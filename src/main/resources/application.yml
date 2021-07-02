@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: dev
+  mvc:
+    static-path-pattern: /static/**
+  http:
+    multipart:
+      locations: ${resourcePath}
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:${spring.http.multipart.locations}
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  servlet:
+    session:
+      timeout: PT1H
+    multipart:
+      max-file-size: 10240MB
+      max-request-size: 10240MB
+  mail:
+    host: smtp.126.com
+    username: opengms@126.com
+    password: EWHAFSGABSPXAKSZ
+    default-encoding: UTF-8
+    protocol: smtp
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+server:
+  port: 7777
+  tomcat:
+    uri-encoding: utf-8
+
+logging:
+  path: /home/log
+
