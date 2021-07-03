@@ -26,10 +26,7 @@ import java.util.List;
 @Document
 @Data
 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")     @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.utils.CustomIDGenerator")
-    String id;
+public class User extends PortalId {
 
     //用户个人信息，由用户直接填写///////////////////////////////////////
     String email;
