@@ -19,7 +19,7 @@ public class PortalItem extends PortalId implements Serializable {
     //Basic Info
 
     String name; //条目名称
-    String nameId; //根据name生成的唯一id
+    String accessId; //根据name生成的唯一id
     List<String> alias; //别名
     String image = "";
     String description; //简单介绍
