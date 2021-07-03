@@ -13,8 +13,6 @@ import java.util.List;
 @Data
 public class ModelItem extends PortalItem {
 
-
-
     String knowledgeGraph;
 
     List<String> classifications = new ArrayList<>();
