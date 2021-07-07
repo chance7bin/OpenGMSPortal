@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.user.*;
-import njgis.opengms.portal.enums.UserTitle;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.Id;
+import njgis.opengms.portal.enums.UserRoleEnum;
+import njgis.opengms.portal.enums.UserTitleEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +29,7 @@ public class User extends PortalId {
     String email;
     String password; //md5+sha256加密
     String name; //用户昵称，对应userserver的name
-    UserTitle title;
+    UserTitleEnum title;
     String gender;
     //用户位置 County / State / Province
     String country;
@@ -87,7 +84,7 @@ public class User extends PortalId {
     //网站运行所需的其他信息
 
     //    String oid; //对应userserver的userId
-    String userId;// 用来访问个人主页，与name一致，重名则加标识
+//    String userId;// 用来访问个人主页，与name一致，重名则加标识
 
     //登录IP
     String lastLoginIp;
@@ -101,7 +98,7 @@ public class User extends PortalId {
     List<FileMeta> fileContainer;
 
     //用户相关资源数量统计
-    UserResourceCount userResourceCount;
+    UserResourceCount resourceCount;
 
     //通知
     int noticeNum;
@@ -117,7 +114,8 @@ public class User extends PortalId {
     Boolean subscribe=true;
     List<UserSubscribeItem> subscribeItemList = new ArrayList<>();
 
-
     String dataNodeToken;
     TokenInfo tokenInfo = new TokenInfo();
+
+    UserRoleEnum userRole;
 }

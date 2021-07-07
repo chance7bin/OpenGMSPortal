@@ -8,11 +8,10 @@ import java.util.List;
 
 /**
  * @ClassName ConceptualModel
- * @Description todo
+ * @Description 概念模型类
  * @Author Kai
  * @Date 2019/3/1
  * @Version 1.0.0
- * TODO
  */
 
 @Document

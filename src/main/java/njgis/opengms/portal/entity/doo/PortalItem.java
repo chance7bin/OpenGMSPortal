@@ -19,16 +19,15 @@ public class PortalItem extends PortalId implements Serializable {
     //Basic Info
 
     String name; //条目名称
-    String accessId; //根据name生成的唯一id
     List<String> alias; //别名
-    String image = "";
-    String description; //简单介绍
-    List<Localization> localizationList = new ArrayList<>(); //多语言详细描述
+    String image;
+    String overview; //简单介绍
+    List<Localization> localizationList; //多语言详细描述
 
     List<String> keywords; //关键字
 
     String author; //贡献者email
-    List<AuthorInfo> authorship; //资源所有者
+    List<AuthorInfo> authorships; //资源所有者
     List<String> admins; //管理者
     List<String> contributors; //修改者
 
