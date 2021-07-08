@@ -225,7 +225,7 @@ public class UserService {
             user.setAvatar(userShuttleDTO.getAvatar());
 
 
-            //TODO 没看懂
+            //TODO wzh 没看懂
             tokenService.refreshUserTokenInfo(j_tokenInfo,user);
 
             JSONObject ipUpdate = new JSONObject();
@@ -413,7 +413,7 @@ public class UserService {
     }
 
     /**
-     * @Description 从用户服务器获取用户基础信息 TODO 基础信息包括哪些？
+     * @Description 从用户服务器获取用户基础信息 TODO wzh 基础信息包括哪些？
      * @param email
      * @Return com.alibaba.fastjson.JSONObject
      * @Author kx
@@ -454,7 +454,7 @@ public class UserService {
     }
 
     /**
-     * @Description 从用户服务器获取用户详细信息 TODO 有多详细？
+     * @Description 从用户服务器获取用户详细信息 TODO wzh 有多详细？
      * @param email
      * @Return com.alibaba.fastjson.JSONObject
      * @Author kx

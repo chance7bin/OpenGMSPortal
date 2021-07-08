@@ -1,8 +1,6 @@
 package njgis.opengms.portal.utils;
 
-import njgis.opengms.portal.entity.doo.PortalId;
-import njgis.opengms.portal.entity.po.ModelItem;
-import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.entity.doo.PortalIdPlus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -43,13 +41,13 @@ public class Utils {
     /**
      * @Description 根据条目类别生成该类别内的唯一AccessId
      * @param name accessId 依据的名字
-     * @param portalIdList 该类别下所有条目id的列表
+     * @param portalIdPlusList 该类别下所有条目id的列表
      * @param isUser 是否为User，user和其他条目的accessId生成方法不一样
      * @Return java.lang.String
      * @Author kx
      * @Date 2021/7/6
      **/
-    public static String generateAccessId(String name, List<PortalId> portalIdList, Boolean isUser){
+    public static String generateAccessId(String name, List<PortalIdPlus> portalIdPlusList, Boolean isUser){
         if(!isUser) { //非User
             name = name.trim().replaceAll("[\\[\\]{}'‘’“”\\\\/ \\-‐,，.。<《>》=~`!@#$%^&*·！?？、|:：;；]", "_");
             name = name.replaceAll("（", "(").replaceAll("）", ")");
@@ -79,14 +77,14 @@ public class Utils {
         }
 
         //若没有重名，则直接使用
-        if(portalIdList.size()==0) {
+        if(portalIdPlusList.size()==0) {
             return name;
         }else { //有重名则判断是否是真正重名，并计算排序序号
             List<Integer> orders = new ArrayList<>();
-            for (PortalId portalId : portalIdList) {
+            for (PortalIdPlus portalIdPlus : portalIdPlusList) {
                 //userid前部是否一致
-                if (portalId.getAccessId().startsWith(name)) {
-                    String left = portalId.getAccessId().replace(name, "");
+                if (portalIdPlus.getAccessId().startsWith(name)) {
+                    String left = portalIdPlus.getAccessId().replace(name, "");
                     if (left.equals("")) {
                         orders.add(1);
                     }else{
@@ -153,6 +151,22 @@ public class Utils {
             } while (head != -1); // 如果在该段落中找不到左括号了，就终止循环
         }
         return context; // 返回更新后的context
+    }
+
+    /**
+     * @Description 判断一个字符串是否存在于字符串列表中
+     * @param
+     * @Return java.lang.Boolean
+     * @Author kx
+     * @Date 2021/7/7
+     **/
+    public static Boolean isStrInList(String str, List<String> stringList){
+        for(String s : stringList){
+            if(str.equals(s)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

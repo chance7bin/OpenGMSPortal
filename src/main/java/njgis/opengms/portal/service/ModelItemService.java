@@ -1,25 +1,35 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.DataItemDao;
 import njgis.opengms.portal.dao.ModelItemDao;
+import njgis.opengms.portal.dao.UserDao;
+import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.modelItem.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.modelItem.ModelRelation;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemAddDTO;
+import njgis.opengms.portal.entity.dto.modelItem.ModelItemFindDTO;
+import njgis.opengms.portal.entity.dto.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.po.DataItem;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ImageUtils;
+import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -39,11 +49,20 @@ public class ModelItemService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
+    @Value(value = "Public,Discoverable")
+    private List<String> itemStatusVisible;
+
     @Autowired
     ModelItemDao modelItemDao;
 
     @Autowired
+    ModelClassificationService modelClassificationService;
+
+    @Autowired
     DataItemDao dataItemDao;
+
+    @Autowired
+    UserDao userDao;
 
     @Autowired
     UserService userService;
@@ -113,11 +132,12 @@ public class ModelItemService {
      * @Author kx
      * @Date 2021/7/7
      **/
-    public int delete(String id,String email){
+
+    public JsonResult delete(String id, String email){
         ModelItem modelItem=modelItemDao.findFirstById(id);
-        if(!modelItem.getAuthor().equals(email))
-            return 2;
-        else if(modelItem!=null){
+        if(!modelItem.getAuthor().equals(email)) {
+            return ResultUtils.error(-1, "access denied");
+        } else if(modelItem!=null){
             //删除图片
             String image=modelItem.getImage();
             if(image.contains("/modelItem/")) {
@@ -125,14 +145,6 @@ public class ModelItemService {
                 File file=new File(resourcePath+modelItem.getImage());
                 if(file.exists()&&file.isFile())
                     file.delete();
-            }
-
-            //删除与之关联数据中的记录
-            List<String> relatedData=modelItem.getRelate().getDataItems();
-            for(int i=0;i<relatedData.size();i++){
-                DataItem dataItem=dataItemDao.findFirstById(relatedData.get(i));
-                dataItem.getRelatedModels().remove(id);
-                dataItemDao.save(dataItem);
             }
 
             //删除与之关联模型中的记录
@@ -148,16 +160,136 @@ public class ModelItemService {
                 }
             }
 
-            //TODO 同时删除datahub dataApplication中的关联记录
+            //TODO 同时删除conceptualModel logicalModel computableModel中的关联记录
 
+            //删除与之关联数据中的记录
+            List<String> relatedData=modelItem.getRelate().getDataItems();
+            for(int i=0;i<relatedData.size();i++){
+                DataItem dataItem=dataItemDao.findFirstById(relatedData.get(i));
+                dataItem.getRelatedModels().remove(id);
+                dataItemDao.save(dataItem);
+            }
+
+            //TODO 同时删除datahub dataApplication中的关联记录
 
             modelItemDao.delete(modelItem);
             userService.ItemCountMinusOne(email, ItemTypeEnum.ModelItem);
-            return 1;
+            return ResultUtils.success();
         }
         else{
-            return -1;
+            return ResultUtils.error(-2, "Error");
         }
+    }
+
+    /**
+     * @Description 根据查询条件查询符合条件的模型条目
+     * @param modelItemFindDTO
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author kx
+     * @Date 2021/7/7
+     **/
+    public JSONObject query(ModelItemFindDTO modelItemFindDTO, Boolean containPrivate) {
+        JSONObject queryResult = new JSONObject();
+
+        //查询条件梳理
+        int page = modelItemFindDTO.getPage();
+        int pageSize = modelItemFindDTO.getPageSize();
+        String searchText = modelItemFindDTO.getSearchText();
+        String sortField = modelItemFindDTO.getSortField();
+        String authorEmail = modelItemFindDTO.getAuthorEmail();
+
+        Sort sort = Sort.by(modelItemFindDTO.getAsc() ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        //取出要查询的所有分类
+        List<String> classIdList = modelItemFindDTO.getClassifications();
+        classIdList = modelClassificationService.getAllClsIdByClsList(classIdList);
+
+        //根据不同的查询字段进行查询
+        Page<ModelItemResultDTO> modelItemPage = null;
+        //若未指定author，则查询全部公开的条目
+        if(authorEmail == null || authorEmail.trim().equals("")) {
+            //未指定分类
+            if(classIdList.size()==0) {
+                switch (modelItemFindDTO.getQueryField()) {
+                    case "Name":
+                        modelItemPage = modelItemDao.findByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
+                        break;
+                    case "Keyword":
+                        modelItemPage = modelItemDao.findByKeywordsIgnoreCaseInAndStatusIn(searchText, itemStatusVisible, pageable);
+                        break;
+                    case "Content":
+                        modelItemPage = modelItemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndStatusIn(searchText, itemStatusVisible, pageable);
+                        break;
+                    case "Contributor":
+                        List<User> userList = userDao.findAllByNameContainsIgnoreCase(searchText);
+                        List<String> emailList = new ArrayList<>();
+                        for (User user : userList) {
+                            emailList.add(user.getEmail());
+                        }
+                        modelItemPage = modelItemDao.findByAuthorInAndStatusInOrContributorsInAndStatusIn(emailList, itemStatusVisible, emailList, itemStatusVisible, pageable);
+                        break;
+                }
+            } else{ //获取某一分类下所有条目
+                modelItemPage = modelItemDao.findByClassificationsInAndStatusIn(classIdList, itemStatusVisible, pageable);
+            }
+        }else{
+            //指定查询某一用户公开条目
+            if(!containPrivate){
+                switch (modelItemFindDTO.getQueryField()) {
+                    case "Name":
+                        modelItemPage = modelItemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                        break;
+                    case "Keyword":
+                        modelItemPage = modelItemDao.findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                        break;
+                    case "Content":
+                        modelItemPage = modelItemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                        break;
+                }
+            }else{//查询某一用户所有条目
+                switch (modelItemFindDTO.getQueryField()) {
+                    case "Name":
+                        modelItemPage = modelItemDao.findByNameContainsIgnoreCase(searchText, pageable);
+                        break;
+                    case "Keyword":
+                        modelItemPage = modelItemDao.findByKeywordsIgnoreCaseIn(searchText, pageable);
+                        break;
+                    case "Content":
+                        modelItemPage = modelItemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescription(searchText, pageable);
+                        break;
+                }
+            }
+
+        }
+
+        //获取模型条目的创建者信息
+        List<ModelItemResultDTO> modelItems = modelItemPage.getContent();
+        JSONArray users = new JSONArray();
+        for (int i = 0; i < modelItems.size(); i++) {
+            ModelItemResultDTO modelItem = modelItems.get(i);
+            String image = modelItem.getImage();
+            if (!image.equals("")) {
+                modelItem.setImage(htmlLoadPath + image);
+            }
+
+            JSONObject userObj = new JSONObject();
+            User user = userDao.findFirstByEmail(modelItems.get(i).getAuthor());
+            userObj.put("accessId", user.getAccessId());
+            userObj.put("image", user.getImage().equals("") ? "" : htmlLoadPath + user.getImage());
+            userObj.put("name", user.getName());
+
+            users.add(userObj);
+
+        }
+
+        queryResult.put("list", modelItems);
+        queryResult.put("total", modelItemPage.getTotalElements());
+        queryResult.put("pages", modelItemPage.getTotalPages());
+        queryResult.put("users", users);
+
+        return queryResult;
+
     }
 
 

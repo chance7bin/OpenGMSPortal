@@ -23,7 +23,7 @@ import java.util.List;
 @Document
 @Data
 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-public class User extends PortalId {
+public class User extends PortalIdPlus {
 
     //用户个人信息，由用户直接填写///////////////////////////////////////
     String email;

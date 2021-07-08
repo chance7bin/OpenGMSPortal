@@ -27,34 +27,13 @@ import java.util.List;
 @Builder
 public class DataItem extends PortalItem {
 
-    String contentType;
-    String userName;
-    String reference;
-    String tabType;//标识四个tabs，包括hubs、repository、network与application
-
-    List<String> classifications;
-    List<String> displays;
-    String image;
+    String url;//reference 若dataType为Url，则需填写该字段
+    String classifications;
+    List<String> imageList;//displays 以图片的形式展示数据内容
+    List<DataMeta> dataList; //若dataType为File, 则添加上传至数据容器的文件元数据
+    String dataType; //Url File
     List<String> relatedModels;
-    List<DataMeta> dataList;
-//    List<FileMetaUser> userDataList;//待删
 
-    String token;
-    String dataType;//标识Hub、Url、File、DistributedNode,目前新增了tabType，此字段可删除
+    //数据条目原author存的是用户编号，需要改成email
 
-    //Share in place
-    String distributedNodeDataId;
-    String type;
-    Boolean authority;
-    String workSpace;
-    List<String> tags;
-    String dataPath;
-    String date;
-    String dataUrl;
-    String ip;
-
-    List<InvokeService> invokeServices;
-
-    List<RelatedProcessing> relatedProcessings;
-    List<RelatedVisualization> relatedVisualizations;
 }

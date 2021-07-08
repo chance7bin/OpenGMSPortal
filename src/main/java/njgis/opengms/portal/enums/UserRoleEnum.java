@@ -36,4 +36,15 @@ public enum UserRoleEnum {
         }
         return null;
     }
+
+    public static Boolean isAdmin(UserRoleEnum userRole){
+        if(userRole == null){
+            return false;
+        }
+        if(userRole.getCode()<2){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

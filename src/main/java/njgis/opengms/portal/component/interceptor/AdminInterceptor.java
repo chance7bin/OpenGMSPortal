@@ -1,5 +1,6 @@
 package njgis.opengms.portal.component.interceptor;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import njgis.opengms.portal.component.AdminRequired;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.enums.UserRoleEnum;
@@ -46,11 +47,12 @@ public class AdminInterceptor implements HandlerInterceptor {
             }else { // 判断用户权限
                 String role_str = role.toString();
                 UserRoleEnum userRole = UserRoleEnum.getUserRoleByRoleName(role_str);
-                if(userRole.getCode()<2){
+                Boolean isAdmin = UserRoleEnum.isAdmin(userRole);
+                if(isAdmin){
                     return true;
                 }
 
-                //TODO 是否要返回无权限提示
+                //TODO 是否要返回无权限提示?
                 return false;
             }
 

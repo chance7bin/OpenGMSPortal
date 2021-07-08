@@ -21,5 +21,4 @@ public class PortalId {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")     @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.component.CustomIDGenerator")
     String id;
 
-    String accessId;//用来访问条目或用户主页的id
 }

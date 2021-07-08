@@ -183,7 +183,7 @@ public class UserRestController {
      * @Date 2021/7/6
      **/
     @LoginRequired
-    @ApiOperation(value = "从用户服务器获取用户基础信息", notes = "需要先登录")
+    @ApiOperation(value = "从用户服务器获取用户基础信息", notes = "@loginRequired")
     @RequestMapping(value = "/getInfoFromUserServer", method = RequestMethod.GET)
     public JsonResult getInfoFromUserServer(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
@@ -211,7 +211,7 @@ public class UserRestController {
      * @Date 2021/7/6
      **/
     @LoginRequired
-    @ApiOperation(value = "从用户服务器获取用户详细信息", notes = "需要先登录")
+    @ApiOperation(value = "从用户服务器获取用户详细信息", notes = "@loginRequired")
     @RequestMapping(value = "/getFullUserInfo", method = RequestMethod.GET)
     public JsonResult getFullUserInfo(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
@@ -237,7 +237,7 @@ public class UserRestController {
      * @Date 2021/7/6
      **/
     @LoginRequired
-    @ApiOperation(value = "从用户服务器获取用户文件资源", notes = "需要先登录")
+    @ApiOperation(value = "从用户服务器获取用户文件资源", notes = "@loginRequired")
     @RequestMapping(value = "/getUserResource", method = RequestMethod.GET)
     public JsonResult getUserResource(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();

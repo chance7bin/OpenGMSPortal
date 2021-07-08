@@ -161,7 +161,7 @@ public class TokenService {
     }
 
     /**
-     * @Description todo
+     * @Description todo wzh
      * @param j_tokenInfo
      * @param user
      * @Return java.lang.String
@@ -188,7 +188,7 @@ public class TokenService {
     }
 
     /**
-     * @Description todo
+     * @Description todo wzh
      * @param userEmail
      * @Return java.lang.String
      * @Author wzh
