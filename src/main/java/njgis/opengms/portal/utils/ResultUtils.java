@@ -5,7 +5,7 @@ import njgis.opengms.portal.enums.ResultEnum;
 
 /**
  * @ClassName ResultUtils
- * @Description todo
+ * @Description 接口返回值工具类
  * @Author sun_liber
  * @Date 2019/2/15
  * @Version 1.0.0

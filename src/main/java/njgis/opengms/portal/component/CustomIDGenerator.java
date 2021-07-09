@@ -1,4 +1,4 @@
-package njgis.opengms.portal.utils;
+package njgis.opengms.portal.component;
 
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * @Description todo
+ * @Description 门户统一Id生成方法类
  * @Author kx
  * @Date 2021/7/1
  * @Version 1.0.0

@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
 /**
- * @Description todo
+ * @Description 门户统一Id生成类，所有持久层对象都要继承该类
  * @Author kx
  * @Date 2021/7/2
  * @Version 1.0.0
@@ -18,7 +18,7 @@ import javax.persistence.GenerationType;
 public class PortalId {
 
     @org.springframework.data.annotation.Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")     @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.utils.CustomIDGenerator")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")     @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.component.CustomIDGenerator")
     String id;
 
 }

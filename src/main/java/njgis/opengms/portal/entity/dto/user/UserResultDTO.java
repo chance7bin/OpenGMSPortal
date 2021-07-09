@@ -1,4 +1,4 @@
-package njgis.opengms.portal.entity.dto;
+package njgis.opengms.portal.entity.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

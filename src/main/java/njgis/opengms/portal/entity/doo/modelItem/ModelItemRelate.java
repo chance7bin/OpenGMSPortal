@@ -10,11 +10,10 @@ import java.util.Map;
 
 /**
  * @ClassName ModelItemRelate
- * @Description todo
+ * @Description 模型条目关联的网站上其他信息
  * @Author Kai
  * @Date 2019/2/21
  * @Version 1.0.0
- * TODO ModelItem 关联信息
  */
 
 @Data

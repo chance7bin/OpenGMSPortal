@@ -25,6 +25,6 @@ public class ModelItem extends PortalItem {
 
     ModelMetadata metadata = new ModelMetadata();
 
-//    String modelId; //替换为nameId
+//    String modelId; //替换为accessId
 
 }

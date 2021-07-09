@@ -2,7 +2,6 @@ package njgis.opengms.portal.entity.doo;
 
 import lombok.Data;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -12,23 +11,22 @@ import java.util.List;
 
 @Document
 @Data
-public class PortalItem extends PortalId implements Serializable {
+public class PortalItem extends PortalIdPlus implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     //Basic Info
 
     String name; //条目名称
-    String nameId; //根据name生成的唯一id
     List<String> alias; //别名
-    String image = "";
-    String description; //简单介绍
-    List<Localization> localizationList = new ArrayList<>(); //多语言详细描述
+    String image;
+    String overview; //简单介绍 原为description
+    List<Localization> localizationList; //多语言详细描述
 
     List<String> keywords; //关键字
 
     String author; //贡献者email
-    List<AuthorInfo> authorship; //资源所有者
+    List<AuthorInfo> authorships; //资源所有者
     List<String> admins; //管理者
     List<String> contributors; //修改者
 

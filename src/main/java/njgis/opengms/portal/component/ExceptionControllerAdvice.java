@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @ClassName ExceptionControllerAdvice
- * @Description todo
+ * @Description 自定义错误
  * @Author sun_liber
  * @Date 2019/2/15
  * @Version 1.0.0
