@@ -38,15 +38,11 @@ public class User extends PortalIdPlus {
 
     //用户头像
     String avatar = ""; //对应userserver的avatar
-    String image = "";
 
     //个人介绍
     String introduction;
-    String description;
 
     //隶属机构
-    String institution;
-    Affiliation affiliation;
     List<String> organizations = new ArrayList<>();
 
     //联系方式
@@ -57,15 +53,11 @@ public class User extends PortalIdPlus {
     String weiBo;
 
     //存放用户的外部网站个人页面
-    String wiki;
-    String homePage;
-    String personPage;//对应homepage,现为临时字段
-    List<String> externalLinks = new ArrayList<>();
+    String homepage;
+    List<String> externalLinks = new ArrayList<>(); // TODO 是否删除？
 
     //研究领域
     ArrayList<String> domain;
-    List<String> subjectAreas;
-    List<String> researchInterests;
 
     //学术信息
     List<String> articles = new ArrayList<>();//保存article的id

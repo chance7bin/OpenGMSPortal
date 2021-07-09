@@ -454,7 +454,7 @@ public class UserService {
     }
 
     /**
-     * @Description 从用户服务器获取用户详细信息 TODO wzh 有多详细？
+     * @Description 从用户服务器和门户获取用户全部信息 TODO 是否要去掉密码？
      * @param email
      * @Return com.alibaba.fastjson.JSONObject
      * @Author kx
@@ -468,16 +468,12 @@ public class UserService {
 
             User user = userDao.findFirstByEmail(email);
 
-            j_result.put("subjectAreas", user.getSubjectAreas());
             j_result.put("userId", user.getAccessId());
             j_result.put("email", user.getEmail());
             j_result.put("phone", user.getPhone());
             j_result.put("weChat", user.getWeChat());
             j_result.put("faceBook", user.getFaceBook());
-            j_result.put("wiki", user.getWiki());
-            j_result.put("researchInterests", user.getResearchInterests());
             j_result.put("lab", user.getLab());
-            j_result.put("affiliation", user.getAffiliation());
             j_result.put("externalLinks", user.getExternalLinks());
             j_result.put("eduExperiences", user.getEducationExperiences());
             j_result.put("awdHonors", user.getAwardsHonors());

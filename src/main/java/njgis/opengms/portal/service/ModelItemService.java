@@ -276,7 +276,7 @@ public class ModelItemService {
             JSONObject userObj = new JSONObject();
             User user = userDao.findFirstByEmail(modelItems.get(i).getAuthor());
             userObj.put("accessId", user.getAccessId());
-            userObj.put("image", user.getImage().equals("") ? "" : htmlLoadPath + user.getImage());
+            userObj.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
             userObj.put("name", user.getName());
 
             users.add(userObj);
