@@ -12,19 +12,11 @@ public interface UserDao extends MongoRepository<User,String> {
 
     User findFirstById(String id);
 
-    User findFirstByOid(String id);
-
     User findFirstByUserId(String userId);
 
     User findFirstByName(String name);
 
     User findFirstByEmail(String email);
-
-    User findFirstByUserName(String username);
-
-    UserResultDTO findByUserName(String userName);
-
-    UserResultDTO findByOid(String oid);
 
     List<User> findAllByUserIdContains(String userId);
 
