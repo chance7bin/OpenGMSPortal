@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.user.*;
-import njgis.opengms.portal.enums.UserTitle;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.Id;
+import njgis.opengms.portal.enums.UserRoleEnum;
+import njgis.opengms.portal.enums.UserTitleEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,16 +23,13 @@ import java.util.List;
 @Document
 @Data
 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")     @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.utils.CustomIDGenerator")
-    String id;
+public class User extends PortalIdPlus {
 
     //用户个人信息，由用户直接填写///////////////////////////////////////
     String email;
     String password; //md5+sha256加密
     String name; //用户昵称，对应userserver的name
-    UserTitle title;
+    UserTitleEnum title;
     String gender;
     //用户位置 County / State / Province
     String country;
@@ -44,15 +38,11 @@ public class User {
 
     //用户头像
     String avatar = ""; //对应userserver的avatar
-    String image = "";
 
     //个人介绍
     String introduction;
-    String description;
 
     //隶属机构
-    String institution;
-    Affiliation affiliation;
     List<String> organizations = new ArrayList<>();
 
     //联系方式
@@ -63,15 +53,11 @@ public class User {
     String weiBo;
 
     //存放用户的外部网站个人页面
-    String wiki;
-    String homePage;
-    String personPage;//对应homepage,现为临时字段
-    List<String> externalLinks = new ArrayList<>();
+    String homepage;
+    List<String> externalLinks = new ArrayList<>(); // TODO 是否删除？
 
     //研究领域
     ArrayList<String> domain;
-    List<String> subjectAreas;
-    List<String> researchInterests;
 
     //学术信息
     List<String> articles = new ArrayList<>();//保存article的id
@@ -90,7 +76,7 @@ public class User {
     //网站运行所需的其他信息
 
     //    String oid; //对应userserver的userId
-    String userId;// 用来访问个人主页，与name一致，重名则加标识
+//    String userId;// 用来访问个人主页，与name一致，重名则加标识
 
     //登录IP
     String lastLoginIp;
@@ -104,7 +90,7 @@ public class User {
     List<FileMeta> fileContainer;
 
     //用户相关资源数量统计
-    UserResourceCount userResourceCount;
+    UserResourceCount resourceCount;
 
     //通知
     int noticeNum;
@@ -120,7 +106,8 @@ public class User {
     Boolean subscribe=true;
     List<UserSubscribeItem> subscribeItemList = new ArrayList<>();
 
-
     String dataNodeToken;
     TokenInfo tokenInfo = new TokenInfo();
+
+    UserRoleEnum userRole;
 }

@@ -5,16 +5,16 @@ import lombok.Data;
 
 /**
  * @EnumName ResultEnum
- * @Description todo
+ * @Description 接口返回值枚举
  * @Author sun_liber
  * @Date 2019/2/15
  * @Version 1.0.0
  */
 
 public enum ResultEnum {
-    SUCCESS(0, "Success"),
-    NO_OBJECT(-1, "No object"),
-    ERROR(-2,"Error");
+    SUCCESS(1, "Success"),
+    NO_OBJECT(0, "No object"),
+    ERROR(-1,"Error");
 
     private Integer code;
 
