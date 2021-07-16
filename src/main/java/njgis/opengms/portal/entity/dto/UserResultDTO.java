@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResultDTO {
 
-    String oid;
+    String oid;//
     String name;
     String image;
     String userId;
