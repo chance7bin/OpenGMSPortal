@@ -1,5 +1,6 @@
 package njgis.opengms.portal.test.queue.service;
 
+import com.sun.xml.bind.v2.TODO;
 import njgis.opengms.portal.test.queue.dao.ServerDao;
 import njgis.opengms.portal.test.queue.dao.TaskDao;
 import njgis.opengms.portal.test.queue.entity.ServerTable;
@@ -9,7 +10,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 /**
  * @Description description
@@ -20,7 +20,7 @@ import java.util.List;
 public class TaskListener{
 
     @Autowired
-    ServerListener serverListener;
+    ServerService serverListener;
 
     @Autowired
     private TaskDao taskDao;
@@ -31,7 +31,7 @@ public class TaskListener{
     @Autowired
     private RunService runService;
 
-    @PostConstruct
+    // @PostConstruct
     @Async
     public void taskListener(){
         System.out.println("[          Thread] -- TaskListener -- start ");
@@ -48,6 +48,7 @@ public class TaskListener{
                     System.out.println("[          Task Running] -- taskId : " + execTask.getTaskId());
                     execTask.setIp(runServerIp);
                     execTask.setPort(runServerPort);
+                    // TODO 更新状态放到模型容器返回msrid的时候更新
                     execTask.setStatus(1);
                     taskDao.save(execTask);
                     runService.run(execTask);

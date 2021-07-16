@@ -33,7 +33,7 @@ public class InvokeService {
     @Autowired
     private TaskDao taskDao;
 
-    public void invoking(){
+    public void invoking() {
 
         // 创建任务记录
         TaskTable task = new TaskTable();
@@ -60,18 +60,18 @@ public class InvokeService {
         // 把该任务加入到任务队列
         taskDao.insert(task);
 
-       while (true){
-           TaskTable taskFinished = taskDao.findByTaskId(task.getTaskId());
-           if (taskFinished.getStatus() == 2){
-               // 获取数据id
-               String gdid = taskFinished.getOutputData().get(0).getDataId();
-               // 下载结果
-               String url = taskFinished.getIp() + ":" + taskFinished.getPort();
-               invoke.download(url,gdid, "E:\\Downloads\\" + gdid);
-               break;
-           }
+        while (true) {
+            TaskTable taskFinished = taskDao.findByTaskId(task.getTaskId());
+            if (taskFinished.getStatus() == 2) {
+                // 获取数据id
+                String gdid = taskFinished.getOutputData().get(0).getDataId();
+                // 下载结果
+                String url = taskFinished.getIp() + ":" + taskFinished.getPort();
+                invoke.download(url, gdid, "E:\\Downloads\\" + gdid);
+                break;
+            }
 
-       }
+        }
 
     }
 }

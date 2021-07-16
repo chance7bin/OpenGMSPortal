@@ -2,15 +2,12 @@ package njgis.opengms.portal.test.queue.controller;
 
 import njgis.opengms.portal.test.queue.entity.ServerTable;
 import njgis.opengms.portal.test.queue.service.InvokeService;
-import njgis.opengms.portal.test.queue.service.ServerListener;
-import njgis.opengms.portal.utils.MyHttpUtils;
+import njgis.opengms.portal.test.queue.service.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -25,12 +22,12 @@ public class InvokeModelController {
     private InvokeService invokeService;
 
     @Autowired
-    private ServerListener serverListener;
+    private ServerService serverListener;
 
     @GetMapping("/invoking")
     public String invoking(HttpServletResponse response){
 
-        System.out.println("[          Task invoking] -- taskId");
+        System.out.println("[          Task invoking]");
 
         invokeService.invoking();
         // for (int i = 0; i < 3; i++) {

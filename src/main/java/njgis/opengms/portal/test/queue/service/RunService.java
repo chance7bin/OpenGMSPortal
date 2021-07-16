@@ -31,13 +31,15 @@ public class RunService {
     private TaskDao taskDao;
 
     @Autowired
-    private ServerListener serverListener;
+    private ServerService serverListener;
 
     @Autowired
     private RunningDao runningDao;
 
+
     // 调用模型服务容器接口
     public void run(TaskTable execTask){
+        // TODO 做try-catch处理，可能请求模型容器接口出错
         String url = execTask.getIp() + ":" + execTask.getPort();
         IOData inputData = new IOData();
         inputData.setInputdata(execTask.getInputData());
