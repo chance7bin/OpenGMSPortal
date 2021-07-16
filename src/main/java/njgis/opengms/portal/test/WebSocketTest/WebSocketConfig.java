@@ -20,6 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 客户端通过这里配置的URL建立WebSocket连接
-        registry.addEndpoint("/chat").withSockJS();
+        registry.addEndpoint("portal/chat").withSockJS();
     }
 }
