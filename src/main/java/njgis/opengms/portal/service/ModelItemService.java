@@ -12,6 +12,7 @@ import njgis.opengms.portal.entity.doo.modelItem.ModelRelation;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemResultDTO;
+import njgis.opengms.portal.entity.dto.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.DataItem;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
@@ -19,6 +20,7 @@ import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ImageUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +29,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -54,6 +63,9 @@ public class ModelItemService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    ModelItemService modelItemService;
 
     @Autowired
     ModelClassificationService modelClassificationService;
@@ -291,6 +303,136 @@ public class ModelItemService {
         return queryResult;
 
     }
+
+
+//    public JSONObject update(ModelItemUpdateDTO modelItemUpdateDTO, String uid){
+//        ModelItem modelItem=modelItemDao.findFirstById(modelItemUpdateDTO.getOriginId());
+//
+//        String author=modelItem.getAuthor();
+//        String authorUserName = author;
+//        if(!modelItem.isLock()) {
+//            if (author.equals(uid)) {
+//
+//                List<String> versions = modelItem.getVersions();
+//                if (versions == null || versions.size() == 0) {
+//                    ModelItemVersion modelItemVersionOri = new ModelItemVersion();
+//                    BeanUtils.copyProperties(modelItem, modelItemVersionOri, "id");
+//                    modelItemVersionOri.setOid(UUID.randomUUID().toString());
+//                    modelItemVersionOri.setOriginOid(modelItem.getOid());
+//                    modelItemVersionOri.setVerNumber((long) 0);
+//                    modelItemVersionOri.setVerStatus(2);
+//                    modelItemVersionOri.setModifier(modelItem.getAuthor());
+//                    modelItemVersionOri.setModifyTime(modelItem.getCreateTime());
+//                    modelItemVersionDao.insert(modelItemVersionOri);
+//
+//                    versions = new ArrayList<>();
+//                    versions.add(modelItemVersionOri.getOid());
+//                    modelItem.setVersions(versions);
+//                }
+//
+//                BeanUtils.copyProperties(modelItemUpdateDTO, modelItem);
+//                //判断是否为新图片
+//                String uploadImage = modelItemUpdateDTO.getUploadImage();
+//                if (uploadImage != null && !uploadImage.contains("/modelItem/") && !uploadImage.equals("")) {
+//                    //删除旧图片
+//                    File file = new File(resourcePath + modelItem.getImage());
+//                    if (file.exists() && file.isFile())
+//                        file.delete();
+//                    //添加新图片
+//                    String path = "/modelItem/" + UUID.randomUUID().toString() + ".jpg";
+//                    String imgStr = uploadImage.split(",")[1];
+//                    Utils.base64StrToImage(imgStr, resourcePath + path);
+//                    modelItem.setImage(path);
+//                }
+//                Date curDate = new Date();
+//                modelItem.setLastModifyTime(curDate);
+//                modelItem.setLastModifier(author);
+//
+//                List<Localization> localizationList = modelItem.getLocalizationList();
+//                for(int l = 0;l<localizationList.size();l++){
+//                    Localization localization = localizationList.get(l);
+//                    localization.setDescription(Utils.saveBase64Image(localization.getDescription(),modelItem.getOid(),resourcePath,htmlLoadPath));
+//                    localizationList.set(l,localization);
+//                }
+//                modelItem.setLocalizationList(localizationList);
+//
+//                ModelItemVersion modelItemVersion = new ModelItemVersion();
+//                BeanUtils.copyProperties(modelItem,modelItemVersion,"id");
+//                modelItemVersion.setOriginOid(modelItem.getOid());
+//                modelItemVersion.setOid(UUID.randomUUID().toString());
+//                modelItemVersion.setModifier(author);
+//                modelItemVersion.setModifyTime(curDate);
+//                modelItemVersion.setVerNumber(curDate.getTime());
+//                modelItemVersion.setVerStatus(2);
+//                modelItemVersion.setCreator(author);
+//                modelItemVersionDao.insert(modelItemVersion);
+//
+//
+//                versions.add(modelItemVersion.getOid());
+//                modelItem.setVersions(versions);
+//
+//                modelItemDao.save(modelItem);
+//
+//                JSONObject result = new JSONObject();
+//                result.put("method", "update");
+//                result.put("oid", modelItem.getOid());
+//
+//                return result;
+//            } else {
+//
+//                ModelItemVersion modelItemVersion = new ModelItemVersion();
+//                BeanUtils.copyProperties(modelItemUpdateDTO, modelItemVersion, "id");
+//
+//                String uploadImage = modelItemUpdateDTO.getUploadImage()==null?"":modelItemUpdateDTO.getUploadImage();
+//                if(uploadImage.equals("")){
+//                    modelItemVersion.setImage("");
+//                }
+//                else if (!uploadImage.contains("/modelItem/") && !uploadImage.equals("")) {
+//                    String path = "/modelItem/" + UUID.randomUUID().toString() + ".jpg";
+//                    String imgStr = uploadImage.split(",")[1];
+//                    Utils.base64StrToImage(imgStr, resourcePath + path);
+//                    modelItemVersion.setImage(path);
+//                }
+//                else{
+//                    String[] names=uploadImage.split("modelItem");
+//                    modelItemVersion.setImage("/modelItem/"+names[1]);
+//                }
+//
+//                modelItemVersion.setOriginOid(modelItem.getOid());
+//                modelItemVersion.setOid(UUID.randomUUID().toString());
+//                modelItemVersion.setModifier(uid);
+//                Date curDate = new Date();
+//                modelItemVersion.setModifyTime(curDate);
+//                modelItemVersion.setVerNumber(curDate.getTime());
+//                modelItemVersion.setVerStatus(0);
+//                userService.messageNumPlusPlus(authorUserName);
+//
+//                List<Localization> localizationList = modelItemVersion.getLocalizationList();
+//                for(int l = 0;l<localizationList.size();l++){
+//                    Localization localization = localizationList.get(l);
+//                    localization.setDescription(Utils.saveBase64Image(localization.getDescription(),modelItemVersion.getOid(),resourcePath,htmlLoadPath));
+//                    localizationList.set(l,localization);
+//                }
+//                modelItemVersion.setLocalizationList(localizationList);
+//
+//                modelItemVersion.setCreator(author);
+//                modelItemVersionDao.insert(modelItemVersion);
+//
+//                modelItem.setLock(true);
+//                modelItemDao.save(modelItem);
+//
+//                JSONObject result = new JSONObject();
+//                result.put("method", "version");
+//                result.put("oid", modelItemVersion.getOid());
+//
+//                return result;
+//            }
+//        }
+//        else{
+//
+//            return null;
+//        }
+//    }
 
 
 

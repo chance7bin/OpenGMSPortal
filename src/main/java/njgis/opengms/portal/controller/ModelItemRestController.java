@@ -7,6 +7,7 @@ import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemFindDTO;
+import njgis.opengms.portal.entity.dto.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.ModelItemService;
@@ -173,4 +174,33 @@ public class ModelItemRestController {
         return ResultUtils.success(modelItemService.query(modelItemFindDTO, true));
 
     }
+
+    /**
+     * @Description 模型条目更新,通过文件上传要更新的属性
+     * @param request
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author kx
+     * @Date 2021/7/12
+     **/
+//    @LoginRequired
+//    @RequestMapping(value = "/update", method = RequestMethod.POST)
+//    public JsonResult updateModelItem(HttpServletRequest request) throws IOException {
+//
+//        HttpSession session=request.getSession();
+//        String email=session.getAttribute("email").toString();
+//
+//        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+//        MultipartFile file=multipartRequest.getFile("info");
+//        String model=IOUtils.toString(file.getInputStream(),"utf-8");
+//        JSONObject jsonObject=JSONObject.parseObject(model);
+//        ModelItemUpdateDTO modelItemUpdateDTO=JSONObject.toJavaObject(jsonObject,ModelItemUpdateDTO.class);
+//
+//        JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
+//        if(result==null){
+//            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+//        }
+//        else {
+//            return ResultUtils.success(result);
+//        }
+//    }
 }

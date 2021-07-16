@@ -1,4 +1,4 @@
-package njgis.opengms.portal.entity.doo;
+package njgis.opengms.portal.entity.doo.base;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;

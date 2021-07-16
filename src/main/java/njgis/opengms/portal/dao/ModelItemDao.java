@@ -1,6 +1,6 @@
 package njgis.opengms.portal.dao;
 
-import njgis.opengms.portal.entity.doo.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import org.springframework.data.domain.Page;

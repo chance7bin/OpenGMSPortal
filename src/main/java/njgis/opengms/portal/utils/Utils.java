@@ -1,6 +1,6 @@
 package njgis.opengms.portal.utils;
 
-import njgis.opengms.portal.entity.doo.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

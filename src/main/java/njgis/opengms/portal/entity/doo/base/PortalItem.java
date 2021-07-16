@@ -1,7 +1,10 @@
-package njgis.opengms.portal.entity.doo;
+package njgis.opengms.portal.entity.doo.base;
 
 import lombok.Data;
 
+import njgis.opengms.portal.entity.doo.AuthorInfo;
+import njgis.opengms.portal.entity.doo.DailyViewCount;
+import njgis.opengms.portal.entity.doo.Localization;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;

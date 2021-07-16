@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import njgis.opengms.portal.entity.doo.PortalId;
+import njgis.opengms.portal.entity.doo.base.PortalId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;

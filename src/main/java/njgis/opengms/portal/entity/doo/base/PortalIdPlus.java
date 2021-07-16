@@ -1,11 +1,7 @@
-package njgis.opengms.portal.entity.doo;
+package njgis.opengms.portal.entity.doo.base;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 /**
  * @Description 在Id的基础上加入了AccessID
