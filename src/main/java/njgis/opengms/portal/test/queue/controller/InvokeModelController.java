@@ -1,13 +1,18 @@
 package njgis.opengms.portal.test.queue.controller;
 
-import njgis.opengms.portal.test.queue.entity.ServerTable;
+import com.alibaba.fastjson.JSONObject;
+import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import njgis.opengms.portal.test.queue.service.InvokeService;
+import njgis.opengms.portal.test.queue.service.ServerListener;
+import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.test.queue.service.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -42,8 +47,13 @@ public class InvokeModelController {
     }
 
     @GetMapping("/getServerInfo")
-    public List<ServerTable> getServerInfo(){
+    public List<ServerInfo> getServerInfo(){
         return serverListener.getServerInfo();
+    }
+
+    @RequestMapping(value = "/checkTaskStatus", method = RequestMethod.GET)
+    public JsonResult checkTaskStatus(@RequestParam("taskId") String taskId){
+        return ResultUtils.success(invokeService.checkTaskStatus(taskId)) ;
     }
 
 

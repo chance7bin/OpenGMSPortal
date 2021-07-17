@@ -1,35 +1,39 @@
 package njgis.opengms.portal.test.queue.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sun.javafx.beans.IDProperty;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.PortalId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @Description description
  * @Author bin
- * @Date 2021/07/15
+ * @Date 2021/07/16
  */
 @Document
 @Data
-// @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-public class TaskTable extends PortalId {
+public class RunTask extends PortalId {
 
     private String taskId;
-    private String taskName;
-    private String userId;
+
+    private String msrid;
+
+    private String md5;
+    private List<String> submitTasks = new ArrayList<>();//报错对应提交任务的id
+
     private String ip;
     private String port;
-    // @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date runTime;
-    // 模型状态 0:未运行 1:正在运行 2:运行完成 -1:运行失败
-    private int status;
+    private String mid;//模型容器中的模型对应id
+
     // private IOData inputData;
     private List<DataItem> inputData;
     // private IOData outputData;
     private List<DataItem> outputData;
+
+    // 模型状态 0:未运行 1:正在运行 2:运行完成 -1:运行失败
+    private int status;
 }

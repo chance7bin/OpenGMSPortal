@@ -1,7 +1,7 @@
 package njgis.opengms.portal.test.queue.service;
 
 import njgis.opengms.portal.test.queue.dao.ServerDao;
-import njgis.opengms.portal.test.queue.entity.ServerTable;
+import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class ServerService {
     private ServerDao serverDao;
 
 
-    public List<ServerTable> getServerInfo(){
+    public List<ServerInfo> getServerInfo(){
         return serverDao.findAll();
     }
 
@@ -27,11 +27,11 @@ public class ServerService {
     public String getIdleServer(){
         // 获取服务器信息
         // boolean hasServer = false;
-        List<ServerTable> serverInfos;
+        List<ServerInfo> serverInfos;
         String runServerIp = null;
 
         serverInfos = getServerInfo();
-        for (ServerTable serverInfo : serverInfos) {
+        for (ServerInfo serverInfo : serverInfos) {
             int cr = serverInfo.getCurrentRun();
             if (cr < serverInfo.getMaxRun()) {
                 cr += 1;
@@ -47,7 +47,7 @@ public class ServerService {
     }
 
     public void updateServerStatus(String runServerIp){
-        ServerTable server = serverDao.findByIp(runServerIp);
+        ServerInfo server = serverDao.findByIp(runServerIp);
         int currentRunCount = server.getCurrentRun();
         currentRunCount -= 1;
         server.setCurrentRun(currentRunCount);

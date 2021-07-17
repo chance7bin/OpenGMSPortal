@@ -1,6 +1,6 @@
 package njgis.opengms.portal.test.queue.dao;
 
-import njgis.opengms.portal.test.queue.entity.ServerTable;
+import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @Author bin
  * @Date 2021/07/15
  */
-public interface ServerDao extends MongoRepository<ServerTable,String> {
+public interface ServerDao extends MongoRepository<ServerInfo,String> {
 
 //    List<ServerTable> findAll();
-    ServerTable findByIp(String ip);
+    ServerInfo findByIp(String ip);
 
 }

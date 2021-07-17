@@ -1,17 +1,10 @@
 package njgis.opengms.portal.test.queue.service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.test.queue.controller.ForestInvoke;
-import njgis.opengms.portal.test.queue.dao.QueueDao;
-import njgis.opengms.portal.test.queue.dao.ServerDao;
-import njgis.opengms.portal.test.queue.dao.TaskDao;
+import njgis.opengms.portal.test.queue.dao.SubmitedTaskDao;
+import njgis.opengms.portal.test.queue.dto.TaskDTO;
 import njgis.opengms.portal.test.queue.entity.DataItem;
-import njgis.opengms.portal.test.queue.entity.IOData;
-import njgis.opengms.portal.test.queue.entity.ServerTable;
-import njgis.opengms.portal.test.queue.entity.TaskQueue;
-import njgis.opengms.portal.test.queue.entity.TaskTable;
+import njgis.opengms.portal.test.queue.entity.SubmitedTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +24,12 @@ public class InvokeService {
     private ForestInvoke invoke;
 
     @Autowired
-    private TaskDao taskDao;
+    private SubmitedTaskDao submitedTaskDao;
 
     public void invoking() {
 
         // 创建任务记录
-        TaskTable task = new TaskTable();
+        SubmitedTask task = new SubmitedTask();
         task.setTaskId(UUID.randomUUID().toString());
         task.setTaskName("wordcloud");
         task.setUserId("localhost");
@@ -58,20 +51,42 @@ public class InvokeService {
         inputdata.add(inputdata2);
         task.setInputData(inputdata);
         // 把该任务加入到任务队列
-        taskDao.insert(task);
+        submitedTaskDao.insert(task);
 
-        // while (true) {
-        //     TaskTable taskFinished = taskDao.findByTaskId(task.getTaskId());
-        //     if (taskFinished.getStatus() == 2) {
-        //         // 获取数据id
-        //         String gdid = taskFinished.getOutputData().get(0).getDataId();
-        //         // 下载结果
-        //         String url = taskFinished.getIp() + ":" + taskFinished.getPort();
-        //         invoke.download(url, gdid, "E:\\Downloads\\PortalTest\\" + gdid);
-        //         break;
-        //     }
-        //
-        // }
+//       while (true){
+//           TaskTable taskFinished = taskDao.findByTaskId(task.getTaskId());
+//           if (taskFinished.getStatus() == 2){
+//               // 获取数据id
+//               String gdid = taskFinished.getOutputData().get(0).getDataId();
+//               // 下载结果
+//               String url = taskFinished.getIp() + ":" + taskFinished.getPort();
+//               invoke.download(url,gdid, "E:\\Downloads\\" + gdid);
+//               break;
+//           }
+//
+//       }
 
+    }
+
+    public void mergeTask(SubmitedTask submitedTask){//如有参数相同的提交任务，合并到同一个执行任务，没有则新建一个
+        String md5 = submitedTask.getMd5();
+    }
+
+    public TaskDTO checkTaskStatus(String taskId){
+        SubmitedTask submitedTask = submitedTaskDao.findFirstByTaskId(taskId);
+        int status = submitedTask.getStatus();
+
+        TaskDTO taskDTO = new TaskDTO();
+
+        taskDTO.setStatus(0);
+        taskDTO.setTaskId(taskId);
+        if(status==0){
+            taskDTO.setQueueNum(submitedTask.getQueueNum());
+        }else if(status==2){
+            taskDTO.setInputData(submitedTask.getInputData());
+            taskDTO.setOutputData(submitedTask.getOutputData());
+        }
+
+        return taskDTO;
     }
 }
