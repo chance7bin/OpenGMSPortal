@@ -1,6 +1,6 @@
 package njgis.opengms.portal.test.queue.dao;
 
-import njgis.opengms.portal.test.queue.entity.TaskTable;
+import njgis.opengms.portal.test.queue.entity.SubmitedTask;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -8,10 +8,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @Author bin
  * @Date 2021/07/15
  */
-public interface TaskDao extends MongoRepository<TaskTable, String> {
-    TaskTable findByTaskId(String taskId);
+public interface SubmitedTaskDao extends MongoRepository<SubmitedTask, String> {
+    SubmitedTask findByTaskId(String taskId);
 
-    TaskTable findFirstByStatus(int status);
+    SubmitedTask findFirstByTaskId(String taskId);
+
+    SubmitedTask findFirstByStatus(int status);
 
     // TaskTable save(TaskTable task);
     //

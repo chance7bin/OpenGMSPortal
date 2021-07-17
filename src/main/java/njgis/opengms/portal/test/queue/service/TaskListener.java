@@ -1,15 +1,16 @@
 package njgis.opengms.portal.test.queue.service;
 
+import njgis.opengms.portal.test.queue.dao.RunTaskDao;
 import njgis.opengms.portal.test.queue.dao.ServerDao;
-import njgis.opengms.portal.test.queue.dao.TaskDao;
-import njgis.opengms.portal.test.queue.entity.ServerTable;
-import njgis.opengms.portal.test.queue.entity.TaskTable;
+import njgis.opengms.portal.test.queue.dao.SubmitedTaskDao;
+import njgis.opengms.portal.test.queue.entity.RunTask;
+import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.io.IOException;
 
 /**
  * @Description description
@@ -23,34 +24,37 @@ public class TaskListener{
     ServerListener serverListener;
 
     @Autowired
-    private TaskDao taskDao;
+    private SubmitedTaskDao submitedTaskDao;
 
     @Autowired
     private ServerDao serverDao;
+
+    @Autowired
+    private RunTaskDao runTaskDao;
 
     @Autowired
     private RunService runService;
 
     @PostConstruct
     @Async
-    public void taskListener(){
+    public void taskListener() throws IOException {
         System.out.println("[          Thread] -- TaskListener -- start ");
         // 实时请求，查看待运行任务
         while (true){
-            TaskTable execTask = taskDao.findFirstByStatus(0);
-            if (execTask != null){
+            RunTask runTask = runTaskDao.findFirstByStatus(0);
+            if (runTask != null){
                 // 查看空闲服务器
                 String runServerIp = serverListener.getIdleServer();
                 if (runServerIp != null){
                     // 执行任务队列里的第一个未执行任务
-                    ServerTable server = serverDao.findByIp(runServerIp);
+                    ServerInfo server = serverDao.findByIp(runServerIp);
                     String runServerPort = server.getPort();
-                    System.out.println("[          Task Running] -- taskId : " + execTask.getTaskId());
-                    execTask.setIp(runServerIp);
-                    execTask.setPort(runServerPort);
-                    execTask.setStatus(1);
-                    taskDao.save(execTask);
-                    runService.run(execTask);
+//                    runTask.setIp(runServerIp);
+//                    runTask.setPort(runServerPort);
+
+                    runService.run(runTask);
+                    runTask.setStatus(1);
+                    runTaskDao.save(runTask);
                 }
             }
             runService.runningListener();

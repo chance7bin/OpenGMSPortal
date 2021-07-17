@@ -1,16 +1,15 @@
 package njgis.opengms.portal.test.queue.controller;
 
-import njgis.opengms.portal.test.queue.entity.ServerTable;
+import com.alibaba.fastjson.JSONObject;
+import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import njgis.opengms.portal.test.queue.service.InvokeService;
 import njgis.opengms.portal.test.queue.service.ServerListener;
-import njgis.opengms.portal.utils.MyHttpUtils;
+import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -26,6 +25,9 @@ public class InvokeModelController {
 
     @Autowired
     private ServerListener serverListener;
+
+    @Autowired
+    private ForestInvoke forestInvoke;
 
     @GetMapping("/invoking")
     public String invoking(HttpServletResponse response){
@@ -45,10 +47,20 @@ public class InvokeModelController {
     }
 
     @GetMapping("/getServerInfo")
-    public List<ServerTable> getServerInfo(){
+    public List<ServerInfo> getServerInfo(){
         return serverListener.getServerInfo();
     }
 
+    @RequestMapping(value = "/checkTaskStatus", method = RequestMethod.GET)
+    public JsonResult checkTaskStatus(@RequestParam("taskId") String taskId){
+        return ResultUtils.success(invokeService.checkTaskStatus(taskId)) ;
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public JSONObject testStatus(){
+
+        return (JSONObject) forestInvoke.getMsrInfo("http://172.21.212.78:8060/modelserrun/json/","60ed4f80392ee3134c9d4c0b" );
+    }
 
     // @GetMapping("/thread")
     // public void thread() throws IOException, URISyntaxException {
