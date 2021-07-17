@@ -54,6 +54,7 @@ public class TaskListener{
                     runService.run(execTask);
                 }
             }
+            // 更新正在运行的模型任务
             runService.runningListener();
             try {
                 Thread.sleep(1000); //设置暂停的时间 1 秒
