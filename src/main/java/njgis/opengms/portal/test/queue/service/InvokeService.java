@@ -26,7 +26,7 @@ public class InvokeService {
     @Autowired
     private SubmitedTaskDao submitedTaskDao;
 
-    public void invoking(){
+    public void invoking() {
 
         // 创建任务记录
         SubmitedTask task = new SubmitedTask();

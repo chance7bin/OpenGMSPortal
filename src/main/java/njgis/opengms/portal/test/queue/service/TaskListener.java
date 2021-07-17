@@ -21,7 +21,7 @@ import java.io.IOException;
 public class TaskListener{
 
     @Autowired
-    ServerListener serverListener;
+    ServerService serverListener;
 
     @Autowired
     private SubmitedTaskDao submitedTaskDao;
@@ -35,7 +35,7 @@ public class TaskListener{
     @Autowired
     private RunService runService;
 
-    @PostConstruct
+    // @PostConstruct
     @Async
     public void taskListener() throws IOException {
         System.out.println("[          Thread] -- TaskListener -- start ");
@@ -49,8 +49,8 @@ public class TaskListener{
                     // 执行任务队列里的第一个未执行任务
                     ServerInfo server = serverDao.findByIp(runServerIp);
                     String runServerPort = server.getPort();
-//                    runTask.setIp(runServerIp);
-//                    runTask.setPort(runServerPort);
+                    runTask.setIp(runServerIp);
+                    runTask.setPort(runServerPort);
 
                     runService.run(runTask);
                     runTask.setStatus(1);

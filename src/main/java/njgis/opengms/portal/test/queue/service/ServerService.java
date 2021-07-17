@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2021/07/16
  */
 @Service
-public class ServerListener {
+public class ServerService {
 
     @Autowired
     private ServerDao serverDao;

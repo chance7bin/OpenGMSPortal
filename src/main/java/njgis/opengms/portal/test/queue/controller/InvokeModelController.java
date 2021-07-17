@@ -6,10 +6,13 @@ import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import njgis.opengms.portal.test.queue.service.InvokeService;
 import njgis.opengms.portal.test.queue.service.ServerListener;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.test.queue.service.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -24,15 +27,12 @@ public class InvokeModelController {
     private InvokeService invokeService;
 
     @Autowired
-    private ServerListener serverListener;
-
-    @Autowired
-    private ForestInvoke forestInvoke;
+    private ServerService serverListener;
 
     @GetMapping("/invoking")
     public String invoking(HttpServletResponse response){
 
-        System.out.println("[          Task invoking] -- taskId");
+        System.out.println("[          Task invoking]");
 
         invokeService.invoking();
         // for (int i = 0; i < 3; i++) {
@@ -56,11 +56,6 @@ public class InvokeModelController {
         return ResultUtils.success(invokeService.checkTaskStatus(taskId)) ;
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public JSONObject testStatus(){
-
-        return (JSONObject) forestInvoke.getMsrInfo("http://172.21.212.78:8060/modelserrun/json/","60ed4f80392ee3134c9d4c0b" );
-    }
 
     // @GetMapping("/thread")
     // public void thread() throws IOException, URISyntaxException {
