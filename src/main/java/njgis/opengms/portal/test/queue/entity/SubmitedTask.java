@@ -31,8 +31,6 @@ public class SubmitedTask extends PortalId {
     private Date runTime;
     // 模型状态 0:未运行 1:正在运行 2:运行完成 -1:运行失败
     private int status;
-    // private IOData inputData;
     private List<DataItem> inputData;
-    // private IOData outputData;
     private List<DataItem> outputData;
 }

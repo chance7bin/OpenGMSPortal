@@ -50,8 +50,8 @@ public class RunService {
         inputData.setInputdata(runTask.getInputData());
         String jsonString = JSON.toJSONString(inputData);
 
+        // 使用MyHttpUtils请求
         JSONObject param = JSONObject.parseObject(jsonString);
-
         String result = MyHttpUtils.POSTWithJSON(url,"UTF-8",null,param);
 
         Map msMap = forestInvoke.invokeRunMs(url,jsonString);
@@ -90,34 +90,34 @@ public class RunService {
 
     // 更新正在运行的模型任务
     public void runningListener(){
-        JSONObject msrInfo;
-        List<RunningTask> runningTasks = runningDao.findAll();
-        for (RunningTask runningTask : runningTasks) {
-            TaskTable execTask = taskDao.findByTaskId(runningTask.getTaskId());
-            if (execTask.getStatus() == 1){
-                String url = execTask.getIp() + ":" + execTask.getPort();
-                msrInfo = (JSONObject) invoke.getMsrInfo(url,runningTask.getMsrid()).get("data");
-                int msrStatus = (int) msrInfo.get("msr_status");
-                if (msrStatus == 0)
-                    break;
-                if (msrStatus == 1){
-                    // JSONObject转化为List
-                    List<DataItem> outputdata = JSONObject.parseArray(msrInfo.get("msr_output").toString(),DataItem.class) ;
-                    execTask.setOutputData(outputdata);
-                    execTask.setStatus(2);
-                    // 任务更新
-                    taskDao.save(execTask);
-                }
-                else if (msrStatus == -1){
-                    execTask.setStatus(-1);
-                    taskDao.save(execTask);
-                }
-
-                // 任务结束,更新服务器信息
-                serverListener.updateServerStatus(execTask.getIp());
-                System.out.println("[          Task Finished] -- taskId : " + execTask.getTaskId());
-            }
-        }
+        // JSONObject msrInfo;
+        // List<RunTask> RunTasks = runningDao.findAll();
+        // for (RunTask RunTask : RunTasks) {
+        //     TaskTable execTask = taskDao.findByTaskId(RunTask.getTaskId());
+        //     if (execTask.getStatus() == 1){
+        //         String url = execTask.getIp() + ":" + execTask.getPort();
+        //         msrInfo = (JSONObject) invoke.getMsrInfo(url,RunTask.getMsrid()).get("data");
+        //         int msrStatus = (int) msrInfo.get("msr_status");
+        //         if (msrStatus == 0)
+        //             break;
+        //         if (msrStatus == 1){
+        //             // JSONObject转化为List
+        //             List<DataItem> outputdata = JSONObject.parseArray(msrInfo.get("msr_output").toString(),DataItem.class) ;
+        //             execTask.setOutputData(outputdata);
+        //             execTask.setStatus(2);
+        //             // 任务更新
+        //             taskDao.save(execTask);
+        //         }
+        //         else if (msrStatus == -1){
+        //             execTask.setStatus(-1);
+        //             taskDao.save(execTask);
+        //         }
+        //
+        //         // 任务结束,更新服务器信息
+        //         serverListener.updateServerStatus(execTask.getIp());
+        //         System.out.println("[          Task Finished] -- taskId : " + execTask.getTaskId());
+        //     }
+        // }
 
 
     }

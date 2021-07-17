@@ -22,9 +22,6 @@ public class TaskDTO {
     private int status;
     private int queueNum;
 
-
-    // private IOData inputData;
     private List<DataItem> inputData;
-    // private IOData outputData;
     private List<DataItem> outputData;
 }

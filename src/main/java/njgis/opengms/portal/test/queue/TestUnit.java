@@ -1,9 +1,11 @@
 package njgis.opengms.portal.test.queue;
 
+import njgis.opengms.portal.test.queue.dao.QueueDao;
 import njgis.opengms.portal.test.queue.dao.ServerDao;
 import njgis.opengms.portal.test.queue.dao.SubmitedTaskDao;
 import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import njgis.opengms.portal.test.queue.entity.SubmitedTask;
+import njgis.opengms.portal.test.queue.entity.TaskQueue;
 import njgis.opengms.portal.test.queue.service.InvokeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +27,10 @@ import java.util.concurrent.Executors;
 public class TestUnit {
 
     @Autowired
-    private ServerDao serverDao;
+    ServerDao serverDao;
 
     @Autowired
-    private SubmitedTaskDao submitedTaskDao;
+    SubmitedTaskDao submitedTaskDao;
 
     // @Autowired
     // private InvokeService invokeService;
@@ -82,54 +84,14 @@ public class TestUnit {
         System.out.println(execTask);
     }
 
+    @Autowired
+    QueueDao queueDao;
+
     @Test
-    public void thread(){
-        ExecutorService service = Executors.newFixedThreadPool(10);
-        service.execute(new Thread1());
-        service.execute(new Thread2());
-        service.execute(new Thread3());
-        service.execute(new Thread4());
-        service.execute(new Thread5());
+    public void idTest(){
+        TaskQueue taskQueue = new TaskQueue();
+        taskQueue.setTaskId("12312312");
+        queueDao.save(taskQueue);
     }
 
-
-
 }
-
-class Thread1 implements Runnable{
-    InvokeService is = new InvokeService();
-    @Override
-    public void run() {
-        is.invoking();
-    }
-}
-class Thread2 implements Runnable{
-    InvokeService is = new InvokeService();
-    @Override
-    public void run() {
-        is.invoking();
-    }
-}
-class Thread3 implements Runnable{
-    InvokeService is = new InvokeService();
-    @Override
-    public void run() {
-        is.invoking();
-    }
-}
-class Thread4 implements Runnable{
-    InvokeService is = new InvokeService();
-    @Override
-    public void run() {
-        is.invoking();
-    }
-}
-class Thread5 implements Runnable{
-    InvokeService is = new InvokeService();
-    @Override
-    public void run() {
-        is.invoking();
-    }
-}
-
-

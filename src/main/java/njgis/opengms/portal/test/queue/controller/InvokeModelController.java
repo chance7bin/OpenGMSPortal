@@ -4,9 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.test.queue.entity.ServerInfo;
 import njgis.opengms.portal.test.queue.service.InvokeService;
-import njgis.opengms.portal.test.queue.service.ServerListener;
-import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.test.queue.service.ServerService;
+import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class InvokeModelController {
     private InvokeService invokeService;
 
     @Autowired
-    private ServerService serverListener;
+    private ServerService serverService;
 
     @GetMapping("/invoking")
     public String invoking(HttpServletResponse response){
@@ -48,7 +47,7 @@ public class InvokeModelController {
 
     @GetMapping("/getServerInfo")
     public List<ServerInfo> getServerInfo(){
-        return serverListener.getServerInfo();
+        return serverService.getServerInfo();
     }
 
     @RequestMapping(value = "/checkTaskStatus", method = RequestMethod.GET)

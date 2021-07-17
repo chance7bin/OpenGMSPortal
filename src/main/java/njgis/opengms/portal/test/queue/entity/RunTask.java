@@ -23,15 +23,13 @@ public class RunTask extends PortalId {
     private String msrid;
 
     private String md5;
-    private List<String> submitTasks = new ArrayList<>();//报错对应提交任务的id
+    private List<String> submitTasks = new ArrayList<>();//保存对应提交任务的id
 
     private String ip;
     private String port;
     private String mid;//模型容器中的模型对应id
 
-    // private IOData inputData;
     private List<DataItem> inputData;
-    // private IOData outputData;
     private List<DataItem> outputData;
 
     // 模型状态 0:未运行 1:正在运行 2:运行完成 -1:运行失败

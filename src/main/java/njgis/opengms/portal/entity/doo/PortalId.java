@@ -18,7 +18,8 @@ import javax.persistence.GenerationType;
 public class PortalId {
 
     @org.springframework.data.annotation.Id
-    // @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")     @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.component.CustomIDGenerator")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
+    @GenericGenerator(name = "custom-id", strategy = "njgis.opengms.portal.component.CustomIDGenerator")
     String id;
 
 }
