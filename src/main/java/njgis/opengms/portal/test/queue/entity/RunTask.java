@@ -14,16 +14,14 @@ import java.util.List;
  * @Author bin
  * @Date 2021/07/16
  */
-@Document
+@Document("RunTask")
 @Data
 public class RunTask extends PortalId {
 
     private String taskId;
 
-    private String msrid;
-
     private String md5;
-    private List<String> submitTasks = new ArrayList<>();//保存对应提交任务的id
+    private List<String> relatedTasks = new ArrayList<>();//保存对应提交任务的id
 
     private String ip;
     private String port;
@@ -32,6 +30,7 @@ public class RunTask extends PortalId {
     private List<DataItem> inputData;
     private List<DataItem> outputData;
 
+    private String msrid;
     // 模型状态 0:未运行 1:正在运行 2:运行完成 -1:运行失败
     private int status;
 }

@@ -23,6 +23,8 @@ public interface RunTaskDao extends MongoRepository<RunTask,String> {
 
     List<RunTask> findAllByMd5(String md5);
 
+    List<RunTask> findAllByMd5AndStatus(String md5, int status);
+
 
 
 }
