@@ -26,6 +26,7 @@ public class SubmitedTask extends PortalId {
     private String model;
     private String md5;
 
+    private String runTaskId;//保存对应的runtask id便于用户查询使用
     private int queueNum;
     // @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date runTime;

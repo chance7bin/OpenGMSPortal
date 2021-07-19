@@ -98,11 +98,16 @@ public class InvokeService {
 
                     relateTaskIds.add(submitedTask.getTaskId());
 
+                    //runtask的字段必须单独更新，否则可能出现并发覆盖之前的修改
                     Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
 
                     Update update = new Update();
                     update.set("relatedTasks",relateTaskIds);
                     mongoTemplate.updateFirst(query, update, RunTask.class);
+
+
+                    submitedTask.setRunTaskId(runTask.getTaskId());
+                    submitedTaskDao.save(submitedTask);
 
                     return;
                 }
@@ -116,6 +121,10 @@ public class InvokeService {
         runTask.setStatus(0);
         runTask.setInputData(submitedTask.getInputData());
         runTask.setOutputData(submitedTask.getOutputData());
+        runTaskDao.insert(runTask);
+
+        submitedTask.setRunTaskId(runTask.getTaskId());
+        submitedTaskDao.save(submitedTask);
 
         return;
 
