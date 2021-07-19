@@ -6,11 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.test.queue.controller.ForestInvoke;
 import njgis.opengms.portal.test.queue.dao.RunTaskDao;
 import njgis.opengms.portal.test.queue.dao.RunningDao;
-import njgis.opengms.portal.test.queue.dao.SubmitedTaskDao;
+import njgis.opengms.portal.test.queue.dao.SubmittedTaskDao;
 import njgis.opengms.portal.test.queue.entity.DataItem;
 import njgis.opengms.portal.test.queue.entity.IOData;
 import njgis.opengms.portal.test.queue.entity.RunTask;
-import njgis.opengms.portal.test.queue.entity.SubmitedTask;
+import njgis.opengms.portal.test.queue.entity.SubmittedTask;
 import njgis.opengms.portal.utils.MyHttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,7 +38,7 @@ public class RunService {
     private ForestInvoke forestInvoke;
 
     @Autowired
-    private SubmitedTaskDao submitedTaskDao;
+    private SubmittedTaskDao submittedTaskDao;
 
     @Autowired
     private ServerService serverListener;
@@ -69,10 +68,17 @@ public class RunService {
         Map msMap = forestInvoke.invokeRunMs(url,jsonString);
         String msrid = (String)msMap.get("data");
         System.out.println("[          runTaskId:msrid] -- " + runTask.getTaskId() + ":" + msrid);
-        // 存储模型运行信息到运行表中
+        // 更新submit表和run表
         runTask.setMsrid(msrid);
         runTask.setStatus(1);
         runningDao.save(runTask);
+        //更新关联task字段
+        List<String> relatedTasksIdList = runTask.getRelatedTasks();
+        for (String relatedTaskId : relatedTasksIdList) {
+            SubmittedTask submittedTask = submittedTaskDao.findByTaskId(relatedTaskId);
+            submittedTask.setStatus(1);
+            submittedTaskDao.save(submittedTask);
+        }
 
     }
 
@@ -86,72 +92,49 @@ public class RunService {
             String port = runTask.getPort();
             String msrid = runTask.getMsrid();
 
-            String url = "http://" + ip + ":" +"port" + "/modelserrun/json/" + msrid;
-            String j_result = MyHttpUtils.GET(url,"UTF-8", null);
+            // String url = "http://" + ip + ":" +port + "/modelserrun/json/" + msrid;
+            // String j_result = MyHttpUtils.GET(url,"UTF-8", null);
+            // JSONObject result = JSONObject.parseObject(j_result);
+            // JSONObject modelInfo = (JSONObject) result.getJSONObject("data");
 
-            JSONObject result = JSONObject.parseObject(j_result);
+            String url = ip + ":" + port;
+            JSONObject modelInfo = (JSONObject) forestInvoke.getMsrInfo(url,msrid).get("data");
 
-            int code = result.getInteger("code");
-
-            if(code==-1){
-//            runTask.setStatus(-1);
-            }else if(code==1){
-                JSONObject modelInfo = (JSONObject) result.getJSONObject("data");
-                if(modelInfo!=null){
-                    int status = modelInfo.getInteger("msr_status");
+            if(modelInfo!=null){
+                int status = modelInfo.getInteger("msr_status");
+                if (status != 0){
                     runTask.setStatus(status);
+                    int runStatus = 1;
+                    List<DataItem> outputs = null;
                     if(status==1){
-
                         JSONArray outputArray = modelInfo.getJSONArray("msr_output");
-                        List<DataItem> outputs = JSONObject.parseArray(outputArray.toString(),DataItem.class);
+                        outputs = JSONObject.parseArray(outputArray.toString(),DataItem.class);
                         runTask.setOutputData(outputs);
-
-                        //更新数据库单字段
-                        Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
-
-                        Update update = new Update();
-                        update.set("outputs",outputs);
-                        update.set("status",status);
-                        mongoTemplate.updateFirst(query, update, RunTask.class);
-
-                        //更新关联task字段
-                        List<String> relatedTasksIdList = runTask.getRelatedTasks();
-
-                        for(int i=0;i<relatedTasksIdList.size();i++){
-                            String relatedTaskId = relatedTasksIdList.get(i);
-
-                            SubmitedTask submitedTask = submitedTaskDao.findByTaskId(relatedTaskId);
-
-                            submitedTask.setStatus(2);
-                            submitedTask.setOutputData(outputs);
-
-                            submitedTaskDao.save(submitedTask);
-                        }
-
+                        runStatus = 2;
                     }else if(status == -1){
-                        //更新数据库单字段
-                        Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
-
-                        Update update = new Update();
-                        update.set("status",status);
-                        mongoTemplate.updateFirst(query, update, RunTask.class);
-
-                        //更新关联task字段
-                        List<String> relatedTasksIdList = runTask.getRelatedTasks();
-
-                        for(int i=0;i<relatedTasksIdList.size();i++){
-                            String relatedTaskId = relatedTasksIdList.get(i);
-
-                            SubmitedTask submitedTask = submitedTaskDao.findByTaskId(relatedTaskId);
-
-                            submitedTask.setStatus(2);
-
-                            submitedTaskDao.save(submitedTask);
-                        }
+                        runStatus = -1;
                     }
 
-                }
+                    //更新数据库单字段
+                    Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
+                    Update update = new Update();
+                    update.set("outputs",outputs);
+                    update.set("status",runStatus);
+                    mongoTemplate.updateFirst(query, update, RunTask.class);
 
+                    //更新关联task字段
+                    List<String> relatedTasksIdList = runTask.getRelatedTasks();
+                    for (String relatedTaskId : relatedTasksIdList) {
+                        SubmittedTask submittedTask = submittedTaskDao.findByTaskId(relatedTaskId);
+                        submittedTask.setStatus(runStatus);
+                        submittedTask.setOutputData(outputs);
+                        submittedTaskDao.save(submittedTask);
+                    }
+
+                    // 任务结束,更新服务器信息
+                    serverListener.updateServerStatus(runTask.getIp());
+                    System.out.println("[          Task Finished] -- taskId : " + runTask.getTaskId());
+                }
 
             }
         }

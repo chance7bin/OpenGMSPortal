@@ -2,11 +2,11 @@ package njgis.opengms.portal.test.queue.service;
 
 import njgis.opengms.portal.test.queue.controller.ForestInvoke;
 import njgis.opengms.portal.test.queue.dao.RunTaskDao;
-import njgis.opengms.portal.test.queue.dao.SubmitedTaskDao;
+import njgis.opengms.portal.test.queue.dao.SubmittedTaskDao;
 import njgis.opengms.portal.test.queue.dto.TaskDTO;
 import njgis.opengms.portal.test.queue.entity.DataItem;
 import njgis.opengms.portal.test.queue.entity.RunTask;
-import njgis.opengms.portal.test.queue.entity.SubmitedTask;
+import njgis.opengms.portal.test.queue.entity.SubmittedTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -32,7 +32,7 @@ public class InvokeService {
     private ForestInvoke invoke;
 
     @Autowired
-    private SubmitedTaskDao submitedTaskDao;
+    private SubmittedTaskDao submittedTaskDao;
 
 
     @Autowired
@@ -44,12 +44,13 @@ public class InvokeService {
     public void invoking() {
 
         // 创建任务记录
-        SubmitedTask task = new SubmitedTask();
+        SubmittedTask task = new SubmittedTask();
         task.setTaskId(UUID.randomUUID().toString());
         task.setTaskName("wordcloud");
         task.setUserId("localhost");
         task.setRunTime(new Date());
         task.setStatus(0);
+        task.setMd5("818daf6969e1d7472739677b81f3bd98");
         // 设置模型输入参数
         List<DataItem> inputdata = new ArrayList<>();
         DataItem inputdata1 = new DataItem();
@@ -66,7 +67,8 @@ public class InvokeService {
         inputdata.add(inputdata2);
         task.setInputData(inputdata);
         // 把该任务加入到任务队列
-        submitedTaskDao.insert(task);
+        submittedTaskDao.insert(task);
+        mergeTask(task);
 
 //       while (true){
 //           TaskTable taskFinished = taskDao.findByTaskId(task.getTaskId());
@@ -83,20 +85,20 @@ public class InvokeService {
 
     }
 
-    public void mergeTask(SubmitedTask submitedTask){//如有参数相同的提交任务，合并到同一个执行任务，没有则新建一个
+    public void mergeTask(SubmittedTask submittedTask){//如有参数相同的提交任务，合并到同一个执行任务，没有则新建一个
 
-        String md5 = submitedTask.getMd5();
+        String md5 = submittedTask.getMd5();
 
         List<RunTask> runTaskList = runTaskDao.findAllByMd5AndStatus(md5,0);
 
         if(runTaskList.size()!=0){
             for(RunTask runTask:runTaskList){
-                if(compareTask(submitedTask,runTask)==0){
+                if(compareTask(submittedTask,runTask)==0){
                     continue;
                 }else {
                     List<String> relateTaskIds = runTask.getRelatedTasks();
 
-                    relateTaskIds.add(submitedTask.getTaskId());
+                    relateTaskIds.add(submittedTask.getTaskId());
 
                     //runtask的字段必须单独更新，否则可能出现并发覆盖之前的修改
                     Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
@@ -106,8 +108,8 @@ public class InvokeService {
                     mongoTemplate.updateFirst(query, update, RunTask.class);
 
 
-                    submitedTask.setRunTaskId(runTask.getTaskId());
-                    submitedTaskDao.save(submitedTask);
+                    submittedTask.setRunTaskId(runTask.getTaskId());
+                    submittedTaskDao.save(submittedTask);
 
                     return;
                 }
@@ -117,20 +119,23 @@ public class InvokeService {
         //如果没有相同的，则新建
         RunTask runTask = new RunTask();
         runTask.setTaskId(UUID.randomUUID().toString());
-        runTask.setMd5(submitedTask.getMd5());
+        runTask.setMd5(submittedTask.getMd5());
         runTask.setStatus(0);
-        runTask.setInputData(submitedTask.getInputData());
-        runTask.setOutputData(submitedTask.getOutputData());
+        runTask.setInputData(submittedTask.getInputData());
+        runTask.setOutputData(submittedTask.getOutputData());
+        // runTask与SubmittedTask进行关联
+        runTask.getRelatedTasks().add(submittedTask.getTaskId());
         runTaskDao.insert(runTask);
 
-        submitedTask.setRunTaskId(runTask.getTaskId());
-        submitedTaskDao.save(submitedTask);
+
+        submittedTask.setRunTaskId(runTask.getTaskId());
+        submittedTaskDao.save(submittedTask);
 
         return;
 
     }
 
-    public int compareTask(SubmitedTask submitedTask,RunTask runTask){
+    public int compareTask(SubmittedTask submittedTask, RunTask runTask){
         List<DataItem> runInputs = runTask.getInputData();
 
         int flag = 0;
@@ -140,7 +145,7 @@ public class InvokeService {
             String runEvent = runInput.getEvent();
             String runData = runInput.getDataId();
 
-            List<DataItem> submitInputs = submitedTask.getInputData();
+            List<DataItem> submitInputs = submittedTask.getInputData();
             for(DataItem submitInput:submitInputs){
                 if(runStateId.equals(submitInput.getStateId())
                         &&runEvent.equals(submitInput.getEvent())
@@ -167,8 +172,8 @@ public class InvokeService {
     }
 
     public TaskDTO checkTaskStatus(String taskId){
-        SubmitedTask submitedTask = submitedTaskDao.findFirstByTaskId(taskId);
-        int status = submitedTask.getStatus();
+        SubmittedTask submittedTask = submittedTaskDao.findFirstByTaskId(taskId);
+        int status = submittedTask.getStatus();
 
         TaskDTO taskDTO = new TaskDTO();
 
@@ -176,10 +181,10 @@ public class InvokeService {
         taskDTO.setTaskId(taskId);
         //TODO status=1的时候返回什么
         if(status==0){
-            taskDTO.setQueueNum(submitedTask.getQueueNum());
+            taskDTO.setQueueNum(submittedTask.getQueueNum());
         }else if(status==2){
-            taskDTO.setInputData(submitedTask.getInputData());
-            taskDTO.setOutputData(submitedTask.getOutputData());
+            taskDTO.setInputData(submittedTask.getInputData());
+            taskDTO.setOutputData(submittedTask.getOutputData());
         }
 
         return taskDTO;

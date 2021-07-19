@@ -17,7 +17,7 @@ import java.util.List;
 @Document
 @Data
 // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-public class SubmitedTask extends PortalId {
+public class SubmittedTask extends PortalId {
 
     private String taskId;
     private String taskName;

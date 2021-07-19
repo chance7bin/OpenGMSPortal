@@ -1,22 +1,24 @@
 package njgis.opengms.portal.test.queue;
 
+import com.mongodb.client.result.UpdateResult;
 import njgis.opengms.portal.test.queue.dao.QueueDao;
 import njgis.opengms.portal.test.queue.dao.ServerDao;
-import njgis.opengms.portal.test.queue.dao.SubmitedTaskDao;
+import njgis.opengms.portal.test.queue.dao.SubmittedTaskDao;
 import njgis.opengms.portal.test.queue.entity.ServerInfo;
-import njgis.opengms.portal.test.queue.entity.SubmitedTask;
+import njgis.opengms.portal.test.queue.entity.SubmittedTask;
 import njgis.opengms.portal.test.queue.entity.TaskQueue;
-import njgis.opengms.portal.test.queue.service.InvokeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @Description description
@@ -31,10 +33,13 @@ public class TestUnit {
     ServerDao serverDao;
 
     @Autowired
-    SubmitedTaskDao submitedTaskDao;
+    SubmittedTaskDao submittedTaskDao;
 
     // @Autowired
     // private InvokeService invokeService;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     @Test
     public void queryTest(){
@@ -50,7 +55,7 @@ public class TestUnit {
     @Test
     public void taskTest(){
 
-        SubmitedTask taskFinished = (SubmitedTask) submitedTaskDao.findByTaskId("d80e2a53-23fd-4d9a-b857-fa0fabcfe409");
+        SubmittedTask taskFinished = (SubmittedTask) submittedTaskDao.findByTaskId("d80e2a53-23fd-4d9a-b857-fa0fabcfe409");
         String taskId = taskFinished.getTaskId();
         System.out.println(taskFinished);
         System.out.println(taskId);
@@ -81,7 +86,7 @@ public class TestUnit {
 
     @Test
     public void queryTask(){
-        SubmitedTask execTask = submitedTaskDao.findFirstByStatus(0);
+        SubmittedTask execTask = submittedTaskDao.findFirstByStatus(0);
         System.out.println(execTask);
     }
 
@@ -95,6 +100,15 @@ public class TestUnit {
         all.get(0).setName("bin");
         // taskQueue.setTaskId("12312312");
         queueDao.save( all.get(0));
+    }
+
+    @Test
+    public void mongoTemplateTest(){
+        Query query = Query.query(Criteria.where("taskId").is("12312312"));
+        Update update = new Update();
+        update.set("taskId","33331212");
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, TaskQueue.class);
+        System.out.println(updateResult);
     }
 
 }
