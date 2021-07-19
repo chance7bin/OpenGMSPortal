@@ -15,6 +15,8 @@ import java.util.List;
 public interface RunTaskDao extends MongoRepository<RunTask,String> {
     RunTask findFirstById(String id);
 
+    RunTask findFirstByTaskId(String taskId);
+
     RunTask findFirstByMsrid(String msrid);
 
     RunTask findFirstByStatus(int status);
