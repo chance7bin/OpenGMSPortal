@@ -51,11 +51,13 @@ public class RunService {
         String jsonString = JSON.toJSONString(inputData);
 
         // 使用MyHttpUtils请求
-        JSONObject param = JSONObject.parseObject(jsonString);
-        String result = MyHttpUtils.POSTWithJSON(url,"UTF-8",null,param);
+        // JSONObject param = JSONObject.parseObject(jsonString);
+        // String result = MyHttpUtils.POSTWithJSON(url,"UTF-8",null,param);
 
+        // 使用forest请求
         Map msMap = forestInvoke.invokeRunMs(url,jsonString);
         String msrid = (String)msMap.get("data");
+        System.out.println("[          runTaskId:msrid] -- " + runTask.getTaskId() + ":" + msrid);
         // 存储模型运行信息到运行表中
         runTask.setMsrid(msrid);
         runTask.setStatus(1);
@@ -63,6 +65,7 @@ public class RunService {
 
     }
 
+    // 从模型服务容器中检查任务信息
     public RunTask checkTaskFromMSC(RunTask runTask) throws IOException, URISyntaxException {
         String ip = runTask.getIp();
         String port = runTask.getPort();

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -89,9 +90,11 @@ public class TestUnit {
 
     @Test
     public void idTest(){
-        TaskQueue taskQueue = new TaskQueue();
-        taskQueue.setTaskId("12312312");
-        queueDao.save(taskQueue);
+        // TaskQueue taskQueue = new TaskQueue();
+        List<TaskQueue> all = queueDao.findAll();
+        all.get(0).setName("bin");
+        // taskQueue.setTaskId("12312312");
+        queueDao.save( all.get(0));
     }
 
 }

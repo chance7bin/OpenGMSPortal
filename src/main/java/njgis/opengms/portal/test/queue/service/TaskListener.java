@@ -53,7 +53,7 @@ public class TaskListener{
                     runTask.setPort(runServerPort);
 
                     runService.run(runTask);
-                    runTask.setStatus(1);
+                    // runTask.setStatus(1);
                     runTaskDao.save(runTask);
                 }
             }

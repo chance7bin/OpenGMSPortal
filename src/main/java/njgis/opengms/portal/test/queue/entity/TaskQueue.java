@@ -13,4 +13,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class TaskQueue extends PortalId {
     private String taskId;
+    private String name;
 }

@@ -128,7 +128,7 @@ public class InvokeService {
         for(DataItem runInput:runInputs){
             flag = 0;
             String runStateId = runInput.getStateId();
-            String runEvent = runInput.getStateId();
+            String runEvent = runInput.getEvent();
             String runData = runInput.getDataId();
 
             List<DataItem> submitInputs = submitedTask.getInputData();
@@ -137,7 +137,8 @@ public class InvokeService {
                         &&runEvent.equals(submitInput.getEvent())
 
                 ){
-                   if( runData.equals(submitInput.getEvent())){
+                    // 判断提交的数据dataId是否与默认的几个选项的dataId相同
+                   if( runData.equals(submitInput.getDataId())){
                        flag = 1;
                        break;
                    }else {
@@ -164,6 +165,7 @@ public class InvokeService {
 
         taskDTO.setStatus(0);
         taskDTO.setTaskId(taskId);
+        //TODO status=1的时候返回什么
         if(status==0){
             taskDTO.setQueueNum(submitedTask.getQueueNum());
         }else if(status==2){
