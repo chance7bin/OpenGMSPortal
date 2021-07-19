@@ -45,7 +45,7 @@ public class RunService {
     // 调用模型服务容器接口
     public void run(RunTask runTask) throws IOException {
         // TODO 做try-catch处理，可能请求模型容器接口出错
-        String url = runTask.getIp() + ":" + runTask.getPort() + "/modelser";
+        String url = runTask.getIp() + ":" + runTask.getPort();
         IOData inputData = new IOData();
         inputData.setInputdata(runTask.getInputData());
         String jsonString = JSON.toJSONString(inputData);
