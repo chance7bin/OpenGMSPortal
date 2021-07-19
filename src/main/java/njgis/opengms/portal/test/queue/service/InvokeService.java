@@ -112,6 +112,7 @@ public class InvokeService {
         //如果没有相同的，则新建
         RunTask runTask = new RunTask();
         runTask.setTaskId(UUID.randomUUID().toString());
+        runTask.setMd5(submitedTask.getMd5());
         runTask.setStatus(0);
         runTask.setInputData(submitedTask.getInputData());
         runTask.setOutputData(submitedTask.getOutputData());

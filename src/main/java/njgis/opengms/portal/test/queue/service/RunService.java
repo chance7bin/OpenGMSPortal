@@ -66,25 +66,33 @@ public class RunService {
     public RunTask checkTaskFromMSC(RunTask runTask) throws IOException, URISyntaxException {
         String ip = runTask.getIp();
         String port = runTask.getPort();
-        String mid = runTask.getMid();
+        String msrid = runTask.getMsrid();
 
-        String url = "http://" + ip + ":" +"port" + "/modelserrun/json/" + mid;
+        String url = "http://" + ip + ":" +"port" + "/modelserrun/json/" + msrid;
         String j_result = MyHttpUtils.GET(url,"UTF-8", null);
 
         JSONObject result = JSONObject.parseObject(j_result);
 
         int code = result.getInteger("code");
+
         if(code==-1){
-            runTask.setStatus(-1);
+//            runTask.setStatus(-1);
         }else if(code==1){
             JSONObject modelInfo = (JSONObject) result.getJSONObject("data");
-            JSONArray outputArray = modelInfo.getJSONArray("msr_output");
-            List<DataItem> outputs = JSONObject.parseArray(outputArray.toString(),DataItem.class);
-            runTask.setOutputData(outputs);
-        }else{
-            runTask.setStatus(0);
-        }
+            if(modelInfo!=null){
+                int status = modelInfo.getInteger("ms_status");
+                runTask.setStatus(status);
+                if(status==1){
 
+                    JSONArray outputArray = modelInfo.getJSONArray("msr_output");
+                    List<DataItem> outputs = JSONObject.parseArray(outputArray.toString(),DataItem.class);
+                    runTask.setOutputData(outputs);
+                }
+
+            }
+
+
+        }
         return runTask;
     }
 
