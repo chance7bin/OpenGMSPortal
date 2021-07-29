@@ -71,7 +71,16 @@ public class RunService {
         // 更新submit表和run表
         runTask.setMsrid(msrid);
         runTask.setStatus(1);
-        runningDao.save(runTask);
+
+        Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
+        Update update = new Update();
+        update.set("ip",runTask.getIp());
+        update.set("port",runTask.getPort());
+        update.set("msrid",runTask.getMsrid());
+        update.set("status",runTask.getStatus());
+        mongoTemplate.updateFirst(query, update, RunTask.class);
+        // runningDao.save(runTask);
+
         //更新关联task字段
         List<String> relatedTasksIdList = runTask.getRelatedTasks();
         for (String relatedTaskId : relatedTasksIdList) {

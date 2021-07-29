@@ -55,7 +55,7 @@ public class TaskListener{
 
                     runService.run(runTask);
                     // runTask.setStatus(1);
-                    runTaskDao.save(runTask);
+                    // runTaskDao.save(runTask);
                 }
             }
             // 更新正在运行的模型任务

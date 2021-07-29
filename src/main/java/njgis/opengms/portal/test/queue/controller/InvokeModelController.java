@@ -29,20 +29,27 @@ public class InvokeModelController {
     private ServerService serverService;
 
     @GetMapping("/invoking")
-    public String invoking(HttpServletResponse response){
+    public void invoking(HttpServletResponse response){
 
         System.out.println("[          Task invoking]");
 
-        invokeService.invoking();
-        // for (int i = 0; i < 3; i++) {
-        //     invokeService.invoking(i);
-        // }
+        // invokeService.invoking();
+        for (int j = 0; j < 50; j++) {
+            for (int i = 0; i < 10; i++) {
+                invokeService.invoking();
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         //        try {
 //            response.sendRedirect("http://localhost:8060/geodata/" + gdid);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        return "finished";
+//         return "finished";
     }
 
     @GetMapping("/getServerInfo")

@@ -102,7 +102,6 @@ public class InvokeService {
 
                     //runtask的字段必须单独更新，否则可能出现并发覆盖之前的修改
                     Query query = Query.query(Criteria.where("taskId").is(runTask.getTaskId()));
-
                     Update update = new Update();
                     update.set("relatedTasks",relateTaskIds);
                     mongoTemplate.updateFirst(query, update, RunTask.class);
@@ -137,6 +136,7 @@ public class InvokeService {
 
     public int compareTask(SubmittedTask submittedTask, RunTask runTask){
         List<DataItem> runInputs = runTask.getInputData();
+        List<DataItem> submitInputs = submittedTask.getInputData();
 
         int flag = 0;
         for(DataItem runInput:runInputs){
@@ -144,12 +144,9 @@ public class InvokeService {
             String runStateId = runInput.getStateId();
             String runEvent = runInput.getEvent();
             String runData = runInput.getDataId();
-
-            List<DataItem> submitInputs = submittedTask.getInputData();
             for(DataItem submitInput:submitInputs){
                 if(runStateId.equals(submitInput.getStateId())
                         &&runEvent.equals(submitInput.getEvent())
-
                 ){
                     // 判断提交的数据dataId是否与默认的几个选项的dataId相同
                    if( runData.equals(submitInput.getDataId())){
