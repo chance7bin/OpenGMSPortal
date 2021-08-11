@@ -28,12 +28,15 @@ import java.util.List;
 public class DataItem extends PortalItem {
 
     String url;//reference 若dataType为Url，则需填写该字段
-    String classifications;
+    List<String> classifications;  //数据目录分类
     List<String> imageList;//displays 以图片的形式展示数据内容
     List<DataMeta> dataList; //若dataType为File, 则添加上传至数据容器的文件元数据
     String dataType; //Url File
     List<String> relatedModels;
 
+
     //数据条目原author存的是用户编号，需要改成email
+
+    List<InvokeService> invokeServices; //绑定本用户数据容器节点数据 （做数据就地共享） 这个只在dataApplication中有
 
 }
