@@ -13,6 +13,7 @@ import njgis.opengms.portal.entity.po.DataItem;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.bson.json.JsonObject;
@@ -244,7 +245,8 @@ public class UserService {
             JSONObject result = new JSONObject();
             result.put("email",j_userShuttleDTO.getString("email"));
             result.put("name",j_userShuttleDTO.getString("name"));
-            result.put("role",user.getUserRole().getRole());
+            // role暂时没有，先注释调
+            // result.put("role",user.getUserRole().getRole());
 
             return j_userShuttleDTO;
         }catch (Exception e){
@@ -280,6 +282,7 @@ public class UserService {
             MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
             httpHeaders.setContentType(mediaType);
             httpHeaders.add("Authorization","Bearer " + token);
+            httpHeaders.set("user-agent","portal_backend");
 
             HttpEntity<Object> httpEntity = new HttpEntity<>(updateInfo.toString(), httpHeaders);
             ResponseEntity<JSONObject> registerResult = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
@@ -403,7 +406,7 @@ public class UserService {
                 j_userInfo = jsonObject.getJSONObject("data");
                 String avatar = j_userInfo.getString("avatar");
                 if(avatar!=null){
-                    avatar = "http://" + userServer + "/userServer" + avatar;
+                    avatar = "http://" + userServer + avatar;
                 }
                 j_userInfo.put("avatar",avatar);
             }else{
@@ -527,6 +530,44 @@ public class UserService {
         // userJson.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
         userJson.put("image", userInfo.getString("avatar"));
         return userJson;
+    }
+
+    public User getByEmail(String email) {
+        try {
+            return userDao.findFirstByEmail(email);
+        } catch (Exception e) {
+            System.out.println("有人乱查数据库！！该UID不存在User对象");
+            throw new MyException(ResultEnum.NO_OBJECT);
+        }
+    }
+
+    public String getAvatarFromUserServer(String email){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("user-agent","portal_backend");
+        //httpEntity = httpHeader + httpBody,当然也可以只有其中一部分
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        String resUserUri = "http://" + userServer + "/user/getAvatar/" + email;
+        //Url, RequestType, RequestContent, ResponseDataType
+
+        try{
+
+            RestTemplate restTemplate = new RestTemplate();
+
+
+            ResponseEntity<JSONObject> userJson = restTemplate.exchange(resUserUri, HttpMethod.GET, httpEntity, JSONObject.class);
+            JSONObject result = userJson.getBody();
+            int code = result.getInteger("code");
+            if(code == -1){
+                return "/static/img/icon/default.png";
+            }else {
+                // return  "https://" + userServer + result.getString("msg");
+                return  "/userServer" + result.getString("msg");
+            }
+
+        }catch (Exception e){
+            System.out.println("Exception: " + e.toString());
+            return "/static/img/icon/default.png";
+        }
     }
 
 

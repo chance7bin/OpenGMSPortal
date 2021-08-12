@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import springfox.documentation.service.ApiListing;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,6 +37,12 @@ public class UserRestController {
 
     @Autowired
     UserService userService;
+
+    @RequestMapping("/test")
+    public String test(){
+        System.out.println("test controller");
+        return "test";
+    }
 
     /**
      * @Description 用户登录
@@ -63,8 +70,8 @@ public class UserRestController {
             // 密码验证成功，将用户数据放入到Session中
             String email = result.getString("email");
             String name = result.getString("name");
-            String role = result.getString("role");
-            userService.setUserSession(request, email, name, role);
+            // String role = result.getString("role");
+            userService.setUserSession(request, email, name, null);
 
 //            WebSocketTest webSocketTest = new WebSocketTest(); //发送websocket信息
 //            webSocketTest.sendMessageToAll("user change");
@@ -73,6 +80,9 @@ public class UserRestController {
             jsonObject.put("email", email);
             jsonObject.put("name", name);
 
+
+
+            // return ResultUtils.success(jsonObject);
             return ResultUtils.success(jsonObject);
         }
 
