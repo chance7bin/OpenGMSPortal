@@ -23,13 +23,13 @@ public class ModelItemRelate {
 
     List<String> data = new ArrayList<>();
 
+    List<String> dataItems = new ArrayList<>();  //原relatedData
     List<ModelRelation> modelRelationList = new ArrayList<>();
 
     List<String> modelItems = new ArrayList<>();
     List<String> conceptualModels = new ArrayList<>();
     List<String> logicalModels = new ArrayList<>();
     List<String> computableModels = new ArrayList<>();
-    List<String> dataItems = new ArrayList<>();
 
     List<String> concepts = new ArrayList<>();
     List<String> spatialReferences = new ArrayList<>();

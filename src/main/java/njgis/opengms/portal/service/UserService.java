@@ -4,11 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.xml.bind.v2.TODO;
 import njgis.opengms.portal.dao.UserDao;
+import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
 import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
+import njgis.opengms.portal.entity.po.DataItem;
+import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.bson.json.JsonObject;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -141,15 +147,15 @@ public class UserService {
             case DataMethod:
                 resourceCount.setDataMethod(resourceCount.getDataMethod()+number);
                 break;
-            case Article:
-                resourceCount.setArticle(resourceCount.getArticle()+number);
-                break;
-            case Project:
-                resourceCount.setProject(resourceCount.getProject()+number);
-                break;
-            case Conference:
-                resourceCount.setConference(resourceCount.getConference()+number);
-                break;
+            // case Article:
+            //     resourceCount.setArticle(resourceCount.getArticle()+number);
+            //     break;
+            // case Project:
+            //     resourceCount.setProject(resourceCount.getProject()+number);
+            //     break;
+            // case Conference:
+            //     resourceCount.setConference(resourceCount.getConference()+number);
+            //     break;
         }
         return resourceCount;
     }
@@ -239,7 +245,8 @@ public class UserService {
             JSONObject result = new JSONObject();
             result.put("email",j_userShuttleDTO.getString("email"));
             result.put("name",j_userShuttleDTO.getString("name"));
-            result.put("role",user.getUserRole().getRole());
+            // role暂时没有，先注释调
+            // result.put("role",user.getUserRole().getRole());
 
             return j_userShuttleDTO;
         }catch (Exception e){
@@ -275,6 +282,7 @@ public class UserService {
             MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
             httpHeaders.setContentType(mediaType);
             httpHeaders.add("Authorization","Bearer " + token);
+            httpHeaders.set("user-agent","portal_backend");
 
             HttpEntity<Object> httpEntity = new HttpEntity<>(updateInfo.toString(), httpHeaders);
             ResponseEntity<JSONObject> registerResult = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
@@ -398,7 +406,7 @@ public class UserService {
                 j_userInfo = jsonObject.getJSONObject("data");
                 String avatar = j_userInfo.getString("avatar");
                 if(avatar!=null){
-                    avatar = "http://" + userServer + "/userServer" + avatar;
+                    avatar = "http://" + userServer + avatar;
                 }
                 j_userInfo.put("avatar",avatar);
             }else{
@@ -419,37 +427,31 @@ public class UserService {
      * @Author kx
      * @Date 2021/7/6
      **/
-    public JSONObject getInfoFromUserServer(String email) throws Exception {
-        User user = userDao.findFirstByEmail(email);
+    public JSONObject getInfoFromUserServer(String email){
         JSONObject jsonObject = new JSONObject();
-        if(user!=null){
-            String token = tokenService.checkToken(email);
-            if(token.equals("out")){
-                jsonObject.put("msg","out");
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String userInfoUrl = "http://" + userServer + "/user/" + email + "/" + userServerCilent + "/" + userServerCilentPWD;
+            HttpHeaders headers = new HttpHeaders();
+            MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
+            headers.setContentType(mediaType);
+            headers.set("user-agent", "portal_backend");
+            HttpEntity httpEntity = new HttpEntity(headers);
+            ResponseEntity<JSONObject> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, httpEntity, JSONObject.class);
+            JSONObject userInfo = response.getBody().getJSONObject("data");
+
+            String avatar = userInfo.getString("avatar");
+            if(avatar!=null){
+                avatar = "/userServer" + avatar;
             }
-            jsonObject = tokenService.getUserFromResServer(token);
-            JSONObject j_userInfo = new JSONObject();
-            if(jsonObject!=null){
-
-                j_userInfo = jsonObject.getJSONObject("data");
-                String avatar = j_userInfo.getString("avatar");
-                if(avatar!=null){
-                    avatar = "http://" + userServer + "/userServer" + avatar;
-                }
-                j_userInfo.put("avatar",avatar);
-                jsonObject = null;
-                j_userInfo.put("msg","suc");
-            }else{
-                j_userInfo.put("msg","err");
-            }
-
-
-            return j_userInfo;
-
-        }else{
+            userInfo.put("avatar",avatar);
+            userInfo.put("msg","suc");
+            return userInfo;
+        }catch(Exception e){
+            System.out.println(e.fillInStackTrace());
             jsonObject.put("msg","no user");
         }
-
         return jsonObject;
     }
 
@@ -515,4 +517,58 @@ public class UserService {
 
         return j_result;
     }
+
+
+    public JSONObject getItemUserInfoByEmail(String email) {
+        User user = userDao.findFirstByEmail(email);
+        JSONObject userInfo = getInfoFromUserServer(user.getEmail());
+        JSONObject userJson = new JSONObject();
+        userJson.put("name", userInfo.getString("name"));
+        // userJson.put("oid", user.getOid());
+        userJson.put("email", user.getEmail());
+        userJson.put("accessId", user.getAccessId());
+        // userJson.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
+        userJson.put("image", userInfo.getString("avatar"));
+        return userJson;
+    }
+
+    public User getByEmail(String email) {
+        try {
+            return userDao.findFirstByEmail(email);
+        } catch (Exception e) {
+            System.out.println("有人乱查数据库！！该UID不存在User对象");
+            throw new MyException(ResultEnum.NO_OBJECT);
+        }
+    }
+
+    public String getAvatarFromUserServer(String email){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("user-agent","portal_backend");
+        //httpEntity = httpHeader + httpBody,当然也可以只有其中一部分
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        String resUserUri = "http://" + userServer + "/user/getAvatar/" + email;
+        //Url, RequestType, RequestContent, ResponseDataType
+
+        try{
+
+            RestTemplate restTemplate = new RestTemplate();
+
+
+            ResponseEntity<JSONObject> userJson = restTemplate.exchange(resUserUri, HttpMethod.GET, httpEntity, JSONObject.class);
+            JSONObject result = userJson.getBody();
+            int code = result.getInteger("code");
+            if(code == -1){
+                return "/static/img/icon/default.png";
+            }else {
+                // return  "https://" + userServer + result.getString("msg");
+                return  "/userServer" + result.getString("msg");
+            }
+
+        }catch (Exception e){
+            System.out.println("Exception: " + e.toString());
+            return "/static/img/icon/default.png";
+        }
+    }
+
+
 }

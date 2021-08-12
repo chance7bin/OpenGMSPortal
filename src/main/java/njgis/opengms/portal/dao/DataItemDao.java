@@ -15,4 +15,8 @@ public interface DataItemDao extends MongoRepository<DataItem,String> {
 
     DataItem findFirstById(String id);
 
+    DataItem findFirstByAuthor(String author);
+
+    DataItem findFirstByName(String name);
+
 }

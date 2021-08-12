@@ -20,9 +20,9 @@ import java.util.Date;
 @Document
 public class TokenInfo {
 
-    String token;
-    String expire;
-    String refreshToken;
-    Date expiryTime;
+    String token;   //请求用户资源的令牌
+    String expire;   //有效时间:7200(s)
+    String refreshToken;  //刷新令牌的令牌
+    Date expiryTime;  //失效时间 Date类型
 
 }

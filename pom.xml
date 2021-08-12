@@ -101,11 +101,6 @@
             <artifactId>jquery</artifactId>
             <version>3.3.1</version>
         </dependency>
-        <!--spring security-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
 
 
         <!--json类库-->
@@ -155,11 +150,14 @@
             <version>4.5.5</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+        </dependency>
+<!--        <dependency>
             <groupId>com.dtflys.forest</groupId>
             <artifactId>forest-spring-boot-starter</artifactId>
             <version>1.5.2-BETA</version>
-        </dependency>
-
+        </dependency>-->
 
     </dependencies>
 

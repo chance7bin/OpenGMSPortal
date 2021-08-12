@@ -25,7 +25,7 @@ public class UserResourceCount {
     int unit;
     int theme;
 
-    int article;
-    int project;
-    int conference;
+    // int article;
+    // int project;
+    // int conference;
 }
