@@ -21,12 +21,12 @@ public class DataMethod extends DataItem{
     String contentType;
 
     Boolean isAuthor;
-    String applicationType;//区分process与visual
+    // String applicationType; //区分process与visual 数据库中没有该字段
 
     // List<InvokeService> invokeServices; 在DataItem已经设置了
     boolean invokable;//是否绑定了invokeService
 
-    String method; // Conversion Processing Visualization
+    String method; // 保留该字段 Conversion Processing Visualization
 
     List<TestData> testData;//存储testData的id
     String testDataPath;

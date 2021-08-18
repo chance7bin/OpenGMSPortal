@@ -169,4 +169,16 @@ public class Utils {
         return false;
     }
 
+
+    /**
+     * @Description 打印代码所在行数()
+     * 使用方法: 在类上标上注解@Slf4j
+     * log.info("[定时任务第 " + counts.incrementAndGet() + "次执行]" + Utils.getLineNumber());
+     * @Author bin
+     * @return java.lang.String
+     **/
+    public static String getLineNumber(){
+        return " --- lineNumber:" + Thread.currentThread().getStackTrace()[1].getLineNumber();
+    }
+
 }

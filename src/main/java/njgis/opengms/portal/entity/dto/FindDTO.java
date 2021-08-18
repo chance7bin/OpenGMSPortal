@@ -17,6 +17,9 @@ public class FindDTO implements Serializable {
     private Integer pageSize = 10; //每页数量
     private Boolean asc = false; //是否顺序，从小到大
     private String searchText; //查询内容
+    private String categoryName; //目录分类
+    private String curQueryField; //属性分类
+    private String sortField; //排序字段
 
 
 }

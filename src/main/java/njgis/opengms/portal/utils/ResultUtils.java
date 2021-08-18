@@ -23,6 +23,9 @@ public class ResultUtils {
         return jsonResult;
     }
 
+    public static JsonResult error() {
+        return error(ResultEnum.ERROR.getCode(),ResultEnum.ERROR.getMsg());
+    }
 
     public static JsonResult error(Integer code, String msg) {
         JsonResult jsonResult = new JsonResult();

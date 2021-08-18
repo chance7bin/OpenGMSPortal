@@ -2,31 +2,25 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.bind.v2.TODO;
-import njgis.opengms.portal.dao.DataItemDao;
-import njgis.opengms.portal.dao.ModelItemDao;
-import njgis.opengms.portal.dao.UserDao;
-import njgis.opengms.portal.entity.doo.AuthorInfo;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
-import njgis.opengms.portal.entity.doo.Localization;
-import njgis.opengms.portal.entity.doo.MyException;
+import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
-import njgis.opengms.portal.entity.po.DataItem;
-import njgis.opengms.portal.entity.po.ModelItem;
-import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description
@@ -48,67 +42,42 @@ public class DataItemService {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    DataCategorysDao dataCategorysDao;
+
+    @Autowired
+    DataHubDao dataHubDao;
+
+    @Autowired
+    DataMethodDao dataMethodDao;
+
+    // private GenericItemDao genericDataItemDao;
+
+
+    @Autowired
+    GenericService genericService;
+
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
-    public DataItem getById(String id) {
-
-
-        return dataItemDao.findById(id).orElseGet(() -> {
-
-            System.out.println("有人乱查数据库！！该ID不存在对象:" + id);
-
-            throw new MyException(ResultEnum.NO_OBJECT);
-
-        });
-
-    }
-
-    public DataItem recordViewCount(DataItem dataItem) {
-        Date now = new Date();
-        DailyViewCount newViewCount = new DailyViewCount(now, 1);
-
-        List<DailyViewCount> dailyViewCountList = dataItem.getDailyViewCount();
-        if (dailyViewCountList == null) {
-            List<DailyViewCount> newList = new ArrayList<>();
-            newList.add(newViewCount);
-            dailyViewCountList = newList;
-        } else if (dailyViewCountList.size() > 0) {
-            DailyViewCount dailyViewCount = dailyViewCountList.get(dailyViewCountList.size() - 1);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-            if (sdf.format(dailyViewCount.getDate()).equals(sdf.format(now))) {
-                dailyViewCount.setCount(dailyViewCount.getCount() + 1);
-                dailyViewCountList.set(dailyViewCountList.size() - 1, dailyViewCount);
-            } else {
-                dailyViewCountList.add(newViewCount);
-            }
-        } else {
-            dailyViewCountList.add(newViewCount);
-        }
-
-        dataItem.setDailyViewCount(dailyViewCountList);
-        dataItem.setViewCount(dataItem.getViewCount() + 1);
-
-        return dataItem;
-    }
-
-
-    public ModelAndView getPage(String id){
+    /**
+     * @Description 根据传入的id返回dataItem的详情界面
+     * @Param [id]
+     * @return org.springframework.web.servlet.ModelAndView
+     **/
+    public ModelAndView getPage(String id, GenericItemDao genericItemDao){
         ModelAndView view = new ModelAndView();
 
         DataItem dataItem;
         try {
-            dataItem = getById(id);
+            dataItem =  (DataItem) genericService.getById(id,genericItemDao);
         }catch (MyException e){
             view.setViewName("error/404");
             return view;
         }
 
-
-        dataItem = recordViewCount(dataItem);
-        dataItemDao.save(dataItem);
-
+        dataItem = (DataItem)genericService.recordViewCount(dataItem);
+        genericItemDao.save(dataItem);
 
         //用户信息
 
@@ -148,17 +117,6 @@ public class DataItemService {
                 }
             }
         }
-        // List<String> classifications = new ArrayList<>();
-        // List<String> categories = dataItem.getClassifications();
-        // for (String category : categories) {
-        //     DataCategorys dataCategorys = dataCategorysDao.findFirstById(category);
-        //     if (dataCategorys == null){
-        //         continue;
-        //     }
-        //     String name = dataCategorys.getCategory();
-        //     classifications.add(name);
-        // }
-
 
         ArrayList<String> fileName = new ArrayList<>();
         if (null!=dataItem.getDataType()&&dataItem.getDataType().equals("DistributedNode")){
@@ -166,7 +124,6 @@ public class DataItemService {
         }
         //设置远程数据内容
         List<InvokeService> invokeServices = dataItem.getInvokeServices();
-
 
 
         //排序
@@ -207,20 +164,13 @@ public class DataItemService {
 
 
         view.setViewName("data_item_info");
-        // if (null!=dataItem.getRelatedProcessings()){
-        //     view.addObject("relatedProcessing",dataItem.getRelatedProcessings());
-        // }
-        // if (null!=dataItem.getRelatedVisualizations()){
-        //     view.addObject("relatedVisualization",dataItem.getRelatedVisualizations());
-        // }
         view.addObject("datainfo", ResultUtils.success(dataItem));
         view.addObject("user",userJson);
         view.addObject("classifications",dataItem.getClassifications());
         view.addObject("relatedModels",modelItemArray);
         view.addObject("authorship",authorshipString);
         view.addObject("fileName",fileName);//后期应该是放该name下的所有数据
-        view.addObject("distributeData", invokeServices);//存放远程节点信息，包括
-
+        view.addObject("distributeData", invokeServices);//存放远程节点信息
         //多语言description
         view.addObject("detailLanguage",detailLanguage);
         view.addObject("itemType","Data");
@@ -228,12 +178,26 @@ public class DataItemService {
         view.addObject("itemInfo",dataItem);
         view.addObject("detail",detailResult);
 
-
         return view;
 
     }
 
 
+
+    /**
+     * 获取当前条目的远程数据信息
+     * @return 成功失败或者远程数据信息
+     */
+    public List<InvokeService> getDistributeDataInfo(@PathVariable(value = "dataItemId") String dataItemId){
+        DataItem dataItem = dataItemDao.findFirstById(dataItemId);
+        return dataItem.getInvokeServices();
+    }
+
+    /**
+     * @Description 获取与数据条目相关的模型
+     * @Param [id]
+     * @return com.alibaba.fastjson.JSONArray
+     **/
     public JSONArray getRelation(String id) {
 
         JSONArray result = new JSONArray();
@@ -256,6 +220,12 @@ public class DataItemService {
 
 
     // TODO 这个方法逻辑有问题
+    /**
+     * @Description 设置与数据条目相关的模型
+     * @Author bin
+     * @Param [id, relations]
+     * @return java.lang.String
+     **/
     public String setRelation(String id, List<String> relations) {
 
         DataItem dataItem = dataItemDao.findFirstById(id);
@@ -316,5 +286,8 @@ public class DataItemService {
         return "suc";
 
     }
+
+
+
 
 }

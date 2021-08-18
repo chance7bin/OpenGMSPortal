@@ -3,6 +3,7 @@ package njgis.opengms.portal.entity.po;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.support.GeoInfoMeta;
 import njgis.opengms.portal.entity.doo.user.*;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.enums.UserTitleEnum;
