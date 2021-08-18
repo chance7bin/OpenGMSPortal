@@ -15,7 +15,7 @@ public class ModelItem extends PortalItem {
 
     String knowledgeGraph;
 
-    List<String> classifications = new ArrayList<>();
+
     List<String> references = new ArrayList<>();// 与Article类相关联
 //    List<String> relatedData = new ArrayList<>();
 
