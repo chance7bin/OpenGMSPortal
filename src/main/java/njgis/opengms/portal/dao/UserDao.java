@@ -20,7 +20,7 @@ public interface UserDao extends MongoRepository<User,String> {
 
     List<PortalIdPlus> findAllByAccessIdContains(String userId);
 
-    @Query("{name:{$regex: '?0',$options:'i'}}")
+    // @Query("{name:{$regex: '?0',$options:'i'}}")
     List<User> findAllByNameContainsIgnoreCase(String name);
 
 

@@ -1,20 +1,29 @@
 package njgis.opengms.portal.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
+import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemFindDTO;
+import njgis.opengms.portal.entity.dto.modelItem.ModelItemResultDTO;
+import njgis.opengms.portal.entity.po.Classification;
 import njgis.opengms.portal.entity.dto.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.ModelItemService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +54,9 @@ public class ModelItemRestController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ModelItemDao modelItemDao;
 
     /**
      * @Description 返回模型条目列表页面

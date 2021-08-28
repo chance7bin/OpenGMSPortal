@@ -26,6 +26,7 @@ public class PortalItem extends PortalIdPlus implements Serializable {
     String overview; //简单介绍 原为description
     List<Localization> localizationList; //多语言详细描述
 
+    List<String> classifications;  //数据目录分类
     List<String> keywords; //关键字
 
     String author; //贡献者email
