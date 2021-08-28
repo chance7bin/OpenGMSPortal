@@ -14,7 +14,9 @@ import lombok.Data;
 public enum ResultEnum {
     SUCCESS(1, "Success"),
     NO_OBJECT(0, "No object"),
-    ERROR(-1,"Error");
+    ERROR(-1,"Error"),
+    UNAUTHORIZED(-2,"Unauthorized");
+
 
     private Integer code;
 

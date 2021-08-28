@@ -40,4 +40,5 @@ public interface DataItemDao extends MongoRepository<DataItem,String>, GenericIt
 
     Page<DataItem> findByAuthorInAndClassificationsIn(List<String> authors, String categoryName, Pageable pageable);
 
+    Page<DataItem> findByAuthor(Pageable pageable,String author);
 }

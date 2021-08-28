@@ -21,8 +21,8 @@ import java.util.UUID;
 public class PortalId {
 
     @org.springframework.data.annotation.Id
-    @GeneratedValue(generator = "customId")
-    @GenericGenerator(name = "customId", strategy = "njgis.opengms.portal.component.CustomIDGenerator")
+    // @GeneratedValue(generator = "customId")
+    // @GenericGenerator(name = "customId", strategy = "njgis.opengms.portal.component.CustomIDGenerator")
     @Field(targetType = FieldType.STRING)
     String id = UUID.randomUUID().toString();
 

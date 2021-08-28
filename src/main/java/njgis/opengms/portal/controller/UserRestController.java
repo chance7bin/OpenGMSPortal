@@ -7,6 +7,9 @@ import lombok.extern.java.Log;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.service.DataHubService;
+import njgis.opengms.portal.service.DataItemService;
+import njgis.opengms.portal.service.DataMethodService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.IpUtil;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -38,11 +41,20 @@ public class UserRestController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/test")
-    public String test(){
-        System.out.println("test controller");
-        return "test";
-    }
+    @Autowired
+    DataItemService dataItemService;
+
+    @Autowired
+    DataHubService dataHubService;
+
+    @Autowired
+    DataMethodService dataMethodService;
+
+    // @RequestMapping("/test")
+    // public String test(){
+    //     System.out.println("test controller");
+    //     return "test";
+    // }
 
     /**
      * @Description 用户登录
@@ -104,7 +116,7 @@ public class UserRestController {
 
         if (email == null) {
             JSONObject user = new JSONObject();
-            return ResultUtils.error(-1, "no login");
+            return ResultUtils.unauthorized();
         } else {
             return userService.loadUser(email);
         }
@@ -118,7 +130,7 @@ public class UserRestController {
      * @Date 2021/7/6
      **/
     @ApiOperation(value = "用户登出", notes = "返回到门户主页")
-    @RequestMapping(value = "/out", method = RequestMethod.POST)
+    @RequestMapping(value = "/out", method = RequestMethod.GET)
     public RedirectView logout(HttpServletRequest request) {
 
         userService.removeUserSession(request);
@@ -264,4 +276,98 @@ public class UserRestController {
         return ResultUtils.success(j_result);
 
     }
+
+    /**
+     * 跳转到个人中心界面
+     * @param request
+     * @return org.springframework.web.servlet.ModelAndView
+     * @Author bin
+     **/
+    @ApiOperation(value = "跳转到个人中心界面")
+    @RequestMapping(value = "/userSpace", method = RequestMethod.GET)
+    public ModelAndView getUserSpace(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        ModelAndView modelAndView = new ModelAndView();
+        if (session.getAttribute("email") == null) {
+            modelAndView.setViewName("login");
+            modelAndView.addObject("notice", "After login, more functions will be unlocked.");
+
+            Object preUrl_obj = session.getAttribute("preUrl");
+            String preUrl = null;
+            if (preUrl_obj != null) {
+                preUrl = preUrl_obj.toString();
+            }else {
+                preUrl = request.getHeader("REFERER");
+            }
+            modelAndView.addObject("preUrl", preUrl);
+            session.removeAttribute("preUrl");
+
+        } else {
+            System.out.println("userSpace1");
+
+            modelAndView.setViewName("userSpace1");
+        }
+
+        return modelAndView;
+
+    }
+
+    /**
+     * 得到用户上传的dataItem
+     * @param email
+     * @param page
+     * @param pagesize
+     * @param asc
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
+    @RequestMapping(value = "/dataItems", method = RequestMethod.GET)
+    JsonResult getUserUploadData(@RequestParam(value = "email", required = false) String email,
+                                 @RequestParam(value = "page", required = false) Integer page,
+                                 @RequestParam(value = "pagesize", required = false) Integer pagesize,
+                                 @RequestParam(value = "asc", required = false) Integer asc){
+        return ResultUtils.success(dataItemService.getUsersUploadData(email, page - 1, pagesize, asc));
+    }
+
+    /**
+     * 得到用户上传的dataHub
+     * @param email
+     * @param page
+     * @param pagesize
+     * @param asc
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @ApiOperation(value = "得到用户上传的dataHub [/user(profile)/getDataHubs]")
+    @RequestMapping(value = "/dataHubs", method = RequestMethod.GET)
+    JsonResult getUserUploadDataHubs(@RequestParam(value = "email", required = false) String email,
+                                     @RequestParam(value = "page", required = false) Integer page,
+                                     @RequestParam(value = "pagesize", required = false) Integer pagesize,
+                                     @RequestParam(value = "asc", required = false) Integer asc
+    ) {
+        return ResultUtils.success(dataHubService.getUsersUploadDataHubs(email, page - 1, pagesize, asc));
+    }
+
+    /**
+     * 得到用户上传的dataMethod
+     * @param email
+     * @param page
+     * @param pagesize
+     * @param asc
+     * @param type
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @ApiOperation(value = "得到用户上传的dataMethod [/user(profile)/getApplication]")
+    @RequestMapping(value = "/dataMethods", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
+    public JsonResult getUserUploadData(@RequestParam(value = "email", required = false) String email,
+                                        @RequestParam(value = "page", required = false) Integer page,
+                                        @RequestParam(value = "pagesize", required = false) Integer pagesize,
+                                        @RequestParam(value = "asc", required = false) Integer asc,
+                                        @ApiParam(name = "type", value = "区分process与visual") @RequestParam(value = "type", required = false) String type
+    ) {
+        return ResultUtils.success(dataMethodService.getUsersUploadData(email, page - 1, pagesize, asc, type));
+    }
+
 }

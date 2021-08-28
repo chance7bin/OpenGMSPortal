@@ -8,7 +8,6 @@ import njgis.opengms.portal.entity.doo.GenericCatalog;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.po.DataItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,42 +55,29 @@ public class GenericService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
+    @Value("${resourcePath}")
+    private String resourcePath;
+
 
     /**
      * @Description 根据传入的查询条件查询数据
-     * @Param [findDTO, dataType: 类型(hub, item, method)]
+     * @Param [findDTO, dataType: 类型(dataHub, dataItem, dataMethod)]
      * @return com.alibaba.fastjson.JSONObject
      **/
-    public JSONObject searchDataItems(FindDTO findDTO, String dataType){
+    public JSONObject searchItems(FindDTO findDTO, String type){
         // setGenericDataItemDao(dataType);
 
-
-        Pageable pageable = PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
-        Page itemsPage;
         // 所有条目都继承PortalItem类
         List<PortalItem> allPortalItem;
         int totalElements = 0;
         try {
-            // 根据查询的条目类型选择相应的DAO
-            switch (dataType){
-                case "item":{
-                    itemsPage = selectItemsByCurQueryFieldAndCategoryName(findDTO, pageable, dataItemDao, classificationDao);
-                    break;
-                }
-                case "hub":{
-                    itemsPage = selectItemsByCurQueryFieldAndCategoryName(findDTO, pageable, dataHubDao, classificationDao);
-                    break;
-                }
-                case "method":{
-                    itemsPage = selectItemsByCurQueryFieldAndCategoryName(findDTO, pageable, dataMethodDao, methodClassificationDao);
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Unexpected value: " + dataType);
-            }
+            Page itemsPage;
+            Pageable pageable = PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
 
+            // 从工厂中拿对应的dao
+            JSONObject daoFactory = daoFactory(type);
 
-
+            itemsPage = selectItemsByCurQueryFieldAndCategoryName(findDTO, pageable, (GenericItemDao) daoFactory.get("itemDao"), (GenericCategoryDao) daoFactory.get("classificationDao"));
             //把查询到的结果放在try中,如果按照之前return null的话前端页面会加载不出来，所以如果查询报错的话那allPortalItem大小就为0
             allPortalItem = itemsPage.getContent();
             totalElements = (int) itemsPage.getTotalElements();
@@ -149,13 +135,40 @@ public class GenericService {
     }
 
 
+    public JSONObject daoFactory(String type){
+
+        JSONObject daoUtils = new JSONObject();
+        // 根据查询的条目类型选择相应的DAO
+        switch (type){
+            case "dataItem":{
+                daoUtils.put("itemDao",dataItemDao);
+                daoUtils.put("classificationDao",classificationDao);
+                break;
+            }
+            case "dataHub":{
+                daoUtils.put("itemDao",dataHubDao);
+                daoUtils.put("classificationDao",classificationDao);
+                break;
+            }
+            case "dataMethod":{
+                daoUtils.put("itemDao",dataMethodDao);
+                daoUtils.put("classificationDao",methodClassificationDao);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
+        return daoUtils;
+
+    }
+
 
     /**
      * @Description 根据查询字段类型、分类名进行查找
      * @Param [findDTO, pageable, genericItemDao, genericCatalogDao]
      * @return org.springframework.data.domain.Page
      **/
-    public Page selectItemsByCurQueryFieldAndCategoryName(FindDTO findDTO, Pageable pageable, GenericItemDao genericItemDao, GenericCatalogDao genericCatalogDao) {
+    public Page selectItemsByCurQueryFieldAndCategoryName(FindDTO findDTO, Pageable pageable, GenericItemDao genericItemDao, GenericCategoryDao genericCatalogDao) {
 
         String searchText = findDTO.getSearchText();
         String curQueryField = findDTO.getCurQueryField();
@@ -164,8 +177,8 @@ public class GenericService {
 
         Page result;
         try {
-            Object categoryById = genericCatalogDao.findFirstById(categoryName);
-            categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
+            // Object categoryById = genericCatalogDao.findFirstById(categoryName);
+            // categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
             if(categoryName.equals("")) {          // 不分类的情况
                 if(searchText.equals("")){
                     result = genericItemDao.findAll(pageable);
@@ -300,5 +313,8 @@ public class GenericService {
 
         return item;
     }
+
+
+
 
 }

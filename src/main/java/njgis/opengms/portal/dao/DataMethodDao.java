@@ -34,4 +34,8 @@ public interface DataMethodDao extends MongoRepository<DataMethod,String>, Gener
     Page<DataMethod> findAllByAuthorLikeIgnoreCaseAndClassificationsIn(String author, String categoryName, Pageable pageable);
 
     Page<DataMethod> findByAuthorInAndClassificationsIn(List<String> authors, String categoryName, Pageable pageable);
+
+    Page<DataMethod> findByAuthorAndType(Pageable pageable, String author, String type);
+
+    Page<DataMethod> findByAuthorAndNameContainsAndType(Pageable pageable, String author, String name, String type);
 }

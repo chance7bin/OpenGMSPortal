@@ -35,4 +35,6 @@ public interface DataHubDao extends MongoRepository<DataHub, String>, GenericIte
     Page<DataHub> findAllByAuthorLikeIgnoreCaseAndClassificationsIn(String author, String categoryName, Pageable pageable);
 
     Page<DataHub> findByAuthorInAndClassificationsIn(List<String> authors, String categoryName, Pageable pageable);
+
+    Page<DataHub> findByAuthor(Pageable pageable, String author);
 }

@@ -8,6 +8,8 @@ import njgis.opengms.portal.entity.po.Classification;
  * @Author bin
  * @Date 2021/08/16
  */
-public interface GenericCatalogDao<T> {
+public interface GenericCategoryDao<T> {
     T findFirstById(String id);
+
+    T findFirstByNameEn(String name);
 }

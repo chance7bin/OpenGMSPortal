@@ -46,7 +46,7 @@ public class ModelAndViewInterceptor implements HandlerInterceptor {
                 user.setAvatar(avatar);
 
                 modelAndView.addObject("userNavBar", user);
-                System.out.println(modelAndView.getModel().get("user"));
+                // System.out.println(((User)modelAndView.getModel().get("userNavBar")).getEmail());
                 modelAndView.addObject("logged", true);
             }
         }
