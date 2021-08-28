@@ -45,4 +45,6 @@ public interface GenericItemDao<T>{
     Optional<T> findById(String id);
 
     <S extends T> S save(S var1);
+
+    T insert(T item);
 }

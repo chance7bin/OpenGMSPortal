@@ -1,15 +1,22 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.data.DataCategorys;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemAddDTO;
 import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemUpdateDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -51,14 +59,17 @@ public class DataItemService {
     @Autowired
     DataMethodDao dataMethodDao;
 
-    // private GenericItemDao genericDataItemDao;
-
+    @Autowired
+    ClassificationDao classificationDao;
 
     @Autowired
     GenericService genericService;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
+
+    @Value("${resourcePath}")
+    private String resourcePath;
 
     /**
      * @Description 根据传入的id返回dataItem的详情界面
@@ -162,11 +173,16 @@ public class DataItemService {
             languageList.add(local.getLocalName());
         }
 
+        List<String> classifications = new ArrayList<>();
+        for (String classification : dataItem.getClassifications()) {
+            classifications.add(classificationDao.findFirstById(classification).getNameEn());
+        }
+
 
         view.setViewName("data_item_info");
         view.addObject("datainfo", ResultUtils.success(dataItem));
         view.addObject("user",userJson);
-        view.addObject("classifications",dataItem.getClassifications());
+        view.addObject("classifications",classifications);
         view.addObject("relatedModels",modelItemArray);
         view.addObject("authorship",authorshipString);
         view.addObject("fileName",fileName);//后期应该是放该name下的所有数据
@@ -226,7 +242,7 @@ public class DataItemService {
      * @Param [id, relations]
      * @return java.lang.String
      **/
-    public String setRelation(String id, List<String> relations) {
+    public JsonResult setRelation(String id, List<String> relations) {
 
         DataItem dataItem = dataItemDao.findFirstById(id);
 
@@ -283,11 +299,272 @@ public class DataItemService {
         dataItem.setRelatedModels(relations);
         dataItemDao.save(dataItem);
 
-        return "suc";
+        return ResultUtils.success();
+
+    }
+
+
+    /**
+     * 新增dataItem、dataHub数据条目
+     * @param dataItemAddDTO
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult insert(DataItemAddDTO dataItemAddDTO, String email, String type) {
+        try {
+            PortalItem item = null;
+            JSONObject daoFactory = genericService.daoFactory(type);
+            if (type.equals("dataItem")){
+                item = new DataItem();
+            }
+            else if (type.equals("dataHub")){
+                item = new DataHub();
+            }
+            else {
+                return ResultUtils.error(-1, "Created failed!");
+            }
+
+
+            BeanUtils.copyProperties(dataItemAddDTO, item);
+            Date now = new Date();
+            // oid字段已被废弃
+            // item.setOid(UUID.randomUUID().toString());
+            item.setCreateTime(now);
+            //设置dataItem的图片path以及存储图片
+            String uuid = UUID.randomUUID().toString();
+            String path = "/static/repository/dataItem/" + uuid + ".jpg";
+            String savePath = "/repository/dataItem/" + uuid + ".jpg";
+            String[] strs = dataItemAddDTO.getUploadImage().split(",");
+            if (strs.length > 1) {
+                String imgStr = dataItemAddDTO.getUploadImage().split(",")[1];
+                Utils.base64StrToImage(imgStr, resourcePath + savePath);
+                item.setImage(path);
+            } else {
+                item.setImage("");
+            }
+            item.setLastModifyTime(now);
+
+            // 调整的字段
+            Localization localization = new Localization();
+            localization.setLocalCode("en");
+            localization.setLocalName("English");
+            localization.setName(dataItemAddDTO.getName());
+            localization.setDescription(dataItemAddDTO.getDetail());
+            List<Localization> list = new ArrayList<>();
+            list.add(localization);
+            item.setLocalizationList(list);
+
+
+            ((GenericItemDao)daoFactory.get("itemDao")).insert(item);
+
+            userService.updateUserResourceCount(email,type,"add");
+
+            // 这个是新增dataCategorys表记录的，该表已被废弃
+            // CategoryAddDTO categoryAddDTO = new CategoryAddDTO();
+            // categoryAddDTO.setId(dataItem.getId());
+            // categoryAddDTO.setCate(dataItem.getClassifications());
+            // categoryAddDTO.setDataType("Url");
+            // addCateId(categoryAddDTO);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id",item.getId());
+            return ResultUtils.success(jsonObject);
+        }catch (Exception e){
+            return ResultUtils.error("Created failed!");
+        }
+    }
+
+
+    /**
+     * 得到分类树数据
+     * @param
+     * @return com.alibaba.fastjson.JSONArray
+     * @Author bin
+     **/
+    public JSONArray createTreeNew(){
+        JSONArray result = new JSONArray();
+        List<Classification> grandpas = classificationDao.findAllByParentId(null);
+        for (Classification grandpa:grandpas){
+            JSONObject oneLevel = new JSONObject();
+            //找出当前grandpa的所有子集
+            List<Classification> fathers = classificationDao.findAllByParentId(grandpa.getId());
+            JSONArray fathersArray = new JSONArray();//用于存储父类的所有的键值对
+            for (Classification father:fathers){
+                JSONObject twoLevel = new JSONObject();
+                List<Classification> sons = classificationDao.findAllByParentId(father.getId());
+                JSONArray sonsArray = new JSONArray();
+                for (Classification son:sons){
+                    JSONObject threeLevel = new JSONObject();
+                    threeLevel.put(son.getNameEn(), son.getId());
+                    sonsArray.add(threeLevel);
+                }
+                twoLevel.put(father.getNameEn(), sonsArray);
+                fathersArray.add(twoLevel);
+            }
+            oneLevel.put(grandpa.getNameEn(),fathersArray);
+            result.add(oneLevel);
+        }
+
+        return result;
+    }
+
+    /**
+     * 根据id得到item，加入一个存目录id的categories
+     * @param dataId
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject getItemByDataId(String dataId, String type){
+
+        JSONObject daoFactory = genericService.daoFactory(type);
+
+        DataItem dataItem =  (DataItem) ((GenericItemDao)daoFactory.get("itemDao")).findFirstById(dataId);
+
+        JSONObject jsonObject = new JSONObject();
+        if(dataItem == null)
+            jsonObject.put("noResult",1);
+        else{
+            List<String> cates = new ArrayList<>();
+            cates = dataItem.getClassifications();
+            List<String> categories = new ArrayList<>();
+            for(String cate : cates){
+                Classification c = classificationDao.findFirstById(cate);
+                categories.add(c.getNameEn());
+            }
+
+            JSONObject obj =(JSONObject) JSON.toJSON(dataItem);
+            obj.put("categories",categories);
+            jsonObject.put("result",obj);
+        }
+
+        return jsonObject;
+    }
+
+
+    /**
+     * 修改item条目
+     * @param dataItemUpdateDTO
+     * @param email 根据email判断是本人编辑还是非本人编辑
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject updateDataItem(DataItemUpdateDTO dataItemUpdateDTO, String email){
+
+        JSONObject dao = genericService.daoFactory("dataItem");
+        return updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"));
 
     }
 
 
 
+    /**
+     * 修改dataItem、datahub通用方法
+     * @param dataItemUpdateDTO
+     * @param email
+     * @param genericItemDao
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject updateItem(DataItemUpdateDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao){
+        JSONObject result = new JSONObject();
+        PortalItem item = (PortalItem) genericItemDao.findFirstById(dataItemUpdateDTO.getDataItemId());
+
+
+        // 更新localization
+        if (item.getLocalizationList().size() == 0) {
+            Localization localization = new Localization("en", "English", item.getName(), dataItemUpdateDTO.getDetail());
+            item.getLocalizationList().add(localization);
+        }
+        else {
+            item.getLocalizationList().get(0).setDescription(dataItemUpdateDTO.getDetail());
+        }
+
+        String author = item.getAuthor();
+        Date now = new Date();
+        if (!item.isLock()){
+            if (author.equals(email)){
+                // 拷贝的时候忽略author字段，因为前端没有传来author
+                BeanUtils.copyProperties(dataItemUpdateDTO,item,"author");
+                String uploadImage = dataItemUpdateDTO.getUploadImage();
+                if (!uploadImage.contains("/dataItem/") && !uploadImage.equals("")){
+                    //删除旧图片
+                    File file = new File(resourcePath + item.getImage());
+                    if (file.exists()&&file.isFile())
+                        file.delete();
+                    //添加新图片
+                    String uuid = UUID.randomUUID().toString();
+                    String path = "/static/repository/dataItem/" + uuid + ".jpg";//入库
+                    String path1 = "/repository/dataItem/" + uuid + ".jpg";//存储
+                    String imgStr = uploadImage.split(",")[1];
+                    Utils.base64StrToImage(imgStr, resourcePath + path1);
+                    item.setImage(path);
+                }
+                item.setLastModifyTime(now);
+                genericItemDao.save(item);
+                result.put("method", "update");
+                result.put("id",item.getId());
+                return result;
+            }else {
+                // TODO: 2021/8/24 author不同时需提交审核
+                result.put("method", "version");
+                return result;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 用户拿到上传的所有条目
+     * @param author
+     * @param page
+     * @param pagesize
+     * @param asc
+     * @return org.springframework.data.domain.Page<njgis.opengms.portal.entity.po.DataItem>
+     * @Author bin
+     **/
+    public Page<DataItem> getUsersUploadData(String author, Integer page, Integer pagesize, Integer asc) {
+
+        boolean as = false;
+        if (asc == 1)
+            as = true;
+
+        Sort sort = Sort.by(as ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
+        Pageable pageable = PageRequest.of(page, pagesize, sort);
+        return dataItemDao.findByAuthor(pageable, author);
+
+    }
+
+    /**
+     * 删除dataItem
+     * @param id
+     * @param email
+     * @return int
+     * @Author bin
+     **/
+    public JsonResult delete(String id,String email){
+        DataItem data = new DataItem();
+        data = (DataItem) genericService.getById(id,dataItemDao);
+
+        if(!data.getAuthor().equals(email))
+            return ResultUtils.error("Unauthorized");
+
+        // List<String> relatedModels = data.getRelatedModels();
+        // if (relatedModels!=null)
+        //     for (int i = 0; i < relatedModels.size(); i++) {
+        //         ModelItem modelItem = modelItemDao.findFirstByOid(relatedModels.get(i));
+        //         modelItem.getRelatedData().remove(id);
+        //         modelItemDao.save(modelItem);
+        //     }
+
+        try {
+            dataItemDao.deleteById(id);
+            userService.updateUserResourceCount(email, "dataItem", "delete");
+        }catch (Exception e){
+            return ResultUtils.error("delete error");
+        }
+
+        return ResultUtils.success();
+    }
 
 }

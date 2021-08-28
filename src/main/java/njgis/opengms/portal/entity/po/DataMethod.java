@@ -1,5 +1,6 @@
 package njgis.opengms.portal.entity.po;
 
+import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.doo.data.TestData;
@@ -18,10 +19,10 @@ public class DataMethod extends DataItem{
 
     List<String> resources;
 
-    String contentType;
+    String contentType; //Package
 
     Boolean isAuthor;
-    // String applicationType; //区分process与visual 数据库中没有该字段
+    String type; //区分process与visual
 
     // List<InvokeService> invokeServices; 在DataItem已经设置了
     boolean invokable;//是否绑定了invokeService
@@ -35,4 +36,6 @@ public class DataMethod extends DataItem{
 
     Boolean batch = false;
     List<String> bindDataTemplates;//存储对应的template的id
+
+    JSONArray resourceJson;
 }

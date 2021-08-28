@@ -365,7 +365,7 @@ public class UserService {
 
         if (email == null) {
 
-            return ResultUtils.error(-2,"email is null");
+            return ResultUtils.error("email is null");
         }
 
         User user = userDao.findFirstByEmail(email);
@@ -377,6 +377,7 @@ public class UserService {
             return ResultUtils.error(-3, "can't get user info from user server");
         }else{
             userInfo.put("email", email);
+            userInfo.put("accessId", j_userBaseInfo.getString("userId"));
             userInfo.put("name", j_userBaseInfo.getString("name"));
             userInfo.put("avatar", j_userBaseInfo.getString("avatar"));
         }
@@ -570,5 +571,29 @@ public class UserService {
         }
     }
 
+    /**
+     * 更新用户数据条目的数量
+     * @param email
+     * @param itemType UserResourceCount对应的属性
+     * @param op 增加还是减少 add delete 
+     * @return void 
+     * @Author bin
+     **/
+    public void updateUserResourceCount(String email, String itemType, String op) throws NoSuchFieldException, IllegalAccessException {
+        User user = userDao.findFirstByEmail(email);
+        UserResourceCount userResourceCount = user.getResourceCount();
+        Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
+        Field field = aClass.getDeclaredField(itemType);
+        field.setAccessible(true);
+        int count = (int)field.get(userResourceCount);
+        if (op.equals("add")) {
+            ++count;
+        } else {
+            --count;
+        }
+        field.set(userResourceCount,count);
+        user.setResourceCount(userResourceCount);
+        userDao.save(user);
+    }
 
 }

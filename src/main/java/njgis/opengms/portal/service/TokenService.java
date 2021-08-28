@@ -2,16 +2,21 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.xml.bind.v2.TODO;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.user.TokenInfo;
 import njgis.opengms.portal.entity.po.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,9 +90,16 @@ public class TokenService {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
+            MediaType mediaType = MediaType.parseMediaType("application/x-www-form-urlencoded");
             headers.setContentType(mediaType);
             headers.set("user-agent","portal_backend");
+            // restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            // restTemplate.setErrorHandler(new DefaultResponseErrorHandler(){
+            //     public boolean hasError(ClientHttpResponse response) throws IOException {
+            //         HttpStatus statusCode = response.getStatusCode();
+            //         return statusCode.series() == HttpStatus.Series.SERVER_ERROR;
+            //     }
+            // });
             HttpEntity<LinkedMultiValueMap<String, String>> httpEntity = new HttpEntity<>(paramMap, headers);
             JSONObject tokenResult = restTemplate.postForObject(authUri, httpEntity, JSONObject.class);
             return tokenResult;
@@ -218,6 +230,7 @@ public class TokenService {
         if(expireDate.before(afterNow)){
             String refreshToken = tokenInfo.getRefreshToken();
             JSONObject newTokenInfo = refreshToken(refreshToken,userEmail);
+            // TODO newTokenInfo可能为null，要判断一下
             if(newTokenInfo.getString("error")!=null){
 
                 return "out";
