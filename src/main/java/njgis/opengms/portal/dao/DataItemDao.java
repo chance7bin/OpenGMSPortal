@@ -1,13 +1,8 @@
 package njgis.opengms.portal.dao;
 
 
-import njgis.opengms.portal.entity.doo.PortalItem;
 import njgis.opengms.portal.entity.po.DataItem;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.List;
 
 /**
  * @InterfaceName DataItemDao
@@ -18,27 +13,29 @@ import java.util.List;
  */
 public interface DataItemDao extends MongoRepository<DataItem,String>, GenericItemDao<DataItem> {
 
-    DataItem findFirstById(String id);
+    // DataItem findFirstById(String id);
+    //
+    // DataItem findFirstByAuthor(String author);
+    //
+    // DataItem findFirstByName(String name);
+    //
+    //
+    // Page<DataItem> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+    // Page<DataItem> findAllByKeywordsContainsIgnoreCase(String keyword, Pageable pageable);
+    // Page<DataItem> findAllByOverviewContainsIgnoreCase(String content, Pageable pageable);
+    // Page<DataItem> findAllByAuthorLikeIgnoreCase(String author, Pageable pageable);
+    //
+    // Page<DataItem> findAllByClassificationsIn(List<String> classifications,Pageable pageable);
+    //
+    // Page<DataItem> findAllByNameContainsIgnoreCaseAndClassificationsIn(String name, List<String> classifications, Pageable pageable);
+    //
+    // Page<DataItem> findAllByKeywordsContainsIgnoreCaseAndClassificationsIn(String keyword, List<String> classifications, Pageable pageable);
+    // Page<DataItem> findAllByOverviewContainsIgnoreCaseAndClassificationsIn(String overview, List<String> classifications, Pageable pageable);
+    // Page<DataItem> findAllByAuthorLikeIgnoreCaseAndClassificationsIn(String author, List<String> classifications, Pageable pageable);
+    //
+    // Page<DataItem> findAllByAuthorInAndClassificationsIn(List<String> authors, List<String> classifications, Pageable pageable);
+    //
+    // Page<DataItem> findAllByAuthorIn(List<String> authors, Pageable pageable);
 
-    DataItem findFirstByAuthor(String author);
-
-    DataItem findFirstByName(String name);
-
-
-    Page<DataItem> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
-    Page<DataItem> findAllByKeywordsContainsIgnoreCase(String keyword, Pageable pageable);
-    Page<DataItem> findAllByOverviewContainsIgnoreCase(String content, Pageable pageable);
-    Page<DataItem> findAllByAuthorLikeIgnoreCase(String author, Pageable pageable);
-
-    Page<DataItem> findAllByClassificationsIn(String categoryName,Pageable pageable);
-
-    Page<DataItem> findAllByNameContainsIgnoreCaseAndClassificationsIn(String name, String categoryName, Pageable pageable);
-
-    Page<DataItem> findAllByKeywordsContainsIgnoreCaseAndClassificationsIn(String keyword, String categoryName, Pageable pageable);
-    Page<DataItem> findAllByOverviewContainsIgnoreCaseAndClassificationsIn(String content, String categoryName, Pageable pageable);
-    Page<DataItem> findAllByAuthorLikeIgnoreCaseAndClassificationsIn(String author, String categoryName, Pageable pageable);
-
-    Page<DataItem> findByAuthorInAndClassificationsIn(List<String> authors, String categoryName, Pageable pageable);
-
-    Page<DataItem> findByAuthor(Pageable pageable,String author);
+    // Page<DataItem> findByAuthor(Pageable pageable, String author);
 }

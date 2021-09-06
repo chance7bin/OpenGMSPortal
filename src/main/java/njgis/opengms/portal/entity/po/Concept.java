@@ -1,16 +1,19 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.GenericCategory;
+import njgis.opengms.portal.entity.doo.PortalItem;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 /**
  * @Description
  * @Author bin
- * @Date 2021/08/12
+ * @Date 2021/09/01
  */
 @Document
 @Data
-public class Classification extends GenericCategory {
-
+public class Concept extends PortalItem {
+    List<String> related;
+    String xml;
 }

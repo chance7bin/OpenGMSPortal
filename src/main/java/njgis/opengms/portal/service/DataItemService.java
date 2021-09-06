@@ -5,18 +5,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.*;
-import njgis.opengms.portal.entity.doo.data.DataCategorys;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemAddDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemUpdateDTO;
+import njgis.opengms.portal.entity.dto.ResultDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.*;
-import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -70,6 +67,10 @@ public class DataItemService {
 
     @Value("${resourcePath}")
     private String resourcePath;
+
+    public JsonResult getItems(SpecificFindDTO dataItemFindDTO){
+        return ResultUtils.success(genericService.searchItems(dataItemFindDTO, ItemTypeEnum.DataItem));
+    }
 
     /**
      * @Description 根据传入的id返回dataItem的详情界面
@@ -311,7 +312,7 @@ public class DataItemService {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    public JsonResult insert(DataItemAddDTO dataItemAddDTO, String email, String type) {
+    public JsonResult insert(DataItemDTO dataItemAddDTO, String email, ItemTypeEnum type) {
         try {
             PortalItem item = null;
             JSONObject daoFactory = genericService.daoFactory(type);
@@ -331,6 +332,7 @@ public class DataItemService {
             // oid字段已被废弃
             // item.setOid(UUID.randomUUID().toString());
             item.setCreateTime(now);
+            item.setAuthor(email);
             //设置dataItem的图片path以及存储图片
             String uuid = UUID.randomUUID().toString();
             String path = "/static/repository/dataItem/" + uuid + ".jpg";
@@ -358,7 +360,7 @@ public class DataItemService {
 
             ((GenericItemDao)daoFactory.get("itemDao")).insert(item);
 
-            userService.updateUserResourceCount(email,type,"add");
+            userService.updateUserResourceCount(email,type.getText(),"add");
 
             // 这个是新增dataCategorys表记录的，该表已被废弃
             // CategoryAddDTO categoryAddDTO = new CategoryAddDTO();
@@ -409,12 +411,12 @@ public class DataItemService {
     }
 
     /**
-     * 根据id得到item，加入一个存目录id的categories
+     * 根据id得到item
      * @param dataId
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject getItemByDataId(String dataId, String type){
+    public JSONObject getItemByDataId(String dataId, ItemTypeEnum type){
 
         JSONObject daoFactory = genericService.daoFactory(type);
 
@@ -448,10 +450,10 @@ public class DataItemService {
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject updateDataItem(DataItemUpdateDTO dataItemUpdateDTO, String email){
+    public JSONObject updateDataItem(DataItemDTO dataItemUpdateDTO, String email, String id){
 
-        JSONObject dao = genericService.daoFactory("dataItem");
-        return updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"));
+        JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataItem);
+        return updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"),id);
 
     }
 
@@ -465,9 +467,9 @@ public class DataItemService {
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject updateItem(DataItemUpdateDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao){
+    public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao, String id){
         JSONObject result = new JSONObject();
-        PortalItem item = (PortalItem) genericItemDao.findFirstById(dataItemUpdateDTO.getDataItemId());
+        PortalItem item = (PortalItem) genericItemDao.findFirstById(id);
 
 
         // 更新localization
@@ -484,7 +486,7 @@ public class DataItemService {
         if (!item.isLock()){
             if (author.equals(email)){
                 // 拷贝的时候忽略author字段，因为前端没有传来author
-                BeanUtils.copyProperties(dataItemUpdateDTO,item,"author");
+                BeanUtils.copyProperties(dataItemUpdateDTO,item);
                 String uploadImage = dataItemUpdateDTO.getUploadImage();
                 if (!uploadImage.contains("/dataItem/") && !uploadImage.equals("")){
                     //删除旧图片
@@ -523,14 +525,14 @@ public class DataItemService {
      * @return org.springframework.data.domain.Page<njgis.opengms.portal.entity.po.DataItem>
      * @Author bin
      **/
-    public Page<DataItem> getUsersUploadData(String author, Integer page, Integer pagesize, Integer asc) {
+    public Page<ResultDTO> getUsersUploadData(String author, Integer page, Integer pagesize, Integer asc) {
 
         boolean as = false;
         if (asc == 1)
             as = true;
 
         Sort sort = Sort.by(as ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
-        Pageable pageable = PageRequest.of(page, pagesize, sort);
+        Pageable pageable = PageRequest.of(page - 1, pagesize, sort);
         return dataItemDao.findByAuthor(pageable, author);
 
     }

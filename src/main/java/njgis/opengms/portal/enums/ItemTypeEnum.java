@@ -7,22 +7,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public enum ItemTypeEnum {
 
-    DataItem(0,"data item"),
+    DataItem(0,"dataItem"),
 
-    ModelItem(1,"model item"),
-    ConceptualModel(2,"conceptual model"),
-    LogicalModel(3,"logical model"),
-    ComputableModel(4,"computable model"),
+    ModelItem(1,"modelItem"),
+    ConceptualModel(2,"conceptualModel"),
+    LogicalModel(3,"logicalModel"),
+    ComputableModel(4,"computableModel"),
 
     Concept(5,"concept"),
-    SpatialReference(6,"spatial reference"),
+    SpatialReference(6,"spatialReference"),
     Template(7,"template"),
     Unit(8,"unit"),
 
     Theme(9,"theme"),
 
-    DataHub(10,"data hub"),
-    DataMethod(11,"data method"),
+    DataHub(10,"dataHub"),
+    DataMethod(11,"dataMethod"),
 
     Article(12,"article"),
     Project(13,"project"),

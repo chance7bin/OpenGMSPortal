@@ -12,9 +12,9 @@ import njgis.opengms.portal.dao.DataItemDao;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
-import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemAddDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemUpdateDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
@@ -77,11 +77,11 @@ public class DataItemRestController {
     @LoginRequired
     @ApiOperation(value = "新增dataItem条目")
     @PostMapping
-    public JsonResult add(@RequestBody DataItemAddDTO dataItemAddDTO, HttpServletRequest request) {
+    public JsonResult add(@RequestBody DataItemDTO dataItemAddDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
-        dataItemAddDTO.setAuthor(email);
-        return dataItemService.insert(dataItemAddDTO,email, "dataItem");
+        // dataItemAddDTO.setAuthor(email);
+        return dataItemService.insert(dataItemAddDTO,email, ItemTypeEnum.DataItem);
     }
 
 
@@ -95,14 +95,14 @@ public class DataItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "更新dataItem(只写了修改者和作者相同的情况)")
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    public JsonResult updateDataItem(@RequestBody DataItemUpdateDTO dataItemUpdateDTO, HttpServletRequest request) {
+    @PutMapping(value = "/{id}")
+    public JsonResult updateDataItem(@PathVariable String id , @RequestBody DataItemDTO dataItemUpdateDTO, HttpServletRequest request) {
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
         // if(email==null){
         //     return ResultUtils.error(-2,"未登录");
         // }
-        JSONObject result=dataItemService.updateDataItem(dataItemUpdateDTO,email);
+        JSONObject result=dataItemService.updateDataItem(dataItemUpdateDTO,email,id);
         if(result==null){
             return ResultUtils.error("There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
         }
@@ -181,8 +181,8 @@ public class DataItemRestController {
      **/
     @ApiOperation(value = "获取Item Repository下的数据 [ /dataItem/Items/getItems ]")
     @RequestMapping(value = "/items",method = RequestMethod.POST)
-    public JsonResult getItems(@RequestBody FindDTO dataItemFindDTO){
-        return  ResultUtils.success(genericService.searchItems(dataItemFindDTO, "dataItem"));
+    public JsonResult getItems(@RequestBody SpecificFindDTO dataItemFindDTO){
+        return  dataItemService.getItems(dataItemFindDTO);
     }
 
 
@@ -283,7 +283,7 @@ public class DataItemRestController {
         // else
         //     return ResultUtils.success(dataItemService.getItemByDataId(id,"item"));
 
-        return ResultUtils.success(dataItemService.getItemByDataId(id,"dataItem"));
+        return ResultUtils.success(dataItemService.getItemByDataId(id,ItemTypeEnum.DataItem));
     }
 
 

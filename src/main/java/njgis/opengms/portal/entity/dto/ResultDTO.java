@@ -1,20 +1,17 @@
-package njgis.opengms.portal.entity.dto.template;
+package njgis.opengms.portal.entity.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @Description
  * @Author bin
- * @Date 2021/08/26
+ * @Date 2021/09/01
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class TemplateResultDTO {
+public class ResultDTO implements Serializable {
 
     String id;
     String status;

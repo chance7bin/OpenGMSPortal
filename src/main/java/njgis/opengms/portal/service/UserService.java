@@ -2,38 +2,28 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.bind.v2.TODO;
 import njgis.opengms.portal.dao.UserDao;
-import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
 import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
-import njgis.opengms.portal.entity.po.DataItem;
-import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
-import org.bson.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 
 /**
@@ -127,7 +117,7 @@ public class UserService {
                 resourceCount.setConcept(resourceCount.getConcept()+number);
                 break;
             case SpatialReference:
-                resourceCount.setSpatial(resourceCount.getSpatial()+number);
+                resourceCount.setSpatialReference(resourceCount.getSpatialReference()+number);
                 break;
             case Template:
                 resourceCount.setTemplate(resourceCount.getTemplate()+number);

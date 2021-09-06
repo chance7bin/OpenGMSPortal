@@ -21,11 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Data
-public class GenericCatalog {
+public class GenericCategory extends PortalId{
 
-    @Id
-    @Field(targetType = FieldType.STRING)
-    String id;
+    // @Id
+    // @Field(targetType = FieldType.STRING)
+    // String id;
     List<String> childrenId;
     String nameCn;
     String nameEn;
