@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @Description
  * @Author bin
- * @Date 2021/08/16
+ * @Date 2021/09/01
  */
-@Data
 @Document
-public class MethodClassification extends GenericCategory {
+@Data
+public class UnitClassification extends GenericCategory {
 }

@@ -3,9 +3,11 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemUpdateDTO;
+import njgis.opengms.portal.entity.dto.ResultDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.DataHub;
-import njgis.opengms.portal.entity.po.DataItem;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +49,12 @@ public class DataHubService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
+
+    public JsonResult getHubs(SpecificFindDTO dataHubsFindDTO){
+        return ResultUtils.success(genericService.searchItems(dataHubsFindDTO, ItemTypeEnum.DataHub));
+    }
+
+
     /**
      * 修改hub条目
      * @param dataItemUpdateDTO
@@ -54,12 +62,12 @@ public class DataHubService {
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject updateDataHubs(DataItemUpdateDTO dataItemUpdateDTO, String email) {
-        JSONObject dao = genericService.daoFactory("dataHub");
-        return dataItemService.updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"));
+    public JSONObject updateDataHubs(DataItemDTO dataItemUpdateDTO, String email, String id) {
+        JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataHub);
+        return dataItemService.updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"),id);
     }
 
-    public Page<DataHub> getUsersUploadDataHubs(String author, Integer page, Integer pagesize, Integer asc) {
+    public Page<ResultDTO> getUsersUploadDataHubs(String author, Integer page, Integer pagesize, Integer asc) {
 
         boolean as = false;
         if (asc == 1) {
@@ -67,7 +75,7 @@ public class DataHubService {
         }
 
         Sort sort = Sort.by(as ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
-        Pageable pageable = PageRequest.of(page, pagesize, sort);
+        Pageable pageable = PageRequest.of(page - 1, pagesize, sort);
         return dataHubDao.findByAuthor(pageable, author);
 
     }

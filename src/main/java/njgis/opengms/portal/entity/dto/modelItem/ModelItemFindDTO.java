@@ -1,9 +1,8 @@
 package njgis.opengms.portal.entity.dto.modelItem;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +12,7 @@ import java.util.List;
  * @Version 1.0.0
  */
 @Data
-public class ModelItemFindDTO extends FindDTO {
+public class ModelItemFindDTO extends SpecificFindDTO {
 
     List<String> classifications;// 在哪个分类下查找
     String authorEmail;//查找属于某位用户的模型条目

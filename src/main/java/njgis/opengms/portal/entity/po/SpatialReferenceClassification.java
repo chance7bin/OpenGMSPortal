@@ -1,15 +1,12 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * @Description
- * @Author bin
- * @Date 2021/08/16
- */
-@Data
 @Document
-public class MethodClassification extends GenericCategory {
+@Data
+public class SpatialReferenceClassification extends GenericCategory {
+
 }

@@ -20,7 +20,7 @@ public class UserResourceCount {
     int computableModel;
 
     int concept;
-    int spatial;
+    int spatialReference;
     int template;
     int unit;
     int theme;

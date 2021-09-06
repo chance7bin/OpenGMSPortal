@@ -3,7 +3,6 @@ package njgis.opengms.portal.entity.dto.dataItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.DataMeta;
 import njgis.opengms.portal.entity.doo.support.DataItemMeta;
 import njgis.opengms.portal.entity.dto.AddDTO;
@@ -20,14 +19,10 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataItemAddDTO extends AddDTO {
+public class DataItemDTO extends AddDTO {
     String url;  //原先的reference 若dataType为Url，则需填写该字段
     List<String> displays;
     String dataType;
     List<DataMeta> dataList; //若dataType为File, 则添加上传至数据容器的文件元数据
-    int shareCount=0;
-    int viewCount=0;
-    int thumbsUpCount=0;
     DataItemMeta meta;
-    String uploadImage;
 }

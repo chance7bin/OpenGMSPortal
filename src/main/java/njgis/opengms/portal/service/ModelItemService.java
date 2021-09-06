@@ -199,7 +199,7 @@ public class ModelItemService {
         String authorEmail = modelItemFindDTO.getAuthorEmail();
 
         Sort sort = Sort.by(modelItemFindDTO.getAsc() ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
         //取出要查询的所有分类
         List<String> classIdList = modelItemFindDTO.getClassifications();
