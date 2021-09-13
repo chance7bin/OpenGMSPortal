@@ -95,7 +95,7 @@ public class User extends PortalIdPlus {
 
     //通知
     int noticeNum;
-    List<UserNotice> noticeList;
+    List<Notice> noticeList;
 
     //时间信息
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")

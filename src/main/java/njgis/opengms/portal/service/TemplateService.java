@@ -130,7 +130,7 @@ public class TemplateService {
         template = (Template) repositoryService.commonInsertPart(template, templateAddDTO ,email, ItemTypeEnum.Template);
 
         try {
-            userService.updateUserResourceCount(email,ItemTypeEnum.Template.getText(),"add");
+            userService.updateUserResourceCount(email,ItemTypeEnum.Template,"add");
         }catch (Exception e){
             return ResultUtils.error("update user template resource fail");
         }

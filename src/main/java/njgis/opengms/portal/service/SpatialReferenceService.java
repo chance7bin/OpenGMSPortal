@@ -44,7 +44,7 @@ public class SpatialReferenceService {
         spatialReference = (SpatialReference) repositoryService.commonInsertPart(spatialReference,spatialReferenceDTO, email, ItemTypeEnum.SpatialReference);
 
         try {
-            userService.updateUserResourceCount(email,ItemTypeEnum.SpatialReference.getText(),"add");
+            userService.updateUserResourceCount(email,ItemTypeEnum.SpatialReference,"add");
         }catch (Exception e){
             return ResultUtils.error("update user spatial resource fail");
         }

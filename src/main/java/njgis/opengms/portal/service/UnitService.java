@@ -41,7 +41,7 @@ public class UnitService {
         unit = (Unit) repositoryService.commonInsertPart(unit,unitDTO, email, ItemTypeEnum.Unit);
 
         try {
-            userService.updateUserResourceCount(email,ItemTypeEnum.Unit.getText(),"add");
+            userService.updateUserResourceCount(email,ItemTypeEnum.Unit,"add");
         }catch (Exception e){
             return ResultUtils.error("update user unit resource fail");
         }

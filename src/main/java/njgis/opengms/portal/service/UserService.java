@@ -54,6 +54,9 @@ public class UserService {
     UserDao userDao;
 
     @Autowired
+    NoticeService noticeService;
+
+    @Autowired
     TokenService tokenService;
 
     /**
@@ -569,11 +572,11 @@ public class UserService {
      * @return void 
      * @Author bin
      **/
-    public void updateUserResourceCount(String email, String itemType, String op) throws NoSuchFieldException, IllegalAccessException {
+    public void updateUserResourceCount(String email, ItemTypeEnum itemType, String op) throws NoSuchFieldException, IllegalAccessException {
         User user = userDao.findFirstByEmail(email);
         UserResourceCount userResourceCount = user.getResourceCount();
         Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
-        Field field = aClass.getDeclaredField(itemType);
+        Field field = aClass.getDeclaredField(itemType.getText());
         field.setAccessible(true);
         int count = (int)field.get(userResourceCount);
         if (op.equals("add")) {
@@ -583,6 +586,12 @@ public class UserService {
         }
         field.set(userResourceCount,count);
         user.setResourceCount(userResourceCount);
+        userDao.save(user);
+    }
+
+    public void updateUserNoticeNum(String email){
+        User user = userDao.findFirstByEmail(email);
+        user.setNoticeNum(noticeService.countUserNoticeNum(email));
         userDao.save(user);
     }
 
