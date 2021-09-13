@@ -77,6 +77,9 @@ public class GenericService {
     @Autowired
     UnitClassificationDao unitClassificationDao;
 
+    @Autowired
+    VersionDao versionDao;
+
 
 
     @Value("${htmlLoadPath}")
@@ -200,6 +203,10 @@ public class GenericService {
             case Unit:{
                 daoUtils.put("itemDao",unitDao);
                 daoUtils.put("classificationDao",unitClassificationDao);
+                break;
+            }
+            case Version:{
+                daoUtils.put("itemDao",versionDao);
                 break;
             }
             default:
@@ -424,5 +431,9 @@ public class GenericService {
         return TemplateObject;
     }
 
+
+    public Pageable getPageable(FindDTO findDTO){
+        return PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
+    }
 
 }

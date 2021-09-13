@@ -1,6 +1,8 @@
 package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
@@ -45,6 +47,12 @@ public class UserRestController {
     
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
 
     // @RequestMapping("/test")
     // public String test(){
@@ -318,7 +326,7 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
     @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
-    JsonResult getUserUploadData(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
@@ -352,7 +360,7 @@ public class UserRestController {
      **/
     @ApiOperation(value = "得到用户上传的dataMethod [/user(profile)/getApplication]")
     @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
-    public JsonResult getUserUploadData(@RequestParam(value = "email", required = false) String email,
+    public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
                                         @RequestParam(value = "page", required = false) Integer page,
                                         @RequestParam(value = "pagesize", required = false) Integer pagesize,
                                         @RequestParam(value = "asc", required = false) Integer asc,
@@ -428,5 +436,114 @@ public class UserRestController {
         return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
     }
 
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
+    public JsonResult getUserEditVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserEditVersion(email);
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
+    public JsonResult getUserReviewVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserReviewVersion(email);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户的通知列表")
+    @RequestMapping (value = "/noticeList", method = RequestMethod.POST)
+    public JsonResult getUserNoticeList(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.getUserNoticeList(findDTO,email));
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户未读的通知数量")
+    @RequestMapping (value = "/unreadNoticeCount", method = RequestMethod.GET)
+    public JsonResult getUnreadNoticeCount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
+    }
 
 }

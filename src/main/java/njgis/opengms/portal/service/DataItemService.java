@@ -11,6 +11,7 @@ import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
@@ -61,6 +62,12 @@ public class DataItemService {
 
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
@@ -360,7 +367,7 @@ public class DataItemService {
 
             ((GenericItemDao)daoFactory.get("itemDao")).insert(item);
 
-            userService.updateUserResourceCount(email,type.getText(),"add");
+            userService.updateUserResourceCount(email,type,"add");
 
             // 这个是新增dataCategorys表记录的，该表已被废弃
             // CategoryAddDTO categoryAddDTO = new CategoryAddDTO();
@@ -470,7 +477,7 @@ public class DataItemService {
     public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao, String id){
         JSONObject result = new JSONObject();
         PortalItem item = (PortalItem) genericItemDao.findFirstById(id);
-
+        String originalItemName = item.getName();
 
         // 更新localization
         if (item.getLocalizationList().size() == 0) {
@@ -484,31 +491,45 @@ public class DataItemService {
         String author = item.getAuthor();
         Date now = new Date();
         if (!item.isLock()){
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!author.equals(email)){
+                item.setLock(true);
+                genericItemDao.save(item);
+            }
+
+            // 拷贝的时候忽略author字段，因为前端没有传来author
+            BeanUtils.copyProperties(dataItemUpdateDTO,item);
+            String uploadImage = dataItemUpdateDTO.getUploadImage();
+            if (!uploadImage.contains("/dataItem/") && !uploadImage.equals("")){
+                //删除旧图片
+                File file = new File(resourcePath + item.getImage());
+                if (file.exists()&&file.isFile())
+                    file.delete();
+                //添加新图片
+                String uuid = UUID.randomUUID().toString();
+                String path = "/static/repository/dataItem/" + uuid + ".jpg";//入库
+                String path1 = "/repository/dataItem/" + uuid + ".jpg";//存储
+                String imgStr = uploadImage.split(",")[1];
+                Utils.base64StrToImage(imgStr, resourcePath + path1);
+                item.setImage(path);
+            }
+            item.setLastModifyTime(now);
+            item.setLastModifier(email);
+
             if (author.equals(email)){
-                // 拷贝的时候忽略author字段，因为前端没有传来author
-                BeanUtils.copyProperties(dataItemUpdateDTO,item);
-                String uploadImage = dataItemUpdateDTO.getUploadImage();
-                if (!uploadImage.contains("/dataItem/") && !uploadImage.equals("")){
-                    //删除旧图片
-                    File file = new File(resourcePath + item.getImage());
-                    if (file.exists()&&file.isFile())
-                        file.delete();
-                    //添加新图片
-                    String uuid = UUID.randomUUID().toString();
-                    String path = "/static/repository/dataItem/" + uuid + ".jpg";//入库
-                    String path1 = "/repository/dataItem/" + uuid + ".jpg";//存储
-                    String imgStr = uploadImage.split(",")[1];
-                    Utils.base64StrToImage(imgStr, resourcePath + path1);
-                    item.setImage(path);
-                }
-                item.setLastModifyTime(now);
                 genericItemDao.save(item);
                 result.put("method", "update");
                 result.put("id",item.getId());
                 return result;
             }else {
-                // TODO: 2021/8/24 author不同时需提交审核
+                Version version = versionService.addVersion(item, email,originalItemName);
+                //发送通知
+                List<String> recipientList = Arrays.asList(author);
+                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
+                result.put("versionId", version.getId());
                 return result;
             }
         } else {
@@ -561,7 +582,7 @@ public class DataItemService {
 
         try {
             dataItemDao.deleteById(id);
-            userService.updateUserResourceCount(email, "dataItem", "delete");
+            userService.updateUserResourceCount(email, ItemTypeEnum.DataItem, "delete");
         }catch (Exception e){
             return ResultUtils.error("delete error");
         }

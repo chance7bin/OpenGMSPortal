@@ -105,7 +105,7 @@ public class DataHubService {
 
         try {
             dataHubDao.deleteById(id);
-            userService.updateUserResourceCount(email, "dataHub", "delete");
+            userService.updateUserResourceCount(email, ItemTypeEnum.DataHub, "delete");
         }catch (Exception e){
             return ResultUtils.error("delete error");
         }

@@ -1,19 +1,23 @@
 package njgis.opengms.portal.utils;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.entity.doo.ModifiedPropertyInfo;
 import njgis.opengms.portal.entity.doo.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.PropertyModelInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -354,5 +358,125 @@ public class Utils {
         list.removeAll(list2);
         return list;
     }
+
+
+    /**
+     * 比较两个对象属性值是否相同,如果不同返回修改过的属性信息集合,包括：字段名,原始数据值，新值
+     *
+     * @param oldObj       原始对象
+     * @param newObj       新对象
+     * @param ignoreFields 忽略比较字段,如果忽略比较字段和记录比较字段中都有相同字段，则忽略比较字段优先级较高
+     * @param recordFields 记录比较字段
+     * @return 变化后的数据集合
+     */
+    public static <T> List<ModifiedPropertyInfo> compareProperty(
+        @NonNull T oldObj,
+        @NonNull T newObj,
+        List<String> ignoreFields,
+        List<String> recordFields
+    ) {
+        // 通过反射获取原始对象的属性名称、getter返回值类型、属性值等信息
+        List<PropertyModelInfo> oldObjectPropertyValue = getObjectPropertyValue(oldObj, ignoreFields, recordFields);
+        // 通过反射获取新对象的属性名称、getter返回值类型、属性值等信息
+        List<PropertyModelInfo> newObjectPropertyValue = getObjectPropertyValue(newObj, ignoreFields, recordFields);
+
+        // 定义修改属性值接收器集合,包括：字段名,原始数据值，新值
+        List<ModifiedPropertyInfo> modifiedPropertyInfos = new ArrayList<>(oldObjectPropertyValue.size());
+
+        // 获取新对象所有属性、属性值
+        Map<String, Object> newObjectInfoMap = getObjectPropertyAndValue(newObjectPropertyValue);
+        // 获取原始对象所有属性、属性值
+        Map<String, Object> oldObjectInfoMap = getObjectPropertyAndValue(oldObjectPropertyValue);
+
+        // 处理原始对象数据内容并和新对象的属性、属性值比较
+        for (Map.Entry<String, Object> oldInfoMap : oldObjectInfoMap.entrySet()) {
+            String oldKey = oldInfoMap.getKey();
+            Object oldValue = oldInfoMap.getValue();
+
+            // 比较原始对象和新对象之间的属性和属性值差异
+            if (newObjectInfoMap.containsKey(oldKey)) {
+                ModifiedPropertyInfo modifiedPropertyInfo = new ModifiedPropertyInfo();
+                Object newValue = newObjectInfoMap.get(oldKey);
+
+                if (oldValue != null && newValue != null) {
+                    // 初始值和新值不为空比较值
+                    if (!oldValue.equals(newValue)) {
+                        modifiedPropertyInfo.setPropertyName(oldKey);
+                        modifiedPropertyInfo.setOldValue(oldValue);
+                        modifiedPropertyInfo.setNewValue(newValue);
+                        modifiedPropertyInfos.add(modifiedPropertyInfo);
+                    }
+                } else if (oldValue == null && newValue == null) {
+                    // 如果初始值和新值全部为空不做处理
+                } else {
+                    // 如果初始值和新值有一个为空
+                    modifiedPropertyInfo.setPropertyName(oldKey);
+                    modifiedPropertyInfo.setOldValue(oldValue);
+                    modifiedPropertyInfo.setNewValue(newValue);
+                    modifiedPropertyInfos.add(modifiedPropertyInfo);
+                }
+            }
+        }
+        return modifiedPropertyInfos;
+    }
+
+    /**
+     * 组建对象属性和属性值信息数据
+     *
+     * @param objectPropertyValue 对象属性和属性值信息
+     * @return 对象属性和属性值信息
+     */
+    private static Map<String, Object> getObjectPropertyAndValue(List<PropertyModelInfo> objectPropertyValue) {
+        Map<String, Object> objectInfoMap = new HashMap<>(16);
+        for (PropertyModelInfo propertyModelInfo : objectPropertyValue) {
+            // 对象属性名称
+            String propertyName = propertyModelInfo.getPropertyName();
+            // 对象属性值
+            Object value = propertyModelInfo.getValue();
+            objectInfoMap.put(propertyName, value);
+        }
+        return objectInfoMap;
+    }
+
+    /**
+     * 通过反射获取对象的属性名称、getter返回值类型、属性值等信息
+     *
+     * @param obj          对象
+     * @param ignoreFields 忽略字段属性集合
+     * @param recordFields 比较字段属性集合
+     * @return 对象的信息
+     */
+    private static <T> List<PropertyModelInfo> getObjectPropertyValue(
+        @NonNull T obj,
+        List<String> ignoreFields,
+        List<String> recordFields
+    ) {
+        Class<?> objClass = obj.getClass();
+        PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(objClass);
+        List<PropertyModelInfo> modelInfos = new ArrayList<>(propertyDescriptors.length);
+
+        // 遍历对象属性信息
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            String name = propertyDescriptor.getName();
+            Method readMethod = propertyDescriptor.getReadMethod();
+            // 该字段属性是否被过滤
+            boolean isIgnore = ignoreFields == null || !ignoreFields.contains(name);
+            // 该字段属性是否必须被比较
+            boolean isRecord = recordFields == null || recordFields.contains(name);
+            if (readMethod != null && isIgnore && isRecord) {
+                try {
+                    // 获取数据类型
+                    Class<?> returnType = readMethod.getReturnType();
+                    // 获取数据值
+                    Object invoke = readMethod.invoke(obj);
+                    modelInfos.add(new PropertyModelInfo(name, invoke, returnType));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    log.error("反射获取类:" + objClass.getName() + "方法异常:", e);
+                }
+            }
+        }
+        return modelInfos;
+    }
+
 
 }

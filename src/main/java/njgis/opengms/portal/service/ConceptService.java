@@ -41,7 +41,7 @@ public class ConceptService {
         concept = (Concept) repositoryService.commonInsertPart(concept,conceptAddDTO, email, ItemTypeEnum.Concept);
 
         try {
-            userService.updateUserResourceCount(email,ItemTypeEnum.Concept.getText(),"add");
+            userService.updateUserResourceCount(email,ItemTypeEnum.Concept,"add");
         }catch (Exception e){
             return ResultUtils.error("update user concept resource fail");
         }

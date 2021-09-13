@@ -16,7 +16,9 @@ import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.DataServerTask;
 import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.FileUtil;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
@@ -96,6 +98,13 @@ public class DataMethodService {
     @Autowired
     TemplateService templateService;
 
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
+
     @Value("${dataServerManager}")
     private String dataServerManager;
 
@@ -107,6 +116,7 @@ public class DataMethodService {
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
+
 
 
     public JsonResult getMethods(SpecificFindDTO dataMethodsFindDTO){
@@ -627,7 +637,7 @@ public class DataMethodService {
                 //将服务invokeApplications置入,如果不绑定测试数据，则无需部署，直接创建条目即可
                 if(dataMethod.getTestData().size() == 0){
                     dataMethodDao.insert(dataMethod);
-                    userService.updateUserResourceCount(email, "dataMethod", "add");
+                    userService.updateUserResourceCount(email, ItemTypeEnum.DataMethod, "add");
                     result = ResultUtils.success(dataMethod.getId());
                     return result;
                 }
@@ -649,7 +659,7 @@ public class DataMethodService {
                 //部署服务
                 result = deployPackage(dataMethod);
 
-                userService.updateUserResourceCount(email, "dataMethod", "add");
+                userService.updateUserResourceCount(email, ItemTypeEnum.DataMethod, "add");
 
 //                if (deployRes.getCode() == -1){
 //                    result.put("code", -2);
@@ -880,8 +890,17 @@ public class DataMethodService {
     public JSONObject update(List<MultipartFile> files, String email, DataMethodDTO updateDTO, String id) {
         JSONObject result = new JSONObject();
         DataMethod dataMethod = dataMethodDao.findFirstById(id);
+        String originalItemName = dataMethod.getName();
 
         if (!dataMethod.isLock()) {
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!dataMethod.getAuthor().equals(email)){
+                dataMethod.setLock(true);
+                dataMethodDao.save(dataMethod);
+            }
+
 
             // 更新绑定的模板(要在copy属性前更新)
             List<String> newTemplate = new ArrayList<>();
@@ -935,14 +954,20 @@ public class DataMethodService {
 
             Date now = new Date();
 
-            if (dataMethod.getAuthor().equals(email)) {
-                dataMethod.setLastModifyTime(now);
-                dataMethodDao.save(dataMethod);
+            dataMethod.setLastModifyTime(now);
+            dataMethod.setLastModifier(email);
 
+            if (dataMethod.getAuthor().equals(email)) {
+                dataMethodDao.save(dataMethod);
                 result.put("method", "update");
                 result.put("id", dataMethod.getId());
             } else {
+                Version version = versionService.addVersion(dataMethod, email,originalItemName);
+                //发送通知
+                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
+                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
+                result.put("versionId", version.getId());
                 return result;
             }
 
@@ -1028,7 +1053,7 @@ public class DataMethodService {
 
             try {
                 dataMethodDao.delete(dataMethod);
-                userService.updateUserResourceCount(dataMethod.getAuthor(), "dataMethod", "delete");
+                userService.updateUserResourceCount(dataMethod.getAuthor(), ItemTypeEnum.DataMethod, "delete");
             }catch (Exception e){
                 return ResultUtils.error("delete error");
             }
