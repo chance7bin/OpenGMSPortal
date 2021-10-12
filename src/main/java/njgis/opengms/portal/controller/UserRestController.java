@@ -1,28 +1,23 @@
 package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.extern.java.Log;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.enums.ResultEnum;
-import njgis.opengms.portal.service.DataHubService;
-import njgis.opengms.portal.service.DataItemService;
-import njgis.opengms.portal.service.DataMethodService;
-import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import springfox.documentation.service.ApiListing;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,7 +30,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @RestController
-@RequestMapping({"/user","/profile"})
+@RequestMapping({"/user"})
 public class UserRestController {
 
     @Autowired
@@ -49,6 +44,15 @@ public class UserRestController {
 
     @Autowired
     DataMethodService dataMethodService;
+    
+    @Autowired
+    GenericService genericService;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
 
     // @RequestMapping("/test")
     // public String test(){
@@ -303,7 +307,7 @@ public class UserRestController {
             session.removeAttribute("preUrl");
 
         } else {
-            System.out.println("userSpace1");
+            // System.out.println("userSpace1");
 
             modelAndView.setViewName("userSpace1");
         }
@@ -314,39 +318,34 @@ public class UserRestController {
 
     /**
      * 得到用户上传的dataItem
-     * @param email
-     * @param page
-     * @param pagesize
-     * @param asc
-     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @param findDTO
+     * @param request 
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
      * @Author bin
      **/
+    @LoginRequired
     @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
-    @RequestMapping(value = "/dataItems", method = RequestMethod.GET)
-    JsonResult getUserUploadData(@RequestParam(value = "email", required = false) String email,
-                                 @RequestParam(value = "page", required = false) Integer page,
-                                 @RequestParam(value = "pagesize", required = false) Integer pagesize,
-                                 @RequestParam(value = "asc", required = false) Integer asc){
-        return ResultUtils.success(dataItemService.getUsersUploadData(email, page - 1, pagesize, asc));
+    @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
+    JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
     }
 
     /**
      * 得到用户上传的dataHub
-     * @param email
-     * @param page
-     * @param pagesize
-     * @param asc
-     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @param findDTO
+     * @param request 
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
      * @Author bin
      **/
+    @LoginRequired
     @ApiOperation(value = "得到用户上传的dataHub [/user(profile)/getDataHubs]")
-    @RequestMapping(value = "/dataHubs", method = RequestMethod.GET)
-    JsonResult getUserUploadDataHubs(@RequestParam(value = "email", required = false) String email,
-                                     @RequestParam(value = "page", required = false) Integer page,
-                                     @RequestParam(value = "pagesize", required = false) Integer pagesize,
-                                     @RequestParam(value = "asc", required = false) Integer asc
-    ) {
-        return ResultUtils.success(dataHubService.getUsersUploadDataHubs(email, page - 1, pagesize, asc));
+    @RequestMapping(value = "/dataHubList", method = RequestMethod.POST)
+    JsonResult getUserUploadDataHubs(@RequestBody FindDTO findDTO,HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataHub));
     }
 
     /**
@@ -360,14 +359,191 @@ public class UserRestController {
      * @Author bin
      **/
     @ApiOperation(value = "得到用户上传的dataMethod [/user(profile)/getApplication]")
-    @RequestMapping(value = "/dataMethods", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
-    public JsonResult getUserUploadData(@RequestParam(value = "email", required = false) String email,
+    @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
+    public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
                                         @RequestParam(value = "page", required = false) Integer page,
                                         @RequestParam(value = "pagesize", required = false) Integer pagesize,
                                         @RequestParam(value = "asc", required = false) Integer asc,
                                         @ApiParam(name = "type", value = "区分process与visual") @RequestParam(value = "type", required = false) String type
     ) {
-        return ResultUtils.success(dataMethodService.getUsersUploadData(email, page - 1, pagesize, asc, type));
+        return ResultUtils.success(dataMethodService.getUsersUploadData(email, page, pagesize, asc, type));
+    }
+
+
+    /**
+     * 得到用户上传的concept
+     * @param findDTO
+     * @param request 
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户上传的concept [/repository/getConceptsByUserId]")
+    @RequestMapping(value = "/conceptList",method = RequestMethod.POST)
+    public JsonResult getConceptsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Concept));
+    }
+
+    /**
+     * 得到用户上传的spatialReference
+     * @param findDTO
+     * @param request 
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户上传的spatialReference [/repository/getSpatialsByUserId]")
+    @RequestMapping(value = "/spatialReferenceList",method = RequestMethod.POST)
+    public JsonResult getSpatialsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.SpatialReference));
+    }
+
+
+    /**
+     * 得到用户template
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户template [ /repository/getTemplatesByUserId ]")
+    @RequestMapping(value = "/templateList",method = RequestMethod.POST)
+    public JsonResult getTemplatesByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Template));
+    }
+
+
+    /**
+     * 得到用户unit
+     * @param findDTO
+     * @param request 
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户unit [ /repository/getUnitsByUserId ]")
+    @RequestMapping(value = "/unitList",method = RequestMethod.POST)
+    public JsonResult getUnitsByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
+    public JsonResult getUserEditVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserEditVersion(email);
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
+    public JsonResult getUserReviewVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserReviewVersion(email);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户的通知列表")
+    @RequestMapping (value = "/noticeList", method = RequestMethod.POST)
+    public JsonResult getUserNoticeList(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.getUserNoticeList(findDTO,email));
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户未读的通知数量")
+    @RequestMapping (value = "/unreadNoticeCount", method = RequestMethod.GET)
+    public JsonResult getUnreadNoticeCount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
     }
 
 }

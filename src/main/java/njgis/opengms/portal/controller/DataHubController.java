@@ -9,10 +9,9 @@ import njgis.opengms.portal.dao.DataHubDao;
 import njgis.opengms.portal.dao.DataItemDao;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemAddDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemUpdateDTO;
-import njgis.opengms.portal.entity.po.DataHub;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.DataHubService;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.GenericService;
@@ -21,10 +20,6 @@ import njgis.opengms.portal.utils.ResultUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,11 +75,11 @@ public class DataHubController
     @LoginRequired
     @ApiOperation(value = "新增dataHubs [ /dataItem/createHubs ]")
     @PostMapping
-    public JsonResult addHubs(@RequestBody DataItemAddDTO dataItemAddDTO, HttpServletRequest request) {
+    public JsonResult addHubs(@RequestBody DataItemDTO dataItemAddDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
-        dataItemAddDTO.setAuthor(email);
-        return dataItemService.insert(dataItemAddDTO, email, "dataHub");
+        // dataItemAddDTO.setAuthor(email);
+        return dataItemService.insert(dataItemAddDTO, email, ItemTypeEnum.DataHub);
     }
 
     /**
@@ -96,11 +91,11 @@ public class DataHubController
      **/
     @LoginRequired
     @ApiOperation(value = "更新data hub(只写了修改者和作者相同的情况) [ /dataItem/updateHubs ]")
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    public JsonResult updateDataHubs(@RequestBody DataItemUpdateDTO dataItemUpdateDTO, HttpServletRequest request) {
+    @PutMapping(value = "/{id}")
+    public JsonResult updateDataHubs(@PathVariable String id , @RequestBody DataItemDTO dataItemUpdateDTO, HttpServletRequest request) {
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
-        JSONObject result= dataHubService.updateDataHubs(dataItemUpdateDTO,email);
+        JSONObject result= dataHubService.updateDataHubs(dataItemUpdateDTO,email,id);
         if(result==null){
             return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
         }
@@ -138,8 +133,8 @@ public class DataHubController
      **/
     @ApiOperation(value = "获取Hub Repository下的数据 [ /dataItem/Items/getHubs ]")
     @RequestMapping(value = "/items",method = RequestMethod.POST)
-    public JsonResult getHubs(@RequestBody FindDTO dataHubsFindDTO){
-        return  ResultUtils.success(genericService.searchItems(dataHubsFindDTO, "dataHub"));
+    public JsonResult getHubs(@RequestBody SpecificFindDTO dataHubsFindDTO){
+        return  dataHubService.getHubs(dataHubsFindDTO);
     }
 
     /**
@@ -171,7 +166,7 @@ public class DataHubController
         // }
         // else
         //     return ResultUtils.success(dataItemService.getItemByDataId(id,"hub"));
-        return ResultUtils.success(dataItemService.getItemByDataId(id,"dataHub"));
+        return ResultUtils.success(dataItemService.getItemByDataId(id,ItemTypeEnum.DataHub));
     }
 
 

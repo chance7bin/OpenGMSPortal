@@ -1,6 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
+import njgis.opengms.portal.entity.doo.PortalItem;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  */
 @Document
 @Data
-public class Template extends DataItem{
+public class Template extends PortalItem {
 
     String xml;
     String type;

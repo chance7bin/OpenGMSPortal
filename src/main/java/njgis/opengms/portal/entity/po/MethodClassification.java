@@ -1,7 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.GenericCatalog;
+import njgis.opengms.portal.entity.doo.GenericCategory;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -11,5 +11,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @Document
-public class MethodClassification extends GenericCatalog {
+public class MethodClassification extends GenericCategory {
 }

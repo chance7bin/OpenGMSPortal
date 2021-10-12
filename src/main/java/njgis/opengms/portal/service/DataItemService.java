@@ -5,18 +5,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.*;
-import njgis.opengms.portal.entity.doo.data.DataCategorys;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemAddDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemUpdateDTO;
+import njgis.opengms.portal.entity.dto.ResultDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.*;
-import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -65,11 +63,21 @@ public class DataItemService {
     @Autowired
     GenericService genericService;
 
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
+
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
     @Value("${resourcePath}")
     private String resourcePath;
+
+    public JsonResult getItems(SpecificFindDTO dataItemFindDTO){
+        return ResultUtils.success(genericService.searchItems(dataItemFindDTO, ItemTypeEnum.DataItem));
+    }
 
     /**
      * @Description 根据传入的id返回dataItem的详情界面
@@ -311,7 +319,7 @@ public class DataItemService {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    public JsonResult insert(DataItemAddDTO dataItemAddDTO, String email, String type) {
+    public JsonResult insert(DataItemDTO dataItemAddDTO, String email, ItemTypeEnum type) {
         try {
             PortalItem item = null;
             JSONObject daoFactory = genericService.daoFactory(type);
@@ -331,6 +339,7 @@ public class DataItemService {
             // oid字段已被废弃
             // item.setOid(UUID.randomUUID().toString());
             item.setCreateTime(now);
+            item.setAuthor(email);
             //设置dataItem的图片path以及存储图片
             String uuid = UUID.randomUUID().toString();
             String path = "/static/repository/dataItem/" + uuid + ".jpg";
@@ -409,12 +418,12 @@ public class DataItemService {
     }
 
     /**
-     * 根据id得到item，加入一个存目录id的categories
+     * 根据id得到item
      * @param dataId
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject getItemByDataId(String dataId, String type){
+    public JSONObject getItemByDataId(String dataId, ItemTypeEnum type){
 
         JSONObject daoFactory = genericService.daoFactory(type);
 
@@ -448,10 +457,10 @@ public class DataItemService {
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject updateDataItem(DataItemUpdateDTO dataItemUpdateDTO, String email){
+    public JSONObject updateDataItem(DataItemDTO dataItemUpdateDTO, String email, String id){
 
-        JSONObject dao = genericService.daoFactory("dataItem");
-        return updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"));
+        JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataItem);
+        return updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"),id);
 
     }
 
@@ -465,10 +474,10 @@ public class DataItemService {
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject updateItem(DataItemUpdateDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao){
+    public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao, String id){
         JSONObject result = new JSONObject();
-        PortalItem item = (PortalItem) genericItemDao.findFirstById(dataItemUpdateDTO.getDataItemId());
-
+        PortalItem item = (PortalItem) genericItemDao.findFirstById(id);
+        String originalItemName = item.getName();
 
         // 更新localization
         if (item.getLocalizationList().size() == 0) {
@@ -482,31 +491,45 @@ public class DataItemService {
         String author = item.getAuthor();
         Date now = new Date();
         if (!item.isLock()){
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!author.equals(email)){
+                item.setLock(true);
+                genericItemDao.save(item);
+            }
+
+            // 拷贝的时候忽略author字段，因为前端没有传来author
+            BeanUtils.copyProperties(dataItemUpdateDTO,item);
+            String uploadImage = dataItemUpdateDTO.getUploadImage();
+            if (!uploadImage.contains("/dataItem/") && !uploadImage.equals("")){
+                //删除旧图片
+                File file = new File(resourcePath + item.getImage());
+                if (file.exists()&&file.isFile())
+                    file.delete();
+                //添加新图片
+                String uuid = UUID.randomUUID().toString();
+                String path = "/static/repository/dataItem/" + uuid + ".jpg";//入库
+                String path1 = "/repository/dataItem/" + uuid + ".jpg";//存储
+                String imgStr = uploadImage.split(",")[1];
+                Utils.base64StrToImage(imgStr, resourcePath + path1);
+                item.setImage(path);
+            }
+            item.setLastModifyTime(now);
+            item.setLastModifier(email);
+
             if (author.equals(email)){
-                // 拷贝的时候忽略author字段，因为前端没有传来author
-                BeanUtils.copyProperties(dataItemUpdateDTO,item,"author");
-                String uploadImage = dataItemUpdateDTO.getUploadImage();
-                if (!uploadImage.contains("/dataItem/") && !uploadImage.equals("")){
-                    //删除旧图片
-                    File file = new File(resourcePath + item.getImage());
-                    if (file.exists()&&file.isFile())
-                        file.delete();
-                    //添加新图片
-                    String uuid = UUID.randomUUID().toString();
-                    String path = "/static/repository/dataItem/" + uuid + ".jpg";//入库
-                    String path1 = "/repository/dataItem/" + uuid + ".jpg";//存储
-                    String imgStr = uploadImage.split(",")[1];
-                    Utils.base64StrToImage(imgStr, resourcePath + path1);
-                    item.setImage(path);
-                }
-                item.setLastModifyTime(now);
                 genericItemDao.save(item);
                 result.put("method", "update");
                 result.put("id",item.getId());
                 return result;
             }else {
-                // TODO: 2021/8/24 author不同时需提交审核
+                Version version = versionService.addVersion(item, email,originalItemName);
+                //发送通知
+                List<String> recipientList = Arrays.asList(author);
+                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
+                result.put("versionId", version.getId());
                 return result;
             }
         } else {
@@ -523,14 +546,14 @@ public class DataItemService {
      * @return org.springframework.data.domain.Page<njgis.opengms.portal.entity.po.DataItem>
      * @Author bin
      **/
-    public Page<DataItem> getUsersUploadData(String author, Integer page, Integer pagesize, Integer asc) {
+    public Page<ResultDTO> getUsersUploadData(String author, Integer page, Integer pagesize, Integer asc) {
 
         boolean as = false;
         if (asc == 1)
             as = true;
 
         Sort sort = Sort.by(as ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
-        Pageable pageable = PageRequest.of(page, pagesize, sort);
+        Pageable pageable = PageRequest.of(page - 1, pagesize, sort);
         return dataItemDao.findByAuthor(pageable, author);
 
     }
@@ -559,7 +582,7 @@ public class DataItemService {
 
         try {
             dataItemDao.deleteById(id);
-            userService.updateUserResourceCount(email, "dataItem", "delete");
+            userService.updateUserResourceCount(email, ItemTypeEnum.DataItem, "delete");
         }catch (Exception e){
             return ResultUtils.error("delete error");
         }

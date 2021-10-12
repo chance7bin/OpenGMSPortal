@@ -1,7 +1,5 @@
 package njgis.opengms.portal.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -9,41 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.doo.data.InvokeService;
-import njgis.opengms.portal.entity.doo.support.TaskData;
-import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
-import njgis.opengms.portal.entity.dto.dataMethod.DataMethodUpdateDTO;
-import njgis.opengms.portal.entity.dto.template.TemplateResultDTO;
-import njgis.opengms.portal.entity.po.DataServerTask;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.DataMethodService;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -52,12 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @Description
@@ -129,19 +98,19 @@ public class DataMethodController {
      **/
     @LoginRequired
     @ApiOperation(value = "更新dataMethod(只写了修改者和作者相同的情况) [ /dataApplication/update ]")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public JsonResult update(HttpServletRequest request) throws IOException {
+    @PutMapping(value = "/{id}")
+    public JsonResult update(@PathVariable String id, HttpServletRequest request) throws IOException {
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = multipartRequest.getFiles("resources");
         MultipartFile file = multipartRequest.getFile("dataApplication");
         String model = IOUtils.toString(file.getInputStream(), "utf-8");
         JSONObject jsonObject = JSONObject.parseObject(model);
-        DataMethodUpdateDTO dataMethodUpdateDTO = JSONObject.toJavaObject(jsonObject, DataMethodUpdateDTO.class);
+        DataMethodDTO dataMethodUpdateDTO = JSONObject.toJavaObject(jsonObject, DataMethodDTO.class);
 
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
-        JSONObject result = dataMethodService.update(files, email, dataMethodUpdateDTO);
+        JSONObject result = dataMethodService.update(files, email, dataMethodUpdateDTO,id);
 
         if (result == null) {
             return ResultUtils.error("There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
@@ -166,8 +135,8 @@ public class DataMethodController {
      **/
     @ApiOperation(value = "获取Method Repository下的数据 [ /dataItem/Items/getMethods (/dataApplication/methods/getApplication)]")
     @RequestMapping(value = "/items",method = RequestMethod.POST)
-    public JsonResult getMethods(@RequestBody FindDTO dataMethodsFindDTO){
-        return  ResultUtils.success(genericService.searchItems(dataMethodsFindDTO, "dataMethod"));
+    public JsonResult getMethods(@RequestBody SpecificFindDTO dataMethodsFindDTO){
+        return dataMethodService.getMethods(dataMethodsFindDTO);
     }
 
     /**

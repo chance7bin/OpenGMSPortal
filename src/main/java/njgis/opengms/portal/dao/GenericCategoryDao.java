@@ -1,7 +1,6 @@
 package njgis.opengms.portal.dao;
 
-import njgis.opengms.portal.entity.doo.GenericCatalog;
-import njgis.opengms.portal.entity.po.Classification;
+import njgis.opengms.portal.entity.doo.GenericCategory;
 
 /**
  * @Description 通用目录dao
