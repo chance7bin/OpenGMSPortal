@@ -1,12 +1,14 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
+import njgis.opengms.portal.dao.DataMethodDao;
 import njgis.opengms.portal.dao.TemplateDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.template.TemplateDTO;
+import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.Template;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -43,6 +45,9 @@ public class TemplateService {
 
     @Autowired
     RepositoryService repositoryService;
+
+    @Autowired
+    DataMethodDao dataMethodDao;
 
     @Value("${resourcePath}")
     private String resourcePath;
@@ -146,36 +151,7 @@ public class TemplateService {
      * @Author bin
      **/
     public JsonResult updateTemplate(TemplateDTO templateUpdateDTO, String email, String id) {
-        // JSONObject result = new JSONObject();
-        // Template template = templateDao.findFirstById(id);
-        // String author = template.getAuthor();
-        // if (!template.isLock()) {
-        //
-        //     template = (Template) repositoryService.commonUpdatePart(template,templateUpdateDTO,ItemTypeEnum.Template);
-        //
-        //     if (author.equals(email)) {
-        //         templateDao.save(template);
-        //         result.put("method", "update");
-        //         result.put("id", template.getId());
-        //     } else {
-        //         // TODO: 2021/8/31 不是作者更新的还没做
-        //         result.put("method", "version");
-        //         // result.put("oid", templateVersion.getOid());
-        //
-        //     }
-        //     // return result;
-        // } else {
-        //     result = null;
-        // }
-        //
-        // if(result==null){
-        //     return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
-        // }
-        // else {
-        //     return ResultUtils.success(result);
-        // }
         return repositoryService.commonUpdatePart(id,email,templateUpdateDTO,ItemTypeEnum.Template);
-
     }
 
 
@@ -220,4 +196,33 @@ public class TemplateService {
         return repositoryService.getRepositoryById(id,templateDao);
     }
 
+
+    public List<Template> searchALL(){
+        List<Template> template = templateDao.findAll();
+        return template;
+    }
+
+    public List<Template> searchByName(String name){
+        List<Template> template = templateDao.findAllByName(name);
+        return template;
+    }
+
+
+    public JsonResult getRelatedDataMethods(String templateId){
+        Template template = templateDao.findFirstById(templateId);
+        if(template != null){
+            List<String> relatedMethods = template.getRelatedMethods();
+            if(relatedMethods != null){
+                List<DataMethod> dataMethods = new ArrayList<>();
+                for(String relatedMethod:relatedMethods){
+                    DataMethod dataMethod = dataMethodDao.findFirstById(relatedMethod);
+                    dataMethods.add(dataMethod);
+                }
+                return ResultUtils.success(dataMethods);
+            }else {
+                return ResultUtils.error();
+            }
+        }
+        return ResultUtils.error();
+    }
 }

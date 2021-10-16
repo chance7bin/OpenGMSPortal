@@ -90,7 +90,7 @@ public class DataHubController
      * @Author bin
      **/
     @LoginRequired
-    @ApiOperation(value = "更新data hub(只写了修改者和作者相同的情况) [ /dataItem/updateHubs ]")
+    @ApiOperation(value = "更新data hub [ /dataItem/updateHubs ]")
     @PutMapping(value = "/{id}")
     public JsonResult updateDataHubs(@PathVariable String id , @RequestBody DataItemDTO dataItemUpdateDTO, HttpServletRequest request) {
         HttpSession session=request.getSession();
@@ -170,7 +170,21 @@ public class DataHubController
     }
 
 
-
+    /**
+     * 得到用户上传的data hub
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户上传的data hub [ /dataHub/listByUserOid[searchByNameByOid] ]")
+    @RequestMapping(value="/itemsByNameAndAuthor",method = RequestMethod.POST)
+    public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+        return dataHubService.searchByNameAndAuthor(findDTO, email);
+    }
 
 
 }

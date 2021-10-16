@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -593,6 +594,25 @@ public class UserService {
         User user = userDao.findFirstByEmail(email);
         user.setNoticeNum(noticeService.countUserNoticeNum(email));
         userDao.save(user);
+    }
+
+
+    /**
+     * 得到contributor的信息
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult getContributorInfo(@PathVariable(value = "email") String email) {
+        User user = userDao.findFirstByEmail(email);
+        JSONObject contributorInfo = new JSONObject();
+        if (user == null) {
+            return ResultUtils.error("user is not exist!");
+        }
+        contributorInfo.put("name", user.getName());
+        contributorInfo.put("accessId", user.getAccessId());
+
+        return ResultUtils.success(contributorInfo);
     }
 
 }
