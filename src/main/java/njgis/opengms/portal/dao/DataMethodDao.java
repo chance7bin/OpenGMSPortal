@@ -5,8 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-
 /**
  * @Description
  * @Author bin
@@ -40,4 +38,7 @@ public interface DataMethodDao extends MongoRepository<DataMethod,String>, Gener
     Page<DataMethod> findByAuthorAndType(Pageable pageable, String author, String type);
 
     Page<DataMethod> findByAuthorAndNameContainsAndType(Pageable pageable, String author, String name, String type);
+
+    Page<DataMethod> findByNameLike(Pageable pageable,String name);
+
 }

@@ -8,6 +8,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.PortalItem;
 import njgis.opengms.portal.entity.dto.AddDTO;
+import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
@@ -18,6 +19,8 @@ import org.dom4j.DocumentHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -501,6 +504,42 @@ public class RepositoryService {
         return modelAndView;
     }
 
+
+
+    /**
+     * 根据用户得到repository
+     * @param
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject getRepositoryByUser(FindDTO findDTO, String email, ItemTypeEnum itemType){
+        Pageable pageable = genericService.getPageable(findDTO);
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        Page result = itemDao.findAllByAuthor(email, pageable);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("count", result.getTotalElements());
+        jsonObject.put("concepts", result.getContent());
+        return jsonObject;
+    }
+
+
+    /**
+     * 根据名称和用户得到repository
+     * @param
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject getRepositoryByNameAndUser(FindDTO findDTO, String email, ItemTypeEnum itemType){
+        Pageable pageable = genericService.getPageable(findDTO);
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        Page result = itemDao.findAllByNameContainsIgnoreCaseAndAuthor(findDTO.getSearchText() ,email, pageable);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("count", result.getTotalElements());
+        jsonObject.put("concepts", result.getContent());
+        return jsonObject;
+    }
 
 
 

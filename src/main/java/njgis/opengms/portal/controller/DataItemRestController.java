@@ -14,22 +14,32 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
+import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.XmlTool;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -66,6 +76,12 @@ public class DataItemRestController {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
+    @Value("${dataServerManager}")
+    private String dataServerManager;
+
+    @Value ("${dataContainerIpAndPort}")
+    String dataContainerIpAndPort;
+
 
     /**
      * 新增dataItem条目
@@ -94,7 +110,7 @@ public class DataItemRestController {
      * @Author bin
      **/
     @LoginRequired
-    @ApiOperation(value = "更新dataItem(只写了修改者和作者相同的情况)")
+    @ApiOperation(value = "更新dataItem")
     @PutMapping(value = "/{id}")
     public JsonResult updateDataItem(@PathVariable String id , @RequestBody DataItemDTO dataItemUpdateDTO, HttpServletRequest request) {
         HttpSession session=request.getSession();
@@ -283,8 +299,150 @@ public class DataItemRestController {
     }
 
 
+    @ApiOperation(value = "有关search的接口大部分都废弃了，现在用dataItem[dataHub]/items，满足不了需求的话再写新的")
+    @RequestMapping(value="/tip",method = RequestMethod.GET)
+    public JsonResult tip(){
+        return ResultUtils.success();
+    }
 
 
+    /**
+     * 得到用户上传的data item
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户上传的data item [ /dataItem/searchByNameAndAuthor[searchByNameByOid/searchDataByUserId] ]")
+    @RequestMapping(value="/itemsByNameAndAuthor",method = RequestMethod.POST)
+    public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+        return dataItemService.searchByNameAndAuthor(findDTO, email);
+    }
+
+
+    /**
+     * 数据详情页面RelatedModels，为数据添加关联的模型
+     * @param id 数据id
+     * @param relatedModels
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "数据详情页面RelatedModels，为数据添加关联的模型 [ /dataItem/models ]")
+    @RequestMapping(value = "/update/relatedModels",method = RequestMethod.POST)
+    public JsonResult addRelatedModels(@RequestParam(value = "dataId") String id,@RequestParam(value = "relatedModels") List<String> relatedModels){
+        return dataItemService.addRelatedModels(id,relatedModels);
+    }
+
+    /**
+     * 个人中心创建数据条目
+     * @param id
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation(value = "数据详情页面RelatedModels，为数据添加关联的模型 [ /dataItem/adddataitembyuser ]")
+    @RequestMapping(value="/addDataItemByUser",method = RequestMethod.GET)
+    public JsonResult addUserData(@RequestParam(value="id") String id) throws IOException{
+
+        return dataItemService.addDataItemByUser(id);
+    }
+
+
+    /**
+     * 根据token与dataId获取下载链接或者节点在线状态
+     * @param token 远程数据所在节点token
+     * @param dataId 远程数据id
+     * @return 下载结果url或者节点不在线的状态提示
+     */
+    @ApiOperation(value = "根据token与dataId获取下载链接或者节点在线状态")
+    @RequestMapping(value = "/downloadDisData", method = RequestMethod.POST)
+    public JsonResult downloadDisData(@RequestParam(value = "token") String token,
+                                      @RequestParam(value = "dataId") String dataId) throws IOException, URISyntaxException, DocumentException {
+        JsonResult res = new JsonResult();
+        String url = "http://"+ dataServerManager +"/fileObtain" + "?token=" + URLEncoder.encode(token) + "&id=" + dataId;
+        String xml = MyHttpUtils.GET(url,"UTF-8",null);
+        String dataUrl = null;
+        try{
+            JSONObject json = JSONObject.parseObject(xml);
+            if(json.getString("code").equals("-1")){
+                return  ResultUtils.error("Node offline");
+            }
+        }catch (Exception e){
+            dataUrl = XmlTool.xml2Json(xml).getString("uid");
+            res.setData(dataUrl);
+            res.setCode(1);
+        }
+//        dataUrl = XmlTool.xml2Json(xml).getString("uid");
+//        res.setData(dataUrl);
+//        res.setCode(0);
+
+        return res;
+    }
+
+    /**
+     * 下载数据资源文件
+     * @param sourceStoreId
+     * @return
+     */
+    @ApiOperation(value = "下载数据资源文件")
+    @RequestMapping (value = "/downloadRemote", method = RequestMethod.GET)
+    ResponseEntity downloadRemote(@RequestParam ("sourceStoreId") String sourceStoreId) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(
+            new ByteArrayHttpMessageConverter());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+
+        Map<String, String> map = new HashMap<>();
+        map.put("sourceStoreId", sourceStoreId);
+
+
+        ResponseEntity<byte[]> response = restTemplate.exchange(
+            "http://" + dataContainerIpAndPort + "/dataResource/getResources?sourceStoreId={sourceStoreId}&",
+            HttpMethod.GET, entity, byte[].class, map);
+
+        return response;
+    }
+
+    /**
+     * 数据详情页面RelatedModels，数据关联的3个模型
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "数据详情页面RelatedModels，数据关联的3个模型 [ /dataItem/briefrelatedmodels ]")
+    @RequestMapping(value = "/briefRelatedModels",method = RequestMethod.GET)
+    JsonResult getBriefRelatedModels(@RequestParam(value = "id") String id){
+        return ResultUtils.success(dataItemService.getRelatedModels(id));
+    }
+
+
+    /**
+     * 数据详情页面RelatedModels，数据关联的所有模型
+     * @param id
+     * @param more
+     * @return
+     */
+    @ApiOperation(value = "数据详情页面RelatedModels，数据关联的所有模型 [ /dataItem/allrelatedmodels ]")
+    @RequestMapping(value = "/allRelatedModels",method = RequestMethod.GET)
+    JsonResult getRelatedModels(@RequestParam(value = "id") String id,@RequestParam(value = "more") Integer more){
+        return ResultUtils.success(dataItemService.getAllRelatedModels(id,more));
+    }
+
+    /**
+     * 模型详情页面中的RelatedData，模型关联数据搜索，搜索范围是全部的选项
+     * @param dataItemFindDTO
+     * @return
+     */
+    @ApiOperation(value = "模型详情页面中的RelatedData，模型关联数据搜索，搜索范围是全部的选项 [ /dataItem/searchFromAll ]")
+    @RequestMapping(value="/allRelatedDataByFindDTO",method = RequestMethod.POST)
+    JsonResult relatedModelsFromAll(@RequestBody DataItemFindDTO dataItemFindDTO){
+        return ResultUtils.success(dataItemService.searchFromAllData(dataItemFindDTO));
+    }
 
 
 }

@@ -6,9 +6,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.unit.UnitDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.service.RepositoryService;
 import njgis.opengms.portal.service.UnitService;
+import njgis.opengms.portal.utils.ResultUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +33,9 @@ public class UnitController {
 
     @Autowired
     UnitService unitService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     /**
      * unit列表信息
@@ -115,6 +122,40 @@ public class UnitController {
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
         return unitService.deleteUnit(id,email);
+    }
+
+
+    /**
+     * 根据用户得到unit
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "根据用户得到unit [ /unit/listUnitsByOid ]")
+    @RequestMapping (value = "/listByUser",method = RequestMethod.GET)
+    public JsonResult listByUserOid(FindDTO findDTO, HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(repositoryService.getRepositoryByUser(findDTO, email, ItemTypeEnum.Unit));
+    }
+
+
+    /**
+     * 根据名称和用户得到unit
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "根据名称和用户得到unit [ /unit/searchByNameByOid ]")
+    @RequestMapping(value="/listByNameAndUser",method= RequestMethod.GET)
+    public JsonResult searchByTitle(FindDTO findDTO, HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(repositoryService.getRepositoryByNameAndUser(findDTO, email, ItemTypeEnum.Unit));
     }
 
 }

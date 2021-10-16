@@ -579,7 +579,7 @@ public class DataMethodService {
     }
 
     /**
-     * 新建一个application条目，并部署部署包
+     * 新建一个dataMethod条目，并部署部署包
      * @param files 上传的包
      * @param dataMethodDTO
      * @param email
@@ -1063,5 +1063,19 @@ public class DataMethodService {
             return ResultUtils.error("delete error");
         }
     }
+
+    /**
+     * 根据条目名和当前用户得到数据
+     * @param findDTO
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult searchByNameAndAuthor(SpecificFindDTO findDTO,String email){
+
+        return ResultUtils.success(genericService.searchItemsByUser(findDTO, ItemTypeEnum.DataMethod, email));
+
+    }
+
 
 }

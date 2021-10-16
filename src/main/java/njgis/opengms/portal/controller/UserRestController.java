@@ -358,7 +358,7 @@ public class UserRestController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    @ApiOperation(value = "得到用户上传的dataMethod [/user(profile)/getApplication]")
+    @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
     @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
     public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
                                         @RequestParam(value = "page", required = false) Integer page,

@@ -2,6 +2,8 @@ package njgis.opengms.portal.dao;
 
 
 import njgis.opengms.portal.entity.po.DataItem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -20,7 +22,7 @@ public interface DataItemDao extends MongoRepository<DataItem,String>, GenericIt
     // DataItem findFirstByName(String name);
     //
     //
-    // Page<DataItem> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+    // Page<DataItem> findAllByNameContainsIgnoreCaseAndStatusIn(String name, Pageable pageable);
     // Page<DataItem> findAllByKeywordsContainsIgnoreCase(String keyword, Pageable pageable);
     // Page<DataItem> findAllByOverviewContainsIgnoreCase(String content, Pageable pageable);
     // Page<DataItem> findAllByAuthorLikeIgnoreCase(String author, Pageable pageable);
@@ -37,5 +39,8 @@ public interface DataItemDao extends MongoRepository<DataItem,String>, GenericIt
     //
     // Page<DataItem> findAllByAuthorIn(List<String> authors, Pageable pageable);
 
-    // Page<DataItem> findByAuthor(Pageable pageable, String author);
+    // Page<DataItem> findAllByStatusIn(Pageable pageable, String author);
+
+    Page<DataItem> findByNameContainingOrOverviewContainingOrKeywordsContaining(Pageable pageable, String name, String overview, String keywords);
+
 }
