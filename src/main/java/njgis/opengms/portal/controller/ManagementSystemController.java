@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @Date 2021/11/08
  */
 @RestController
-@RequestMapping(value = "/management")
+@RequestMapping(value = "/managementSystem")
 public class ManagementSystemController {
 
     @Autowired
