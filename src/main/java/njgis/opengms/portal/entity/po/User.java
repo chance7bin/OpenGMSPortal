@@ -2,11 +2,10 @@ package njgis.opengms.portal.entity.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.PortalIdPlus;
 import njgis.opengms.portal.entity.doo.support.GeoInfoMeta;
 import njgis.opengms.portal.entity.doo.user.*;
 import njgis.opengms.portal.enums.UserRoleEnum;
-import njgis.opengms.portal.enums.UserTitleEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,7 +29,7 @@ public class User extends PortalIdPlus {
     String email;
     String password; //md5+sha256加密
     String name; //用户昵称，对应userserver的name
-    UserTitleEnum title;
+    // UserTitleEnum title;
     String gender;
     //用户位置 County / State / Province
     String country;
@@ -86,7 +85,7 @@ public class User extends PortalIdPlus {
     GeoInfoMeta geoInfo;
 
     //运行模型记录
-    List<UserTaskInfo> runTask;
+    List<UserTaskInfo> runTask = new ArrayList<>();
     //文件
     List<FileMeta> fileContainer;
 
