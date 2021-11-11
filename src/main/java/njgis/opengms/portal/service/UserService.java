@@ -2,10 +2,12 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
+import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
 import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -25,6 +27,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -33,6 +37,7 @@ import java.text.ParseException;
  * @Date 2021/7/5
  * @Version 1.0.0
  */
+@Slf4j
 @Service
 public class UserService {
 
@@ -244,7 +249,8 @@ public class UserService {
 
             return j_userShuttleDTO;
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+            // System.out.println(e.getMessage());
             return null;
         }
     }
@@ -444,7 +450,8 @@ public class UserService {
             userInfo.put("msg","suc");
             return userInfo;
         }catch(Exception e){
-            System.out.println(e.fillInStackTrace());
+            log.error(e.getMessage());
+            // System.out.println(e.fillInStackTrace());
             jsonObject.put("msg","no user");
         }
         return jsonObject;
@@ -531,7 +538,8 @@ public class UserService {
         try {
             return userDao.findFirstByEmail(email);
         } catch (Exception e) {
-            System.out.println("有人乱查数据库！！该UID不存在User对象");
+            log.error("有人乱查数据库！！该UID不存在User对象");
+            // System.out.println("有人乱查数据库！！该UID不存在User对象");
             throw new MyException(ResultEnum.NO_OBJECT);
         }
     }
@@ -560,7 +568,8 @@ public class UserService {
             }
 
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return "/static/img/icon/default.png";
         }
     }
@@ -613,6 +622,36 @@ public class UserService {
         contributorInfo.put("accessId", user.getAccessId());
 
         return ResultUtils.success(contributorInfo);
+    }
+
+    /**
+     * 更新任务信息
+     * @param email
+     * @param userTaskInfo
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String addTaskInfo(String email, UserTaskInfo userTaskInfo) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                List<UserTaskInfo> runTask = user.getRunTask();
+                runTask.add(userTaskInfo);
+                Date now = new Date();
+
+                user.setRunTask(runTask);
+                user.setUpdateTime(now);
+                userDao.save(user);
+                // System.out.println(userDao.save(user));
+                return "add taskInfo suc";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+
     }
 
 }

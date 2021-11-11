@@ -240,6 +240,7 @@ public class DataMethodController {
      * @throws UnsupportedEncodingException UnsupportedEncodingException
      * @throws DocumentException DocumentException
      */
+    @LoginRequired
     @ApiOperation(value = "调用服务 [ /dataApplication/invokeMethod ]")
     @RequestMapping(value = "/invokeMethod", method = RequestMethod.POST)
     public JsonResult invokeMethod(
@@ -250,8 +251,9 @@ public class DataMethodController {
         @ApiParam(name = "selectData", value = "onlineData所选的数据，可选传") @RequestParam(value = "selectData",  required = false) String selectData,
         @ApiParam(name = "integrate", value = "是否集成的调用，集成的调用则标识\"integrate\", 可选") @RequestParam(value = "integrate",  required = false) String integrate,
         HttpServletRequest request) throws IOException, DocumentException {
-
-        return dataMethodService.invokeMethod(dataMethodId,serviceId,serviceName,params,selectData,integrate,request);
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+        return dataMethodService.invokeMethod(dataMethodId,serviceId,serviceName,params,selectData,integrate,email);
     }
 
     /**

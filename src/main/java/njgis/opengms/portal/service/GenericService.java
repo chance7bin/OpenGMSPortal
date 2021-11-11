@@ -349,7 +349,7 @@ public class GenericService {
                             break;
                         }
                         default:{
-                            System.out.println("curQueryField" + curQueryField + " is wrong.");
+                            log.error("curQueryField" + curQueryField + " is wrong.");
                             return null;
                         }
                     }
@@ -392,7 +392,7 @@ public class GenericService {
                             break;
                         }
                         default:{
-                            System.out.println("curQueryField" + curQueryField + " is wrong.");
+                            log.error("curQueryField" + curQueryField + " is wrong.");
                             return null;
                             // result = genericItemDao.findAllByNameContainsIgnoreCaseAndClassificationsIn(searchText, categoryName, pageable);
                             // break;
@@ -402,7 +402,7 @@ public class GenericService {
 
             }
         }catch (Exception e){
-            System.out.println("查询数据库时出错");
+            log.error(e.getMessage());
             throw new MyException(ResultEnum.NO_OBJECT);
         }
 
@@ -421,7 +421,7 @@ public class GenericService {
 
         return (PortalItem) genericItemDao.findById(id).orElseGet(() -> {
 
-            System.out.println("有人乱查数据库！！该ID不存在对象:" + id);
+            log.error("有人乱查数据库！！该ID不存在对象:" + id);
 
             throw new MyException(ResultEnum.NO_OBJECT);
 

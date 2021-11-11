@@ -1,6 +1,7 @@
 package njgis.opengms.portal.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import njgis.opengms.portal.entity.doo.MyException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
@@ -17,6 +18,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -544,5 +547,34 @@ public class MyHttpUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    /**
+     * 上传数据到数据服务器
+     * @param dataContainerIpAndPort
+     * @param part
+     * @param fileSize 
+     * @return com.alibaba.fastjson.JSONObject 
+     * @Author bin
+     **/
+    public static JSONObject uploadDataToDataServer(String dataContainerIpAndPort, MultiValueMap<String, Object> part, int ...fileSize) {
+
+        String url="http://"+ dataContainerIpAndPort +"/configData";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        JSONObject jsonObject = restTemplate.postForObject(url, part, JSONObject.class);
+
+        if(jsonObject.getIntValue("code")==-1){
+            throw new MyException("远程服务出错");
+        }
+
+        if(fileSize!=null){
+            jsonObject.put("file_size",fileSize);
+        }
+
+        return jsonObject;
+
     }
 }
