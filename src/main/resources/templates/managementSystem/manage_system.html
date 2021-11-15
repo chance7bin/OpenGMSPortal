@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Management</title>
+
+    <script src="/static/js/common/vue.min.js"></script>
+
+    <script src="/static/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        /*基本边距*/
+        html,
+        body,
+        #manage_app {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* 滚动条样式 */
+        .el-table__body-wrapper::-webkit-scrollbar{
+            width: 5px;
+        }
+        .el-table__body-wrapper::-webkit-scrollbar-thumb{
+            border-radius: 4px;
+            height: 50px;
+            background: rgba(93, 92, 92,0.2);
+        }
+        .el-table__body-wrapper::-webkit-scrollbar-track{
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+            background: rgba(253, 250, 250, 0.4);
+        }
+
+        .el-header, .el-footer {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .top_head, .table_head {
+            display: flex;
+            justify-content: space-between;
+        }
+        .table_head_item1{
+            flex-grow:1;
+        }
+        .table_head_item2{
+            flex-grow:2;
+        }
+        .table_head_item3{
+            flex-grow:1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .flexRowCenter{
+            display: flex;
+            justify-content: center;
+
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="manage_system">
+    <el-container class="container">
+        <el-header class="top_head">
+            <div>
+                <h2 style="font-family:微软雅黑;margin:0px 0px 0px 20px">门户后台管理</h2>
+            </div>
+            <el-link href="/management/home" :underline="false" style="margin-right:20px">
+                <h2>返回首页</h2>
+            </el-link>
+
+        </el-header>
+        <el-container>
+<!--            左侧导航栏-->
+            <el-aside width="200px">
+                <el-menu
+                        default-active="1"
+                        class="el-menu-vertical-demo">
+                    <el-menu-item index="1"  @click="handelModelMenu">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">模型管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="2" @click="handelUserMenu">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">用户管理</span>
+                    </el-menu-item>
+                </el-menu>
+            </el-aside>
+            <el-main>
+
+<!--            模型管理部分-->
+                <div v-if=model_seen class="model_list_container">
+                    <div class="model_list_container">
+                        <div class="table_head">
+                            <h2 class="table_head_item1" style="margin: 2px 0px">模型列表</h2>
+                            <div class="table_head_item2 flexRowCenter">
+                                <el-input
+                                        placeholder="请输入内容"
+                                        prefix-icon="el-icon-search"
+                                        v-model="searchInput"
+                                        @keyup.enter.native="searchModel()"
+                                >
+                                </el-input>
+                                &nbsp;&nbsp;
+                                <el-button  type="success" icon="el-icon-search" @click="searchModel()" >搜索</el-button>
+                            </div>
+                            <div class="table_head_item3">
+                                <el-button  size="medium" type="primary" @click="checkSelectedModels()">检测所选模型</el-button>
+                            </div>
+                        </div>
+
+                        <el-table
+                                ref="modelTable"
+                                @selection-change="handleSelectionChange"
+                                :data="tableData.slice((currentPage - 1) * PageSize,currentPage * PageSize)"
+                                stripe
+                                style="width: 100%"
+                                height="500"
+                                :default-sort="{ prop: 'count', order: 'descending' }"
+
+                        >
+                            <el-table-column type="selection" width="55">
+                            </el-table-column>
+                            <el-table-column sortable prop="name" label="名称" width="180">
+                            </el-table-column>
+
+                            <el-table-column sortable prop="date" label="日期" width="190">
+                            </el-table-column>
+
+                            <el-table-column sortable prop="count" label="访问量"></el-table-column>
+
+                            <el-table-column  label="操作">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            type="primary"
+                                            @click="checkModel(scope.$index, scope.row)">Check</el-button>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column  prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <el-tag
+                                            :type="scope.row.status === '正常' ? 'primary' : 'danger'"
+                                            disable-transitions>{{scope.row.status}}</el-tag>
+                                </template>
+                            </el-table-column>
+
+                        </el-table>
+                        <el-divider></el-divider>
+
+                            <el-pagination
+                                    background
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="currentPage"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="PageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="totalNum"
+                                    class="flexRowCenter"
+                            >
+                            </el-pagination>
+                    </div>
+                </div>
+
+<!--                右侧用户管理部分-->
+                <div v-if=user_seen >
+                    uuuuuuuuuuuuuuuuuuu
+                </div>
+
+            </el-main>
+        </el-container>
+
+    </el-container>
+
+
+</div>
+
+
+</body>
+<script src="/static/js/managementSystem/manage_system.js"></script>
+</html>
