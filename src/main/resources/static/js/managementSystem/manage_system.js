@@ -1,66 +1,30 @@
 new Vue({
     el: '#manage_system',
     data:{
-        tableData: [], //表格中展示的数据（搜索后）
-        totalData:[], //总模型数据
-        totalNum: 0,
-        currentPage: 1,
-        PageSize: 20,
+        tableData: [], //表格中展示的数据
+        totalModel: 0, //数据库中模型总数
+        currentPage: 1,  //模型列表当前页
+        PageSize: 20,  //模型列表每页数量
         input: "",
-        todos: [{
-            name: "abc",
-            age: "12"
-        }, {
-            name: "def",
-            age: "13"
-        }],
+
         model_seen: true,
         user_seen: false,
         active_item:"2",
-        searchInput:"",
-        selectedModels:[]
+        searchInput:"", //模型列表搜索框内容
+        sortField:"createTime", //模型列表排序字段 默认时间
+        ifasc:false, //模型请求列表升降序
+        selectedModels:[],
+        historyTableVisible:false, //历史记录弹出框
     },
 
     mounted() {
-
-        //生成假数据
-        for (let i = 0, len = 120; i < len; i++) {
-            let dataItem = {
-                tempID: i,
-                date: new Date().toLocaleString(),
-                name: i.toString() + "xxx",
-                count: Math.floor(Math.random() * 1000),
-                status: Math.floor(Math.random()* 10)>5? "未知" : "正常",
-                mmmid:"xxxxxxxxx"
-            };
-            this.totalData.push(dataItem);
-            this.tableData=this.totalData;
-        }
-        this.totalNum=this.tableData.length
-
-
-        axios.get('/management/test')
-            //这里使用用箭头函数，使得this指向不是windows，而是外层的vue
-            .then( (response)=> {
-                console.log(response);
-                this.todos.push(response.data.data)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+        //初始加载模型列表数据
+        this.getModelList();
     },
+
     methods: {
 
-        //分页
-        handleSizeChange(val) {
-            this.PageSize = val;
-        },
-        handleCurrentChange(val) {
-            this.currentPage = val;
-        },
-
-        //导航菜单点击事件
+        //导航菜单点击切换模型/用户管理页面
         handelModelMenu(){
             this.model_seen=true
             this.user_seen=false
@@ -70,41 +34,86 @@ new Vue({
             this.user_seen=true
         },
 
-        //模型搜索
-        searchModel() {
-            this.tableData = this.totalData.filter((item) => {
-                return !this.searchInput || item.name.toLowerCase().includes(this.searchInput.toLowerCase())
+        //模型列表请求模型数据
+        getModelList(){
+            axios.post('/managementSystem/deployedModel', {
+                "asc": this.ifasc,
+                "page": this.currentPage,
+                "pageSize": this.PageSize,
+                "searchText": this.searchInput,
+                "sortField": this.sortField
             })
-            this.totalNum = this.tableData.length
+                .then(response=> {
+                    console.log(response);
+                    let data=response.data.data
+                    this.totalModel=data.total
+                    this.tableData=data.content
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+        },
+
+        //分页
+        handleSizeChange(val) {
+            this.PageSize = val;
+            this.getModelList();
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.getModelList();
         },
 
         //监测表格选择，实时更新所选行
         handleSelectionChange(val) {
             this.selectedModels = val;
         },
+
         //检测所选模型（多选）
         checkSelectedModels() {
             console.log(this.selectedModels)
             let selectedModelsId = this.selectedModels.map(item => {
-                return item.mmmid
+                this.checkModel(item)
             })
-            console.log(selectedModelsId)
-            axios.post('/checkModels', {checkModelIds:selectedModelsId})
-                .then( response=> {
-                    console.log(response.data.data);
+        },
 
+        //检测模型（单个）
+        checkModel(modelItem){
+            axios.get('/managementSystem/model/invoke/'+modelItem.id)
+                .then( response=> {
+                    console.log(response);
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
 
-        //检测模型（单个）
-        checkModel(index,item){
-            console.log(index,item)
-            axios.post('/checkModel', {checkModelId:item.mmmid})
-                .then( response=> {
-                    console.log(response.data.data);
+        UpdateStatus(){
+            axios.post('/managementSystem/update/modelStatus', {
+                "asc": this.ifasc,
+                "page": this.currentPage,
+                "pageSize": this.PageSize,
+                "sortType": "runtime",
+                "status": "all"
+            })
+                .then(response=> {
+                    console.log(response);
+                    // let data=response.data.data
+                    // this.totalModel=data.total
+                    // this.tableData=data.content
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        testGetApi(){
+            axios.get('/managementSystem/test')
+                //这里使用用箭头函数，使得this指向不是windows，而是外层的vue
+                .then( (response)=> {
+                    console.log(response);
+                    this.todos.push(response.data.data)
                 })
                 .catch(function (error) {
                     console.log(error);

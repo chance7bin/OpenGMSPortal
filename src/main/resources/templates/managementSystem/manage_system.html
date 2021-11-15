@@ -63,6 +63,37 @@
             justify-content: center;
 
         }
+        .flexRowEnd{
+            display: flex;
+            justify-content:flex-end;
+        }
+
+        /*del*/
+        .el-row {
+            margin-bottom: 20px;
+
+        }
+        .el-col {
+            border-radius: 4px;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
 
     </style>
 </head>
@@ -107,57 +138,97 @@
                                         placeholder="请输入内容"
                                         prefix-icon="el-icon-search"
                                         v-model="searchInput"
-                                        @keyup.enter.native="searchModel()"
+                                        @keyup.enter.native="getModelList()"
                                 >
                                 </el-input>
                                 &nbsp;&nbsp;
-                                <el-button  type="success" icon="el-icon-search" @click="searchModel()" >搜索</el-button>
+                                <el-button  type="success" icon="el-icon-search" @click="getModelList()" >搜索</el-button>
                             </div>
+
                             <div class="table_head_item3">
-                                <el-button  size="medium" type="primary" @click="checkSelectedModels()">检测所选模型</el-button>
+<!--                                <el-button  size="medium" type="primary" @click="">更细状态</el-button>-->
+                                <el-button type="primary" @click="getModelList()">test</el-button>
+                                <el-button type="primary" icon="el-icon-refresh" @click="UpdateStatus()"></el-button>
+                                <el-button  size="medium" type="primary" @click="historyTableVisible = true">检测记录</el-button>
+                                <el-button  size="medium" type="success" @click="checkSelectedModels()">检测所选模型</el-button>
                             </div>
                         </div>
 
+                        <!-- 历史记录弹出框 -->
+                        <el-dialog title="检测历史记录" :visible.sync="historyTableVisible">
+                            <el-table :data="tableData.slice(0,10)"
+                                      height="300">
+
+
+                                <el-table-column sortable prop="date" label="检测时间" width="220">
+                                </el-table-column>
+                                <el-table-column  prop="count" label="模型个数">
+
+                                </el-table-column>
+                                <el-table-column  label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                size="mini"
+                                                type="primary"
+                                                @click="checkModel(scope.$index, scope.row)">Check</el-button>
+                                        <el-button
+                                                size="mini"
+                                                type="success"
+                                                @click="checkModel(scope.$index, scope.row)">Load</el-button>
+                                    </template>
+                                </el-table-column>
+
+                            </el-table>
+
+
+                        </el-dialog>
+
+<!--                        模型列表-->
                         <el-table
                                 ref="modelTable"
                                 @selection-change="handleSelectionChange"
-                                :data="tableData.slice((currentPage - 1) * PageSize,currentPage * PageSize)"
+                                :data="tableData"
                                 stripe
                                 style="width: 100%"
                                 height="500"
-                                :default-sort="{ prop: 'count', order: 'descending' }"
+                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
 
                         >
                             <el-table-column type="selection" width="55">
                             </el-table-column>
-                            <el-table-column sortable prop="name" label="名称" width="180">
+                            <el-table-column sortable prop="accessId" label="名称" width="250">
                             </el-table-column>
 
-                            <el-table-column sortable prop="date" label="日期" width="190">
+                            <el-table-column sortable prop="createTime" label="日期" width="190">
                             </el-table-column>
 
-                            <el-table-column sortable prop="count" label="访问量"></el-table-column>
+                            <el-table-column sortable prop="viewCount" label="访问量"></el-table-column>
 
                             <el-table-column  label="操作">
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
                                             type="primary"
-                                            @click="checkModel(scope.$index, scope.row)">Check</el-button>
+                                            @click="checkModel(scope.row)">Check</el-button>
                                 </template>
                             </el-table-column>
 
                             <el-table-column  prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <el-tag
-                                            :type="scope.row.status === '正常' ? 'primary' : 'danger'"
+                                            v-if="scope.row.status ==='Public'"
+                                            type='primary'
                                             disable-transitions>{{scope.row.status}}</el-tag>
+<!--                                    <el-tag-->
+<!--                                            v-if="scope.row.status ==='xxxx'"-->
+<!--                                            type='danger info warning danger'-->
+<!--                                            disable-transitions>{{scope.row.status}}</el-tag>-->
                                 </template>
                             </el-table-column>
 
                         </el-table>
                         <el-divider></el-divider>
-
+<!--                            分页-->
                             <el-pagination
                                     background
                                     @size-change="handleSizeChange"
@@ -166,7 +237,7 @@
                                     :page-sizes="[10, 20, 30, 40]"
                                     :page-size="PageSize"
                                     layout="total, sizes, prev, pager, next, jumper"
-                                    :total="totalNum"
+                                    :total="totalModel"
                                     class="flexRowCenter"
                             >
                             </el-pagination>
@@ -175,7 +246,34 @@
 
 <!--                右侧用户管理部分-->
                 <div v-if=user_seen >
-                    uuuuuuuuuuuuuuuuuuu
+                    <el-main class="middle_content">
+                        <!--                    <h2>测试</h2>-->
+                        <el-tabs tab-position="left" type="border-card" >
+                        </el-tabs>
+                        <!--                    <el-tag v-for="todo in todos" >{{todo.name}},{{todo.age}}</el-tag>-->
+                        <el-divider></el-divider>
+                        <el-row :gutter="20">
+                            <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        </el-row>
+                        <el-row :gutter="20">
+                            <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        </el-row>
+                        <el-row :gutter="20">
+                            <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        </el-row>
+                        <el-row :gutter="20">
+                            <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                            <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        </el-row>
+
+                    </el-main>
                 </div>
 
             </el-main>

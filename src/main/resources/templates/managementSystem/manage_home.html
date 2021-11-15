@@ -95,6 +95,33 @@
             justify-content: space-between;
         }
 
+
+        /*del*/
+        .el-row {
+            margin-bottom: 20px;
+
+        }
+        .el-col {
+            border-radius: 4px;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
     </style>
 </head>
 
@@ -115,26 +142,90 @@
                     <el-tabs tab-position="left" type="border-card" >
 
                     </el-tabs>
+                    <el-row :gutter="20">
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+
                 </el-main>
 
                 <el-main class="middle_content">
-                    <h2>请求测试</h2>
-                    <el-tag v-for="todo in todos" >{{todo.name}},{{todo.age}}</el-tag>
+<!--                    <h2>测试</h2>-->
+                    <el-tabs tab-position="left" type="border-card" >
+                    </el-tabs>
+<!--                    <el-tag v-for="todo in todos" >{{todo.name}},{{todo.age}}</el-tag>-->
+                    <el-row :gutter="20">
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+
                 </el-main>
 
 
 
                 <el-main class="right_content">
-                    <template>
-                        <el-skeleton :rows="6"/>
-                    </template>
+                    <el-tabs tab-position="left" type="border-card" >
+
+                    </el-tabs>
+                    <el-row :gutter="20">
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+                    </el-row>
 
                 </el-main>
 
 
             </el-container>
 
-        <el-footer>Footer</el-footer>
+
     </el-container>
 
 

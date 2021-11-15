@@ -85,7 +85,7 @@ public class ManagementSystemService {
         //加载数据
         JsonResult loadTestDataRes = taskService.loadTestData(modelId, email);
         if (loadTestDataRes.getCode() != 1)
-            ResultUtils.error("加载测试数据失败");
+            return ResultUtils.error("加载测试数据失败");
         List<ResultDataDTO> loadTestDataData = (List<ResultDataDTO>)loadTestDataRes.getData();
 
 
