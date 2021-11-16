@@ -22,7 +22,7 @@ public class Version extends PortalId {
     ItemTypeEnum type; //条目类型
     String name; //由版本id和条目名组成
     String description; //需不需要加一个修改描述（需要审核的时候）
-    PortalItem content; //修改条目数据
+    PortalItem content; //提交审核的修改的条目数据
     // String preVersion; //上一个版本的id
     String itemCreator; //条目创建者邮箱
     String editor; //修改人邮箱

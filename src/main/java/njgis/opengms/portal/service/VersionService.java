@@ -1,30 +1,31 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.VersionDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.version.VersionDTO;
 import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description
  * @Author bin
  * @Date 2021/09/06
  */
+@Slf4j
 @Service
 public class VersionService {
 
@@ -42,6 +43,7 @@ public class VersionService {
      * 添加审核版本
      * @param item 修改的条目数据
      * @param editor 修改者
+     * @param originalItemName 原始条目的名字，用于生成版本名
      * @return njgis.opengms.portal.entity.po.Version
      * @Author bin
      **/
@@ -61,6 +63,11 @@ public class VersionService {
         String type = nameArr[nameArr.length - 1];
         ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
         version.setType(itemType);
+        try {
+            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
         return versionDao.insert(version);
 
     }
@@ -321,5 +328,46 @@ public class VersionService {
         return ResultUtils.error("invalid operation");
 
     }
+
+
+    /**
+     * 比较两个版本的不同
+     * @param editItem 编辑后的item数据
+     * @param itemType 条目类型
+     * @return void
+     * @Author bin
+     **/
+    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, ItemTypeEnum itemType) throws IllegalAccessException {
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
+        PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
+        return genericService.getDifferenceBetweenTwoObject(originalItem,editItem);
+    }
+
+
+    /**
+     * 得到审核版本的详细信息
+     * @param id 版本id
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult getVersionDetail(String id) {
+
+        try {
+            Version version = versionDao.findFirstById(id);
+            JSONObject factory = genericService.daoFactory(version.getType());
+            GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+            PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
+            VersionDTO versionDTO = new VersionDTO();
+            BeanUtils.copyProperties(version,versionDTO);
+            versionDTO.setOriginal(original);
+            return ResultUtils.success(versionDTO);
+        } catch (Exception e){
+            return ResultUtils.error();
+        }
+
+    }
+
+
 
 }

@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.DailyViewCount;
+import njgis.opengms.portal.entity.doo.GenericCategory;
+import njgis.opengms.portal.entity.doo.MyException;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.dto.FindDTO;
@@ -25,13 +28,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
- * @Description 用于搜索条目
+ * @Description 通用Service
  * @Author bin
  * @Date 2021/08/16
  */
@@ -95,11 +97,16 @@ public class GenericService {
     @Value("${resourcePath}")
     private String resourcePath;
 
+    @Value(value = "Public,Discoverable")
+    private List<String> itemStatusVisible;
+
 
     /**
-     * @Description 根据传入的查询条件查询数据
-     * @Param [findDTO, dataType: 类型(dataHub, dataItem, dataMethod)]
+     * 根据传入的查询条件查询数据(curQueryField未设置的话默认用name进行查询 [e.g. searchByName接口] )
+     * @param findDTO 查询条件
+     * @param type 条目类型
      * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
      **/
     public JSONObject searchItems(SpecificFindDTO findDTO, ItemTypeEnum type){
         // setGenericDataItemDao(dataType);
@@ -125,7 +132,51 @@ public class GenericService {
             // return null;
         }
 
+        return generateSearchResult(allPortalItem, totalElements);
+    }
 
+
+    /**
+     * 根据登录用户得到条目信息 (curQueryField未设置的话默认用name进行查询 [e.g. searchByTitleByOid接口] )
+     * @param findDTO
+     * @param type
+     * @param user 登录用户email
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject searchItemsByUser(FindDTO findDTO, ItemTypeEnum type, String user){
+        // 所有条目都继承PortalItem类
+        List<PortalItem> allPortalItem;
+        int totalElements = 0;
+        try {
+            Page itemsPage;
+            Pageable pageable = PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
+
+            // 从工厂中拿对应的dao
+            JSONObject daoFactory = daoFactory(type);
+            GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
+            itemsPage = itemDao.findAllByNameContainsIgnoreCaseAndAuthor(findDTO.getSearchText(), user, pageable);
+            //把查询到的结果放在try中,如果按照之前return null的话前端页面会加载不出来，所以如果查询报错的话那allPortalItem大小就为0
+            allPortalItem = itemsPage.getContent();
+            totalElements = (int) itemsPage.getTotalElements();
+        } catch (MyException err) {
+            log.error(String.valueOf(err));
+            allPortalItem = new ArrayList<>();
+            // TODO 查询数据库出错要做什么处理
+            // return null;
+        }
+
+        return generateSearchResult(allPortalItem, totalElements);
+    }
+
+    /**
+     * 生成接口返回的数据信息
+     * @param allPortalItem
+     * @param totalElements
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject generateSearchResult(List<PortalItem> allPortalItem, int totalElements){
         JSONArray lists = new JSONArray();
         JSONArray users = new JSONArray();
         for (int i=0;i<allPortalItem.size();++i) {
@@ -167,11 +218,16 @@ public class GenericService {
         res.put("list",lists);
         res.put("total",totalElements);
         res.put("users",users);
-
         return res;
     }
 
 
+    /**
+     * dao工厂
+     * @param type
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
     public JSONObject daoFactory(ItemTypeEnum type){
 
         JSONObject daoUtils = new JSONObject();
@@ -257,9 +313,11 @@ public class GenericService {
         String searchText = findDTO.getSearchText();
         String curQueryField = findDTO.getCurQueryField();
         String categoryName = findDTO.getCategoryName();
+        List<String> classifications = new ArrayList<>();
 
         // 构建classifications集合,如果没有childrenId则表示只查询一个分类条目，有的话表示有多个分类条目
-        List<String> classifications = buildClassifications(categoryName, genericCategoryDao);
+        if (categoryName != null && !categoryName.equals(""))
+            classifications = buildClassifications(categoryName, genericCategoryDao);
 
         Page result;
         try {
@@ -267,24 +325,25 @@ public class GenericService {
             // categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
             if(categoryName.equals("")) {          // 不分类的情况
                 if(searchText.equals("")){
-                    result = genericItemDao.findAll(pageable);
+                    result = genericItemDao.findAllByStatusIn(itemStatusVisible,pageable);
+                    // result = genericItemDao.findAll(pageable);
                 }
                 else if (curQueryField == null || curQueryField.equals("")){
                     // 如果没有查询的类型则默认以名字进行查询
-                    result = genericItemDao.findAllByNameContainsIgnoreCase(searchText, pageable);
+                    result = genericItemDao.findAllByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
                 }
                 else{
                     switch (curQueryField) {
                         case "name":{
-                            result = genericItemDao.findAllByNameContainsIgnoreCase(searchText, pageable);
+                            result = genericItemDao.findAllByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
                             break;
                         }
                         case "keyword":{
-                            result = genericItemDao.findAllByKeywordsContainsIgnoreCase(searchText, pageable);
+                            result = genericItemDao.findAllByKeywordsContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
                             break;
                         }
                         case "content":{
-                            result = genericItemDao.findAllByOverviewContainsIgnoreCase(searchText, pageable);
+                            result = genericItemDao.findAllByOverviewContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
                             break;
                         }
                         case "contributor":{
@@ -300,35 +359,36 @@ public class GenericService {
                         case "author":{
                             List<String> email =  new ArrayList<>();
                             email.add(searchText);
-                            result = genericItemDao.findAllByAuthorIn(email, pageable);
+                            result = genericItemDao.findAllByAuthorInAndStatusIn(email, itemStatusVisible, pageable);
                             break;
                         }
                         default:{
-                            System.out.println("curQueryField" + curQueryField + " is wrong.");
+                            log.error("curQueryField" + curQueryField + " is wrong.");
                             return null;
                         }
                     }
                 }
             } else {
                 if(searchText.equals("")){
-                    result = genericItemDao.findAllByClassificationsIn(classifications, pageable);
+                    // result = genericItemDao.findAllByClassificationsIn(classifications, pageable);
+                    result = genericItemDao.findAllByClassificationsInAndStatusIn(classifications, itemStatusVisible, pageable);
                 }
                 else if (curQueryField == null || curQueryField.equals("")){
                     // 如果没有查询的类型则默认以名字进行查询
-                    result = genericItemDao.findAllByNameContainsIgnoreCaseAndClassificationsIn(searchText, classifications, pageable);
+                    result = genericItemDao.findAllByNameContainsIgnoreCaseAndClassificationsInAndStatusIn(searchText, classifications, itemStatusVisible, pageable);
                 }
                 else {
                     switch (curQueryField) {
                         case "name":{
-                            result = genericItemDao.findAllByNameContainsIgnoreCaseAndClassificationsIn(searchText, classifications, pageable);
+                            result = genericItemDao.findAllByNameContainsIgnoreCaseAndClassificationsInAndStatusIn(searchText, classifications, itemStatusVisible, pageable);
                             break;
                         }
                         case "keyword":{
-                            result = genericItemDao.findAllByKeywordsContainsIgnoreCaseAndClassificationsIn(searchText, classifications, pageable);
+                            result = genericItemDao.findAllByKeywordsContainsIgnoreCaseAndClassificationsInAndStatusIn(searchText, classifications, itemStatusVisible, pageable);
                             break;
                         }
                         case "content":{
-                            result = genericItemDao.findAllByOverviewContainsIgnoreCaseAndClassificationsIn(searchText, classifications, pageable);
+                            result = genericItemDao.findAllByOverviewContainsIgnoreCaseAndClassificationsInAndStatusIn(searchText, classifications, itemStatusVisible, pageable);
                             break;
                         }
                         case "contributor":{
@@ -337,7 +397,7 @@ public class GenericService {
                             for (User user : users) {
                                 userEmailList.add(userDao.findFirstByName(user.getName()).getEmail());
                             }
-                            result = genericItemDao.findAllByAuthorInAndClassificationsIn(userEmailList,classifications, pageable);
+                            result = genericItemDao.findAllByAuthorInAndClassificationsInAndStatusIn(userEmailList,classifications, itemStatusVisible, pageable);
                             // if(user != null){
                             //     result = dataItemDao.findAllByAuthorLikeIgnoreCaseAndClassificationsIn(user.getEmail(), categoryName, pageable);
                             // } else {    // 取一个不存在的名字，返回nodata，不能返回null
@@ -346,7 +406,7 @@ public class GenericService {
                             break;
                         }
                         default:{
-                            System.out.println("curQueryField" + curQueryField + " is wrong.");
+                            log.error("curQueryField" + curQueryField + " is wrong.");
                             return null;
                             // result = genericItemDao.findAllByNameContainsIgnoreCaseAndClassificationsIn(searchText, categoryName, pageable);
                             // break;
@@ -356,7 +416,7 @@ public class GenericService {
 
             }
         }catch (Exception e){
-            System.out.println("查询数据库时出错");
+            log.error(e.getMessage());
             throw new MyException(ResultEnum.NO_OBJECT);
         }
 
@@ -375,7 +435,7 @@ public class GenericService {
 
         return (PortalItem) genericItemDao.findById(id).orElseGet(() -> {
 
-            System.out.println("有人乱查数据库！！该ID不存在对象:" + id);
+            log.error("有人乱查数据库！！该ID不存在对象:" + id);
 
             throw new MyException(ResultEnum.NO_OBJECT);
 
@@ -445,8 +505,11 @@ public class GenericService {
         return TemplateObject;
     }
 
+
     /**
-     * 获取分页标准
+     * 得到Pageable
+     * @param findDTO
+     * @return org.springframework.data.domain.Pageable
      * @Author bin
      **/
     public Pageable getPageable(FindDTO findDTO){
@@ -562,4 +625,57 @@ public class GenericService {
         }
         return null;
     }
+    /**
+     * 获取对象所有属性，包括父类
+     * @param object
+     * @return java.lang.reflect.Field[]
+     * @Author bin
+     **/
+    public List<Field> getAllFields(Object object) {
+        Class clazz = object.getClass();
+        List<Field> fieldList = new ArrayList<>();
+        while (clazz != null) {
+            fieldList.addAll(new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())));
+            clazz = clazz.getSuperclass();
+        }
+        return fieldList;
+    }
+
+    /**
+     * 比较两个对象的不同，返回不相等的属性
+     * @param originalObj 原始对象
+     * @param newObj 待比较对象
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     * @Author bin
+     **/
+    public Map<String,Object> getDifferenceBetweenTwoObject(Object originalObj, Object newObj) throws IllegalAccessException {
+        Map<String,Object> differences = new HashMap<>();
+
+        //获得所有属性
+        List<Field> allFields = getAllFields(originalObj);
+        for (Field field : allFields) {
+            field.setAccessible(true);
+            Object originalField = field.get(originalObj);
+            Object newField = field.get(newObj);
+            if (newField == null){
+                if (originalField != null){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("original", originalField);
+                    jsonObject.put("new", null);
+                    differences.put(field.getName(),jsonObject);
+                }
+
+            }
+            else if (!newField.equals(originalField)){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("original", originalField);
+                jsonObject.put("new", newField);
+                differences.put(field.getName(),jsonObject);
+            }
+        }
+
+
+        return differences;
+    }
+
 }

@@ -11,13 +11,14 @@ import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.ModelItemService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @ClassName ModelItemRestController
@@ -230,4 +232,48 @@ public class ModelItemRestController {
             return ResultUtils.success(result);
         }
     }
+
+
+    /**
+     * 模型详情页面RelatedData，为模型添加关联的数据
+     * @param id 模型id
+     * @param relatedData
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "模型详情页面RelatedData，为模型添加关联的数据 [ /dataItem/data ]")
+    @RequestMapping(value = "/update/relatedData",method = RequestMethod.POST)
+    JsonResult addRelatedData(@RequestParam(value = "modelId") String id,@RequestParam(value = "relatedData") List<String> relatedData){
+        return modelItemService.addRelatedData(id,relatedData);
+    }
+
+
+    /**
+     * 模型详情页面RelatedData，模型关联的3个数据
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "模型详情页面RelatedData，模型关联的3个数据 [ /dataItem/briefrelateddata ]")
+    @RequestMapping(value = "/briefRelatedData",method = RequestMethod.GET)
+    JsonResult getBriefRelatedData(@RequestParam(value = "id") String id){
+        return ResultUtils.success(modelItemService.getRelatedData(id));
+    }
+
+
+    /**
+     * 模型详情页面RelatedData，模型关联的所有数据
+     * @param id
+     * @param more
+     * @return
+     */
+    @ApiOperation(value = "模型详情页面RelatedData，模型关联的所有数据 [ /dataItem/allrelateddata ]")
+    @RequestMapping(value = "/allRelatedData",method = RequestMethod.GET)
+    JsonResult getRelatedData(@RequestParam(value = "id") String id,@RequestParam(value = "more") Integer more){
+        return ResultUtils.success(modelItemService.getAllRelatedData(id,more));
+    }
+
+
+
+
 }

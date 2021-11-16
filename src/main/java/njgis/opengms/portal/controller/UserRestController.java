@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpSession;
  * @Version 1.0.0
  */
 
+@Slf4j
 @RestController
 @RequestMapping({"/user"})
 public class UserRestController {
@@ -77,9 +79,10 @@ public class UserRestController {
                             @RequestParam(value = "password") String password,
                             HttpServletRequest request) {
 
-        System.out.println("in");
+        // System.out.println("in");
         String ip = IpUtil.getIpAddr(request);
-        System.out.println(ip);
+        // System.out.println(ip);
+        log.info("login ip:{}",ip);
 
         JSONObject result = userService.loginUserServer(account, DigestUtils.sha256Hex(password), ip);
         if (result != null) {
@@ -157,7 +160,8 @@ public class UserRestController {
     @ApiOperation(value = "返回用户的注册页面")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView getRegister() {
-        System.out.println("register");
+        log.info("register");
+        // System.out.println("register");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("register");
         modelAndView.addObject("name", "OpenGMS");
@@ -175,7 +179,8 @@ public class UserRestController {
     @ApiOperation(value = "返回用户的登录页面")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView getLogin(HttpServletRequest request) {
-        System.out.println("login");
+        log.info("login");
+        // System.out.println("login");
         HttpSession session = request.getSession();
         ModelAndView modelAndView = new ModelAndView();
         //若用户没有登录，则进入登录页面
@@ -358,7 +363,7 @@ public class UserRestController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    @ApiOperation(value = "得到用户上传的dataMethod [/user(profile)/getApplication]")
+    @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
     @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
     public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
                                         @RequestParam(value = "page", required = false) Integer page,

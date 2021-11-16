@@ -6,9 +6,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.community.spatialReference.SpatialReferenceDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.service.RepositoryService;
 import njgis.opengms.portal.service.SpatialReferenceService;
+import njgis.opengms.portal.utils.ResultUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +33,9 @@ public class SpatialReferenceController {
 
     @Autowired
     SpatialReferenceService spatialReferenceService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
 
     /**
@@ -115,5 +122,68 @@ public class SpatialReferenceController {
         String email = session.getAttribute("email").toString();
         return spatialReferenceService.deleteSpatial(id,email);
     }
+
+
+    /**
+     * 根据用户得到spatialReference
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "根据用户得到spatialReference [ /spatial/listSpatialsByOid ]")
+    @RequestMapping (value = "/listByUser",method = RequestMethod.GET)
+    public JsonResult listByUserOid(FindDTO findDTO, HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(repositoryService.getRepositoryByUser(findDTO, email, ItemTypeEnum.SpatialReference));
+    }
+
+
+    /**
+     * 根据名称和用户得到concept
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "根据名称和用户得到spatialReference [ /spatial/searchByNameByOid ]")
+    @RequestMapping(value="/listByNameAndUser",method= RequestMethod.GET)
+    public JsonResult searchByTitle(FindDTO findDTO, HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(repositoryService.getRepositoryByNameAndUser(findDTO, email, ItemTypeEnum.SpatialReference));
+    }
+
+    @ApiOperation(value = "getWKT [ /spatial/listSpatialsByOid ]")
+    @RequestMapping(value="/getWKT",method= RequestMethod.GET)
+    JsonResult searchByTitle(@RequestParam(value = "id")String id){
+        return ResultUtils.success(spatialReferenceService.getWKT(id));
+    }
+
+    @ApiOperation(value = "getSpatialReference [ /spatial/listSpatialsByOid ]")
+    @RequestMapping(value="/getSpatialReference",method= RequestMethod.GET)
+    JsonResult getSpatialReference(@RequestParam(value="asc") int asc,
+                                   @RequestParam(value = "page") int page,
+                                   @RequestParam(value = "size") int size)
+    {
+        return ResultUtils.success(spatialReferenceService.getSpatialReference(asc,page,size));
+    }
+
+
+    @ApiOperation(value = "searchSpatialReference [ /spatial/listSpatialsByOid ]")
+    @RequestMapping(value="/searchSpatialReference",method= RequestMethod.GET)
+    JsonResult searchSpatialReference(@RequestParam(value="asc") int asc,
+                                      @RequestParam(value = "page") int page,
+                                      @RequestParam(value = "size") int size,
+                                      @RequestParam(value = "searchText") String searchText)
+    {
+        return ResultUtils.success(spatialReferenceService.searchSpatialReference(asc,page,size,searchText));
+    }
+
+
+
 
 }

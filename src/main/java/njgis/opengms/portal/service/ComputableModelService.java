@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.ComputableModelDao;
 import njgis.opengms.portal.dao.ModelItemDao;
+import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
+import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.model.ComputableModelResultDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.*;
 import org.slf4j.Logger;
@@ -20,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,6 +60,9 @@ public class ComputableModelService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    UserDao userDao;
 
     @Value("${htmlLoadPath}")
     String htmlLoadPath;
@@ -638,4 +646,25 @@ public class ComputableModelService {
             return ResultUtils.error();
         }
     }
+
+    public JSONObject searchDeployedModel(FindDTO findDTO){
+
+        Pageable pageable = genericService.getPageable(findDTO);
+
+        Page<ComputableModel> computableModelPage = computableModelDao.findAllByDeployAndStatusInAndNameLikeIgnoreCase(true,itemStatusVisible,findDTO.getSearchText(),pageable);
+        List<ComputableModel> ComputableModelList = computableModelPage.getContent();
+
+        for(ComputableModel computableModel:ComputableModelList){
+            // String author = computableModel.getAuthor();
+            User user = userDao.findFirstByEmail(computableModel.getAuthor());
+            computableModel.setAuthor(user.getName());
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("total",computableModelPage.getTotalElements());
+        jsonObject.put("content",ComputableModelList);
+
+        return jsonObject;
+    }
+
 }

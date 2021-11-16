@@ -2,7 +2,7 @@ package njgis.opengms.portal.entity.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 import njgis.opengms.portal.entity.doo.support.GeoInfoMeta;
 import njgis.opengms.portal.entity.doo.user.*;
@@ -87,7 +87,7 @@ public class User extends PortalIdPlus {
     GeoInfoMeta geoInfo;
 
     //运行模型记录
-    List<UserTaskInfo> runTask;
+    List<UserTaskInfo> runTask = new ArrayList<>();
     //文件
     List<FileMeta> fileContainer;
 

@@ -51,8 +51,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -426,18 +424,18 @@ public class DataMethodService {
      * @param serviceId serviceId
      * @param serviceName serviceName
      * @param params 调用所需的参数
-     * @param request request
+     * @param email email
      * @param selectData onlineData所选的数据，可选传
      * @param integrate 是否集成的调用，集成的调用则标识"integrate", 可选
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
     public JsonResult invokeMethod(String dataMethodId,String serviceId,String serviceName,String[] params,String selectData,
-                            String integrate,HttpServletRequest request) throws IOException, DocumentException {
+                            String integrate,String email) throws IOException, DocumentException {
         // JsonResult jsonResult = new JsonResult();
         DataServerTask dataServerTask = new DataServerTask();
         Date date = new Date();
         dataServerTask.setRunTime(date);
-        dataServerTask.setOid(UUID.randomUUID().toString());
+        // dataServerTask.setOid(UUID.randomUUID().toString());
         dataServerTask.setServiceId(serviceId);
         dataServerTask.setServiceName(serviceName);
 //        dataServerTask.setDataType(dataType);
@@ -451,12 +449,7 @@ public class DataMethodService {
         DataMethod dataMethod = dataMethodDao.findFirstById(dataMethodId);
         List<InvokeService> invokeServices = dataMethod.getInvokeServices();
         //门户测试解绑
-        HttpSession session=request.getSession();
-        if(session.getAttribute("email")==null){
-            return ResultUtils.error(-1,"no login");
-        }
-        String reqUsrId = session.getAttribute("email").toString();
-        dataServerTask.setUserId(reqUsrId);
+        dataServerTask.setEmail(email);
         //String reqUsrId = "33";//门户测试时注释掉
 
         InvokeService invokeService = null;
@@ -532,7 +525,7 @@ public class DataMethodService {
         }
         String content = EntityUtils.toString(response.getEntity());
 // Log.i("test",content);
-        System.out.println(content);
+//         System.out.println(content);
         JSONObject resp = JSON.parseObject(content);
 
         log.info(response + "");
@@ -579,7 +572,7 @@ public class DataMethodService {
     }
 
     /**
-     * 新建一个application条目，并部署部署包
+     * 新建一个dataMethod条目，并部署部署包
      * @param files 上传的包
      * @param dataMethodDTO
      * @param email
@@ -1063,5 +1056,19 @@ public class DataMethodService {
             return ResultUtils.error("delete error");
         }
     }
+
+    /**
+     * 根据条目名和当前用户得到数据
+     * @param findDTO
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult searchByNameAndAuthor(SpecificFindDTO findDTO,String email){
+
+        return ResultUtils.success(genericService.searchItemsByUser(findDTO, ItemTypeEnum.DataMethod, email));
+
+    }
+
 
 }

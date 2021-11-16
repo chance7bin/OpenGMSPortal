@@ -767,5 +767,107 @@ public class ModelItemService {
 
 
 
+    public JsonResult addRelatedData(String id, List<String> relatedData) {
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+
+        modelItem.getRelate().setDataItems(relatedData);
+
+        modelItemDao.save(modelItem);
+
+        return ResultUtils.success();
+    }
+
+
+    public List<Map<String, String>> getRelatedData(String id) {
+
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+
+        List<String> relatedData = modelItem.getRelate().getDataItems();
+
+        if (relatedData == null) {
+            List<Map<String, String>> list = new ArrayList<>();
+            return list;
+
+        }
+
+        List<Map<String, String>> data = new ArrayList<>();
+        Map<String, String> dataInfo;
+        DataItem dataItem;
+
+
+        for (int i = 0; i < relatedData.size(); i++) {
+            //只取三个
+            if (i == 3) {
+                break;
+            }
+
+            modelItem = new ModelItem();
+
+            dataItem = dataItemDao.findFirstById(relatedData.get(i));
+
+            dataInfo = new HashMap<>();
+            dataInfo.put("name", dataItem.getName());
+            dataInfo.put("id", dataItem.getId());
+            dataInfo.put("overview", dataItem.getOverview());
+
+            data.add(dataInfo);
+
+        }
+        return data;
+
+    }
+
+    //getAllRelatedData
+    public List<Map<String, String>> getAllRelatedData(String id, Integer more) {
+
+
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+
+        List<String> relatedData = modelItem.getRelate().getDataItems();
+
+
+        List<Map<String, String>> data = new ArrayList<>();
+
+        DataItem dataItem;
+
+        Map<String, String> dataInfo;
+        if (relatedData == null) {
+            dataInfo = new HashMap<>();
+            dataInfo.put("all", "all");
+            data.add(dataInfo);
+            return data;
+        }
+
+
+        if (more - 5 > relatedData.size() || more - 5 == relatedData.size()) {
+
+            dataInfo = new HashMap<>();
+            dataInfo.put("all", "all");
+            data.add(dataInfo);
+
+            return data;
+        }
+
+        for (int i = more - 5; i < more && i < relatedData.size(); i++) {
+            //只取三个
+
+            dataItem = new DataItem();
+
+            dataItem = dataItemDao.findFirstById(relatedData.get(i));
+
+            dataInfo = new HashMap<>();
+            dataInfo.put("name", dataItem.getName());
+            dataInfo.put("oid", dataItem.getId());
+            dataInfo.put("overview", dataItem.getOverview());
+
+            data.add(dataInfo);
+
+        }
+        return data;
+
+    }
+
+
+
 
 }

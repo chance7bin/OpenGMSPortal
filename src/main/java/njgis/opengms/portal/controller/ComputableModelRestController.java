@@ -165,4 +165,11 @@ public class ComputableModelRestController {
             return ResultUtils.unauthorized();
         }
     }
+
+    @ApiOperation(value = "查找部署的模型 [ /searchDeployedModel ]")
+    @RequestMapping(value="/deployedModel",method= RequestMethod.POST)
+    public JsonResult searchDeployedModel(@RequestBody FindDTO findDTO) {
+        return ResultUtils.success(computableModelService.searchDeployedModel(findDTO));
+    }
+
 }
