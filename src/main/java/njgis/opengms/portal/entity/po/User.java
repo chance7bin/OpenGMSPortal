@@ -77,7 +77,7 @@ public class User extends PortalIdPlus {
 
     //网站运行所需的其他信息
 
-    //    String oid; //对应userserver的userId
+    //    String id; //对应userserver的userId
 //    String userId;// 用来访问个人主页，与name一致，重名则加标识
 
     //登录IP

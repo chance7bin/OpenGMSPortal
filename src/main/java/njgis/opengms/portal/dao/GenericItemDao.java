@@ -21,6 +21,8 @@ public interface GenericItemDao<T>{
 
     T findFirstByName(String name);
 
+    T findFirstByAccessId(String accessId);
+
 
     Page<T> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
     Page<T> findAllByKeywordsContainsIgnoreCase(String keyword, Pageable pageable);
@@ -38,6 +40,7 @@ public interface GenericItemDao<T>{
     Page<T> findAllByAuthorInAndClassificationsIn(List<String> authors, List<String> classifications, Pageable pageable);
 
     Page<T> findAllByAuthorIn(List<String> authors, Pageable pageable);
+    Page<T> findAllByAuthorInOrContributorsIn(List<String> authors, List<String> contributors, Pageable pageable);
 
 
     Page<T> findAll(Pageable pageable);

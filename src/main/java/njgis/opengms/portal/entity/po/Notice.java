@@ -3,7 +3,7 @@ package njgis.opengms.portal.entity.po;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import njgis.opengms.portal.entity.doo.PortalId;
+import njgis.opengms.portal.entity.doo.base.PortalId;
 import njgis.opengms.portal.enums.OperationEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 

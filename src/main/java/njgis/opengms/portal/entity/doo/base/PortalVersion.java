@@ -3,8 +3,8 @@ package njgis.opengms.portal.entity.doo.base;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.Localization;
-import njgis.opengms.portal.entity.doo.modelItem.ModelItemRelate;
-import njgis.opengms.portal.entity.doo.modelItem.ModelMetadata;
+import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
+import njgis.opengms.portal.entity.doo.model.ModelMetadata;
 
 import java.util.Date;
 import java.util.List;

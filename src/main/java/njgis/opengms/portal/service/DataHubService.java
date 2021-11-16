@@ -5,7 +5,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
+import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.DataHub;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;

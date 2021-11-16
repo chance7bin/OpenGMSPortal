@@ -6,7 +6,7 @@ import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.template.TemplateDTO;
+import njgis.opengms.portal.entity.dto.community.template.TemplateDTO;
 import njgis.opengms.portal.entity.po.Template;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -160,7 +160,7 @@ public class TemplateService {
         //     } else {
         //         // TODO: 2021/8/31 不是作者更新的还没做
         //         result.put("method", "version");
-        //         // result.put("oid", templateVersion.getOid());
+        //         // result.put("id", templateVersion.getId());
         //
         //     }
         //     // return result;

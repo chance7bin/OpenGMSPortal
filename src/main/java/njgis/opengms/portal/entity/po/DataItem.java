@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import njgis.opengms.portal.entity.doo.DataMeta;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.data.InvokeService;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;

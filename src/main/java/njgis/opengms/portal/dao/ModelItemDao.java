@@ -1,7 +1,7 @@
 package njgis.opengms.portal.dao;
 
 import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
-import njgis.opengms.portal.entity.dto.modelItem.ModelItemResultDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +17,7 @@ import java.util.List;
  * @Date 2019/2/21
  * @Version 1.0.0
  */
-public interface ModelItemDao extends MongoRepository<ModelItem,String> {
+public interface ModelItemDao extends MongoRepository<ModelItem,String>, GenericItemDao<ModelItem> {
 
     List<PortalIdPlus> findAllByAccessIdContains(String text);
 

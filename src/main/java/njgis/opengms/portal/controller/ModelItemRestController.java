@@ -1,33 +1,26 @@
 package njgis.opengms.portal.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.dto.modelItem.ModelItemAddDTO;
-import njgis.opengms.portal.entity.dto.modelItem.ModelItemFindDTO;
-import njgis.opengms.portal.entity.dto.modelItem.ModelItemResultDTO;
-import njgis.opengms.portal.entity.po.Classification;
-import njgis.opengms.portal.entity.dto.modelItem.ModelItemUpdateDTO;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemResultDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.ModelItemService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,8 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @ClassName ModelItemRestController
@@ -54,6 +45,9 @@ public class ModelItemRestController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    GenericService genericService;
 
     @Autowired
     ModelItemDao modelItemDao;
@@ -91,6 +85,25 @@ public class ModelItemRestController {
         modelAndView.setViewName("modelApplication");
 
         return modelAndView;
+    }
+
+    /**
+     * @Description 根据id获取模型条目详情页面
+     * @param id
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author kx
+     * @Date 21/10/12
+     **/
+    @ApiOperation(value = "根据id获取模型条目详情页面")
+    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    ModelAndView get(@PathVariable("id") String id, HttpServletRequest request){
+        PortalItem portalItem = genericService.getPortalItem(id, ItemTypeEnum.ModelItem);
+        ModelAndView modelAndView = genericService.checkPrivatePageAccessPermission(portalItem, Utils.checkLoginStatus(request));
+        if(modelAndView != null){
+            return modelAndView;
+        }else {
+            return modelItemService.getPage(portalItem);
+        }
     }
 
     /**
@@ -195,25 +208,26 @@ public class ModelItemRestController {
      * @Author kx
      * @Date 2021/7/12
      **/
-//    @LoginRequired
-//    @RequestMapping(value = "/update", method = RequestMethod.POST)
-//    public JsonResult updateModelItem(HttpServletRequest request) throws IOException {
-//
-//        HttpSession session=request.getSession();
-//        String email=session.getAttribute("email").toString();
-//
-//        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-//        MultipartFile file=multipartRequest.getFile("info");
-//        String model=IOUtils.toString(file.getInputStream(),"utf-8");
-//        JSONObject jsonObject=JSONObject.parseObject(model);
-//        ModelItemUpdateDTO modelItemUpdateDTO=JSONObject.toJavaObject(jsonObject,ModelItemUpdateDTO.class);
-//
-//        JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
-//        if(result==null){
-//            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
-//        }
-//        else {
-//            return ResultUtils.success(result);
-//        }
-//    }
+    @LoginRequired
+    @ApiOperation(value = "更新模型条目", notes = "@LoginRequired\n之前因为玄武盾封锁，需要以文件的形式将条目信息传入")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public JsonResult updateModelItem(HttpServletRequest request) throws IOException {
+
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultipartFile file=multipartRequest.getFile("info");
+        String model=IOUtils.toString(file.getInputStream(),"utf-8");
+        JSONObject jsonObject=JSONObject.parseObject(model);
+        ModelItemUpdateDTO modelItemUpdateDTO=JSONObject.toJavaObject(jsonObject,ModelItemUpdateDTO.class);
+
+        JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
+        if(result==null){
+            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+        }
+        else {
+            return ResultUtils.success(result);
+        }
+    }
 }

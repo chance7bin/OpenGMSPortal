@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.template.TemplateDTO;
+import njgis.opengms.portal.entity.dto.community.template.TemplateDTO;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.TemplateService;
 import org.apache.commons.io.IOUtils;

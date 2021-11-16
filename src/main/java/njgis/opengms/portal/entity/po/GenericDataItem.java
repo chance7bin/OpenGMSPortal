@@ -1,6 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
-import njgis.opengms.portal.entity.doo.PortalItem;
+
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 
 /**
  * @Description 通用DataItem类

@@ -17,6 +17,7 @@ import java.util.List;
 @Document
 @Data
 public class ConceptualModel extends PortalItem {
+    //前端需要调整的地方：relatedModelItems 数组；单语言描述改为多语言，需要向后台传输List<Localization> localizationList字段
 
 //    String relateModelItem;
     List<String> relatedModelItems; //新增new

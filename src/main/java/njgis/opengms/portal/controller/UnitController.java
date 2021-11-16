@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.unit.UnitDTO;
+import njgis.opengms.portal.entity.dto.community.unit.UnitDTO;
 import njgis.opengms.portal.service.UnitService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.AddDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -142,7 +142,7 @@ public class RepositoryService {
      * @param addDTO DTO
      * @param email 贡献者email
      * @param itemType 条目类型
-     * @return njgis.opengms.portal.entity.doo.PortalItem
+     * @return njgis.opengms.portal.entity.doo.base.PortalItem
      * @Author bin
      **/
     public PortalItem commonInsertPart(PortalItem item, AddDTO addDTO, String email, ItemTypeEnum itemType){

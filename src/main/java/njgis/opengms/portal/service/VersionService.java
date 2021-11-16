@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.VersionDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;

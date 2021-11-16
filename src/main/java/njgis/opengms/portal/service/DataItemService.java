@@ -5,10 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
+import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
@@ -337,7 +338,7 @@ public class DataItemService {
             BeanUtils.copyProperties(dataItemAddDTO, item);
             Date now = new Date();
             // oid字段已被废弃
-            // item.setOid(UUID.randomUUID().toString());
+            // item.setId(UUID.randomUUID().toString());
             item.setCreateTime(now);
             item.setAuthor(email);
             //设置dataItem的图片path以及存储图片
