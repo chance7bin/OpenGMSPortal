@@ -63,7 +63,6 @@ public class ConceptService {
         //         result.put("method", "update");
         //         result.put("id", concept.getId());
         //     } else {
-        //         // TODO: 2021/8/31 不是作者更新的还没做
         //         result.put("method", "version");
         //         // result.put("oid", templateVersion.getOid());
         //

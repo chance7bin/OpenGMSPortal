@@ -8,7 +8,6 @@ import java.util.List;
 
 /**
  * @ClassName DataItemMeta
- * @Description todo
  * @Author sun_liber
  * @Date 2019/2/13
  * @Version 1.0.0

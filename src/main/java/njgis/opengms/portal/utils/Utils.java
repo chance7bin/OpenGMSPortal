@@ -273,7 +273,6 @@ public class Utils {
                 try {
                     file.transferTo(dest);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     return null;
                 }
@@ -586,7 +585,6 @@ public class Utils {
                     // System.out.println(a);
                     return JSONObject.parseObject(a);
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                     return null;
                 }

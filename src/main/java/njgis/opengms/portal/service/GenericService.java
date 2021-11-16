@@ -437,10 +437,25 @@ public class GenericService {
      * @return njgis.opengms.portal.entity.doo.PortalItem
      **/
     public PortalItem recordViewCount(PortalItem item) {
+        List<DailyViewCount> dailyViewCountList = item.getDailyViewCount();
+
+        item.setDailyViewCount(recordViewCountByField(dailyViewCountList));
+        item.setViewCount(item.getViewCount() + 1);
+
+        return item;
+    }
+
+
+    /**
+     * @Description 记录访问数量(参数是字段)
+     * @Author bin
+     * @Param [dailyViewCountList]
+     * @return njgis.opengms.portal.entity.doo.PortalItem
+     **/
+    public List<DailyViewCount> recordViewCountByField(List<DailyViewCount> dailyViewCountList) {
         Date now = new Date();
         DailyViewCount newViewCount = new DailyViewCount(now, 1);
-
-        List<DailyViewCount> dailyViewCountList = item.getDailyViewCount();
+        // List<DailyViewCount> dailyViewCountList = item.getDailyViewCount();
         if (dailyViewCountList == null) {
             List<DailyViewCount> newList = new ArrayList<>();
             newList.add(newViewCount);
@@ -459,12 +474,8 @@ public class GenericService {
             dailyViewCountList.add(newViewCount);
         }
 
-        item.setDailyViewCount(dailyViewCountList);
-        item.setViewCount(item.getViewCount() + 1);
-
-        return item;
+        return dailyViewCountList;
     }
-
 
 
     /**
