@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * @Description todo
  * @Author kx
  * @Date 2021/7/1
  * @Version 1.0.0

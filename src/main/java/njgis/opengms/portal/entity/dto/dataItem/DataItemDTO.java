@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * @ClassName DataItemAddDTO
- * @Description todo
  * @Author sun_liber
  * @Date 2019/2/13
  * @Version 1.0.0

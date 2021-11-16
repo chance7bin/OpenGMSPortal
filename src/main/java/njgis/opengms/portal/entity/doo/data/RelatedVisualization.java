@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @Author mingyuan
  * @Date 2020.07.03 20:13
- * TODO lmy
  */
 @Document
 @Data
