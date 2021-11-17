@@ -70,6 +70,9 @@ public class ComputableModelService {
     @Value("${resourcePath}")
     String resourcePath;
 
+    @Value(value = "Public,Discoverable")
+    private List<String> itemStatusVisible;
+
     /**
      * @Description 计算模型详情页面
      * @param id
