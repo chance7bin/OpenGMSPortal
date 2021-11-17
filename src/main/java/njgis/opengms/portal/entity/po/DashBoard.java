@@ -2,7 +2,7 @@ package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
-import njgis.opengms.portal.entity.doo.PortalId;
+import njgis.opengms.portal.entity.doo.base.PortalId;
 
 import java.util.ArrayList;
 import java.util.List;
