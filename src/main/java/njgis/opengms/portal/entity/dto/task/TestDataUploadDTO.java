@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestDataUploadDTO {
-    // String dataItemId;
+    String dataItemId;
     String id;
     String host;
     int port;

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
-import njgis.opengms.portal.entity.dto.task.TaskFindDTO;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.service.ComputableModelService;
 import njgis.opengms.portal.service.ManagementSystemService;
 import njgis.opengms.portal.service.TaskService;
@@ -81,12 +81,12 @@ public class ManagementSystemController {
 
     // @LoginRequired
     @ApiOperation(value = "更新任务状态")
-    @RequestMapping(value="/update/modelStatus",method= RequestMethod.POST)
-    public JsonResult updateTaskStatus(@RequestBody TaskFindDTO taskFindDTO) {
+    @RequestMapping(value="/update/modelStatus",method= RequestMethod.GET)
+    public JsonResult updateTaskStatus() {
         // HttpSession session = request.getSession();
         // String email = session.getAttribute("email").toString();
         String email = "782807969@qq.com";
-        return taskService.getTasksByUserByStatus(email, taskFindDTO);
+        return managementSystemService.updateTaskStatus();
     }
 
 
@@ -125,5 +125,30 @@ public class ManagementSystemController {
         return managementSystemService.deleteCheckedList(id);
 
     }
+
+
+    @ApiOperation(value = "用户列表")
+    @RequestMapping(value="/user/info",method= RequestMethod.POST)
+    public JsonResult getUserList(@RequestBody FindDTO findDTO){
+        return managementSystemService.getUserList(findDTO);
+    }
+
+
+
+    // @LoginRequired
+    @ApiOperation(value = "设置用户权限 ( role: ROLE_ROOT / ROLE_ADMIN / ROLE_USER )")
+    @RequestMapping(value="/user/role/{id}/{role}",method= RequestMethod.POST)
+    public JsonResult setUserRole(@PathVariable String id, @PathVariable UserRoleEnum role){
+        return managementSystemService.setUserRole(id,role);
+    }
+
+
+
+    @ApiOperation(value = "大屏展示需要的数据")
+    @RequestMapping(value="/dashboard/info",method= RequestMethod.GET)
+    public JsonResult getDashboardInfo(){
+        return managementSystemService.getDashboardInfo();
+    }
+
 
 }
