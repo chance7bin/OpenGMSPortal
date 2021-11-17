@@ -1,7 +1,7 @@
 package njgis.opengms.portal.entity.dto.version;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.po.Version;
 
 /**

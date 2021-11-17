@@ -1,11 +1,15 @@
 package njgis.opengms.portal.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import njgis.opengms.portal.entity.doo.AuthorInfo;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.ModifiedPropertyInfo;
-import njgis.opengms.portal.entity.doo.PortalIdPlus;
 import njgis.opengms.portal.entity.doo.PropertyModelInfo;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -24,6 +28,10 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.math.BigInteger;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,8 +218,8 @@ public class Utils {
     /**
      * base64字符串转化成图片
      * @param imgStr
-     * @param path 
-     * @return boolean 
+     * @param path
+     * @return boolean
      * @Author bin
      **/
     public static boolean base64StrToImage(String imgStr, String path) {
@@ -490,6 +498,35 @@ public class Utils {
         return modelInfos;
     }
 
+    /**
+     * @Description 计算文件md5
+     * @param file
+     * @Return java.lang.String
+     * @Author kx
+     * @Date 21/11/12
+     **/
+    public static String getMd5ByFile(File file) throws FileNotFoundException {
+        String value = null;
+        FileInputStream in = new FileInputStream(file);
+        try {
+            MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(byteBuffer);
+            BigInteger bi = new BigInteger(1, md5.digest());
+            value = bi.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(null != in) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return value;
+    }
 
     // public static class Method {
     //     public static String POST = "POST";
@@ -602,8 +639,8 @@ public class Utils {
 
     /**
      * mdl2json
-     * @param mdl 
-     * @return com.alibaba.fastjson.JSONObject 
+     * @param mdl
+     * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
     public static JSONObject convertMdl(String mdl) {

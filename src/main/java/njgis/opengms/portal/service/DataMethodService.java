@@ -12,7 +12,7 @@ import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.doo.support.MetaData;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.DataServerTask;
 import njgis.opengms.portal.entity.po.User;
@@ -658,7 +658,7 @@ public class DataMethodService {
 //                    result.put("code", -2);
 //                }else {
 //                    result.put("code", 1);
-//                    result.put("id", dataMethod.getOid());
+//                    result.put("id", dataMethod.getId());
 //                }
             }catch (Exception e){
                 log.info("dataMethod create failed");
@@ -752,8 +752,8 @@ public class DataMethodService {
         }
         part2.add("name", dataMethod.getName());
 
-//        part2.add("oid", "I3MXbzRq/NZkbWcKO8tF0w==");//33
-        part2.add("oid", "5KglgbsDPmrFnA3J9CALzQ==");//75
+//        part2.add("id", "I3MXbzRq/NZkbWcKO8tF0w==");//33
+        part2.add("id", "5KglgbsDPmrFnA3J9CALzQ==");//75
 
         //获取xml
         String packageZipPath = resourcePath + "/DataApplication/Package" + dataMethod.getResources().get(0);

@@ -8,9 +8,9 @@ package njgis.opengms.portal.enums;
  */
 public enum UserRoleEnum {
 
-    ROLE_ROOT(0,"ROOT"),
-    ROLE_ADMIN(1,"ADMIN"),
-    ROLE_USER(2,"USER");
+    ROLE_ROOT(0,"ROOT"), //最高权限
+    ROLE_ADMIN(1,"ADMIN"), //管理员
+    ROLE_USER(2,"USER"); //普通用户
 
     private int code;
     private String role;
@@ -37,14 +37,14 @@ public enum UserRoleEnum {
         return null;
     }
 
-    public static Boolean isAdmin(UserRoleEnum userRole){
-        if(userRole == null){
-            return false;
-        }
-        if(userRole.getCode()<2){
-            return true;
-        }else{
-            return false;
-        }
+    /**
+     * @Description 判断是否为管理员
+     * @Return java.lang.Boolean
+     * @Author kx
+     * @Date 21/11/12
+     **/
+    public Boolean isAdmin(){
+        //code == 0 / 1 为管理员
+        return this.getCode()<2;
     }
 }

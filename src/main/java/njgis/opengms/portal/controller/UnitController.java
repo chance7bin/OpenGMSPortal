@@ -8,7 +8,7 @@ import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.unit.UnitDTO;
+import njgis.opengms.portal.entity.dto.community.unit.UnitDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.RepositoryService;
 import njgis.opengms.portal.service.UnitService;
