@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.service.ComputableModelService;
 import njgis.opengms.portal.service.ManagementSystemService;
@@ -149,6 +151,16 @@ public class ManagementSystemController {
     public JsonResult getDashboardInfo(){
         return managementSystemService.getDashboardInfo();
     }
+
+
+
+    @ApiOperation(value = "条目展示, 根据条目类型(type必填)")
+    @RequestMapping(value="/item/info/{itemType}",method= RequestMethod.POST)
+    public JsonResult getItemInfo(@PathVariable ItemTypeEnum itemType, @RequestBody SpecificFindDTO specificFindDTO){
+        return managementSystemService.getItemInfo(itemType, specificFindDTO);
+    }
+
+
 
 
 }

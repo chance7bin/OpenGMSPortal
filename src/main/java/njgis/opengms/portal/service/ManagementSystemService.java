@@ -12,10 +12,12 @@ import njgis.opengms.portal.entity.doo.task.InputData;
 import njgis.opengms.portal.entity.doo.task.InputDataChildren;
 import njgis.opengms.portal.entity.doo.task.ModelListItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.task.ResultDataDTO;
 import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
 import njgis.opengms.portal.entity.dto.task.TaskInvokeDTO;
 import njgis.opengms.portal.entity.po.*;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,6 +362,11 @@ public class ManagementSystemService {
         List<DailyViewCount> dailyViewCount = dashboard.getDailyViewCount();
         dashboard.setDailyViewCount(genericService.recordViewCountByField(dailyViewCount));
         dashboardDao.save(dashboard);
+    }
+
+
+    public JsonResult getItemInfo(ItemTypeEnum itemType, SpecificFindDTO specificFindDTO){
+        return ResultUtils.success();
     }
 
 
