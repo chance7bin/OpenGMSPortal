@@ -526,7 +526,7 @@ public class UserService {
         JSONObject userInfo = getInfoFromUserServer(user.getEmail());
         JSONObject userJson = new JSONObject();
         userJson.put("name", userInfo.getString("name"));
-        // userJson.put("oid", user.getOid());
+        // userJson.put("id", user.getId());
         userJson.put("email", user.getEmail());
         userJson.put("accessId", user.getAccessId());
         // userJson.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());

@@ -1,7 +1,7 @@
 package njgis.opengms.portal.dao;
 
 
-import njgis.opengms.portal.entity.doo.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 import njgis.opengms.portal.entity.po.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

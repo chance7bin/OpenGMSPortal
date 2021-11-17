@@ -47,8 +47,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             }else { // 判断用户权限
                 String role_str = role.toString();
                 UserRoleEnum userRole = UserRoleEnum.getUserRoleByRoleName(role_str);
-                Boolean isAdmin = UserRoleEnum.isAdmin(userRole);
-                if(isAdmin){
+                if(userRole.isAdmin()){
                     return true;
                 }
 

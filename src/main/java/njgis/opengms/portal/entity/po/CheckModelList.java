@@ -1,7 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.PortalId;
+import njgis.opengms.portal.entity.doo.base.PortalId;
 import njgis.opengms.portal.entity.doo.task.ModelListItem;
 import org.springframework.data.mongodb.core.mapping.Document;
 

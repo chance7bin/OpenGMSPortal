@@ -13,7 +13,7 @@ import lombok.Data;
 public class SpecificFindDTO extends FindDTO {
     @ApiModelProperty(value = "目录分类", example = "specific uuid")
     private String categoryName; //目录分类
-    @ApiModelProperty(value = "按属性查询", example = "name")
+    @ApiModelProperty(value = "当前查询的属性", example = "name")
     private String curQueryField; //属性分类
 
 }

@@ -9,7 +9,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.DataMethodService;
 import njgis.opengms.portal.service.GenericService;
@@ -287,7 +287,7 @@ public class DataMethodController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    @ApiOperation(value = "根据id获取条目数据 [ /dataApplication/getInfo/{oid} ]")
+    @ApiOperation(value = "根据id获取条目数据 [ /dataApplication/getInfo/{id} ]")
     @RequestMapping(value = "/itemInfo/{id}", method = RequestMethod.GET)
     public JsonResult getInfo(@PathVariable("id") String id) {
         return ResultUtils.success(dataMethodService.getInfo(id));

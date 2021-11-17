@@ -1,5 +1,6 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -7,9 +8,14 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.model.RelatedModelInfoDTO;
+import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
@@ -20,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -197,7 +204,7 @@ public class GenericService {
             jsonObject.put("description",portalItem.getOverview());
             // jsonObject.put("type",portalItem.getType());
             jsonObject.put("status",portalItem.getStatus());
-            // jsonObject.put("oid",portalItem.getOid());
+            // jsonObject.put("id",portalItem.getId());
             jsonObject.put("id", portalItem.getId());
             jsonObject.put("viewCount",portalItem.getViewCount());
             jsonObject.put("dailyViewCount",portalItem.getDailyViewCount());
@@ -345,7 +352,14 @@ public class GenericService {
                             for (User user : users) {
                                 userEmailList.add(userDao.findFirstByName(user.getName()).getEmail());
                             }
-                            result = genericItemDao.findAllByAuthorInAndStatusIn(userEmailList, itemStatusVisible, pageable);
+                            result = genericItemDao.findAllByAuthorInOrContributorsIn(userEmailList, userEmailList, pageable);
+                            break;
+                        }
+                        //添加查询用户本人创建的条目 kx 21.10.15
+                        case "author":{
+                            List<String> email =  new ArrayList<>();
+                            email.add(searchText);
+                            result = genericItemDao.findAllByAuthorInAndStatusIn(email, itemStatusVisible, pageable);
                             break;
                         }
                         default:{
@@ -414,7 +428,7 @@ public class GenericService {
     /**
      * @Description 根据id查dataItem
      * @Param [id, genericItemDao]
-     * @return njgis.opengms.portal.entity.doo.PortalItem
+     * @return njgis.opengms.portal.entity.doo.base.PortalItem
      **/
     public PortalItem getById(String id, GenericItemDao genericItemDao) {
 
@@ -434,7 +448,7 @@ public class GenericService {
      * @Description 记录访问数量
      * @Author bin
      * @Param [item]
-     * @return njgis.opengms.portal.entity.doo.PortalItem
+     * @return njgis.opengms.portal.entity.doo.base.PortalItem
      **/
     public PortalItem recordViewCount(PortalItem item) {
         List<DailyViewCount> dailyViewCountList = item.getDailyViewCount();
@@ -513,6 +527,115 @@ public class GenericService {
         return PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
     }
 
+
+    /**
+     * @Description 概念、逻辑、计算模型 获取与其相关的模型条目简要信息
+     * @param relatedModelItems
+     * @Return com.alibaba.fastjson.JSONArray
+     * @Author kx
+     * @Date 21/11/11
+     **/
+    public List<RelatedModelInfoDTO> getRelatedModelInfoList(List<String> relatedModelItems){
+        List<RelatedModelInfoDTO> relatedModelInfoDTOList = new ArrayList<>();
+
+        for(int i = 0;i<relatedModelItems.size();i++){
+            String relatedModelItemId = relatedModelItems.get(i);
+            ModelItem modelItem=modelItemDao.findFirstById(relatedModelItemId);
+            RelatedModelInfoDTO relatedModelInfoDTO = new RelatedModelInfoDTO();
+            relatedModelInfoDTO.setName(modelItem.getName());
+            relatedModelInfoDTO.setId(modelItem.getId());
+            relatedModelInfoDTOList.add(relatedModelInfoDTO);
+        }
+        return relatedModelInfoDTOList;
+    }
+
+
+    /**
+     * @Description 根据文件路径获取用于前端展示的文件信息
+     * @param filePathList
+     * @Return java.util.List<njgis.opengms.portal.entity.doo.data.SimpleFileInfo>
+     * @Author kx
+     * @Date 21/11/11
+     **/
+    public List<SimpleFileInfo> getSimpleFileInfoList(List<String> filePathList){
+        List<SimpleFileInfo> simpleFileInfoList = new ArrayList<>();
+        if (filePathList != null) {
+            for (int i = 0; i < filePathList.size(); i++) {
+
+                String path = filePathList.get(i);
+
+                String[] arr = path.split("\\.");
+                String suffix = arr[arr.length - 1];
+
+                arr = path.split("/");
+                String name = arr[arr.length - 1].substring(14);
+
+                SimpleFileInfo simpleFileInfo = new SimpleFileInfo();
+                simpleFileInfo.setName(name);
+                simpleFileInfo.setSuffix(suffix);
+                simpleFileInfo.setPath(path);
+
+                simpleFileInfoList.add(simpleFileInfo);
+            }
+        }
+        return simpleFileInfoList;
+    }
+
+    /**
+     * @Description 根据id或accessId获取条目
+     * @param id
+     * @Return njgis.opengms.portal.entity.doo.base.PortalItem
+     * @Author kx
+     * @Date 21/11/15
+     **/
+    public PortalItem getPortalItem(String id, ItemTypeEnum itemTypeEnum){
+        GenericItemDao genericItemDao = (GenericItemDao) daoFactory(itemTypeEnum).get("itemDao");
+        PortalItem item = null;
+        if(id.matches("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}")) {
+            //条目信息
+            try {
+                item = (PortalItem) genericItemDao.findFirstById(id);
+            } catch (MyException e) {
+                return null;
+            }
+        }else{
+            try {
+                item = (PortalItem) genericItemDao.findFirstByAccessId(id);
+            } catch (MyException e) {
+                return null;
+            }
+        }
+        return item;
+    }
+
+    /**
+     * @Description 检查私有条目是否可以被用户访问
+     * @param item 条目对象
+     * @param email 访问者唯一标识
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author kx
+     * @Date 21/11/12
+     **/
+    public ModelAndView checkPrivatePageAccessPermission(PortalItem item, String email){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("error/404");
+
+        User user = userDao.findFirstByEmail(email);
+        if(user.getUserRole().isAdmin()){
+            return null;
+        }
+
+        if (item.getStatus().equals("Private")) {
+            if (email == null) {
+                return modelAndView;
+            } else {
+                if (!email.equals(item.getAuthor())) {
+                    return modelAndView;
+                }
+            }
+        }
+        return null;
+    }
     /**
      * 获取对象所有属性，包括父类
      * @param object

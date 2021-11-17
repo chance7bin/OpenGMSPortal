@@ -9,7 +9,7 @@ import njgis.opengms.portal.dao.DataMethodDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.template.TemplateDTO;
+import njgis.opengms.portal.entity.dto.community.template.TemplateDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.Template;
 import njgis.opengms.portal.enums.ItemTypeEnum;
