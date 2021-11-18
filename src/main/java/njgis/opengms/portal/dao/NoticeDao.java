@@ -22,4 +22,6 @@ public interface NoticeDao extends MongoRepository<Notice,String> {
     List<Notice> findAllByRecipientAndHasRead(String email, boolean hasRead);
 
     Notice findFirstByRecipient(String email);
+
+
 }
