@@ -29,7 +29,9 @@ public enum ItemTypeEnum {
     Conference(14,"conference"),
 
     //通知类型
-    Version(15,"version");
+    Version(15,"version"),
+
+    Information(16,"information");
 
     private int number;
     private String text;

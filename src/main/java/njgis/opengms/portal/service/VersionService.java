@@ -113,7 +113,10 @@ public class VersionService {
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
             else
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
-            noticeService.sendNoticeContainRoot(reviewer, OperationEnum.Accept,version.getId(),recipientList);
+            recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
+            recipientList = noticeService.addPortalAdmins(recipientList);
+            recipientList = noticeService.addPortalRoot(recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Accept,version.getId(),recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
@@ -147,7 +150,10 @@ public class VersionService {
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
             else
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
-            noticeService.sendNoticeContainRoot(reviewer, OperationEnum.Reject,version.getId(),recipientList);
+            recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
+            recipientList = noticeService.addPortalAdmins(recipientList);
+            recipientList = noticeService.addPortalRoot(recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Reject,version.getId(),recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }

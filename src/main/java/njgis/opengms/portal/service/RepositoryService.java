@@ -213,7 +213,10 @@ public class RepositoryService {
                 Version version = versionService.addVersion(item, email,originalItemName);
                 //发送通知
                 List<String> recipientList = Arrays.asList(author);
-                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
+                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
 
                 result.put("method", "version");
                 result.put("versionId", version.getId());

@@ -2,6 +2,7 @@ package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
@@ -11,10 +12,13 @@ import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.service.ComputableModelService;
 import njgis.opengms.portal.service.ManagementSystemService;
 import njgis.opengms.portal.service.TaskService;
+import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 /**
  * @Description
@@ -30,6 +34,9 @@ public class ManagementSystemController {
 
     @Autowired
     ManagementSystemService managementSystemService;
+
+    @Autowired
+    UserService userService;
 
 
     @Autowired
@@ -138,29 +145,113 @@ public class ManagementSystemController {
 
 
     // @LoginRequired
-    @ApiOperation(value = "设置用户权限 ( role: ROLE_ROOT / ROLE_ADMIN / ROLE_USER )")
+    @ApiOperation(value = "设置用户权限")
     @RequestMapping(value="/user/role/{id}/{role}",method= RequestMethod.POST)
     public JsonResult setUserRole(@PathVariable String id, @PathVariable UserRoleEnum role){
-        return managementSystemService.setUserRole(id,role);
+        return userService.setUserRole(id,role);
     }
 
 
 
-    @ApiOperation(value = "大屏展示需要的数据")
-    @RequestMapping(value="/dashboard/info",method= RequestMethod.GET)
-    public JsonResult getDashboardInfo(){
-        return managementSystemService.getDashboardInfo();
-    }
+    // @ApiOperation(value = "大屏展示需要的数据")
+    // @RequestMapping(value="/dashboard/info",method= RequestMethod.GET)
+    // public JsonResult getDashboardInfo(){
+    //     return managementSystemService.getDashboardInfo();
+    // }
 
 
 
     @ApiOperation(value = "条目展示, 根据条目类型(type必填)")
     @RequestMapping(value="/item/info/{itemType}",method= RequestMethod.POST)
     public JsonResult getItemInfo(@PathVariable ItemTypeEnum itemType, @RequestBody SpecificFindDTO specificFindDTO){
-        return managementSystemService.getItemInfo(itemType, specificFindDTO);
+        return ResultUtils.success(managementSystemService.getItemInfo(itemType, specificFindDTO));
     }
 
 
+    // @LoginRequired
+    @ApiOperation(value = "给条目添加管理者")
+    @RequestMapping(value="/item/admin/{itemType}/{itemId}",method= RequestMethod.POST)
+    public JsonResult addAdmin(
+        @ApiParam(name = "itemType", value = "条目类型", required = true)
+        @PathVariable ItemTypeEnum itemType,
+        @ApiParam(name = "itemId", value = "条目id", required = true)
+        @PathVariable String itemId,
+        @ApiParam(name = "userList", value = "新增的用户email", required = true)
+        @RequestBody List<String> userList
+    ){
+        return managementSystemService.addAdmin(itemType, itemId, userList);
+    }
+
+    // @LoginRequired
+    @ApiOperation(value = "设置条目的访问状态 status: Public/Discoverable/Private")
+    @RequestMapping(value="/item/status/{itemType}/{itemId}/{status}",method= RequestMethod.POST)
+    public JsonResult setItemStatus(@PathVariable ItemTypeEnum itemType, @PathVariable String itemId, @PathVariable String status){
+        // HttpSession session = request.getSession();
+        // String email = session.getAttribute("email").toString();
+        String email = "782807969@qq.com";
+        return managementSystemService.setItemStatus(itemType, itemId, status,email);
+
+    }
+
+    @ApiOperation(value = "查找资源数量")
+    @RequestMapping(value="/item/count/{itemType}",method= RequestMethod.GET)
+    public JsonResult getItemCount(@PathVariable ItemTypeEnum itemType){
+        return ResultUtils.success(managementSystemService.getItemCount(itemType));
+
+    }
+
+
+    @ApiOperation(value = "页面访问量")
+    @RequestMapping(value="/view/page/count",method= RequestMethod.GET)
+    public JsonResult getPageViewCount(){
+        return ResultUtils.success(managementSystemService.getPageViewCount());
+
+    }
+
+
+    @ApiOperation(value = "用户访问量")
+    @RequestMapping(value="/view/user/count",method= RequestMethod.GET)
+    public JsonResult getUserViewCount(){
+        return ResultUtils.success(managementSystemService.getUserViewCount());
+
+    }
+
+
+    @ApiOperation(value = "条目访问量 按viewCount排序")
+    @RequestMapping(value="/view/item/sortByViewCount/{itemType}",method= RequestMethod.POST)
+    public JsonResult getItemViewCount(@PathVariable ItemTypeEnum itemType, @RequestBody SpecificFindDTO specificFindDTO){
+        specificFindDTO.setSortField("viewCount");
+        return ResultUtils.success(managementSystemService.getItemInfo(itemType, specificFindDTO));
+    }
+
+
+    @ApiOperation(value = "计算模型服务调用的数量 按invokeCount排序")
+    @RequestMapping(value="/service/computableModel/invokeCount",method= RequestMethod.POST)
+    public JsonResult getModelServiceInvokeCount(@RequestBody SpecificFindDTO specificFindDTO){
+        specificFindDTO.setSortField("invokeCount");
+        return ResultUtils.success(managementSystemService.getItemInfo(ItemTypeEnum.ComputableModel, specificFindDTO));
+    }
+
+    @ApiOperation(value = "数据方法服务调用的数量 按invokeCount排序")
+    @RequestMapping(value="/service/dataMethod/invokeCount",method= RequestMethod.POST)
+    public JsonResult getDataMethodServiceInvokeCount(@RequestBody SpecificFindDTO specificFindDTO){
+        specificFindDTO.setSortField("invokeCount");
+        return ResultUtils.success(managementSystemService.getItemInfo(ItemTypeEnum.DataMethod, specificFindDTO));
+    }
+
+
+    // @LoginRequired
+    @ApiOperation(value = "获取用户数量")
+    @RequestMapping(value="/user/count",method= RequestMethod.GET)
+    public JsonResult getUserCount(){
+        return ResultUtils.success(managementSystemService.getUserCount());
+    }
+
+    @ApiOperation(value = "获取服务节点")
+    @RequestMapping(value="/serverNodes",method= RequestMethod.GET)
+    public JsonResult getAllServerNodes(){
+        return ResultUtils.success(managementSystemService.getAllServerNodes());
+    }
 
 
 }

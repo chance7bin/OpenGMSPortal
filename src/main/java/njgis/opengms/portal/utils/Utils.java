@@ -1,21 +1,21 @@
 package njgis.opengms.portal.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import njgis.opengms.portal.entity.doo.AuthorInfo;
-import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.ip2location.IP2Location;
+import com.ip2location.IPResult;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.ModifiedPropertyInfo;
 import njgis.opengms.portal.entity.doo.PropertyModelInfo;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.support.GeoInfoMeta;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
 
@@ -25,10 +25,10 @@ import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
@@ -890,6 +890,114 @@ public class Utils {
         } else {
             return;
         }
+    }
+
+
+    public static GeoInfoMeta getGeoInfoMeta(String host) throws Exception {
+        IP2Location location = new IP2Location();
+        location.IPDatabasePath = ClassUtils.getDefaultClassLoader().getResource("static/").getPath()+"IP2LOCATION-LITE-DB5.BIN";
+        GeoInfoMeta geoInfoMeta = new GeoInfoMeta();
+        try {
+            IPResult rec = location.IPQuery(host);
+            if ("OK".equals(rec.getStatus())) {
+                if(!rec.getCountryLong().equals("-")) {
+                    geoInfoMeta.setCity(rec.getCity());
+                    geoInfoMeta.setRegion(rec.getRegion());
+                    geoInfoMeta.setCountryCode(rec.getCountryShort());
+                    String countryName = rec.getCountryLong();
+
+                    switch (countryName.trim()){
+                        case "United States of America":
+                            countryName="United States";
+                            break;
+                        case "United Kingdom of Great Britain and Northern Ireland":
+                            countryName="United Kingdom";
+                            break;
+                        case "Hong Kong":
+                            countryName="Hong Kong, China";
+                            break;
+                        case "Macao":
+                            countryName="Macao, China";
+                            break;
+                        case "Taiwan (Province of China)":
+                            countryName="Taiwan, China";
+                            break;
+                        case "Congo (Democratic Republic of the)":
+                            countryName="Dem. Rep. Congo";
+                            break;
+                        case "Russian Federation":
+                            countryName="Russia";
+                            break;
+                        case "Korea (Republic of)":
+                            countryName="Korea";
+                            break;
+                        case "Iran (Islamic Republic of)":
+                            countryName="Iran";
+                            break;
+                        case "Bolivia (Plurinational State of)":
+                            countryName="Bolivia";
+                            break;
+                        case "Micronesia (Federated States of)":
+                            countryName="Micronesia";
+                            break;
+                        case "Venezuela (Bolivarian Republic of)":
+                            countryName="Venezuela";
+                            break;
+                        case "Moldova (Republic of)":
+                            countryName="Moldova";
+                            break;
+                        case "Dominican Republic":
+                            countryName="Dominican Rep.";
+                            break;
+                        case "Palestine, State of":
+                            countryName="Palestine, State of";
+                            break;
+                        case "Tanzania, United Republic of":
+                            countryName="Tanzania";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    geoInfoMeta.setCountryName(countryName);
+                    geoInfoMeta.setLatitude(String.valueOf(rec.getLatitude()));
+                    geoInfoMeta.setLongitude(String.valueOf(rec.getLongitude()));
+                }else{
+                    geoInfoMeta.setCity("Nanjing");
+                    geoInfoMeta.setRegion("Jiangsu");
+                    geoInfoMeta.setCountryCode("CN");
+                    geoInfoMeta.setCountryName("China");
+                    geoInfoMeta.setLatitude("32.0617");
+                    geoInfoMeta.setLongitude("118.7778");
+
+                }
+            } else if ("EMPTY_IP_ADDRESS".equals(rec.getStatus())) {
+                System.out.println("IP address cannot be blank.");
+            } else if ("INVALID_IP_ADDRESS".equals(rec.getStatus())) {
+                System.out.println("Invalid IP address.");
+            } else if ("MISSING_FILE".equals(rec.getStatus())) {
+                System.out.println("Invalid database path.");
+            } else if ("IPV6_NOT_SUPPORTED".equals(rec.getStatus())) {
+                System.out.println("This BIN does not contain IPv6 data.");
+            } else {
+                System.out.println("Unknown error." + rec.getStatus());
+            }
+//            if (rec.getDelay() == true) {
+//                System.out.println("The last query was delayed for 5 seconds because this is an evaluation copy.");
+//            }
+//            System.out.println("Java Component: " + rec.getVersion());
+        }catch (Exception e){
+            System.out.println(e.fillInStackTrace());
+            geoInfoMeta.setCity("Nanjing");
+            geoInfoMeta.setRegion("Jiangsu");
+            geoInfoMeta.setCountryCode("CN");
+            geoInfoMeta.setCountryName("China");
+            geoInfoMeta.setLatitude("32.0617");
+            geoInfoMeta.setLongitude("118.7778");
+        }
+
+        return geoInfoMeta;
     }
 
 }
