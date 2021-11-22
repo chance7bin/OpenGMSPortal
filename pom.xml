@@ -183,11 +183,93 @@
             <version>1.5.2-BETA</version>
         </dependency>-->
 
+        <!-- ip位置库 -->
+        <dependency>
+            <groupId>com.ip2location</groupId>
+            <artifactId>ip2location</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/ip2location.jar</systemPath>
+        </dependency>
+
+        <!-- mxgraph -->
+        <dependency>
+            <groupId>com.mxgraph</groupId>
+            <artifactId>mxgraph-all</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/mxgraph-all.jar</systemPath>
+        </dependency>
+
+        <!-- 解压缩 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.19</version>
+        </dependency>
+        <!-- 处理Java基本对象方法的工具类包 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <!-- MongoClient -->
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.data</groupId>-->
+        <!--    <artifactId>spring-data-mongodb</artifactId>-->
+        <!--    <version>2.1.3.RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.data</groupId>-->
+        <!--    <artifactId>spring-data-mongodb</artifactId>-->
+        <!--    <version>3.2.5</version>-->
+        <!--</dependency>-->
+
+
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
 
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/resources/lib/</directory>
+                            <targetPath>WEB-INF/lib/</targetPath>
+                            <includes>
+                                <include>ip2location.jar</include>
+                            </includes>
+                        </resource>
+                        <resource>
+                            <directory>src/main/resources/lib/</directory>
+                            <targetPath>WEB-INF/lib/</targetPath>
+                            <includes>
+                                <include>mxgraph-all.jar</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <!-- 配置将哪些资源文件(静态文件/模板文件/mapper文件)加载到tomcat输出目录里 -->
         <resources>
             <resource>
                 <directory>src/main/java</directory><!--java文件的路径-->
@@ -204,21 +286,6 @@
                 <!-- <filtering>false</filtering>-->
             </resource>
         </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 
 </project>

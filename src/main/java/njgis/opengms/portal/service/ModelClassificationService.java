@@ -1,7 +1,9 @@
 package njgis.opengms.portal.service;
 
-import njgis.opengms.portal.dao.ModelClassificationDao;
-import njgis.opengms.portal.entity.po.ModelClassification;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import njgis.opengms.portal.dao.ClassificationDao;
+import njgis.opengms.portal.entity.po.Classification;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ import java.util.List;
 public class ModelClassificationService {
 
     @Autowired
-    ModelClassificationDao modelClassificationDao;
+    ClassificationDao classificationDao;
 
     /**
      * @Description 通过分类id获取指定分类
@@ -28,8 +30,8 @@ public class ModelClassificationService {
      * @Author kx
      * @Date 2021/7/7
      **/
-    public ModelClassification getById(String id){
-        return modelClassificationDao.findFirstById(id);
+    public Classification getById(String id){
+        return classificationDao.findFirstById(id);
     }
 
     /**
@@ -44,7 +46,7 @@ public class ModelClassificationService {
         if(classIdList == null) return new ArrayList<>();
 
         for(String classId : classIdList){
-            ModelClassification classification=getById(classId);
+            Classification classification=getById(classId);
             if(classification!=null) {
                 List<String> children = classification.getChildrenId();
                 if (children.size() > 0) {
@@ -52,7 +54,7 @@ public class ModelClassificationService {
                         if(!Utils.isStrInList(child, classIdList)) {
                             classIdList.add(child);
                         }
-                        ModelClassification classification1=getById(child);
+                        Classification classification1=getById(child);
                         List<String> children1=classification1.getChildrenId();
                         if(children1.size()>0){
                             for(String child1:children1){
@@ -66,6 +68,44 @@ public class ModelClassificationService {
             }
         }
         return classIdList;
+    }
+
+    /**
+     * @Description 根据分类id该分类的路径
+     * @param classifications
+     * @Return com.alibaba.fastjson.JSONArray
+     * @Author kx
+     * @Date 21/11/15
+     **/
+    public JSONArray getClassifications(List<String> classifications){
+        JSONArray classResult=new JSONArray();
+
+        for(int i=0;i<classifications.size();i++){
+
+            JSONArray array=new JSONArray();
+            String classId=classifications.get(i);
+
+            do{
+                Classification classification=classificationDao.findFirstById(classId);
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name",classification.getNameEn());
+                jsonObject.put("id",classification.getId());
+
+                array.add(jsonObject);
+                classId=classification.getParentId();
+            }while(classId!=null);
+
+            JSONArray array1=new JSONArray();
+            for(int j=array.size()-1;j>=0;j--){
+                array1.add(array.get(j));
+            }
+
+            classResult.add(array1);
+
+        }
+        System.out.println(classResult);
+        return classResult;
     }
 
 }

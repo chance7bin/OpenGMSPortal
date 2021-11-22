@@ -2,7 +2,7 @@ package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 public class ComputableModel extends PortalItem {
 
-    List<String> relateModelItems;
+    List<String> relatedModelItems;
 
     String contentType; // Package; Service; Code; Link; Library; MD5
     String url;

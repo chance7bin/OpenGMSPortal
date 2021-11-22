@@ -8,7 +8,7 @@ import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.concept.ConceptDTO;
+import njgis.opengms.portal.entity.dto.community.concept.ConceptDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.ConceptService;
 import njgis.opengms.portal.service.GenericService;
@@ -38,7 +38,7 @@ public class ConceptController {
 
     @Autowired
     GenericService genericService;
-    
+
     @Autowired
     RepositoryService repositoryService;
 
@@ -134,8 +134,8 @@ public class ConceptController {
     /**
      * 根据用户得到concept
      * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
     @LoginRequired
@@ -151,8 +151,8 @@ public class ConceptController {
     /**
      * 根据名称和用户得到concept
      * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
     @LoginRequired

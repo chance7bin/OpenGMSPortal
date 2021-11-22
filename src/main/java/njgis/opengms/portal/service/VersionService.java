@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.VersionDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.version.VersionDTO;
 import njgis.opengms.portal.entity.po.Version;
@@ -52,11 +52,12 @@ public class VersionService {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         version.setItemId(item.getId());
-        version.setName(sdf.format(date) + "@" + originalItemName);
+        version.setItemName(originalItemName);
+        version.setVersionName(sdf.format(date) + "@" + originalItemName);
         version.setContent(item);
         version.setEditor(editor);
         version.setItemCreator(item.getAuthor());
-        version.setCreateTime(date);
+        version.setSubmitTime(date);
         Class<? extends PortalItem> aClass = item.getClass();
         String name = aClass.getName();
         String[] nameArr = name.split("\\.");
@@ -66,6 +67,7 @@ public class VersionService {
         try {
             version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
         }catch (Exception e){
+            e.printStackTrace();
             log.error(e.getMessage());
         }
         return versionDao.insert(version);
@@ -111,7 +113,10 @@ public class VersionService {
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
             else
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
-            noticeService.sendNoticeContainRoot(reviewer, OperationEnum.Accept,version.getId(),recipientList);
+            recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
+            recipientList = noticeService.addPortalAdmins(recipientList);
+            recipientList = noticeService.addPortalRoot(recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Accept,version.getId(),recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
@@ -145,7 +150,10 @@ public class VersionService {
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
             else
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
-            noticeService.sendNoticeContainRoot(reviewer, OperationEnum.Reject,version.getId(),recipientList);
+            recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
+            recipientList = noticeService.addPortalAdmins(recipientList);
+            recipientList = noticeService.addPortalRoot(recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Reject,version.getId(),recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }

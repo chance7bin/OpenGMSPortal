@@ -3,7 +3,7 @@ package njgis.opengms.portal.service;
 import njgis.opengms.portal.dao.ConceptDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.concept.ConceptDTO;
+import njgis.opengms.portal.entity.dto.community.concept.ConceptDTO;
 import njgis.opengms.portal.entity.po.Concept;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -63,9 +63,8 @@ public class ConceptService {
         //         result.put("method", "update");
         //         result.put("id", concept.getId());
         //     } else {
-        //         // TODO: 2021/8/31 不是作者更新的还没做
         //         result.put("method", "version");
-        //         // result.put("oid", templateVersion.getOid());
+        //         // result.put("id", templateVersion.getId());
         //
         //     }
         //     // return result;

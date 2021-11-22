@@ -1,6 +1,7 @@
 package njgis.opengms.portal.component.interceptor;
 
 import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.service.ManagementSystemService;
 import njgis.opengms.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class ModelAndViewInterceptor implements HandlerInterceptor {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ManagementSystemService managementSystemService;
+
     /**
      * 判断session 是否有值
      *
@@ -35,6 +39,10 @@ public class ModelAndViewInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
         if(modelAndView!=null) {
+
+            //每次访问一个新的界面就把访问数量+1
+            managementSystemService.recordViewCount();
+
             HttpSession session = request.getSession();
             if (session.getAttribute("email") == null) {
                 modelAndView.addObject("userNavBar", new User());

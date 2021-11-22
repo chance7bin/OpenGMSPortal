@@ -7,7 +7,7 @@ import njgis.opengms.portal.dao.SpatialReferenceDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.spatialReference.SpatialReferenceDTO;
+import njgis.opengms.portal.entity.dto.community.spatialReference.SpatialReferenceDTO;
 import njgis.opengms.portal.entity.po.SpatialReference;
 import njgis.opengms.portal.entity.po.SpatialReferenceClassification;
 import njgis.opengms.portal.entity.po.User;

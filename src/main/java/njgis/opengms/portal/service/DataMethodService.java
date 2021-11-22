@@ -12,7 +12,7 @@ import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.doo.support.MetaData;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.DataServerTask;
 import njgis.opengms.portal.entity.po.User;
@@ -516,6 +516,14 @@ public class DataMethodService {
         post.setEntity(postingString);
         post.setHeader("Content-type", "application/json");
         HttpResponse response = null;
+
+        //记录调用次数
+        int invokeCount = dataMethod.getInvokeCount();
+        invokeCount++;
+        dataMethod.setInvokeCount(invokeCount);
+        dataMethodDao.save(dataMethod);
+        // invokeCount = (invokeCount == null) ? 0 : invokeCount;
+
         try {
             response = httpClient.execute(post);
         }catch (ResourceAccessException e){
@@ -658,7 +666,7 @@ public class DataMethodService {
 //                    result.put("code", -2);
 //                }else {
 //                    result.put("code", 1);
-//                    result.put("id", dataMethod.getOid());
+//                    result.put("id", dataMethod.getId());
 //                }
             }catch (Exception e){
                 log.info("dataMethod create failed");
@@ -752,8 +760,8 @@ public class DataMethodService {
         }
         part2.add("name", dataMethod.getName());
 
-//        part2.add("oid", "I3MXbzRq/NZkbWcKO8tF0w==");//33
-        part2.add("oid", "5KglgbsDPmrFnA3J9CALzQ==");//75
+//        part2.add("id", "I3MXbzRq/NZkbWcKO8tF0w==");//33
+        part2.add("id", "5KglgbsDPmrFnA3J9CALzQ==");//75
 
         //获取xml
         String packageZipPath = resourcePath + "/DataApplication/Package" + dataMethod.getResources().get(0);
@@ -958,7 +966,10 @@ public class DataMethodService {
                 Version version = versionService.addVersion(dataMethod, email,originalItemName);
                 //发送通知
                 List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
-                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
+                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
                 result.put("versionId", version.getId());
                 return result;

@@ -56,6 +56,9 @@ public class UserRestController {
     @Autowired
     NoticeService noticeService;
 
+    @Autowired
+    ManagementSystemService managementSystemService;
+
     // @RequestMapping("/test")
     // public String test(){
     //     System.out.println("test controller");
@@ -99,7 +102,8 @@ public class UserRestController {
             jsonObject.put("email", email);
             jsonObject.put("name", name);
 
-
+            // 记录用户访问的数量
+            managementSystemService.recordUserViewCount(ip);
 
             // return ResultUtils.success(jsonObject);
             return ResultUtils.success(jsonObject);
@@ -550,5 +554,18 @@ public class UserRestController {
         String email = session.getAttribute("email").toString();
         return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
     }
+
+
+    // @ApiOperation(value = "得到门户管理员")
+    // @RequestMapping (value = "/admin", method = RequestMethod.GET)
+    // public List<User> getAdminUser(){
+    //     return userService.getAdminUser();
+    // }
+    //
+    // @ApiOperation(value = "得到门户root")
+    // @RequestMapping (value = "/root", method = RequestMethod.GET)
+    // public List<User> getRootUser(){
+    //     return userService.getRootUser();
+    // }
 
 }

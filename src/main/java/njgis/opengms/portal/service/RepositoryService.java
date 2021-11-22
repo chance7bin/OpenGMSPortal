@@ -6,7 +6,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.AddDTO;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.*;
@@ -145,7 +145,7 @@ public class RepositoryService {
      * @param addDTO DTO
      * @param email 贡献者email
      * @param itemType 条目类型
-     * @return njgis.opengms.portal.entity.doo.PortalItem
+     * @return njgis.opengms.portal.entity.doo.base.PortalItem
      * @Author bin
      **/
     public PortalItem commonInsertPart(PortalItem item, AddDTO addDTO, String email, ItemTypeEnum itemType){
@@ -213,7 +213,10 @@ public class RepositoryService {
                 Version version = versionService.addVersion(item, email,originalItemName);
                 //发送通知
                 List<String> recipientList = Arrays.asList(author);
-                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
+                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
 
                 result.put("method", "version");
                 result.put("versionId", version.getId());

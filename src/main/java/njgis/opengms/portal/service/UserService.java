@@ -12,6 +12,7 @@ import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -526,7 +527,7 @@ public class UserService {
         JSONObject userInfo = getInfoFromUserServer(user.getEmail());
         JSONObject userJson = new JSONObject();
         userJson.put("name", userInfo.getString("name"));
-        // userJson.put("oid", user.getOid());
+        // userJson.put("id", user.getId());
         userJson.put("email", user.getEmail());
         userJson.put("accessId", user.getAccessId());
         // userJson.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
@@ -652,6 +653,47 @@ public class UserService {
         }
 
 
+    }
+
+
+    /**
+     * 设置用户权限
+     * @param id
+     * @param role
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult setUserRole(String id, UserRoleEnum role){
+        try {
+            User user = userDao.findFirstById(id);
+            user.setUserRole(role);
+            User updatedUser = userDao.save(user);
+            return ResultUtils.success(updatedUser);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtils.error();
+        }
+
+    }
+
+    /**
+     * 得到门户管理员
+     * @param
+     * @return java.util.List<njgis.opengms.portal.entity.po.User>
+     * @Author bin
+     **/
+    public List<User> getAdminUser(){
+        return userDao.findAllByUserRole(UserRoleEnum.ROLE_ADMIN);
+    }
+
+    /**
+     * 得到门户root用户
+     * @param
+     * @return java.util.List<njgis.opengms.portal.entity.po.User>
+     * @Author bin
+     **/
+    public List<User> getRootUser(){
+        return userDao.findAllByUserRole(UserRoleEnum.ROLE_ROOT);
     }
 
 }
