@@ -377,5 +377,16 @@ public class VersionService {
     }
 
 
+    public JsonResult getOriginalItemInfo(String id){
+
+        Version version = versionDao.findFirstById(id);
+        String itemId = version.getItemId();
+        ItemTypeEnum type = version.getType();
+
+        JSONObject jsonObject = genericService.daoFactory(type);
+        GenericItemDao dao = (GenericItemDao) jsonObject.get("itemDao");
+        PortalItem item = (PortalItem) dao.findFirstById(itemId);
+        return ResultUtils.success(item);
+    }
 
 }

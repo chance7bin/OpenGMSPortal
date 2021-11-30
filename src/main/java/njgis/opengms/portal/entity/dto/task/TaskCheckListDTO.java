@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class TaskCheckListDTO {
 
-    List<String> modelList;
+    List<String> modelList;  //模型id列表
     String draftName;
 
 }

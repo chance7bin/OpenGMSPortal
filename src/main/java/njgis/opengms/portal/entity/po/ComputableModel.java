@@ -39,4 +39,7 @@ public class ComputableModel extends PortalItem {
 
     int invokeCount = 0;
     List<DailyViewCount> dailyInvokeCount = new ArrayList<>();
+
+    CheckedModel checkedModel; //计算模型的检查记录
+
 }

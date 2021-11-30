@@ -11,7 +11,7 @@ import java.util.List;
  * @Date 2021/11/16
  */
 public interface CheckedModelDao extends MongoRepository<CheckedModel, String> {
-    CheckedModel findFirstById(String id);
+    // CheckedModel findFirstById(String id);
 
     List<CheckedModel> findAllByStatusIn(List<Integer> status);
 }
