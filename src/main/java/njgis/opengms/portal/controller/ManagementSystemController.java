@@ -68,7 +68,7 @@ public class ManagementSystemController {
     @ApiOperation(value = "得到已部署的模型")
     @RequestMapping(value="/deployedModel",method= RequestMethod.POST)
     public JsonResult searchDeployedModel(@RequestBody FindDTO findDTO) {
-        return ResultUtils.success(computableModelService.searchDeployedModel(findDTO));
+        return managementSystemService.searchDeployedModel(findDTO);
     }
 
     // @LoginRequired
@@ -89,14 +89,14 @@ public class ManagementSystemController {
 
 
     // @LoginRequired
-    @ApiOperation(value = "更新任务状态")
-    @RequestMapping(value="/update/modelStatus",method= RequestMethod.GET)
-    public JsonResult updateTaskStatus() {
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
-        return managementSystemService.updateTaskStatus();
-    }
+    // @ApiOperation(value = "更新任务状态 [不用这个了]")
+    // @RequestMapping(value="/update/modelStatus",method= RequestMethod.GET)
+    // public JsonResult updateTaskStatus() {
+    //     // HttpSession session = request.getSession();
+    //     // String email = session.getAttribute("email").toString();
+    //     String email = "782807969@qq.com";
+    //     return managementSystemService.updateTaskStatus();
+    // }
 
 
     // @LoginRequired

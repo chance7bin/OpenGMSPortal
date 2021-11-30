@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.VersionService;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,5 +132,11 @@ public class VersionController {
         return modelAndView;
     }
 
+
+    @ApiOperation(value = "根据版本版本id得到原始的条目信息")
+    @RequestMapping(value = "/originalItemInfo/{id}", method = RequestMethod.GET)
+    public JsonResult getOriginalItemInfo(@PathVariable String id){
+        return versionService.getOriginalItemInfo(id);
+    }
 
 }
