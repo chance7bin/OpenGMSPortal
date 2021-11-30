@@ -696,4 +696,15 @@ public class UserService {
         return userDao.findAllByUserRole(UserRoleEnum.ROLE_ROOT);
     }
 
+
+    //根据传入的字符串返回用户名
+    public String getUserName(String author){
+        if (author.contains("@")) {
+            User user = userDao.findFirstByEmail(author);
+            if (user != null)
+                author = user.getName();
+        }
+        return author;
+    }
+
 }

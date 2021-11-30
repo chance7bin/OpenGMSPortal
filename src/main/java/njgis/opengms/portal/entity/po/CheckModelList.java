@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Description 管理系统用于保存待检查的模型的列表
+ * @Description 管理系统用于保存已检查的模型记录
  * @Author bin
  * @Date 2021/11/11
  */

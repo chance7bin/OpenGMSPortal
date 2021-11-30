@@ -59,8 +59,11 @@ public class ManagementSystemService {
     @Autowired
     ComputableModelService computableModelService;
 
+    // @Autowired
+    // CheckedModelDao checkedModelDao;
+
     @Autowired
-    CheckedModelDao checkedModelDao;
+    UserService userService;
 
     @Autowired
     UserDao userDao;
@@ -83,10 +86,44 @@ public class ManagementSystemService {
 
 
     public JsonResult searchDeployedModel(FindDTO findDTO) {
-        return ResultUtils.success(computableModelService.searchDeployedModel(findDTO));
+
+        JSONObject jsonObject = computableModelService.searchDeployedModel(findDTO);
+        List<ComputableModel> content = (List<ComputableModel>) jsonObject.get("content");
+
+        //得到查到的结果并更新下计算模型的运行状态
+        content = updateTaskStatus(content);
+        JSONArray jsonArray = new JSONArray();
+        for (ComputableModel computableModel : content) {
+            JSONObject o = new JSONObject();
+            o.put("id",computableModel.getId());
+            o.put("accessId",computableModel.getAccessId());
+            o.put("name",computableModel.getName());
+            o.put("author", userService.getUserName(computableModel.getAuthor()));
+            o.put("createTime",computableModel.getCreateTime());
+            o.put("lastModifyTime",computableModel.getLastModifyTime());
+            o.put("status",computableModel.getStatus());
+            o.put("dailyViewCount",computableModel.getDailyViewCount());
+            o.put("md5",computableModel.getMd5());
+            o.put("checkedModel",computableModel.getCheckedModel());
+            jsonArray.add(o);
+        }
+
+
+        JSONObject result = new JSONObject();
+        result.put("total",jsonObject.get("total"));
+        result.put("content",jsonArray);
+
+        return ResultUtils.success(result);
     }
 
     public JsonResult invokeModel(String modelId, String email) {
+
+        ComputableModel computableModel = computableModelDao.findFirstById(modelId);
+        CheckedModel checkedModel = computableModel.getCheckedModel();
+        checkedModel = checkedModel == null ? new CheckedModel() : checkedModel;
+        checkedModel.setHasChecked(true);
+        checkedModel.setLastCheckTime(new Date());
+
 
         //初始化任务
         JsonResult initTaskRes = taskService.initTask(modelId, email);
@@ -94,8 +131,12 @@ public class ManagementSystemService {
         int generateTaskFlag = (int) initTaskData.get("generateTaskFlag");
         if (generateTaskFlag != 1){
             if (generateTaskFlag == -2){
+                checkedModel.setOnline(false);
+                saveComputableModel(computableModel,checkedModel,"未找到相应服务");
                 return ResultUtils.error("未找到相应服务");
             } else {
+                // checkedModel.setOnline(true);
+                saveComputableModel(computableModel,checkedModel,"初始化任务失败");
                 return ResultUtils.error("初始化任务失败");
             }
         }
@@ -103,14 +144,21 @@ public class ManagementSystemService {
         //判断是否有测试数据
         JSONObject modelInfo = (JSONObject) initTaskData.get("modelInfo");
         boolean hasTest = (boolean) modelInfo.get("hasTest");
-        if (!hasTest)
+        if (!hasTest){
+            checkedModel.setHasTest(false);
+            saveComputableModel(computableModel,checkedModel,"未找到测试数据");
             return ResultUtils.error("未找到测试数据");
+        }
+
 
 
         //加载数据
         JsonResult loadTestDataRes = taskService.loadTestData(modelId, email);
-        if (loadTestDataRes.getCode() != 1)
+        if (loadTestDataRes.getCode() != 1){
+            saveComputableModel(computableModel,checkedModel,"加载测试数据失败");
             return ResultUtils.error("加载测试数据失败");
+        }
+
         List<ResultDataDTO> loadTestDataData = (List<ResultDataDTO>)loadTestDataRes.getData();
 
         TaskInvokeDTO taskInvokeDTO;
@@ -119,39 +167,37 @@ public class ManagementSystemService {
         }catch (Exception e){
             log.error(e.getMessage());
             e.printStackTrace();
+            saveComputableModel(computableModel,checkedModel,"构造输入数据出错");
             return ResultUtils.error("构造输入数据出错");
         }
 
         JSONObject invokeParams = JSON.parseObject(JSON.toJSONString(taskInvokeDTO));
         JsonResult result = taskService.handleInvoke(invokeParams, email);
 
-        if (result.getCode() != 1)
-            return ResultUtils.error("调用模型失败");
-        JSONObject resultData = (JSONObject) result.getData();
-
-        // 把检查记录存入表中
-        CheckedModel model = checkedModelDao.findFirstById(modelId);
-        if (model == null){
-            CheckedModel checkedModel = new CheckedModel();
-            checkedModel.setId(modelId);
-            checkedModel.setName(modelInfo.getString("name"));
-            checkedModel.setLastCheckTime(new Date());
-            checkedModel.setStatus(0);
-            checkedModel.getTaskIdList().add(resultData.getString("tid"));
-            checkedModelDao.insert(checkedModel);
-        } else {
-            model.setStatus(0);
-            model.setLastCheckTime(new Date());
-            model.getTaskIdList().add(resultData.getString("tid"));
-            checkedModelDao.save(model);
+        if (result.getCode() != 1){
+            saveComputableModel(computableModel,checkedModel,"模型调用失败");
+            return ResultUtils.error("模型调用失败");
         }
 
+        JSONObject resultData = (JSONObject) result.getData();
+        // 把检查记录存入表中
+        checkedModel.setStatus(0);
+        checkedModel.getTaskIdList().add(resultData.getString("tid"));
+        saveComputableModel(computableModel,checkedModel,"模型调用成功");
 
         return result;
 
 
 
     }
+
+    //更新模型的检查记录
+    public void saveComputableModel(ComputableModel computableModel, CheckedModel checkedModel, String msg){
+        checkedModel.setMsg(msg);
+        computableModel.setCheckedModel(checkedModel);
+        computableModelDao.save(computableModel);
+    }
+
 
 
     //构造调用invoke接口的参数 先构造测试数据，再根据测试数据匹配模型的输入参数
@@ -237,10 +283,20 @@ public class ManagementSystemService {
     }
 
 
-    public JsonResult updateTaskStatus() {
+    public List<ComputableModel> updateTaskStatus(List<ComputableModel> content) {
 
-        List<Integer> status = Arrays.asList(0, 1);
-        List<CheckedModel> modelList = checkedModelDao.findAllByStatusIn(status);
+        List<CheckedModel> modelList = new ArrayList<>();
+        for (ComputableModel model : content) {
+            CheckedModel cm = model.getCheckedModel();
+            if (cm != null){
+                if (cm.isHasChecked() && (cm.getStatus() == 0 || cm.getStatus() == 1)){
+                    modelList.add(cm);
+                }
+            }
+        }
+
+        // List<Integer> status = Arrays.asList(0, 1);
+        // List<CheckedModel> modelList = checkedModelDao.findAllByStatusIn(status);
         List<String> ids = new ArrayList<>();
         for (CheckedModel model : modelList) {
             List<String> taskIdList = model.getTaskIdList();
@@ -252,20 +308,24 @@ public class ManagementSystemService {
         List<Task> newTasks = taskService.updateUserTasks(ts);
 
         for(Task newTask : newTasks){
-            for(CheckedModel model:modelList){
-                List<String> taskIdList = model.getTaskIdList();
-                int size = taskIdList.size();
-                if(newTask.getTaskId().equals(taskIdList.get(size - 1))){
-                    // 更新checkedModel表的状态
-                    model.setStatus(newTask.getStatus());
-                    checkedModelDao.save(model);
+            for(ComputableModel computableModel:content){
+                CheckedModel model = computableModel.getCheckedModel();
+                if (model != null){
+                    List<String> taskIdList = model.getTaskIdList();
+                    int size = taskIdList.size();
+                    if(newTask.getTaskId().equals(taskIdList.get(size - 1))){
+                        // 更新model中checkedModel属性的状态，并保存
+                        model.setStatus(newTask.getStatus());
+                        computableModel.setCheckedModel(model);
+                        computableModelDao.save(computableModel);
+                        break;
+                    }
                 }
             }
-
         }
 
 
-        return ResultUtils.success();
+        return content;
 
     }
 
@@ -337,7 +397,25 @@ public class ManagementSystemService {
 
         // 如果有字段需要筛选的话再加
 
-        return jsonObject;
+        JSONArray itemList = new JSONArray();
+        JSONArray allPortalItem = jsonObject.getJSONArray("allPortalItem");
+        for (int i = 0; i < allPortalItem.size(); i++) {
+            JSONObject object = allPortalItem.getJSONObject(i);
+            JSONObject item = new JSONObject();
+            item.put("id", object.get("id"));
+            item.put("name", object.get("name"));
+            item.put("createTime", object.get("id"));
+            item.put("lastModifyTime", object.get("id"));
+            item.put("status", object.get("id"));
+            item.put("viewCount", object.get("id"));
+            item.put("author", userService.getUserName(object.getString("author")));
+            itemList.add(item);
+        }
+        JSONObject result = new JSONObject();
+        result.put("totalElements", jsonObject.getIntValue("totalElements"));
+        result.put("itemList",itemList);
+
+        return result;
     }
 
 
