@@ -31,7 +31,7 @@ public class User extends PortalIdPlus {
     String email;
     String password; //md5+sha256加密
     String name; //用户昵称，对应userserver的name
-    UserTitleEnum title;
+//    UserTitleEnum title; //先注释掉，模型条目查询
     String gender;
     //用户位置 County / State / Province
     String country;
