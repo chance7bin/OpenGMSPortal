@@ -465,6 +465,35 @@ public class ManagementSystemService {
         return itemDao.count();
     }
 
+    public JsonResult getAllItemCount(){
+
+        // 统计的条目类型
+        ItemTypeEnum[] itemTypeEnums = {
+            ItemTypeEnum.ModelItem,
+            ItemTypeEnum.DataItem,
+            ItemTypeEnum.DataHub,
+            ItemTypeEnum.DataHub,
+            ItemTypeEnum.Concept,
+            ItemTypeEnum.SpatialReference,
+            ItemTypeEnum.Template,
+            ItemTypeEnum.Unit
+        };
+
+        JSONArray result = new JSONArray();
+        for (ItemTypeEnum itemType : itemTypeEnums) {
+            JSONObject factory = genericService.daoFactory(itemType);
+            GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+            long count = itemDao.count();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type",itemType);
+            jsonObject.put("count",count);
+            result.add(jsonObject);
+        }
+
+
+        return ResultUtils.success(result);
+    }
+
 
     //得到仪表板的数据
     public JsonResult getDashboardInfo(){
