@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Task | OpenGMS</title>
+
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/element-ui/index.js"></script>
+
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/common/fileinput.min.css">
+    <link rel="stylesheet" href="/static/css/common/fileinput-rtl.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/fabric/fabric.min.css"/>
+    <link rel="stylesheet" href="/static/css/base/style.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <!--<link rel="stylesheet" href="/static/css/other/computable-test.css">-->
+    <!--<link rel="stylesheet" href="/static/css/other/jquery.gritter.css">-->
+    <!--<link rel="stylesheet" href="/static/css/page/logical_model.css">-->
+    <!--    <link rel="stylesheet" href="../static/css/components/file-manager.css">-->
+    <link rel="stylesheet" href="/static/haha/css/style.css">
+    <link rel="stylesheet" href="/static/css/page/user_space_out.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/page/user_space.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css"/>
+    <style>
+
+        .el-button--text {
+            color: black;
+        }
+
+        input[type=file] {
+            display: none;
+        }
+
+        .form-horizontal .form-group {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+
+        .el-collapse-item__header {
+            font-size: 16px;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .el-input.is-disabled .el-input__inner {
+            background-color: #ecf5ff;
+            color: #8d8d8d;
+            cursor: default;
+        }
+
+        .el-form-item {
+            margin-bottom: 0;
+        }
+
+        .el-table .cell {
+            word-break: break-word;
+        }
+
+        .flexColCenter {
+            display: grid;
+            flex-direction: unset;
+        }
+
+        .innerBorder {
+            border: 0;
+        }
+
+        .el-dialog {
+            height:80%;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <div th:replace="fragments/navbar :: unlog"></div>
+    <div v-loading="loading"
+         element-loading-text="The data service is running, please do not close this page"
+         element-loading-spinner="el-icon-loading"
+         element-loading-background="rgba(0, 0, 0, 0.8)">
+        <div class="clearfix" :style="{height:windowHeight+'px'}" style="max-height: 100vh;overflow: auto;"
+             >
+            <div class="el-col el-col-5" role="applicationIntro" id="applicationSider" style="min-width: 220px;position: fixed;width: 23%;">
+                <div id="introContainer" class="slider">
+                    <div class="introHeader">
+                        <div class="image">
+                            <i class="fa fa-cogs"></i>
+                            <!--<img src="/static/haha/img/default.png">-->
+                        </div>
+                        <div>
+                            <h3 class="model_title"> {{invokeService.name}}</h3>
+                            <span>Contributed by <span style="cursor: pointer; font-size: 2rem;"
+                                                       @click="goPersonCenter(contributorInfo.userId)">{{contributorInfo.name}}</span></span>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="btn-list">
+                        <el-button plain type="primary" style="min-width: 120px" @click="loadTestData()">
+                            Load Test Data
+                        </el-button>
+
+                        <el-button plain type="primary" style="min-width: 121px" @click="invokeNow()">
+                            <i class="fa fa-hand-spock-o"></i>&nbsp;Invoke
+                        </el-button>
+                    </div>
+                    <div class="introContent">
+                        <h4 class="desc-title">Introduction</h4>
+                        <div>
+                            <p class="desc">{{metaDetail.description}}</p>
+                        </div>
+                        <br>
+                        <span class="model_date">Updated at <span
+                                style="font-weight: 600">{{dateFormat(applicationInfo.lastModifyTime)}}</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="el-col el-col-18" style="margin-left: 25%;border-left: black solid 1px;padding-left: 20px;
+            overflow-y: auto;display: block;position: relative;margin-bottom: 5%">
+                <div class="content">
+                    <div class="_main">
+                        <el-row class="_title">
+                            <el-row type="flex" align="middle">
+                                <i class="fa fa-database"></i>
+                                <p style="font-size: 18px;margin-bottom: 0;margin-left:10px">Configure Execution</p>
+
+                                <div style="position:absolute;right:0">
+                                    <span>Origin: </span>
+                                    <!--                            <el-radio-group v-model="radioStyle">-->
+                                    <el-tag v-if="invokeService.isPortal === true" class="classic" label="Portal" style="margin-right:20px">Portal</el-tag>
+                                    <el-tag v-if="invokeService.isPortal != true" class="classic" label="Others" style="margin-right:20px">Others</el-tag>
+
+                                    <span>Method category: </span>
+                                    <el-tag class="classic" label="Others" style="margin-right:20px">{{method}}</el-tag>
+                                    <!--                            </el-radio-group>-->
+                                </div>
+                            </el-row>
+                        </el-row>
+                        <div class="dataContainer" style="width: 100%">
+                            <div class="_params-group"  v-loading="loadingData">
+                                <el-row class="_title">Input</el-row>
+                                <div class="_items">
+<!--                                    <p>{{metaDetail.Input}}</p>-->
+                                    <el-row v-for="(item,index) in metaDetail.input">
+                                        <el-col :span="11" class="_event-desc">
+                                                        <span class="event-name">
+                                                            <span style="color:red">*</span>
+                                                            {{item.name}}
+                                                        </span>
+                                        </el-col>
+                                        <div>
+                                            <el-col :span="6" :offset="1">
+                                                    <el-input class="data-input" placeholder="Input Data" v-model="item.loadName" :disabled="true">
+                                                    </el-input>
+                                            </el-col>
+
+                                            <el-col :span="6">
+                                                <div class="_btn-group">
+                                                    <el-button plain round type="success" @click="openDataSpace($event)" class="uploadBtn">
+                                                        <i class="fa fa-folder-open"></i>
+                                                    </el-button>
+                                                    <span v-if="item.loadName">
+                                                    <el-button plain round type="warning" @click="downLoadInfoTestData($event)" class="downloadInfoBtn">
+                                                        <i class="fa fa-download"></i>
+                                                    </el-button>
+                                                    </span>
+                                                </div>
+                                            </el-col>
+                                        </div>
+                                    </el-row>
+                                    <el-row>
+                                        <p title="Input data can be used to run data processing services" class="event-desc">
+                                            Input data, can be used to run data processing services
+                                        </p>
+                                    </el-row>
+                                </div>
+                            </div>
+                            <div class="_params-group">
+                                <el-row class="_title">Parameter</el-row>
+                                <div class="_items">
+                                    <el-row v-for="(item,index) in metaDetail.parameter">
+                                        <el-col :span="11" class="_event-desc">
+                                                        <span class="event-name">
+                                                            <span style="color:red">*</span>
+                                                            {{item.name}}
+                                                        </span>
+                                        </el-col>
+                                        <div>
+                                            <el-input :placeholder="item.description" v-model="item.value" :disabled="false"></el-input>
+<!--                                            <p>{{item}}</p>-->
+<!--                                            <p>{{metaDetail.Parameter}}</p>-->
+<!--                                            <el-input class="parameter-input" v-model="parameter">-->
+<!--                                            </el-input>-->
+                                        </div>
+<!--                                        <div>-->
+<!--                                            <p title="Input parameter can be used to run data processing services" class="event-desc">-->
+<!--                                                {{item.description}}-->
+<!--                                            </p>-->
+<!--                                        </div>-->
+                                    </el-row>
+                                    <el-row>
+                                        <p title="Input parameter can be used to run data processing services" class="event-desc">
+                                            Input parameter, can be used to run data processing services
+                                        </p>
+                                    </el-row>
+                                </div>
+                            </div>
+                            <div class="_params-group">
+                                <el-row class="_title">Output</el-row>
+                                <div class="_items">
+                                    <el-row>
+                                        <el-col :span="6" class="_event-desc">
+                                                        <span class="event-name">
+                                                            <span style="color:red">*</span>
+                                                            Output Data
+                                                        </span>
+                                        </el-col>
+
+                                        <div>
+<!--                                            <el-col :span="6" :offset="1">-->
+<!--                                                <el-input class="data-input"  placeholder="Output Data" v-model="outPutData" :disabled="true">-->
+<!--                                                </el-input>-->
+<!--                                            </el-col>-->
+                                            <span style="margin-right: 20px;">{{outPutData.length}} Output Datas</span>
+                                            <el-select v-model="value" placeholder="Output Data" no-data-text="No Output Data" @change="selectChanged">
+                                                <el-option
+                                                        v-for="item in outPutData"
+                                                        :key="item.tag"
+                                                        :label="item.tag + '.' + item.suffix"
+                                                        :value="item.tag + '.' + item.suffix">
+                                                </el-option>
+                                            </el-select>
+
+                                            <el-col :span="6" style="float: right">
+                                                <div class="_btn-group" v-if="!(outPutData.length===0)">
+                                                    <el-tooltip class="item" effect="dark" content="Download to personal space" placement="top">
+                                                    <el-button plain round type="success" @click="addOutputToMyData(outPutData)">
+                                                        <i class="el-icon-upload2"></i>
+                                                    </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Download to local" placement="top">
+                                                    <el-button plain round type="warning" @click="downloadResult()">
+                                                        <i class="fa fa-download"></i>
+                                                    </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Visualization" placement="top">
+                                                    <el-button plain round type="primary" v-if="method === 'Visualization'" @click="initPicture()">
+                                                        <i class="fa fa-eye"></i>
+                                                    </el-button>
+                                                    </el-tooltip>
+                                                </div>
+                                            </el-col>
+                                        </div>
+                                    </el-row>
+                                    <el-row>
+                                        <p title="Output data, data processing service running result file" class="event-desc">
+                                            Output data, data processing service running result file
+                                        </p>
+                                    </el-row>
+                                </div>
+                            </div>
+                            <el-button plain type="primary" style="min-width: 121px;float: right;margin-right: 20px" @click="invokeNow()">
+                                <i class="fa fa-hand-spock-o"></i>&nbsp;Invoke
+                            </el-button>
+                        </div>
+                        <!--                    </el-row>-->
+                        <!--                </el-row>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <div th:replace="fragments/footer :: footer"></div>-->
+    <div th:replace="fragments/footer :: footer-mini"></div>
+
+    <!--    <el-dialog-->
+<!--            v-loading="loading"-->
+<!--        title="Invoke"-->
+<!--        :visible.sync="invokeDialog"-->
+<!--        width="80%">-->
+<!--    <el-card>-->
+<!--        <div class="" style="display: inline-block;width: 60%;">-->
+<!--            <p style="font-weight: 600">XML description of visualization:</p><br>-->
+<!--            <pre v-if="xml" lang="xml">{{xml}}</pre>-->
+<!--        </div>-->
+<!--        <div class="" style="display: inline-block;float: right;width: 35%">-->
+<!--            <p style="font-weight: 600">Parameters to be filled in:</p><br>-->
+<!--            <div class="" v-for = "(para,i) in parameters" v-if="parameters.length != 0">-->
+<!--                <p>{{para}}</p>-->
+<!--                <input type="text" autocomplete="off" v-model="parameter" placeholder="Please enter the content" :id ="para" class="el-input__inner">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </el-card>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--        <el-button @click="invokeDialog = false">Cancel</el-button>-->
+<!--        <el-button type="primary" @click = "invokeNow()">Invoke Now</el-button>-->
+<!--    </span>-->
+<!--    </el-dialog>-->
+
+    <el-dialog
+            title="Load Data"
+            :visible.sync="loadDataVisible"
+            width="80%">
+                <user-data
+                        @com-selectfile="selectDataspaceFile"
+                        @com-removefile="removeDataspaceFile"
+                        single-choice
+                        ref="userDataSpace" style="height: 505px;">
+                </user-data>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="loadDataVisible = false">Cancel</el-button>
+            <el-button @click="confirmData(),loadDataVisible = false" type="success">Confirm</el-button>
+        </span>
+    </el-dialog>
+
+    <el-dialog
+            title="Visualization Show"
+            :visible.sync="visualization"
+            custom-class="customWidth"
+            width="80%"
+    >
+        <span>
+<!--            <img style="display:inline;width: 100%;height: 100%;" :src="visualPath"/>-->
+            <iframe :src="visualPath" width="100%" height="100%"></iframe>
+        </span>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="visualization = false">Cancel</el-button>
+<!--    <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>-->
+        </span>
+    </el-dialog>
+
+            <!--            上传文件到个人空间  el-dialog-->
+    <el-dialog :visible.sync="addOutputToMyDataVisible" title="Add Output to My Data"
+                           width="35%">
+                    <el-card style="min-height: 300px;">
+                        <el-tree
+                                :data="outputFolderTree"
+                                ref="folderTree2"
+                                node-key="id"
+                                highlight-current = true
+                                default-expand-all
+                                :expand-on-click-node="false"
+                        >
+                                            <span class="custom-tree-node" slot-scope="{ node, data }">
+                                                <span>{{ node.label }}</span>
+                                            </span>
+                        </el-tree>
+                    </el-card>
+                    <span slot="footer" class="dialog-footer">
+                                        <el-button class="pull-left" type="primary" icon="el-icon-folder-add"
+                                                   @click="addFolderinTree(2)">Add new folder</el-button>
+                                        <el-button @click="addOutputToMyDataVisible = false">Cancel</el-button>
+                                        <el-button type="primary"
+                                                   @click="addOutputToMyDataConfirm()">OK</el-button>
+                    </span>
+    </el-dialog>
+</div>
+<template th:replace="modules/userDataSpaceModule :: userDataSpaceModule"></template>
+<script src="/static/js/modules/userDataSpaceModule.js"></script>
+</body>
+
+
+
+<script>
+    mxBasePath = "/static/js/mxGraph";
+</script>
+
+<script src="/static/js/mxGraph/js/mxClient.js"></script>
+<script src="/static/js/mxGraph/js/ogmsDiagram.js"></script>
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+
+<script src="/static/js/common/clipboard.min.js"></script>
+<script src="/static/js/common/bootstrap.js"></script>
+<script src="/static/js/common/bootstrap-treeview.js"></script>
+<script src="/static/js/common/fileinput.js"></script>
+
+<script src="/static/js/common/axios.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+<script src="/static/js/common/bootstrap-tagsinput.js"></script>
+<!--<script src="/static/js/modules/userDataSpaceModule.js"></script>-->
+<script src="/static/js/page/data_application_task.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/js/common/navbar.js"></script>
+
+
+</html>

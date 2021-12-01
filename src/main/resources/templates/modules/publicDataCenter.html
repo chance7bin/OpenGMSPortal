@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<template id="publicDataCenter" th:fragment="publicDataCenter">
+    <div>
+        <div style="height: 100%;" class="grid_c6 dataListContainer">
+            <div class="item_c4 flexCol flexAlignCenter wzhScrollbar padding_5" style="padding-right: 0">
+                <div v-for="(data,index) in dataList" style="width: 100%">
+                    <div class="flexAlignCenter singleData w100 singleData" @mouseover="hoverData(data)" @mouseleave="leaveData">
+                        <div class="squareButtonMini flexCenter"
+                             style="margin: 4px;float: inherit;cursor: pointer"
+                             @click="singleClick($event,data)"
+                        >
+                            <i style="font-size: 16px;color:#1b7cde"
+                               :style="{display:(isSelected(data))?'block':'none'}"
+                               class="fa fa-check"></i>
+                        </div>
+                        <div style="margin-left: 25px">{{data.name}}.{{data.suffix}}</div>
+                    </div>
+                    <div  class="innerBorder" v-if="index!=(dataList.length-1)" style="border-bottom: 1px solid #cccccc;margin-left: 10px">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="item_c2 dataInfoContainer" ref="dataInfoContainer">
+                <h4>Data Info:</h4>
+                <p v-if="dataInfoShow!=''">{{dataInfoShow}}</p>
+                <p v-if="dataInfoShow===''" style="font-style: italic;color: #999999">No info to show.</p>
+            </div>
+        </div>
+    </div>
+</template>
+
+</body>
+</html>

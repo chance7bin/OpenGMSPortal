@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Demo Document | OpenGMS</title>
+
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common/fluent/fluent.css">
+    <link rel="stylesheet" href="/static/css/base/style.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" />
+
+    <style>
+        .fixed{
+            position: fixed;
+            top: 30px;
+        }
+
+        #contentsTree{
+            max-height:calc(100vh - 195px) ;
+        }
+    </style>
+    <script src="../static/js/help/demo/demo1.js"></script>
+
+</head>
+<body>
+<div v-cloak id="app">
+    <div th:replace="fragments/navbar :: unlog"></div>
+    <div th:replace="fragments/backToTop :: backtop-down"></div>
+    <div class="clearfix" style="position: relative;"
+         :style="{'min-height':ScreenMinHeight}">
+        <div class="clearfix" style="height: 100%;">
+            <div class="clearfix titleImg_small fontWhite" style="background-image: url('/static/img/bled_clip.jpg');background-position-y: 600px;">
+                <h3 style="text-align: center;margin-top: 30px">Demo<span class="h_lite"> Document</span></h3>
+                <h5 style="text-align: center;margin-top: 20px">Let's learn what can we do in OpenGMS!</h5>
+            </div>
+            <div class="col-lg-10 col-lg-offset-1 col-md-12 clearfix" style="padding: 5px 0">
+                <el-row :gutter="40" >
+
+                    <el-col id="leftPanel"  :span="sectionTitleSpan" style="position: sticky;top:0px">
+                        <div class="treeContainer" id="sidebarMenu">
+                            <div class=" lineButton" style="margin: 15px 15px 25px 13px;width: 63px" >
+                                <a type="info" @click="backClick">&larr;&nbsp;Back</a>
+                                <div class="hoverLine"></div>
+                            </div>
+                            <el-tree
+                                    id="contentsTree"
+                                    class="wzhScrollbar"
+                                    :data="sectionData"
+                                    @node-click="anchorClick"
+                                    ref="tree">
+                            </el-tree>
+                        </div>
+                    </el-col>
+                    <el-col :span="sectionSpan" style="margin-bottom: 30px;">
+                        <h3 style="padding: 0 20px 0 20px; color: #0a6999" th:text="${name}+'?'" >How to run a model online?</h3>
+                        <hr>
+                        <div class="clearfix docSection " style="background-color: white;padding: 0 20px 0px" >
+                            <section class="wordSpace" v-for="section in supportDoc" :id="generateId(section.title)" >
+                                <h3 class="h_lite" >{{section.title}}</h3>
+                                <p v-html="section.content"></p>
+                            </section>
+                        </div>
+                    </el-col>
+                </el-row>
+                <!--<h5 class="phoneCenter"><a class="cursorPointer">Download</a> this support document.</h5>-->
+                <!--<div class="flexAlignCenter phoneCenter">-->
+                <!--<h5 style="margin-right: 15px">Still have problems?</h5>-->
+                <!--<el-button round size="mini" type="primary" @click="" plain>Contact us</el-button>-->
+                <!--</div>-->
+            </div>
+            <div class="floatBlock commentContent "
+                 ref="commentCard" @mouseenter="unfoldSide" @mouseleave="foldSide"
+                 style="background-color: rgba(4,162,255,0.88);width: 213.8px;">
+                <div v-if="commentSended"  class="floatBlockContent" style="height: 20px;">
+                    <p class="noMargin"  >Thank you for your comment.</p>
+                </div>
+                <div v-else class=" flexCol flexAlignCenter floatBlockContent" style="height: 46px;" >
+                    <p>Was this document helpful?</p>
+                    <el-radio-group   v-model="isHelpful"  size="mini" @change="sendComment()">
+                        <el-radio label="1">Yes</el-radio>
+                        <el-radio label="2">No</el-radio>
+                    </el-radio-group>
+                </div>
+
+            </div>
+            <div class="fullScreenComment" ref="fullCommentCard" style="width: 100%">
+                <div v-if="commentSended"  class="flexCenter" style="height: 46px;">
+                    <p class="noMargin"  >Thank you for your comment.</p>
+                </div>
+                <div v-else class=" flexAlignCenter flexJustAround floatBlockContent" style="height: 46px;background-color: #04a2ff" >
+                    <p class="noMargin">Was this document helpful?</p>
+                    <el-radio-group   v-model="isHelpful"  size="mini" @change="sendComment()" >
+                        <el-radio label="1">Yes</el-radio>
+                        <el-radio label="2">No</el-radio>
+                    </el-radio-group>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+</body>
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/index/bootstrap.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+
+<script th:if="${name=='How to use a model online'}" src="/static/js/help/demo/demo1.js"></script>
+<script th:if="${name=='How to run a integrated model online'}" src="/static/js/help/demo/demo2.js"></script>
+
+<script src="/static/js/page/demoDoc.js"></script>
+<script src="/static/js/common/navbar.js"></script>
+</html>

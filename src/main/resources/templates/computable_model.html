@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${modelInfo.name}+' | Computable Model | OpenGMS'">Computable Model | OpenGMS</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <link rel="stylesheet" th:href="@{/static/lib/element-ui/theme-chalk/index.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/style.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/universal.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/itemInfo.css}">
+    <link rel="stylesheet" th:href="@{/static/css/components/file-manager.css}">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
+    <link rel="stylesheet" th:href="@{/static/css/page/model_item_info.css}">
+    <link rel="stylesheet" type="text/css" href="/static/js/mxGraph/css/common.css">
+    <link rel="stylesheet" href="/static/css/base/userModule.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css"/>
+
+    <style>
+        .img img {
+            width: 90px;
+            height: 90px;
+        }
+
+        .el-dialog__header {
+            /*padding: 0px;*/
+        }
+
+        .mxWindowPane {
+            /*overflow-x: hidden !important;*/
+            overflow: unset !important;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+    <div th:replace="fragments/backToTop :: backtop-down"></div>
+
+    <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
+
+        <div class="left-panel el-col">
+            <div class="detail">
+                <div class="detail_title">
+                    <!--<a th:if="${history!=true}"-->
+                       <!--th:href="${modelInfo.relateModelItem}==null?'/modelItem/repository':'/modelItem/'+${modelInfo.relateModelItem}"-->
+                       <!--class="el-icon-arrow-left" style="font-size: 20px"></a>-->
+
+                    <h2 th:utext="${modelInfo.name}"
+                        style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>
+                    <div class="pull-right">
+                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <a href="javascript:void(0);" th:if="${modelInfo.status=='Public'&&history!=true&&modelInfo.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true'
+                               @click="edit"></a>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
+                            <li th:if="${modelInfo.status=='Public'&&history!=true&&modelInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
+                        </el-tooltip>
+
+                        <el-tooltip th:if="${modelInfo.verify}"
+                                    popper-class="fontsize-15"
+                                    effect="light"
+                                    content="This model is maintained by OpenGMS."
+                                    placement="top">
+                            <div style="cursor: help;display: inline-block;vertical-align: super;"><img style="width:36px;height:36px;" src="/static/img/logo/logo_check.png"/></div>
+                        </el-tooltip>
+
+                        <el-tooltip popper-class="fontsize-15" th:content="${modelInfo.status}" effect="light" placement="top">
+                            <i th:if="${modelInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
+                            <i th:if="${modelInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
+                            <i th:if="${modelInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
+                        </el-tooltip>
+                        <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
+                    </div>
+                </div>
+                <div class="detail_overview">
+
+                    <div th:switch="${modelInfo.image}" class="img">
+                        <img th:case="''" src="/static/img/model/calcModel.png">
+                        <img th:case="null" src="/static/img/model/calcModel.png">
+                        <img th:case="*" th:src="'/static'+${modelInfo.image}">
+                    </div>
+
+                    <div class="info" style="padding-top:0px">
+                        <p th:text="${modelInfo.description}"></p>
+                        <div class="tags">
+                            <span class="label label-warning" style="margin-right: 10px;">
+                                Computable Model
+                            </span>
+                            <span th:if="${modelInfo.contentType=='Package'}" class="label label-info"
+                                  >OpenGMS Model-Service Package</span>
+                            <span th:if="${modelInfo.contentType=='Code'}" class="label label-info"
+                                  >Source Code</span>
+                            <span th:if="${modelInfo.contentType=='Library'}" class="label label-info"
+                                  >Executable Library</span>
+                            <span th:if="${modelInfo.contentType=='Service URL'}" class="label label-info"
+                                  >Third-party Web-Service Link</span>
+                            <span th:if="${modelInfo.contentType=='Link'}" class="label label-info"
+                                  >Downloadable Link</span>
+                        </div>
+                    </div>
+
+                    <div th:if="${history!=true}" class="detail_option">
+                        <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
+                        <!--<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>-->
+                        <!--门户备用服务器不给调用-->
+
+                            <span th:if="${modelInfo.contentType=='Package'}">
+                                <button th:unless="${modelInfo.deploy==true}" class="btn btn-lg btn-info" type="button"
+                                        @click="dialogVisible = true">Deploy
+                                </button>
+                            </span>
+
+
+
+                            <button th:if="${modelInfo.deploy==true||modelInfo.contentType=='MD5'}" class="btn btn-lg btn-success" type="button" style="font-size: 18px;vertical-align: initial;margin-right:10px;"
+                                    @click="invoke()">Invoke
+                            </button>
+
+
+                        <!--<el-tooltip th:if="${modelInfo.verify}"-->
+                                    <!--popper-class="fontsize-15"-->
+                                    <!--effect="light"-->
+                                    <!--content="This model has been verified, it can be invoked successfully."-->
+                                    <!--placement="top">-->
+                            <!--<span style="font-size: 16px;cursor: help;"><li class="fa fa-check-square-o" style="color:forestgreen"></li> verified</span>-->
+                        <!--</el-tooltip>-->
+                        <!--<el-tooltip th:if="${!modelInfo.verify}"-->
+                                    <!--popper-class="fontsize-15"-->
+                                    <!--effect="light"-->
+                                    <!--content="This model is contributed by users, we're not sure if it works."-->
+                                    <!--placement="top">-->
+                            <!--<span style="font-size: 16px;cursor: help;"><li class="fa fa-users" style="color:#339fff"></li> volunteer</span>-->
+                        <!--</el-tooltip>-->
+
+                        <a class="fa fa-eye " aria-hidden="true"></a>
+                        <div th:utext="'&nbsp&nbsp'+${modelInfo.viewCount}">&nbsp&nbsp341</div>
+
+                    </div>
+
+                </div>
+                <p th:if="${modelInfo.contentType=='MD5'}" style="color: #A8A8A8;font-style: italic;font-size: 12px;margin-left: 20px">This model is deployed on a personal server node.</p>
+
+            </div>
+            <div id="Contributor0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history==true}">Modifier</h4>
+                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+                        </el-tooltip>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="el-row"
+                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
+                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
+                        <div class="el-col">
+                            <div class="pull-left" style="display: block;margin-left: 15px;">
+                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
+                                    Marvolo Riddle</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-row">
+                        <div class="text-center">
+                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13
+                                14:32:18 </h5>
+                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13
+                                14:32:18 </h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex"><h4>
+                        Authorship</h4>
+                        <el-tooltip popper-class="fontsize-15" effect="light"
+                                    content="We deeply understand that a model may be attributed to the efforts of a team.
+                                    If all author information is not listed here, please click the feedback below."
+                                    placement="top"><i class="fa fa-question-circle-o" aria-hidden="true"
+                                                       style="margin-top:4px;"></i></el-tooltip>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;" th:each="author,key:${modelInfo.authorship}">
+                        <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
+                                data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
+                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
+                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
+                        <div th:id="'authorshipPhone'+${key.index}" class="panel-collapse"
+                             th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
+                             style="">
+                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
+                                <dl>
+                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
+                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
+                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
+                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
+                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
+                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div th:if="${modelInfo.authorship==null||#lists.size(modelInfo.authorship)==0}">-->
+                        <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
+                                                                              <!--style="text-decoration: underline">claim</a>-->
+                            <!--the item.-->
+                        <!--</el-tag>-->
+                    <!--</div>-->
+                    <div th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
+                                                                          style="text-decoration: underline">Feedback</a></el-tag>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"
+                 th:if="${(modelInfo.contentType=='Package'||modelInfo.contentType=='Code'||modelInfo.contentType=='Library')&&(modelInfo.resources!=null&&#lists.size(modelInfo.resources)>0)}">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Resource</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="margin-right: 0;">
+
+                    <!--<div class="el-card is-always-shadow">&lt;!&ndash;&ndash;&gt;-->
+                        <!--<div class="el-card__body" style="padding: 9px;"><span><i class="el-icon-document"></i>&nbsp;&nbsp; contents</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="el-card filecontent is-always-shadow" id="browsercont"
+                         style=" overflow-y: auto;">
+
+                        <!--</el-row>-->
+                        <div class="el-card dataitemisol is-never-shadow"
+                             th:each="data,key:${resources}"
+                             th:title="${data.name}" shadow="never" th:id="${key.index}"
+                             th:key="${key.index}" @click.native="getid(id)" @contextmenu.prevent="openMenu($event,id)"
+                             style="width: 150px;"><!---->
+                            <a target="_blank"
+                               th:href="${loadPath}+'/computableModel/'+${modelInfo.contentType}+${data.path}"
+                                style="color:black">
+                                <div class="el-card__body">
+                                    <div class="el-row">
+                                        <div class="el-col el-col-6">&nbsp;</div>
+                                        <div class="el-col el-col-12">
+                                            <img
+                                                    th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"
+                                                    onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
+                                                    style="width: 100%;">
+                                        </div>
+                                        <div class="el-col el-col-6">&nbsp;</div>
+                                    </div>
+                                    <div class="el-row" style="height: 45px;">
+                                        <div class="el-col el-col-2">&nbsp;</div>
+                                        <div class="el-col el-col-20"><p th:text="${data.name}"
+                                                                         style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
+                                        </p></div>
+                                        <div class="el-col el-col-2">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+
+                    </div>
+
+
+                    <!--<el-card v-if="rightMenuShow" class="browsermenu" ref="rightMenu">-->
+                        <!--<el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download-->
+                        <!--</el-button>-->
+                        <!--<br>-->
+                        <!--<el-button id="sbtn" icon="el-icon-share" @click="share" type="text">share</el-button>-->
+                    <!--</el-card>-->
+                    <!--refresh 白板刷新和全选功能，待进一步完善-->
+
+                    <!--<el-card class="browser">-->
+                    <!--<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>-->
+                    <!--<el-button icon="el-icon-check" type="text">selectAll</el-button>-->
+                    <!--</el-card>-->
+
+
+                </div>
+            </div>
+
+            <div id="link" class="detail_block"
+                 th:if="${modelInfo.contentType=='Link'||(modelInfo.contentType=='Service' && modelInfo.mdl == null)}">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Link</h4>
+                    </div>
+                </div>
+                <div class="block_content flex">
+                    <div id="link-text" style="word-wrap:break-word; word-break:break-all;">
+                        <a th:href="${modelInfo.url}" th:text="${modelInfo.url}" target="_blank">
+                            https://geomodeling.njnu.edu.cn/conceptualmodel/4e028983-c8c0-4d98-86cd-85fc16a00d21
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="MDL" class="detail_block" th:if="${mdlJson}!=null">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px; padding-right: 15px; display: inline-flex">
+                        <h4>MDL Description</h4>
+                        <el-tooltip popper-class="fontsize-15" effect="light" content="Supported by Model Description Language (MDL)" placement="top">
+                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+                        </el-tooltip>
+                    </div>
+                </div>
+                <el-tabs class="block_content" v-model="activeName" type="border-card" stretch="true">
+                    <el-tab-pane label="AttributeSet" name="AttributeSet">
+                        <table class="table table-bordered text-center">
+                            <colgroup>
+                                <col class="col1" style="width: 30%">
+                                <col class="col2">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td style="font-weight: bold;">Style</td>
+                                <td th:text="${modelInfo.mdlJson.ModelClass[0].style}"></td>
+                            </tr>
+                            <tr th:each="category,key:${modelInfo.mdlJson.ModelClass[0].AttributeSet[0].Categories[0].Category}">
+                                <td style="font-weight: bold;" th:if="${key.index}==0"
+                                    th:attr="rowspan=${#lists.size(modelInfo.mdlJson.ModelClass[0].AttributeSet[0].Categories[0].Category)}">
+                                    Categories
+                                </td>
+                                <td th:text="${category.principle}+' / '+${category.path}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered text-center"
+                               th:each="local,key:${modelInfo.mdlJson.ModelClass[0].AttributeSet[0].LocalAttributes[0].LocalAttribute}">
+                            <colgroup>
+                                <col class="col1" style="width: 30%">
+                                <col class="col2">
+                                <col class="col3">
+                            </colgroup>
+                            <tbody>
+                            <tr th:if="${local.local!=''}">
+                                <td style="font-weight: bold;">Language</td>
+                                <td colspan="2" th:text="${local.local}"></td>
+                            </tr>
+                            <tr th:if="${local.localName!=''}">
+                                <td style="font-weight: bold;">Name</td>
+                                <td colspan="2" th:text="${local.localName}"></td>
+                            </tr>
+                            <tr th:if="${local.Keywords!=''}">
+                                <td style="font-weight: bold;">Keywords</td>
+                                <td colspan="2" th:text="${local.Keywords}"></td>
+                            </tr>
+                            <tr th:if="${local.Abstract!=''}">
+                                <td style="font-weight: bold;">Abstract</td>
+                                <td colspan="2" th:text="${local.Abstract}"></td>
+                            </tr>
+                            <tr th:if="${local.wiki!=''}">
+                                <td style="font-weight: bold;">Wiki</td>
+                                <td colspan="2" th:text="${local.wiki}"></td>
+                            </tr>
+                            <!--<div th:if="${modelInfo.mdlJson.ModelClass[0].AttributeSet[0].LocalAttributes[0].LocalAttribute[key.index].Mechanism}!=null">-->
+                            <!--<tr th:each="mechanism,key:${local.Mechanism}">-->
+                            <!--<td th:if="${key.index}==0" th:attr="rowspan=${#lists.size(local.Mechanism)}">Mechanism</td>-->
+                            <!--<td th:text="${mechanism.name}"></td>-->
+                            <!--<td th:text="${mechanism.value}"></td>-->
+                            <!--</tr>-->
+                            <!--</div>-->
+                            </tbody>
+                        </table>
+                    </el-tab-pane>
+                    <el-tab-pane label="Behavior" name="Behavior">
+                        <el-button style="position: absolute; z-index: 900" @click="showMxGraph()"> Show Detail
+                        </el-button>
+                        <div id="mxGraphContainer"></div>
+                    </el-tab-pane>
+                    <el-tab-pane label="Runtime" name="Runtime">
+                        <table id="runtime_table" class="table table-bordered text-center">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Property</th>
+                                <th class="text-center">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <div th:if="${modelInfo.mdlJson.ModelClass[0].Runtime[0].HardwareConfigures}!=''">
+                                <tr th:each="hardware,key:${modelInfo.mdlJson.ModelClass[0].Runtime[0].HardwareConfigures[0].Add}">
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">HardwareConfigures</td>
+                                    <td th:text="${hardware.key}"></td>
+                                    <td th:text="${hardware.value}"></td>
+                                </tr>
+                            </div>
+                            <div th:if="${modelInfo.mdlJson.ModelClass[0].Runtime[0].SoftwareConfigures}!=''">
+                                <tr th:each="software,key:${modelInfo.mdlJson.ModelClass[0].Runtime[0].SoftwareConfigures[0].Add}">
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">SoftwareConfigures</td>
+                                    <td th:text="${software.key}"></td>
+                                    <td th:text="${software.value}"></td>
+                                </tr>
+                            </div>
+                            <div th:if="${modelInfo.mdlJson.ModelClass[0].Runtime[0].Assemblies}!=''">
+                                <tr th:each="assembly,key:${modelInfo.mdlJson.ModelClass[0].Runtime[0].Assemblies[0].Assembly}">
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">Assemblies</td>
+                                    <td th:text="${assembly.name}"></td>
+                                    <td th:text="${assembly.path}"></td>
+                                </tr>
+                            </div>
+                            <div th:if="${modelInfo.mdlJson.ModelClass[0].Runtime[0].SupportiveResources}!=''">
+                                <tr th:each="support,key:${modelInfo.mdlJson.ModelClass[0].Runtime[0].SupportiveResources[0].Add}">
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">SupportiveResources</td>
+                                    <td th:text="${support.type}"></td>
+                                    <td th:text="${support.name}"></td>
+                                </tr>
+                            </div>
+
+
+                            </tbody>
+                        </table>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+
+            <div id="description" class="detail_block" th:if="${modelInfo.detail!=null&&modelInfo.detail!=''}">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Detailed Description</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div th:utext="${modelInfo.detail}" id="detail" class="detailIntroducePanel">
+                    </div>
+                </div>
+                <div class="fullPaper text-center hide">
+                    <a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i
+                            class="fa fa-angle-down"
+                            style="margin-left: 10px;color:red;font-weight: bold"
+                            aria-hidden="true"></i></a>
+                </div>
+            </div>
+
+            <div id="related_models" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Related Model Item</h4>
+                    </div>
+                </div>
+                <div class="block_content flex">
+
+                    <div class="list_panel clearfix">
+                        <a th:href="'/modelItem/'+${relateModelItem.oid}" class="img">
+                            <div th:switch="${relateModelItem.img}">
+                                <img th:case="null" src="/static/img/model/model.png">
+                                <img th:case="*" th:src="${relateModelItem.img}">
+                            </div>
+
+                        </a>
+
+                        <div class="info" style="margin-top:0px;">
+                            <a th:href="'/modelItem/'+${relateModelItem.oid}"
+                               th:text="${relateModelItem.name}">Ground Water Flow System</a>
+
+                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial
+                                neural network method to extract
+                                land use change rules in the study area, and then applies the rules to
+                                subsequent
+                                simulations and predictions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cite" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>How to Cite</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div id="cite-text" class="width:100%">
+                        <span th:if="${authorship!=''}"
+                              th:text="${authorship}+' ('+${year}+'). '+${modelInfo.name}+', Computable Model, OpenGMS, '"></span>
+                        <span th:if="${authorship==''}"
+                              th:text="${user.name}+' ('+${year}+'). '+${modelInfo.name}+', Computable Model, OpenGMS, '">
+                            Tom Marvolo Riddle.(2018).Integrated stand growth model data,
+                            </span>
+                        <a style="word-break:break-all;"
+                           th:href="'https://geomodeling.njnu.edu.cn/computableModel/'+${modelInfo.oid}"
+                           th:text="'https://geomodeling.njnu.edu.cn/computableModel/'+${modelInfo.oid}">
+                            https://geomodeling.njnu.edu.cn/computableModel/4e028983-c8c0-4d98-86cd-85fc16a00d21
+                        </a>
+                    </div>
+                    <div id="copy" class="btn btn-info">
+                        Copy
+                    </div>
+                </div>
+            </div>
+
+            <div id="copyright" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Copyright and Disclaimer</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="copyright_text">
+                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                    </div>
+                </div>
+            </div>
+
+            <div id="Modifier0" class="detail_block minScreen"
+                 th:if="${history!=true&&modelInfo.contributors!=null&&#lists.size(modelInfo.contributors)!=0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>History</h4>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;">
+
+                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                            <dl>
+                                <dt>Last modifier :&nbsp</dt>
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                       target="_blank"></a></dd>
+                                <dt>Last modify time :&nbsp</dt>
+                                <dd th:text="${lastModifyTime}"></dd>
+                                <dt>Modify times :&nbsp</dt>
+                                <dd><span th:text="${#lists.size(modelInfo.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/computableModel/'+${modelInfo.oid}"
+                                        target="_blank">View
+                                    History</a></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="QR0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>QR Code</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+
+                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+
+                </div>
+            </div>
+
+            <div id="comment" class="detail_block">
+                <comments></comments>
+            </div>
+        </div>
+        <div class="right-panel el-col" style="border-left: #d2d2d2 solid 1px;margin-left:-1px">
+            <div id="Contributor" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history==true}">Modifier</h4>
+                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+                        </el-tooltip>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="el-row"
+                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
+                        <div class="el-col">
+                            <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
+                        </div>
+                        <div class="el-col">
+                            <div class="pull-left" style="display: block;margin-left: 15px;">
+                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
+                                    Marvolo Riddle</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-row">
+                        <div class="text-center">
+                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13
+                                14:32:18 </h5>
+                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13
+                                14:32:18 </h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+                <div class="block_head">
+                    <div class="head_text " style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;" th:each="author,key:${modelInfo.authorship}">
+                        <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
+                                data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
+                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
+                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
+                        <div th:id="'authorship'+${key.index}" class="panel-collapse"
+                             th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
+                             style="">
+                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
+                                <dl>
+                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
+                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
+                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
+                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
+                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
+                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div th:if="${modelInfo.authorship==null||#lists.size(modelInfo.authorship)==0}">-->
+                        <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
+                                                                              <!--style="text-decoration: underline">claim</a>-->
+                            <!--the item.-->
+                        <!--</el-tag>-->
+                    <!--</div>-->
+                    <div th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
+                                                                          style="text-decoration: underline">Feedback</a></el-tag>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Modifier" class="detail_block"
+                 th:if="${history!=true&&modelInfo.contributors!=null&&#lists.size(modelInfo.contributors)!=0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>History</h4>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;">
+
+                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                            <dl>
+                                <dt>Last modifier :&nbsp</dt>
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                       target="_blank"></a></dd>
+                                <dt>Last modify time :&nbsp</dt>
+                                <dd th:text="${lastModifyTime}"></dd>
+                                <dt>Modify times :&nbsp</dt>
+                                <dd><span th:text="${#lists.size(modelInfo.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/computableModel/'+${modelInfo.oid}"
+                                        target="_blank">View
+                                    History</a></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="QR" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>QR Code</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+
+                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div th:if="${history==true}"
+             style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
+
+    </div>
+    <div v-cloak id="ModelShow" style="display: none;">
+        <iframe src="/common/ModelShow"
+                style="width: 100%; height: 100%;z-index: 990; position:absolute;  top:0px;"></iframe>
+        <el-button style="z-index: 999; position: absolute;left: 20px;top: 10px;" @click="hideMxGraph"> Close
+        </el-button>
+    </div>
+    <el-dialog v-cloak
+               title=""
+               :visible.sync="dialogVisible"
+               width="30%"
+               :close-on-click-modal="false"
+               :close-on-press-escape="false"
+               :show-close="dialogShowClose">
+        <span v-if="contentBeforeDeploy">
+            <h4>This computable model has not been deployed, do you want to deploy it now?</h4>
+        </span>
+        <span v-if="contentDeploying">
+            <h4 style="padding-bottom: 15px;">Deploying...</h4>
+            <div class="progress progress-striped active progress-sm">
+                <div style="width: 100%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="100" role="progressbar"
+                     class="progress-bar progress-bar-info">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+        </span>
+        <span v-if="contentAfterDeploy_suc">
+            <h4>Deploy successfully!</h4>
+        </span>
+        <span v-if="contentAfterDeploy_fail">
+            <h4>Deploy failed! Please try again.</h4>
+        </span>
+        <span v-if="footerBeforeDeploy" slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="deployToGivenServer">OK</el-button>
+        </span>
+        <span v-if="footerAfterDeploy" slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="window.location.reload();">OK</el-button>
+        </span>
+    </el-dialog>
+    <!-- edit -->
+    <el-dialog title="Edit Computable Model" class="responseDialog" :visible.sync="editComputableModelDialog" width="65%">
+        <edit-computable-model-module :model-edit-oid="modelOid"></edit-computable-model-module>
+    </el-dialog>
+
+    <el-dialog title="Select Model Server" center :visible.sync="selectModelServerDialog">
+        <div style="flex: 1.5;margin-left: 5px">
+            <p style="text-align: center;font-style: italic;color: #999999">We have provided several servers of different platforms for model deploying.</p>
+            <p style="text-align: center;font-style: italic;color: #999999">If this model was contributed by you, and you want to deploy this model only on your model server, please change its content type to 'md5' in your space.</p>
+            <div class="wzhScrollbar"
+                     style="height: 340px;min-height: 350px">
+                <div style="width: 100%;margin-bottom: 10px">
+                    <div class="col-sm-12 col-md-6 col-lg-6"
+                         v-if="publicModelContainerList.length!=0"
+
+                         v-for="(container,index) in publicModelContainerList">
+                        <el-card class="box-card serverCard"
+                                 :class="container.status?'cursorPointer':''"
+                                 :style="container.ip==modelServerUrl.split(':')[0]?'border-top:8px solid #36c94f':''"
+                                 @click.native="selectModelServer(container)"
+                        >
+                            <div class="content">
+                                <div class="clearfix">
+                                    <div class="pull-left">
+                                        <h4>
+                                            {{container.hardware.hostName}}
+
+                                        </h4>
+                                        <p style="margin-bottom:5px">
+                                            {{container.hardware.system}}
+                                            {{container.hardware.version}}</p>
+                                        <p>{{container.hardware.cpu_Core}}
+                                            Core -
+                                            {{container.hardware.totalMemory}}
+                                            RAM -
+                                            {{container.hardware.diskAll}}
+                                            Hard Disk</p>
+                                    </div>
+                                </div>
+                                <div class="clearfix"
+                                     style="margin-top:10px">
+                                    <div class="serverStatus pull-left"
+                                         v-if="container.status">
+                                        <span style="background: #6FCE7F;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>
+                                        Running
+                                    </div>
+                                    <div class="serverStatus pull-left"
+                                         v-else>
+                                        <span style="background: #929994;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>
+                                        Offline
+                                    </div>
+                                </div>
+                            </div>
+                        </el-card>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button style="float: right;margin-right: 5px" size="small" type="primary" @click="deploy">Deploy</el-button>
+            <el-button style="float: right" size="small" @click="selectModelServerDialog=false">Cancel</el-button>
+        </span>
+    </el-dialog>
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+<template th:replace="modules/editComputableModelModule :: editComputableModelModule"></template>
+<template th:replace="fragments/comments :: comments"></template>
+<template th:replace="modules/userAvatar :: userAvatar"></template>
+
+</body>
+
+<script th:inline="javascript">
+    var Behavior = [[${behavior}]];
+    var author=[[${user}]];
+    console.log([[${mdlJson}]])
+</script>
+
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+<script type="text/javascript" src="/static/iCheck/jquery.icheck.min.js"></script>
+<script src="/static/js/common/md5.js"></script>
+<script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/js/common/qrcode.min.js"></script>
+<script src="/static/js/modules/userAvatar.js"></script>
+
+<script src="/static/js/modules/editComputableModelModule.js"></script>
+<script src="/static/js/modules/comments.js"></script>
+<script src="/static/js/common/copy.js"></script>
+<script src="/static/js/common/bootstrap.min.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+
+
+<script>
+    mxBasePath = "/static/js/mxGraph";
+</script>
+
+<script type="text/javascript" src="/static/js/mxGraph/js/mxClient.js"></script>
+<script type="text/javascript" src="/static/js/mxGraph/js/ogmsDiagram.js"></script>
+
+<script src="/static/js/page/computable_model.js"></script>
+<!--<script src="/static/js/common/navbar.js"></script>-->
+
+
+<script>
+    var behavior = {};
+
+    if (Behavior.StateGroup[0].States === '') {
+        behavior.states = [];
+    }
+    else {
+        behavior.states = Behavior.StateGroup[0].States[0].State;
+    }
+
+    if (Behavior.StateGroup[0].StateTransitions === "") {
+        behavior.transition = [];
+    }
+    else {
+        behavior.transition = Behavior.StateGroup[0].StateTransitions[0].Add;
+    }
+
+    if (Behavior.RelatedDatasets === "") {
+        behavior.dataRef = [];
+    }
+    else {
+        behavior.dataRef = Behavior.RelatedDatasets[0].DatasetItem;
+    }
+
+    function getLoadJson() {
+        return JSON.stringify(behavior).replace(new RegExp("\"Event\":", "gm"), "\"events\":");
+    }
+
+</script>
+
+<script src="/static/js/common/navbar.js"></script>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <title>Title</title>
+    <style>
+        .is-fixed{
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body class="ms-Fabric">
+<template id="headSideBar"  th:fragment="headSideBar">
+    <div class="ms-Fabric" role="headSideBar">
+        <div style="width: 100%">
+            <div id="headBar" style="">
+                <div class="logo" style="float:none;margin:0 0 0 39px; width:200px;height: 50px;cursor:pointer;" onclick="window.location.href='/home'"> </div>
+                <div class="flexCol flexCenter titleContainer" style=" flex: 1;">
+                    <div id="title" class="flexCol"  style="display:inline-block;color: rgb(248, 249, 250);font-size:24px;text-align: center;"></div>
+                </div>
+                <div class="flexRow flexCenter iconContainer" style="">
+                    <!--<div @click="getThemeMessage">-->
+                    <!--<el-badge :value="message_num" :max="99" class="item">-->
+                        <!--<div class="flexCenter cursorPointer" style="padding: 5px;font-size: 18px;margin-right: 25px ">-->
+                            <!--<i class="fa fa-bell"></i>-->
+                        <!--</div>-->
+                    <!--</el-badge>-->
+                        <!--原生写法-->
+                        <a class="el-badge item" href="/user/userSpace#/notice">
+                            <div class="flexCenter cursorPointer" style="padding: 5px; font-size: 18px; margin-right: 25px;">
+                                <i class="fa fa-bell" style="color: white;"></i>
+                            </div>
+                            <!--<sup th:if="${userNavBar.messageNum}" th:text="${userNavBar.messageNum}" class="el-badge__content el-badge__content&#45;&#45;undefined is-fixed"></sup>-->
+                            <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                right: 30px !important;
+                                border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
+                            </sup>
+                        </a>
+
+                    <!--</div>-->
+                    <div class="innerBorderCol"></div>
+
+
+<!--                    <img class="round_icon" :src="(userInfo.avatar==''||userInfo.avatar==undefined)?'/static/img/icon/default.png':userInfo.avatar" onerror="src='/static/img/icon/default.png'" style="width:30px;height: 30px;display: inline-block;margin-right:10px">-->
+                    <user-avatar :email="userInfo.email"
+                                 ref="userAvatar"
+                                 style="width:30px;height: 30px;display: inline-block;margin-right:10px">
+                    </user-avatar>
+                    <p id="userName" style="color: rgb(248, 249, 250);margin: 0">{{userInfo.name}}</p>
+                    <div id="dropmu" class="flexCenter cursorPointer" style="padding: 5px;font-size: 17px;margin-right: 7px ">
+                        <i class="ms-Icon ms-Icon--MoreVertical"></i>
+                    </div>
+                </div>
+
+                <div id="submenu" class="sub zmax flexCenter" style="right:0px;width: 180px;margin-top: -10px">
+                    <ul id="leftUl" class="flexCol " style="width: 160px">
+                        <li><a id="userPageDir" :href="'/profile/'+userInfo.userId">My Page</a></li>
+                        <li><a href="/user/out">Log Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="innerShadowTop" style="">
+        </div>
+        <div>
+            <div class="backImg">
+                <div class="sideContainer " style="margin-top:30px;position: fixed; ">
+                    <ul class="flexCol sideUl wzhScrollbar">
+                        <!--                <li class="filter" style="height: 0;display: none" ></li>-->
+                        <li class="flexCol mainCenter" :class="curIndex == 1?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 1?'showLeftBorder':''"
+                                 @click="changeRter(1)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="el-icon-location" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
+                                    <p>Home</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 2?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 2?'showLeftBorder':''"
+                                 @click="changeRter(2)">
+                                <div class="flexRow flexColCenter">
+                                    <img class="squareMini" src="/static/img/model/model.png">
+                                    <p>Model</p>
+                                </div>
+
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 3?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 3?'showLeftBorder':''"
+                                 @click="changeRter(3)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="fa fa-database" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
+                                    <p>Data</p>
+                                </div>
+
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 4?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 4?'showLeftBorder':''"
+                                 @click="changeRter(4)">
+                                <div class="flexRow flexColCenter">
+                                    <img class="squareMini" src="/static/img/model/server.png">
+                                    <p>Server</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 5?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 5?'showLeftBorder':''"
+                                 @click="changeRter(5)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="el-icon-s-tools" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
+                                    <p>Task</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 6?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 6?'showLeftBorder':''"
+                                 @click="changeRter(6)">
+                                <div class="flexRow flexColCenter">
+                                    <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"
+                                       style="font-size: 18px;font-weight: 600; color: #05c4ff;margin: 4px;"></i>
+                                    <p>Community</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 7?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 7?'showLeftBorder':''"
+                                 @click="changeRter(7)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="el-icon-s-order" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
+                                    <p>Theme</p>
+                                </div>
+                            </div>
+                        </li>
+                        <div class="innerBorderGrey60" style="margin:3px"></div>
+                        <li class="flexCol mainCenter" :class="curIndex == 8?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 8?'showLeftBorder':''"
+                                 @click="changeRter(8)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="fa fa-user-circle-o"
+                                       style="font-size: 18px;color: #d48634;margin: 4px;"></i>
+                                    <p>My Account</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 10?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 10?'showLeftBorder':''" @click="changeRter(10)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="el-icon-chat-dot-square" style="font-size: 18px;color: #d48634;margin: 4px;" ></i>
+                                    <p>Notice</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 11?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 11?'showLeftBorder':''"
+                                 @click="changeRter(11)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="ms-Icon ms-Icon--EditNote"
+                                       style="font-size: 18px;color: #d48634;margin: 4px;"></i>
+                                    <p>Draft Box</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 9?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 9?'showLeftBorder':''"
+                                 @click="changeRter(9)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="fa fa-paper-plane"
+                                       style="font-size: 18px;color: #d48634;margin: 4px;"></i>
+                                    <p>Feedback</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="rightShade" style="background: rgba(252, 251, 251, 0.88);position: absolute; width: calc(100% - 240px);height: 100%;margin-left: 240px;"></div>
+                <div class="topContainer">
+                    <ul class="flexRow rowUl flexJCSA flexAIStart">
+                        <li class="flexCol mainCenter" :class="curIndex == 1?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 1?'showBottomBorder':''"
+                                 @click="changeRter(1)">
+                                <p>Home</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 2?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 2?'showBottomBorder':''"
+                                 @click="changeRter(2)">
+                                <p>Model</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 3?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 3?'showBottomBorder':''"
+                                 @click="changeRter(3)">
+                                <p>Data</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 4?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 4?'showBottomBorder':''"
+                                 @click="changeRter(4)">
+                                <p>Server</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 5?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 5?'showBottomBorder':''"
+                                 @click="changeRter(5)">
+                                <p>Task</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 6?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 6?'showBottomBorder':''"
+                                 @click="changeRter(6)">
+                                <p>Community</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 7?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 7?'showBottomBorder':''"
+                                 @click="changeRter(7)">
+                                <p>Theme</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 8?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 8?'showBottomBorder':''"
+                                 @click="changeRter(8)">
+                                <p>My Account</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 10?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 10?'showBottomBorder':''" @click="changeRter(10)">
+                                <p>Notice</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 11?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 11?'showBottomBorder':''" @click="changeRter(11)">
+                                <p>Drafts</p>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 9?'topFocus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 9?'showBottomBorder':''"
+                                 @click="changeRter(9)">
+                                <p>Feedback</p>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+</body>
+</html>

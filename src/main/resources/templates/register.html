@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Sign Up | OpenGMS</title>
+
+
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/style.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" />
+    
+    <style>
+        /*org*/
+        .el-tag {
+            height:auto;
+            margin-right: 10px;
+            white-space: normal;
+        }
+        .button-new-tag {
+            /*margin-left: 10px;*/
+            height: 32px;
+            line-height: 30px;
+            padding-top: 0;
+            padding-left: 10px;
+            padding-bottom: 0;
+        }
+        .input-new-tag {
+            width: 185px;
+            /*margin-left: 10px;*/
+            vertical-align: bottom;
+        }
+
+        .registerCard{
+            min-width: 350px;
+            max-width: 630px;
+            margin: auto;
+        }
+
+        .el-button+.el-button{
+            margin:0px;
+        }
+    </style>
+</head>
+<body>
+    <!--<h1 th:text="${name}">Hello World</h1>-->
+    <div id="app">
+        <div th:replace="fragments/navbar :: unlog"></div>
+        <el-row style="margin-top:30px;margin-bottom: 30px;">
+            <el-col class="" style="width: 100%">
+                <div class="registerCard el-card is-always-shadow">
+                    <div slot="header" class="clearfix el-card__header" style="text-align: center;">
+                        <span style="font-weight: bold;font-size: 20px">Sign Up</span>
+                    </div>
+                    <div style="margin-top: 30px">
+                        <el-col :span="20" :offset="1">
+                            <el-form label-position="right" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="150px" class="demo-ruleForm" size="medium">
+                                <el-form-item label="Email" prop="email">
+                                    <el-input type="text" v-model="ruleForm2.email" autocomplete="off" placeholder="Please enter your email address"></el-input>
+                                </el-form-item>
+                                <!--<el-form-item label="Code" prop="code">-->
+                                    <!--<el-input type="text" v-model="ruleForm2.code" autocomplete="off"></el-input>-->
+                                <!--</el-form-item>-->
+                                <el-form-item label="Password" prop="pwd">
+                                    <el-input type="password" v-model="ruleForm2.pwd" autocomplete="off" placeholder="Please enter your password"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Confirm Password" prop="checkPass">
+                                    <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off" placeholder="Please enter your password again"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Name" prop="name">
+                                    <el-input type="text" v-model="ruleForm2.name" autocomplete="off" placeholder="Please enter your name"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Title" prop="title">
+                                    <el-select class="w100" v-model="ruleForm2.title" placeholder="Please select your title">
+                                        <el-option label="Prof" value="Professor"></el-option>
+                                        <el-option label="Dr" value="Dr"></el-option>
+                                        <el-option label="Mr" value="Mr"></el-option>
+                                        <el-option label="Mrs" value="Mrs"></el-option>
+                                        <el-option label="Miss" value="Miss"></el-option>
+                                        <el-option label="Ms" value="Ms"></el-option>
+                                        <el-option label="Mx" value="Mx"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="Organization" prop="org">
+                                    <el-tag
+                                            :key="organization"
+                                            v-for="organization in ruleForm2.org"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="handleClose(organization)">
+                                        {{organization}}
+                                    </el-tag>
+                                    <el-input
+                                            class="input-new-tag"
+                                            v-if="inputVisible"
+                                            v-model="inputValue"
+                                            ref="saveTagInput"
+                                            size="small"
+                                            @keyup.enter.native="handleInputConfirm"
+                                            @blur="handleInputConfirm"
+                                    >
+                                    </el-input>
+                                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New</el-button>
+                                </el-form-item>
+                                <div class="flexRowCenter" style="margin: 10px;width: 100%">
+                                    <el-button type="primary" plain style="margin-right: 10px;" @click="window.location.href='/user/login'"><i class="fa fa-arrow-left"></i> Log In</el-button>
+                                    <el-button class="pull-left" style="margin-right: 2px;"  @click="resetForm('ruleForm2')">Reset</el-button>
+                                    <el-button type="primary" @click="submitForm('ruleForm2')">Join OpenGMS</el-button>
+
+
+                                </div>
+                            </el-form>
+                        </el-col>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
+</body>
+    <script src="/static/js/common/md5.js"></script>
+    <script src="/static/js/common/sha256.js"></script>
+    <script src="/static/js/common/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/js/common/axios.min.js"></script>
+    <script src="/static/element-ui/index.js"></script>
+    <script src="/static/js/page/register.js"></script>
+    <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/js/common/navbar.js"></script>
+
+</html>

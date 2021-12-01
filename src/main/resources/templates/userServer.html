@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/mongo">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<template id="userServer" th:fragment="userServer">
+    <div class="innerShadowCol">
+        <div class="page-content clearfix scrollbar el-col-lg-21 el-col-md-20 pageContent acrylicBack"
+             style="margin-left: 240px;"
+             :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}"
+             id="pageContent">
+            <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
+            <div class="flexColContainer mainContent" style="">
+                <section role="description" class="flexCol flexCenter contentSection">
+                    <h3>Server</h3>
+                    <h5>You can manage your model/data server here</h5>
+
+                </section>
+                <section class="flexRowContainer flexWrap contentSection">
+                    <div class="contentCard flexCol flexColCenter" style="height: 400px">
+                        <div class="content_h34 flexRow noPadding">
+                            <div class="content_w100 flexCol flexJustAround" style="padding: 10px 25px">
+                                <div class="flexCenter ">
+                                    <h4>Model Server</h4>
+                                </div>
+                                <p style="text-align: center">You can add your model server and manage it here.</p>
+                            </div>
+<!--                            <div class="flexCenter content_w32" style="">-->
+<!--                                <img class="square_80" style="" src="../../static/img/model/server.png">-->
+<!--                            </div>-->
+                        </div>
+                        <div class="innerBorderGrey89"></div>
+                        <div style="flex: 1;" class="flexCenter">
+                            <img style="height: 185px" src="../../static/img/model/Internet_version_framework1.png">
+                        </div>
+                        <!--                            <div class="innerBorderGrey89"></div>-->
+                        <div class="content_h16 flexCol noPadding" style="width: 100%;background-image: linear-gradient(to right, #fdf9f4 0%, #ebf6f8 100%);">
+                            <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
+                                <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
+                                    <div class="lineButton flexCol" @click="manageItem(1)">
+                                        <p style="margin-block-end: 0">manage</p>
+                                        <div class="hoverLine"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="contentCard flexCol flexColCenter" style="height: 400px">
+                        <div class="content_h34 flexRow noPadding">
+                            <div class="content_w100 flexCol flexJustAround" style="padding: 10px 25px">
+                                <div class="flexCenter ">
+                                    <h4>Data Server</h4>
+                                </div>
+                                <p style="text-align: center">You can check status of you data server and manage content of it.</p>
+                            </div>
+<!--                            <div class="flexCenter content_w32" style="">-->
+<!--                                <img class="square_80" style="" src="../../static/img/model/server.png">-->
+<!--                            </div>-->
+                        </div>
+                        <div class="innerBorderGrey89"></div>
+                        <div style="flex: 1;" class="flexCenter">
+                            <img style="height: 185px" src="../../static/img/data/SOFTWARE FRAMEWORK.jpg">
+                        </div>
+                        <!--                            <div class="innerBorderGrey89"></div>-->
+                        <div class="content_h16 flexCol noPadding" style="width: 100%;background-image: linear-gradient(to right, #fdf9f4 0%, #ebf6f8 100%);">
+                            <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
+                                <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
+                                    <div class="lineButton flexCol" @click="manageItem(2)">
+                                        <p style="margin-block-end: 0">manage</p>
+                                        <div class="hoverLine"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+
+        </div>
+    </div>
+
+</template>
+</body>
+<script src="/static/js/page/userServer.js"></script>
+</html>

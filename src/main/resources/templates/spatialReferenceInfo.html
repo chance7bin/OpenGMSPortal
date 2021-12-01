@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title th:text="${info.name}+' | Spatiotemporal Reference | OpenGMS'">Spatiotemporal Reference | OpenGMS</title>
+
+    <link href="/static/css/base/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" th:href="@{/static/ol/ol.css}">-->
+    <link rel="stylesheet" th:href="@{/static/leaflet/leaflet.css}">
+    <link rel="stylesheet" th:href="@{/static/css/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" th:href="@{/static/css/base/style.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/universal.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/itemInfo.css}">
+    <link rel="stylesheet" th:href="@{/static/css/common/wzhFlexContainer.css}">
+    <link rel="stylesheet" th:href="@{/static/css/common/wzhStyle.css}">
+    <link rel="stylesheet" th:href="@{/static/css/page/model_item_info.css}">
+    <link rel="stylesheet" th:href="@{/static/css/page/repositoryInfo.css}">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" />
+    <style>
+        #description h1{
+            font-size: 24px;
+        }
+        #description h2{
+            font-size: 22px;
+        }
+        #description h3{
+            font-size: 20px;
+        }
+        #description h4{
+            font-size: 18px;
+        }
+
+        .fullPaper{
+            position:relative;
+            padding-top:100px;
+            margin-top:-110px;
+            background-image: -webkit-gradient(linear,left top, left bottom,from(rgba(255,255,255,0)),color-stop(90%, #fff));
+            background-image: linear-gradient(-180deg,rgba(255,255,255,0) 0%,#fff 90%);
+            margin-bottom:20px;
+        }
+
+        .el-tabs--border-card{
+            box-shadow:none;
+            -webkit-box-shadow:none;
+        }
+
+        .modal-content{
+            border-radius: 0!important;
+        }
+
+        .form-control{
+            border-radius: 0!important;
+        }
+
+        .leaflet-container{
+            background: #eee!important;
+        }
+        .is-disabled input{
+            color: #6f7276!important;
+        }
+        .batchInputButton{
+            color: #039bd9;
+            margin-top: 10px;
+            position: absolute;
+            bottom:0px;
+            margin-bottom: 5px;
+        }
+        .batchInputButton:hover{
+            text-decoration:underline ;
+        }
+        .uploadCenter{
+            display: flex;
+            flex-direction: column;
+            align-self: center;
+        }
+
+        .uploadCenter .el-upload.el-upload--text{
+            display: flex;
+            flex-direction: column;
+            align-self: center;
+            justify-content: center;
+        }
+        input[type=file] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+    <div th:replace="fragments/backToTop :: backtop-down"></div>
+
+    <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
+
+        <div class="left-panel el-col">
+            <div class="detail">
+                <div class="detail_title">
+
+                    <h2 th:utext="${info.name}" style="display: inline-block;margin-right:15px;"></h2>
+                    <div class="pull-right">
+                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <a href="javascript:void(0);" th:if="${info.status=='Public'&&history!=true&&info.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
+                            <li th:if="${info.status=='Public'&&history!=true&&info.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15" th:content="${info.status}" effect="light" placement="top">
+                            <i th:if="${info.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
+                            <i th:if="${info.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
+                            <i th:if="${info.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
+                        </el-tooltip>
+                        <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
+                    </div>
+                </div>
+                <div class="detail_overview">
+
+                    <div class="img">
+                        <div th:switch="${info.image}" class="img">
+                            <avatar th:case="''" th:username="${info.name}" :size="90" :rounded="false"></avatar>
+                            <avatar th:case="null" th:username="${info.name}" :size="90" :rounded="false"></avatar>
+                            <img th:case="*" th:src="${image}">
+                        </div>
+                    </div>
+
+                    <div class="info">
+                        <p th:text="${info.description != null ? info.description : info.wkt==null?info.wkname:info.wkt}" style="word-break: break-word;"></p>
+                        <div class="tags">
+                            <span class="badge badge-info">Spatial Reference</span>
+                        </div>
+                    </div>
+
+                    <div th:if="${history!=true}" class="detail_option">
+                        <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
+                        <!--<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>-->
+                        <a class="fa fa-eye" aria-hidden="true"></a>
+                        <div th:utext="'&nbsp&nbsp'+${info.viewCount}">&nbsp&nbsp341</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alias" class="detail_block" th:if="${info.alias!=null&&#lists.size(info.alias)>0}">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Alias</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="margin-bottom:10px;">
+
+                    <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
+
+                    <el-tag th:each="alias:${info.alias}" th:text="${alias}"
+                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
+
+                </div>
+            </div>
+
+            <div id="Contributor0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history==true}">Modifier</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="el-row"
+                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
+                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
+                        <div class="el-col">
+                            <div class="pull-left" style="display: block;margin-left: 15px;">
+                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-row">
+                        <div class="text-center">
+                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
+                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="Knowledge_Graph0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>Map</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="height: 200px" id="map">
+
+                </div>
+            </div>
+
+            <div id="classification" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Classification(s)</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="margin-top:20px;">
+                    <div th:each="classS:${classifications}">
+                        <span style="font-size:24px;margin-right: 8px">●</span>
+                        <el-breadcrumb separator-class="el-icon-arrow-right">
+                            <el-breadcrumb-item th:each="class:${classS}" th:text="${class}" :to="{ path: '/' }">Earth
+                                System Classification
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                </div>
+            </div>
+<!--transform-->
+            <div id="transform" class="detail_block" v-cloak>
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Transform</h4>
+                    </div>
+                </div>
+                <div class="block_content transformContainer " th:if="${isTemporal} eq 'other'">
+                    <div class="flexCol flexAlignCenter" style="flex: 1;">
+                        <h5 style="font-size: 16px;">Input coordinate system</h5>
+                        <div class="flexJustBetween flexAlignCenter inputForm">
+                            <h5><span style="color: #7d7d7d">Name: </span> {{inputCoordinate.name}}</h5>
+                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(0)">Select</el-button>
+                        </div>
+                        <div v-if="judgeUnit(inputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>X: </p>
+                            <el-input size="mini" type="primary" v-model="inputX" plain ></el-input>
+                        </div>
+                        <div v-if="judgeUnit(inputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>Y: </p>
+                            <el-input size="mini" type="primary" v-model="inputY" plain ></el-input>
+                        </div>
+                        <div v-if="judgeUnit(inputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>Longtitude: </p>
+                            <el-input size="mini" type="primary" v-model="inputLong" plain placeholder="e.g. 22.53°"></el-input>
+                            <p>&deg</p>
+                        </div>
+                        <div v-if="judgeUnit(inputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>Latitude: </p>
+                            <el-input size="mini" type="primary" v-model="inputLat" plain placeholder="e.g. 22.53°" style="margin-left: 20.5px;"></el-input>
+                            <p>&deg</p>
+                        </div>
+                    </div>
+                    <div class="flexCol flexCenter positionRelative" style="height: 150px">
+                        <el-button type="primary" size="medium" style="margin: 0 20px" @click="transformClick">
+                            Transform
+                        </el-button>
+                        <i class="el-icon-sort cursorPointer exchangeButton" @click="exchangeIO" style="color: #0069ba;font-size: 18px;margin-top: 5px"></i>
+                        <p class="cursorPointer batchInputButton" role="button" style="" @click="batchInput">Batch input</p>
+                    </div>
+                    <div class="flexCol flexAlignCenter" style="flex: 1;">
+                        <h5 style="font-size: 16px;">Output coordinate system</h5>
+                        <div class="flexJustBetween flexAlignCenter inputForm">
+                            <h5><span style="color: #7d7d7d">Name: </span> {{outputCoordinate.name}}</h5>
+                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(1)">Select</el-button>
+                        </div>
+                        <div v-if="judgeUnit(outputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>X: </p>
+                            <el-input size="mini" type="primary" v-model="outputX" plain disabled></el-input>
+                        </div>
+                        <div v-if="judgeUnit(outputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>Y: </p>
+                            <el-input size="mini" type="primary" v-model="outputY" plain disabled></el-input>
+                        </div>
+                        <div v-if="judgeUnit(outputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>Longtitude: </p>
+                            <el-input size="mini" type="primary" v-model="outputLong" plain disabled></el-input>
+                            <p>&deg</p>
+                        </div>
+                        <div v-if="judgeUnit(outputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
+                            <p>Latitude: </p>
+                            <el-input size="mini" type="primary" v-model="outputLat" plain style="margin-left: 20.5px;" disabled></el-input>
+                            <p>&deg</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="block_content transformContainer " th:if="${isTemporal} eq 'Global'">
+                    <div class="flexCol flexAlignCenter" style="flex: 1;">
+                        <h5 style="font-size: 16px;">Input Calendar</h5>
+                        <div class="flexAlignCenter inputForm">
+                            <p style="width: 15%">Calender : </p>
+                                <el-select size="small" type="primary" :data="CalendarValue" placeholder="请选择"  style="width: 84%;float: right" v-model="inCalen" @change="CalenChange(1)">
+                                    <el-option
+                                            v-for="item in CalendarValue"
+                                            :key="item.label"
+                                            :label="item.label"
+                                            :value="item.label">
+                                    </el-option>
+                                </el-select>
+                        </div>
+                        <div class="flexAlignCenter inputForm">
+                            <p style="width: 15%">Year : </p>
+                            <el-input size="small" style="width: 85%" v-model="inYear"></el-input>
+
+                        </div>
+                        <div class="flexAlignCenter inputForm">
+
+                            <p style="width: 15%">Month : </p>
+
+                                <el-select  size="small" type="primary" :data="inMonth" placeholder="请选择" v-model="inMonth" style="width: 84%;">
+                                    <el-option
+                                            v-for="item in inMonthOptions"
+                                            :key="item.id"
+                                            :label="item.label"
+                                            :value="item.id">
+                                    </el-option>
+                                </el-select>
+                        </div>
+
+
+                        <div class="flexAlignCenter inputForm">
+
+                            <p style="width: 15%">Day : </p> <el-input size="small" style="width: 85%;float: right" v-model="inDay"></el-input>
+                        </div>
+
+                    </div>
+                    <div class="flexCol flexCenter positionRelative" style="height: 150px">
+                        <el-button type="primary" size="medium" style="margin: 0 20px" @click="CalendarTransform" >
+                            Transform
+                        </el-button>
+                    </div>
+                    <div class="flexCol flexAlignCenter" style="flex: 1;">
+                        <h5 style="font-size: 16px;">Input Calendar</h5>
+                        <div class="flexAlignCenter inputForm">
+                            <p style="width: 15%">Calender : </p>
+                            <el-select size="small" type="primary" :data="CalendarValue" placeholder="请选择" v-model="outCalen" style="width: 84%;float: right" @change="CalenChange(2)">
+                                <el-option
+                                        v-for="item in CalendarValue"
+                                        :key="item.label"
+                                        :label="item.label"
+                                        :value="item.label">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="flexAlignCenter inputForm">
+                            <p style="width: 15%">Year : </p>
+                            <el-input size="small" style="width: 85%" :disabled="true" v-model="outYear"></el-input>
+
+                        </div>
+                        <div class="flexAlignCenter inputForm">
+
+                            <p style="width: 15%">Month : </p>
+
+                            <el-select size="small" v-model="outMonth" type="primary" disabled  :data="GregorianMonth" placeholder="请选择" id="slct1" style="width: 84%;">
+                                <el-option
+                                        v-for="item in outMonthOptions"
+                                        :key="item.id"
+                                        :label="item.label"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+
+
+
+                        </div>
+
+
+                        <div class="flexAlignCenter inputForm">
+
+                            <p style="width: 15%">Day : </p> <el-input size="small" :disabled="true" v-model="outDay"  style="width: 85%;float: right"></el-input>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="block_content transformContainer" th:if="${isTemporal} eq 'Local'">
+                    <div class="flexCol flexAlignCenter" style="flex: 1;">
+                        <h5 style="font-size: 16px;">Input Time</h5>
+                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
+                            <p style="width: 15%;margin: 5px 0">Time System: </p>
+                            <el-select size="small" type="primary" :data="TimeSystemOptions" placeholder="请选择"  style="width: 84%;float: right" v-model="inTime" @change="TimeChange(1)">
+                                <el-option
+                                        v-for="item in TimeSystemOptions"
+                                        :key="item.label"
+                                        :label="item.label"
+                                        :value="item.label">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
+                            <p style="width: 15%;margin: 5px 0">Hour : </p>
+                            <el-input-number v-model="inHour" size="small" controls-position="right"  :min="0" :max="23" style="width: 84%" @change="intimeChange"></el-input-number>
+
+                        </div>
+                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
+
+                            <p style="width: 15%;margin: 5px 0">Minute : </p>
+
+                            <el-input-number v-model="inMin" size="small"  controls-position="right"  :min="0" :max="59" style="width: 84%;" @change="intimeChange"></el-input-number>
+                        </div>
+                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
+
+                            <p style="width: 15%;margin: 5px 0">Second : </p>
+                            <el-input-number v-model="inSec"  size="small" controls-position="right"  :min="0" :max="59" style="width: 84%;font-size: large" @change="intimeChange"></el-input-number>
+                        </div>
+                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
+
+                            <p style="width: 15%;margin: 5px 0">Time : </p>
+                            <el-input v-model="intime" size="small" style="width: 84%;text-align: center" >{{intime}}</el-input>
+                        </div>
+                    </div>
+                    <div class="flexCol flexCenter positionRelative" style="height: 150px">
+                        <el-button type="primary" size="medium" style="margin: 0 20px" @click="TimeTransform" >
+                            Transform
+                        </el-button>
+                    </div>
+                    <div class="flexCol flexAlignCenter" style="flex: 1;">
+                        <h5 style="font-size: 16px;">Output Time</h5>
+                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
+                            <p style="width: 15%;margin: 5px 0">Time System : </p>
+                            <el-select size="small" type="primary" :data="TimeSystemOptions" placeholder="请选择"  style="width: 84%;float: right" v-model="outTime" @change="TimeChange(2)">
+                                <el-option
+                                        v-for="item in TimeSystemOptions"
+                                        :key="item.label"
+                                        :label="item.label"
+                                        :value="item.label">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
+                            <p style="width: 15%;margin: 5px 0">Hour : </p>
+                            <el-input-number v-model="outHour" size="small" controls-position="right" :disabled="true" :min="0" :max="23"  style="width: 84%"></el-input-number>
+
+                        </div>
+                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
+
+                            <p style="width: 15%;margin: 5px 0">Minute : </p>
+
+                            <el-input-number v-model="outMin" size="small"  controls-position="right" :disabled="true" :min="0" :max="59" style="width: 84%;"></el-input-number>
+                        </div>
+                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
+
+                            <p style="width: 15%;margin: 5px 0">Second : </p>
+                            <el-input-number v-model="outSec"  size="small" controls-position="right"  :disabled="true" :min="0" :max="59" style="width: 84%;"></el-input-number>
+                        </div>
+                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
+
+                            <p style="width: 15%;margin: 5px 0">Time : </p>
+                            <el-input v-model="outtime" size="small" style="width: 84%;text-align: center" :disabled="true" >{{outtime}}</el-input>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+<!--            description-->
+            <div id="description" th:if="${#lists.size(info.localizationList)>0}" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Detailed Description</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="LanguageInfoContainer" th:each="localization:${info.localizationList}" th:id="${localization.localCode}">
+                        <table class="table table-bordered" >
+                            <thead>
+                            <tr>
+                                <th class="thMain" th:text="${localization.localName}"></th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="table table-bordered">
+                            <colgroup>
+                                <col width="25%">
+                                <col width="75%">
+                            </colgroup>
+                            <tr th:if="${localization.name!=''}">
+                                <td>Name</td>
+                                <td class="enName" th:text="${localization.name}"></td>
+                            </tr>
+                            <tr th:if="${localization.description!=''}">
+                                <td>Description</td>
+                                <td class="enDesc" th:utext="${localization.description}"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!--<div th:if="${info.detail==null}"  class="text-center" >-->
+            <!--<a id="addLocalization" style="cursor:pointer;font-size:16px;" data-toggle="modal" data-target="#myModal">Add Localization<i class="fa fa-plus" style="margin-left: 10px;color:#339fff;font-weight: bold" aria-hidden="true"></i></a>-->
+            <!--</div>-->
+
+
+
+            <div id="cite" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>How to Cite</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div id="cite-text">
+                        <span th:text="${user.name}+' ('+${year}+'). '+${info.name}+', Spatiotemporal Reference, OpenGMS, '">
+                        Tom Marvolo Riddle.(2018).Integrated stand growth model data,
+                        </span>
+                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/spatialReference/'+${info.oid}"
+                           th:text="'https://geomodeling.njnu.edu.cn/repository/spatialReference/'+${info.oid}">
+                            https://geomodeling.njnu.edu.cn/modelItem/4e028983-c8c0-4d98-86cd-85fc16a00d21
+                        </a>
+                    </div>
+                    <div id="copy" class="btn btn-info">
+                        Copy
+                    </div>
+                </div>
+            </div>
+
+            <div id="copyright" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Copyright and Disclaimer</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="copyright_text">
+                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                    </div>
+                </div>
+            </div>
+
+            <div id="Modifier0" class="detail_block minScreen"
+                 th:if="${history!=true&&info.contributors!=null&&#lists.size(info.contributors)!=0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>History</h4>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;">
+
+                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                            <dl>
+                                <dt>Last modifier :&nbsp</dt>
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                       target="_blank"></a></dd>
+                                <dt>Last modify time :&nbsp</dt>
+                                <dd th:text="${lastModifyTime}"></dd>
+                                <dt>Modify times :&nbsp</dt>
+                                <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/spatialReference/'+${info.oid}" target="_blank">View
+                                    History</a></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="QR0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>QR Code</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+
+                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+
+                </div>
+            </div>
+
+            <div id="comment" class="detail_block">
+                <comments></comments>
+            </div>
+
+        </div>
+
+        <div class="right-panel el-col">
+            <div id="Contributor" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history==true}">Modifier</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="el-row"
+                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
+                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
+                        <div class="el-col">
+                            <div class="pull-left" style="display: block;margin-left: 15px;">
+                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-row">
+                        <div class="text-center">
+                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
+                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="Knowledge_Graph" class="detail_block" style="display: none">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>Map</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="height: 200px" id="map">
+
+                </div>
+            </div>
+
+            <div id="Modifier" class="detail_block"
+                 th:if="${history!=true&&info.contributors!=null&&#lists.size(info.contributors)!=0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>History</h4>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;">
+
+                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                            <dl>
+                                <dt>Last modifier :&nbsp</dt>
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                       target="_blank"></a></dd>
+                                <dt>Last modify time :&nbsp</dt>
+                                <dd th:text="${lastModifyTime}"></dd>
+                                <dt>Modify times :&nbsp</dt>
+                                <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/spatialReference/'+${info.oid}" target="_blank">View
+                                    History</a></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="QR" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>QR Code</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+
+                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div th:if="${history==true}"
+             style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
+
+    </div>
+
+    <el-dialog title="Spatial references" :visible.sync="loadSpatialDialog">
+        <div v-loading="loading">
+            <div class="flexRow flexJustCenter" style="margin-top: 12px; margin-left: 10px;">
+                <div class="flexRow flexColCenter" style="width: 50%;mini-width:250px">
+                    <input placeholder="Search for ..." v-model="searchText" class="noBorderInput miniInput" @keyup.enter="searchSpatialReference(1)">
+                </div>
+                <i class="fa fa-search cursorPointer" style="font-size: 18px;" @click="searchSpatialReference(1)"></i>
+            </div>
+            <el-table style="padding-left:10px "
+                      :data="searchResult">
+                <el-table-column
+                        label="Name"
+                        prop="name"
+                >
+                    <template slot-scope="scope">
+                        <a class="cursorPointer" @click="window.open('/repository/spatialReference/'+scope.row.oid)">{{scope.row.name}}</a>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="Contributor"
+                >
+                    <template slot-scope="scope">
+                        <a class="cursorPointer" v-if="scope.row.author!='unknown'" @click="window.open('/user/'+scope.row.author)" >{{scope.row.author}}</a>
+                        <p v-else>{{scope.row.author}}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="Option"
+                        width="180"
+                >
+                    <template slot-scope="scope">
+                        <el-button size="mini" round type="success" @click="loadCoordinate(scope.row)">Select</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination style="text-align: center;margin-top:20px"
+                           @current-change="handlePageChange"
+                           :current-page="pageOption.currentPage"
+                           layout="total, prev, pager, next, jumper"
+                           :page-size="6"
+                           :total="pageOption.total">
+            </el-pagination>
+
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="loadSpatialDialog = false;">Cancel</el-button>
+<!--            <el-button type="primary" @click="confirm()">OK</el-button>-->
+        </div>
+    </el-dialog>
+
+    <el-dialog title="Batch input transform" :visible.sync="batchSpatialInputDialog" width="60%">
+        <el-card style="width: 100%;min-height: 310px" v-loading="batchSpatialLoading">
+            <div class="flexJustAround flexAlignCenter flexWrap">
+                <div>
+                    <div class="flexJustBetween flexAlignCenter inputForm">
+                        <h5><span style="color: #7d7d7d">Input coordinate system: </span> {{inputCoordinate.name}}</h5>
+                        <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(0)">Select</el-button>
+                    </div>
+                    <div class="flexJustBetween flexAlignCenter inputForm">
+                        <h5><span style="color: #7d7d7d">Output coordinate system: </span> {{outputCoordinate.name}}</h5>
+                        <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(0)">Select</el-button>
+                    </div>
+                    <div class="flexJustBetween flexAlignCenter inputForm">
+                        <h5><span style="color: #7d7d7d">Uploaded file: </span></h5>
+                        <div>
+                            <el-tooltip v-if="csvFile.length>0" :content="csvFile[0].name" placement="bottom-start">
+                                <div class="quickToolsCard flexAlignCenter positionRelative" style="margin-right: 12px;" v-for="csv in csvFile">
+                                    <div class="cursorPointer">
+                                        <div class="cornerButton flexCenter"  @click.prevent="uploadRemove">
+                                            <i class="el-icon-close " style="font-size: 12px;color: #d40202"></i>
+                                        </div>
+                                    </div>
+                                    <img src="/static/img/filebrowser/csv.svg" style="width: 32px">
+
+                                </div>
+                            </el-tooltip>
+                        </div>
+                    </div>
+                    <el-upload
+                            class="uploadCenter"
+                            drag
+                            ref="upload"
+                            accept=".csv"
+                            :on-change="uploadChange"
+                            :on-remove="uploadRemove"
+                            :auto-upload="false"
+                            :show-file-list="false"
+                            :multiple="false">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">Drop the file here, or<em> click </em>to upload.</div>
+                    </el-upload>
+                </div>
+                <div class="innerBorderCol" style="height: 300px"></div>
+                <div class="textContainer">
+                    <p>The type of the file should only be <span style="color: #0473fa;">csv</span>.</p>
+                    <p>And the content of it should be formed as the following:</p>
+                    <p>the first column is filled with the x-coordinate or the longtitude
+                        <br>of points,
+                        <br>the second column is filled with the y-coordinate or the latitude.</p>
+                    <img src="/static/img/filebrowser/csvExample.png">
+                </div>
+
+            </div>
+        </el-card>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="batchinputTransform">Transform</el-button>
+            <el-button @click="loadSpatialDialog = false;">Cancel</el-button>
+            <!--            <el-button type="primary" @click="confirm()">OK</el-button>-->
+        </div>
+    </el-dialog>
+
+    <el-dialog title="Batch transform result" :visible.sync="batchSpatialOutputDialog" width="28%" center>
+        <div class="flexCenter">
+            <i style="font-size: 68px;color: #5ec23a" class="fa fa-check-circle "></i>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" plain @click="downloadSpatialOutput">Download</el-button>
+            <el-button @click="copySpatialOutput">Copy url</el-button>
+            <el-button type="primary" @click="addSpatialOutputToDataSpace" :disabled="useroid==null">Add to my space</el-button>
+            <!--            <el-button type="primary" @click="confirm()">OK</el-button>-->
+        </div>
+    </el-dialog>
+
+    <!--                el-dialog放在这一层-->
+    <el-dialog :visible.sync="addOutputToMyDataVisible" title="Add Output to My Data"
+               width="35%">
+        <el-card style="min-height: 300px;">
+            <el-tree
+                    :data="folderTree"
+                    ref="folderTree2"
+                    node-key="id"
+                    highlight-current = true
+                    default-expand-all
+                    :expand-on-click-node="false"
+            >
+                                            <span class="custom-tree-node" slot-scope="{ node, data }">
+                                                <span>{{ node.label }}</span>
+                                            </span>
+            </el-tree>
+        </el-card>
+        <span slot="footer" class="dialog-footer">
+                                        <el-button class="pull-left" type="primary" icon="el-icon-folder-add"
+                                                   @click="addFolderinTree(2)">Add new folder</el-button>
+                                        <el-button @click="addOutputToMyDataVisible = false">Cancel</el-button>
+                                        <el-button type="primary"
+                                                   @click="addOutputToDataServer7DataSpace()">OK</el-button>
+                                    </span>
+    </el-dialog>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Add Localization</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addConceptLocalizationForm" role="form" method="post">
+                        <div class="form-group hidden">
+                            <input type="text" name="id" class="form-control" th:value="${info.oid}">
+                        </div>
+                        <div class="form-group">
+                            <label>Language</label>
+                            <input type="text" name="language" class="form-control" placeholder="Please Input Language">
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Please Input Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="desc" class="form-control" placeholder="Please Input Description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">cancle</button>
+                    <button type="button" class="btn btn-primary" onclick="submitFrom()">Ok</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+<template th:replace="fragments/comments :: comments"></template>
+<template th:replace="modules/userAvatar :: userAvatar"></template>
+</body>
+
+<script type="text/javascript" src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/js/common/bootstrap.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/js/modules/userAvatar.js"></script>
+<script src="/static/js/modules/comments.js"></script>
+<script src="/static/js/common/copy.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<script src="/static/js/common/qrcode.min.js"></script>
+<script src="/static/ol/proj4.js"></script>
+<!--<script src="../../static/ol/ol.js"></script>-->
+<script src="/static/leaflet/leaflet.js"></script>
+<script src="/static/leaflet/proj4leaflet.js"></script>
+<script th:inline="javascript">
+    var spatialRfInPage = [[${info}]]
+    var projcs = [[${info.wkt}]];
+    var proj_name = [[${info.name}]];
+    var author=[[${user}]];
+</script>
+<script type="text/javascript" src="/static/js/page/repositoryInfo.js"></script>
+
+
+
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/js/common/navbar.js"></script>
+<script>
+    function submitFrom() {
+        var arry = $("#addConceptLocalizationForm").serializeArray();
+        var object = {};
+        for(var i =0;i<arry.length;i++){
+            var item = arry[i];
+            object[item["name"]] = item["value"];
+            if(item["name"]==="language"&&item["value"].trim().length<1){
+                alert("Please enter language");
+                return;
+            }
+            if(item["name"]==="name"&&item["value"].trim().length<1){
+                alert("Please enter name");
+                return;
+            }
+        }
+
+        $.ajax({
+            url:"/repository/addSpatialReferenceLocalization",
+            data:object,
+            type:"post",
+            success:function (result) {
+                if(result.data==="ok"){
+                    window.location.reload();
+                }
+            }
+        })
+    }
+
+    if(projcs){
+        proj4.defs(proj_name,projcs);
+    }
+    $.ajax({
+        url:"/static/geoJson/world.json",
+        type:"get",
+        success:function (geojson) {
+            console.log(geojson);
+            var map = L.map('map',{attributionControl:false});
+            if(projcs){
+                geojson["crs"] = {
+                    type:"name",
+                    properties: {
+                        name: proj_name
+                    }
+                };
+            }
+            var geojsonLayer = L.Proj.geoJson(geojson, {
+                style: {
+                    color: "#000",
+                    weight: 0.3
+                }
+            }).addTo(map);
+            map.fitBounds(geojsonLayer.getBounds());
+        }
+    })
+
+
+</script>
+</html>

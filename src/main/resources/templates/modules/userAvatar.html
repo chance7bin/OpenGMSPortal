@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<template id="userAvatar" th:fragment="userAvatar">
+<!--    <div>-->
+        <img :src="avatar"
+             onerror=src="/static/img/icon/default.png"
+             class="round_icon" style="width:100%;height: 100%;">
+<!--    </div>-->
+</template>
+</body>
+</html>
