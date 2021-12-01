@@ -6,13 +6,12 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.entity.doo.PortalItem;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.AddDTO;
-import njgis.opengms.portal.entity.po.Concept;
-import njgis.opengms.portal.entity.po.SpatialReference;
-import njgis.opengms.portal.entity.po.Template;
-import njgis.opengms.portal.entity.po.Unit;
+import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.dom4j.DocumentException;
@@ -20,15 +19,14 @@ import org.dom4j.DocumentHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Description
@@ -68,11 +66,19 @@ public class RepositoryService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
+
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
     @Value("${resourcePath}")
     String resourcePath;
+
+
 
 
     /**
@@ -139,7 +145,7 @@ public class RepositoryService {
      * @param addDTO DTO
      * @param email 贡献者email
      * @param itemType 条目类型
-     * @return njgis.opengms.portal.entity.doo.PortalItem
+     * @return njgis.opengms.portal.entity.doo.base.PortalItem
      * @Author bin
      **/
     public PortalItem commonInsertPart(PortalItem item, AddDTO addDTO, String email, ItemTypeEnum itemType){
@@ -186,18 +192,34 @@ public class RepositoryService {
         GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
         PortalItem item = (PortalItem) itemDao.findFirstById(id);
         String author = item.getAuthor();
+        String originalItemName = item.getName();
         if (!item.isLock()) {
 
-            item = updatePart(item,updateDTO,itemType);
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!author.equals(email)){
+                item.setLock(true);
+                itemDao.save(item);
+            }
+
+            item = updatePart(item,updateDTO,itemType,email);
 
             if (author.equals(email)) {
                 itemDao.save(item);
                 result.put("method", "update");
                 result.put("id", item.getId());
             } else {
-                // TODO: 2021/8/31 不是作者更新的还没做
+
+                Version version = versionService.addVersion(item, email,originalItemName);
+                //发送通知
+                List<String> recipientList = Arrays.asList(author);
+                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
+
                 result.put("method", "version");
-                // result.put("oid", templateVersion.getOid());
+                result.put("versionId", version.getId());
 
             }
             // return result;
@@ -215,7 +237,7 @@ public class RepositoryService {
     }
 
 
-    public PortalItem updatePart(PortalItem item, AddDTO updateDTO, ItemTypeEnum itemType){
+    public PortalItem updatePart(PortalItem item, AddDTO updateDTO, ItemTypeEnum itemType, String email){
         BeanUtils.copyProperties(updateDTO, item);
         //判断是否为新图片
         String uploadImage = updateDTO.getUploadImage();
@@ -232,6 +254,7 @@ public class RepositoryService {
         }
         Date now = new Date();
         item.setLastModifyTime(now);
+        item.setLastModifier(email);
         return item;
     }
 
@@ -258,7 +281,7 @@ public class RepositoryService {
             }
             itemDao.delete(item);
             try {
-                userService.updateUserResourceCount(email,itemType.getText(),"delete");
+                userService.updateUserResourceCount(email,itemType,"delete");
             }catch (Exception e){
                 return ResultUtils.error("update user resource fail");
             }
@@ -484,6 +507,42 @@ public class RepositoryService {
         return modelAndView;
     }
 
+
+
+    /**
+     * 根据用户得到repository
+     * @param
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject getRepositoryByUser(FindDTO findDTO, String email, ItemTypeEnum itemType){
+        Pageable pageable = genericService.getPageable(findDTO);
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        Page result = itemDao.findAllByAuthor(email, pageable);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("count", result.getTotalElements());
+        jsonObject.put("concepts", result.getContent());
+        return jsonObject;
+    }
+
+
+    /**
+     * 根据名称和用户得到repository
+     * @param
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject getRepositoryByNameAndUser(FindDTO findDTO, String email, ItemTypeEnum itemType){
+        Pageable pageable = genericService.getPageable(findDTO);
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        Page result = itemDao.findAllByNameContainsIgnoreCaseAndAuthor(findDTO.getSearchText() ,email, pageable);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("count", result.getTotalElements());
+        jsonObject.put("concepts", result.getContent());
+        return jsonObject;
+    }
 
 
 

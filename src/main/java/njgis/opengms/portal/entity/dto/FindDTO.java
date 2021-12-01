@@ -19,7 +19,7 @@ public class FindDTO implements Serializable {
     @ApiModelProperty(value = "是否顺序，从小到大", example = "false")
     private Boolean asc = false; //是否顺序，从小到大
     @ApiModelProperty(value = "查询内容", example = "")
-    private String searchText; //查询内容
+    private String searchText = ""; //查询内容
     @ApiModelProperty(value = "排序字段", example = "createTime")
-    private String sortField; //排序字段
+    private String sortField = "createTime"; //排序字段
 }

@@ -2,7 +2,6 @@ package njgis.opengms.portal.entity.po;
 
 import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.doo.data.TestData;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -38,4 +37,6 @@ public class DataMethod extends DataItem{
     List<String> bindDataTemplates;//存储对应的template的id
 
     JSONArray resourceJson;
+
+    int invokeCount = 0;
 }

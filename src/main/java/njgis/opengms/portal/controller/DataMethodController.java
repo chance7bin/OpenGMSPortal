@@ -7,8 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.DataMethodService;
 import njgis.opengms.portal.service.GenericService;
@@ -17,7 +18,10 @@ import njgis.opengms.portal.utils.ResultUtils;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -72,7 +76,7 @@ public class DataMethodController {
      * @Author bin
      **/
     @LoginRequired
-    @ApiOperation(value = "新增dataMethod(不支持Content Type第一个选项) [ /dataApplication/add ]")
+    @ApiOperation(value = "新增dataMethod [ /dataApplication/add ]")
     @PostMapping
     public JsonResult add(HttpServletRequest request) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -97,7 +101,7 @@ public class DataMethodController {
      * @Author bin
      **/
     @LoginRequired
-    @ApiOperation(value = "更新dataMethod(只写了修改者和作者相同的情况) [ /dataApplication/update ]")
+    @ApiOperation(value = "更新dataMethod [ /dataApplication/update ]")
     @PutMapping(value = "/{id}")
     public JsonResult update(@PathVariable String id, HttpServletRequest request) throws IOException {
 
@@ -133,7 +137,7 @@ public class DataMethodController {
      * @Param [dataMethodsFindDTO]
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
-    @ApiOperation(value = "获取Method Repository下的数据 [ /dataItem/Items/getMethods (/dataApplication/methods/getApplication)]")
+    @ApiOperation(value = "获取Method Repository下的数据 [ /dataItem/Items/getMethods 、/dataApplication/methods/getApplication 、 /dataApplication/searchByName]")
     @RequestMapping(value = "/items",method = RequestMethod.POST)
     public JsonResult getMethods(@RequestBody SpecificFindDTO dataMethodsFindDTO){
         return dataMethodService.getMethods(dataMethodsFindDTO);
@@ -157,7 +161,7 @@ public class DataMethodController {
      * @Param [id]
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
-    @ApiOperation(value = "根据id拿到条目的所有信息 [ /dataApplication/getApplication/{id} ]")
+    @ApiOperation(value = "根据id拿到条目的所有信息 [ /dataApplication/getApplication/{oid} ]")
     @RequestMapping(value = "/method/{id}",method = RequestMethod.GET)
     public JsonResult getApplicationById(@PathVariable("id") String id) throws UnsupportedEncodingException {
         return ResultUtils.success(JSONObject.toJSON(dataMethodService.getApplicationById(id)));
@@ -195,17 +199,7 @@ public class DataMethodController {
     }
 
 
-    /**
-     * 根据email查询用户信息
-     * @param email
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @ApiOperation(value = "根据email查询用户信息 [ /dataApplication/getContributorInfo/{email} ]")
-    @RequestMapping(value = "/contributorInfo/{email}", method = RequestMethod.GET)
-    public JsonResult getContributorInfo(@PathVariable(value = "email") String email){
-        return dataMethodService.getContributorInfo(email);
-    }
+
 
     /**
      * 获取xml以及parameter
@@ -246,6 +240,7 @@ public class DataMethodController {
      * @throws UnsupportedEncodingException UnsupportedEncodingException
      * @throws DocumentException DocumentException
      */
+    @LoginRequired
     @ApiOperation(value = "调用服务 [ /dataApplication/invokeMethod ]")
     @RequestMapping(value = "/invokeMethod", method = RequestMethod.POST)
     public JsonResult invokeMethod(
@@ -256,8 +251,9 @@ public class DataMethodController {
         @ApiParam(name = "selectData", value = "onlineData所选的数据，可选传") @RequestParam(value = "selectData",  required = false) String selectData,
         @ApiParam(name = "integrate", value = "是否集成的调用，集成的调用则标识\"integrate\", 可选") @RequestParam(value = "integrate",  required = false) String integrate,
         HttpServletRequest request) throws IOException, DocumentException {
-
-        return dataMethodService.invokeMethod(dataMethodId,serviceId,serviceName,params,selectData,integrate,request);
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+        return dataMethodService.invokeMethod(dataMethodId,serviceId,serviceName,params,selectData,integrate,email);
     }
 
     /**
@@ -291,10 +287,82 @@ public class DataMethodController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    @ApiOperation(value = "根据id获取条目数据 [ /dataApplication/getInfo/{oid} ]")
+    @ApiOperation(value = "根据id获取条目数据 [ /dataApplication/getInfo/{id} ]")
     @RequestMapping(value = "/itemInfo/{id}", method = RequestMethod.GET)
     public JsonResult getInfo(@PathVariable("id") String id) {
         return ResultUtils.success(dataMethodService.getInfo(id));
+    }
+
+
+    /**
+     * 根据email得到contributor的信息
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @ApiOperation(value = "根据email得到contributor的信息 [ /dataApplication/getContributorInfo/{uid} ]")
+    @RequestMapping(value = "/contributorInfo/{email}", method = RequestMethod.GET)
+    public JsonResult getContributorInfo(@PathVariable(value = "email") String email) {
+
+        return userService.getContributorInfo(email);
+    }
+
+    /**
+     * 得到用户上传的data method
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户上传的data method [ /dataApplication/listByUserOid[searchByNameByOid] ]")
+    @RequestMapping(value="/itemsByNameAndAuthor",method = RequestMethod.POST)
+    public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+        return dataMethodService.searchByNameAndAuthor(findDTO, email);
+    }
+
+
+    /**
+     * 上传测试数据
+     * @param files 上传的文件
+     * @param uploadName 上传的文件名称
+     * @param userName userName
+     * @param serverNode serveNode
+     * @param origination origination
+     * @return 数据可下载的oid
+     */
+    @ApiOperation(value = "上传测试数据 [ /dataApplication/uploadData ]")
+    @RequestMapping(value = "/uploadData", method = RequestMethod.POST)
+    public JsonResult uploadData(@RequestParam("ogmsdata") MultipartFile[] files,
+                                 @RequestParam("name")String uploadName,
+                                 @RequestParam("userId")String userName,
+                                 @RequestParam("serverNode")String serverNode,
+                                 @RequestParam("origination")String origination){
+        JsonResult jsonResult = new JsonResult();
+        MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+
+        for(int i=0;i<files.length;i++) {
+            part.add("ogmsdata", files[i].getResource());
+        }
+        part.add("name", uploadName);
+        part.add("userId", userName);
+        part.add("serverNode", serverNode);
+        part.add("origination", origination);
+        String url="http://"+ "111.229.14.128:8899/data";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        JSONObject jsonObject = restTemplate.postForObject(url, part, JSONObject.class);
+
+        if(jsonObject.getIntValue("code") == -1){
+            throw new MyException("远程服务出错");
+        }
+
+        jsonResult.setData(jsonObject);
+        log.info(jsonObject+"");
+        return jsonResult;
     }
 
 }

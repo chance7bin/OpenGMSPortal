@@ -3,7 +3,7 @@ package njgis.opengms.portal.service;
 import njgis.opengms.portal.dao.UnitDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.unit.UnitDTO;
+import njgis.opengms.portal.entity.dto.community.unit.UnitDTO;
 import njgis.opengms.portal.entity.po.Unit;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -41,7 +41,7 @@ public class UnitService {
         unit = (Unit) repositoryService.commonInsertPart(unit,unitDTO, email, ItemTypeEnum.Unit);
 
         try {
-            userService.updateUserResourceCount(email,ItemTypeEnum.Unit.getText(),"add");
+            userService.updateUserResourceCount(email,ItemTypeEnum.Unit,"add");
         }catch (Exception e){
             return ResultUtils.error("update user unit resource fail");
         }

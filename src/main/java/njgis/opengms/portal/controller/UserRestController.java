@@ -1,8 +1,11 @@
 package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpSession;
  * @Version 1.0.0
  */
 
+@Slf4j
 @RestController
 @RequestMapping({"/user"})
 public class UserRestController {
@@ -45,6 +49,15 @@ public class UserRestController {
     
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
+
+    @Autowired
+    ManagementSystemService managementSystemService;
 
     // @RequestMapping("/test")
     // public String test(){
@@ -69,9 +82,10 @@ public class UserRestController {
                             @RequestParam(value = "password") String password,
                             HttpServletRequest request) {
 
-        System.out.println("in");
+        // System.out.println("in");
         String ip = IpUtil.getIpAddr(request);
-        System.out.println(ip);
+        // System.out.println(ip);
+        log.info("login ip:{}",ip);
 
         JSONObject result = userService.loginUserServer(account, DigestUtils.sha256Hex(password), ip);
         if (result != null) {
@@ -88,7 +102,8 @@ public class UserRestController {
             jsonObject.put("email", email);
             jsonObject.put("name", name);
 
-
+            // 记录用户访问的数量
+            managementSystemService.recordUserViewCount(ip);
 
             // return ResultUtils.success(jsonObject);
             return ResultUtils.success(jsonObject);
@@ -149,7 +164,8 @@ public class UserRestController {
     @ApiOperation(value = "返回用户的注册页面")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView getRegister() {
-        System.out.println("register");
+        log.info("register");
+        // System.out.println("register");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("register");
         modelAndView.addObject("name", "OpenGMS");
@@ -167,7 +183,8 @@ public class UserRestController {
     @ApiOperation(value = "返回用户的登录页面")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView getLogin(HttpServletRequest request) {
-        System.out.println("login");
+        log.info("login");
+        // System.out.println("login");
         HttpSession session = request.getSession();
         ModelAndView modelAndView = new ModelAndView();
         //若用户没有登录，则进入登录页面
@@ -318,7 +335,7 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
     @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
-    JsonResult getUserUploadData(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
@@ -350,9 +367,9 @@ public class UserRestController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      * @Author bin
      **/
-    @ApiOperation(value = "得到用户上传的dataMethod [/user(profile)/getApplication]")
+    @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
     @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
-    public JsonResult getUserUploadData(@RequestParam(value = "email", required = false) String email,
+    public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
                                         @RequestParam(value = "page", required = false) Integer page,
                                         @RequestParam(value = "pagesize", required = false) Integer pagesize,
                                         @RequestParam(value = "asc", required = false) Integer asc,
@@ -428,5 +445,127 @@ public class UserRestController {
         return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
     }
 
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
+    public JsonResult getUserEditVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserEditVersion(email);
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
+    public JsonResult getUserReviewVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserReviewVersion(email);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/edit/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/versionList/review/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户的通知列表")
+    @RequestMapping (value = "/noticeList", method = RequestMethod.POST)
+    public JsonResult getUserNoticeList(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.getUserNoticeList(findDTO,email));
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户未读的通知数量")
+    @RequestMapping (value = "/unreadNoticeCount", method = RequestMethod.GET)
+    public JsonResult getUnreadNoticeCount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
+    }
+
+
+    // @ApiOperation(value = "得到门户管理员")
+    // @RequestMapping (value = "/admin", method = RequestMethod.GET)
+    // public List<User> getAdminUser(){
+    //     return userService.getAdminUser();
+    // }
+    //
+    // @ApiOperation(value = "得到门户root")
+    // @RequestMapping (value = "/root", method = RequestMethod.GET)
+    // public List<User> getRootUser(){
+    //     return userService.getRootUser();
+    // }
 
 }

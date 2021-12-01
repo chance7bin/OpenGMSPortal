@@ -1,19 +1,38 @@
 package njgis.opengms.portal.utils;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.ip2location.IP2Location;
+import com.ip2location.IPResult;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import njgis.opengms.portal.entity.doo.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.ModifiedPropertyInfo;
+import njgis.opengms.portal.entity.doo.PropertyModelInfo;
+import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.support.GeoInfoMeta;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.springframework.beans.BeanUtils;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.beans.PropertyDescriptor;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +44,12 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class Utils {
+
+    // public static class Method {
+    //     public static String POST = "POST";
+    //     public static String GET = "GET";
+    // }
+
 
     /**
      * @Description 检查用户登录状态
@@ -193,8 +218,8 @@ public class Utils {
     /**
      * base64字符串转化成图片
      * @param imgStr
-     * @param path 
-     * @return boolean 
+     * @param path
+     * @return boolean
      * @Author bin
      **/
     public static boolean base64StrToImage(String imgStr, String path) {
@@ -256,7 +281,6 @@ public class Utils {
                 try {
                     file.transferTo(dest);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     return null;
                 }
@@ -353,6 +377,627 @@ public class Utils {
         List<String> list = new ArrayList<>(list1);
         list.removeAll(list2);
         return list;
+    }
+
+
+    /**
+     * 比较两个对象属性值是否相同,如果不同返回修改过的属性信息集合,包括：字段名,原始数据值，新值
+     *
+     * @param oldObj       原始对象
+     * @param newObj       新对象
+     * @param ignoreFields 忽略比较字段,如果忽略比较字段和记录比较字段中都有相同字段，则忽略比较字段优先级较高
+     * @param recordFields 记录比较字段
+     * @return 变化后的数据集合
+     */
+    public static <T> List<ModifiedPropertyInfo> compareProperty(
+        @NonNull T oldObj,
+        @NonNull T newObj,
+        List<String> ignoreFields,
+        List<String> recordFields
+    ) {
+        // 通过反射获取原始对象的属性名称、getter返回值类型、属性值等信息
+        List<PropertyModelInfo> oldObjectPropertyValue = getObjectPropertyValue(oldObj, ignoreFields, recordFields);
+        // 通过反射获取新对象的属性名称、getter返回值类型、属性值等信息
+        List<PropertyModelInfo> newObjectPropertyValue = getObjectPropertyValue(newObj, ignoreFields, recordFields);
+
+        // 定义修改属性值接收器集合,包括：字段名,原始数据值，新值
+        List<ModifiedPropertyInfo> modifiedPropertyInfos = new ArrayList<>(oldObjectPropertyValue.size());
+
+        // 获取新对象所有属性、属性值
+        Map<String, Object> newObjectInfoMap = getObjectPropertyAndValue(newObjectPropertyValue);
+        // 获取原始对象所有属性、属性值
+        Map<String, Object> oldObjectInfoMap = getObjectPropertyAndValue(oldObjectPropertyValue);
+
+        // 处理原始对象数据内容并和新对象的属性、属性值比较
+        for (Map.Entry<String, Object> oldInfoMap : oldObjectInfoMap.entrySet()) {
+            String oldKey = oldInfoMap.getKey();
+            Object oldValue = oldInfoMap.getValue();
+
+            // 比较原始对象和新对象之间的属性和属性值差异
+            if (newObjectInfoMap.containsKey(oldKey)) {
+                ModifiedPropertyInfo modifiedPropertyInfo = new ModifiedPropertyInfo();
+                Object newValue = newObjectInfoMap.get(oldKey);
+
+                if (oldValue != null && newValue != null) {
+                    // 初始值和新值不为空比较值
+                    if (!oldValue.equals(newValue)) {
+                        modifiedPropertyInfo.setPropertyName(oldKey);
+                        modifiedPropertyInfo.setOldValue(oldValue);
+                        modifiedPropertyInfo.setNewValue(newValue);
+                        modifiedPropertyInfos.add(modifiedPropertyInfo);
+                    }
+                } else if (oldValue == null && newValue == null) {
+                    // 如果初始值和新值全部为空不做处理
+                } else {
+                    // 如果初始值和新值有一个为空
+                    modifiedPropertyInfo.setPropertyName(oldKey);
+                    modifiedPropertyInfo.setOldValue(oldValue);
+                    modifiedPropertyInfo.setNewValue(newValue);
+                    modifiedPropertyInfos.add(modifiedPropertyInfo);
+                }
+            }
+        }
+        return modifiedPropertyInfos;
+    }
+
+    /**
+     * 组建对象属性和属性值信息数据
+     *
+     * @param objectPropertyValue 对象属性和属性值信息
+     * @return 对象属性和属性值信息
+     */
+    private static Map<String, Object> getObjectPropertyAndValue(List<PropertyModelInfo> objectPropertyValue) {
+        Map<String, Object> objectInfoMap = new HashMap<>(16);
+        for (PropertyModelInfo propertyModelInfo : objectPropertyValue) {
+            // 对象属性名称
+            String propertyName = propertyModelInfo.getPropertyName();
+            // 对象属性值
+            Object value = propertyModelInfo.getValue();
+            objectInfoMap.put(propertyName, value);
+        }
+        return objectInfoMap;
+    }
+
+    /**
+     * 通过反射获取对象的属性名称、getter返回值类型、属性值等信息
+     *
+     * @param obj          对象
+     * @param ignoreFields 忽略字段属性集合
+     * @param recordFields 比较字段属性集合
+     * @return 对象的信息
+     */
+    private static <T> List<PropertyModelInfo> getObjectPropertyValue(
+        @NonNull T obj,
+        List<String> ignoreFields,
+        List<String> recordFields
+    ) {
+        Class<?> objClass = obj.getClass();
+        PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(objClass);
+        List<PropertyModelInfo> modelInfos = new ArrayList<>(propertyDescriptors.length);
+
+        // 遍历对象属性信息
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            String name = propertyDescriptor.getName();
+            Method readMethod = propertyDescriptor.getReadMethod();
+            // 该字段属性是否被过滤
+            boolean isIgnore = ignoreFields == null || !ignoreFields.contains(name);
+            // 该字段属性是否必须被比较
+            boolean isRecord = recordFields == null || recordFields.contains(name);
+            if (readMethod != null && isIgnore && isRecord) {
+                try {
+                    // 获取数据类型
+                    Class<?> returnType = readMethod.getReturnType();
+                    // 获取数据值
+                    Object invoke = readMethod.invoke(obj);
+                    modelInfos.add(new PropertyModelInfo(name, invoke, returnType));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    log.error("反射获取类:" + objClass.getName() + "方法异常:", e);
+                }
+            }
+        }
+        return modelInfos;
+    }
+
+    /**
+     * @Description 计算文件md5
+     * @param file
+     * @Return java.lang.String
+     * @Author kx
+     * @Date 21/11/12
+     **/
+    public static String getMd5ByFile(File file) throws FileNotFoundException {
+        String value = null;
+        FileInputStream in = new FileInputStream(file);
+        try {
+            MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(byteBuffer);
+            BigInteger bi = new BigInteger(1, md5.digest());
+            value = bi.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(null != in) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return value;
+    }
+
+    // public static class Method {
+    //     public static String POST = "POST";
+    //     public static String GET = "GET";
+    // }
+    public static JSONObject connentURL(String method, String urlStr) {
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod(method);
+            connection.setConnectTimeout(3000);
+            connection.connect();
+            // 取得输入流，并使用Reader读取
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));//设置编码,否则中文乱码
+            String lines = "";
+            String strResponse = "";
+            while ((lines = reader.readLine()) != null) {
+                strResponse += lines;
+            }
+            JSONObject jsonResponse = JSONObject.parseObject(strResponse);
+
+            reader.close();
+
+            connection.disconnect();
+
+            return jsonResponse;
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+
+    public static JSONObject postJSON(String urlStr, JSONObject jsonParam) {
+        try {
+
+            //System.out.println(obj);
+            // 创建url资源
+            URL url = new URL(urlStr);
+            // 建立http连接
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            // 设置允许输出
+            conn.setDoOutput(true);
+
+            conn.setDoInput(true);
+
+            // 设置不用缓存
+            conn.setUseCaches(false);
+            // 设置传递方式
+            conn.setRequestMethod("POST");
+            // 设置维持长连接
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            // 设置文件字符集:
+            conn.setRequestProperty("Charset", "UTF-8");
+            //转换为字节数组
+            byte[] data = (jsonParam.toJSONString()).getBytes();
+
+            // 设置文件长度
+            conn.setRequestProperty("Content-Length", String.valueOf(data.length));
+
+            // 设置文件类型:
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+
+            // 开始连接请求
+            conn.connect();
+            OutputStream out = conn.getOutputStream();
+            // 写入请求的字符串
+            out.write(data);
+            out.flush();
+            out.close();
+
+            // System.out.println(conn.getResponseCode());
+            // System.out.println(conn.getResponseMessage());
+
+            // 请求返回的状态
+            if (conn.getResponseCode() == 200) {
+                // System.out.println("连接成功");
+                // 请求返回的数据
+                InputStream in = conn.getInputStream();
+                String a = null;
+                try {
+                    byte[] data1 = new byte[in.available()];
+                    in.read(data1);
+                    // 转成字符串
+                    a = new String(data1);
+                    // System.out.println(a);
+                    return JSONObject.parseObject(a);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    return null;
+                }
+            } else {
+                // System.out.println("no++");
+                return null;
+            }
+
+        } catch (Exception e) {
+            // System.out.println(e);
+            return null;
+        }
+
+    }
+
+    /**
+     * mdl2json
+     * @param mdl
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public static JSONObject convertMdl(String mdl) {
+        JSONObject mdlObj = new JSONObject();
+        try {
+            Document mdlDoc = DocumentHelper.parseText(mdl);
+            Element rootElement = mdlDoc.getRootElement();
+            mdlObj.put("name", rootElement.attributeValue("name"));
+
+
+            Element AttributeSet = rootElement.element("AttributeSet");
+            Element Behavior = rootElement.element("Behavior");
+
+            //基本属性开始
+            Element Category = AttributeSet.element("Categories").element("Category");
+            mdlObj.put("principle", Category.attributeValue("principle"));
+            mdlObj.put("path", Category.attributeValue("path"));
+
+            List<Element> LocalAttributes = AttributeSet.element("LocalAttributes").elements();
+            if (LocalAttributes.size() > 0) {
+                for (Element LocalAttribute : LocalAttributes) {
+                    JSONObject local = new JSONObject();
+                    local.put("localName", LocalAttribute.attributeValue("localName"));
+                    Element Keywords = LocalAttribute.element("Keywords");
+                    local.put("keywords", Keywords.getText());
+                    Element Abstract = LocalAttribute.element("Abstract");
+                    local.put("abstract", Abstract.getText());
+                    if (LocalAttribute.attributeValue("local").equals("EN_US")) {
+                        mdlObj.put("enAttr", local);
+                    } else {
+                        mdlObj.put("cnAttr", local);
+                    }
+                }
+            }
+            //基本属性结束
+
+            //相关数据开始
+
+
+            Element RelatedDatasets = Behavior.element("RelatedDatasets");
+            if (RelatedDatasets == null) {
+                RelatedDatasets = Behavior.element("DatasetDeclarations");
+            }
+            List<Element> DatasetItems = RelatedDatasets.elements();
+            if (DatasetItems.size() > 0) {
+                String relatedDatasets = mdl.substring(mdl.indexOf("<RelatedDatasets>") + 17, mdl.indexOf("</RelatedDatasets>"));
+                JSONArray DatasetItemArray = new JSONArray();
+                for (Element DatasetDeclaration : DatasetItems) {
+                    JSONArray dataset = new JSONArray();
+                    JSONObject root = new JSONObject();
+                    root.put("text", DatasetDeclaration.attributeValue("name"));
+                    if (DatasetDeclaration.attribute("description") != null) {
+                        root.put("desc", DatasetDeclaration.attributeValue("description"));
+                    } else {
+                        root.put("desc", "");
+                    }
+                    root.put("dataType", DatasetDeclaration.attributeValue("type"));
+                    if (DatasetDeclaration.attributeValue("type").equals("external")) {
+                        String external = "";
+                        if (DatasetDeclaration.attribute("externalId") != null) {
+                            external = DatasetDeclaration.attributeValue("externalId");
+                        } else if (DatasetDeclaration.attribute("external") != null) {
+                            external = DatasetDeclaration.attributeValue("external");
+                        }
+                        root.put("externalId", external.toLowerCase());
+
+                        root.put("parentId", "null");
+                        dataset.add(root);
+                    } else {
+                        Element UDXDeclaration;
+                        if (DatasetDeclaration.element("UdxDeclaration") != null) {
+                            UDXDeclaration = DatasetDeclaration.element("UdxDeclaration");
+                        } else {
+                            UDXDeclaration = DatasetDeclaration.element("UDXDeclaration");
+                        }
+                        String rootId = "";
+                        if (UDXDeclaration.attribute("id") != null) {
+                            rootId = "root" + UDXDeclaration.attributeValue("id");
+                        } else {
+                            rootId = "root" + UUID.randomUUID().toString();
+                        }
+                        root.put("Id", rootId);
+                        root.put("parentId", "null");
+
+                        Element udxNode;
+                        if (UDXDeclaration.element("UDXNode") != null) {
+                            udxNode = UDXDeclaration.element("UDXNode");
+                        } else {
+                            udxNode = UDXDeclaration.element("UdxNode");
+                        }
+                        List<Element> UdxNodes = udxNode.elements();
+                        if (UdxNodes.size() > 0) {
+                            root.put("schema",Utils.getUdxSchema(relatedDatasets,root.getString("text")));
+                            root.put("nodes", new JSONArray());
+                            convertData(UdxNodes, root);
+                        }
+                        dataset.add(root);
+                    }
+                    DatasetItemArray.add(dataset);
+                }
+                mdlObj.put("DataItems", DatasetItemArray);
+            }
+            //相关数据结束
+
+            //State开始
+            Element States = Behavior.element("StateGroup").element("States");
+            List<Element> StateList = States.elements();
+            JSONArray states = new JSONArray();
+            if (StateList.size() > 0) {
+                for (Element State : StateList) {
+                    JSONObject stateObj = new JSONObject();
+                    stateObj.put("name", State.attributeValue("name"));
+                    stateObj.put("type", State.attributeValue("type"));
+                    stateObj.put("desc", State.attributeValue("description"));
+                    stateObj.put("Id", State.attributeValue("id"));
+                    List<Element> EventList = State.elements();
+                    JSONArray event = new JSONArray();
+                    for (Element Event : EventList) {
+                        JSONObject eventObj = new JSONObject();
+                        eventObj.put("eventId", UUID.randomUUID().toString());
+                        eventObj.put("eventName", Event.attributeValue("name"));
+                        eventObj.put("eventType", Event.attributeValue("type"));
+                        eventObj.put("eventDesc", Event.attributeValue("description"));
+                        Element Parameter = null;
+                        if (Event.attributeValue("type").equals("response")) {
+                            Parameter = Event.element("ResponseParameter");
+                            if (Event.attribute("optional") != null) {
+                                if (Event.attributeValue("optional").equalsIgnoreCase("True")) {
+                                    if (Event.element("ControlParameter") != null) {
+                                        Parameter = Event.element("ControlParameter");
+                                    }
+                                    eventObj.put("optional", true);
+                                } else {
+                                    eventObj.put("optional", false);
+                                }
+                            }
+                        } else {
+                            Parameter = Event.element("DispatchParameter");
+                            if (Event.attribute("optional") != null) {
+                                if (Event.attributeValue("optional").equalsIgnoreCase("True")) {
+                                    if (Event.element("ControlParameter") != null) {
+                                        Parameter = Event.element("ControlParameter");
+                                    }
+                                    eventObj.put("optional", true);
+                                } else {
+                                    eventObj.put("optional", false);
+                                }
+                            }
+                            if(Event.attribute("multiple") != null){//判断是否可以多输出
+                                if(Event.attributeValue("multiple").equalsIgnoreCase("True")){
+                                    eventObj.put("multiple", true);
+
+                                }else{
+                                    eventObj.put("multiple", false);
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < mdlObj.getJSONArray("DataItems").size(); i++) {
+                            JSONArray currentDataSet = mdlObj.getJSONArray("DataItems").getJSONArray(i);
+                            JSONObject rootData = currentDataSet.getJSONObject(0);
+                            if (Parameter == null) {
+                                break;
+                            }
+                            if (rootData.getString("text").equals(Parameter.attributeValue("datasetReference"))) {
+                                eventObj.put("data", currentDataSet);
+                            }
+                        }
+                        event.add(eventObj);
+                    }
+                    stateObj.put("event", event);
+                    states.add(stateObj);
+                }
+            }
+            mdlObj.put("states", states);
+            //State结束
+        } catch (DocumentException e) {
+            // System.out.println(mdl);
+            e.printStackTrace();
+        }
+        JSONObject result = new JSONObject();
+        result.put("mdl", mdlObj);
+        return result;
+    }
+
+
+    public static String getUdxSchema(String text,String name){
+        int findIndex=text.indexOf(name);
+        int startIndex=text.indexOf(">",findIndex+name.length())+1;
+        int endIndex=text.indexOf("</DatasetItem>",startIndex);
+        return text.substring(startIndex,endIndex);
+    }
+
+    public static void convertData(List<Element> udxNodes, JSONObject root) {
+        if (udxNodes.size() > 0) {
+            for (Element udxNode : udxNodes) {
+                JSONObject node = new JSONObject();
+                node.put("text", udxNode.attributeValue("name"));
+                String dataType=udxNode.attributeValue("type");
+                String dataType_result="";
+//                switch (dataType) {
+//                    case "DTKT_INT | DTKT_LIST":
+//                        dataType_result = "int_array";
+//                        break;
+//                    default:
+//                        String[] strings=dataType.split("_");
+//                        for(int i=0;i<strings.length;i++){
+//                            if(!strings[i].equals("DTKT")){
+//                                dataType_result+=strings[i];
+//                                if(i!=strings.length-1){
+//                                    dataType_result+="_";
+//                                }
+//                            }
+//                        }
+//                }
+                String[] dataTypes=dataType.split("\\|");
+                if(dataTypes.length>1){
+                    for(int j=0;j<dataTypes.length;j++){
+                        String[] strings=dataTypes[j].trim().split("_");
+                        if(strings[1].equals("LIST")){
+                            strings[1]="ARRAY";
+                        }
+                        dataType_result+=strings[1];
+                        if(j!=dataTypes.length-1){
+                            dataType_result+="_";
+                        }
+                    }
+                }
+                else{
+                    String[] strings=dataType.split("_");
+                    dataType_result=strings[1];
+                }
+
+                node.put("dataType", dataType_result);
+                node.put("desc", udxNode.attributeValue("description"));
+                if (udxNode.attributeValue("type").equals("external")) {
+                    node.put("externalId", udxNode.attributeValue("externalId").toLowerCase());
+                }
+                List<Element> nodeChildren = udxNode.elements();
+                if (nodeChildren.size() > 0) {
+                    node.put("nodes", new JSONArray());
+                    convertData(nodeChildren, node);
+                }
+                JSONArray nodes = root.getJSONArray("nodes");
+                nodes.add(node);
+            }
+        } else {
+            return;
+        }
+    }
+
+
+    public static GeoInfoMeta getGeoInfoMeta(String host) throws Exception {
+        IP2Location location = new IP2Location();
+        location.IPDatabasePath = ClassUtils.getDefaultClassLoader().getResource("static/").getPath()+"IP2LOCATION-LITE-DB5.BIN";
+        GeoInfoMeta geoInfoMeta = new GeoInfoMeta();
+        try {
+            IPResult rec = location.IPQuery(host);
+            if ("OK".equals(rec.getStatus())) {
+                if(!rec.getCountryLong().equals("-")) {
+                    geoInfoMeta.setCity(rec.getCity());
+                    geoInfoMeta.setRegion(rec.getRegion());
+                    geoInfoMeta.setCountryCode(rec.getCountryShort());
+                    String countryName = rec.getCountryLong();
+
+                    switch (countryName.trim()){
+                        case "United States of America":
+                            countryName="United States";
+                            break;
+                        case "United Kingdom of Great Britain and Northern Ireland":
+                            countryName="United Kingdom";
+                            break;
+                        case "Hong Kong":
+                            countryName="Hong Kong, China";
+                            break;
+                        case "Macao":
+                            countryName="Macao, China";
+                            break;
+                        case "Taiwan (Province of China)":
+                            countryName="Taiwan, China";
+                            break;
+                        case "Congo (Democratic Republic of the)":
+                            countryName="Dem. Rep. Congo";
+                            break;
+                        case "Russian Federation":
+                            countryName="Russia";
+                            break;
+                        case "Korea (Republic of)":
+                            countryName="Korea";
+                            break;
+                        case "Iran (Islamic Republic of)":
+                            countryName="Iran";
+                            break;
+                        case "Bolivia (Plurinational State of)":
+                            countryName="Bolivia";
+                            break;
+                        case "Micronesia (Federated States of)":
+                            countryName="Micronesia";
+                            break;
+                        case "Venezuela (Bolivarian Republic of)":
+                            countryName="Venezuela";
+                            break;
+                        case "Moldova (Republic of)":
+                            countryName="Moldova";
+                            break;
+                        case "Dominican Republic":
+                            countryName="Dominican Rep.";
+                            break;
+                        case "Palestine, State of":
+                            countryName="Palestine, State of";
+                            break;
+                        case "Tanzania, United Republic of":
+                            countryName="Tanzania";
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    geoInfoMeta.setCountryName(countryName);
+                    geoInfoMeta.setLatitude(String.valueOf(rec.getLatitude()));
+                    geoInfoMeta.setLongitude(String.valueOf(rec.getLongitude()));
+                }else{
+                    geoInfoMeta.setCity("Nanjing");
+                    geoInfoMeta.setRegion("Jiangsu");
+                    geoInfoMeta.setCountryCode("CN");
+                    geoInfoMeta.setCountryName("China");
+                    geoInfoMeta.setLatitude("32.0617");
+                    geoInfoMeta.setLongitude("118.7778");
+
+                }
+            } else if ("EMPTY_IP_ADDRESS".equals(rec.getStatus())) {
+                System.out.println("IP address cannot be blank.");
+            } else if ("INVALID_IP_ADDRESS".equals(rec.getStatus())) {
+                System.out.println("Invalid IP address.");
+            } else if ("MISSING_FILE".equals(rec.getStatus())) {
+                System.out.println("Invalid database path.");
+            } else if ("IPV6_NOT_SUPPORTED".equals(rec.getStatus())) {
+                System.out.println("This BIN does not contain IPv6 data.");
+            } else {
+                System.out.println("Unknown error." + rec.getStatus());
+            }
+//            if (rec.getDelay() == true) {
+//                System.out.println("The last query was delayed for 5 seconds because this is an evaluation copy.");
+//            }
+//            System.out.println("Java Component: " + rec.getVersion());
+        }catch (Exception e){
+            System.out.println(e.fillInStackTrace());
+            geoInfoMeta.setCity("Nanjing");
+            geoInfoMeta.setRegion("Jiangsu");
+            geoInfoMeta.setCountryCode("CN");
+            geoInfoMeta.setCountryName("China");
+            geoInfoMeta.setLatitude("32.0617");
+            geoInfoMeta.setLongitude("118.7778");
+        }
+
+        return geoInfoMeta;
     }
 
 }

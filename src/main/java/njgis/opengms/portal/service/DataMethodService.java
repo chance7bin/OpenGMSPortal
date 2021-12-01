@@ -12,11 +12,13 @@ import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.doo.support.MetaData;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.DataServerTask;
 import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.FileUtil;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
@@ -49,8 +51,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -96,6 +96,13 @@ public class DataMethodService {
     @Autowired
     TemplateService templateService;
 
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
+
     @Value("${dataServerManager}")
     private String dataServerManager;
 
@@ -107,6 +114,7 @@ public class DataMethodService {
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
+
 
 
     public JsonResult getMethods(SpecificFindDTO dataMethodsFindDTO){
@@ -416,18 +424,18 @@ public class DataMethodService {
      * @param serviceId serviceId
      * @param serviceName serviceName
      * @param params 调用所需的参数
-     * @param request request
+     * @param email email
      * @param selectData onlineData所选的数据，可选传
      * @param integrate 是否集成的调用，集成的调用则标识"integrate", 可选
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
     public JsonResult invokeMethod(String dataMethodId,String serviceId,String serviceName,String[] params,String selectData,
-                            String integrate,HttpServletRequest request) throws IOException, DocumentException {
+                            String integrate,String email) throws IOException, DocumentException {
         // JsonResult jsonResult = new JsonResult();
         DataServerTask dataServerTask = new DataServerTask();
         Date date = new Date();
         dataServerTask.setRunTime(date);
-        dataServerTask.setOid(UUID.randomUUID().toString());
+        // dataServerTask.setOid(UUID.randomUUID().toString());
         dataServerTask.setServiceId(serviceId);
         dataServerTask.setServiceName(serviceName);
 //        dataServerTask.setDataType(dataType);
@@ -441,12 +449,7 @@ public class DataMethodService {
         DataMethod dataMethod = dataMethodDao.findFirstById(dataMethodId);
         List<InvokeService> invokeServices = dataMethod.getInvokeServices();
         //门户测试解绑
-        HttpSession session=request.getSession();
-        if(session.getAttribute("email")==null){
-            return ResultUtils.error(-1,"no login");
-        }
-        String reqUsrId = session.getAttribute("email").toString();
-        dataServerTask.setUserId(reqUsrId);
+        dataServerTask.setEmail(email);
         //String reqUsrId = "33";//门户测试时注释掉
 
         InvokeService invokeService = null;
@@ -513,6 +516,14 @@ public class DataMethodService {
         post.setEntity(postingString);
         post.setHeader("Content-type", "application/json");
         HttpResponse response = null;
+
+        //记录调用次数
+        int invokeCount = dataMethod.getInvokeCount();
+        invokeCount++;
+        dataMethod.setInvokeCount(invokeCount);
+        dataMethodDao.save(dataMethod);
+        // invokeCount = (invokeCount == null) ? 0 : invokeCount;
+
         try {
             response = httpClient.execute(post);
         }catch (ResourceAccessException e){
@@ -522,7 +533,7 @@ public class DataMethodService {
         }
         String content = EntityUtils.toString(response.getEntity());
 // Log.i("test",content);
-        System.out.println(content);
+//         System.out.println(content);
         JSONObject resp = JSON.parseObject(content);
 
         log.info(response + "");
@@ -569,7 +580,7 @@ public class DataMethodService {
     }
 
     /**
-     * 新建一个application条目，并部署部署包
+     * 新建一个dataMethod条目，并部署部署包
      * @param files 上传的包
      * @param dataMethodDTO
      * @param email
@@ -627,7 +638,7 @@ public class DataMethodService {
                 //将服务invokeApplications置入,如果不绑定测试数据，则无需部署，直接创建条目即可
                 if(dataMethod.getTestData().size() == 0){
                     dataMethodDao.insert(dataMethod);
-                    userService.updateUserResourceCount(email, "dataMethod", "add");
+                    userService.updateUserResourceCount(email, ItemTypeEnum.DataMethod, "add");
                     result = ResultUtils.success(dataMethod.getId());
                     return result;
                 }
@@ -649,13 +660,13 @@ public class DataMethodService {
                 //部署服务
                 result = deployPackage(dataMethod);
 
-                userService.updateUserResourceCount(email, "dataMethod", "add");
+                userService.updateUserResourceCount(email, ItemTypeEnum.DataMethod, "add");
 
 //                if (deployRes.getCode() == -1){
 //                    result.put("code", -2);
 //                }else {
 //                    result.put("code", 1);
-//                    result.put("id", dataMethod.getOid());
+//                    result.put("id", dataMethod.getId());
 //                }
             }catch (Exception e){
                 log.info("dataMethod create failed");
@@ -749,8 +760,8 @@ public class DataMethodService {
         }
         part2.add("name", dataMethod.getName());
 
-//        part2.add("oid", "I3MXbzRq/NZkbWcKO8tF0w==");//33
-        part2.add("oid", "5KglgbsDPmrFnA3J9CALzQ==");//75
+//        part2.add("id", "I3MXbzRq/NZkbWcKO8tF0w==");//33
+        part2.add("id", "5KglgbsDPmrFnA3J9CALzQ==");//75
 
         //获取xml
         String packageZipPath = resourcePath + "/DataApplication/Package" + dataMethod.getResources().get(0);
@@ -880,8 +891,17 @@ public class DataMethodService {
     public JSONObject update(List<MultipartFile> files, String email, DataMethodDTO updateDTO, String id) {
         JSONObject result = new JSONObject();
         DataMethod dataMethod = dataMethodDao.findFirstById(id);
+        String originalItemName = dataMethod.getName();
 
         if (!dataMethod.isLock()) {
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!dataMethod.getAuthor().equals(email)){
+                dataMethod.setLock(true);
+                dataMethodDao.save(dataMethod);
+            }
+
 
             // 更新绑定的模板(要在copy属性前更新)
             List<String> newTemplate = new ArrayList<>();
@@ -935,14 +955,23 @@ public class DataMethodService {
 
             Date now = new Date();
 
-            if (dataMethod.getAuthor().equals(email)) {
-                dataMethod.setLastModifyTime(now);
-                dataMethodDao.save(dataMethod);
+            dataMethod.setLastModifyTime(now);
+            dataMethod.setLastModifier(email);
 
+            if (dataMethod.getAuthor().equals(email)) {
+                dataMethodDao.save(dataMethod);
                 result.put("method", "update");
                 result.put("id", dataMethod.getId());
             } else {
+                Version version = versionService.addVersion(dataMethod, email,originalItemName);
+                //发送通知
+                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
+                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
+                result.put("versionId", version.getId());
                 return result;
             }
 
@@ -1028,7 +1057,7 @@ public class DataMethodService {
 
             try {
                 dataMethodDao.delete(dataMethod);
-                userService.updateUserResourceCount(dataMethod.getAuthor(), "dataMethod", "delete");
+                userService.updateUserResourceCount(dataMethod.getAuthor(), ItemTypeEnum.DataMethod, "delete");
             }catch (Exception e){
                 return ResultUtils.error("delete error");
             }
@@ -1038,5 +1067,19 @@ public class DataMethodService {
             return ResultUtils.error("delete error");
         }
     }
+
+    /**
+     * 根据条目名和当前用户得到数据
+     * @param findDTO
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult searchByNameAndAuthor(SpecificFindDTO findDTO,String email){
+
+        return ResultUtils.success(genericService.searchItemsByUser(findDTO, ItemTypeEnum.DataMethod, email));
+
+    }
+
 
 }

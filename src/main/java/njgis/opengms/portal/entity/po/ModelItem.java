@@ -1,9 +1,9 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.PortalItem;
-import njgis.opengms.portal.entity.doo.modelItem.ModelItemRelate;
-import njgis.opengms.portal.entity.doo.modelItem.ModelMetadata;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
+import njgis.opengms.portal.entity.doo.model.ModelMetadata;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;

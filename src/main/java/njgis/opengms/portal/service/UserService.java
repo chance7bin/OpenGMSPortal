@@ -2,20 +2,24 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
+import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
 import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +28,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -32,6 +38,7 @@ import java.text.ParseException;
  * @Date 2021/7/5
  * @Version 1.0.0
  */
+@Slf4j
 @Service
 public class UserService {
 
@@ -52,6 +59,9 @@ public class UserService {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    NoticeService noticeService;
 
     @Autowired
     TokenService tokenService;
@@ -240,7 +250,8 @@ public class UserService {
 
             return j_userShuttleDTO;
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+            // System.out.println(e.getMessage());
             return null;
         }
     }
@@ -440,7 +451,8 @@ public class UserService {
             userInfo.put("msg","suc");
             return userInfo;
         }catch(Exception e){
-            System.out.println(e.fillInStackTrace());
+            log.error(e.getMessage());
+            // System.out.println(e.fillInStackTrace());
             jsonObject.put("msg","no user");
         }
         return jsonObject;
@@ -515,7 +527,7 @@ public class UserService {
         JSONObject userInfo = getInfoFromUserServer(user.getEmail());
         JSONObject userJson = new JSONObject();
         userJson.put("name", userInfo.getString("name"));
-        // userJson.put("oid", user.getOid());
+        // userJson.put("id", user.getId());
         userJson.put("email", user.getEmail());
         userJson.put("accessId", user.getAccessId());
         // userJson.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
@@ -527,7 +539,8 @@ public class UserService {
         try {
             return userDao.findFirstByEmail(email);
         } catch (Exception e) {
-            System.out.println("有人乱查数据库！！该UID不存在User对象");
+            log.error("有人乱查数据库！！该UID不存在User对象");
+            // System.out.println("有人乱查数据库！！该UID不存在User对象");
             throw new MyException(ResultEnum.NO_OBJECT);
         }
     }
@@ -556,7 +569,8 @@ public class UserService {
             }
 
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return "/static/img/icon/default.png";
         }
     }
@@ -569,11 +583,11 @@ public class UserService {
      * @return void 
      * @Author bin
      **/
-    public void updateUserResourceCount(String email, String itemType, String op) throws NoSuchFieldException, IllegalAccessException {
+    public void updateUserResourceCount(String email, ItemTypeEnum itemType, String op) throws NoSuchFieldException, IllegalAccessException {
         User user = userDao.findFirstByEmail(email);
         UserResourceCount userResourceCount = user.getResourceCount();
         Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
-        Field field = aClass.getDeclaredField(itemType);
+        Field field = aClass.getDeclaredField(itemType.getText());
         field.setAccessible(true);
         int count = (int)field.get(userResourceCount);
         if (op.equals("add")) {
@@ -584,6 +598,113 @@ public class UserService {
         field.set(userResourceCount,count);
         user.setResourceCount(userResourceCount);
         userDao.save(user);
+    }
+
+    public void updateUserNoticeNum(String email){
+        User user = userDao.findFirstByEmail(email);
+        user.setNoticeNum(noticeService.countUserNoticeNum(email));
+        userDao.save(user);
+    }
+
+
+    /**
+     * 得到contributor的信息
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult getContributorInfo(@PathVariable(value = "email") String email) {
+        User user = userDao.findFirstByEmail(email);
+        JSONObject contributorInfo = new JSONObject();
+        if (user == null) {
+            return ResultUtils.error("user is not exist!");
+        }
+        contributorInfo.put("name", user.getName());
+        contributorInfo.put("accessId", user.getAccessId());
+
+        return ResultUtils.success(contributorInfo);
+    }
+
+    /**
+     * 更新任务信息
+     * @param email
+     * @param userTaskInfo
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String addTaskInfo(String email, UserTaskInfo userTaskInfo) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                List<UserTaskInfo> runTask = user.getRunTask();
+                runTask.add(userTaskInfo);
+                Date now = new Date();
+
+                user.setRunTask(runTask);
+                user.setUpdateTime(now);
+                userDao.save(user);
+                // System.out.println(userDao.save(user));
+                return "add taskInfo suc";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+
+    }
+
+
+    /**
+     * 设置用户权限
+     * @param id
+     * @param role
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult setUserRole(String id, UserRoleEnum role){
+        try {
+            User user = userDao.findFirstById(id);
+            user.setUserRole(role);
+            User updatedUser = userDao.save(user);
+            return ResultUtils.success(updatedUser);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtils.error();
+        }
+
+    }
+
+    /**
+     * 得到门户管理员
+     * @param
+     * @return java.util.List<njgis.opengms.portal.entity.po.User>
+     * @Author bin
+     **/
+    public List<User> getAdminUser(){
+        return userDao.findAllByUserRole(UserRoleEnum.ROLE_ADMIN);
+    }
+
+    /**
+     * 得到门户root用户
+     * @param
+     * @return java.util.List<njgis.opengms.portal.entity.po.User>
+     * @Author bin
+     **/
+    public List<User> getRootUser(){
+        return userDao.findAllByUserRole(UserRoleEnum.ROLE_ROOT);
+    }
+
+
+    //根据传入的字符串返回用户名
+    public String getUserName(String author){
+        if (author.contains("@")) {
+            User user = userDao.findFirstByEmail(author);
+            if (user != null)
+                author = user.getName();
+        }
+        return author;
     }
 
 }

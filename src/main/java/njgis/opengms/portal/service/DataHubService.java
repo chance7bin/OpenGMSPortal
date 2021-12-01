@@ -5,7 +5,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.dataItem.DataItemDTO;
+import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.DataHub;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -105,11 +105,25 @@ public class DataHubService {
 
         try {
             dataHubDao.deleteById(id);
-            userService.updateUserResourceCount(email, "dataHub", "delete");
+            userService.updateUserResourceCount(email, ItemTypeEnum.DataHub, "delete");
         }catch (Exception e){
             return ResultUtils.error("delete error");
         }
 
         return ResultUtils.success();
+    }
+
+
+    /**
+     * 根据条目名和当前用户得到数据
+     * @param findDTO
+     * @param email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult searchByNameAndAuthor(SpecificFindDTO findDTO,String email){
+
+        return ResultUtils.success(genericService.searchItemsByUser(findDTO, ItemTypeEnum.DataHub, email));
+
     }
 }

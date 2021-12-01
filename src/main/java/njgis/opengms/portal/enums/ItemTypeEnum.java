@@ -26,7 +26,12 @@ public enum ItemTypeEnum {
 
     Article(12,"article"),
     Project(13,"project"),
-    Conference(14,"conference");
+    Conference(14,"conference"),
+
+    //通知类型
+    Version(15,"version"),
+
+    Information(16,"information");
 
     private int number;
     private String text;

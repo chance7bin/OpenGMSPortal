@@ -2,21 +2,17 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.bind.v2.TODO;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.user.TokenInfo;
 import njgis.opengms.portal.entity.po.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,6 +25,7 @@ import java.util.Date;
  * @Description 用户服务器登录token
  * @CreateDate(Y/M/D-H:M:S) 2021/03/25/ 17:11:00
  */
+@Slf4j
 @Service
 public class TokenService {
 
@@ -73,7 +70,8 @@ public class TokenService {
 
             return result;
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return null;
         }
     }
@@ -104,7 +102,8 @@ public class TokenService {
             JSONObject tokenResult = restTemplate.postForObject(authUri, httpEntity, JSONObject.class);
             return tokenResult;
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return null;
         }
     }
@@ -128,7 +127,8 @@ public class TokenService {
             ResponseEntity<JSONObject> userJson = restTemplate.exchange(resUserUri, HttpMethod.GET, httpEntity, JSONObject.class);
             return userJson.getBody();
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return null;
         }
 
@@ -154,7 +154,8 @@ public class TokenService {
             ResponseEntity<JSONObject> userJson = restTemplate.exchange(resUserUri, HttpMethod.GET, httpEntity, JSONObject.class);
             return userJson.getBody();
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return null;
         }
 
@@ -179,14 +180,14 @@ public class TokenService {
             ResponseEntity<JSONObject> userJson = restTemplate.exchange(resUserUri, HttpMethod.GET, httpEntity, JSONObject.class);
             return userJson.getBody();
         }catch (Exception e){
-            System.out.println("Exception: " + e.toString());
+            log.error("Exception: " + e);
+            // System.out.println("Exception: " + e.toString());
             return null;
         }
 
     }
 
     /**
-     * @Description todo wzh
      * @param j_tokenInfo
      * @param user
      * @Return java.lang.String
@@ -213,7 +214,6 @@ public class TokenService {
     }
 
     /**
-     * @Description todo wzh
      * @param userEmail
      * @Return java.lang.String
      * @Author wzh
