@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>itemInfoModule</title>
+</head>
+<body>
+<div th:fragment="description" id="description" th:if="${detailLanguage!=''}" class="detail_block">
+    <div class="block_head">
+        <div class="head_text">
+            <h4><span th:text="${itemType}">Model</span> Description</h4>
+        </div>
+        <el-dropdown v-cloak style="float:right;padding:0 10px;background-color: white;cursor:pointer;" trigger="click" @command="changeDetailLanguage" >
+
+                        <span v-if="currentDetailLanguage==''" class="el-dropdown-link" >
+                            <span th:text="${detailLanguage}"></span><i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+            <span v-else class="el-dropdown-link" >
+                            {{currentDetailLanguage}}<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item th:each="language:${languageList}" th:text="${language}" th:attr="command=${language}">View Count</el-dropdown-item>
+                <!--<el-dropdown-item command="Name">Name</el-dropdown-item>-->
+                <!--<el-dropdown-item command="Create Time">Create Time</el-dropdown-item>-->
+
+            </el-dropdown-menu>
+        </el-dropdown>
+        <span class="fa fa-language" style="background-color:white;padding-left:10px;float:right;font-size:23px;"></span>
+        <span class="blockEdit">
+                         <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                                       type="primary" icon="el-icon-edit" @click="getDescription" circle></el-button>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15"
+                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                    effect="light" placement="top">
+                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                                       icon="el-icon-edit" plain circle></el-button>
+                        </el-tooltip>
+                    </span>
+    </div>
+    <div th:fragment="descriptionContent" class="block_content">
+        <div v-if="detail==''" th:utext="${detail}" id="detail" class="detailIntroducePanel">
+        </div>
+        <div v-else v-html="detail" id="detail" class="detailIntroducePanel">
+        </div>
+    </div>
+    <div class="fullPaper text-center hide">
+        <a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Text<i class="fa fa-angle-down"
+                                                                                  style="margin-left: 10px;color:red;font-weight: bold"
+                                                                                  aria-hidden="true"></i></a>
+    </div>
+</div>
+
+<div th:fragment="contributor">
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+            <h4 th:if="${history!=true}">Contributor(s)</h4>
+            <h4 th:if="${history==true}">Modifier(s)</h4>
+            <el-tooltip popper-class="fontsize-15" effect="light"
+                        content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item."
+                        placement="top">
+                <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+            </el-tooltip>
+        </div>
+    </div>
+    <div th:fragment="contributorContent" class="block_content">
+        <div class="el-row"
+             style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">
+            <div class="el-col ">
+<!--                <img :src="lightenContributor.avatar==''?'/static/img/icon/default.png':lightenContributor.avatar"-->
+<!--                     class="round_icon" style="width:40px;height: 40px;float:left;">-->
+                <user-avatar ref="mainContributorAvatar"
+                             style="width:40px;height: 40px;float:left;">
+                </user-avatar>
+            </div>
+            <div class="el-col">
+                <div class="pull-left" style="display: block;margin-left: 15px;">
+                    <a :href="'/profile/'+lightenContributor.userId"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
+                </div>
+            </div>
+        </div>
+        <div class="el-row">
+            <div class="text-center">
+                <h5 th:if="${history!=true}" th:text="'Initial contribute: '+${date}">contributed at 2018-7-13 14:32:18 </h5>
+                <h5 th:if="${history==true}" th:text="'Modify: '+${date}">modified at 2018-7-13 14:32:18 </h5>
+            </div>
+        </div>
+        <div class="flexAlignEnd flexJustCenter">
+            <div class="wzhScrollbar " style="max-height: 135px">
+                <div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.userId"
+                     class="inlineBlock cursorPointer" style="margin: 10px 5px;">
+                    <el-tooltip effect="dark"
+                                :content="contributor.name"
+                                placement="bottom">
+                        <img :src="contributor.image==''?'/static/img/icon/default.png':contributor.image"
+                             @click="riseUser(contributor,index)"
+                             class="round_icon iconImg">
+                    </el-tooltip>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="author">
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+            <h4>Authorship</h4>
+            <el-tooltip popper-class="fontsize-15" effect="light"
+                        content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
+                        placement="top">
+                <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+            </el-tooltip>
+        </div>
+    </div>
+    <div th:fragment="authorContent" class="block_content text-center" style="padding-left:10px" >
+
+        <div th:if="${itemInfo.authorship!=null&&#lists.size(itemInfo.authorship)!=0}"
+             style="text-align: left;" th:each="author,key:${itemInfo.authorship}">
+                        <span role="button" tabindex="0" class="ab" style="float: right;"
+                              th:class="${key.index==0?'ab':'ab transform180'}"><a
+                                data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
+                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
+            <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
+            <div th:id="'authorshipPhone'+${key.index}" class="panel-collapse" name="authorshipContent"
+                 th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
+                 style="">
+                <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
+                    <dl>
+                        <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
+                        <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
+                        <dt th:if="${author.email!=''}">Email: &nbsp</dt>
+                        <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
+                        <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
+                        <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div th:if="${itemInfo.authorship==null||#lists.size(itemInfo.authorship)==0}">
+            <el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"
+                                                                  style="text-decoration: underline">claim</a>
+                the item.
+            </el-tag>
+        </div>
+        <div th:if="${history!=true && #lists.size(itemInfo.authorship)>0}">
+            <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
+                                                              style="text-decoration: underline">Feed
+                back</a></el-tag>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="itemTitle" class="detail" >
+    <div class="detail_title">
+        <h2 th:utext="${itemInfo.name}"
+            style="display: inline-block;word-wrap:break-word; word-break:break-all;width:90%;"></h2>
+        <div class="pull-right" style="width:10%;">
+            <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                <a th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" href="javascript:void(0);"
+                   class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
+            </el-tooltip>
+            <el-tooltip popper-class="fontsize-15"
+                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                        effect="light" placement="top">
+                <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x'
+                    style="color:#cccccc" aria-hidden='true'></li>
+            </el-tooltip>
+            <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light"
+                        placement="top">
+                <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em "></i>
+                <i th:if="${itemInfo.status=='Discoverable'}"
+                   class="el-icon-unlock discoverable fontsize-2em "></i>
+                <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em "></i>
+            </el-tooltip>
+
+            <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
+        </div>
+    </div>
+    <div class="detail_overview">
+
+        <div th:switch="${itemInfo.image}" class="img">
+            <img th:case="''" src="/static/img/model/model.png">
+            <img th:case="null" src="/static/img/model/model.png">
+            <img th:case="*" th:src="${itemInfo.image}">
+        </div>
+
+        <div class="info">
+            <p th:text="${itemInfo.description}"></p>
+            <div class="tags">
+                            <span th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info">
+                                DEM Characteristics
+                            </span>
+
+            </div>
+        </div>
+
+        <div class="detail_option" th:if="${history!=true}">
+            <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
+            <!--<div th:utext="'&nbsp&nbsp'+${itemInfo.shareCount}">&nbsp&nbsp37</div>-->
+            <a class="fa fa-eye" aria-hidden="true"></a>
+            <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}">&nbsp&nbsp341</div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div th:fragment="classifications">
+    <div th:if="${#lists.size(classifications2)>0}" id="classification2" class="detail_block">
+        <div class="block_head">
+            <div class="head_text">
+                <h4>Classification(s)</h4>
+            </div>
+            <span class="blockEdit">
+                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                                       type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15"
+                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                    effect="light" placement="top">
+                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                                       icon="el-icon-edit" plain circle></el-button>
+                        </el-tooltip>
+                    </span>
+        </div>
+        <div th:fragment="classificationsContent" class="block_content" style="margin-top:20px;">
+            <div th:each="classS:${classifications2}">
+                <span style="font-size:24px;margin-right: 8px">●</span>
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item th:each="class:${classS}" th:text="${class.name}"
+                                        th:onclick="window.open('/modelItem/repository?category='+[[${class.oid}]])"
+                                        :to="{ path: '/' }">Earth
+                        System Classification
+                    </el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="alias" id="alias" class="detail_block"
+     th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">
+    <div class="block_head">
+        <div class="head_text">
+            <h4>Alias</h4>
+        </div>
+        <span class="blockEdit">
+                         <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                                       type="primary" icon="el-icon-edit" @click="getAlias" circle></el-button>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15"
+                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                    effect="light" placement="top">
+                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                                       icon="el-icon-edit" plain circle></el-button>
+                        </el-tooltip>
+                    </span>
+    </div>
+    <div th:fragment="aliasContent" class="block_content" style="margin-bottom:10px;">
+
+        <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
+
+        <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"
+                style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
+
+    </div>
+
+</div>
+
+</body>
+</html>

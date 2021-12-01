@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<template id="imgUpload" th:fragment="imgUpload">
+    <div style="position: relative">
+        <img class="imgPreview" style="display: inline" v-show="image!=undefined&&image!=''" :src="image"/>
+        <div class="imgMask flexCenter" v-if="image!=undefined&&image!=''"
+             style="position: absolute;">
+            <div class="fa fa-times imgDelete" @click="deleteImg"></div>
+            <div class="fa fa-pencil imgEditBlock flexCenter" style="" @click="imgFile"></div>
+        </div>
+        <div v-if="image==''||image==undefined" class="cursorPointer loadImg" @click="imgFile">
+            <i class="fa fa-plus fa-5x"></i>
+        </div>
+        <input type="file" id="imgOne" @change="preImg()"
+               style="display: none" accept="image/*"/>
+    </div>
+</template>
+</body>
+</html>

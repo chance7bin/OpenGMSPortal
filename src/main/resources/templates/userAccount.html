@@ -1,0 +1,611 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Space | OpenGMS</title>
+
+
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+
+    <link rel="stylesheet" href="/static/css/font-awesome/fonts/fontawesome-webfont.woff">
+    <link rel="stylesheet" href="/static/css/font-awesome/fonts/fontawesome-webfont.ttf">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/static/css/common/fileinput.min.css">
+    <link rel="stylesheet" href="/static/css/common/fileinput-rtl.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/fabric/fabric.min.css"/>
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/static/css/common/mdb/mdb.lite.min.css">
+    <link rel="stylesheet" href="/static/css/common/fluent/fluent.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="../../assets/css/basic.css" /> -->
+    <link rel="stylesheet" href="/static/css/page/user_space.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap-tagsinput.css">
+
+    <link rel="stylesheet" href="/static/css/common/newSideBar.css">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
+
+    <style>
+
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div id="loading" v-if="load">
+        <div class="loading-center">
+            <div class="loading-center-absolute">
+                <div class="object"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-container" style="height: 2000px;" v-cloak>
+        <head-side-bar :user-infoin-parent="userInfo"></head-side-bar>
+        <template id="userAccount" th:fragment="userAccount">
+            <div>
+                <div class="innerShadowCol">
+                    <div class="page-content clearfix scrollbar el-col-lg-21 el-col-md-20 pageContent acrylicBack"
+                         style="margin-left: 240px;"
+                         :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}"
+                         id="pageContent">
+                        <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
+                        <div class="flexColContainer mainContent" style="">
+                            <section role="description" class="flexCol flexCenter contentSection">
+                                <div class="profile-pic text-center">
+<!--                                    <img :src="(userInfo.avatar==''||userInfo.avatar==undefined)?'/static/img/icon/default.png':userInfo.avatar">-->
+                                    <user-avatar :email="userInfo.email" ref="userAvatar" style="width:105px;height: 105px;float:left;"></user-avatar>
+                                </div>
+                                <h4>Welcome, <a :href="'/profile/'+userInfo.userId">{{userInfo.name}}</a></h4>
+                            </section>
+                            <section class="flexRowContainer flexWrap contentSection">
+                                <div class="contentCard flexCol flexColCenter" style="height: 450px">
+                                    <div v-cloak class="col-md-12">
+
+                                        <div class="panel-body ">
+                                            <h4 style="margin-left: -5px">Personal Infomation</h4>
+                                            <ul class="p-info wzhScrollbar" style="overflow: auto;height: 250px;">
+                                                <li>
+                                                    <div class="title"><h5>Name</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.name}}</h5></div>
+                                                </li>
+                                                <li>
+                                                    <div class="title"><h5>Email</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.email}}</h5></div>
+                                                </li>
+                                                <li v-if="userInfo.title!=undefined&&userInfo.title!=''">
+                                                    <div class="title"><h5>Title</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.title}}</h5></div>
+                                                </li>
+                                                <li v-if="userInfo.phone!=undefined&&userInfo.phone!=''">
+                                                    <div class="title"><h5>Phone</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.phone}}</h5></div>
+                                                </li>
+                                                <li v-if="userInfo.homepage!=undefined&&userInfo.homepage!=''">
+                                                    <div class="title"><h5>Home Page</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.homepage}}</h5></div>
+                                                </li>
+                                                <li v-if="userInfo.orgStr!=undefined&&userInfo.orgStr!=''">
+                                                    <div class="title"><h5>Organizations</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.orgStr}}</h5></div>
+                                                </li>
+
+                                                <li v-if="userInfo.saStr!=undefined&&userInfo.saStr!=''">
+                                                    <div class="title"><h5>Domain</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.saStr}}</h5></div>
+                                                </li>
+                                                <li v-if="userInfo.introduction!=undefined&&userInfo.introduction!=''">
+                                                    <div class="title"><h5>Introduction</h5></div>
+                                                    <div class="desk"><h5>{{userInfo.introduction}}</h5></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                    <div class="innerBorderGrey89"></div>
+
+                                    <div class="col-md-12">
+                                        <div class="panel-body">
+                                            <button id="edit"
+                                                    class="btn btn-noShadow btn-info btn-round btn-block btn-lg"
+                                                    style="text-transform: capitalize;font-size: 16px"
+                                                    @click="editUserInfo">Edit Infomation
+                                            </button>
+                                            <br/>
+                                            <button id="changePass"
+                                                    class="btn btn-noShadow btn-default btn-round btn-block btn-lg"
+                                                    @click="changePassword"
+                                                    style="color: #fff;text-transform: capitalize;font-size: 16px">
+                                                Change Password
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="contentCard flexCol flexColCenter" style="height: 450px">
+                                    <div v-cloak class="col-md-12" style="width:100%">
+
+                                        <div class="panel-body">
+                                            <h4 style="margin-left: -5px">Setting</h4>
+
+                                            <ul class="p-info">
+                                                <li style="margin-top:15px;text-align: center">
+                                                    <div class="title">
+                                                        <h5>Subscribe</h5>
+                                                    </div>
+                                                    <div class="desk">
+                                                        <el-switch
+                                                                style="margin-top:7px"
+                                                                v-model="subscribe"
+                                                                active-text="Yes"
+                                                                inactive-text="No"
+                                                                @change="setSubscribe()">
+                                                        </el-switch>
+                                                    </div>
+                                                    <el-tag type="info" style="margin-top: 10px">Whether receive reports of your resources
+                                                        from OpenGMS.
+                                                    </el-tag>
+
+                                                    <div v-if="subscribe">
+                                                        <div style="margin-top:30px">
+                                                            <h5 style="display: inline;margin-right:20px">Subscribed Computable Model</h5>
+                                                            <el-button type="primary" size="mini"
+                                                                       @click="editSubscribedList" round>Edit
+                                                            </el-button>
+                                                        </div>
+                                                        <div style="width: 100%;height:230px;overflow: auto">
+                                                            <el-table
+                                                                    v-if="subscribeList.length!=0"
+                                                                    :data="subscribeList"
+                                                                    show-header="false"
+                                                                    >
+
+                                                                <el-table-column
+                                                                        align="center"
+                                                                        header-align="center"
+                                                                        label="Name">
+                                                                    <template slot-scope="scope">
+                                                                        <a :href="'/computableModel/'+scope.row.oid">{{scope.row.name}}</a>
+                                                                    </template>
+                                                                </el-table-column>
+
+                                                            </el-table>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!--<div class="content_h32 flexRow noPadding">-->
+                                    <!--<div class="content_w68 flexCol flexJustAround">-->
+                                    <!--<h4>Foot print</h4>-->
+                                    <!--<p>You can manage Data provided by yourself or create a new one</p>-->
+                                    <!--</div>-->
+                                    <!--<div class="flexCenter content_w32" style="">-->
+                                    <!--<img class="square_80" style="" src="../../static/img/carousels/foot_print.jpg">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="innerBorderGrey89"></div>-->
+                                    <!--<div style="flex: 1;"></div>-->
+                                    <!--<div class="content_h16 flexCol noPadding" style="width: 100%;background-image: linear-gradient(to right, #fdf9f4 0%, #ebf6f8 100%);">-->
+                                    <!--<div class=" acrylicBack flexColCenter"-->
+                                    <!--style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">-->
+                                    <!--<div class="flexRow flexCenter flexJustAround "-->
+                                    <!--style="width: 100%;margin-left: 5%">-->
+                                    <!--<div class="lineButton flexCol" @click="">-->
+                                    <!--<p style="margin-block-end: 0">view</p>-->
+                                    <!--<div class="hoverLine"></div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                </div>
+
+                            </section>
+                        </div>
+
+
+                    </div>
+
+                    <!--Edit Information modal-->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header " style="color:white;margin-top: 110px;border: 0">
+                                    <button id="modal-close" type="button" class="close"
+                                            data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <img id="userPhoto"
+                                         :src="userInfo.avatar"
+                                         onerror=src="/static/img/icon/default.png"
+                                         width="120px"
+                                         height="120px"
+                                         style=""/>
+                                    <input type="file" name="imgOne" id="imgFile" style="display: none" accept="image/*"/>
+<!--                                    <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="itemInfo.image"/>-->
+                                    <div class=" selectImg flexCenter " style="" @click="selectUserImg">
+                                        <i class="fa fa-camera hoverIcon"
+                                           style=" color: #ebebeb;font-size: 28px"></i>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal wzhScrollBar" role="form" style="margin-top: 20px;height: 80vh;max-height: 490px;">
+                                        <div class="wzhModalForm">
+                                            <label for="inputName">Name</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" id="inputName"
+                                                       placeholder="Name" v-model="userInfo.name">
+                                            </div>
+                                        </div>
+                                         <div class="wzhModalForm">
+                                            <label for="inputName">Title</label>
+                                            <div class="">
+                                                <el-select v-model="userInfo.title" placeholder="Click to select" style="width: 100%">
+                                                    <el-option
+                                                            v-for="item in titleOptions"
+                                                            :key="item.value"
+                                                            :label="item.label"
+                                                            :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputPhone">Phone</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" id="inputPhone"
+                                                       placeholder="Phone" v-model="userInfo.phone">
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputHomePage">Home Page</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" id="inputHomePage"
+                                                       v-model="userInfo.homepage"
+                                                       placeholder="Home Page">
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputOrganizations">Organizations</label>
+                                            <div class="">
+                                                <input type="text" class="form-control"
+                                                       id="inputOrganizations"
+                                                       placeholder="Organizations">
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputSubjectAreas">Domain</label>
+                                            <div class="">
+                                                <input type="text" class="form-control"
+                                                       id="inputSubjectAreas"
+                                                       placeholder="Study Areas">
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputDescription">Introduction</label>
+                                            <div class="">
+                                                <textarea type="text" class="form-control" id="inputDescription"
+                                                  v-model="userInfo.introduction"
+                                                  placeholder="Introduction"></textarea>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="saveUser" type="button" class="btn btn-round btn-primary "
+                                            style="text-transform: capitalize;font-size: 15px;    margin-right: 15px;"
+                                            @click="saveEditInfo">Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Change Password modal-->
+                    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="margin-top: 16vh;color:white;border: 0">
+                                    <button id="modal-close1" type="button" class="close"
+                                            data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" style="color: #737373;text-align: center;">Change
+                                        Password</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal" role="form">
+                                        <div class="wzhModalForm">
+                                            <label for="inputName">Old Password</label>
+                                            <div>
+                                                <input type="password" class="form-control"
+                                                       id="inputOldPass"
+                                                       placeholder="Old password">
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputPhone">New Password</label>
+                                            <div>
+                                                <input type="password" class="form-control"
+                                                       id="inputPassword"
+                                                       placeholder="New password">
+                                            </div>
+                                        </div>
+                                        <div class="wzhModalForm">
+                                            <label for="inputHomePage" >Confirm Password</label>
+                                            <div>
+                                                <input type="password" class="form-control"
+                                                       id="inputPassAgain"
+                                                       placeholder="New password again">
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <div class="modal-footer" style="padding: 15px 24px">
+                                    <button @click="submitPass" type="button"
+                                            class="btn btn-round btn-primary"
+                                            style="text-transform: capitalize;font-size: 15px">Submit
+                                    </button>
+
+                                    <button @click="forgetPass" type="button"
+                                            class="btn btn-round btn-warning"
+                                            style="text-transform: capitalize;font-size: 15px;float:left;">Forget Password
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end modal-->
+                </div>
+
+                <!--                <div class="modal fade" id="editUserImg" aria-hidden="true" aria-labelledby="myModalLabel" style="margin-top: 45px">-->
+                <!--                    <div class="modal-dialog">-->
+                <!--                        <div class="modal-content" id="modalContent">-->
+                <!--                            <div class="modal-header" style="background: deepskyblue;border-bottom: 0">-->
+                <!--                                <h3 class="modal-title" style="color:aliceblue;text-align: center">-->
+                <!--                                    Select a picture-->
+                <!--                                </h3>-->
+                <!--                            </div>-->
+                <!--                            <div class="flexAround" style="height: 280px;border: 1px solid #cccccc;padding: 0 5%">-->
+                <!--                                <div class="containerWithDashed">-->
+                <!--                                    <div id="imgChange" @click="imgChange()">-->
+                <!--                                        <i class="fa fa-plus fa-5x"></i>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                                <input id="imgFile" type="file"-->
+                <!--                                       style="display: none"-->
+                <!--                                       accept="image/*"/>-->
+                <!--                                <div class="innerBorderCol"></div>-->
+                <!--                                <div class="overviewContainer" style="width: 40%">-->
+                <!--                                    <p style="text-align: center;color: #595959;font-size: 15px">overview</p>-->
+                <!--                                    <div class="flexAround" style="background-color: inherit;margin-top: 20px">-->
+                <!--                                        <div class="circlePhotoFrame flexCenter">-->
+                <!--                                            <canvas></canvas>-->
+                <!--                                        </div>-->
+                <!--                                        &lt;!&ndash;                                    <div class="circlePhotoFrameShade">&ndash;&gt;-->
+                <!--                                        &lt;!&ndash;                                    </div>&ndash;&gt;-->
+                <!--                                        &lt;!&ndash;                                    <img id="imgShowBig" style="width: 145px;height: 145px"&ndash;&gt;-->
+                <!--                                        &lt;!&ndash;                                         src="../static/img/icon/default.png">&ndash;&gt;-->
+                <!--                                        <div class="dragBar" style="margin-top:15px ">-->
+                <!--                                            <div class="dragBlock" ></div>-->
+                <!--                                        </div>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                            <div style="display: flex;justify-content: flex-end;padding:10px 15px 10px">-->
+                <!--                                <el-button id="saveUserImgButton" type="success">Save</el-button>-->
+                <!--                                <el-button id="closeSaveUserImg">Cancel</el-button>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+
+                <el-dialog :visible.sync="dialogTableVisible" title="Subscribe specific model" width="70%"
+                           top="40px">
+
+                    <el-alert
+                            title="You can subscribe your own computable models' report."
+                            type="success"
+                            :closable="false"
+                            style="margin-bottom:10px;">
+                    </el-alert>
+
+                    <el-card class="box-card" shadow="never" style="width:40%;margin-right: 1%;float: left;">
+                        <div slot="header" class="clearfix">
+                            <span>Subscribed Computable Model</span>
+
+                        </div>
+                        <el-table
+                                :data="subscribeList"
+                                ref="leftTable"
+                                :max-height="tableMaxHeight">
+                            <!--<el-table-column type="expand">-->
+                            <!--<template slot-scope="props">-->
+                            <!--<el-form label-position="left" inline class="demo-table-expand">-->
+                            <!--<el-form-item label="Contributor">-->
+                            <!--<span>{{ props.row.author }}</span>-->
+                            <!--</el-form-item>-->
+
+                            <!--</el-form>-->
+                            <!--</template>-->
+                            <!--</el-table-column>-->
+                            <el-table-column
+                                    label="Name">
+                                <template slot-scope="props">
+                                    <a :href="'/computableModel/'+props.row.oid" target="_blank">{{props.row.name}}</a>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column fixed="right" label="Operation" width="100">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            type="danger"
+                                            @click="handleDelete(scope.$index, scope.row)">Remove
+                                    </el-button>
+
+
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-card>
+
+                    <el-card class="box-card" shadow="never" style="width:59%;float: left;">
+
+
+
+                            <el-input placeholder="Please enter name..." v-model="searchText"
+                                      class="input-with-select" clearable="true">
+                                <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
+                            </el-input>
+                            <el-table
+                                    :data="pageOption.searchResult"
+                                    style="margin-top:17px;"
+                                    :max-height="tableMaxHeight">
+                                <el-table-column type="expand">
+                                    <template slot-scope="props">
+                                        <el-form label-position="left" inline class="demo-table-expand">
+                                            <el-form-item label="Overview">
+                                                <span>{{ props.row.description }}</span>
+                                            </el-form-item>
+
+                                        </el-form>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="Name">
+                                    <template slot-scope="props">
+                                        <a :href="'/computableModel/'+props.row.oid" target="_blank">{{props.row.name}}</a>
+                                    </template>
+                                </el-table-column>
+                                <!--<el-table-column-->
+                                <!--label="Contributor"-->
+                                <!--prop="author">-->
+                                <!--</el-table-column>-->
+                                <el-table-column fixed="right" label="Operation" width="100">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                size="mini"
+                                                @click="handleEdit(scope.$index, scope.row)">Add
+                                        </el-button>
+
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-pagination style="text-align: center;margin-top:20px"
+                                           @current-change="handlePageChange"
+                                           :current-page="pageOption.currentPage"
+                                           layout="total, prev, pager, next, jumper"
+                                           :page-size="6"
+                                           :total="pageOption.total">
+                            </el-pagination>
+
+                    </el-card>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogTableVisible = false;">Cancel</el-button>
+                        <el-button type="primary" @click="submitSubscribedList">Submit</el-button>
+                    </div>
+                </el-dialog>
+
+                <el-dialog class="top350Dialog" title="Edit Image" :visible.sync="imgClipDialog"
+                           @close="closeImgUpload" center  width="30%" append-to-body>
+                    <p class="noMargin" style="text-align: center">Drag to change the position and size.</p>
+                    <span slot="footer" class="dialog-footer">
+                        <div id="editImageDialog">
+                            <div class="flexJustAround flexAlignCenter editImageContainer" style="">
+<!--                                <div class="containerWithDashed">-->
+<!--                                    <div id="imgChange">-->
+<!--                                        <i class="fa fa-upload fa-3x"></i>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <input id="imgFile" type="file" style="display: none" accept="image/*"/>-->
+                                <!--                            <div class="innerBorderCol"></div>-->
+                                <div class="imgOverview" style="width: 40%">
+                                    <p style="text-align: center;color: #595959;font-size: 15px">overview</p>
+                                    <div class="flexJustAround flexAlignCenter flexCol" style="background-color: inherit;">
+                                        <div class="circlePhotoFrame flexCenter">
+                                            <canvas id="clipCanvas" ref="clipCanvas"></canvas>
+                                        </div>
+                                        <!--                                    <div class="circlePhotoFrameShade">-->
+                                        <!--                                    </div>-->
+                                        <!--                                    <img id="imgShowBig" style="width: 145px;height: 145px"-->
+                                        <!--                                         src="../static/img/icon/default.png">-->
+                                        <div class="flexAlignCenter flexJustAround" style="width: 280px;margin-top: 20px;">
+                                            <div class="fa fa-minus" style="font-size: 10px;color: #737373;"></div>
+                                            <div class="dragBar" style=""
+                                                 :style="dragReady?'background-color: #cfe5fa':'background-color: #d9d9d9'">
+                                                <div class="dragBlock flexAlignCenter flexJustAround" style="left: -7px;width: 23px;">
+                                                    <div class="fa fa-caret-left" style="color: #dcdfe6;font-size: 10px;"></div>
+                                                    <div class="fa fa-caret-right" style="color: #dcdfe6;font-size: 10px;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="fa fa-plus" style="font-size: 10px;color: #666666;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex;justify-content: center;padding:10px 15px 10px">
+                                <el-button id="saveUserImgButton" size="mini" round type="success">Comfirm</el-button>
+                                <el-button id="closeSaveUserImg" size="mini" round style="margin-left: 15px" @click="imgClipDialog=false"> Cancel </el-button>
+                            </div>
+                        </div>
+                    </span>
+
+                </el-dialog>
+            </div>
+        </template>
+    </div>
+
+
+</div>
+</div>
+</body>
+<script src="/static/js/common/md5.js"></script>
+<script src="/static/js/common/sha256.js"></script>
+<script src="/static/js/common/jquery-3.3.1.js"></script>
+<script src="/static/js/common/jquery.rotate.min.js"></script>
+<script src="/static/js/common/bootstrap.min.js"></script>
+<script src="/static/js/common/mdb.min.js"></script>
+<script src="/static/js/common/piexif.min.js"></script>
+<script src="/static/js/common/fileinput.js"></script>
+<script src="/static/js/common/bootstrap-treeview.js"></script>
+
+<script type="text/javascript" src="/static/js/tinymce/tinymce.min.js"></script>
+
+
+<!--<script src="/static/js/common/echarts.min.js"></script>-->
+<!--<script src="/static/js/common/world.js"></script>-->
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+
+<!--<script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+<script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+
+<script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+<script src="/static/js/common/bootstrap-tagsinput.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<!--<script src="/static/js/page/user_space.js"></script>-->
+<!--<script src="/static/js/page/userSpace1.js"></script>-->
+<script th:replace="fragments/newSideBar :: headSideBar"></script>
+<script th:replace="fragments/newSideBar :: sideBarComponent"></script>
+<script src="/static/js/page/userAccount.js"></script>
+</html>

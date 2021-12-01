@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title th:text="${info.themename}+' | Theme | OpenGMS'"></title>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
+
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/js/common/vue-avatar.min.js"></script>
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/page/theme_info.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/data-tables/DT_bootstrap.css"/>
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/style.css"/>-->
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/themeEditor.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/fabric/fabric.min.css"/>
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/bootstrap-select.css"/>
+    <link rel="stylesheet" href="/static/css/base/navbar.css">
+
+    <style>
+        .block{
+            display: none;
+        }
+        .el-card__body{
+            padding:0;
+        }
+        .el-menu{
+            border:none;
+        }
+        a:hover{
+            text-decoration: none;!important;
+        }
+
+        input.spinner {
+            background: url(/static/img/input-spinner.gif) right no-repeat !important;
+        }
+
+        .btn-block {
+            padding: 6px 12px;
+        }
+
+        tbody tr td {
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        .col-sm-2 {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        .tox .tox-silver-sink .tox-tinymce-aux {
+            z-index: 2004;
+            background-color: cyan;
+        }
+    </style>
+
+<!--    <script th:inline="javascript">-->
+<!--        modelClassInfos = [[${modelClassInfos}]]-->
+<!--        console.log(modelClassInfos)-->
+
+<!--    </script>-->
+</head>
+<body class="scrollbar">
+<div id="app" class="flex-colDirect" style="height: 100%">
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+
+    <div id="mainContainer" class="mainContainer" v-cloak >
+
+
+        <div id="leftContainer" class="leftContainer" >
+            <el-card id="subcard" class="subCard flex-colDirect" style="min-width: 60px;">
+
+<!--                头-->
+                <div slot="header" class="clearfix text-center headerImg flex-colDirect flex-center" >
+<!--                    专题照片-->
+                    <div class="editTheme themeImg flex-center" style="position: relative">
+                        <img v-if="edit_themeObj.themeImage!=undefined&&edit_themeObj.themeImage!=null&&edit_themeObj.themeImage!=''" class="themeImg" id="imgShow1" :src="edit_themeObj.themeImage">
+                        <div v-show="editActiveIndex==1" class="shade flex-center"  style="align-items: center;position: absolute;top: 0px;justify-content: center;" @click="uploadImg">
+                            <i class="fa fa-camera hoverIcon"></i>
+                        </div>
+                        <input id="imgFile"  type="file"
+                               style="display: none"
+                               accept="image/*"/>
+
+                    </div>
+
+<!--                    专题名显示-->
+                    <div class="themeName flex-rowDirect flex-center" v-if="NameEditActiveIndex==0">
+                        <span class="themename_item"style="font-size: 24px;color:#444">{{edit_themeObj.themeName}}</span>
+                        <i class="el-icon-edit" style="margin-left: 5px;cursor: pointer;font-size: 20px;color: #00abff" @click="NameEditActiveIndex=1" v-if="editActiveIndex==1"></i>
+                    </div>
+
+<!--                    专题名编辑-->
+                    <div class="themeName_Edit themeName flex-rowDirect flex-center" v-if="NameEditActiveIndex==1">
+                        <el-input placeholder="Input a theme name." v-model="editThemeName" size="mini"></el-input>
+                        <div style="font-size: 25px;padding: 5px" class="flex-rowDirect">
+                            <i class="el-icon-circle-check" style="color: #67C23A;cursor: pointer;margin-right: 8px" @click="editNameSave()"></i>
+                            <i class="el-icon-circle-close" style="cursor: pointer" @click="NameEditActiveIndex=0"></i>
+                        </div>
+
+                    </div>
+                </div>
+
+<!--                body-->
+                <div class="cardBody flex-colDirect">
+<!--                    menu-->
+                    <div class="cardMenu">
+                        <el-menu
+                                id="leftBottomBody"
+                                :default-active="defaultActive"
+                                ref="menu"
+                                class="el-menu-vertical-demo"
+                                active-text-color="#409EFF"
+                                :collapse="isCollapse"
+                                :collapse-transition = "false"
+                                style="overflow: auto;"
+
+                        >
+
+<!--                            theme info-->
+                            <el-menu-item index="1" @click="show('detailinfo','BasicInfoPanel','detailIntroducePanel')">
+                                <i class="el-icon-info"></i>
+                                <span slot="title">
+                                    <span>Theme Info</span>
+                                    <i class="el-icon-edit editMenuIcon"  @click="edit_themeDetail()" v-if="editActiveIndex==1"></i>
+                                </span>
+                            </el-menu-item>
+
+<!--                            models-->
+                            <el-submenu  v-if="(themeModelData[0]!=undefined&&themeModelData[0].children.length>0)||editActiveIndex==1"  index="2" class="model">
+                                <div slot="title" class="menuTitleFlex">
+                                    <i class="el-icon-menu"></i>
+                                    <span  slot="title">Models</span>
+<!--                                    <i class="el-icon-edit editMenuIcon"  @click="dialogVisibleModel=true" v-if="editActiveIndex==1"></i>-->
+
+                                    <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
+                                        <i class="el-icon-plus menuIcon" @click="appendModel(themeModelData[0])"></i>
+                                        <i class="el-icon-edit menuIconDisabled"></i>
+                                        <i class="el-icon-delete menuIcon" @click="removeModel(undefined,undefined)"></i>
+                                    </div>
+
+                                </div>
+                                <div v-if="themeModelData[0].children!=undefined&&themeModelData[0].children.length!=0">
+                                    <div  v-for="(modelClass,index) in themeModelData[0].children"  class="modelmenu">
+                                        <!--                                    有孩子-->
+                                        <div v-if="modelClass.children.length>0" >
+                                            <el-submenu :index="'2-'+index" >
+                                                <div slot="title"  class="menuTitleFlex" @click="changeModelClassNode(modelClass)">
+<!--                                                    显示name-->
+                                                    <span v-if="modelClass.editActiveIndex==0" slot="title">{{modelClass.label}}</span>
+<!--                                                    编辑name-->
+                                                    <el-input v-if="modelClass.editActiveIndex==1" v-model="modelClass.label" size="mini" onfocus="this.select()"></el-input>
+
+<!--                                                    按钮组-->
+                                                    <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
+
+<!--                                                        append-->
+                                                        <i class="el-icon-plus menuIcon"  @click="appendModel(modelClass)"></i>
+<!--                                                        modify-->
+                                                        <i class="el-icon-edit menuIcon" v-if="modelClass.editActiveIndex==0" @click="modelClass.editActiveIndex=1"></i>
+                                                        <i class="el-icon-edit menuIcon active" v-if="modelClass.editActiveIndex==1" @click="modifyModel(modelClass)"></i>
+
+                                                        <!--                                                        remove-->
+                                                        <i class="el-icon-delete menuIcon" @click="removeModel(themeModelData[0],modelClass)"></i>
+                                                    </div>
+
+                                                </div>
+
+<!--                                                孩子-->
+                                                <div  v-for="(model,index2) in modelClass.children">
+                                                    <el-menu-item  :index="'2-'+index+'-'+index2" @click="function(){changeModelClassNode(model);editActiveIndex==0?show('modelClass'+index+'-'+index2,'model','block'):show('modelClass_edit'+index+'-'+index2,'model','block')}" >
+
+                                                        <div  slot="title"  class="menuTitleFlex">
+<!--                                                            显示name-->
+                                                            <span v-if="model.editActiveIndex==0" slot="title">{{model.label}}</span>
+                                                            <!--                                                    编辑name-->
+                                                            <el-input v-if="model.editActiveIndex==1" v-model="model.label" size="mini" onfocus="this.select()"></el-input>
+<!--                                                            按钮组-->
+                                                            <div v-if="editActiveIndex == 1" class="editHeadBtnGroups" style="margin-right: -10px">
+                                                                <i class="el-icon-plus menuIconDisabled " ></i>
+                                                                <!--                                                        modify-->
+                                                                <i class="el-icon-edit menuIcon" v-if="model.editActiveIndex==0" @click="model.editActiveIndex=1"></i>
+                                                                <i class="el-icon-edit menuIcon active" v-if="model.editActiveIndex==1" @click="modifyModel(model)"></i>
+                                                                <i class="el-icon-delete menuIcon" @click="removeModel(modelClass,model)"></i>
+                                                            </div>
+                                                        </div>
+                                                    </el-menu-item>
+                                                </div>
+                                            </el-submenu>
+                                        </div>
+                                        <!--                                    没孩子-->
+                                        <div v-else>
+                                            <el-menu-item  :index="'3-'+index"  @click="function(){changeModelClassNode(modelClass);editActiveIndex==0?show('modelClass'+index,'model','block'): show('modelClass_edit'+index,'model','block')}" >
+                                                <div slot="title"  class="menuTitleFlex">
+                                                    <!--                                                            显示name-->
+                                                    <span v-if="modelClass.editActiveIndex==0" slot="title">{{modelClass.label}}</span>
+                                                    <!--                                                    编辑name-->
+                                                    <el-input v-if="modelClass.editActiveIndex==1" v-model="modelClass.label" size="mini" onfocus="this.select()"></el-input>
+<!--                                                   按钮组-->
+                                                    <div v-if="editActiveIndex == 1" class="editHeadBtnGroups" style="margin-right: -10px">
+                                                        <i class="el-icon-plus menuIcon" @click="appendModel(modelClass)"></i>
+                                                        <!--                                                        modify-->
+                                                        <i class="el-icon-edit menuIcon" v-if="modelClass.editActiveIndex==0" @click="modelClass.editActiveIndex=1"></i>
+                                                        <i class="el-icon-edit menuIcon active" v-if="modelClass.editActiveIndex==1" @click="modifyModel(modelClass)"></i>
+                                                        <i class="el-icon-delete menuIcon" @click="removeModel(themeModelData[0],modelClass)"></i>
+                                                    </div>
+                                                </div>
+                                            </el-menu-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-submenu>
+
+<!--                            data-->
+                            <el-submenu v-if="(themeData[0]!=undefined&&themeData[0].children.length>0)||editActiveIndex==1"  index="3" class="data">
+                                <div slot="title" class="menuTitleFlex">
+                                    <i class="el-icon-coin"></i>
+                                    <span slot="title">Data</span>
+<!--                                    <i class="el-icon-edit editMenuIcon" style="margin-left: 120px" @click="dialogVisibleData=true" v-if="editActiveIndex==1"></i>-->
+                                    <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
+                                        <i class="el-icon-plus menuIcon" @click="appendData(themeData[0])"></i>
+                                        <i class="el-icon-edit menuIconDisabled"></i>
+                                        <i class="el-icon-delete menuIcon" @click="removeData(undefined,undefined)"></i>
+                                    </div>
+                                </div>
+                                <div  v-for="(dataClassInfo,index) in themeData[0].children">
+<!--                                    有孩子-->
+                                    <div v-if="dataClassInfo.children.length>0" >
+                                        <el-submenu :index="'2-'+index">
+                                            <div slot="title"  class="menuTitleFlex" @click="changeClassNode(dataClassInfo)">
+                                                <!--                                                    显示name-->
+                                                <span v-if="dataClassInfo.editActiveIndex==0" slot="title">{{dataClassInfo.label}}</span>
+                                                <!--                                                    编辑name-->
+                                                <el-input v-if="dataClassInfo.editActiveIndex==1" v-model="dataClassInfo.label" size="mini" onfocus="this.select()"></el-input>
+
+                                                <!--                                                    按钮组-->
+                                                <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
+
+                                                    <!--                                                        append-->
+                                                    <i class="el-icon-plus menuIcon"  @click="appendData(dataClassInfo)"></i>
+                                                    <!--                                                        modify-->
+                                                    <i class="el-icon-edit menuIcon" v-if="dataClassInfo.editActiveIndex==0" @click="dataClassInfo.editActiveIndex=1"></i>
+                                                    <i class="el-icon-edit menuIcon active" v-if="dataClassInfo.editActiveIndex==1" @click="modifyData(dataClassInfo)"></i>
+
+                                                    <!--                                                        remove-->
+                                                    <i class="el-icon-delete menuIcon" @click="removeData(themeData[0],dataClassInfo)"></i>
+                                                </div>
+
+                                            </div>
+<!--                                            孩子-->
+                                            <div v-for="(data,index2) in dataClassInfo.children">
+                                                <!--                                                <el-menu-item index="1-2">选项2</el-menu-item>-->
+                                                <el-menu-item :index="'2-'+index+'-'+index2" @click="function(){changeClassNode(data);editActiveIndex==0?showData('dataClass'+index+'-'+index2,'data'):showData('dataClass_edit'+index+'-'+index2,'data')}" >
+                                                    <div  slot="title"  class="menuTitleFlex">
+                                                        <!--                                                            显示name-->
+                                                        <span v-if="data.editActiveIndex==0" slot="title">{{data.label}}</span>
+                                                        <!--                                                    编辑name-->
+                                                        <el-input v-if="data.editActiveIndex==1" v-model="data.label" size="mini" onfocus="this.select()"></el-input>
+                                                        <!--                                                            按钮组-->
+                                                        <div v-if="editActiveIndex == 1" class="editHeadBtnGroups" style="margin-right: -10px">
+                                                            <i class="el-icon-plus menuIconDisabled " ></i>
+                                                            <!--                                                        modify-->
+                                                            <i class="el-icon-edit menuIcon" v-if="data.editActiveIndex==0" @click="data.editActiveIndex=1"></i>
+                                                            <i class="el-icon-edit menuIcon active" v-if="data.editActiveIndex==1" @click="modifyData(data)"></i>
+                                                            <i class="el-icon-delete menuIcon" @click="removeData(dataClassInfo,data)"></i>
+                                                        </div>
+                                                    </div>
+                                                </el-menu-item>
+                                            </div>
+
+                                        </el-submenu>
+                                    </div>
+<!--                                    没孩子-->
+                                    <div v-else>
+                                        <el-menu-item :index="'2-'+index" @click="function(){changeClassNode(dataClassInfo);editActiveIndex==0?showData('dataClass'+index,'data'):showData('dataClass_edit'+index,'data')}" >
+
+                                            <div slot="title"  class="menuTitleFlex">
+                                                <!--                                                            显示name-->
+                                                <span v-if="dataClassInfo.editActiveIndex==0" slot="title">{{dataClassInfo.label}}</span>
+                                                <!--                                                    编辑name-->
+                                                <el-input v-if="dataClassInfo.editActiveIndex==1" v-model="dataClassInfo.label" size="mini" onfocus="this.select()"></el-input>
+                                                <!--                                                   按钮组-->
+                                                <div v-if="editActiveIndex == 1" class="editHeadBtnGroups" style="margin-right: -10px">
+                                                    <i class="el-icon-plus menuIcon" @click="appendData(dataClassInfo)"></i>
+                                                    <!--                                                        modify-->
+                                                    <i class="el-icon-edit menuIcon" v-if="dataClassInfo.editActiveIndex==0" @click="dataClassInfo.editActiveIndex=1"></i>
+                                                    <i class="el-icon-edit menuIcon active" v-if="dataClassInfo.editActiveIndex==1" @click="modifyData(dataClassInfo)"></i>
+                                                    <i class="el-icon-delete menuIcon" @click="removeData(themeData[0],dataClassInfo)"></i>
+                                                </div>
+                                            </div>
+                                        </el-menu-item>
+                                    </div>
+                                </div>
+                            </el-submenu>
+
+<!--                            data methods-->
+                            <el-submenu v-if="(themeDataMethod[0]!=undefined&&themeDataMethod[0].children.length>0)||editActiveIndex==1" index="5-4" class="dataMethod">
+                                <div slot="title" class="menuTitleFlex">
+                                    <i class="el-icon-finished"></i>
+                                    <span slot="title">Data Method</span>
+<!--                                    <i class="el-icon-edit editMenuIcon" style="margin-left: 70px"  @click="dialogVisibleDataMethod=true" v-if="editActiveIndex==1"></i>-->
+                                    <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
+                                        <i class="el-icon-plus menuIcon" @click="appendDataMethod(themeDataMethod[0])"></i>
+                                        <i class="el-icon-edit menuIconDisabled"></i>
+                                        <i class="el-icon-delete menuIcon" @click="removeDataMethod(undefined,undefined)"></i>
+                                    </div>
+                                </div>
+                                <div  v-for="(dataMethodClassInfo,index) in themeDataMethod[0].children">
+                                    <div v-if="dataMethodClassInfo.children.length>0" >
+                                        <el-submenu :index="'2-'+index">
+<!--                                            <template slot="title">{{dataMethodClassInfo.label}}</template>-->
+                                            <div slot="title"  class="menuTitleFlex" @click="changedataMethodClassNode(dataMethodClassInfo)">
+                                                <!--                                                    显示name-->
+                                                <span v-if="dataMethodClassInfo.editActiveIndex==0" slot="title">{{dataMethodClassInfo.label}}</span>
+                                                <!--                                                    编辑name-->
+                                                <el-input v-if="dataMethodClassInfo.editActiveIndex==1" v-model="dataMethodClassInfo.label" size="mini" onfocus="this.select()"></el-input>
+
+                                                <!--                                                    按钮组-->
+                                                <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
+
+                                                    <!--                                                        append-->
+                                                    <i class="el-icon-plus menuIcon"  @click="appendDataMethod(dataMethodClassInfo)"></i>
+                                                    <!--                                                        modify-->
+                                                    <i class="el-icon-edit menuIcon" v-if="dataMethodClassInfo.editActiveIndex==0" @click="dataMethodClassInfo.editActiveIndex=1"></i>
+                                                    <i class="el-icon-edit menuIcon active" v-if="dataMethodClassInfo.editActiveIndex==1" @click="modifyDataMethod(dataMethodClassInfo)"></i>
+
+                                                    <!--                                                        remove-->
+                                                    <i class="el-icon-delete menuIcon" @click="removeDataMethod(themeDataMethod[0],dataMethodClassInfo)"></i>
+                                                </div>
+
+                                            </div>
+
+                                            <div v-for="(dataMethod,index2) in dataMethodClassInfo.children">
+                                                <el-menu-item :index="'2-'+index+'-'+index2" @click="function(){changedataMethodClassNode(dataMethod);editActiveIndex==0?showDataMethod('dataMethodClass'+index+'-'+index2,'dataMethod'):showDataMethod('dataMethodClass_edit'+index+'-'+index2,'dataMethod')}" >
+<!--                                                    <span slot="title">{{dataMethod.label}}</span>-->
+                                                    <div  slot="title"  class="menuTitleFlex">
+                                                        <!--                                                            显示name-->
+                                                        <span v-if="dataMethod.editActiveIndex==0" slot="title">{{dataMethod.label}}</span>
+                                                        <!--                                                    编辑name-->
+                                                        <el-input v-if="dataMethod.editActiveIndex==1" v-model="dataMethod.label" size="mini" onfocus="this.select()"></el-input>
+                                                        <!--                                                            按钮组-->
+                                                        <div v-if="editActiveIndex == 1" class="editHeadBtnGroups" style="margin-right: -10px">
+                                                            <i class="el-icon-plus menuIconDisabled " ></i>
+                                                            <!--                                                        modify-->
+                                                            <i class="el-icon-edit menuIcon" v-if="dataMethod.editActiveIndex==0" @click="dataMethod.editActiveIndex=1"></i>
+                                                            <i class="el-icon-edit menuIcon active" v-if="dataMethod.editActiveIndex==1" @click="modifyDataMethod(dataMethod)"></i>
+                                                            <i class="el-icon-delete menuIcon" @click="removeDataMethod(dataMethodClassInfo,dataMethod)"></i>
+                                                        </div>
+                                                    </div>
+                                                </el-menu-item>
+                                            </div>
+                                        </el-submenu>
+                                    </div>
+
+                                    <div v-else>
+                                        <el-menu-item :index="'2-'+index"  @click="function(){changedataMethodClassNode(dataMethodClassInfo);editActiveIndex==0?showDataMethod('dataMethodClass'+index,'dataMethod'):showDataMethod('dataMethodClass_edit'+index,'dataMethod')}" >
+<!--                                            <span slot="title">{{dataMethodClassInfo.label}}</span>-->
+                                            <div slot="title"  class="menuTitleFlex">
+                                                <!--                                                            显示name-->
+                                                <span v-if="dataMethodClassInfo.editActiveIndex==0" slot="title">{{dataMethodClassInfo.label}}</span>
+                                                <!--                                                    编辑name-->
+                                                <el-input v-if="dataMethodClassInfo.editActiveIndex==1" v-model="dataMethodClassInfo.label" size="mini" onfocus="this.select()"></el-input>
+                                                <!--                                                   按钮组-->
+                                                <div v-if="editActiveIndex == 1" class="editHeadBtnGroups" style="margin-right: -10px">
+                                                    <i class="el-icon-plus menuIcon" @click="appendDataMethod(dataMethodClassInfo)"></i>
+                                                    <!--                                                        modify-->
+                                                    <i class="el-icon-edit menuIcon" v-if="dataMethodClassInfo.editActiveIndex==0" @click="dataMethodClassInfo.editActiveIndex=1"></i>
+                                                    <i class="el-icon-edit menuIcon active" v-if="dataMethodClassInfo.editActiveIndex==1" @click="modifyDataMethod(dataMethodClassInfo)"></i>
+                                                    <i class="el-icon-delete menuIcon" @click="removeDataMethod(themeDataMethod[0],dataMethodClassInfo)"></i>
+                                                </div>
+                                            </div>
+                                        </el-menu-item>
+                                    </div>
+                                </div>
+                            </el-submenu>
+
+<!--                            applications-->
+                            <el-menu-item index="4" @click="showData('application','applicationPanel')">
+
+                                <div slot="title"  id="applications1">
+                                    <i class="el-icon-bangzhu"></i>
+                                    <span>Applications</span>
+                                <i class="el-icon-edit editMenuIcon"  @click="dialogVisibleApplication=true" v-if="editActiveIndex==1"></i>
+                                </div>
+                            </el-menu-item>
+
+<!--                            maintainers-->
+                            <el-menu-item index="5" @click="showData('maintainers1','maintainerPanel')" >
+                                <i class="el-icon-s-custom"></i>
+                                <span slot="title" id="maintainer">Maintainers</span>
+                            </el-menu-item>
+                        </el-menu>
+                    </div>
+<!--                    按钮组-->
+                    <div class="cardEdit" th:if="${info.author==loginId}" style="padding:20px;">
+                        <div class="editEnableButton" v-if="editActiveIndex==0">
+                            <el-button id="controlEditButton" type="primary" @click="controlEdit">Enable editing</el-button>
+                        </div>
+                        <div class="editingBtnGroups flex-rowDirect flex-center" v-if="editActiveIndex==1">
+                            <el-button type="success" @click="editSave()">Save</el-button>
+                            <el-button @click="editCancel()">Cancel</el-button>
+                        </div>
+                    </div>
+                </div>
+            </el-card>
+        </div>
+<!--        rightContainer-->
+        <div id="rightContainer"  class="rightContainer">
+            <div  style="overflow: auto;padding:10px 10px;" id="right_content">
+<!--                theme Info-->
+                <div class="infoPanel container-fluid" id="BasicInfoPanel">
+
+                    <div class="title text-center" style="margin-bottom:40px;">
+                        <h3>
+                            <span>Theme Info</span>
+                            <!--<el-button class="editicon" type="primary" @click="edit_theme_info" icon="el-icon-edit" circle style="display: none"></el-button>-->
+<!--                            <el-button class="editIcon" type="primary" @click="edit_theme('0')" icon="el-icon-edit" style="display: none"></el-button>-->
+                            <!--<a href="javascript:void(0)" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit_theme_info"></a>-->
+                        </h3>
+                    </div>
+                    <div v-html="edit_themeObj.themeDetail" v-show="DetailEditActiveIndex===0" id="detailinfo" class="detailIntroducePanel"></div>
+
+                    <div class="editThemeDetail flex-colDirect" v-show="editActiveIndex==1 && DetailEditActiveIndex===1" v-cloak>
+                            <h4 class="col-sm-2 control-label"
+                                   style="font-weight: bold">
+                                Description:
+                            </h4>
+                        <textarea id="themeText"></textarea>
+                        <div class="editDetailBtnGroups">
+                            <el-button type="success" @click="editDetailSave()">Save</el-button>
+                            <el-button @click="DetailEditActiveIndex=0">Cancel</el-button>
+                        </div>
+                    </div>
+
+                </div>
+
+<!--                Model-->
+                <div id="model" class="infoPanel container-fluid dataPanel">
+                    <div class="title text-center">
+                        <h3>
+                            <span>Models</span>
+<!--                            <el-button class="editIcon" type="primary" @click="edit_theme('1')" icon="el-icon-edit" style="display: none"></el-button>-->
+                        </h3>
+                    </div>
+
+<!--                    编辑模式-->
+                    <div v-if="editActiveIndex == 1 && (themeModelData[0]!=undefined&&themeModelData[0].children.length>0)">
+<!--                        编辑dialog的入口-->
+                        <div class="col-md-2 model_col" @click="dialogVisibleModel=true" v-if="curModelNode.children!=undefined&&curModelNode.children.length==0">
+
+                            <el-card shadow="hover" style="width: 100%;height: 220px;" >
+                                <div class="editItemCard">
+                                    <i class="fa fa-plus" ></i>
+                                </div>
+
+                            </el-card>
+
+                        </div>
+                        <div v-for="(modelClass,index) in themeModelData[0].children" class="model_card">
+
+                        <!--                        有孩子-->
+                        <div v-if="modelClass.children!=null&&modelClass.children!=undefined&&modelClass.children.length>0">
+
+                            <div v-for="(model,index2) in modelClass.children">
+
+                                <div class="x_content model_item" :id="'modelClass_edit'+index+'-'+index2" style="width: 100%">
+                                    <el-row type="center" id="content" >
+                                        <div v-for="(item,index3) in model.tableData" class="col-md-2 model_col">
+
+                                            <a :href="'https://geomodeling.njnu.edu.cn/modelItem/'+item.oid" target = "_blank">
+                                                <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                    <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
+                                                        <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                    </div>
+                                                    <div v-else >
+                                                        <img :src="'/static'+item.image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                                    </div>
+                                                    <div style="text-align: center;justify-content: center">
+                                                        <span  class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;">{{item.name}}</span>
+                                                    </div>
+                                                </el-card>
+                                            </a>
+                                        </div>
+                                    </el-row>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        没孩子-->
+                        <div v-if="modelClass.children.length==0||modelClass.children==undefined">
+                            <div class="x_content model_item" :id="'modelClass_edit'+index" style="width: 100%">
+                                <el-row type="center" id="content" >
+                                    <div v-for="item in modelClass.tableData"  class="col-md-2 model_col">
+
+                                        <a :href="'https://geomodeling.njnu.edu.cn/modelItem/'+item.oid" target = "_blank">
+                                            <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
+                                                    <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                </div>
+                                                <div v-else >
+                                                    <img :src="'/static'+item.image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                                </div>
+
+                                                <div style="text-align: center;justify-content: center">
+                                                    <span  class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;">{{item.name}}</span>
+                                                </div>
+                                            </el-card>
+                                        </a>
+                                    </div>
+                                </el-row>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
+
+                    <!--                    展示模式-->
+                    <div v-if="editActiveIndex == 0" th:each="modelClass,index:${modelClassInfos}" class="model_card">
+
+                            <div th:if="${#lists.size(modelClass.children)} gt 0">
+                                <div th:each="class,index2:${modelClass.children}" >
+                                    <div class="x_content model_item" th:id="'modelClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
+                                        <el-row type="center" id="content" >
+                                            <div th:each="item:${class.content}" class="col-md-2 model_col">
+                                                <a th:href="'https://geomodeling.njnu.edu.cn/modelItem/'+${item.oid}" target = "_blank">
+                                                    <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                        <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                        <div th:unless="${item.image}!=''" style="text-align: center;justify-content: center">
+                                                            <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                        </div>
+                                                        <div th:if="${item.image!=''}">
+                                                            <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                                        </div>
+                                                        <div style="text-align: center;justify-content: center">
+                                                            <span th:text="${item.name}" class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;"></span>
+                                                        </div>
+                                                    </el-card>
+                                                </a>
+                                            </div>
+                                        </el-row>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div th:if="${#lists.size(modelClass.children)} eq 0">
+                                <div class="x_content model_item" th:id="'modelClass'+${index.index}" style="width: 100%">
+                                    <el-row type="center" id="content" >
+                                        <div th:each="item:${modelClass.content}" class="col-md-2 model_col">
+                                            <a th:href="'https://geomodeling.njnu.edu.cn/modelItem/'+${item.oid}" target = "_blank">
+                                                <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                    <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                    <div th:unless="${item.image}!=''" style="text-align: center;justify-content: center">
+                                                        <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                    </div>
+                                                    <div th:if="${item.image!=''}">
+                                                        <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                                    </div>
+                                                    <div style="text-align: center;justify-content: center">
+                                                        <span th:text="${item.name}" class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;"></span>
+                                                    </div>
+                                                </el-card>
+                                            </a>
+                                        </div>
+                                    </el-row>
+                                </div>
+                            </div>
+
+
+                        </div>
+                </div>
+
+                <!--                Data-->
+                <div id="data" class="infoPanel container-fluid dataPanel">
+                    <div class="title text-center">
+                        <h3>
+                            <span>Data</span>
+<!--                            <el-button class="editIcon" type="primary" @click="edit_theme('2')" icon="el-icon-edit" style="display: none"></el-button>-->
+                        </h3>
+                    </div>
+
+                    <!--                    编辑模式-->
+                    <div v-if="editActiveIndex == 1 && (themeData[0]!=undefined&&themeData[0].children.length>0)">
+                        <div class="col-md-2 model_col" @click="dialogVisibleData=true" v-if="curDataNode.children!=undefined&&curDataNode.children.length==0">
+
+                            <el-card shadow="hover" style="width: 100%;height: 220px;" >
+                                <div class="editItemCard">
+                                    <i class="fa fa-plus" ></i>
+                                </div>
+
+                            </el-card>
+
+                        </div>
+                        <div  v-for="(dataClass,index) in themeData[0].children"  class="model_card">
+                        <!--                        有孩子-->
+                            <div v-if="dataClass.children!=null&&dataClass.children!=undefined&&dataClass.children.length>0">
+                                <div v-for="(data,index2) in dataClass.children">
+                                    <div class="x_content data_item" :id="'dataClass_edit'+index+'-'+index2" style="width: 100%">
+                                        <el-row type="center" id="content" >
+                                            <div v-for="(item,index3) in data.tableData" class="col-md-2 model_col">
+                                                <a :href="'https://geomodeling.njnu.edu.cn/dataItem/'+item.oid" target = "_blank">
+                                                    <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                        <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                        <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
+                                                            <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                        </div>
+                                                        <div v-else >
+                                                            <img :src="'/static'+item.image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                                        </div>
+                                                        <div style="text-align: center;justify-content: center">
+                                                            <span  class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;">{{item.name}}</span>
+                                                        </div>
+                                                    </el-card>
+                                                </a>
+                                            </div>
+                                        </el-row>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--没孩子-->
+                            <div v-if="dataClass.children.length==0||dataClass.children==undefined">
+                            <div class="x_content data_item" :id="'dataClass_edit'+index" style="width: 100%">
+                                <el-row type="center" id="content" >
+                                    <div v-for="item in dataClass.tableData" class="col-md-2 model_col">
+                                        <a :href="'https://geomodeling.njnu.edu.cn/dataItem/'+item.oid" target = "_blank">
+                                            <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
+                                                    <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                </div>
+                                                <div v-else >
+                                                    <img :src="'/static'+item.image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                                </div>
+                                                <div style="text-align: center;justify-content: center">
+                                                    <span  class="data_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;">{{item.name}}</span>
+                                                </div>
+                                            </el-card>
+                                        </a>
+                                    </div>
+                                </el-row>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+
+                    <!--                    展示模式-->
+                    <div v-if="editActiveIndex == 0" th:each="dataClass,index:${dataClassInfos}" class="model_card">
+
+                        <div th:if="${#lists.size(dataClass.children)} gt 0">
+                            <div th:each="class,index2:${dataClass.children}" >
+                                <div class="x_content data_item" th:id="'dataClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
+                                    <el-row type="center" id="content" >
+                                        <div th:each="item:${class.content}" class="col-md-2 model_col">
+                                            <a th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${item.oid}" target = "_blank">
+                                                <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                    <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                    <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
+                                                        <img src="/static/img/model/myData.png" style="width:160px;height: 160px;">
+                                                    </div>
+                                                    <div th:if="${item.image!=null}">
+                                                        <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                                    </div>
+                                                    <div style="text-align: center;justify-content: center">
+                                                        <span th:text="${item.name}" class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;"></span>
+                                                    </div>
+                                                </el-card>
+                                            </a>
+                                        </div>
+                                    </el-row>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div th:if="${#lists.size(dataClass.children)} eq 0">
+                            <div class="x_content data_item" th:id="'dataClass'+${index.index}" style="width: 100%">
+                                <el-row type="center" id="content" >
+                                    <div th:each="item:${dataClass.content}" class="col-md-2 model_col">
+                                        <a th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${item.oid}" target = "_blank">
+                                            <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
+                                                    <img src="/static/img/model/myData.png" style="width:160px;height: 160px;">
+                                                </div>
+                                                <div th:if="${item.image!=null}">
+                                                    <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                                </div>
+                                                <div style="text-align: center;justify-content: center">
+                                                    <span th:text="${item.name}" class="data_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;"></span>
+                                                </div>
+                                            </el-card>
+                                        </a>
+                                    </div>
+                                </el-row>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+                <!--                Data Method-->
+                <div id="dataMethod" class="infoPanel container-fluid dataPanel">
+                    <div class="title text-center">
+                        <h3>
+                            <span>Data Method</span>
+<!--                            <el-button class="editIcon" type="primary" @click="edit_theme('3')" icon="el-icon-edit" style="display: none"></el-button>-->
+                        </h3>
+                    </div>
+
+                    <!--                    编辑模式-->
+                    <div v-if="editActiveIndex == 1 && (themeDataMethod[0]!=undefined&&themeDataMethod[0].children.length>0)">
+                        <div class="col-md-2 model_col" @click="dialogVisibleDataMethod=true" v-if="curDataMethodNode.children!=undefined&&curDataMethodNode.children.length==0">
+
+                            <el-card shadow="hover" style="width: 100%;height: 220px;" >
+                                <div class="editItemCard">
+                                    <i class="fa fa-plus" ></i>
+                                </div>
+
+                            </el-card>
+
+                        </div>
+                        <div  v-for="(dataMethodClass,index) in themeDataMethod[0].children"  class="model_card">
+                            <!--                        有孩子-->
+                            <div v-if="dataMethodClass.children!=null&&dataMethodClass.children!=undefined&&dataMethodClass.children.length>0">
+                                <div v-for="(dataMethod,index2) in dataMethodClass.children">
+                                    <div class="x_content data_item" :id="'dataMethodClass_edit'+index+'-'+index2" style="width: 100%">
+                                        <el-row type="center" id="content" >
+                                            <div v-for="(item,index3) in dataMethod.tableData" class="col-md-2 model_col">
+                                                <a :href="'https://geomodeling.njnu.edu.cn/dataApplication/'+item.oid" target = "_blank">
+                                                    <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                        <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
+                                                            <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                        </div>
+                                                        <div v-else >
+                                                            <img :src="'/static'+item.image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                                        </div>
+                                                        <div style="text-align: center;justify-content: center">
+                                                            <span  class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;">{{item.name}}</span>
+                                                        </div>
+                                                    </el-card>
+                                                </a>
+                                            </div>
+                                        </el-row>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--                        没孩子-->
+                            <div v-if="dataMethodClass.children.length==0||dataMethodClass.children==undefined">
+
+                                <div class="x_content data_item" :id="'dataMethodClass_edit'+index" style="width: 100%">
+                                    <el-row type="center" id="content" >
+                                        <div v-for="item in dataMethodClass.tableData" class="col-md-2 model_col">
+                                            <a :href="'https://geomodeling.njnu.edu.cn/dataApplication/'+item" target = "_blank">
+                                                <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                    <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                    <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
+                                                        <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
+                                                    </div>
+                                                    <div v-else >
+                                                        <img :src="'/static'+item.image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                                    </div>
+                                                    <div style="text-align: center;justify-content: center">
+                                                        <span  class="data_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;">{{item.name}}</span>
+                                                    </div>
+                                                </el-card>
+                                            </a>
+                                        </div>
+                                    </el-row>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+<!--                    展示模式-->
+                    <div v-if="editActiveIndex == 0" th:if="${dataMethodClassInfos!=null}">
+
+                        <div th:each="dataMethodClass,index:${dataMethodClassInfos}" class="model_card">
+
+                            <div th:if="${#lists.size(dataMethodClass.children)} gt 0">
+                                <div th:each="class,index2:${dataMethodClass.children}" >
+                                    <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
+                                        <el-row type="center" id="content" >
+                                            <div th:each="item:${class.content}" class="col-md-2 model_col">
+                                                <a th:href="'https://geomodeling.njnu.edu.cn/dataApplication/'+${item.oid}" target = "_blank">
+                                                    <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                        <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                        <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
+                                                            <img src="/static/img/model/myData.png" style="width:160px;height: 160px;">
+                                                        </div>
+                                                        <div th:if="${item.image!=null}">
+                                                            <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                                        </div>
+                                                        <div style="text-align: center;justify-content: center">
+                                                            <span th:text="${item.name}" class="model_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;"></span>
+                                                        </div>
+                                                    </el-card>
+                                                </a>
+                                            </div>
+                                        </el-row>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div th:if="${#lists.size(dataMethodClass.children)} eq 0">
+                                <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}" style="width: 100%">
+                                    <el-row type="center" id="content" >
+                                        <div th:each="item:${dataMethodClass.content}" class="col-md-2 model_col">
+                                            <a th:href="'https://geomodeling.njnu.edu.cn/dataApplication/'+${item.oid}" target = "_blank">
+                                                <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
+                                                    <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
+                                                    <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
+                                                        <img src="/static/img/model/myData.png" style="width:160px;height: 160px;">
+                                                    </div>
+                                                    <div th:if="${item.image!=null}">
+                                                        <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                                    </div>
+                                                    <div style="text-align: center;justify-content: center">
+                                                        <span th:text="${item.name}" class="data_name" style="-webkit-line-clamp: 2; height: 40px;max-width: 150px;margin: 0 auto; word-break:break-all;"></span>
+                                                    </div>
+                                                </el-card>
+                                            </a>
+                                        </div>
+                                    </el-row>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--                Application-->
+                <div class="infoPanel container-fluid applicationPanel" id="applicationPanel">
+                    <div class="title text-center">
+                        <h3>
+                            <span>Applications</span>
+<!--                            <el-button class="editIcon" type="primary" @click="edit_theme('4')" icon="el-icon-edit" style="display: none"></el-button>-->
+                        </h3>
+                    </div>
+
+                    <div id="applications">
+                        <div class="x_content application_item"  id="application">
+                            <el-row type="center" class="row-bg" id="content2">
+
+<!--                                编辑模式-->
+                                <div v-if="editActiveIndex == 1" v-for="(item,index) in themeApplicationData"  style="margin:20px 10px 0 10px;float: left" >
+                                    <a v-if="item.applicationlink!=''" :href="item.applicationlink" target = "_blank">
+                                        <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width:180px;height: 250px">
+
+                                            <div  v-if="item.imageTag == 0" style="text-align: center;justify-content: center">
+                                                <img src="/static/img/model/myData.png" style="width:160px;height: 160px;">
+                                            </div>
+                                            <div  v-if="item.imageTag == 2" style="text-align: center;justify-content: center">
+                                                <img :src="item.upload_application_image" style="width:160px;height: 160px;">
+                                            </div>
+                                            <div v-if="item.imageTag == 1" >
+                                                <img :src="'/static'+item.upload_application_image"  class="image" style="height: 180px!important;width: 180px!important;">
+                                            </div>
+                                            <div style="padding: 14px;">
+                                                <span>{{item.applicationname}}</span>
+                                            </div>
+                                        </el-card>
+                                    </a>
+                                </div>
+
+<!--                                展示模式-->
+                                <div  v-if="editActiveIndex == 0" th:each="item:${applications}" style="margin:20px 10px 0 10px;float: left" id="model_col3">
+                                    <a  th:href="${item.link}" target = "_blank">
+                                        <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width:180px;height: 250px">
+                                            <div th:if="${item.image==''}" style="text-align: center;justify-content: center">
+                                                <img src="/static/img/model/myData.png" style="width:160px;height: 160px;">
+                                            </div>
+                                            <div th:if="${item.image!=''}">
+                                                <img th:src="'/static'+${item.image}" class="image" style="height: 180px!important;width: 180px!important;">
+                                            </div>
+                                            <div style="padding: 14px;">
+                                                <span th:text="${item.name}"></span>
+                                            </div>
+                                        </el-card>
+                                    </a>
+                                </div>
+                            </el-row>
+                        </div>
+                    </div>
+                </div>
+
+
+<!--                maintainers-->
+                <div class="infoPanel container-fluid maintainerPanel" id="maintainerPanel">
+                    <div class="title text-center">
+                        <h3>
+                            <span>Maintainers</span>
+                        </h3>
+                    </div>
+                    <div id="maintainers">
+                        <div class="x_content"  id="maintainers1" style="display: contents;">
+                            <!--<el-row type="center" class="row-bg" id="content2">-->
+                            <div v-for="(item, index) in maintainer" :key="index">
+
+                                <el-col :span="8" style="padding:10px;height:350px;width:230px">
+                                    <div class="el-card__body" style="padding: 0px;">
+                                        <a :href="'/profile/' + item.userId" class="md-opjjpmhoiojifppkkcdabiobhakljdgm_doc">
+                                            <img :src="'/static/user/'+ item.image" onerror="this.src='/static/img/icon/default.png'; this.onerror='null'" class="image"></a>
+                                        <div style="padding: 14px;background-color: white">
+                                            <p style="text-align: center;">{{ item.name }}</p>
+                                        </div>
+                                    </div>
+
+                                </el-col>
+
+<!--                                                                        <el-col th:each="item:${maintainer}" style="margin:20px 20px 0 0;float: left">-->
+<!--                                                                            <el-card>-->
+<!--                                                                            <a th:href="'/profile/'+${item.name}" target = "_blank">-->
+<!--                                                                                    <div  style="margin: 5px;height: 40px;display: flex;justify-content: center;-->
+<!--                                                                                    align-items: center;padding: 10px;">-->
+<!--                                                                                        <div class="el-col ">-->
+<!--                                                                                            <img th:src="${item.image}"-->
+<!--                                                                                                 class="round_icon" style="width:40px;height: 40px;float:left;">-->
+<!--                                                                                        </div>-->
+<!--                                                                                        <div class="el-col">-->
+<!--                                                                                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
+<!--                                                                                                <h4  th:text="${item.name}" style="padding: 0;"></h4>-->
+<!--                                                                                            </div>-->
+<!--                                                                                        </div>-->
+<!--                                                                                    </div>-->
+<!--                                                                                </a>-->
+<!--                                                                            </el-card>-->
+<!--                                                                        </el-col>-->
+
+                            </div>
+                            <!--</el-row>-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            </div>
+        </div>
+
+<!--        model-->
+        <el-dialog
+                v-cloak
+                :title="'Edit Model : '+currentModelName"
+                :visible.sync="dialogVisibleModel"
+                width="70%"
+                :before-close="handleClose">
+            <el-card shadow="never">
+                <div class="panel-body" style="height: 570px">
+                    <el-card>
+<!--                        <div style="width: 20%;float: left">-->
+<!--                            <el-card class="box-card">-->
+
+<!--                                <el-tree :data="themeModelData"-->
+<!--                                         :props="defaultModelProps"-->
+<!--                                         :current-node-key="currentModelNode"-->
+<!--                                         highlight-current-->
+<!--                                         node-key="id"-->
+<!--                                         default-expand-all-->
+<!--                                         :expand-on-click-node="false"-->
+<!--                                         @node-click="changeModelClassNode">-->
+<!--                                              <span class="custom-tree-node" slot-scope="{ node, data }">-->
+<!--                                                    <span>{{node.label}}</span>-->
+<!--&lt;!&ndash;                                                    <span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          <el-button type="text"  @click="() => appendModel(node,data)" icon="el-icon-plus"></el-button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          <el-button type="text"  @click="() => modifyModel(data)" icon="el-icon-edit" v-if="data.id!=1"></el-button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          <el-button type="text"  @click="() => removeModel(node, data)" icon="el-icon-delete" v-if="data.id!=1"></el-button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    </span>&ndash;&gt;-->
+<!--                                              </span>-->
+<!--                                </el-tree>-->
+<!--                            </el-card>-->
+<!--                        </div>-->
+                        <div style="width: 100%;float: right">
+                            <div v-if="parentModelNode" style="text-align: center">Please Select Children Model Class</div>
+                            <div class='model-attr' v-if="childModelNode">
+
+                                <el-card class="box-card"
+                                         style="width:40%;margin-right: 1%;float: left;"
+                                         id="step2_left">
+                                    <div slot="header"
+                                         class="clearfix">
+                                        <span>Selected Items</span>
+                                    </div>
+                                    <el-table
+                                            :data="selectedModelTableData"
+                                            ref="leftTable"
+                                            :max-height="tableMaxHeight">
+                                        <el-table-column
+                                                type="expand">
+                                            <template
+                                                    slot-scope="props">
+                                                <el-form
+                                                        label-position="left"
+                                                        inline
+                                                        class="demo-table-expand">
+                                                    <el-form-item
+                                                            label="Contributor">
+                                                        <span>{{ props.row.author }}</span>
+                                                    </el-form-item>
+
+                                                </el-form>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="Name">
+                                            <template
+                                                    slot-scope="props">
+                                                <a :href="'/'+relateType+'/'+props.row.oid"
+                                                   target="_blank">{{props.row.name}}</a>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                fixed="right"
+                                                label="Operation"
+                                                width="100">
+                                            <template
+                                                    slot-scope="scope">
+
+                                                <el-button
+                                                        size="mini"
+                                                        type="danger"
+                                                        @click="deleteModel(scope.$index, scope.row)">
+                                                    Delete
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-card>
+                                <el-card class="box-card"
+                                         style="width:59%;"
+                                         id="step2_right">
+                                    <el-input
+                                            placeholder="Please enter name..."
+                                            v-model="relateSearch"
+                                            class="input-with-select">
+                                        <el-button slot="append"
+                                                   icon="el-icon-search"
+                                                   @click="search1()"></el-button>
+                                    </el-input>
+                                    <el-table
+                                            :data="pageOption1.searchResult"
+                                            style="margin-top:17px;"
+                                            :max-height="tableMaxHeight">
+                                        <el-table-column
+                                                type="expand">
+                                            <template
+                                                    slot-scope="props">
+                                                <el-form
+                                                        label-position="left"
+                                                        inline
+                                                        class="demo-table-expand">
+                                                    <el-form-item
+                                                            label="Detail">
+                                                        <span>{{ props.row.description }}</span>
+                                                    </el-form-item>
+
+                                                </el-form>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="Name">
+                                            <template
+                                                    slot-scope="props">
+                                                <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                                   target="_blank">{{props.row.name}}</a>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="Contributor"
+                                                prop="author">
+                                        </el-table-column>
+                                        <el-table-column
+                                                fixed="right"
+                                                label="Operation"
+                                                width="100">
+                                            <template
+                                                    slot-scope="scope">
+                                                <el-button
+                                                        size="mini"
+                                                        @click="addModel(scope.$index, scope.row)">
+                                                    Add
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-pagination
+                                            style="text-align: center;margin-top:20px"
+                                            @current-change="handlePageChange1"
+                                            :current-page="pageOption1.currentPage"
+                                            layout="total, prev, pager, next, jumper"
+                                            :page-size="5"
+                                            :total="pageOption1.total">
+                                    </el-pagination>
+                                </el-card>
+                            </div>
+                        </div>
+
+                    </el-card>
+                    <div class="dialogBtnGroups" >
+                        <el-button @click="dialogCancel('Model')">Cancel</el-button>
+                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Model')">Save</el-button>
+
+                    </div>
+                </div>
+            </el-card>
+
+        </el-dialog>
+<!--        data-->
+        <el-dialog
+                v-cloak
+                title="Edit Data"
+                :visible.sync="dialogVisibleData"
+                width="70%"
+                :before-close="handleClose">
+            <el-card  shadow="never">
+                <div class="panel-body" style="height: 570px">
+                    <el-card>
+<!--                            <div style="width: 20%;float: left">-->
+<!--                                <el-card class="box-card">-->
+
+<!--                                    <el-tree :data="themeData"-->
+<!--                                             :props="defaultProps"-->
+<!--                                             :current-node-key="currentNode"-->
+<!--                                             highlight-current-->
+<!--                                             node-key="id"-->
+<!--                                             default-expand-all-->
+<!--                                             :expand-on-click-node="false"-->
+<!--                                             @node-click="changeClassNode">-->
+<!--                                                  <span class="custom-tree-node" slot-scope="{ node, data }">-->
+<!--                                                        <span>{{node.label}}</span>-->
+<!--                                                        <span>-->
+<!--                                                              <el-button type="text"  @click="() => append(node,data)" icon="el-icon-plus"></el-button>-->
+<!--                                                              <el-button type="text"  @click="() => modify(data)" icon="el-icon-edit" v-if="data.id!=1"></el-button>-->
+<!--                                                              <el-button type="text"  @click="() => remove(node, data)" icon="el-icon-delete" v-if="data.id!=1"></el-button>-->
+<!--                                                        </span>-->
+<!--                                                  </span>-->
+<!--                                    </el-tree>-->
+<!--                                </el-card>-->
+<!--                            </div>-->
+                            <div style="width: 100%;float: right">
+                                <div v-if="parentNode" style="text-align: center">Please Select Children Model Class</div>
+                                <div class='model-attr' v-if="childNode">
+                                    <el-card class="box-card"
+                                             style="width:40%;margin-right: 1%;float: left;"
+                                             id="step3_left">
+                                        <div slot="header"
+                                             class="clearfix">
+                                            <span>Selected Items</span>
+                                        </div>
+                                        <el-table
+                                                :data="selectedTableData"
+                                                ref="leftTable"
+                                                :max-height="tableMaxHeight">
+                                            <el-table-column
+                                                    type="expand">
+                                                <template
+                                                        slot-scope="props">
+                                                    <el-form
+                                                            label-position="left"
+                                                            inline
+                                                            class="demo-table-expand">
+                                                        <el-form-item
+                                                                label="Contributor">
+                                                            <span>{{ props.row.author }}</span>
+                                                        </el-form-item>
+
+                                                    </el-form>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label="Name">
+                                                <template
+                                                        slot-scope="props">
+                                                    <a :href="'/'+relateType+'/'+props.row.oid"
+                                                       target="_blank">{{props.row.name}}</a>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column
+                                                    fixed="right"
+                                                    label="Operation"
+                                                    width="100">
+                                                <template
+                                                        slot-scope="scope">
+
+                                                    <el-button
+                                                            size="mini"
+                                                            type="danger"
+                                                            @click="deleteData(scope.$index, scope.row)">
+                                                        Delete
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-card>
+                                    <el-card class="box-card"
+                                             style="width:59%;"
+                                             id="step3_right">
+                                        <el-input
+                                                placeholder="Please enter name..."
+                                                v-model="relateSearch"
+                                                class="input-with-select">
+                                            <el-button slot="append"
+                                                       icon="el-icon-search"
+                                                       @click="search2()"></el-button>
+                                        </el-input>
+                                        <el-table
+                                                :data="pageOption2.searchResult"
+                                                style="margin-top:17px;"
+                                                :max-height="tableMaxHeight">
+                                            <el-table-column
+                                                    type="expand">
+                                                <template
+                                                        slot-scope="props">
+                                                    <el-form
+                                                            label-position="left"
+                                                            inline
+                                                            class="demo-table-expand">
+                                                        <el-form-item
+                                                                label="Detail">
+                                                            <span>{{ props.row.description }}</span>
+                                                        </el-form-item>
+
+                                                    </el-form>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label="Name">
+                                                <template
+                                                        slot-scope="props">
+                                                    <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                                       target="_blank">{{props.row.name}}</a>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label="Contributor"
+                                                    prop="author">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    fixed="right"
+                                                    label="Operation"
+                                                    width="100">
+                                                <template
+                                                        slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            @click="addData(scope.$index, scope.row)">
+                                                        Add
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                        <el-pagination
+                                                style="text-align: center;margin-top:20px"
+                                                @current-change="handlePageChange2"
+                                                :current-page="pageOption2.currentPage"
+                                                layout="total, prev, pager, next, jumper"
+                                                :page-size="5"
+                                                :total="pageOption2.total">
+                                        </el-pagination>
+                                    </el-card>
+                                </div>
+                            </div>
+                        </el-card>
+                    <div class="dialogBtnGroups" >
+                        <el-button @click="dialogCancel('Data')">Cancel</el-button>
+                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Data')">Save</el-button>
+
+                    </div>
+                </div>
+            </el-card>
+
+
+        </el-dialog>
+<!--        datamethod-->
+        <el-dialog
+                v-cloak
+                title="Edit Data Method"
+                :visible.sync="dialogVisibleDataMethod"
+                width="80%"
+                :before-close="handleClose">
+            <div class="panel-body" style="height: 570px">
+                <el-card shadow="never">
+
+                    <el-card>
+<!--                        <div style="width: 20%;float: left">-->
+<!--                            <el-card class="box-card">-->
+
+<!--                                <el-tree :data="themeDataMethod"-->
+<!--                                         :props="defaultProps"-->
+<!--                                         :current-node-key="currentdataMethodNode"-->
+<!--                                         highlight-current-->
+<!--                                         node-key="id"-->
+<!--                                         default-expand-all-->
+<!--                                         :expand-on-click-node="false"-->
+<!--                                         @node-click="changedataMethodClassNode">-->
+<!--                                                                                      <span class="custom-tree-node" slot-scope="{ node, data }">-->
+<!--                                                                                            <span>{{node.label}}</span>-->
+<!--                                                                                            <span>-->
+<!--                                                                                                  <el-button type="text"  @click="() => appendMethod(node,data)" icon="el-icon-plus"></el-button>-->
+<!--                                                                                                  <el-button type="text"  @click="() => modifyMethod(data)" icon="el-icon-edit" v-if="data.id!=1"></el-button>-->
+<!--                                                                                                  <el-button type="text"  @click="() => removeMethod(node, data)" icon="el-icon-delete" v-if="data.id!=1"></el-button>-->
+<!--                                                                                            </span>-->
+<!--                                                                                      </span>-->
+<!--                                </el-tree>-->
+<!--                            </el-card>-->
+<!--                        </div>-->
+                        <div style="width: 100%;float: right">
+                            <div v-if="parentdataMethodNode" style="text-align: center">Please Select Children Data Method Class</div>
+                            <div class='model-attr' v-if="childdataMethodNode">
+                                <el-card class="box-card"
+                                         style="width:40%;margin-right: 1%;float: left;"
+                                         id="step3_left">
+                                    <div slot="header"
+                                         class="clearfix">
+                                        <span>Selected Items</span>
+                                    </div>
+                                    <el-table
+                                            :data="selecteddataMethodTableData"
+                                            ref="leftTable"
+                                            :max-height="tableMaxHeight">
+                                        <el-table-column
+                                                type="expand">
+                                            <template
+                                                    slot-scope="props">
+                                                <el-form
+                                                        label-position="left"
+                                                        inline
+                                                        class="demo-table-expand">
+                                                    <el-form-item
+                                                            label="Contributor">
+                                                        <span>{{ props.row.author }}</span>
+                                                    </el-form-item>
+
+                                                </el-form>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="Name">
+                                            <template
+                                                    slot-scope="props">
+                                                <a :href="'/'+relateType+'/'+props.row.oid"
+                                                   target="_blank">{{props.row.name}}</a>
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column
+                                                fixed="right"
+                                                label="Operation"
+                                                width="100">
+                                            <template
+                                                    slot-scope="scope">
+
+                                                <el-button
+                                                        size="mini"
+                                                        type="danger"
+                                                        @click="deleteDataMethod(scope.$index, scope.row)">
+                                                    Delete
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-card>
+                                <el-card class="box-card"
+                                         style="width:59%;"
+                                         id="step3_right">
+                                    <el-input
+                                            placeholder="Please enter name..."
+                                            v-model="relateSearch"
+                                            class="input-with-select">
+                                        <el-button slot="append"
+                                                   icon="el-icon-search"
+                                                   @click="search3()"></el-button>
+                                    </el-input>
+                                    <el-table
+                                            :data="pageOption3.searchResult"
+                                            style="margin-top:17px;"
+                                            :max-height="tableMaxHeight">
+                                        <el-table-column
+                                                type="expand">
+                                            <template
+                                                    slot-scope="props">
+                                                <el-form
+                                                        label-position="left"
+                                                        inline
+                                                        class="demo-table-expand">
+                                                    <el-form-item
+                                                            label="Detail">
+                                                        <span>{{ props.row.description }}</span>
+                                                    </el-form-item>
+
+                                                </el-form>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="Name">
+                                            <template
+                                                    slot-scope="props">
+                                                <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                                   target="_blank">{{props.row.name}}</a>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                label="Contributor"
+                                                prop="author">
+                                        </el-table-column>
+                                        <el-table-column
+                                                fixed="right"
+                                                label="Operation"
+                                                width="100">
+                                            <template
+                                                    slot-scope="scope">
+                                                <el-button
+                                                        size="mini"
+                                                        @click="addDataMethod(scope.$index, scope.row)">
+                                                    Add
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-pagination
+                                            style="text-align: center;margin-top:20px"
+                                            @current-change="handlePageChange3"
+                                            :current-page="pageOption3.currentPage"
+                                            layout="total, prev, pager, next, jumper"
+                                            :page-size="5"
+                                            :total="pageOption3.total">
+                                    </el-pagination>
+                                </el-card>
+                            </div>
+                        </div>
+                    </el-card>
+
+            </el-card>
+                <div class="dialogBtnGroups" >
+                    <el-button @click="dialogCancel('DataMethod')">Cancel</el-button>
+                    <el-button type="success" style="margin-right: 20px" @click="dialogSave('DataMethod')">Save</el-button>
+
+                </div>
+            </div>
+
+
+        </el-dialog>
+<!--        application-->
+        <el-dialog
+                v-cloak
+                title="Edit Application"
+                :visible.sync="dialogVisibleApplication"
+                width="70%"
+                :before-close="handleClose">
+            <el-card shadow="never">
+                <div class="panel-body" style="height: 570px">
+                            <el-card style="height: 400px">
+                                <el-button type="success"
+                                           style="position: absolute;right: 25px;z-index: 999"
+                                           @click="addTab()">Add New Application
+                                </el-button>
+                                <el-tabs
+                                        v-model="editableTabsValue_applications"
+                                        type="card" editable
+                                        @edit="handleTabsEdit_applications"
+                                @tab-click="handleTabClick">
+                                    <el-tab-pane
+                                            :key="item.name"
+                                            v-for="(item, index) in themeApplicationData"
+                                            :label="item.applicationname"
+                                            :name="item.name"
+                                            id="add_tabs"
+
+                                    >
+                                        <div class='user-attr3'>
+<!--                                            name-->
+                                            <div>
+                                                <lable class='control-label col-sm-2 text-center'
+                                                       categorynameApplication
+                                                       style='font-weight: bold;'>
+                                                    Name:
+                                                </lable>
+                                                <div class='input-group'>
+                                                    <el-input type='text'
+                                                           :id="'applicationName'+index"
+                                                           name="name"
+                                                           v-model="item.applicationname"
+                                                           >
+                                                    </el-input>
+                                                </div>
+                                            </div>
+<!--                                            link-->
+                                            <div style="margin-top:10px">
+                                                <lable class='control-label col-sm-2 text-center'
+                                                       style='font-weight: bold;'>
+                                                    Link:
+                                                </lable>
+                                                <div class='input-group'>
+                                                    <el-input type='text'
+                                                           :id="'applicationLink'+index"
+                                                           name="name"
+                                                              v-model="item.applicationlink">
+                                                    </el-input>
+                                                </div>
+                                            </div>
+
+
+<!--                                            image-->
+                                            <div style="margin-top:10px">
+                                                <lable class='control-label col-sm-2 text-center'
+                                                       style='font-weight: bold;'>
+                                                    Image:
+                                                </lable>
+
+                                                <div>
+
+<!--                                                    <img :id="'imgShowApplication'+index"-->
+<!--                                                         src=""-->
+<!--                                                         class="img_Show1"-->
+<!--                                                         style="-->
+<!--                                                                    display: none;-->
+<!--                                                                    border: 1px solid #ccc;-->
+<!--                                                                    width: 100px;-->
+<!--                                                                    height: 100px;-->
+<!--                                                                    text-align: center;-->
+<!--                                                                    float: left;-->
+<!--                                                                    margin-right: 10px;"-->
+<!--                                                         />-->
+
+                                                    <img :id="'imgShowApplication'+index"
+                                                         v-if="item.imageTag==1"
+                                                         :src="'/static'+item.upload_application_image"
+                                                         class="img_Show1"
+                                                         style="
+                                                                                            border: 1px solid #ccc;
+                                                                                            width: 100px;
+                                                                                            height: 100px;
+                                                                                            text-align: center;
+                                                                                            float: left;
+                                                                                            margin-right: 10px;"
+                                                    />
+                                                    <img :id="'imgShowApplication'+index"
+                                                         v-if="item.imageTag==2"
+                                                         :src="item.upload_application_image"
+                                                         class="img_Show1"
+                                                         style="
+                                                                                            border: 1px solid #ccc;
+                                                                                            width: 100px;
+                                                                                            height: 100px;
+                                                                                            text-align: center;
+                                                                                            float: left;
+                                                                                            margin-right: 10px;"
+                                                    />
+                                                    <div :id="'imgChangeAppliction'+index"
+                                                         @click = "uploadApplicationImg(index)"
+                                                         class="imgChange"
+                                                         style=" border: 1px solid #ccc;
+                                                                                            width: 100px;
+                                                                                            height: 100px;
+                                                                                            text-align: center;
+                                                                                            line-height: 150px;
+                                                                                            vertical-align: middle;
+                                                                                            color: #ccc;
+                                                                                            float: left;">
+                                                        <i class="fa fa-plus fa-5x"></i>
+                                                    </div>
+                                                    <input :id="'imgFileApplication'+index"
+                                                           class="img_fileApplication"
+                                                           type="file"
+                                                           style="display: none"
+                                                           accept="image/*"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </el-tab-pane>
+                                </el-tabs>
+                            </el-card>
+
+
+                    <div class="dialogBtnGroups" >
+                        <el-button @click="dialogCancel('Application')">Cancel</el-button>
+                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Application')">Save</el-button>
+
+                    </div>
+                </div>
+            </el-card>
+
+
+        </el-dialog>
+
+
+    </div>
+
+</div>
+
+</body>
+
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/bootstrap.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+
+<script type="text/javascript" src="/static/js/common/bootstrap-treeview.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<!--<script src="/static/js/tinymce/tinymce.min.js"></script>-->
+<script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+
+<script type="text/javascript" src="/static/js/common/pageEn.js"></script>
+<script src="/static/js/common/bootstrap.min.js"></script>
+
+<script src="/static/iCheck/jquery.icheck.min.js"></script>
+<script src="/static/js/page/theme_info.js"></script>
+
+<!--<script src="/static/socket/message.js"></script>-->
+<script src="/static/socket/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jutils-src"></script>
+<script src="/static/js/page/create-theme.js"></script>
+<script src="/static/js/common/navbar.js"></script>
+
+<!--<script type="text/javascript" src="/static/js/page/userSpace1.js"></script>-->
+
+</html>
