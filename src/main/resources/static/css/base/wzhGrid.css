@@ -1,0 +1,56 @@
+.grid_c6{
+    display: grid;
+    grid-template-columns: [c1] 1fr [c2] 1fr [c3] 1fr [c4] 1fr [c5] 1fr [c6] 1fr [c7];
+}
+.grid_c12{
+    display: grid;
+    grid-template-columns: [c1]1fr [c2]1fr [c3]1fr [c4]1fr [c5]1fr [c6]1fr [c7]1fr [c8]1fr [c9]1fr [c10]1fr [c11]1fr [c12]1fr [c13];
+}
+.grid_c3{
+    display: grid;
+    grid-template-columns:  [c1]1fr [c2]1fr [c3]1fr [c4];
+}
+.grid_r6{
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+}
+.grid_r3{
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+}
+.cgap_20{
+    grid-column-gap: 20px;
+
+}
+
+.item_c1{
+    grid-column-start: span 1;
+}
+.item_c2{
+    grid-column-start: span 2;
+}
+.item_c3{
+    grid-column-start: span 3;
+}
+.item_c4{
+    grid-column-start: span 4;
+}
+.item_c5{
+    grid-column-start: span 5;
+}
+.item_c6{
+    grid-column-start: span 6;
+}
+
+.grid_justStart{
+    justify-items: start
+}
+.grid_justCenter{
+    justify-items: center;
+}
+.grid_justEnd{
+    justify-items: end;
+}
+.grid_justStretch{
+    justify-items: stretch;
+}
