@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<template id="translationBar" th:fragment="translationBar">
+    <div>
+        <div class="flexJustCenter positionRelative">
+            <div class="leftNutTag flexCenter" :class="getClass('en-us')" @click="changeLang('en-us')" style="border-right: 0px;width: 45px">
+                EN
+            </div>
+            <div class="absoluteCenter innerBorderCol h66" :class="themeStyle" ></div>
+            <div class="rightNutTag flexCenter" :class="getClass('zh-cn')" @click="changeLang('zh-cn')" style="border-left: 0px">
+                中文
+            </div>
+        </div>
+    </div>
+
+
+</template>
+
+</body>
+</html>

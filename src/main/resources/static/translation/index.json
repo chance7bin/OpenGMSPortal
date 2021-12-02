@@ -1,0 +1,228 @@
+{
+  "en-us":
+  {
+    "headerSentence": "<h1 id=\"headerSentence\">Open Geographic</br>Modeling and Simulation</br> (OpenGMS)</h1>",
+
+    "headerSentenceBig": "<h1 id=\"headerSentenceBig\" >Open Geographic Modeling </br>and Simulation (OpenGMS)</h1>",
+
+    "headerSection": "OpenGMS supports sharing of your modeling and simulation resources for geographic applications. Also, this platform provides a virtual community for collaboration among researchers from various domains. Through open web-distributed resource sharing and collaboration, this platform further contributes to open geographic modelling and simulation to enable broader participation and exploration.",
+
+    "exploreMore": "Explore more",
+    "joinUs": "Join us",
+
+    "rollingNews_1": "Prof. Min Chen is awarded the 2021 Global Frontier Science and Technology Young Scientist in WDGC",
+    "rollingNews_2": "Prof. Min Chen serves as Vice-President of the International Society for Environmental Modeling and Software (iEMSs) and Chair of the Geographic Information Modeling Committee of the International Geographic Union (IGU)",
+    "rollingNews_3": " OpenGMS leading a position paper with ten more famous experts on open web-distributed integrated geographic modelling and simulation",
+    "rollingNews_4": " <a href=\"http://opengmsteam.com/news/1a1ec738-751b-49f6-8756-7a460b2e6173\"\n                   target=\"_blank\">\n                    OpenGMS joins the call for transparency of COVID-19 models ( in <i>Science</i> )\n                </a>",
+    "rollingNews_5": " CoMSES Net adds OpenGMS to Trusted Digital Repositories for Software",
+    "rollingNews_6": "  Exploring Interoperability of Open Modeling Platforms Initiative",
+
+    "mainFunc": "Main Functionalities",
+
+    "sharing":"SHARING",
+    "sharingSetence": "Sharing models, data and computing resources as reusable resources.",
+
+
+    "reusing":"REUSING",
+    "reusingSetence": "Reusing models, data and computing resources as services in web environment.",
+
+
+    "integrating":"INTEGRATING",
+    "integratingSetence": "Integrating different models, data and computing resources to solve real world problems.",
+    "integratingSetence_mobile": "<p>Integrating different models, data and computers to solve</br>real world problems.</p>",
+
+    "modelRep": "Model Repository",
+    "modelRepContent": "The model repository collects model resources to build a dictionary where all models (also include related tools, algorithms, etc.) are organized in a formal way. Users can find a model with its detailed information, conceptual and logical descriptions, computable resources, developing history, and applications. This repository publishes  model resources under the permission of the author.",
+    "discover": "Discover",
+    "DISCOVRE": "Discover",
+    "modelRelationGraph": "Model Relation Graph",
+
+    "dataRep": "Model Repository",
+    "dataRepContent": "The model repository collects model resources to build a dictionary where all models (also include related tools, algorithms, etc.) are organized in a formal way. Users can find a model with its detailed information, conceptual and logical descriptions, computable resources, developing history, and applications. This repository publishes  model resources under the permission of the author.",
+
+    "useModel": "Using Models as Services",
+    "useModelContent": "This platform provides model, data, and computing resources as corresponding services in an open web environment.Users can setup input data and run a model via a web client, and the related model will be executed in a remote computer node.Users can invoke a model service before boarding and obtain results when get off. A set of alternative solutions are available to convert original models as reusable services, to publish data files as reusable services and to share computers as available services.",
+    "swat": "SWAT",
+    "fvcom": "FVCOM",
+    "swmm": "SWMM",
+
+    "thematic": "Thematic Center",
+    "thematicContent": "Regarding a research topic or a specific problem, multi-disciplinary knowledge could be involved. Several thematic centers are constructed to help researchers collect models, data and other related resources. Topic-related or problem-related resources could be easily discovered within a thematic center.  And various web applications would be offered in certain centers.",
+
+    "saga": "Saga",
+    "hydrology": "Hydrology",
+    "forestGrowth": "Forest Growth",
+    "trafficNoise": "Traffic Noise",
+    "geodetector": "Geodetector",
+    "bss": "B-SHADE-Sampling",
+    "bse": "B-SHADE-Estimation",
+    "beautiful": "Beautiful China",
+    "chinaBasin": "China Basin",
+
+    "explore": "Explore More",
+
+    "supportTool": "Supportive Tools",
+    "modelSerCntner": "Model Service Container",
+    "modelSerCntnerContent": "Model Service Container is developed based on the open source NodeJS, and it mainly provides tools/functions for users to deploy a model as a reusable model-service which can also be managed in the model service container. It can be deployed in various computing platforms (e.g. Windows, Linux, Mac OS, etc.).</p>",
+    "useNow": "Use Now",
+    "download": "Download",
+    "dateSerCntner": "Data Service Container",
+    "dateSerCntnerContent": "Data Service Container is developed based on the open source NodeJS project, and it mainly provides tools/functions for users to publish data as reusable data-services. It can be deployed in various computing platforms (e.g. Windows, Linux, Mac OS, etc.).",
+    "modelWrap": "Model Wrapping Tools",
+    "modelWrapContent": "Model Wrapping Tools are some tools that help users to wrap their own models as services. Tools include Programming Libraries for converting original program= as service-enabled program (currently supporting C++, C#, Java and Python) and Model Service Packaging tool for packaging model execution related files as one zip file.",
+
+    "download": "Download",
+
+    "contact": "<q>Please <a href=\"mailto:opengms@njnu.edu.cn\" style=\"color:blue\">contact us</a> if you would like to cooperate with us. </q>",
+
+    "cooperation": "Cooperation partners",
+
+    "feedBack": "Feed Back",
+
+    "collaborators": "Collaborators",
+    "collaboratorsList": {
+      "albert": "Albert J. Kettner",
+      "stewart": "A. Stewart Fotheringham",
+      "barry": "Barry Croken",
+      "huangBo": "Bo Huang",
+      "wangChuanHai": "Chuanhai Wang",
+      "daniel": "Daniel P. Ames",
+      "guoFei": "Fei Guo",
+      "zhangJinBo": "Jinbo Zhang",
+      "zhangjs": "Jinshan Zhang",
+      "liujunz": "Junzhi Liu",
+      "ningLiang": "Liang Ning",
+      "yuanLinWang": "Linwang Yuan",
+      "liLongHui": "Longhui Li",
+      "cm": "Ming Cao",
+      "luc": "Luc Anselin",
+      "dq": "Qiang Dai",
+      "whitehead": "Paul Whitehead",
+      "quillon": "Quillon Harpham",
+      "zhangShuLiang": "Shuliang Zhang",
+      "liShuo": "Shuo Li",
+      "yueTianXiang": "Tianxiang Yue",
+      "yuanWanPing": "Wenping Yuan",
+      "liXia": "Xia Li",
+      "yeXinYue": "Xinyue Ye",
+      "shiXun": "Xun Shi",
+      "songZhiYao": "ZhiYao Song",
+      "nanZhuoTong": "ZhuoTong Nan"
+    }
+
+  },
+
+  "zh-cn":
+  {
+    "headerSentence": "<h1 id=\"headerSentence\">开放式地理建模与模拟</br>(OpenGMS)</h1>",
+
+    "headerSentenceBig": "<h1 id=\"headerSentenceBig\" >开放式地理建模与模拟</br>(OpenGMS)</h1>",
+
+    "headerSection": "OpenGMS supports sharing of your modeling and simulation resources for geographic applications. Also, this platform provides a virtual community for collaboration among researchers from various domains. Through open web-distributed resource sharing and collaboration, this platform further contributes to open geographic modelling and simulation to enable broader participation and exploration.",
+
+    "exploreMore": "了解更多",
+    "joinUs": "加入我们",
+
+    "rollingNews_1": "Prof. Min Chen is awarded the 2021 Global Frontier Science and Technology Young Scientist in WDGC",
+    "rollingNews_2": "Prof. Min Chen serves as Vice-President of the International Society for Environmental Modeling and Software (iEMSs) and Chair of the Geographic Information Modeling Committee of the International Geographic Union (IGU)",
+    "rollingNews_3": " OpenGMS leading a position paper with ten more famous experts on open web-distributed integrated geographic modelling and simulation",
+    "rollingNews_4": " <a href=\"http://opengmsteam.com/news/1a1ec738-751b-49f6-8756-7a460b2e6173\"\n                   target=\"_blank\">\n                    OpenGMS joins the call for transparency of COVID-19 models ( in <i>Science</i> )\n                </a>",
+    "rollingNews_5": " CoMSES Net adds OpenGMS to Trusted Digital Repositories for Software",
+    "rollingNews_6": "  Exploring Interoperability of Open Modeling Platforms Initiative",
+
+    "mainFunc": "Main Functionalities",
+
+    "sharing":"SHARING",
+    "sharingSetence": "Sharing models, data and computing resources as reusable resources.",
+
+
+    "reusing":"REUSING",
+    "reusingSetence": "Reusing models, data and computing resources as services in web environment.",
+
+
+    "integrating":"INTEGRATING",
+    "integratingSetence": "Integrating different models, data and computing resources to solve real world problems.",
+    "integratingSetence_mobile": "<p>Integrating different models, data and computers to solve</br>real world problems.</p>",
+
+    "modelRep": "Model Repository",
+    "modelRepContent": "The model repository collects model resources to build a dictionary where all models (also include related tools, algorithms, etc.) are organized in a formal way. Users can find a model with its detailed information, conceptual and logical descriptions, computable resources, developing history, and applications. This repository publishes  model resources under the permission of the author.",
+    "discover": "Discover",
+    "DISCOVRE": "Discover",
+    "modelRelationGraph": "Model Relation Graph",
+
+    "dataRep": "Model Repository",
+    "dataRepContent": "The model repository collects model resources to build a dictionary where all models (also include related tools, algorithms, etc.) are organized in a formal way. Users can find a model with its detailed information, conceptual and logical descriptions, computable resources, developing history, and applications. This repository publishes  model resources under the permission of the author.",
+
+    "useModel": "Using Models as Services",
+    "useModelContent": "This platform provides model, data, and computing resources as corresponding services in an open web environment.Users can setup input data and run a model via a web client, and the related model will be executed in a remote computer node.Users can invoke a model service before boarding and obtain results when get off. A set of alternative solutions are available to convert original models as reusable services, to publish data files as reusable services and to share computers as available services.",
+    "swat": "SWAT",
+    "fvcom": "FVCOM",
+    "swmm": "SWMM",
+
+    "thematic": "Thematic Center",
+    "thematicContent": "Regarding a research topic or a specific problem, multi-disciplinary knowledge could be involved. Several thematic centers are constructed to help researchers collect models, data and other related resources. Topic-related or problem-related resources could be easily discovered within a thematic center.  And various web applications would be offered in certain centers.",
+
+    "saga": "Saga",
+    "hydrology": "Hydrology",
+    "forestGrowth": "Forest Growth",
+    "trafficNoise": "Traffic Noise",
+    "geodetector": "Geodetector",
+    "bss": "B-SHADE-Sampling",
+    "bse": "B-SHADE-Estimation",
+    "beautiful": "Beautiful China",
+    "chinaBasin": "China Basin",
+
+    "explore": "Explore More",
+
+    "supportTool": "Supportive Tools",
+    "modelSerCntner": "Model Service Container",
+    "modelSerCntnerContent": "Model Service Container is developed based on the open source NodeJS, and it mainly provides tools/functions for users to deploy a model as a reusable model-service which can also be managed in the model service container. It can be deployed in various computing platforms (e.g. Windows, Linux, Mac OS, etc.).</p>",
+    "useNow": "Use Now",
+    "download": "Download",
+    "dateSerCntner": "Data Service Container",
+    "dateSerCntnerContent": "Data Service Container is developed based on the open source NodeJS project, and it mainly provides tools/functions for users to publish data as reusable data-services. It can be deployed in various computing platforms (e.g. Windows, Linux, Mac OS, etc.).",
+    "modelWrap": "Model Wrapping Tools",
+    "modelWrapContent": "Model Wrapping Tools are some tools that help users to wrap their own models as services. Tools include Programming Libraries for converting original program= as service-enabled program (currently supporting C++, C#, Java and Python) and Model Service Packaging tool for packaging model execution related files as one zip file.",
+
+    "download": "Download",
+
+    "contact": "<q>Please <a href=\"mailto:opengms@njnu.edu.cn\" style=\"color:blue\">contact us</a> if you would like to cooperate with us. </q>",
+
+    "cooperation": "Cooperation partners",
+
+    "feedBack": "Feed Back",
+
+    "collaborators": "Collaborators",
+    "collaboratorsList": {
+      "albert": "Albert J. Kettner",
+      "stewart": "A. Stewart Fotheringham",
+      "barry": "Barry Croken",
+      "huangBo": "Bo Huang",
+      "wangChuanHai": "Chuanhai Wang",
+      "daniel": "Daniel P. Ames",
+      "guoFei": "Fei Guo",
+      "zhangJinBo": "Jinbo Zhang",
+      "zhangjs": "Jinshan Zhang",
+      "liujunz": "Junzhi Liu",
+      "ningLiang": "Liang Ning",
+      "yuanLinWang": "Linwang Yuan",
+      "liLongHui": "Longhui Li",
+      "cm": "Ming Cao",
+      "luc": "Luc Anselin",
+      "dq": "Qiang Dai",
+      "whitehead": "Paul Whitehead",
+      "quillon": "Quillon Harpham",
+      "zhangShuLiang": "Shuliang Zhang",
+      "liShuo": "Shuo Li",
+      "yueTianXiang": "Tianxiang Yue",
+      "yuanWanPing": "Wenping Yuan",
+      "liXia": "Xia Li",
+      "yeXinYue": "Xinyue Ye",
+      "shiXun": "Xun Shi",
+      "songZhiYao": "ZhiYao Song",
+      "nanZhuoTong": "ZhuoTong Nan"
+    }
+
+  }
+
+}

@@ -1,0 +1,39 @@
+{
+   "en-us":{
+     "systems": "OpenGMS Systems",
+     "gsp": "GeoProblem Solving Platform",
+     "mcp": "Model Comparison Platform",
+
+     "tools": "Online Tools",
+     "dsc": "Data Service Container",
+     "msc": "Model Service Container",
+
+     "about": "About",
+     "aboutOGMS": "About OpenGMS",
+     "join": "Join Us",
+
+     "contact": "Contact",
+     "mail_nnu": "opengms@njnu.edu.cn",
+     "main_126": "opengms@126.com",
+     "vge": "VGETeam"
+   },
+
+   "zh-cn":{
+     "systems": "OpenGMS系统",
+     "gsp": "GeoProblem Solving Platform",
+     "mcp": "Model Comparison Platform",
+
+     "tools": "在线工具",
+     "dsc": "Data Service Container",
+     "msc": "Model Service Container",
+
+     "about": "关于我们",
+     "aboutOGMS": "About OpenGMS",
+     "join": "Join Us",
+
+     "contact": "联系我们",
+     "mail_nnu": "opengms@njnu.edu.cn",
+     "main_126": "opengms@126.com",
+     "vge": "VGETeam"
+   }
+}
