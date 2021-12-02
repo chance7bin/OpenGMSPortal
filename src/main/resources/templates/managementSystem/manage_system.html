@@ -47,6 +47,7 @@
             display: flex;
             justify-content: space-between;
         }
+
         .table_head {
             display: flex;
             justify-content: space-between;
@@ -78,9 +79,40 @@
 
         .GeoItemLeftMenu{
             border:1px solid rgba(0, 0, 0, 0.3);
-            width: 240px;
+            width: 15vw;
         }
 
+
+        div[aria-label="版本对比"]{
+            margin-top: 2vh !important;
+            width: 80% !important;
+            height: 95vh;
+            overflow: auto;
+
+        }
+
+        .versionCompImgBox{
+            height: 20vw;
+            width:35vw;
+        }
+
+        .versionCompImgBox img{
+            width: auto !important;
+            height: auto !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+
+        .el-divider--vertical{
+            height: auto;
+        }
+
+
+        .flexRowStart{
+            display: flex;
+            justify-content: flex-start;
+
+        }
         .flexRowCenter{
             display: flex;
             justify-content: center;
@@ -101,6 +133,13 @@
             flex-direction: column;
             justify-content: flex-start;
         }
+
+        .flexRowEvenly{
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+
 
 
 
@@ -250,15 +289,15 @@
                                 :data="tableData"
                                 stripe
                                 style="width: 100%"
-                                height="500"
+                                height="65vh"
                                 :default-sort="{ prop: 'viewCount', order: 'descending' }"
                         >
-                            <el-table-column type="selection" width="55">
+                            <el-table-column type="selection">
                             </el-table-column>
-                            <el-table-column sortable prop="accessId" label="名称" width="280">
+                            <el-table-column sortable prop="accessId" label="名称">
                             </el-table-column>
 
-                            <el-table-column sortable prop="author" label="作者" width="150">
+                            <el-table-column sortable prop="author" label="作者" >
                             </el-table-column>
 
                             <el-table-column sortable prop="viewCount" label="访问量"></el-table-column>
@@ -339,15 +378,14 @@
                                 :data="userTableData"
                                 stripe
                                 style="width: 100%"
-                                height="500"
+                                height="65vh"
                                 :default-sort="{ prop: 'viewCount', order: 'descending' }"
                         >
-                            <el-table-column type="selection" width="55">
-                            </el-table-column>
-                            <el-table-column sortable prop="name" label="姓名" width="280">
+
+                            <el-table-column sortable prop="name" label="姓名">
                             </el-table-column>
 
-                            <el-table-column sortable prop="email" label="邮箱" width="280">
+                            <el-table-column sortable prop="email" label="邮箱" >
                             </el-table-column>
 
                             <el-table-column  label="操作">
@@ -385,14 +423,13 @@
 <!--             条目展示页面-->
                 <div v-if="pageShow==3">
                     <el-main>
-
-                        <div class="GeoItemManagement flexRowBetween" >
+                        <div class="flexRowBetween" >
                             <div class="GeoItemLeftMenu">
                                 <div>Data item classification</div>
                                 <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
                             </div>
 
-                            <div class="GeoItemRightMenu flexColumnStart">
+                            <div class="GeoItemRightMenu flexColumnStart" style="width: 65vw">
                                 <div class="geoSubTopMenu ">
                                     <div class="flexRowBetween">
                                         <el-input
@@ -405,25 +442,23 @@
                                         &nbsp;&nbsp;
                                         <el-button  type="success" icon="el-icon-search" @click="getGeoItemList()" >搜索</el-button>
                                     </div>
-
                                 </div>
-                                <div class="geoItemMainContent" style="width: 950px">
+                                <div class="geoItemMainContent" >
                                     <el-table
                                             ref="geoItemTable"
                                             :data="geoItemTableData"
                                             stripe
                                             style="width: 100%"
-                                            height="500"
+                                            height="65vh"
                                             :default-sort="{ prop: 'viewCount', order: 'descending' }"
                                     >
-                                        <el-table-column type="selection" width="55">
-                                        </el-table-column>
-                                        <el-table-column sortable prop="name" label="名称" width="300">
+
+                                        <el-table-column sortable prop="name" label="名称">
                                         </el-table-column>
 
-                                        <el-table-column sortable prop="author" label="贡献者" width="250">
+                                        <el-table-column sortable prop="author" label="贡献者" >
                                         </el-table-column>
-                                        <el-table-column sortable prop="viewCount" label="查看次数" width="100">
+                                        <el-table-column sortable prop="viewCount" label="查看次数" >
                                         </el-table-column>
 
                                         <el-table-column  label="操作">
@@ -465,12 +500,11 @@
 <!--====================================================================================================================================-->
 <!--             版本审核页面-->
                 <div v-if="pageShow==4">
-                    <el-main class="middle_content" style="height: 80%" >
-                        <el-tabs tab-position="left" stretch="true" type="border-card" >
-
+                    <el-main class="middle_content" style="height:85vh">
+                        <el-tabs tab-position="left" stretch="true" type="border-card" @tab-click="changeTabs" >
+<!--                            未审核页面-->
                             <el-tab-pane label="未审核版本">
                                 <div class=" flexColumnStart">
-                                    <div class="">
                                         <div class="flexRowBetween">
                                             <el-input
                                                     placeholder="请输入内容"
@@ -482,46 +516,40 @@
                                             &nbsp;&nbsp;
                                             <el-button  type="success" icon="el-icon-search" @click="getWaitVersionList()" >搜索</el-button>
                                         </div>
-                                    </div>
-
-                                    <div class="geoItemMainContent">
+                                    <div>
                                         <el-table
                                                 ref="waitVersionTable"
                                                 :data="waitVersionTableData"
                                                 stripe
                                                 style="width: 100%"
-                                                height="500"
+                                                height="58vh"
+
                                                 :default-sort="{ prop: 'viewCount', order: 'descending' }"
                                         >
-                                            <el-table-column sortable prop="date" label="日期" width="300">
+                                            <el-table-column sortable prop="submitTime" label="日期" >
                                             </el-table-column>
-                                            <el-table-column sortable prop="name" label="名称" width="300">
-                                            </el-table-column>
-
-                                            <el-table-column sortable prop="type" label="类型" width="200">
-                                            </el-table-column>
-                                            <el-table-column sortable prop="modifier" label="修改者" width="200">
+                                            <el-table-column sortable prop="itemName" label="名称">
                                             </el-table-column>
 
-                                            <el-table-column  label="操作">
+                                            <el-table-column sortable prop="type" label="类型" >
+                                            </el-table-column>
+                                            <el-table-column sortable prop="editor" label="修改者" >
+                                            </el-table-column>
+
+                                            <el-table-column  label="操作" width="240">
                                                 <template slot-scope="scope">
                                                     <el-button
                                                             size="mini"
                                                             type="primary"
-                                                            @click="viewVersion(scope.row.id)">查看</el-button>
-                                                </template>
-                                            </el-table-column>
-
-                                            <el-table-column  label="操作">
-                                                <template slot-scope="scope">
+                                                            @click="viewWaitVersion(scope.row.id)">查看</el-button>
                                                     <el-button
                                                             size="mini"
-                                                            type="primary"
+                                                            type="success"
                                                             @click="acceptVersion(scope.row.id)">接受</el-button>
                                                     &nbsp;
                                                     <el-button
                                                             size="mini"
-                                                            type="primary"
+                                                            type="danger"
                                                             @click="rejectVersion(scope.row.id)">拒绝</el-button>
                                                 </template>
 
@@ -546,14 +574,166 @@
                                 </div>
 
                             </el-tab-pane>
+<!--                                版本对比对话框-->
+                            <el-dialog title="版本对比" :visible.sync="dialogVersionComp" width="80%" center="true">
 
+                                <div class="flexRowEvenly">
+                                    <h1>原始版本</h1>
+                                    <el-divider direction="vertical"></el-divider>
+                                    <h1>审核版本</h1>
+                                </div>
+
+                                <div v-if="versionCompChangedField.authorships">
+                                    <h1>authorships:</h1>
+                                    <div class="flexRowBetween">
+                                        <div>
+                                            {{versionCompChangedField.authorships.original[0]}}
+                                        </div>
+                                        <el-divider direction="vertical"></el-divider>
+                                        <div>
+                                            {{versionCompChangedField.authorships.new[0]}}
+                                        </div>
+                                    </div>
+                                    <el-divider></el-divider>
+                                </div>
+
+                                <div v-if="versionCompChangedField.localizationList">
+                                    <h1>localizationList:</h1>
+                                    <div class="flexRowBetween">
+                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
+                                        <el-divider direction="vertical"></el-divider>
+                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
+                                    </div>
+                                    <el-divider></el-divider>
+
+                                </div>
+
+
+                            </el-dialog>
+
+<!--                            接受页面-->
                             <el-tab-pane label="接受版本">
-                                接受版本
+                                <div class=" flexColumnStart">
+                                    <div class="flexRowBetween">
+                                        <el-input
+                                                placeholder="请输入内容"
+                                                prefix-icon="el-icon-search"
+                                                v-model="searchInputAcceptVersion"
+                                                @keyup.enter.native="getAcceptVersionList()"
+                                        >
+                                        </el-input>
+                                        &nbsp;&nbsp;
+                                        <el-button  type="success" icon="el-icon-search" @click="getAcceptVersionList()" >搜索</el-button>
+                                    </div>
+                                    <div class="">
+                                        <el-table
+                                                ref="acceptVersionTable"
+                                                :data="acceptVersionTableData"
+                                                stripe
+                                                style="width: 100%"
+                                                height="58vh"
+                                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
+                                        >
+                                            <el-table-column sortable prop="submitTime" label="日期" >
+                                            </el-table-column>
+                                            <el-table-column sortable prop="itemName" label="名称">
+                                            </el-table-column>
+
+                                            <el-table-column sortable prop="type" label="类型" >
+                                            </el-table-column>
+                                            <el-table-column sortable prop="editor" label="修改者" >
+                                            </el-table-column>
+
+                                            <el-table-column  label="操作" width="240">
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            type="primary"
+                                                            @click="viewAcceptVersion(scope.row.id)">查看</el-button>
+                                                </template>
+
+                                            </el-table-column>
+
+                                        </el-table>
+                                        <el-divider></el-divider>
+
+                                        <el-pagination
+                                                background
+                                                @size-change="handleSizeChangeAcceptVersion"
+                                                @current-change="handleCurrentChangeAcceptVersion"
+                                                :current-page="currentPageAcceptVersion"
+                                                :page-sizes="[10, 20, 30, 40]"
+                                                :page-size="PageSizeAcceptVersion"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="totalAcceptVersion"
+                                                class="flexRowCenter"
+                                        >
+                                        </el-pagination>
+                                    </div>
+                                </div>
 
                             </el-tab-pane>
 
+<!--                            拒绝页面-->
                             <el-tab-pane label="拒接版本">
-                                拒接版本
+                                <div class=" flexColumnStart">
+                                    <div class="flexRowBetween">
+                                        <el-input
+                                                placeholder="请输入内容"
+                                                prefix-icon="el-icon-search"
+                                                v-model="searchInputRejectVersion"
+                                                @keyup.enter.native="getRejectVersionList()"
+                                        >
+                                        </el-input>
+                                        &nbsp;&nbsp;
+                                        <el-button  type="success" icon="el-icon-search" @click="getRejectVersionList()" >搜索</el-button>
+                                    </div>
+                                    <div>
+                                        <el-table
+                                                ref="rejectVersionTable"
+                                                :data="rejectVersionTableData"
+                                                stripe
+                                                style="width: 100%"
+                                                height="58vh"
+                                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
+                                        >
+                                            <el-table-column sortable prop="submitTime" label="日期" >
+                                            </el-table-column>
+                                            <el-table-column sortable prop="itemName" label="名称">
+                                            </el-table-column>
+
+                                            <el-table-column sortable prop="type" label="类型" >
+                                            </el-table-column>
+                                            <el-table-column sortable prop="editor" label="修改者" >
+                                            </el-table-column>
+
+                                            <el-table-column  label="操作" >
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            type="primary"
+                                                            @click="viewRejectVersion(scope.row.id)">查看</el-button>
+                                                </template>
+
+                                            </el-table-column>
+
+                                        </el-table>
+                                        <el-divider></el-divider>
+
+                                        <el-pagination
+                                                background
+                                                @size-change="handleSizeChangeRejectVersion"
+                                                @current-change="handleCurrentChangeRejectVersion"
+                                                :current-page="currentPageRejectVersion"
+                                                :page-sizes="[10, 20, 30, 40]"
+                                                :page-size="PageSizeRejectVersion"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="totalRejectVersion"
+                                                class="flexRowCenter"
+                                        >
+                                        </el-pagination>
+                                    </div>
+                                </div>
                             </el-tab-pane>
                         </el-tabs>
                     </el-main>

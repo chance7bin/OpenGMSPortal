@@ -11,9 +11,12 @@
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+
 <!--    <script src="/static/js/management/manage_header.js"></script>-->
 <!--    <script src="/static/js/management/manage_footer.js"></script>-->
-
 
 
     <style>
@@ -25,19 +28,57 @@
             width: 100%;
         }
 
-        /* 滚动条样式 */
-        .el-table__body-wrapper::-webkit-scrollbar{
+        /*全局滚动条*/
+        ::-webkit-scrollbar{
             width: 5px;
         }
-        .el-table__body-wrapper::-webkit-scrollbar-thumb{
+        ::-webkit-scrollbar-thumb{
             border-radius: 4px;
             height: 50px;
             background: rgba(93, 92, 92,0.2);
         }
-        .el-table__body-wrapper::-webkit-scrollbar-track{
+        ::-webkit-scrollbar-track{
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
             border-radius: 2px;
             background: rgba(253, 250, 250, 0.4);
+        }
+
+        .flexRowStart{
+            display: flex;
+            justify-content: flex-start;
+
+        }
+        .flexRowCenter{
+            display: flex;
+            justify-content: center;
+
+        }
+        .flexRowEnd{
+            display: flex;
+            justify-content:flex-end;
+        }
+
+        .flexRowBetween{
+            display: flex;
+            justify-content:space-between;
+        }
+
+        .flexColumnStart{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .flexRowEvenly{
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .flexColumnStartCenter {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
         }
 
 
@@ -48,87 +89,30 @@
             line-height: 60px;
         }
 
-        .el-aside {
-            background-color: #D3DCE6;
-            color: #333;
-            text-align: center;
-            line-height: 200px;
-        }
-
-        .el-main {
-            background-color: #E9EEF3;
-            color: #333;
-            text-align: center;
-        }
-
-        body > .el-container {
-            margin-bottom: 40px;
-        }
-
-        .container{
-
-        }
-
-        .left_content{
-            border:1px solid rgba(0, 0, 0, 0.3);
-            margin-right: 5px;
-            flex-grow: 1;
-            width: 25%;
-        }
-
-        .middle_content{
-            border:1px solid rgba(0, 0, 0, 0.3);
-            flex-grow: 1;
-            width: 50%;
-        }
-
-        .right_content{
-            border:1px solid rgba(0, 0, 0, 0.3);
-            margin-left: 5px;
-            flex-grow: 1;
-            width: 25%;
-
-        }
-
         .top_head{
             display: flex;
             justify-content: space-between;
         }
 
-
-        /*del*/
-        .el-row {
-            margin-bottom: 20px;
-
-        }
-        .el-col {
-            border-radius: 4px;
-        }
-        .bg-purple-dark {
-            background: #99a9bf;
-        }
-        .bg-purple {
-            background: #d3dce6;
-        }
-        .bg-purple-light {
-            background: #e5e9f2;
+        .left_content{
+            width:30vw;
         }
 
-        .grid-content {
-            border-radius: 4px;
-            min-height: 36px;
+        .middle_content{
+            width:40vw;
         }
-        .row-bg {
-            padding: 10px 0;
-            background-color: #f9fafc;
+
+        .right_content{
+            width:30vw;
         }
+
     </style>
 </head>
 
 <body>
 
 <div id="manage_home">
-    <el-container class="container">
+    <el-container style="height: 100vh;">
         <el-header class="top_head">
             <div>
                 <h1 style="font-family:微软雅黑;margin:0px">门户后台管理</h1>
@@ -136,89 +120,24 @@
             <el-link href="/managementSystem/system" :underline="false" >进入管理页</el-link>
 
         </el-header>
-
-            <el-container>
+            <el-container class="flexRowEvenly">
                 <el-main class="left_content">
-                    <el-tabs tab-position="left" type="border-card" >
+                    <div id="resourceCount" style="width: 30vw;height: 40vh;">
 
-                    </el-tabs>
-                    <el-row :gutter="20">
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-
+                    </div>
                 </el-main>
 
                 <el-main class="middle_content">
-<!--                    <h2>测试</h2>-->
-                    <el-tabs tab-position="left" type="border-card" >
-                    </el-tabs>
-<!--                    <el-tag v-for="todo in todos" >{{todo.name}},{{todo.age}}</el-tag>-->
-                    <el-row :gutter="20">
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
+                    <div >
+                        <div id="earthNodes" style="width: 35vw;height: 40vh;"></div>
+                    </div>
 
                 </el-main>
 
 
-
-                <el-main class="right_content">
-                    <el-tabs tab-position="left" type="border-card" >
-
-                    </el-tabs>
-                    <el-row :gutter="20">
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="16"><div class="grid-content bg-purple"></div></el-col>
-                        <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                    </el-row>
+                <el-main class="right_content flexColumnStartCenter" >
+                    <div id="pageView" style="width: 85% ;height: 30%;"> </div>
+                    <div id="userView" style="width: 85%;height: 30%;"></div>
 
                 </el-main>
 
