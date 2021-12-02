@@ -193,10 +193,17 @@ public class ManagementSystemController {
 
     }
 
-    @ApiOperation(value = "查找资源数量")
+    @ApiOperation(value = "按条目类型查找资源数量")
     @RequestMapping(value="/item/count/{itemType}",method= RequestMethod.GET)
     public JsonResult getItemCount(@PathVariable ItemTypeEnum itemType){
         return ResultUtils.success(managementSystemService.getItemCount(itemType));
+
+    }
+
+    @ApiOperation(value = "查找所有资源的数量")
+    @RequestMapping(value="/item/count/all",method= RequestMethod.GET)
+    public JsonResult getAllItemCount(){
+        return managementSystemService.getAllItemCount();
 
     }
 
