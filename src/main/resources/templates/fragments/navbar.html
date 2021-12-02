@@ -1,0 +1,392 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+
+
+
+<body>
+<div th:fragment="unlog">
+    <style>
+        .el-menu-item{
+            padding:0px;
+        }
+    </style>
+
+    <script type="text/javascript" src="/static/js/ppiwik-nsti.js"></script>
+    <!--    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="#00001e"-->
+    <!--             text-color="#fff"-->
+    <!--             active-text-color="#00c0ff"-->
+    <!--             style="padding-top:10px;">-->
+    <!--        <div>-->
+    <!--            <a class="logo" href="/home"></a>-->
+    <!--        </div>-->
+    <!--        <el-menu-item index="1"><a href="/home">Home</a></el-menu-item>-->
+    <!--        <el-menu-item index="2"><a href="/modelItem/repository">Model</a></el-menu-item>-->
+    <!--        <el-menu-item index="3"><a href="/dataItem/repository">Data</a>-->
+    <!--        </el-menu-item>-->
+    <!--        <el-submenu index="8">-->
+    <!--            <template slot="title">Community</template>-->
+    <!--            <el-menu-item index="8-1"><a href="/repository/concept">Concept & Semantic</a></el-menu-item>-->
+    <!--            <el-menu-item index="8-2"><a href="/repository/spatialReference">Spatial Reference</a></el-menu-item>-->
+    <!--            <el-menu-item index="8-3"><a href="/repository/template">Data Template</a></el-menu-item>-->
+    <!--            <el-menu-item index="8-4"><a href="/repository/unit">Unit & Metric</a></el-menu-item>-->
+    <!--            &lt;!&ndash;<el-menu-item index="8-5"><a href="/repository/contributors">Contributors  & Participants</a></el-menu-item>&ndash;&gt;-->
+    <!--            <el-menu-item index="8-6"><a href="/repository/thematic">Thematic Center</a></el-menu-item>-->
+    <!--            &lt;!&ndash;<el-menu-item index="4-4">Supportive</el-menu-item>&ndash;&gt;-->
+    <!--        </el-submenu>-->
+
+    <!--        <el-submenu index="4">-->
+    <!--            <template slot="title">Help</template>-->
+    <!--            <el-menu-item index="4-1"><a href="/help/demo">Demo</a></el-menu-item>-->
+    <!--            <el-menu-item index="4-2"><a href="/help/support">Support</a></el-menu-item>-->
+    <!--            <el-menu-item index="4-3"><a href="https://geomodeling.njnu.edu.cn/Development">Document</a></el-menu-item>-->
+    <!--            &lt;!&ndash;<el-menu-item index="4-4">Supportive</el-menu-item>&ndash;&gt;-->
+    <!--        </el-submenu>-->
+
+    <!--        <el-menu-item index="5"><a href="http://opengmsteam.com" target="_blank">About Us</a></el-menu-item>-->
+    <!--        <el-menu-item index="7" style="float:right"><a href="/user/register">Sign Up</a></el-menu-item>-->
+    <!--        <el-menu-item index="6" style="float:right"><a href="/user/login">Log In</a></el-menu-item>-->
+
+    <!--    </el-menu>-->
+
+
+    <div id="navBar" class="wrap">
+        <div id="mainBar" role="mainBar">
+            <ul role="menubar" class="mainNav">
+                <!--            <div tabindex="0">-->
+                <div class="strip" style="float: left;margin-left: 4%;">
+                    <li id="dropstrip" style="width: 35px"><a id="phoneStrip" class="fa fa-navicon fa-2x" style="cursor: pointer"></a></li>
+                </div>
+                <li class="mainBarLogo">
+                    <a href="/home" style="display: inline">
+                        <img src="/static/img/logo/logo.png" style="width: 180px;height: 56px;"/>
+                    </a>
+                </li>
+
+                <li style="width: 100px;padding: 0 10px 0 5px;">
+                    <a href="http://www.geodata.cn/" style="padding: 0;" target="_blank">
+                        <img id="geodataLogo" src="/static/img/team/nessdc_white.png"/>
+                    </a>
+                </li>
+                <!--        </div>-->
+                <div class="mainmenu">
+                    <li id="menuHome" class="clickMenu" style="width: 77px" ><a href="/home">Home</a></li>
+                    <li id="menuModel" class="clickMenu" style="width: 85px"><a>Model<div class="fa fa-angle-down" style="margin-left:5px"></div></a></li>
+                    <li id="menuData" class="clickMenu" style="width: 73px"><a>Data<div class="fa fa-angle-down" style="margin-left:5px"></div></a></li>
+                    <li id="drop1" class="clickMenu" style="width: 127px">
+                        <a style="text-align: left; padding-left: 17px;cursor: pointer;display: flex;align-items: center">Community <div id="arrow1" class="fa fa-angle-down" style="margin-left:8px"></div></a>
+                    </li>
+                    <li id="drop2" class="clickMenu" style="width: 77px">
+                        <a style="text-align: left; padding-left: 15px;cursor: pointer;display: flex;align-items: center">Help <div class="fa fa-angle-down" style="margin-left:5px"></div></a>
+                    </li>
+                    <li id="menuAbout" class="clickMenu" style="width: 90px"><a href="http://opengmsteam.com">About us</a></li>
+                </div>
+                <div class="indentmenu">
+                    <li id="dropmu" style="left:150px;max-width:50px;min-width:20px"><a class="fa fa-navicon " style="cursor: pointer;"></a></li>
+                </div>
+                <div th:unless="${logged}" class="login">
+                    <li><a class="login" href="/user/login" onclick="window.sessionStorage.setItem('history',window.location.href)">Log In</a></li>
+                    <li><a class="login" href="/user/register">Sign Up</a></li>
+                </div>
+                <div th:unless="${logged}" class="login2">
+                    <li id="dropls"><a style="cursor:pointer"><p style="font-size: 13px">Log in</p><div class="innerBorder"></div><p style="font-size: 13px">Sign up</p></a></li>
+                </div>
+                <!--/*@thymesVar id="logged" type=""*/-->
+                <div th:if="${logged}" class="loged" >
+                    <li id="userLoged" style="float: right">
+                        <a class="" style="cursor:default;display: flex; align-items: center; margin-left: 12px;">
+                            <img class="userIcon round_icon"
+                                 th:src="${(userNavBar.avatar == null ||#strings.isEmpty(userNavBar.avatar)) ? '/static/img/icon/default.png' : userNavBar.avatar}"
+                                 onerror="src='/static/img/icon/default.png'"
+                                 style="width:30px;height: 30px;display: inline-block;margin-right:10px;margin-top: -3px">
+                            <div class="el-badge item" style="flex: 0.5;">
+                                <div id="userName" class="textLineLimit" th:text="${userNavBar.name}" style="display: inline-block;max-width: 100px">Hello!!!!!!!!!</div>
+                                <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                right: 0px !important;
+                                border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
+                                </sup>
+                            </div>
+                        </a>
+                    </li>
+                </div>
+                <div th:if="${logged}" class="phoneLoged">
+                    <li id="phoneUserDrop" style="float: right;width: 40px; margin-right: 5%;">
+                        <div style="padding: 10px 5px;cursor:pointer">
+                            <div class="el-badge item">
+                                <img class="userIcon round_icon"
+                                     th:src="${(userNavBar.avatar == null ||#strings.isEmpty(userNavBar.avatar)) ? '/static/img/icon/default.png' : userNavBar.avatar}"
+                                     onerror="src='/static/img/icon/default.png'"
+                                     style="width:30px;height: 30px;display: inline-block;margin-right:0px">
+                                <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                right: 0px !important;
+                                border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
+                                </sup>
+                            </div>
+
+                        </div>
+                    </li>
+                </div>
+
+                <!--               -->
+                <!--      小屏适配 -->
+
+                <!--               -->
+            </ul>
+        </div>
+
+        <!--    各种下拉菜单 +80px -->
+        <div class="sub zmax" id="subModel" style="left: 370px;">
+            <ul style="width: 160px">
+                <li><a href="/modelItem/repository" class="clickSubMenu">Repository</a></li>
+                <li><a href="/modelItem/application" class="clickSubMenu">Application</a></li>
+            </ul>
+        </div>
+        <div class="sub zmax" id="subData" style="left: 455px;width: 235px">
+            <ul style="width: 90%">
+                <li><a href="/dataItem/hubs" class="clickSubMenu">Hub Repository</a></li>
+                <li><a href="/dataItem/repository" class="clickSubMenu">Item Repository</a></li>
+                <!--<li><a href="/dataItem/network" class="clickSubMenu">Network</a></li>-->
+                <li><a href="/dataApplication/methods" class="clickSubMenu">Method Repository</a></li>
+                <li><a href="/dataItem/application" class="clickSubMenu">Application</a></li>
+<!--                <li><a href="/dataApplication/center" class="clickSubMenu">DataApplication Center</a></li>-->
+            </ul>
+        </div>
+        <div class="sub zmax" id="subCommunity" style="left: 531px;width: 235px">
+            <ul id="subCommunityUl">
+                <li><a href="/repository/concept" class="clickSubMenu">Concept & Semantic</a></li>
+                <li><a href="/repository/spatialReference" class="clickSubMenu">Spatiotemporal Reference</a></li>
+                <li><a href="/repository/template" class="clickSubMenu">Data Template</a></li>
+                <li><a href="/repository/unit" class="clickSubMenu">Unit & Metric</a></li>
+                <li><a href="/repository/thematic" class="clickSubMenu">Thematic Center</a></li>
+                <li><a href="/statistics/serverNodes" class="clickSubMenu">Server Nodes</a></li>
+                <!--<li><a href="/statistics" class="clickSubMenu">Statistics</a></li>-->
+            </ul>
+        </div>
+        <div class="sub zmax" id="subHelp" style="left:661px">
+            <ul style="width: 180px">
+                <li style="width: 180px;"><a href="/help/demo" style="margin-left: 25px" class="clickSubMenu">Demo</a></li>
+                <li style="width: 180px;"><a href="/help/support" style="margin-left: 25px" class="clickSubMenu">Support</a></li>
+                <li style="width: 180px;"><a href="/help/cite" style="margin-left: 25px" class="clickSubMenu">Cite OpenGMS</a></li>
+                <li style="width: 180px;"><a href="https://geomodeling.njnu.edu.cn/Development" style="margin-left: 25px" class="clickSubMenu">Development</a></li>
+
+                <!--<li style="width: 180px;"><a href="/help/support" style="margin-left: 25px" class="clickSubMenu">Support</a></li>-->
+            </ul>
+        </div>
+        <div id="subls" class="sub" style="right:0px;z-index:1000">
+            <ul style="width: 120px">
+                <li><a href="/user/login" onclick="window.sessionStorage.setItem('history',window.location.href)">Log In</a></li>
+                <li><a href="/user/register">Sign Up</a></li>
+            </ul>
+        </div>
+<!--        <div class="sub zmax" id="subData" style="left: 453px">-->
+<!--            <ul>-->
+<!--                <li><a href="/repository/concept" class="clickSubMenu">Data Center</a></li>-->
+<!--                <li><a href="/repository/spatialReference" class="clickSubMenu">Data Resource</a></li>-->
+<!--                <li><a href="/repository/template" class="clickSubMenu">Distributed Node Data</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+
+
+        <!--        用户登录后的下拉-->
+        <!--        大屏幕-->
+        <div th:if="${logged}" class="subLog zmax" id="logedSub" style="right: 0px">
+            <ul>
+                <li><a id="userSpaceDir" href="/user/userSpace">My Space</a></li>
+                <li><a id="userPageDir" th:href="${'/profile/' + userNavBar.userId}">My Page</a></li>
+                <li>
+                    <!--<el-badge :value="2" class="item">-->
+                    <!--<a id="userNoticeDir" href="/user/userSpace#/notice">Notice</a>-->
+                    <!--</el-badge>-->
+                    <div class="el-badge item">
+                        <a id="userNoticeDir1" href="/user/userSpace#/notice">Notice</a>
+                        <!--<sup th:if="${userNavBar.messageNum}" class="el-badge__content is-fixed" th:text="${userNavBar.messageNum}"-->
+                             <!--style="top: 30%;right: 30% !important;padding-right: 4px;padding-left: 4px;"></sup>-->
+                        <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 15px !important;
+                                right: 45px !important;
+                                border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
+                        </sup>
+                    </div>
+                </li>
+                <li><a href="/user/out">Log Out</a></li>
+                <!--                        <li><a href="">Thematic Center</a></li>-->
+            </ul>
+        </div>
+        <!--        小屏幕-->
+        <div th:if="${logged}" id="phoneUserSub" class="fullSub zmax" style="">
+            <ul>
+                <li style="padding-top: 16px;background-color: rgb(8,10,14)"><p style="text-align: center;font-size: 15.2px;color: white">
+                    Hello ! &nbsp;&nbsp;<span id="userAloha" style="font-size: 15.5px;" th:text="${userNavBar.name}"></span></p></li>
+                <li><a href="/user/userSpace">My Space</a></li>
+                <li><a id="phoneUserPageDir" th:href="${'/profile/' + userNavBar.userId}">My Page</a></li>
+                <li class="el-badge item">
+                    <a id="userNoticeDir2" href="/user/userSpace#/notice">Notice</a>
+                    <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed notice_num" style="right: 45%!important;"></sup>
+                </li>
+                <li style="background-color: rgb(0,192,255)"><a href="/user/out">Log Out</a></li>
+                <!--                        <li><a href="">Thematic Center</a></li>-->
+            </ul>
+        </div>
+
+
+        <!-- 左侧边栏 -->
+        <div id="submenu" class="sub zmax" style="left:0px">
+            <ul id="leftUl" style="width:220px">
+                <li><a href="/home">Home</a></li>
+                <li id="leftModel"><a class="show" style="width: 190px;padding-right:18px;cursor: pointer">Model<span class="fa fa-angle-right" style="float: right;"></span></a></li>
+                <li id="leftData"><a class="show" style="width: 190px;padding-right:18px;cursor: pointer">Data<span class="fa fa-angle-right" style="float: right;"></span></a></li>
+                <li id="leftcommunity"><a class="show" style="width: 190px;padding-right:18px;cursor: pointer">Community<span class="fa fa-angle-right" style="float: right;"></span></a></li>
+                <!-- <div class="lsub" id="leftsubc">
+                    <li><a href="/repository/concept">Concept & Semantic</a></li>
+                    <li><a href="/repository/spatialReference">Spatial Reference</a></li>
+                    <li><a href="/repository/unit">Unit & Metric</a></li>
+                    <li><a href="/repository/thematic">Thematic Center</a></li>
+                </div> -->
+                <li id="lefthelp" ><a class="show" style="width: 190px;padding-right: 18px;cursor: pointer">Help<span class="fa fa-angle-right" style="float: right;"></span></a></li>
+                <!-- <div class="lsub" id="leftsubh">
+                    <li><a href="/help/demo">Demo</a></li>
+                    <li><a href="/help/support">Support</a></li>
+                    <li><a href="https://geomodeling.njnu.edu.cn/Development">Development</a></li>
+                </div> -->
+                <li><a href="http://opengmsteam.com/">About us</a></li>
+            </ul>
+        </div>
+        <!-- 左侧边栏的子菜单 -->
+        <div class="sub zmax" id="leftModelSub" style="top: 105px;left: 218px;">
+            <ul style="margin-left: 4px;">
+                <li><a href="/modelItem/repository">Repository</a></li>
+                <li><a href="/modelItem/application" class="clickSubMenu">Application</a></li>
+            </ul>
+        </div>
+        <div class="sub zmax" id="leftDataSub" style="top: 151px;left: 218px;">
+            <ul style="margin-left: 4px;">
+                <li><a href="/dataItem/hubs" class="clickSubMenu">Hubs</a></li>
+                <li><a href="/dataItem/repository">Repository</a></li>
+                <!--<li><a href="/dataItem/network">Network</a></li>-->
+                <li><a href="/dataApplication/methods">Methods</a></li>
+                <li><a href="/dataItem/application">Application</a></li>
+            </ul>
+        </div>
+        <div class="sub zmax" id="leftCommunitySub" style="top: 197px;left: 218px;">
+            <ul style="margin-left: 4px;">
+                <li><a href="/repository/concept" class="subsub">Concept & Semantic</a></li>
+                <li><a href="/repository/spatialReference">Spatiotemporal Reference</a></li>
+                <li><a href="/repository/template">Data Template</a></li>
+                <li><a href="/repository/unit">Unit & Metric</a></li>
+                <li><a href="/repository/thematic">Thematic Center</a></li>
+                <li><a href="/statistics/serverNodes">Server Nodes</a></li>
+                <!--<li><a href="/statistics">Statistics</a></li>-->
+            </ul>
+        </div>
+        <div class="sub zmax" id="leftHelpSub" style="top: 242px;left: 219px">
+            <ul style="margin-left: 3px">
+                <li><a href="/help/demo" class="subsub">Demo</a></li>
+                <li><a href="/help/support">Support</a></li>
+                <li><a href="/help/cite">Cite OpenGMS</a></li>
+                <li><a href="https://geomodeling.njnu.edu.cn/Development">Development</a></li>
+                <!--<li><a href="/help/support">Support</a></li>-->
+            </ul>
+        </div>
+
+        <!-- 小屏适配下拉菜单-- -->
+        <div class="fullSub zmax" id="phonesub" style="left:0px" >
+            <ul style="width: 100%;" >
+                <li id="phoneModel"><a style="cursor: pointer">Model  <div class="fa fa-angle-down" style="margin-left: 3px;"></div></a></li>
+                <div id="phoneSubModel" class="phoneSubSUb">
+                    <ul>
+                        <li><a href="/modelItem/repository">Repository</a></li>
+                        <li><a href="#" class="clickSubMenu">Application</a></li>
+                    </ul>
+                </div>
+                <li id="phoneData"><a style="cursor: pointer">Data  <div class="fa fa-angle-down" style="margin-left: 3px;"></div></a></li>
+                <div id="phoneSubData" class="phoneSubSUb">
+                    <ul>
+                        <li><a href="/dataItem/hubs" class="clickSubMenu">Hubs</a></li>
+                        <li><a href="/dataItem/repository">Repository</a></li>
+                        <!--<li><a href="/dataItem/network">Network</a></li>-->
+                        <li><a href="/dataApplication/methods">Methods</a></li>
+                        <li><a href="/dataItem/application">Application</a></li>
+                    </ul>
+                </div>
+                <li id="phoneCommunity"><a type="button" data-toggle="collapse" data-target="#phoneSubCom" style="cursor: pointer">Community <div class="fa fa-angle-down" style="margin-left: 3px;"></div></a></li>
+                <div id="phoneSubCom" class="phoneSubSUb" >
+                    <ul>
+                        <li><a href="/repository/concept">Concept & Semantic</a></li>
+                        <li class="flexCenter"><a href="/repository/spatialReference">Spatiotemporal Reference</a></li>
+                        <li><a href="/repository/template">Data Template</a></li>
+                        <li><a href="/repository/unit">Unit & Metric</a></li>
+                        <li><a href="/repository/thematic">Thematic Center</a></li>
+                        <li><a href="/statistics/serverNodes">Server Nodes</a></li>
+                        <!--<li><a href="/statistics">Statistics</a></li>-->
+                    </ul>
+                </div>
+                <li id="phoneHelp" ><a type="button" data-toggle="collapse" data-target="#phoneSubHelp" style="cursor: pointer">Help <div class="fa fa-angle-down" style="margin-left: 3px;"></div></a></li>
+                <div id="phoneSubHelp" class="phoneSubSUb">
+                    <ul id="phoneSubHelp1">
+                        <li><a href="/help/demo" class="subsub">Demo</a></li>
+                        <li><a href="/help/support">Support</a></li>
+                        <li><a href="/help/cite">Cite OpenGMS</a></li>
+                        <li><a href="https://geomodeling.njnu.edu.cn/Development">Development</a></li>
+
+                        <!--<li><a href="/help/support">Support</a></li>-->
+                    </ul>
+                </div>
+                <li id="aboutUs"><a href="http://opengmsteam.com/">About us</a></li>
+                <div th:unless="${logged}" id="phoneLogin">
+                    <!--                        <a href="" style="padding: 0px">-->
+                    <li style="float: left;width: 50%;background-color: inherit;border-width: 0;color: white" ><a href="/user/login">Log In</a></li>
+                    <li style="float: left;width: 50%;background-color: inherit;border-width: 0;color: white" ><a href="/user/register">Sigh Up</a></li>
+                    <!--                    </a>-->
+                </div>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+<div th:fragment="login">
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="#00001e"
+             text-color="#fff"
+             active-text-color="#00c0ff"
+             style="padding-top:10px;">
+        <div>
+            <a class="logo" href="/"></a>
+        </div>
+        <el-menu-item index="1"><a href="/">Home</a></el-menu-item>
+        <el-submenu index="2">
+            <template slot="title">Item</template>
+            <el-menu-item index="2-1"><a href="/modelItem/repository">Model Item</a></el-menu-item>
+            <el-menu-item index="2-2"><a href="/dataItem/hubs">Data Item</a></el-menu-item>
+
+        </el-submenu>
+        <el-submenu index="3">
+            <template slot="title">Model</template>
+            <el-menu-item index="3-1"><a href="/conceptualModel/repository">Conceptual Model</a></el-menu-item>
+            <el-menu-item index="3-2"><a href="/logicalModel/repository">Logical Model</a></el-menu-item>
+            <el-menu-item index="3-3"><a href="/computableModel/repository">Computable Model</a></el-menu-item>
+        </el-submenu>
+        <el-submenu index="4">
+            <template slot="title">Help</template>
+            <el-menu-item index="4-1">Demo</el-menu-item>
+            <el-menu-item index="4-2">Support</el-menu-item>
+            <el-menu-item index="4-3">Development</el-menu-item>
+            <el-menu-item index="4-4">Supportive</el-menu-item>
+        </el-submenu>
+        <el-menu-item index="5">About Us</el-menu-item>
+        <el-menu-item index="7" style="float:right"><a href="/user/out">Log Out</a></el-menu-item>
+        <el-menu-item index="6" style="float:right">
+            <a href="/user/1">
+                <img class="round_icon" src="/static/img/icon/default.png" style="width:30px;height: 30px;display: inline-block;margin-right:10px">
+                <span>NNU_Group</span>
+            </a>
+        </el-menu-item>
+
+    </el-menu>
+
+</div>
+</body>
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/navbar.js"></script>
+<script src="/static/socket/message.js"></script>
+
+</html>

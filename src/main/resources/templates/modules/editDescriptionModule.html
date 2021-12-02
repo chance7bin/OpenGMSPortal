@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<template th:fragment="editDescriptionModule">
+    <div class="localization">
+        <el-card style="width: 15%;float:left">
+            <div slot="header" class="clearfix">
+                <span style="font-weight: bold">Localizations</span>
+                <el-button
+                        style="float: right; padding: 3px 0"
+                        type="text" @click="addLocalization">+ Add
+                </el-button>
+            </div>
+            <el-collapse-transition>
+                <div v-show="languageAdd.show">
+                    <el-select v-model="languageAdd.local" filterable placeholder="Select language" style="width:80%;float: left;">
+                        <el-option
+                                v-for="item in languageList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                    <el-button @click="confirmAddLocal" type="success" style="width:10%;float: left;"><i class="el-icon-check"></i></el-button>
+                    <el-button @click="cancelAddLocal" type="danger" style="width:10%;"><i class="el-icon-close"></i></el-button>
+                </div>
+            </el-collapse-transition>
+            <div class="clearfix" style="height:400px;overflow: auto;">
+                <el-table
+                        :data="localizationList"
+                        :show-header="false"
+                >
+                    <el-table-column>
+                        <template slot-scope="props">
+                            <el-tooltip class="item" effect="light" :content="props.row.localCode" placement="top">
+                                <el-button
+                                        :class="{localizationSelected:props.row.selected}"
+                                        style="width:90%;float:left;"
+                                        @click="changeLocalization(props.row)">
+                                    {{props.row.localName}}
+                                </el-button>
+                            </el-tooltip>
+
+                            <el-button style="width:10%;" @click="deleteLocalization(props.row)"><i
+                                    class="el-icon-close"></i>
+                            </el-button>
+
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </el-card>
+        <el-card style="width: 85%;">
+            <div slot="header" class="clearfix">
+                <span>Model Name : </span>
+                <el-input v-model="currentLocalization.name" placeholder="Please enter the model's localized name"></el-input>
+
+            </div>
+            <textarea id="conceptText" style="float:left">
+
+                                                                    </textarea>
+        </el-card>
+    </div>
+</template>
+
+</body>
+</html>
