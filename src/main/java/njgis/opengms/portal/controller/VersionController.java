@@ -31,7 +31,7 @@ public class VersionController {
     VersionService versionService;
 
 
-    @LoginRequired
+//    @LoginRequired
     @ApiOperation(value = "接受版本")
     @RequestMapping(value = "/accept/{id}", method = RequestMethod.POST)
     public JsonResult accept(@PathVariable String id, HttpServletRequest request) {
@@ -40,7 +40,7 @@ public class VersionController {
         return versionService.accept(id, email);
     }
 
-    @LoginRequired
+//    @LoginRequired
     @ApiOperation(value = "拒绝版本")
     @RequestMapping(value = "/reject/{id}", method = RequestMethod.POST)
     public JsonResult reject(@PathVariable String id, HttpServletRequest request) {
@@ -99,7 +99,7 @@ public class VersionController {
     // }
 
 
-    @LoginRequired
+//    @LoginRequired
     @ApiOperation(value = "得到审核版本的详细信息")
     @ApiImplicitParams({
         @ApiImplicitParam(name="id",value="版本id",required=true)
@@ -112,7 +112,7 @@ public class VersionController {
     // TODO compare页面需要返回什么数据
 
 
-    @LoginRequired
+//    @LoginRequired
     @ApiOperation(value = "超级用户审核界面")
     @RequestMapping(value = "/review", method = RequestMethod.GET)
     public ModelAndView getRegister(HttpServletRequest request) {
