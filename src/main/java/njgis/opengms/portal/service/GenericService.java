@@ -782,5 +782,15 @@ public class GenericService {
         return list;
     }
 
+    /**
+     * 格式化日期
+     * @param date
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String dateFormat(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
 
 }
