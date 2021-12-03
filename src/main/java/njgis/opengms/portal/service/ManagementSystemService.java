@@ -404,10 +404,10 @@ public class ManagementSystemService {
             JSONObject item = new JSONObject();
             item.put("id", object.get("id"));
             item.put("name", object.get("name"));
-            item.put("createTime", object.get("id"));
-            item.put("lastModifyTime", object.get("id"));
-            item.put("status", object.get("id"));
-            item.put("viewCount", object.get("id"));
+            item.put("createTime", object.get("createTime"));
+            item.put("lastModifyTime", object.get("lastModifyTime"));
+            item.put("status", object.get("status"));
+            item.put("viewCount", object.get("viewCount"));
             item.put("author", userService.getUserName(object.getString("author")));
             itemList.add(item);
         }
