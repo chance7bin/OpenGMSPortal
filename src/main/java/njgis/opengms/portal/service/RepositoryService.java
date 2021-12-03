@@ -1,5 +1,6 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
@@ -7,6 +8,7 @@ import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.support.theme.*;
 import njgis.opengms.portal.entity.dto.AddDTO;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.*;
@@ -24,7 +26,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -71,6 +76,21 @@ public class RepositoryService {
 
     @Autowired
     NoticeService noticeService;
+
+    @Autowired
+    ThemeDao themeDao;
+
+    @Autowired
+    DataItemDao dataItemDao;
+
+    @Autowired
+    ModelItemDao modelItemDao;
+
+    @Autowired
+    DataMethodDao dataMethodDao;
+
+    @Autowired
+    UserDao userDao;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
@@ -543,6 +563,284 @@ public class RepositoryService {
         jsonObject.put("concepts", result.getContent());
         return jsonObject;
     }
+
+
+    /**
+     * 得到theme信息
+     * @param
+     * @return org.springframework.web.servlet.ModelAndView
+     * @Author bin
+     **/
+    public JSONArray getThematic() {
+        List<Theme> themes= themeDao.findAll();
+        JSONArray themeRs = new JSONArray();
+        for (int i=0;i<themes.size();i++){
+            JSONObject themeR = new JSONObject();
+            themeR.put("oid",themes.get(i).getId());
+            themeR.put("img",themes.get(i).getImage());
+            themeR.put("status",themes.get(i).getStatus());
+            themeR.put("creator_name",themes.get(i).getCreator_name());
+            themeR.put("creator_eid",themes.get(i).getCreator_eid());
+            themeR.put("name",themes.get(i).getThemename());
+            themeRs.add(themeR);
+        }
+        return themeRs;
+    }
+
+    public ModelAndView getThemePage(String id, HttpServletRequest req) throws InvocationTargetException {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+
+        Theme theme = themeDao.findFirstById(id);
+        theme=(Theme)genericService.recordViewCount(theme);
+        themeDao.save(theme);
+
+//        获取loginId
+        HttpSession session = req.getSession();
+
+        Object oid_obj = session.getAttribute("email");
+        if(oid_obj!=null)
+        {
+            modelAndView.addObject("loginId",oid_obj.toString());
+        }
+        else {
+            modelAndView.addObject("loginId",null);
+        }
+
+
+        if(theme==null){
+            modelAndView.setViewName("error/404");
+            return modelAndView;
+        }
+
+        modelAndView.setViewName("theme_info");
+        modelAndView.addObject("info", theme);
+
+        //详情页面
+        //String detailResult;
+        // String theme_detailDesc=theme.getDetail();
+        String theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
+
+        JSONArray array = new JSONArray();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String lastModifyTime = sdf.format(theme.getLastModifyTime());
+
+
+//        model
+        List<ClassInfo> classInfos = theme.getClassinfo();
+        JSONArray classInfos_result = new JSONArray();
+        for(int i=0;i<classInfos.size();i++){
+            if(classInfos.get(i).getOid() == null && classInfos.get(i).getMcname() == null && classInfos.get(i).getChildren().size() == 0 && classInfos.get(i).getModelsoid() == null){
+                continue;
+            }
+            classInfos_result.add(findChildren(classInfos.get(i)));
+
+        }
+        System.out.println(classInfos_result);
+
+//        data
+        List<DataClassInfo> dataClassInfos = theme.getDataClassInfo();
+        JSONArray dataClassInfos_result = new JSONArray();
+        for(int i=0;i<dataClassInfos.size();++i){
+            if(dataClassInfos.get(i).getOid() == null && dataClassInfos.get(i).getDcname() == null && dataClassInfos.get(i).getChildren().size() == 0 && dataClassInfos.get(i).getDatasoid() == null){
+                continue;
+            }
+            dataClassInfos_result.add(findDataChildren(dataClassInfos.get(i)));
+        }
+
+//        data method
+        List<DataMethodClassInfo> dataMethodClassInfos = theme.getDataMethodClassInfo();
+        JSONArray dataMethodClassInfos_result = new JSONArray();
+        if(dataMethodClassInfos!=null){
+            for(int i=0;i<dataMethodClassInfos.size();++i){
+                if(dataMethodClassInfos.get(i).getOid() == null && dataMethodClassInfos.get(i).getDmcname() == null && dataMethodClassInfos.get(i).getChildren().size() == 0 && dataMethodClassInfos.get(i).getDataMethodsoid() == null){
+                    continue;
+                }
+                dataMethodClassInfos_result.add(findDataMethodChildren(dataMethodClassInfos.get(i)));
+            }
+        }
+        else{
+            dataMethodClassInfos_result = null;
+        }
+
+//        application
+        List<Application> applications = theme.getApplication();
+        JSONArray applications_result = new JSONArray();
+
+        for(int i=0;i<applications.size();i++){
+            JSONObject app = new JSONObject();
+            Application application = applications.get(i);
+            app.put("name",application.getApplicationname());
+            app.put("link",application.getApplicationlink());
+            app.put("image",application.getApplication_image());
+            applications_result.add(app);
+        }
+
+        List<Maintainer> maintainers = theme.getMaintainer();
+        JSONArray maintainer_result = new JSONArray();
+        if (maintainers!=null) {
+            for (int i = 0; i < maintainers.size(); i++) {
+                JSONObject ma = new JSONObject();
+                Maintainer maintainer = maintainers.get(i);
+                ma.put("name", maintainer.getName());
+                ma.put("id", maintainer.getId());
+                User user = userDao.findFirstById(maintainer.getId());
+                if(user!=null){
+                    ma.put("image",user.getAvatar());
+                }
+
+                maintainer_result.add(ma);
+            }
+        }
+
+
+        modelAndView.addObject("image", htmlLoadPath+theme.getImage());
+        modelAndView.addObject("detail",theme_detailDesc);
+        modelAndView.addObject("references",JSONArray.parseArray(JSON.toJSONString(theme.getReferences())));
+        modelAndView.addObject("modelClassInfos",classInfos_result);
+        modelAndView.addObject("dataClassInfos",dataClassInfos_result);
+        modelAndView.addObject("dataMethodClassInfos",dataMethodClassInfos_result);
+        modelAndView.addObject("applications",applications_result);
+        modelAndView.addObject("maintainer",maintainer_result);
+
+        return modelAndView;
+    }
+
+    public Object findChildren(ClassInfo classInfo) throws InvocationTargetException {
+        JSONObject classObj = new JSONObject();
+        classObj.put("label",classInfo.getMcname());
+
+        List<ClassInfo> childrenArr = new ArrayList<>();
+        childrenArr = classInfo.getChildren();
+
+        if(childrenArr==null||childrenArr.size()==0){
+
+            //没有孩子
+            JSONArray models=new JSONArray();
+            List<String> modelOids=classInfo.getModelsoid();
+            for(int j=0;j<modelOids.size();j++) {
+                JSONObject model=new JSONObject();
+                ModelItem modelItem=modelItemDao.findFirstById(modelOids.get(j));
+                if(modelItem == null){
+                    continue;
+                }
+                model.put("name",modelItem.getName());
+                model.put("image",modelItem.getImage());
+                model.put("oid",modelItem.getId());
+                models.add(model);
+            }
+            classObj.put("content",models);
+            classObj.put("children",new JSONArray());
+
+        }
+        else if(childrenArr.size()>0){
+
+            JSONArray children = new JSONArray();
+            for(int j=0;j<childrenArr.size();++j){
+                children.add(findChildren(childrenArr.get(j)));
+            }
+            classObj.put("content",new JSONArray());
+            classObj.put("children",children);
+
+        }
+
+
+        return classObj;
+
+
+    }
+
+    public Object findDataChildren(DataClassInfo dataClassInfo) throws InvocationTargetException {
+        JSONObject classObj = new JSONObject();
+        classObj.put("label",dataClassInfo.getDcname());
+
+        List<DataClassInfo> childrenArr = new ArrayList<>();
+        childrenArr = dataClassInfo.getChildren();
+
+        if(childrenArr==null||childrenArr.size()==0){
+
+            //没有孩子
+            JSONArray models=new JSONArray();
+            List<String> dataOids=dataClassInfo.getDatasoid();
+            for(int j=0;j<dataOids.size();j++) {
+                JSONObject data=new JSONObject();
+                // ModelItem modelItem=modelItemDao.findFirstByOid(dataOids.get(j));
+                DataItem dataItem = dataItemDao.findFirstById(dataOids.get(j));
+                if(dataItem == null){
+                    continue;
+                }
+                data.put("name",dataItem.getName());
+                data.put("image",dataItem.getImage());
+                data.put("oid",dataItem.getId());
+                models.add(data);
+            }
+            classObj.put("content",models);
+            classObj.put("children",new JSONArray());
+
+        }
+        else if(childrenArr.size()>0){
+
+            JSONArray children = new JSONArray();
+            for(int j=0;j<childrenArr.size();++j){
+                children.add(findDataChildren(childrenArr.get(j)));
+            }
+            classObj.put("content",new JSONArray());
+            classObj.put("children",children);
+
+        }
+
+        return classObj;
+
+
+    }
+
+    public Object findDataMethodChildren(DataMethodClassInfo dataMethodClassInfo) throws InvocationTargetException {
+        JSONObject classObj = new JSONObject();
+        classObj.put("label",dataMethodClassInfo.getDmcname());
+
+        List<DataMethodClassInfo> childrenArr = new ArrayList<>();
+        childrenArr = dataMethodClassInfo.getChildren();
+
+        if(childrenArr==null||childrenArr.size()==0){
+
+            //没有孩子
+            JSONArray models=new JSONArray();
+            List<String> dataMethodOids=dataMethodClassInfo.getDataMethodsoid();
+            for(int j=0;j<dataMethodOids.size();j++) {
+                JSONObject dataMethod=new JSONObject();
+                DataMethod dataApplication = dataMethodDao.findFirstById(dataMethodOids.get(j));
+                if(dataApplication == null){
+                    continue;
+                }
+
+                dataMethod.put("name",dataApplication.getName());
+                dataMethod.put("image",dataApplication.getImage());
+                dataMethod.put("oid",dataApplication.getId());
+                models.add(dataMethod);
+            }
+            classObj.put("content",models);
+            classObj.put("children",new JSONArray());
+
+        }
+        else if(childrenArr.size()>0){
+
+            JSONArray children = new JSONArray();
+            for(int j=0;j<childrenArr.size();++j){
+                children.add(findDataMethodChildren(childrenArr.get(j)));
+            }
+            classObj.put("content",new JSONArray());
+            classObj.put("children",children);
+
+        }
+
+        return classObj;
+
+
+    }
+
 
 
 
