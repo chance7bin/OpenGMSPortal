@@ -444,5 +444,10 @@ public class DataItemRestController {
         return ResultUtils.success(dataItemService.searchFromAllData(dataItemFindDTO));
     }
 
+    @ApiOperation(value = "根据id得到DataItem信息")
+    @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)
+    public JsonResult getItemById(@PathVariable String id){
+        return genericService.getById(id, ItemTypeEnum.DataItem);
+    }
 
 }

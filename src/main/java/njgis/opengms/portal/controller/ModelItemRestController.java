@@ -9,10 +9,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.GenericService;
@@ -274,7 +271,10 @@ public class ModelItemRestController {
         return ResultUtils.success(modelItemService.getAllRelatedData(id,more));
     }
 
-
-
+    @ApiOperation(value = "根据id得到模型条目信息")
+    @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)
+    public JsonResult getItemById(@PathVariable String id){
+        return genericService.getById(id, ItemTypeEnum.ModelItem);
+    }
 
 }

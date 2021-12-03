@@ -187,4 +187,10 @@ public class DataHubController
     }
 
 
+    @ApiOperation(value = "根据id得到DataHub信息")
+    @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)
+    public JsonResult getItemById(@PathVariable String id){
+        return genericService.getById(id, ItemTypeEnum.DataHub);
+    }
+
 }
