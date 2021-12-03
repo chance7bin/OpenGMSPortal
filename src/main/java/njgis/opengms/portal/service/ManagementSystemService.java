@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.entity.doo.CheckedModel;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.UserDailyViewCount;
@@ -409,6 +410,9 @@ public class ManagementSystemService {
             item.put("status", object.get("status"));
             item.put("viewCount", object.get("viewCount"));
             item.put("author", userService.getUserName(object.getString("author")));
+            if (object.get("invokeCount") != null){
+                item.put("invokeCount", object.get("invokeCount"));
+            }
             itemList.add(item);
         }
         JSONObject result = new JSONObject();
@@ -472,7 +476,7 @@ public class ManagementSystemService {
             ItemTypeEnum.ModelItem,
             ItemTypeEnum.DataItem,
             ItemTypeEnum.DataHub,
-            ItemTypeEnum.DataHub,
+            ItemTypeEnum.DataMethod,
             ItemTypeEnum.Concept,
             ItemTypeEnum.SpatialReference,
             ItemTypeEnum.Template,
