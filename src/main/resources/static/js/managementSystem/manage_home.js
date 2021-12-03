@@ -17,6 +17,8 @@ new Vue({
 
         userCount:0, //用户数量
 
+        ctrlEarth:false,
+
     },
     mounted() {
 
@@ -34,34 +36,8 @@ new Vue({
 
         this.getUserCount()
 
-        this.dd()
-
     },
     methods: {
-        dd(){
-            let chartDom = document.getElementById('del');
-            let myChart = echarts.init(chartDom);
-            myChart.setOption({
-                grid: {
-                    show: true,
-                    y: '70%',
-                    containLabel: true
-                },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-                    {
-                        data: [120, 200, 150, 80, 70, 110, 130],
-                        type: 'bar'
-                    }
-                ]
-            })
-        },
 
         //获取服务节点数据
         getServerNodes(){
@@ -336,7 +312,6 @@ new Vue({
         getUserViewCount(){
             axios.get("/managementSystem/view/user/count")
                 .then(response=> {
-                    console.log(response)
                     this.userViewCount=response.data.data
                     this.drawUserViewCount()
                 })
@@ -411,7 +386,6 @@ new Vue({
                 "sortField": "viewCount"
             })
                 .then(response=> {
-                    console.log(response)
                     this.itemViewCount=response.data.data.itemList
                     this.drawItemViewCount()
                 })
@@ -536,7 +510,7 @@ new Vue({
                 "curQueryField": "name",
                 "page": 1,
                 "pageSize": 5,
-                "sortField": "viewCount"
+                "sortField": "invokeCount"
             })
                 .then(response=> {
                     this.serviceUseCount=response.data.data.itemList
@@ -554,9 +528,8 @@ new Vue({
                 return item.name
             }))
             let yData=this.serviceUseCount.map((item=>{
-                return item.viewCount
+                return item.invokeCount
             }))
-            console.log(xData,yData)
 
             myChart.setOption({
 
@@ -654,7 +627,6 @@ new Vue({
         getUserCount(){
             axios.get("/managementSystem/user/count")
                 .then(response=> {
-                    console.log(response)
                     this.userCount=response.data.data
                     this.drawUserCount()
                 })

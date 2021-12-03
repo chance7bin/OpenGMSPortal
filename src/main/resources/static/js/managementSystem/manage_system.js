@@ -58,7 +58,7 @@ new Vue({
         PageSizeGeo:10, //条目列表每页数目
         totalGeo:0, //条目总数
         searchInputGeo:"", //条目表搜索内容
-        itemType:"ModelItem", //选择展示的条目类型
+        itemType:"DataHub", //选择展示的条目类型
 
         //条目管理界面===============================================
 
@@ -95,7 +95,7 @@ new Vue({
     },
 
     methods: {
-
+        //页面切换
         pageChange(pageId){
             this.pageShow=pageId
             if(pageId===1){
@@ -430,8 +430,24 @@ new Vue({
             this.getGeoItemList()
         },
 
+        //改变条目状态
         changeStatus(val){
             console.log(val)
+            let status=val.status
+            if(status==="Public"){
+                status="Private"
+            }else{
+                status="Public"
+            }
+            axios.post('/managementSystem/item/status/'+this.itemType+val.id+status, {
+            })
+                .then(response=> {
+                    this.getGeoItemList()
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
         },
         setAdmin(val){
             console.log(val)
