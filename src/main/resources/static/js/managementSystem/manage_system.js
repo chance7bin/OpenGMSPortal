@@ -223,7 +223,14 @@ new Vue({
         deleteCheckModel(modelId){
             for (let i=0,len=this.waitCheckModels.length;i<len;i++){
                 if(this.waitCheckModels[i].modelId===modelId){
+                    this.$message({
+                        showClose: true,
+                        message: '从检测队列移除模型: '+this.waitCheckModels[i].modelName,
+                        type: 'warning',
+                        duration: 2000,
+                    });
                     this.waitCheckModels.splice(i,1)
+
                     break
                 }
             }
@@ -244,17 +251,17 @@ new Vue({
 
         //检测所选模型（多选）(循环调用单次检测方法)
         checkSelectedModels() {
-            this.$confirm('是否开始检测所选模型?', '提示', {
+            this.$confirm('是否开始检测所选全部模型?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '开始检测!'
+                    message: '开始检测!!!'
                 });
                 let selectedModelIds=this.waitCheckModels.map(item=>{
-                    this.checkModel(item.modelId)
+                    this.checkModelSimple(item.modelId)
                     return item.modelId
                 })
                 axios.post('/managementSystem/checkList/save', {
@@ -273,20 +280,50 @@ new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '取消检测！'
+                    message: '取消检测！！！'
                 });
             });
         },
 
-        //检测模型（单个）
-        checkModel(modelId){
+        //检测模型（单个，用于多选循环调用）
+        checkModelSimple(modelId){
             axios.get('/managementSystem/model/invoke/'+modelId)
                 .then( response=> {
                     // console.log(response);
+                    this.getModelList()
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        //检测模型（单个，用于响应单次检测按钮）
+        checkModel(modelId){
+            this.$confirm('是否开始检测所选模型?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '开始检测!'
+                });
+                axios.get('/managementSystem/model/invoke/'+modelId)
+                    .then( response=> {
+                        // console.log(response);
+                        this.getModelList()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消检测！'
+                });
+            });
+
+
         },
 
         //获取历史检测记录
@@ -377,6 +414,18 @@ new Vue({
             this.getUserList()
         },
 
+        //用户权限切换
+        handleRoleSelect(role,userId){
+            axios.post('/managementSystem/user/role/'+userId+'/'+role, {
+            })
+                .then(response=> {
+                    this.getUserList()
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
 
         //条目管理界面================================================
         //条目管理菜单
@@ -439,7 +488,7 @@ new Vue({
             }else{
                 status="Public"
             }
-            axios.post('/managementSystem/item/status/'+this.itemType+val.id+status, {
+            axios.post('/managementSystem/item/status/'+this.itemType+'/'+val.id+'/'+status, {
             })
                 .then(response=> {
                     this.getGeoItemList()

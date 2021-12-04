@@ -78,7 +78,6 @@
 
 
         .GeoItemLeftMenu{
-            border:1px solid rgba(0, 0, 0, 0.3);
             width: 15vw;
         }
 
@@ -88,6 +87,7 @@
             width: 80% !important;
             height: 95vh;
             overflow: auto;
+            margin-bottom: auto;
 
         }
 
@@ -101,6 +101,18 @@
             height: auto !important;
             max-width: 100% !important;
             max-height: 100% !important;
+        }
+        .acceptBtn{
+            bottom: 4vh;
+            right: 20vw;
+            position: fixed;
+            z-index: 100;
+        }
+        .rejectBtn{
+            bottom: 4vh;
+            right: 15vw;
+            position: fixed;
+            z-index: 100;
         }
 
         .el-divider--vertical{
@@ -138,6 +150,7 @@
             display: flex;
             justify-content: space-evenly;
         }
+
 
 
 
@@ -317,19 +330,19 @@
                                             type='info'
                                             disable-transitions>未检测</el-tag>
                                     <el-tag
-                                            v-if="scope.row.checkedModel !==null && scope.row.checkedModel.status===-1 "
+                                            v-if="scope.row.checkedModel !==null && (scope.row.checkedModel.status===-1 ||scope.row.checkedModel.hasInvokeSuccess===false||scope.row.checkedModel.hasTest===false)"
                                             type='danger'
                                             disable-transitions>{{scope.row.checkedModel.msg}}</el-tag>
                                     <el-tag
-                                            v-if="scope.row.checkedModel !==null && scope.row.checkedModel.status===0 "
+                                            v-if="scope.row.checkedModel !==null &&scope.row.checkedModel.hasInvokeSuccess===true&& scope.row.checkedModel.status===0 "
                                             type='warning'
                                             disable-transitions>正在排队检测</el-tag>
                                     <el-tag
-                                            v-if="scope.row.checkedModel !==null && scope.row.checkedModel.status===1 "
+                                            v-if="scope.row.checkedModel !==null &&scope.row.checkedModel.hasInvokeSuccess===true&& scope.row.checkedModel.status===1 "
                                             type='primary'
                                             disable-transitions>正在检测</el-tag>
                                     <el-tag
-                                            v-if="scope.row.checkedModel !==null && scope.row.checkedModel.status===2 "
+                                            v-if="scope.row.checkedModel !==null &&scope.row.checkedModel.hasInvokeSuccess===true&& scope.row.checkedModel.status===2 "
                                             type='success'
                                             disable-transitions>正常</el-tag>
                                 </template>
@@ -398,13 +411,21 @@
 
                             <el-table-column sortable prop="email" label="邮箱" >
                             </el-table-column>
+                            <el-table-column sortable prop="userRole" label="权限" >
+                            </el-table-column>
 
                             <el-table-column  label="操作">
                                 <template slot-scope="scope">
-                                    <el-button
-                                            size="mini"
-                                            type="primary"
-                                            @click="setRole(scope.row.id)">权限设置</el-button>
+                                    <el-dropdown >
+                                        <el-button type="primary"  size="mini">
+                                            权限设置<i class="el-icon-arrow-down el-icon--right"></i>
+                                        </el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item @click.native="handleRoleSelect('ROLE_ROOT',scope.row.id)" >ROOT</el-dropdown-item>
+                                            <el-dropdown-item @click.native="handleRoleSelect('ROLE_ADMIN',scope.row.id)">ADMIN</el-dropdown-item>
+                                            <el-dropdown-item @click.native="handleRoleSelect('ROLE_USER',scope.row.id)">USER</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </template>
                             </el-table-column>
 
@@ -436,10 +457,12 @@
                     <el-main>
                         <div class="flexRowBetween" >
 <!--                            左侧类型选择框-->
-                            <div class="GeoItemLeftMenu">
-                                <div>Data item classification</div>
-                                <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
-                            </div>
+                                <el-card class="box-card GeoItemLeftMenu">
+                                    <div slot="header" class="clearfix">
+                                        <span>Data item classification</span>
+                                    </div>
+                                    <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
+                                </el-card>
 <!--                            后侧内容-->
                             <div class="flexColumnStart" style="width: 65vw">
                                 <div class="geoSubTopMenu ">
@@ -470,29 +493,28 @@
 
                                         <el-table-column sortable prop="author" label="贡献者" >
                                         </el-table-column>
-                                        <el-table-column sortable prop="viewCount" label="查看次数" >
+                                        <el-table-column sortable prop="viewCount" label="查看数" >
                                         </el-table-column>
 
                                         <el-table-column  label="操作">
                                             <template slot-scope="scope">
-
                                                 <el-button
                                                         v-if="scope.row.status==='Public'"
                                                         size="mini"
-                                                        type="primary"
+                                                        type="success"
                                                         icon="el-icon-unlock"
                                                         @click="changeStatus(scope.row)">状态切换</el-button>
                                                 <el-button
                                                         v-if="scope.row.status==='Private'"
                                                         size="mini"
-                                                        type="primary"
+                                                        type="warning"
                                                         icon="el-icon-lock"
                                                         @click="changeStatus(scope.row)">状态切换</el-button>
-                                                &nbsp;
                                                 <el-button
                                                         size="mini"
                                                         type="primary"
-                                                        @click="setAdmin(scope.row.id)">管理员设置</el-button>
+                                                        icon="el-icon-user"
+                                                        @click="setAdmin(scope.row.id)">管理员</el-button>
                                             </template>
 
                                         </el-table-column>
@@ -629,6 +651,19 @@
 
                                 </div>
 
+                                <div v-if="versionCompChangedField.localizationList">
+                                    <h1>localizationList:</h1>
+                                    <div class="flexRowBetween">
+                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
+                                        <el-divider direction="vertical"></el-divider>
+                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
+                                    </div>
+                                    <el-divider></el-divider>
+
+                                </div>
+
+                                <el-button class="acceptBtn" type="success">接受</el-button>
+                                <el-button class="rejectBtn" type="danger">拒绝</el-button>
 
                             </el-dialog>
 
