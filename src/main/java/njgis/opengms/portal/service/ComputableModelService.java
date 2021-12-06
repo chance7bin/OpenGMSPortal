@@ -15,7 +15,6 @@ import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.model.ComputableModelResultDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.ModelItem;
-import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.*;
 import org.slf4j.Logger;
@@ -657,11 +656,11 @@ public class ComputableModelService {
         Page<ComputableModel> computableModelPage = computableModelDao.findAllByDeployAndStatusInAndNameLikeIgnoreCase(true,itemStatusVisible,findDTO.getSearchText(),pageable);
         List<ComputableModel> ComputableModelList = computableModelPage.getContent();
 
-        for(ComputableModel computableModel:ComputableModelList){
-            // String author = computableModel.getAuthor();
-            User user = userDao.findFirstByEmail(computableModel.getAuthor());
-            computableModel.setAuthor(user.getName());
-        }
+        // for(ComputableModel computableModel:ComputableModelList){
+        //     // String author = computableModel.getAuthor();
+        //     User user = userDao.findFirstByEmail(computableModel.getAuthor());
+        //     computableModel.setAuthor(user.getName());
+        // }
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("total",computableModelPage.getTotalElements());

@@ -1,0 +1,68 @@
+{
+  "en-us": {
+    "home": "Home",
+    "modelRep": "Repository",
+    "application": "Application",
+
+    "data": "Data",
+    "dateHubRep": "Hub Repository",
+    "dateItemRep": "Item Repository",
+    "dateMethodRep": "Method Repository",
+
+    "community": "Commmunity",
+    "concept": "Concept & Semantic",
+    "spatial": "Spatiotemporal Reference",
+    "template": "Data Template",
+    "unit": "Unit & Metric",
+    "thema": "Thematic Center",
+    "servNodes": "Server Nodes",
+
+    "help": "Help",
+    "demo": "Demo",
+    "supp": "Support",
+    "cite": "Cite OpenGMS",
+    "dev": "Development",
+
+    "aboutUs": "About Us",
+
+    "login": "Log In",
+    "signup": "Sign Up",
+
+    "mySpace": "My Space",
+    "myPage": "My Page",
+    "notice": "Notice"
+  },
+  "zh-cn": {
+    "home": "首页",
+    "modelRep": "Repository",
+    "application": "Application",
+
+    "data": "Data",
+    "dateHubRep": "Hub Repository",
+    "dateItemRep": "Item Repository",
+    "dateMethodRep": "Method Repository",
+
+    "community": "Commmunity",
+    "concept": "Concept & Semantic",
+    "spatial": "Spatiotemporal Reference",
+    "template": "Data Template",
+    "unit": "Unit & Metric",
+    "thema": "Thematic Center",
+    "servNodes": "Server Nodes",
+
+    "help": "Help",
+    "demo": "Demo",
+    "supp": "Support",
+    "cite": "Cite OpenGMS",
+    "dev": "Development",
+
+    "aboutUs": "About Us",
+
+    "login": "登 录",
+    "signup": "注 册",
+
+    "mySpace": "个人中心",
+    "myPage": "个人页面",
+    "notice": "事项"
+  }
+}

@@ -10,6 +10,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.DataMethodService;
 import njgis.opengms.portal.service.GenericService;
@@ -363,6 +364,13 @@ public class DataMethodController {
         jsonResult.setData(jsonObject);
         log.info(jsonObject+"");
         return jsonResult;
+    }
+
+
+    @ApiOperation(value = "根据id得到DataMethod信息")
+    @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)
+    public JsonResult getItemById(@PathVariable String id){
+        return genericService.getById(id, ItemTypeEnum.DataMethod);
     }
 
 }

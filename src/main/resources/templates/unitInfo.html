@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title th:text="${info.name}+' | Unit & Metric | OpenGMS'">Unit & Metric | OpenGMS</title>
+    <link href="/static/css/base/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" th:href="@{/static/css/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/style.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/universal.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/itemInfo.css}">
+    <link rel="stylesheet" th:href="@{/static/css/page/model_item_info.css}">
+    <link rel="stylesheet" th:href="@{/static/css/page/repositoryInfo.css}">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" />
+    <style>
+        #description h1{
+            font-size: 24px;
+        }
+        #description h2{
+            font-size: 22px;
+        }
+        #description h3{
+            font-size: 20px;
+        }
+        #description h4{
+            font-size: 18px;
+        }
+
+        .fullPaper{
+            position:relative;
+            padding-top:100px;
+            margin-top:-110px;
+            background-image: -webkit-gradient(linear,left top, left bottom,from(rgba(255,255,255,0)),color-stop(90%, #fff));
+            background-image: linear-gradient(-180deg,rgba(255,255,255,0) 0%,#fff 90%);
+            margin-bottom:20px;
+        }
+
+        .el-tabs--border-card{
+            box-shadow:none;
+            -webkit-box-shadow:none;
+        }
+
+        .modal-content{
+            border-radius: 0!important;
+        }
+
+        .form-control{c
+            border-radius: 0!important;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+    <div th:replace="fragments/backToTop :: backtop-down"></div>
+
+    <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
+        <div class="left-panel el-col">
+            <div class="detail">
+                <div class="detail_title">
+
+                    <h2 th:utext="${info.name}" style="display: inline-block;margin-right:15px;"></h2>
+                    <div class="pull-right">
+                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <a href="javascript:void(0);" th:if="${info.status=='Public'&&history!=true&&info.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
+                            <li th:if="${info.status=='Public'&&history!=true&&info.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
+                        </el-tooltip>
+                        <el-tooltip popper-class="fontsize-15" th:content="${info.status}" effect="light" placement="top">
+                            <i th:if="${info.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
+                            <i th:if="${info.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
+                            <i th:if="${info.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
+                        </el-tooltip>
+                        <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
+                    </div>
+                </div>
+                <div class="detail_overview">
+
+                    <div class="img">
+                        <div th:switch="${info.image}" class="img">
+                            <avatar th:case="''" th:username="${info.name}" :size="90" :rounded="false"></avatar>
+                            <avatar th:case="null" th:username="${info.name}" :size="90" :rounded="false"></avatar>
+                            <img th:case="*" th:src="${image}">
+                        </div>
+                    </div>
+
+                    <div class="info">
+                        <p th:text="${info.description}" style="word-break: break-word;"></p>
+                        <div class="tags">
+                            <span class="badge badge-info">Unit & Metric</span>
+                        </div>
+                    </div>
+
+                    <div th:if="${history!=true}" class="detail_option">
+                        <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
+                        <!--<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>-->
+                        <a class="fa fa-eye" aria-hidden="true"></a>
+                        <div th:utext="'&nbsp&nbsp'+${info.viewCount}">&nbsp&nbsp341</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alias" class="detail_block" th:if="${info.alias!=null&&#lists.size(info.alias)>0}">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Alias</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="margin-bottom:10px;">
+
+                    <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
+
+                    <el-tag th:each="alias:${info.alias}" th:text="${alias}"
+                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
+
+                </div>
+            </div>
+
+
+            <div id="Contributor0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history==true}">Modifier</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="el-row"
+                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
+                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
+                        <div class="el-col">
+                            <div class="pull-left" style="display: block;margin-left: 15px;">
+                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-row">
+                        <div class="text-center">
+                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
+                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="classification" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Classification(s)</h4>
+                    </div>
+                </div>
+                <div class="block_content" style="margin-top:20px;">
+                    <div th:each="classS:${classifications}">
+                        <span style="font-size:24px;margin-right: 8px">●</span>
+                        <el-breadcrumb separator-class="el-icon-arrow-right">
+                            <el-breadcrumb-item th:each="class:${classS}" th:text="${class}" :to="{ path: '/' }">Earth
+                                System Classification
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                </div>
+            </div>
+
+            <div id="transform" class="detail_block" style="display: none">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Transform</h4>
+                    </div>
+                </div>
+                <div class="block_content transformContainer" >
+                    <div class="col-sm-10">
+                        <div style="padding: 1%">
+                            <el-row :gutter="20">
+                                <el-col :span="12">
+
+                                    <el-input   id="ipt1"
+                                                size="medium"
+                                                type="text"
+                                                placeholder="input a value"
+                                                v-model="ipt1value">
+                                    </el-input>
+
+                                </el-col>
+
+                                <el-col :span="12">
+
+                                    <el-select  id="slct1"
+                                                size="medium"
+                                                placeholder="select the value"
+                                                v-model="slct1Value"
+                                                style="width: 100%">
+                                        <el-option
+                                                v-for="item in unitSlct"
+                                                :key="item.value"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+
+
+                                </el-col>
+
+                            </el-row>
+                        </div>
+
+                        <div style="margin: 1%">
+                            <el-row :gutter="20">
+                                <el-col :span="12">
+                                        <el-input  id="ipt2"
+                                                   size="medium"
+                                                   placeholder="output a value"
+                                                   :readonly= "true"
+                                                   >
+                                        </el-input>
+
+                                </el-col>
+
+                                <el-col :span="12">
+
+                                        <el-select  id="slct2"
+                                                    size="medium"
+                                                    placeholder="select the value"
+                                                    v-model="slct2Value"
+                                                    style="width: 100%">
+                                            <el-option
+                                                    v-for="item in unitSlct"
+                                                    :key="item.value"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
+
+                                </el-col>
+
+                            </el-row>
+                        </div>
+                    </div>
+
+
+<!--                    <button class="bg-primary" id="btn-cvt">Convert</button>-->
+                    <div class="col-sm-2 flexCol flexAlignCenter">
+<!--                        <el-button id="btn-cvt" type="primary" >Convert</el-button>-->
+                        <el-button id="btn-cvt1" type="primary" size="medium" style="margin: 0 20px" @click="cvtclick" >
+                            Convert
+                        </el-button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="description" th:if="${#lists.size(info.localizationList)>0}" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Detailed Description</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="LanguageInfoContainer" th:each="localization:${info.localizationList}" th:id="${localization.localCode}">
+                        <table class="table table-bordered" >
+                            <thead>
+                            <tr>
+                                <th class="thMain" th:text="${localization.localName}"></th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="table table-bordered">
+                            <colgroup>
+                                <col width="25%">
+                                <col width="75%">
+                            </colgroup>
+                            <tr th:if="${localization.name!=''}">
+                                <td>Name</td>
+                                <td class="enName" th:text="${localization.name}"></td>
+                            </tr>
+                            <tr th:if="${localization.description!=''}">
+                                <td>Description</td>
+                                <td class="enDesc" th:utext="${localization.description}"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+<!--            <div th:if="${info.detail == null}" class="text-center" >-->
+<!--                <a id="addLocalization" style="cursor:pointer;font-size:16px;" data-toggle="modal" data-target="#myModal">Add Localization<i class="fa fa-plus" style="margin-left: 10px;color:#339fff;font-weight: bold" aria-hidden="true"></i></a>-->
+<!--            </div>-->
+
+            <div id="cite" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>How to Cite</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div id="cite-text">
+
+                        <span th:text="${user.name}+' ('+${year}+'). '+${info.name}+', Unit & Metric, OpenGMS, '">
+                        Tom Marvolo Riddle.(2018).Integrated stand growth model data,
+                        </span>
+                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.oid}"
+                           th:text="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.oid}">
+                            https://geomodeling.njnu.edu.cn/modelitem/4e028983-c8c0-4d98-86cd-85fc16a00d21
+                        </a>
+                    </div>
+                    <div id="copy" class="btn btn-info">
+                        Copy
+                    </div>
+                </div>
+            </div>
+
+            <div id="copyright" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Copyright and Disclaimer</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="copyright_text">
+                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                    </div>
+                </div>
+            </div>
+
+            <div id="Modifier0" class="detail_block minScreen"
+                 th:if="${history!=true&&info.contributors!=null&&#lists.size(info.contributors)!=0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>History</h4>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;">
+
+                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                            <dl>
+                                <dt>Last modifier :&nbsp</dt>
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                       target="_blank"></a></dd>
+                                <dt>Last modify time :&nbsp</dt>
+                                <dd th:text="${lastModifyTime}"></dd>
+                                <dt>Modify times :&nbsp</dt>
+                                <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/unit/'+${info.oid}" target="_blank">View
+                                    History</a></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="QR0" class="detail_block minScreen">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>QR Code</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+
+                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+
+                </div>
+            </div>
+
+            <div id="comment" class="detail_block">
+                <comments></comments>
+            </div>
+        </div>
+
+        <div class="right-panel el-col">
+            <div id="Contributor" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history==true}">Modifier</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+                    <div class="el-row"
+                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
+                        <user-avatar email="user.email" style="width:40px;height: 40px;float:left;"></user-avatar>
+                        <div class="el-col">
+                            <div class="pull-left" style="display: block;margin-left: 15px;">
+                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="el-row">
+                        <div class="text-center">
+                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
+                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="Modifier" class="detail_block"
+                 th:if="${history!=true&&info.contributors!=null&&#lists.size(info.contributors)!=0}">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>History</h4>
+                    </div>
+                </div>
+                <div class="block_content text-center" style="padding-left:10px">
+
+                    <div style="text-align: left;">
+
+                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                            <dl>
+                                <dt>Last modifier :&nbsp</dt>
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                       target="_blank"></a></dd>
+                                <dt>Last modify time :&nbsp</dt>
+                                <dd th:text="${lastModifyTime}"></dd>
+                                <dt>Modify times :&nbsp</dt>
+                                <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/unit/'+${info.oid}" target="_blank">View
+                                    History</a></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="QR" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text" style="padding-left: 10px;">
+                        <h4>QR Code</h4>
+                    </div>
+                </div>
+                <div class="block_content">
+
+                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div th:if="${history==true}"
+             style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
+
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Add Localization</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addConceptLocalizationForm" role="form" method="post">
+                        <div class="form-group hidden">
+                            <input type="text" name="id" class="form-control" th:value="${info.oid}">
+                        </div>
+                        <div class="form-group">
+                            <label>Language</label>
+                            <input type="text" name="language" class="form-control" placeholder="Please Input Language">
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Please Input Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="desc" class="form-control" placeholder="Please Input Description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">cancle</button>
+                    <button type="button" class="btn btn-primary" onclick="submitFrom()">Ok</button>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+<template th:replace="fragments/comments :: comments"></template>
+<template th:replace="modules/userAvatar :: userAvatar"></template>
+</body>
+
+<script th:inline="javascript">
+    var author=[[${user}]];
+</script>
+
+<script type="text/javascript" src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/js/common/bootstrap.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/js/common/qrcode.min.js"></script>
+<script src="/static/js/modules/userAvatar.js"></script>
+
+<script th:inline="javascript">
+    var oidcvt=[[${oid_cvt}]];
+    var infoname = [[${info.name}]];
+</script>
+<script type="text/javascript" src="/static/js/page/repositoryInfo.js"></script>
+<script src="/static/js/modules/comments.js"></script>
+<script src="/static/js/common/copy.js"></script>
+<script src="/static/js/common/bootstrap.min.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/js/common/navbar.js"></script>
+<script>
+    function submitFrom() {
+        var arry = $("#addConceptLocalizationForm").serializeArray();
+        var object = {};
+        for(var i =0;i<arry.length;i++){
+            var item = arry[i];
+            object[item["name"]] = item["value"];
+            if(item["name"]==="language"&&item["value"].trim().length<1){
+                alert("Please enter language");
+                return;
+            }
+            if(item["name"]==="name"&&item["value"].trim().length<1){
+                alert("Please enter name");
+                return;
+            }
+        }
+
+        $.ajax({
+            url:"/repository/addUnitLocalization",
+            data:object,
+            type:"post",
+            success:function (result) {
+                if(result.data==="ok"){
+                    window.location.reload();
+                }
+            }
+        })
+    }
+</script>
+</html>

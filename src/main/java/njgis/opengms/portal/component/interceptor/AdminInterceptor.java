@@ -1,8 +1,6 @@
 package njgis.opengms.portal.component.interceptor;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import njgis.opengms.portal.component.AdminRequired;
-import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;

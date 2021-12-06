@@ -1,6 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
+import njgis.opengms.portal.entity.doo.CheckedModel;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -39,4 +40,7 @@ public class ComputableModel extends PortalItem {
 
     int invokeCount = 0;
     List<DailyViewCount> dailyInvokeCount = new ArrayList<>();
+
+    CheckedModel checkedModel; //计算模型的检查记录
+
 }

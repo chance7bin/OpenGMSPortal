@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Space | OpenGMS</title>
+
+    <!--<link rel="stylesheet" href="/static/css/page/theme_info.css">-->
+
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+
+    <link rel="stylesheet" href="/static/css/font-awesome/fonts/fontawesome-webfont.woff">
+    <link rel="stylesheet" href="/static/css/font-awesome/fonts/fontawesome-webfont.ttf">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/static/css/common/fileinput.min.css">
+    <link rel="stylesheet" href="/static/css/common/fileinput-rtl.min.css">
+
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/fabric/fabric.min.css"/>
+    <link  rel="stylesheet" href="/static/css/common/mdb/mdb.lite.min.css">
+    <link  rel="stylesheet" href="/static/css/common/fluent/fluent.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+<!--    <link rel="stylesheet" href="/static/css/base/style.css">-->
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="../../assets/css/basic.css" /> -->
+<!--    <link rel="stylesheet" href="/static/css/page/user_page2.css">-->
+    <link rel="stylesheet" href="/static/css/page/user_space.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/bootstrap-select.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/data-tables/DT_bootstrap.css"/>
+
+    <link  rel="stylesheet" href="/static/css/base/navbar.css">
+    <link  rel="stylesheet" href="/static/css/common/newSideBar.css">
+    <link  rel="stylesheet" href="/static/css/page/createCommunity.css">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/userModule.css"/>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/module/editImage.css"/>
+
+    <script src="/static/js/common/md5.js"></script>
+    <script src="/static/js/common/sha256.js"></script>
+    <script src="/static/js/common/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/static/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="/static/js/common/jquery.rotate.min.js"></script>
+    <script type="text/javascript" src="/static/iCheck/jquery.icheck.min.js"></script>
+    <script src="/static/js/common/bootstrap.min.js"></script>
+    <script src="/static/js/common/mdb.min.js"></script>
+    <script src="/static/js/common/piexif.min.js"></script>
+    <script src="/static/js/common/fileinput.js"></script>
+    <script src="/static/js/common/bootstrap-treeview.js"></script>
+
+    <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
+    <!--<script src="/static/js/common/echarts.min.js"></script>-->
+    <!--<script src="/static/js/common/world.js"></script>-->
+    <script src="/static/js/common/axios.min.js"></script>
+
+    <!--<script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+    <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+
+    <script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+    <script src="/static/js/common/bootstrap-tagsinput.js"></script>
+    <script type="text/javascript" src="/static/data-tables/jquery.dataTables.js"></script>
+
+
+    <script src="/static/js/common/clipboard.min.js"></script>
+
+    <script src="/static/js/common/vue.min.js"></script>
+<!--    <script src="/static/js/common/vue.js"></script>-->
+    <script src="/static/js/common/vue-router.js"></script>
+    <script src="/static/js/common/vue-avatar.min.js"></script>
+    <script src="/static/js/common/vue-cropper.min.js"></script>
+    <script src="/static/js/utils/qs.js"></script>
+    <script src="/static/element-ui/index.js"></script>
+    <script src="/static/element-ui/umd/locale/en.js"></script>
+    <script src="/static/js/common/echarts.min.js"></script>
+    <script >
+        // ELEMENT.locale(ELEMENT.lang.en);
+        var websocketAddress = "ws://"+window.location.host+"/websocket";
+    </script>
+    <style>
+        .el-table .readed {
+            background: #ffffff;
+        }
+
+        .el-table .unread {
+            background: #f5f5dc;
+        }
+
+        .localization .el-table td{
+              padding: 0;
+          }
+        .localization .el-table .cell{
+            padding: 0;
+        }
+        .localization .el-button{
+            padding-left:0;
+            padding-right:0;
+            border: none;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+        .localization .el-card{
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+        .localization .el-card__body{
+            padding: 0;
+        }
+        .localization .tox-tinymce{
+            border: none;
+        }
+        .el-popconfirm__action .el-button + .el-button{
+            margin-left: 10px;
+        }
+        .localization .el-tag{
+            height: auto;
+            line-height: 1.42857143;
+        }
+        .localizationSelected{
+            color: #409EFF;
+            border-color: #c6e2ff;
+            background-color: #ecf5ff;
+        }
+        #imgMask{
+            transition: .3s;
+        }
+        .imgDelete{
+            position: absolute;
+            cursor: pointer;
+            top: 3px;
+            right: 3px;
+            font-size: 16px;
+            color: #980000;
+            transition: .3s;
+        }
+        .imgEditBlock{
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            font-size: 28px;
+            border: #555555;
+            border-style: dashed;
+            border-radius: 10px;
+            color: #555555;
+            transition: .3s;
+        }
+        .imgDelete,.imgEditBlock{
+            opacity: 0;
+        }
+        #imgMask:hover{
+            backdrop-filter: blur(5px);
+            background: rgba(230,230,230,0.7);
+        }
+        #imgMask:hover .imgDelete,#imgMask:hover .imgEditBlock{
+            opacity: 1;
+            display: flex;
+        }
+        .top350Dialog .el-dialog{
+            top:350px
+        }
+
+        /*分类样式*/
+        .el-tree > .el-tree-node > .el-tree-node__content {
+            font-weight: bold;
+        }
+
+        .el-tree > .el-tree-node > .el-tree-node__children > .el-tree-node > .el-tree-node__content {
+            font-style: italic;
+        }
+
+
+        .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+            background-color: #d9edf7;
+        }
+
+        #tree_select .el-tree-node{
+            background-color: aliceblue;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div id="loading" v-if="load">
+        <div class="loading-center">
+            <div class="loading-center-absolute">
+                <div class="object"></div>
+            </div>
+        </div>
+    </div>
+    <div v-loading.fullscreen.lock="fullscreenLoading"></div>
+
+    <div class="page-container" style="height: 2000px;" v-cloak>
+        <head-side-bar :user-infoin-parent="userInfo" :curindex-parent="curIndex"></head-side-bar>
+        <router-view @com-sendcurindex="changecurIndex"
+                     @com-senditemindex="changeitemIndex"
+                     @com-senduserinfo="updateUserInfo"
+                     @com-format-date="formatDate"
+        ></router-view>
+
+    </div>
+
+</div>
+
+<!--sideBar组件-->
+<template th:replace="fragments/newSideBar :: headSideBar"></template>
+<script src="/static/js/page/newSideBar.js"></script>
+<!--主页面组件-->
+<template th:replace="userSpaceHome :: userSpaceHome"></template>
+<script src="/static/js/page/userSpaceHome.js"></script>
+<!--userModel组件-->
+<template th:replace="userModel :: userModel"></template>
+<script src="/static/js/page/userModel.js"></script>
+<!--userModelItems展示组件及子组件-->
+<template th:replace="userModels :: userModels"></template>
+<template th:replace="userModels :: modelItemShow"></template>
+<script src="/static/js/page/userModels.js"></script>
+<!--userModel create/edit组件-->
+<template th:replace="create-modelitem :: createModelItem"></template>
+<script src="/static/js/page/create-modelitem.js"></script>
+
+<template th:replace="create-logical-model :: createLogicalModel"></template>
+<script src="/static/js/page/create-logical-model.js"></script>
+
+<template th:replace="create-conceptual-model :: createConceptualModel"></template>
+<script src="/static/js/page/create-conceptual-model.js"></script>
+
+<template th:replace="create-computable-model :: createComputableModel"></template>
+<script src="/static/js/page/create-computable-model.js"></script>
+<!--userData组件-->
+<template th:replace="userData :: userData"></template>
+<script src="/static/js/page/userData.js"></script>
+<!--userDataItems展示组件-->
+<template th:replace="userDataItems :: userDataItems"></template>
+<script src="/static/js/page/userDataItems.js"></script>
+<template th:replace="userDataHubs :: userDataHubs"></template>
+<script src="/static/js/page/userDataHubs.js"></script>
+<template th:replace="userDataApplication :: userDataApplication"></template>
+<script src="/static/js/page/userDataApplication.js"></script>
+<template th:replace="userDataVisualApplication :: userDataVisualApplication"></template>
+<script src="/static/js/page/userDataVisualApplication.js"></script>
+
+<!--userData create/edit组件-->
+<template th:replace="create-dataItem :: createDataItem"></template>
+<script src="/static/js/page/create-dataItem.js"></script>
+<template th:replace="create-dataHubs :: createDataHubs"></template>
+<script src="/static/js/page/create-dataHubs.js"></script>
+<!--userData create/edit组件-->
+<template th:replace="create-data-application :: createDataApplication"></template>
+<script src="/static/js/page/create-data-application.js"></script>
+<template th:replace="create-data-visualApplication :: createDataVisualApplication"></template>
+<script src="/static/js/page/create-data-visualApplication.js"></script>
+<!--userDataSpace展示组件-->
+<template th:replace="userDataSpace :: userDataSpace"></template>
+<script src="/static/js/page/userDataSpace.js"></script>
+<!--distributed node mange 组件-->
+<template th:replace="distributed_node_mange :: distributedNode"></template>
+<script src="/static/js/page/distributed_node_mange.js"></script>
+<!--userServer组件-->
+<template th:replace="userServer :: userServer"></template>
+<script src="/static/js/page/userServer.js"></script>
+<!--userModelServer组件-->
+<template th:replace="userModelServer :: userModelServer"></template>
+<script src="/static/js/page/userModelServer.js"></script>
+<!--userDataServer组件-->
+<template th:replace="userDataServer :: userDataServer"></template>
+<script src="/static/js/page/userDataServer.js"></script>
+<!--userTask组件-->
+<template th:replace="userTask :: userTask"></template>
+<script src="/static/js/page/userspaceTask.js"></script>
+<!--userCommunity组件-->
+<template th:replace="userCommunity :: userCommunity"></template>
+<script src="/static/js/page/userCommunity.js"></script>
+<!--userCommunities展示组件及子组件-->
+<template th:replace="userCommunities :: userCommunities"></template>
+<template th:replace="userCommunities :: communityItems"></template>
+<script src="/static/js/page/userCommunities.js"></script>
+<!--userCommunity create/edit组件-->
+<template th:replace="create-concept :: createConcept"></template>
+<script src="/static/js/page/create-concept.js"></script>
+
+<template th:replace="create-spatialReference :: createSpatialReference"></template>
+<script src="/static/js/page/create-spatialReference.js"></script>
+
+<template th:replace="create-template :: createTemplate"></template>
+<script src="/static/js/page/create-template.js"></script>
+
+<template th:replace="create-unit :: createUnit"></template>
+<script src="/static/js/page/create-unit.js"></script>
+<!--userTheme组件-->
+<template th:replace="userTheme :: userTheme"></template>
+<script src="/static/js/page/userTheme.js"></script>
+<!--userCommunity create组件-->
+<template th:replace="create-theme :: createTheme"></template>
+<script src="/static/js/page/create-theme.js"></script>
+<!--userAccount组件-->
+<template th:replace="userAccount :: userAccount"></template>
+<script src="/static/js/page/userAccount.js"></script>
+<!--feedback组件-->
+<template th:replace="feedBack :: feedback"></template>
+<script src="/static/js/page/feedBack.js"></script>
+<!--draftBox组件-->
+<template th:replace="userDraftBox :: userDraftBox"></template>
+<script src="/static/js/page/userDraftBox.js"></script>
+<!--notice组件-->
+<template th:replace="message_confirm :: notice"></template>
+<script src="/static/js/page/message_confirm.js"></script>
+<!--dataSpace通用组件-->
+<template th:replace="modules/userDataSpaceModule :: userDataSpaceModule"></template>
+<script src="/static/js/modules/userDataSpaceModule.js"></script>
+<!--draftBox通用组件-->
+<template th:replace="modules/draftBox :: draftBox"></template>
+<script src="/static/js/modules/draftBox.js"></script>
+<!--avatar通用组件-->
+<template th:replace="modules/userAvatar :: userAvatar"></template>
+<script src="/static/js/modules/userAvatar.js"></script>
+<!--img通用组件-->
+<template th:replace="modules/imgUpload :: imgUpload"></template>
+<script src="/static/js/modules/imgUpload.js"></script>
+</body>
+
+<!--根组件-->
+<script src="/static/js/page/userSpace1.js"></script>
+<script src="/static/js/common/commonInfo.js"></script>
+</html>

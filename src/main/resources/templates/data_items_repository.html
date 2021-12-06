@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Data Item Repository | OpenGMS</title>
+
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/js/common/vue-avatar.min.js"></script>
+
+    <script src="/static/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+
+
+
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/style.css">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" href="/static/css/base/list.css">
+    <link rel="stylesheet" href="/static/css/base/tree.css">
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" href="/static/css/other/bootstrap-select.css">
+    <link rel="stylesheet" href="/static/css/page/model_items.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" />
+    <link rel="stylesheet" href="/static/driver/driver.min.css"/>
+    <style>
+        .content-body .list-item:not(:first-child) {
+            margin-top: -1px;
+        }
+        .bootstrap-tagsinput{
+            min-height:36px;
+        }
+        .bootstrap-tagsinput input{
+            min-height:26px;
+        }
+        .el-collapse-item__content{
+            padding-bottom: 0px;
+        }
+        .el-collapse-item__header{
+            font-size: 14px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id="data_items" v-cloak>
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+    <div th:replace="fragments/backToTop :: backtop-up"></div>
+
+    <div class="clearfix" style="margin-bottom: 40px;">
+
+        <div class="guide el-backtop el-icon-question" title="Help" @click="showDriver"></div>
+
+        <div class="mainContent">
+            <div class="el-row">
+                <div class="data-top">
+                    <h2 class="main-title">Data Item Repository</h2>
+                    <h4 class="sub-title">The repository of data (one-stop hub with public shared data resources)
+                    </h4>
+                    <button id="contributeBtn"  class="btn btn-success btn-lg contributeItemBtn" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute($event)">+ Contribute</button>
+                </div>
+                <hr>
+            </div>
+            <div class="el-col el-col-6 minScreen_maxWidth" style="margin-top:29px;">
+                <el-card class="box-card categoryList">
+                    <div slot="header" class="clearfix text-center">
+                        <span style="font-size: 20px;color:#444">Data Categories</span>
+                    </div>
+                    <el-collapse v-model="activeNames" @change="handleChange">
+                        <el-collapse-item title="Application-focused categories" name="1">
+                            <el-collapse v-model="activeNames1" @change="handleChange1">
+                                <el-collapse-item title="Natural-perspective" style="margin-left: 10%;" name="11">
+                                    <el-button class="cateButton"  type="text" id="5f3e42070e989714e8364e9a" @click="chooseCate('5f3e42070e989714e8364e9a', $event)">Land regions</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e422a0e989714e8364e9c" @click="chooseCate('5f3e422a0e989714e8364e9c', $event)">Ocean regions</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e42360e989714e8364e9e" @click="chooseCate('5f3e42360e989714e8364e9e', $event)">Frozen regions</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e42400e989714e8364ea0" @click="chooseCate('5f3e42400e989714e8364ea0', $event)">Atmospheric regions</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e424c0e989714e8364ea2" @click="chooseCate('5f3e424c0e989714e8364ea2', $event)">Space-earth regions</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e42550e989714e8364ea4" @click="chooseCate('5f3e42550e989714e8364ea4', $event)">Solid-earth regions</el-button>
+                                    <!--                                    <el-button type="text" id="5f3e42610e989714e8364ea6" @click="chooseCate('5f3e42610e989714e8364ea6')" style="font-size: x-small">Integrated Perspective</el-button>-->
+                                </el-collapse-item>
+                                <el-collapse-item title="Human-perspective" style="margin-left: 10%;" name="12">
+                                    <el-button class="cateButton"  type="text" id="5f3e42780e989714e8364ea8" @click="chooseCate('5f3e42780e989714e8364ea8', $event)">Development activities</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e42830e989714e8364eaa" @click="chooseCate('5f3e42830e989714e8364eaa', $event)">Social activities</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f3e428c0e989714e8364eac" @click="chooseCate('5f3e428c0e989714e8364eac', $event)">Economic activities</el-button>
+                                    <!--                                    <el-button type="text" id="5f3e42940e989714e8364eae" @click="chooseCate('5f3e42940e989714e8364eae')" style="font-size: x-small">Integrated Perspective</el-button>-->
+                                </el-collapse-item>
+                                <el-collapse-item title="Integrated-perspective" style="margin-left: 10%;" name="13">
+                                    <el-button class="cateButton"  type="text" id="5f6c424eefdc249e286947b8" @click="chooseCate('5f6c424eefdc249e286947b8', $event)">Global scale</el-button>
+                                    <el-button class="cateButton"  type="text" id="5f6c42d2efdc249dc47f4665" @click="chooseCate('5f6c42d2efdc249dc47f4665', $event)">Regional scale</el-button>
+                                </el-collapse-item>
+                            </el-collapse>
+                        </el-collapse-item>
+                        <el-collapse-item title="Method-focused categories" style="font-size: 14px;" name="2">
+                            <el-collapse v-model="activeNames2" @change="handleChange1">
+                                <el-collapse-item title="Data-perspective" style="margin-left: 10%;font-size: 14px;" name="21">
+                                    <el-button class="cateButton"  type="text" id="5f3e42ac0e989714e8364eb0" @click="chooseCate('5f3e42ac0e989714e8364eb0', $event)">Geoinformation analysis</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42b40e989714e8364eb2" @click="chooseCate('5f3e42b40e989714e8364eb2', $event)">Remote sensing analysis</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42bc0e989714e8364eb4" @click="chooseCate('5f3e42bc0e989714e8364eb4', $event)">Geostatistical analysis</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42c30e989714e8364eb6" @click="chooseCate('5f3e42c30e989714e8364eb6', $event)">Intelligent computation analysis</el-button>
+                                </el-collapse-item>
+                                <el-collapse-item title="Process-perspective" style="margin-left: 10%;font-size: 14px;" name="22">
+                                    <el-button  class="cateButton" type="text" id="5f3e42d40e989714e8364eb8" @click="chooseCate('5f3e42d40e989714e8364eb8', $event)">Physical process calculation</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42dc0e989714e8364eba" @click="chooseCate('5f3e42dc0e989714e8364eba', $event)">Chemical process calculation</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42e30e989714e8364ebc" @click="chooseCate('5f3e42e30e989714e8364ebc', $event)">Biological process calculation</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42ec0e989714e8364ebe" @click="chooseCate('5f3e42ec0e989714e8364ebe', $event)">Human-activity calculation</el-button>
+                                </el-collapse-item>
+                            </el-collapse>
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-card>
+            </div>
+            <div class="el-col el-col-18 minScreen_maxWidth" >
+                <div class="searcherPanel">
+                    <div class="searcherInputPanel" @keydown.enter="search()">
+                        <el-input v-model="searchText" placeholder="Query String..." style="border-radius: 0;">
+                            <el-select v-model="curQueryField" slot="prepend" style="color:#606266;width:120px;border-radius: 0;">
+                                <el-option
+                                        v-for="qf in queryFields"
+                                        :key="qf"
+                                        :label="qf"
+                                        :value="qf">
+                                </el-option>
+                            </el-select>
+                            <el-button slot="append" icon="el-icon-search" @click="search" style="border-radius: 0;padding: 0;">Search</el-button>
+                        </el-input>
+                    </div>
+                </div>
+                <div class="progressPanel">
+                    <span class="barControl">
+                        <div class="barContro_space">
+                            <span class="progress_line" :class="{active:progressBar}"></span>
+                        </div>
+                    </span>
+                </div>
+                <div  class="alert alert-success" role="alert" style="margin-bottom: 2px;">
+                    <span >
+                        <strong class="minScreen_curClass" style="border-right: 1px solid rgb(234, 234, 234)">
+                            {{categoryName==''?'':"Current Category: "+showCategoryName}}
+                        </strong>
+                        <span style="width: 2px;height: 100%">{{searchText.length===0?'':'|'}}</span>
+                        <strong style="color: cornflowerblue">
+                            {{searchText.length===0?'':'Current ' + curQueryField + ': '+searchText}}
+                        </strong>
+                        <strong style="float: right">
+                            {{datacount!=0 ?(datacount===-1?'loading...':datacount+' items'):'no data'}}
+                        </strong>
+                        </span><br>
+                </div>
+                <!--v-loading-->
+                <div class="maincontnt fixedLoading"  v-loading="loading">
+                    <span style="float:left;margin-top: 12px;margin-left: 15px">
+                            <span style="font-weight: bold">Sorted By: </span>&nbsp;
+                            <el-dropdown trigger="click" @command="changeSortField" style="cursor:pointer;">
+                                <span class="el-dropdown-link">
+                                    {{sortField}}<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="View Count">View Count</el-dropdown-item>
+                                    <el-dropdown-item command="Name">Name</el-dropdown-item>
+                                    <el-dropdown-item command="Create Time">Create Time</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <el-dropdown trigger="click" @command="changeSortOrder" style="cursor:pointer;">
+                                <span class="el-dropdown-link">
+                                    {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="Asc.">Asc.</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">Desc.</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </span>
+                    <el-pagination style="text-align: right;padding: 10px"
+                                   @current-change="handleCurrentChange"
+                                   :pager-count="5"
+                                   :page-size="findDto.pageSize"
+                                   :current-page="findDto.page"
+                                   layout="prev, pager, next"
+                                   :total="datacount">
+                    </el-pagination>
+                    <div class="modelPanel" >
+                        <div  class="content-body">
+                            <div class="list-item" v-for="(item,index) in list" :key="index">
+                                <div class="detail_title">
+                                    <el-tooltip popper-class="fontsize-15" effect="light" :content="item.status" placement="left">
+                                        <i v-if="item.status=='Public'" class="el-icon-unlock public fontsize-24 pull-right"></i>
+                                        <i v-if="item.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
+                                    </el-tooltip>
+                                    <a :class="item.viewCount>100?'hot':''" :href="goto(item.id)" target="_blank" >{{item.name}}&nbsp&nbsp</a>
+                                </div>
+                                <div class="detail_overview">
+                                    <a class="img" :href="'/dataItem/'+ item.id" target="_blank">
+                                        <avatar  :username="item.name" :size="90"
+                                                 :rounded="false"></avatar>
+                                    </a>
+                                    <div class="info">
+                                        <p style="height:40px;-webkit-line-clamp:2;">{{item.description}}</p>
+                                        <div class="tags" v-for="(tagitem,ind) in item.keywords" :key="ind" style="display: inline-block">
+                                            <span class="badge badge-info" >{{tagitem}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="detail_bottom">
+                                    <div style="display:inline-block;float: left;">
+                                        <a :href="'/profile/'+users[index].oid">
+<!--                                            <img :src="users[index].avatar==''?'/static/img/icon/default.png':users[index].avatar" class="round_icon"-->
+<!--                                                 style="margin-top:-5px;width:30px;height: 30px;display: inline-block;">-->
+                                            <user-avatar :email="users[index].email"
+                                                         style="margin-top: -5px; width: 30px; height: 30px; display: inline-block;">
+                                            </user-avatar>
+                                        </a>
+                                        <a :href="'/profile/'+users[index].userId" style="display: inline-block;margin-left: 5px;"><h4>{{users[index].name}}</h4></a>
+                                        <h4 class="screen_view">contributed at {{formatDate(item.createTime).substring(0,10)}}</h4>
+                                        <h4 class="mobile_view">{{formatDate(item.createTime).substring(0,10)}}</h4>
+                                    </div>
+                                    <div class="detail_option">
+                                        <a class="fa fa-eye" aria-hidden="true"></a>&nbsp&nbsp{{item.viewCount}}
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <el-pagination style="text-align: center;margin-top:20px"
+                                   @current-change="handleCurrentChange"
+                                   :page-size="findDto.pageSize"
+                                   :current-page="findDto.page"
+                                   layout="total,prev, pager, next, jumper"
+                                   :total="datacount">
+                    </el-pagination>
+                </div>
+                <!--                <div class="manyhub" >-->
+                <!--                    <div>-->
+                <!--                        <el-card class="hub_items" v-for="(item,index) in list" :key="index" style="width:20%;height: 140px;float: left;margin-top: 10px">-->
+                <!--                            <div class="el-row" >-->
+                <!--                                <a   :href="item.url" target="_blank"  >-->
+                <!--                                    <avatar  :username="item.title"  :size="100"-->
+                <!--                                             class="center-block" ></avatar>-->
+                <!--                                </a>-->
+                <!--                            </div>-->
+                <!--                            <center><a :href=item.url target="_blank" :title=item.url><h5>{{item.title}}</h5></a></center>-->
+                <!--                        </el-card>-->
+                <!--                    </div>-->
+                <!--                    <br>-->
+                <!--                    <div class="el-row" ><br>-->
+                <!--                        <center><el-button  v-loading="loading" id="addmore" @click="addmorehubs">View More</el-button></center>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+<template th:replace="modules/userAvatar :: userAvatar"></template>
+</body>
+<script src="/static/js/common/jquery-3.3.1.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/js/common/bootstrap.js"></script>
+<script src="/static/js/common/bootstrap-select.js"></script>
+<script src="/static/js/common/bootstrap-tagsinput.js"></script>
+<script src="/static/driver/driver.min.js"></script>
+<script src="/static/js/modules/userAvatar.js"></script>
+<script src="/static/js/page/data_items.js"></script>
+<script  async src="/static/js/common/loadUser.js" ></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/js/common/navbar.js"></script>
+</html>

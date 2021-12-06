@@ -22,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
 
 /**
  * @Description 用户控制器
@@ -55,6 +56,9 @@ public class UserRestController {
 
     @Autowired
     NoticeService noticeService;
+
+    @Autowired
+    ManagementSystemService managementSystemService;
 
     // @RequestMapping("/test")
     // public String test(){
@@ -99,7 +103,8 @@ public class UserRestController {
             jsonObject.put("email", email);
             jsonObject.put("name", name);
 
-
+            // 记录用户访问的数量
+            managementSystemService.recordUserViewCount(ip);
 
             // return ResultUtils.success(jsonObject);
             return ResultUtils.success(jsonObject);
@@ -441,6 +446,26 @@ public class UserRestController {
         return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
     }
 
+    /**
+     * 得到用户上传的theme
+     * @param findDTO
+     * @param request
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    @LoginRequired
+    @ApiOperation(value = "得到用户theme [ /repository/getThemesByUserId ]")
+    @RequestMapping(value = "/themeList",method = RequestMethod.POST)
+    public JsonResult getThemesByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme));
+    }
+
+
+
+
+
 
     @LoginRequired
     @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
@@ -543,6 +568,15 @@ public class UserRestController {
     }
 
     @LoginRequired
+    @ApiOperation(value = "得到用户的通知数量")
+    @RequestMapping (value = "/noticeCount", method = RequestMethod.GET)
+    public JsonResult getNoticeCount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(noticeService.countUserNoticeNum(email));
+    }
+
+    @LoginRequired
     @ApiOperation(value = "得到用户未读的通知数量")
     @RequestMapping (value = "/unreadNoticeCount", method = RequestMethod.GET)
     public JsonResult getUnreadNoticeCount(HttpServletRequest request){
@@ -559,4 +593,24 @@ public class UserRestController {
         String email = session.getAttribute("email").toString();
         return ResultUtils.success(userService.countResource(email));
     }
+
+    // @ApiOperation(value = "得到门户管理员")
+    // @RequestMapping (value = "/admin", method = RequestMethod.GET)
+    // public List<User> getAdminUser(){
+    //     return userService.getAdminUser();
+    // }
+    //
+    // @ApiOperation(value = "得到门户root")
+    // @RequestMapping (value = "/root", method = RequestMethod.GET)
+    // public List<User> getRootUser(){
+    //     return userService.getRootUser();
+    // }
+
+    @ApiOperation(value = "根据email得到用户名")
+    @RequestMapping (value = "/name", method = RequestMethod.GET)
+    public JsonResult getUserName(@PathParam("email") String email){
+        return ResultUtils.success(userService.getUserName(email));
+    }
+
+
 }

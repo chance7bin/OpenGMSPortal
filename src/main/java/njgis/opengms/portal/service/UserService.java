@@ -12,6 +12,7 @@ import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -485,8 +486,6 @@ public class UserService {
             j_result.put("runTask", user.getRunTask());
             j_result.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
             j_result.put("subscribe", user.getSubscribe());
-            j_result.put("resourceCount", user.getResourceCount());
-
 
         }else {
             j_result = commonInfo;
@@ -666,6 +665,58 @@ public class UserService {
     public UserResourceCount countResource(String email){
         User user = userDao.findFirstByEmail(email);
         return user.getResourceCount();
+    }
+
+
+    /**
+     * 设置用户权限
+     * @param id
+     * @param role
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
+    public JsonResult setUserRole(String id, UserRoleEnum role){
+        try {
+            User user = userDao.findFirstById(id);
+            user.setUserRole(role);
+            User updatedUser = userDao.save(user);
+            return ResultUtils.success(updatedUser);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtils.error();
+        }
+
+    }
+
+    /**
+     * 得到门户管理员
+     * @param
+     * @return java.util.List<njgis.opengms.portal.entity.po.User>
+     * @Author bin
+     **/
+    public List<User> getAdminUser(){
+        return userDao.findAllByUserRole(UserRoleEnum.ROLE_ADMIN);
+    }
+
+    /**
+     * 得到门户root用户
+     * @param
+     * @return java.util.List<njgis.opengms.portal.entity.po.User>
+     * @Author bin
+     **/
+    public List<User> getRootUser(){
+        return userDao.findAllByUserRole(UserRoleEnum.ROLE_ROOT);
+    }
+
+
+    //根据传入的字符串返回用户名
+    public String getUserName(String author){
+        if (author.contains("@")) {
+            User user = userDao.findFirstByEmail(author);
+            if (user != null)
+                author = user.getName();
+        }
+        return author;
     }
 
 }

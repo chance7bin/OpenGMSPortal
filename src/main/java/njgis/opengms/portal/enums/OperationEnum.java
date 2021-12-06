@@ -10,9 +10,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum OperationEnum {
 
+    //条目的编辑 接受 拒绝
     Edit(0,"edit",ItemTypeEnum.Version),
     Accept(1,"accept",ItemTypeEnum.Version),
-    Reject(2,"reject",ItemTypeEnum.Version);
+    Reject(2,"reject",ItemTypeEnum.Version),
+
+    //对条目操作的通知
+    Inform(3,"inform",ItemTypeEnum.Information);
 
     private int number;
     private String text;

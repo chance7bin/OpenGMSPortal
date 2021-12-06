@@ -7,6 +7,7 @@ import njgis.opengms.portal.dao.VersionDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.Notice;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -14,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -98,7 +101,7 @@ public class NoticeService {
                             p2 = "your ";
                         else
                             p2 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
-                        message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName;
+                        message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName + " (" + notice.getRemark() + ")";
                         break;
                     }
                     case Accept:
@@ -115,7 +118,7 @@ public class NoticeService {
                             p3 = "your ";
                         else
                             p3 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
-                        message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName;
+                        message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName + " (" + notice.getRemark() + ")";
                         break;
                     }
                     default:{
@@ -124,6 +127,16 @@ public class NoticeService {
                     }
 
                 }
+                break;
+            }
+            case Information:{
+                String p1;
+                if (notice.getDispatcher().equals(currentUser))
+                    p1 = "you";
+                else
+                    p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                message = p1 + " " + notice.getRemark();
+
                 break;
             }
             default:{
@@ -149,7 +162,7 @@ public class NoticeService {
      * @return njgis.opengms.portal.entity.po.Notice
      * @Author bin
      **/
-    public Notice initNotice(String dispatcher, OperationEnum action,String objectId, String recipient){
+    public Notice initNotice(String dispatcher, OperationEnum action,String objectId, String recipient, @Nullable List<String> additionList){
         Notice notice = new Notice();
         notice.setDispatcher(dispatcher);
         notice.setAction(action);
@@ -158,6 +171,13 @@ public class NoticeService {
         // notice.setObjectName(objectName);
         notice.setCreateTime(new Date());
         notice.setRecipient(recipient);
+
+        //设置附加的信息
+        if (additionList != null){
+            //列表的第0个是remark
+            notice.setRemark(additionList.get(0));
+        }
+
         notice = noticeDao.insert(notice);
         //更新用户的通知数量
         userService.updateUserNoticeNum(recipient);
@@ -168,7 +188,7 @@ public class NoticeService {
 
 
     /**
-     * 发送通知到指定的用户(不包括门户)
+     * 发送通知到指定的用户, 根据recipientList统一发送
      * @param dispatcher 消息发送者
      * @param action 动作 edit/accept/reject等
      * @param objectId 消息类型对应的id version的id/comment的id
@@ -176,10 +196,10 @@ public class NoticeService {
      * @return java.util.List<njgis.opengms.portal.entity.po.Notice>
      * @Author bin
      **/
-    public List<Notice> sendNotice(String dispatcher, OperationEnum action,String objectId,List<String> recipientList){
+    public List<Notice> sendNotice(String dispatcher, OperationEnum action,String objectId,List<String> recipientList, @Nullable List<String> additionList){
         List<Notice> noticeList = new ArrayList<>();
         for (String recipient : recipientList) {
-            noticeList.add(initNotice(dispatcher, action, objectId, recipient));
+            noticeList.add(initNotice(dispatcher, action, objectId, recipient,additionList));
         }
         return noticeList;
 
@@ -196,13 +216,112 @@ public class NoticeService {
      **/
     public List<Notice> sendNoticeContainRoot(String dispatcher, OperationEnum action, String objectId, List<String> recipientList){
 
-        List<Notice> noticeList = sendNotice(dispatcher, action, objectId, recipientList);
+        List<Notice> noticeList = sendNotice(dispatcher, action, objectId, recipientList, null);
         //如果消息接收列表里不包含超级用户的话那也要把通知发给超级用户
         if (!recipientList.contains("opengms@njnu.edu.cn")){
-            noticeList.add(initNotice(dispatcher, action, objectId, rootUser));
+            noticeList.add(initNotice(dispatcher, action, objectId, rootUser,null));
         }
         return noticeList;
     }
+
+
+    /**
+     * 发送通知, 在调用这个方法前先构造一下通知要发送的用户列表
+     * @param dispatcher 消息发送者
+     * @param action 动作 edit/accept/reject等
+     * @param objectId 消息类型对应的id version的id/comment的id
+     * @param recipientList 消息接收者列表
+     * @param additionProperties 附加的notice属性, 目前附加的属性只有一个remark, 之后有多的按顺序加在后面
+     * @return java.util.List<njgis.opengms.portal.entity.po.Notice>
+     * @Author bin
+     **/
+    public List<Notice> sendNoticeContains(String dispatcher, OperationEnum action, String objectId, List<String> recipientList, @Nullable String... additionProperties){
+
+        List<String> additionList = additionProperties != null ? Arrays.asList(additionProperties) : null;
+
+
+        //添加门户管理员
+        // List<User> adminUser = userService.getAdminUser();
+        // List<String> adminEmail = new ArrayList<>();
+        // for (User user : adminUser) {
+        //     adminEmail.add(user.getEmail());
+        // }
+        // recipientList = addPortalAdmins(recipientList, adminEmail);
+
+        //添加门户root用户
+        // List<User> rootUser = userService.getRootUser();
+        // List<String> rootEmail = new ArrayList<>();
+        // for (User user : rootUser) {
+        //     rootEmail.add(user.getEmail());
+        // }
+        // recipientList = addPortalRoot(recipientList, rootEmail);
+
+
+        List<Notice> noticeList = sendNotice(dispatcher, action, objectId, recipientList, additionList);
+
+        return noticeList;
+    }
+
+
+
+    /**
+     * 往通知的接收者添加条目管理员
+     * @param recipientList 通知者列表
+     * @param itemAdmins 条目管理员
+     * @return java.util.List<java.lang.String>
+     * @Author bin
+     **/
+    public List<String> addItemAdmins(List<String> recipientList, List<String> itemAdmins){
+        for (String itemAdmin : itemAdmins) {
+            if (!recipientList.contains(itemAdmin))
+                recipientList.add(itemAdmin);
+        }
+        return recipientList;
+    }
+
+
+    /**
+     * 往通知的接收者添加门户管理员
+     * @param recipientList
+     * @return java.util.List<java.lang.String>
+     * @Author bin
+     **/
+    public List<String> addPortalAdmins(List<String> recipientList){
+        List<User> adminUser = userService.getAdminUser();
+        List<String> portalAdmins = new ArrayList<>();
+        for (User user : adminUser) {
+            portalAdmins.add(user.getEmail());
+        }
+
+        for (String portalAdmin : portalAdmins) {
+            if (!recipientList.contains(portalAdmin))
+                recipientList.add(portalAdmin);
+        }
+        return recipientList;
+    }
+
+    /**
+     * 往通知的接收者添加门户root用户
+     * @param recipientList
+     * @return java.util.List<java.lang.String>
+     * @Author bin
+     **/
+    public List<String> addPortalRoot(List<String> recipientList){
+        List<User> rootUser = userService.getRootUser();
+        List<String> portalRoot = new ArrayList<>();
+        for (User user : rootUser) {
+            portalRoot.add(user.getEmail());
+        }
+
+        for (String root : portalRoot) {
+            if (!recipientList.contains(root))
+                recipientList.add(root);
+        }
+        return recipientList;
+    }
+
+
+
 
     /**
      * 统计用户的通知数量

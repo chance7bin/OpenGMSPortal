@@ -5,23 +5,33 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.entity.doo.CheckedModel;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.UserDailyViewCount;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.support.ParamInfo;
 import njgis.opengms.portal.entity.doo.task.InputData;
 import njgis.opengms.portal.entity.doo.task.InputDataChildren;
 import njgis.opengms.portal.entity.doo.task.ModelListItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.task.ResultDataDTO;
 import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
 import njgis.opengms.portal.entity.dto.task.TaskInvokeDTO;
 import njgis.opengms.portal.entity.po.*;
-import njgis.opengms.portal.enums.UserRoleEnum;
+import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
+import njgis.opengms.portal.utils.XmlTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -50,8 +60,11 @@ public class ManagementSystemService {
     @Autowired
     ComputableModelService computableModelService;
 
+    // @Autowired
+    // CheckedModelDao checkedModelDao;
+
     @Autowired
-    CheckedModelDao checkedModelDao;
+    UserService userService;
 
     @Autowired
     UserDao userDao;
@@ -62,12 +75,59 @@ public class ManagementSystemService {
     @Autowired
     DashboardDao dashboardDao;
 
+    @Autowired
+    NoticeService noticeService;
+
+
+    @Autowired
+    ModelContainerDao modelContainerDao;
+
+    @Value("${dataServerManager}")
+    private String dataServerManager;
+
 
     public JsonResult searchDeployedModel(FindDTO findDTO) {
-        return ResultUtils.success(computableModelService.searchDeployedModel(findDTO));
+
+        JSONObject jsonObject = computableModelService.searchDeployedModel(findDTO);
+        List<ComputableModel> content = (List<ComputableModel>) jsonObject.get("content");
+
+        //得到查到的结果并更新下计算模型的运行状态
+        content = updateTaskStatus(content);
+        JSONArray jsonArray = new JSONArray();
+        for (ComputableModel computableModel : content) {
+            JSONObject o = new JSONObject();
+            o.put("id",computableModel.getId());
+            o.put("accessId",computableModel.getAccessId());
+            o.put("name",computableModel.getName());
+            o.put("author", userService.getUserName(computableModel.getAuthor()));
+            o.put("createTime",genericService.dateFormat(computableModel.getCreateTime()));
+            o.put("viewCount",computableModel.getViewCount());
+            o.put("lastModifyTime",computableModel.getLastModifyTime());
+            o.put("status",computableModel.getStatus());
+            o.put("dailyViewCount",computableModel.getDailyViewCount());
+            o.put("md5",computableModel.getMd5());
+            o.put("checkedModel",computableModel.getCheckedModel());
+            jsonArray.add(o);
+        }
+
+
+        JSONObject result = new JSONObject();
+        result.put("total",jsonObject.get("total"));
+        result.put("content",jsonArray);
+
+        return ResultUtils.success(result);
     }
 
     public JsonResult invokeModel(String modelId, String email) {
+
+        ComputableModel computableModel = computableModelDao.findFirstById(modelId);
+        CheckedModel checkedModel = computableModel.getCheckedModel();
+        checkedModel = checkedModel == null ? new CheckedModel() : checkedModel;
+        //重置任务状态
+        checkedModel.setHasChecked(true);
+        checkedModel.setLastCheckTime(new Date());
+        checkedModel.setHasInvokeSuccess(false);
+
 
         //初始化任务
         JsonResult initTaskRes = taskService.initTask(modelId, email);
@@ -75,8 +135,12 @@ public class ManagementSystemService {
         int generateTaskFlag = (int) initTaskData.get("generateTaskFlag");
         if (generateTaskFlag != 1){
             if (generateTaskFlag == -2){
+                checkedModel.setOnline(false);
+                saveComputableModel(computableModel,checkedModel,"未找到相应服务");
                 return ResultUtils.error("未找到相应服务");
             } else {
+                // checkedModel.setOnline(true);
+                saveComputableModel(computableModel,checkedModel,"初始化任务失败");
                 return ResultUtils.error("初始化任务失败");
             }
         }
@@ -84,14 +148,21 @@ public class ManagementSystemService {
         //判断是否有测试数据
         JSONObject modelInfo = (JSONObject) initTaskData.get("modelInfo");
         boolean hasTest = (boolean) modelInfo.get("hasTest");
-        if (!hasTest)
+        if (!hasTest){
+            checkedModel.setHasTest(false);
+            saveComputableModel(computableModel,checkedModel,"未找到测试数据");
             return ResultUtils.error("未找到测试数据");
+        }
 
+        checkedModel.setHasTest(true);
 
         //加载数据
         JsonResult loadTestDataRes = taskService.loadTestData(modelId, email);
-        if (loadTestDataRes.getCode() != 1)
+        if (loadTestDataRes.getCode() != 1){
+            saveComputableModel(computableModel,checkedModel,"加载测试数据失败");
             return ResultUtils.error("加载测试数据失败");
+        }
+
         List<ResultDataDTO> loadTestDataData = (List<ResultDataDTO>)loadTestDataRes.getData();
 
         TaskInvokeDTO taskInvokeDTO;
@@ -100,39 +171,38 @@ public class ManagementSystemService {
         }catch (Exception e){
             log.error(e.getMessage());
             e.printStackTrace();
+            saveComputableModel(computableModel,checkedModel,"构造输入数据出错");
             return ResultUtils.error("构造输入数据出错");
         }
 
         JSONObject invokeParams = JSON.parseObject(JSON.toJSONString(taskInvokeDTO));
         JsonResult result = taskService.handleInvoke(invokeParams, email);
 
-        if (result.getCode() != 1)
-            return ResultUtils.error("调用模型失败");
-        JSONObject resultData = (JSONObject) result.getData();
-
-        // 把检查记录存入表中
-        CheckedModel model = checkedModelDao.findFirstById(modelId);
-        if (model == null){
-            CheckedModel checkedModel = new CheckedModel();
-            checkedModel.setId(modelId);
-            checkedModel.setName(modelInfo.getString("name"));
-            checkedModel.setLastCheckTime(new Date());
-            checkedModel.setStatus(0);
-            checkedModel.getTaskIdList().add(resultData.getString("tid"));
-            checkedModelDao.insert(checkedModel);
-        } else {
-            model.setStatus(0);
-            model.setLastCheckTime(new Date());
-            model.getTaskIdList().add(resultData.getString("tid"));
-            checkedModelDao.save(model);
+        if (result.getCode() != 1){
+            saveComputableModel(computableModel,checkedModel,"模型调用失败");
+            return ResultUtils.error("模型调用失败");
         }
 
+        JSONObject resultData = (JSONObject) result.getData();
+        // 把检查记录存入表中
+        checkedModel.setStatus(0);
+        checkedModel.getTaskIdList().add(resultData.getString("tid"));
+        checkedModel.setHasInvokeSuccess(true);
+        saveComputableModel(computableModel,checkedModel,"模型调用成功");
 
         return result;
 
 
 
     }
+
+    //更新模型的检查记录
+    public void saveComputableModel(ComputableModel computableModel, CheckedModel checkedModel, String msg){
+        checkedModel.setMsg(msg);
+        computableModel.setCheckedModel(checkedModel);
+        computableModelDao.save(computableModel);
+    }
+
 
 
     //构造调用invoke接口的参数 先构造测试数据，再根据测试数据匹配模型的输入参数
@@ -218,10 +288,20 @@ public class ManagementSystemService {
     }
 
 
-    public JsonResult updateTaskStatus() {
+    public List<ComputableModel> updateTaskStatus(List<ComputableModel> content) {
 
-        List<Integer> status = Arrays.asList(0, 1);
-        List<CheckedModel> modelList = checkedModelDao.findAllByStatusIn(status);
+        List<CheckedModel> modelList = new ArrayList<>();
+        for (ComputableModel model : content) {
+            CheckedModel cm = model.getCheckedModel();
+            if (cm != null){
+                if (cm.isHasInvokeSuccess() && (cm.getStatus() == 0 || cm.getStatus() == 1)){
+                    modelList.add(cm);
+                }
+            }
+        }
+
+        // List<Integer> status = Arrays.asList(0, 1);
+        // List<CheckedModel> modelList = checkedModelDao.findAllByStatusIn(status);
         List<String> ids = new ArrayList<>();
         for (CheckedModel model : modelList) {
             List<String> taskIdList = model.getTaskIdList();
@@ -233,20 +313,24 @@ public class ManagementSystemService {
         List<Task> newTasks = taskService.updateUserTasks(ts);
 
         for(Task newTask : newTasks){
-            for(CheckedModel model:modelList){
-                List<String> taskIdList = model.getTaskIdList();
-                int size = taskIdList.size();
-                if(newTask.getTaskId().equals(taskIdList.get(size - 1))){
-                    // 更新checkedModel表的状态
-                    model.setStatus(newTask.getStatus());
-                    checkedModelDao.save(model);
+            for(ComputableModel computableModel:content){
+                CheckedModel model = computableModel.getCheckedModel();
+                if (model != null){
+                    List<String> taskIdList = model.getTaskIdList();
+                    int size = taskIdList.size();
+                    if(newTask.getTaskId().equals(taskIdList.get(size - 1))){
+                        // 更新model中checkedModel属性的状态，并保存
+                        model.setStatus(newTask.getStatus());
+                        computableModel.setCheckedModel(model);
+                        computableModelDao.save(computableModel);
+                        break;
+                    }
                 }
             }
-
         }
 
 
-        return ResultUtils.success();
+        return content;
 
     }
 
@@ -302,19 +386,6 @@ public class ManagementSystemService {
     }
 
 
-    public JsonResult setUserRole(String id, UserRoleEnum role){
-        try {
-            User user = userDao.findFirstById(id);
-            user.setUserRole(role);
-            User updatedUser = userDao.save(user);
-            return ResultUtils.success(updatedUser);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResultUtils.error();
-        }
-
-    }
-
 
     public JsonResult getUserList(FindDTO findDTO){
 
@@ -325,16 +396,143 @@ public class ManagementSystemService {
     }
 
 
+
+    public JSONObject getItemInfo(ItemTypeEnum itemType, SpecificFindDTO specificFindDTO){
+        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType);
+
+        // 如果有字段需要筛选的话再加
+
+        JSONArray itemList = new JSONArray();
+        JSONArray allPortalItem = jsonObject.getJSONArray("allPortalItem");
+        for (int i = 0; i < allPortalItem.size(); i++) {
+            JSONObject object = allPortalItem.getJSONObject(i);
+            JSONObject item = new JSONObject();
+            item.put("id", object.get("id"));
+            item.put("name", object.get("name"));
+            item.put("createTime", object.get("createTime"));
+            item.put("lastModifyTime", object.get("lastModifyTime"));
+            item.put("status", object.get("status"));
+            item.put("viewCount", object.get("viewCount"));
+            item.put("author", userService.getUserName(object.getString("author")));
+            if (object.get("invokeCount") != null){
+                item.put("invokeCount", object.get("invokeCount"));
+            }
+            itemList.add(item);
+        }
+        JSONObject result = new JSONObject();
+        result.put("totalElements", jsonObject.getIntValue("totalElements"));
+        result.put("itemList",itemList);
+
+        return result;
+    }
+
+
+
+    public JsonResult addAdmin(ItemTypeEnum itemType, String itemId, List<String> userList){
+
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        PortalItem item = genericService.getById(itemId, itemDao);
+        List<String> admins = item.getAdmins();
+        if (admins == null)
+            admins = new ArrayList<>();
+        for (String user : userList) {
+            if (!admins.contains(user))
+                admins.add(user);
+        }
+        item.setAdmins(admins);
+        item.setLastModifyTime(new Date());
+
+        genericService.saveItem(item,itemDao);
+
+        return ResultUtils.success();
+    }
+
+
+    public JsonResult setItemStatus(ItemTypeEnum itemType, String itemId, String status,String email){
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        PortalItem item = genericService.getById(itemId, itemDao);
+        item.setStatus(status);
+        genericService.saveItem(item, itemDao);
+        //发送通知
+        List<String> recipientList = Arrays.asList(item.getAuthor());
+        recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+
+        // notice的附加信息
+        String remark = "edited " + item.getName() + "'s status to" + item.getStatus();
+
+        noticeService.sendNoticeContains(email, OperationEnum.Inform,item.getId(),recipientList, remark);
+        return ResultUtils.success();
+    }
+
+
+    public long getItemCount(ItemTypeEnum itemType){
+        JSONObject factory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        return itemDao.count();
+    }
+
+    public JsonResult getAllItemCount(){
+
+        // 统计的条目类型
+        ItemTypeEnum[] itemTypeEnums = {
+            ItemTypeEnum.ModelItem,
+            ItemTypeEnum.DataItem,
+            ItemTypeEnum.DataHub,
+            ItemTypeEnum.DataMethod,
+            ItemTypeEnum.Concept,
+            ItemTypeEnum.SpatialReference,
+            ItemTypeEnum.Template,
+            ItemTypeEnum.Unit
+        };
+
+        JSONArray result = new JSONArray();
+        for (ItemTypeEnum itemType : itemTypeEnums) {
+            JSONObject factory = genericService.daoFactory(itemType);
+            GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+            long count = itemDao.count();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type",itemType);
+            jsonObject.put("count",count);
+            result.add(jsonObject);
+        }
+
+
+        return ResultUtils.success(result);
+    }
+
+
+    //得到仪表板的数据
     public JsonResult getDashboardInfo(){
 
         JSONObject result = new JSONObject();
-        DashBoard dashboard = dashboardDao.findFirstByName("dashboard");
-
 
         // 模型数量
 
-
         // 访问数量
+
+        // 用户数量
+
+        return ResultUtils.success(result);
+    }
+
+
+
+
+    // 记录访问页面的数量
+    public void recordViewCount(){
+        DashBoard dashboard = dashboardDao.findFirstByName("dashboard");
+        List<DailyViewCount> dailyViewCount = dashboard.getDailyViewCount();
+        dashboard.setDailyViewCount(genericService.recordViewCountByField(dailyViewCount));
+        dashboardDao.save(dashboard);
+    }
+
+
+    // 页面访问量
+    public JSONArray getPageViewCount(){
+        DashBoard dashboard = dashboardDao.findFirstByName("dashboard");
+
         List<DailyViewCount> dailyViewCount = dashboard.getDailyViewCount();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         JSONArray dailyViewArr = new JSONArray();
@@ -344,22 +542,131 @@ public class ManagementSystemService {
             o.put("count",count.getCount());
             dailyViewArr.add(o);
         }
-        result.put("DailyViewCount", dailyViewArr);
 
+        return dailyViewArr;
 
-        // 用户数量
-
-
-
-        return ResultUtils.success(result);
     }
 
-    // 记录访问页面的数量
-    public void recordViewCount(){
+
+    // 记录用户访问的数量
+    public void recordUserViewCount(String ip){
         DashBoard dashboard = dashboardDao.findFirstByName("dashboard");
-        List<DailyViewCount> dailyViewCount = dashboard.getDailyViewCount();
-        dashboard.setDailyViewCount(genericService.recordViewCountByField(dailyViewCount));
+        List<UserDailyViewCount> dailyViewCountList = dashboard.getUserDailyViewCount();
+
+        Date now = new Date();
+        UserDailyViewCount newViewCount = new UserDailyViewCount(now, 1, Arrays.asList(ip));
+        if (dailyViewCountList == null) {
+            List<UserDailyViewCount> newList = new ArrayList<>();
+            newList.add(newViewCount);
+            dailyViewCountList = newList;
+        } else if (dailyViewCountList.size() > 0) {
+            UserDailyViewCount dailyViewCount = dailyViewCountList.get(dailyViewCountList.size() - 1);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (sdf.format(dailyViewCount.getDate()).equals(sdf.format(now))) {
+
+                List<String> ipList = dailyViewCount.getIpList();
+                if (!ipList.contains(ip)){
+                    ipList.add(ip);
+                }
+
+                dailyViewCount.setCount(ipList.size());
+                dailyViewCountList.set(dailyViewCountList.size() - 1, dailyViewCount);
+            } else {
+                dailyViewCountList.add(newViewCount);
+            }
+        } else {
+            dailyViewCountList.add(newViewCount);
+        }
+
+        dashboard.setUserDailyViewCount(dailyViewCountList);
         dashboardDao.save(dashboard);
+    }
+
+    //得到用户的访问量
+    public JSONArray getUserViewCount(){
+        DashBoard dashboard = dashboardDao.findFirstByName("dashboard");
+        List<UserDailyViewCount> userDailyViewCount = dashboard.getUserDailyViewCount();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        JSONArray dailyViewArr = new JSONArray();
+        for (UserDailyViewCount count : userDailyViewCount) {
+            JSONObject o = new JSONObject();
+            o.put("date",sdf.format(count.getDate()));
+            o.put("count",count.getCount());
+            dailyViewArr.add(o);
+        }
+        return dailyViewArr;
+    }
+
+    // 获取用户数量
+    public long getUserCount(){
+        return userDao.count();
+    }
+
+
+    //获取所有模型\数据容器
+    public JsonResult getAllServerNodes(){
+
+        JSONArray nodes = new JSONArray();
+        //模型容器节点
+        List<ModelContainer> modelContainerList = modelContainerDao.findAll();
+        for(ModelContainer modelContainer : modelContainerList){
+            JSONObject node = new JSONObject();
+            node.put("geoJson",modelContainer.getGeoInfo());
+            node.put("type","model");
+            nodes.add(node);
+        }
+
+        //数据容器节点
+        try {
+            HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+            httpRequestFactory.setConnectionRequestTimeout(6000);
+            httpRequestFactory.setConnectTimeout(6000);
+            httpRequestFactory.setReadTimeout(6000);
+
+            String url = "http://" + dataServerManager + "/onlineNodes";
+
+            RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
+            String xml = null;
+            try {
+                xml = restTemplate.getForObject(url, String.class);
+            } catch (Exception e) {
+
+            }
+
+            if (xml.equals("err")) {
+                xml = null;
+            }
+
+            if(xml!=null) {
+
+                JSONObject jsonObject = XmlTool.xml2Json(xml);
+                JSONObject jsonNodeInfo = jsonObject.getJSONObject("serviceNodes");
+
+
+
+                try {
+                    JSONArray dataNodes = jsonNodeInfo.getJSONArray("onlineServiceNode");
+
+                    for (int i = 0; i < dataNodes.size(); i++) {
+                        JSONObject dataNode = (JSONObject) dataNodes.get(i);
+                        JSONObject node = new JSONObject();
+                        node.put("geoJson", Utils.getGeoInfoMeta(dataNode.getString("ip")));
+                        node.put("type","data");
+                        nodes.add(node);
+                    }
+                } catch (Exception e) {
+                    JSONObject dataNode = jsonNodeInfo.getJSONObject("onlineServiceNode");
+                    JSONObject node = new JSONObject();
+                    node.put("geoJson",Utils.getGeoInfoMeta(dataNode.getString("ip")));
+                    node.put("type","data");
+                    nodes.add(node);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return ResultUtils.success(nodes);
     }
 
 

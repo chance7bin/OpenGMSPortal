@@ -61,4 +61,7 @@ public interface GenericItemDao<T>{
     Page<T> findAllByNameContainsIgnoreCaseAndAuthor(String name, String author, Pageable pageable);
 
     Page<T> findAllByAuthor(String author, Pageable pageable);
+
+    long count();
+
 }

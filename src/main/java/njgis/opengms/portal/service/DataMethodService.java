@@ -516,6 +516,14 @@ public class DataMethodService {
         post.setEntity(postingString);
         post.setHeader("Content-type", "application/json");
         HttpResponse response = null;
+
+        //记录调用次数
+        int invokeCount = dataMethod.getInvokeCount();
+        invokeCount++;
+        dataMethod.setInvokeCount(invokeCount);
+        dataMethodDao.save(dataMethod);
+        // invokeCount = (invokeCount == null) ? 0 : invokeCount;
+
         try {
             response = httpClient.execute(post);
         }catch (ResourceAccessException e){
@@ -958,7 +966,10 @@ public class DataMethodService {
                 Version version = versionService.addVersion(dataMethod, email,originalItemName);
                 //发送通知
                 List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
-                noticeService.sendNoticeContainRoot(email, OperationEnum.Edit,version.getId(),recipientList);
+                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
                 result.put("versionId", version.getId());
                 return result;

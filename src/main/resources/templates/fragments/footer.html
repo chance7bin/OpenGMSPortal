@@ -1,0 +1,157 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="footer">
+    <!--以下为公共部分-->
+    <div class="footer el-row" id="footer">
+        <div id="pcFooter" class="footer-content el-row is-justify-center el-row--flex">
+            <div class="el-col el-col-6">
+                <h3 class="list-title" translateId="systems">OpenGMS Systems</h3>
+                <ul>
+                    <li class="list-item">
+                        <a href="https://geomodeling.njnu.edu.cn/PExploration/home" target="_blank" translateId="gsp">GeoProblem Solving Platform</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="https://geomodeling.njnu.edu.cn/PMIP/home" target="_blank" translateId="mcp">Model Comparison Platform</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="el-col el-col-6">
+                <h3 class="list-title"  translateId="tools">Online Tools</h3>
+                <ul>
+
+                    <li class="list-item">
+                        <a href="http://106.14.78.235:8899" target="_blank" translateId="dsc">Data Service Container</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="http://106.14.78.235:8060/index" target="_blank" translateId="msc">Model Service Container</a>
+                    </li>
+
+
+                </ul>
+            </div>
+
+
+            <div class="el-col el-col-6">
+
+                <h3 class="list-title"  translateId="about">About</h3>
+                <ul>
+                    <li class="list-item">
+                        <a href="http://opengmsteam.com/" translateId="aboutOGMS">About OpenGMS</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="/user/register" translateId="join">Join us</a>
+                    </li>
+                    <!--<li class="list-item">-->
+                        <!--<a href="mailto:opengms@njnu.edu.cn">Suggestions</a>-->
+                    <!--</li>-->
+                </ul>
+            </div>
+
+            <div class="el-col el-col-6">
+                <h3 class="list-title" translateId="contact">
+                    Contact
+                </h3>
+                <ul>
+                    <li class="list-item">
+                        <i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:opengms@njnu.edu.cn" translateId="mail_nnu">
+                        &nbsp;opengms@njnu.edu.cn</a>
+                    </li>
+                    <li class="list-item">
+                        <i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:opengms@126.com" translateId="main_126">
+                        &nbsp;opengms@126.com</a>
+                    </li>
+                    <li class="list-item">
+                        <i class="fa fa-wechat"></i>
+                        <a id="wx" style="cursor:pointer" translateId="vge">
+                            &nbsp;&nbsp;VGETeam
+                        </a>
+                    </li>
+
+                </ul>
+                <div class="qrcodeShow" id="wxqrcode" style="display: none;position: absolute;right:0;bottom:35px"><img style="width:95px;height: 95px;"
+                                                               src="/static/img/weixin/qrcode.bmp"></div>
+            </div>
+        </div>
+        <!--            小屏适配-->
+        <!--            小屏适配-->
+        <!--        <div class="footer-content el-row is-justify-center el-row&#45;&#45;flex phoneFooterContent">-->
+        <div id="phoneFooterContent" style="margin-left: 0;width: 100%">
+            <ul style="width: 100%;">
+                <li><a type="button" data-toggle="collapse" data-target="#subDocuments" style="cursor:pointer">
+                    <h3 class="list-title" translateId="systems">OpenGMS Systems
+                        <div class="arrow" style="right: 4%;border-top: 2px solid;border-right:2px solid;"></div>
+                    </h3>
+                </a></li>
+                <ul id="subDocuments" class="collapse">
+                    <li><a href="https://geomodeling.njnu.edu.cn/PExploration/home" translateId="gsp">GeoProblem Solving Platform</a></li>
+                    <li><a href="https://geomodeling.njnu.edu.cn/PMIP/home" translateId="mcp">Model Comparison Platform</a></li>
+                </ul>
+                <li>
+                    <a type="button" data-toggle="collapse" data-target="#subOnLineTls" style="cursor:pointer">
+                        <h3 class="list-title" translateId="tools">Online Tools
+                            <div class="arrow" style="right: 4%;border-top: 2px solid;border-right:2px solid;"></div>
+                        </h3>
+                    </a>
+                </li>
+                <ul id="subOnLineTls" class="collapse">
+                    <li><a href="http://106.14.78.235:8899/" translateId="dsc">Data Service Container</a></li>
+                    <li><a href="http://106.14.78.235:8060/index" translateId="msc">Model Service Container</a></li>
+
+                </ul>
+                <li><a type="button" data-toggle="collapse" data-target="#subAbout" style="cursor:pointer">
+                    <h3 class="list-title" translateId="about">About
+                        <div class="arrow" style="right: 4%;border-top: 2px solid;border-right:2px solid;">
+
+                        </div>
+                    </h3>
+                </a></li>
+                <ul id="subAbout" class="collapse">
+                    <li><a href="http://opengmsteam.com/" translateId="aboutOGMS">About OpenGMS</a></li>
+                    <li><a href="/user/register" translateId="join">Join Us</a></li>
+                </ul>
+                <li><a type="button" data-toggle="collapse" data-target="#subContact" style="cursor:pointer">
+                    <h3 class="list-title" translateId="contact">Contact
+                        <div class="arrow" style="right: 4%;border-top: 2px solid;border-right:2px solid;"></div>
+                    </h3>
+                </a></li>
+                <ul id="subContact" class="collapse">
+                    <li class="list-item">
+                        <i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:opengms@njnu.edu.cn" translateId="mail_nnu">
+                        &nbsp;opengms@njnu.edu.cn</a>
+                    </li>
+                    <li class="list-item">
+                        <i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:opengms@126.com" translateId="main_126">
+                        &nbsp;opengms@126.com</a>
+                    </li>
+                    <li class="list-item">
+                        <i class="fa fa-wechat"></i>
+                        <a translateId="vge">&nbsp;&nbsp;VGETeam</a>
+
+
+                    </li>
+                </ul>
+            </ul>
+        </div>
+        <!--        </div>-->
+        <div class="footer-content copyright el-row">
+            <h2 class="copyright-title">Open Geographic Modeling and Simulation</h2>
+
+            <span>Copyright © 2011-2021 OpenGMS. All Rights Reserved.</span>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="footer-mini">
+    <!--以下为公共部分-->
+    <div class="footer el-row" style="text-align: center;font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif ">
+        <h3 style="margin:0;font-size:20px;font-style: italic;">Open Geographic Modeling and Simulation</h3>
+        <h5 style="margin-top:10px;margin-bottom:0;">Copyright © 2011-2021 OpenGMS. All Rights Reserved.</h5>
+    </div>
+
+</div>
+</body>
+
+</html>

@@ -1,24 +1,20 @@
 package njgis.opengms.portal.service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
-import njgis.opengms.portal.entity.doo.GenericCategory;
-import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.RelatedModelInfoDTO;
-import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -87,6 +83,12 @@ public class GenericService {
     UnitClassificationDao unitClassificationDao;
 
     @Autowired
+    ThemeDao themeDao;
+
+    @Autowired
+    ComputableModelDao computableModelDao;
+
+    @Autowired
     VersionDao versionDao;
 
 
@@ -109,6 +111,22 @@ public class GenericService {
      * @Author bin
      **/
     public JSONObject searchItems(SpecificFindDTO findDTO, ItemTypeEnum type){
+
+        JSONObject jsonObject = searchDBItems(findDTO, type);
+
+
+        return generateSearchResult((List<PortalItem>) jsonObject.get("allPortalItem"), jsonObject.getIntValue("totalElements"));
+    }
+
+
+    /**
+     * 不对查询的结果做处理
+     * @param findDTO
+     * @param type
+     * @return com.alibaba.fastjson.JSONObject
+     * @Author bin
+     **/
+    public JSONObject searchDBItems(SpecificFindDTO findDTO, ItemTypeEnum type){
         // setGenericDataItemDao(dataType);
 
         // 所有条目都继承PortalItem类
@@ -132,7 +150,14 @@ public class GenericService {
             // return null;
         }
 
-        return generateSearchResult(allPortalItem, totalElements);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("allPortalItem",allPortalItem);
+        jsonObject.put("totalElements",totalElements);
+
+
+
+
+        return jsonObject;
     }
 
 
@@ -233,6 +258,16 @@ public class GenericService {
         JSONObject daoUtils = new JSONObject();
         // 根据查询的条目类型选择相应的DAO
         switch (type){
+            case ModelItem:{
+                daoUtils.put("itemDao",modelItemDao);
+                daoUtils.put("classificationDao",classificationDao);
+                break;
+            }
+            case ComputableModel:{
+                daoUtils.put("itemDao",computableModelDao);
+                daoUtils.put("classificationDao",classificationDao);
+                break;
+            }
             case DataItem:{
                 daoUtils.put("itemDao",dataItemDao);
                 daoUtils.put("classificationDao",classificationDao);
@@ -266,6 +301,10 @@ public class GenericService {
             case Unit:{
                 daoUtils.put("itemDao",unitDao);
                 daoUtils.put("classificationDao",unitClassificationDao);
+                break;
+            }
+            case Theme:{
+                daoUtils.put("itemDao",themeDao);
                 break;
             }
             case Version:{
@@ -323,7 +362,7 @@ public class GenericService {
         try {
             // Object categoryById = genericCategoryDao.findFirstById(categoryName);
             // categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
-            if(categoryName.equals("")) {          // 不分类的情况
+            if(categoryName == null || categoryName.equals("")) {          // 不分类的情况
                 if(searchText.equals("")){
                     result = genericItemDao.findAllByStatusIn(itemStatusVisible,pageable);
                     // result = genericItemDao.findAll(pageable);
@@ -441,6 +480,42 @@ public class GenericService {
 
         });
 
+    }
+    
+    /**
+     * 根据id查dataItem
+     * @param id 条目id
+     * @param type 条目类型
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @Author bin
+     **/
+    public JsonResult getById(String id, ItemTypeEnum type){
+
+        JSONObject factory = daoFactory(type);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        try {
+            PortalItem item = getById(id, itemDao);
+            return ResultUtils.success(item);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+            return ResultUtils.error();
+        }
+        
+
+    }
+    
+    
+
+    /**
+     * 保存条目数据
+     * @param item
+     * @param genericItemDao
+     * @return njgis.opengms.portal.entity.doo.base.PortalItem
+     * @Author bin
+     **/
+    public PortalItem saveItem(PortalItem item, GenericItemDao genericItemDao){
+        return (PortalItem) genericItemDao.save(item);
     }
 
 
@@ -687,6 +762,35 @@ public class GenericService {
 
 
         return differences;
+    }
+
+    /**
+     * detail 转 localizationList
+     * @param name
+     * @param detail
+     * @return java.util.List<njgis.opengms.portal.entity.doo.Localization>
+     * @Author bin
+     **/
+    public List<Localization> detail2localization(String name, String detail){
+        List<Localization> list = new ArrayList<>();
+        Localization localization = new Localization();
+        localization.setLocalCode("en");
+        localization.setLocalName("English");
+        localization.setName(name);
+        localization.setDescription(detail);
+        list.add(localization);
+        return list;
+    }
+
+    /**
+     * 格式化日期
+     * @param date
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String dateFormat(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 
 }
