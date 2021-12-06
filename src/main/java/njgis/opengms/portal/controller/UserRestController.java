@@ -585,6 +585,14 @@ public class UserRestController {
         return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
     }
 
+    @LoginRequired
+    @ApiOperation(value = "得到用户贡献的资源数量")
+    @RequestMapping (value = "/resourceCount", method = RequestMethod.GET)
+    public JsonResult getResourceCount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(userService.countResource(email));
+    }
 
     // @ApiOperation(value = "得到门户管理员")
     // @RequestMapping (value = "/admin", method = RequestMethod.GET)

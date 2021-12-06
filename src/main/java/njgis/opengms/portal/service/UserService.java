@@ -473,6 +473,7 @@ public class UserService {
 
             User user = userDao.findFirstByEmail(email);
 
+            j_result.put("id",user.getId());
             j_result.put("userId", user.getAccessId());
             j_result.put("email", user.getEmail());
             j_result.put("phone", user.getPhone());
@@ -653,6 +654,17 @@ public class UserService {
         }
 
 
+    }
+
+    /**
+     * 得到用户贡献资源数量
+     * @param email
+     * @return UserResourceCount
+     * @Author kai
+     **/
+    public UserResourceCount countResource(String email){
+        User user = userDao.findFirstByEmail(email);
+        return user.getResourceCount();
     }
 
 
