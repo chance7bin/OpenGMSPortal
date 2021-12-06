@@ -472,6 +472,7 @@ public class UserService {
 
             User user = userDao.findFirstByEmail(email);
 
+            j_result.put("id",user.getId());
             j_result.put("userId", user.getAccessId());
             j_result.put("email", user.getEmail());
             j_result.put("phone", user.getPhone());
@@ -484,6 +485,8 @@ public class UserService {
             j_result.put("runTask", user.getRunTask());
             j_result.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
             j_result.put("subscribe", user.getSubscribe());
+            j_result.put("resourceCount", user.getResourceCount());
+
 
         }else {
             j_result = commonInfo;
@@ -652,6 +655,17 @@ public class UserService {
         }
 
 
+    }
+
+    /**
+     * 得到用户贡献资源数量
+     * @param email
+     * @return UserResourceCount
+     * @Author kai
+     **/
+    public UserResourceCount countResource(String email){
+        User user = userDao.findFirstByEmail(email);
+        return user.getResourceCount();
     }
 
 }
