@@ -724,9 +724,39 @@ public class UserService {
     }
 
     /**
+     * @Description 通过用户服务器发送验证码
+     * @param email
+     * @Return java.lang.String
+     * @Author kx
+     * @Date 21/12/7
+     **/
+    public String sendResetByUserserver(String email) throws IOException, URISyntaxException {
+        try{
+            String url = "http://" + userServer + "/user/resetPwd/" + email;
+            Map<String,String> headers = new HashMap<>();
+            headers.put("user-agent","portal_backend");
+            String result = MyHttpUtils.GET(url,"UTF-8",headers);
+
+            JSONObject j_result = JSONObject.parseObject(result);
+            int code = j_result.getInteger("code");
+
+            if(code==0){
+                return "suc";
+            }else if(code==-1){
+                return "no user";
+            }else {
+                return "err";
+            }
+        }catch (Exception e){
+            return "err";
+        }
+
+    }
+
+    /**
      * @Description 重置密码
      * @param email
-     * @param resetCode
+     * @param resetCode 验证码
      * @param newPass
      * @Return java.lang.String
      * @Author kx
