@@ -193,7 +193,7 @@ new Vue({
                                 });
                             }
                             this.sendingCode = false
-                        }, error: function (e) {
+                        }, error: (e)=> {
                             this.$alert('Send verification code error', 'Tip', {
                                     type: "warning",
                                     confirmButtonText: 'OK',
