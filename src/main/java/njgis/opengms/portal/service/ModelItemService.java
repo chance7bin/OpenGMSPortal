@@ -736,7 +736,7 @@ public class ModelItemService {
 //                modelItemVersion.setModifyTime(curDate);
 //                modelItemVersion.setVerNumber(curDate.getTime());
 //                modelItemVersion.setVerStatus(0);
-//                userService.messageNumPlusPlus(authorUserName);
+//                userService.noticeNumPlusPlus(authorUserName);
 //
 //                List<Localization> localizationList = modelItemVersion.getLocalizationList();
 //                for(int l = 0;l<localizationList.size();l++){

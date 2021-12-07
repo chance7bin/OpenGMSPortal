@@ -1426,7 +1426,7 @@ Vue.component("edit-modelitem-module",
                                     that.modelitem_oid = currentUrl.substring(index + 1,currentUrl.length);
                                     console.log(that.modelitem_oid);
 
-                                    // that.getMessageNum(that.modelitem_oid);
+                                    // that.getnoticeNum(that.modelitem_oid);
                                     // let params = that.message_num_socket;
                                     // that.send(params);
                                     this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
@@ -1468,7 +1468,7 @@ Vue.component("edit-modelitem-module",
             //     that.modelitem_oid = currentUrl.substring(index + 1,currentUrl.length);
             //     console.log(that.modelitem_oid);
             //     //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-            //     that.getMessageNum(that.modelitem_oid);
+            //     that.getnoticeNum(that.modelitem_oid);
             //     let params = that.message_num_socket;
             //     that.send(params);
             // });

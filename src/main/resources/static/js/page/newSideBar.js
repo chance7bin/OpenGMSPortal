@@ -181,9 +181,9 @@ Vue.component('headSideBar', {
             target.children('ul').children('#phoneLogin').css('height','0')
         },
         //
-        getMessageNum(){
+        getnoticeNum(){
             $.updatePortalUser({
-                url:"/theme/getMessageNum",
+                url:"/theme/getnoticeNum",
                 type:"GET",
                 success:(data)=>{
                     this.message_num = data;
@@ -201,7 +201,7 @@ Vue.component('headSideBar', {
         //let that= this;
         //用于判断用户是否收到消息
         // that.getMessageInfo();
-        // this.getMessageNum();
+        // this.getnoticeNum();
 
         $('#dropmu').click((e)=>{
             // clearTimeout(tFoldLmu);
