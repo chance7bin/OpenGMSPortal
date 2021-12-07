@@ -610,6 +610,14 @@ public class UserRestController {
         return ResultUtils.success(userService.getUserName(email));
     }
 
+    @ApiOperation(value = "通过用户服务器发送验证码")
+    @RequestMapping(value = "/sendResetByUserserver", method = RequestMethod.POST)
+    public JsonResult sendResetByUserserver(@RequestParam String email) throws IOException, URISyntaxException {
+
+        String result = userService.sendResetByUserserver(email);
+        return ResultUtils.success(result);
+    }
+
     @ApiOperation(value = "重置密码")
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
     public JsonResult resetPass(@RequestParam String email,
