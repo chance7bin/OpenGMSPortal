@@ -13,8 +13,10 @@ import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
+import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -29,7 +31,9 @@ import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -717,6 +721,41 @@ public class UserService {
                 author = user.getName();
         }
         return author;
+    }
+
+    /**
+     * @Description 重置密码
+     * @param email
+     * @param resetCode
+     * @param newPass
+     * @Return java.lang.String
+     * @Author kx
+     * @Date 21/12/7
+     **/
+    public String resetPassword(String email, String resetCode, String newPass) throws IOException, URISyntaxException {
+
+        try{
+            String url = "http://" + userServer + "/user/resetPwd/" + email + "/" + resetCode + "/" + DigestUtils.sha256Hex(newPass) ;
+            Map<String,String> headers = new HashMap<>();
+            headers.put("user-agent","portal_backend");
+
+            String result = MyHttpUtils.GET(url,"UTF-8",headers);
+
+            JSONObject j_result = JSONObject.parseObject(result);
+            int code = j_result.getInteger("code");
+
+            if(code==0){
+                return "suc";
+            }else if(code==-1){
+                return "no user";
+            }else {
+                return "err";
+            }
+        }catch (Exception e){
+            return "err";
+        }
+
+
     }
 
 }
