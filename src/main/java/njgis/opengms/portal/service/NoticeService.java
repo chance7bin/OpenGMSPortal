@@ -333,6 +333,8 @@ public class NoticeService {
         return noticeDao.countByRecipient(email);
     }
 
+
+
     /**
      * 统计用户未读的通知数量
      * @param email
@@ -342,6 +344,8 @@ public class NoticeService {
     public int countUserUnreadNoticeNum(String email){
         return noticeDao.countByRecipientAndHasRead(email,false);
     }
+
+
 
     /**
      * 得到用户的通知列表

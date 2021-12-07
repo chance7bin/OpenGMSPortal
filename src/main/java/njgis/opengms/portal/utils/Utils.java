@@ -1000,4 +1000,27 @@ public class Utils {
         return geoInfoMeta;
     }
 
+
+    public static String saveBase64Image(String content,String id,String resourcePath,String htmlLoadPath){
+        if(content==null){
+            return null;
+        }
+        int startIndex = 0, endIndex = 0, index = 0;
+        while (content!=null&&content.indexOf("src=\"data:im", startIndex) != -1) {
+            int Start = content.indexOf("src=\"data:im", startIndex) + 5;
+            int typeStart = content.indexOf("/", Start) + 1;
+            int typeEnd = content.indexOf(";", typeStart);
+            String type = content.substring(typeStart, typeEnd);
+            startIndex = typeEnd + 8;
+            endIndex = content.indexOf("\"", startIndex);
+            String imgStr = content.substring(startIndex, endIndex);
+
+            String imageName = "/detailImage/" + id + "/" + id + "_" + (index++) + "." + type;
+            Utils.base64StrToImage(imgStr, resourcePath + imageName);
+
+            content = content.substring(0, Start) + htmlLoadPath + imageName + content.substring(endIndex, content.length());
+        }
+        return content;
+    }
+
 }

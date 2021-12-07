@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.entity.doo.CheckedModel;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.UserDailyViewCount;
@@ -99,7 +100,8 @@ public class ManagementSystemService {
             o.put("accessId",computableModel.getAccessId());
             o.put("name",computableModel.getName());
             o.put("author", userService.getUserName(computableModel.getAuthor()));
-            o.put("createTime",computableModel.getCreateTime());
+            o.put("createTime",genericService.dateFormat(computableModel.getCreateTime()));
+            o.put("viewCount",computableModel.getViewCount());
             o.put("lastModifyTime",computableModel.getLastModifyTime());
             o.put("status",computableModel.getStatus());
             o.put("dailyViewCount",computableModel.getDailyViewCount());
@@ -121,8 +123,10 @@ public class ManagementSystemService {
         ComputableModel computableModel = computableModelDao.findFirstById(modelId);
         CheckedModel checkedModel = computableModel.getCheckedModel();
         checkedModel = checkedModel == null ? new CheckedModel() : checkedModel;
+        //重置任务状态
         checkedModel.setHasChecked(true);
         checkedModel.setLastCheckTime(new Date());
+        checkedModel.setHasInvokeSuccess(false);
 
 
         //初始化任务
@@ -150,7 +154,7 @@ public class ManagementSystemService {
             return ResultUtils.error("未找到测试数据");
         }
 
-
+        checkedModel.setHasTest(true);
 
         //加载数据
         JsonResult loadTestDataRes = taskService.loadTestData(modelId, email);
@@ -183,6 +187,7 @@ public class ManagementSystemService {
         // 把检查记录存入表中
         checkedModel.setStatus(0);
         checkedModel.getTaskIdList().add(resultData.getString("tid"));
+        checkedModel.setHasInvokeSuccess(true);
         saveComputableModel(computableModel,checkedModel,"模型调用成功");
 
         return result;
@@ -289,7 +294,7 @@ public class ManagementSystemService {
         for (ComputableModel model : content) {
             CheckedModel cm = model.getCheckedModel();
             if (cm != null){
-                if (cm.isHasChecked() && (cm.getStatus() == 0 || cm.getStatus() == 1)){
+                if (cm.isHasInvokeSuccess() && (cm.getStatus() == 0 || cm.getStatus() == 1)){
                     modelList.add(cm);
                 }
             }
@@ -404,11 +409,14 @@ public class ManagementSystemService {
             JSONObject item = new JSONObject();
             item.put("id", object.get("id"));
             item.put("name", object.get("name"));
-            item.put("createTime", object.get("id"));
-            item.put("lastModifyTime", object.get("id"));
-            item.put("status", object.get("id"));
-            item.put("viewCount", object.get("id"));
+            item.put("createTime", object.get("createTime"));
+            item.put("lastModifyTime", object.get("lastModifyTime"));
+            item.put("status", object.get("status"));
+            item.put("viewCount", object.get("viewCount"));
             item.put("author", userService.getUserName(object.getString("author")));
+            if (object.get("invokeCount") != null){
+                item.put("invokeCount", object.get("invokeCount"));
+            }
             itemList.add(item);
         }
         JSONObject result = new JSONObject();
@@ -463,6 +471,35 @@ public class ManagementSystemService {
         JSONObject factory = genericService.daoFactory(itemType);
         GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
         return itemDao.count();
+    }
+
+    public JsonResult getAllItemCount(){
+
+        // 统计的条目类型
+        ItemTypeEnum[] itemTypeEnums = {
+            ItemTypeEnum.ModelItem,
+            ItemTypeEnum.DataItem,
+            ItemTypeEnum.DataHub,
+            ItemTypeEnum.DataMethod,
+            ItemTypeEnum.Concept,
+            ItemTypeEnum.SpatialReference,
+            ItemTypeEnum.Template,
+            ItemTypeEnum.Unit
+        };
+
+        JSONArray result = new JSONArray();
+        for (ItemTypeEnum itemType : itemTypeEnums) {
+            JSONObject factory = genericService.daoFactory(itemType);
+            GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+            long count = itemDao.count();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type",itemType);
+            jsonObject.put("count",count);
+            result.add(jsonObject);
+        }
+
+
+        return ResultUtils.success(result);
     }
 
 

@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
-import njgis.opengms.portal.entity.doo.GenericCategory;
-import njgis.opengms.portal.entity.doo.MyException;
+import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.dto.FindDTO;
@@ -16,6 +14,7 @@ import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -82,6 +81,9 @@ public class GenericService {
 
     @Autowired
     UnitClassificationDao unitClassificationDao;
+
+    @Autowired
+    ThemeDao themeDao;
 
     @Autowired
     ComputableModelDao computableModelDao;
@@ -301,6 +303,10 @@ public class GenericService {
                 daoUtils.put("classificationDao",unitClassificationDao);
                 break;
             }
+            case Theme:{
+                daoUtils.put("itemDao",themeDao);
+                break;
+            }
             case Version:{
                 daoUtils.put("itemDao",versionDao);
                 break;
@@ -475,6 +481,31 @@ public class GenericService {
         });
 
     }
+    
+    /**
+     * 根据id查dataItem
+     * @param id 条目id
+     * @param type 条目类型
+     * @return njgis.opengms.portal.entity.doo.JsonResult 
+     * @Author bin
+     **/
+    public JsonResult getById(String id, ItemTypeEnum type){
+
+        JSONObject factory = daoFactory(type);
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        try {
+            PortalItem item = getById(id, itemDao);
+            return ResultUtils.success(item);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+            return ResultUtils.error();
+        }
+        
+
+    }
+    
+    
 
     /**
      * 保存条目数据
@@ -731,6 +762,35 @@ public class GenericService {
 
 
         return differences;
+    }
+
+    /**
+     * detail 转 localizationList
+     * @param name
+     * @param detail
+     * @return java.util.List<njgis.opengms.portal.entity.doo.Localization>
+     * @Author bin
+     **/
+    public List<Localization> detail2localization(String name, String detail){
+        List<Localization> list = new ArrayList<>();
+        Localization localization = new Localization();
+        localization.setLocalCode("en");
+        localization.setLocalName("English");
+        localization.setName(name);
+        localization.setDescription(detail);
+        list.add(localization);
+        return list;
+    }
+
+    /**
+     * 格式化日期
+     * @param date
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String dateFormat(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 
 }

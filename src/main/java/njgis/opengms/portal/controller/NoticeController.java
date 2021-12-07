@@ -33,4 +33,6 @@ public class NoticeController {
         return noticeService.allNotice2read(email);
     }
 
+
+
 }

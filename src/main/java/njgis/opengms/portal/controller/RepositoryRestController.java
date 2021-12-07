@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @Description
@@ -130,5 +131,27 @@ public class RepositoryRestController {
     public ModelAndView getUnitPage(@PathVariable("id") String id){
         return repositoryService.getUnitPage(id);
     }
+
+
+
+    @ApiOperation(value = "theme专题")
+    @RequestMapping(value = "/thematic",method = RequestMethod.GET)
+    public ModelAndView getThematic() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Thematic");
+
+        modelAndView.addObject("themeResult",repositoryService.getThematic());
+
+        return modelAndView;
+    }
+
+    @ApiOperation(value = "根据id得到theme页面")
+    @RequestMapping(value = "/theme/{id}",method = RequestMethod.GET)
+    public ModelAndView getThemePage(@PathVariable("id") String id,HttpServletRequest req) throws InvocationTargetException {
+        return repositoryService.getThemePage(id, req);
+    }
+
+
 
 }
