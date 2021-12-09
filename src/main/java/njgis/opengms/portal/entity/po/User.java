@@ -79,7 +79,6 @@ public class User extends PortalIdPlus {
 //    String userId;// 用来访问个人主页，与name一致，重名则加标识
 
     //登录IP
-    String lastLoginIp;
     ArrayList<String> loginIp;
     //根据IP获得的用户位置信息
     GeoInfoMeta geoInfo;
