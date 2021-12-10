@@ -101,7 +101,7 @@
                                  style="width:30px;height: 30px;display: inline-block;margin-right:10px;margin-top: -3px">
                             <div class="el-badge item" style="flex: 0.5;">
                                 <div id="userName" class="textLineLimit" th:text="${userNavBar.name}" style="display: inline-block;max-width: 100px">Hello!!!!!!!!!</div>
-                                <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
                                 right: 0px !important;
                                 border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                                 </sup>
@@ -117,7 +117,7 @@
                                      th:src="${(userNavBar.avatar == null ||#strings.isEmpty(userNavBar.avatar)) ? '/static/img/icon/default.png' : userNavBar.avatar}"
                                      onerror="src='/static/img/icon/default.png'"
                                      style="width:30px;height: 30px;display: inline-block;margin-right:0px">
-                                <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
                                 right: 0px !important;
                                 border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                                 </sup>
@@ -192,16 +192,16 @@
         <div th:if="${logged}" class="subLog zmax" id="logedSub" style="right: 0px">
             <ul>
                 <li><a id="userSpaceDir" href="/user/userSpace">My Space</a></li>
-                <li><a id="userPageDir" th:href="${'/profile/' + userNavBar.userId}">My Page</a></li>
+                <li><a id="userPageDir" th:href="${'/profile/' + userNavBar.accessId}">My Page</a></li>
                 <li>
                     <!--<el-badge :value="2" class="item">-->
                     <!--<a id="userNoticeDir" href="/user/userSpace#/notice">Notice</a>-->
                     <!--</el-badge>-->
                     <div class="el-badge item">
                         <a id="userNoticeDir1" href="/user/userSpace#/notice">Notice</a>
-                        <!--<sup th:if="${userNavBar.messageNum}" class="el-badge__content is-fixed" th:text="${userNavBar.messageNum}"-->
+                        <!--<sup th:if="${userNavBar.noticeNum}" class="el-badge__content is-fixed" th:text="${userNavBar.noticeNum}"-->
                              <!--style="top: 30%;right: 30% !important;padding-right: 4px;padding-left: 4px;"></sup>-->
-                        <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 15px !important;
+                        <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 15px !important;
                                 right: 45px !important;
                                 border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                         </sup>
@@ -217,10 +217,10 @@
                 <li style="padding-top: 16px;background-color: rgb(8,10,14)"><p style="text-align: center;font-size: 15.2px;color: white">
                     Hello ! &nbsp;&nbsp;<span id="userAloha" style="font-size: 15.5px;" th:text="${userNavBar.name}"></span></p></li>
                 <li><a href="/user/userSpace">My Space</a></li>
-                <li><a id="phoneUserPageDir" th:href="${'/profile/' + userNavBar.userId}">My Page</a></li>
+                <li><a id="phoneUserPageDir" th:href="${'/profile/' + userNavBar.accessId}">My Page</a></li>
                 <li class="el-badge item">
                     <a id="userNoticeDir2" href="/user/userSpace#/notice">Notice</a>
-                    <sup th:if="${userNavBar.messageNum>0}" class="el-badge__content is-fixed notice_num" style="right: 45%!important;"></sup>
+                    <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed notice_num" style="right: 45%!important;"></sup>
                 </li>
                 <li style="background-color: rgb(0,192,255)"><a href="/user/out">Log Out</a></li>
                 <!--                        <li><a href="">Thematic Center</a></li>-->

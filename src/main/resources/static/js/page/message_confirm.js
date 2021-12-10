@@ -1307,7 +1307,7 @@ var notice = Vue.extend({
                             this.dataItem_tableData1_length--;
                             this.table_length_sum--;
                             this.version_sum--;
-                            // var messageNum = document
+                            // var noticeNum = document
                             this.dataItem_tableData1.splice(pos,1);
                             this.dataItem_tableData2.splice(0,0,tableItem);
                             this.dataItem_tableData2_length++;

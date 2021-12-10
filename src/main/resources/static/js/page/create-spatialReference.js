@@ -606,7 +606,7 @@ var createSpatialReference = Vue.extend({
         close: function () {
             console.log("socket已经关闭")
         },
-        getMessageNum(spatialReference_oid) {
+        getnoticeNum(spatialReference_oid) {
             this.message_num_socket = 0;//初始化消息数目
             let data = {
                 type: 'spatialReference',
@@ -615,7 +615,7 @@ var createSpatialReference = Vue.extend({
 
             //根据oid去取该作者的被编辑的条目数量
             $.ajax({
-                url: "/theme/getAuthorMessageNum",
+                url: "/theme/getAuthornoticeNum",
                 type: "GET",
                 data: data,
                 async: false,
@@ -628,7 +628,7 @@ var createSpatialReference = Vue.extend({
                 oid: spatialReference_oid,
             };
             $.ajax({
-                url: "/theme/getThemeMessageNum",
+                url: "/theme/getThemenoticeNum",
                 async: false,
                 type: "GET",
                 data: data_theme,
@@ -976,7 +976,7 @@ var createSpatialReference = Vue.extend({
                                 that.spatialReference_oid = currentUrl.substring(index + 1, currentUrl.length);
                                 console.log(that.spatialReference_oid);
                                 //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-                                // that.getMessageNum(that.spatialReference_oid);
+                                // that.getnoticeNum(that.spatialReference_oid);
                                 // let params = that.message_num_socket;
                                 // that.send(params);
                                 this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
@@ -1020,7 +1020,7 @@ var createSpatialReference = Vue.extend({
         //     that.spatialReference_oid = currentUrl.substring(index + 1,currentUrl.length);
         //     console.log(that.spatialReference_oid);
         //     //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-        //     that.getMessageNum(that.spatialReference_oid);
+        //     that.getnoticeNum(that.spatialReference_oid);
         //     let params = that.message_num_socket;
         //     that.send(params);
         // });

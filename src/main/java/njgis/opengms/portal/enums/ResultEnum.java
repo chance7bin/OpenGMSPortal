@@ -12,10 +12,10 @@ import lombok.Data;
  */
 
 public enum ResultEnum {
-    SUCCESS(1, "Success"),
-    NO_OBJECT(0, "No object"),
-    ERROR(-1,"Error"),
-    UNAUTHORIZED(-2,"Unauthorized");
+    SUCCESS(0, "Success"),
+    NO_OBJECT(-1, "No object"),
+    ERROR(-2,"Error"),
+    UNAUTHORIZED(-3,"Unauthorized");
 
 
     private Integer code;

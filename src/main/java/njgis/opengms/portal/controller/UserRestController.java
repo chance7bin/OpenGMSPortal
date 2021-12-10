@@ -23,6 +23,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * @Description 用户控制器
@@ -465,10 +467,6 @@ public class UserRestController {
     }
 
 
-
-
-
-
     @LoginRequired
     @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
     @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
@@ -587,6 +585,14 @@ public class UserRestController {
         return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
     }
 
+    @LoginRequired
+    @ApiOperation(value = "得到用户贡献的资源数量")
+    @RequestMapping (value = "/resourceCount", method = RequestMethod.GET)
+    public JsonResult getResourceCount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(userService.countResource(email));
+    }
 
     // @ApiOperation(value = "得到门户管理员")
     // @RequestMapping (value = "/admin", method = RequestMethod.GET)
@@ -604,6 +610,31 @@ public class UserRestController {
     @RequestMapping (value = "/name", method = RequestMethod.GET)
     public JsonResult getUserName(@PathParam("email") String email){
         return ResultUtils.success(userService.getUserName(email));
+    }
+
+    @ApiOperation(value = "通过用户服务器发送验证码")
+    @RequestMapping(value = "/sendResetByUserserver", method = RequestMethod.POST)
+    public JsonResult sendResetByUserserver(@RequestParam String email) throws IOException, URISyntaxException {
+
+        String result = userService.sendResetByUserserver(email);
+        return ResultUtils.success(result);
+    }
+
+    @ApiOperation(value = "重置密码")
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    public JsonResult resetPass(@RequestParam String email,
+                                @RequestParam String code,
+                                @RequestParam String newPass) throws IOException, URISyntaxException {
+
+        String result = userService.resetPassword(email,code,newPass);
+
+        if(result.equals("suc")){
+            return ResultUtils.success(result);
+        }else if(result.equals("no user")){
+            return ResultUtils.error(-1,result);
+        }else{
+            return ResultUtils.error(-2,result);
+        }
     }
 
 

@@ -324,7 +324,7 @@ public class ConceptualModelService {
 //                    conceptualModelVersion.setModifier(uid);
 //                    conceptualModelVersion.setVerNumber(now.getTime());
 //                    conceptualModelVersion.setVerStatus(0);
-//                    userService.messageNumPlusPlus(authorUserName);
+//                    userService.noticeNumPlusPlus(authorUserName);
 //                    conceptualModelVersion.setModifyTime(now);
 //                    conceptualModelVersion.setCreator(author0);
 //

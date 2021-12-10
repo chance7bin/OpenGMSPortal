@@ -102,13 +102,15 @@ new Vue({
                 // data对象中的属性名要和服务端控制器的参数名一致 login(name, password)
                 data: data,
                 // dataType : 'json',
-                success: (result) => {
+                success: (res) => {
+                    let result = res.data
+                    let code = res.code
                     if (this.ruleForm.remember) {
                         localStorage.setItem('account', this.ruleForm.account);
                         localStorage.setItem('password', this.ruleForm.password);
                         localStorage.setItem('remember', "yes");
                     }
-                    if (result == "1") {
+                    if (code == "1") {
                         this.$notify.success({
                             title: 'Success',
                             message: 'Login successful ! Redirecting...',
@@ -193,7 +195,7 @@ new Vue({
                                 });
                             }
                             this.sendingCode = false
-                        }, error: function (e) {
+                        }, error: (e)=> {
                             this.$alert('Send verification code error', 'Tip', {
                                     type: "warning",
                                     confirmButtonText: 'OK',
