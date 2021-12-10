@@ -55,6 +55,14 @@ new Vue({
     },
     methods: {
 
+        //reset cancel
+        resetCancel(){
+            this.resetPassFormVisible = false
+            this.resetPassForm.newPass = ''
+            this.resetPassForm.verifyCode = ''
+
+        },
+
 
         //register form
         submitForm(formName) {
@@ -102,15 +110,13 @@ new Vue({
                 // data对象中的属性名要和服务端控制器的参数名一致 login(name, password)
                 data: data,
                 // dataType : 'json',
-                success: (res) => {
-                    let result = res.data
-                    let code = res.code
+                success: (result) => {
                     if (this.ruleForm.remember) {
                         localStorage.setItem('account', this.ruleForm.account);
                         localStorage.setItem('password', this.ruleForm.password);
                         localStorage.setItem('remember', "yes");
                     }
-                    if (code == "1") {
+                    if (result.code == "0") {
                         this.$notify.success({
                             title: 'Success',
                             message: 'Login successful ! Redirecting...',
