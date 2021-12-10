@@ -138,7 +138,7 @@ var notice = Vue.extend({
             data_seen:false,
             application_seen: false,
 
-            message_num:0,
+            noticeNum:0,
 
             reverse: true,
 
@@ -1491,8 +1491,8 @@ var notice = Vue.extend({
                         success: (json) => {
                             if (json=="ok"){
                                 this.unread = 0;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 // this.timeLineColor1 = '#409EFF';
                                 console.log("success");
                             }
@@ -1534,8 +1534,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1572,8 +1572,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1614,8 +1614,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread+
                                     this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1652,8 +1652,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1694,8 +1694,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1732,8 +1732,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1774,8 +1774,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }
@@ -1812,8 +1812,8 @@ var notice = Vue.extend({
                                 this.table_length_sum_self = (this.model_accept_unread+this.model_reject_unread+this.community_accept_unread+this.community_reject_unread
                                     +this.theme_accept_unread+this.theme_reject_unread+this.dataItem_accept_unread+this.dataItem_reject_unread);
                                 this.version_sum = this.table_length_sum + this.table_length_sum_self;
-                                this.message_num = this.version_sum + this.unread;
-                                $("#headBar .el-badge__content").text(this.message_num);
+                                this.noticeNum = this.version_sum + this.unread;
+                                $("#headBar .el-badge__content").text(this.noticeNum);
                                 console.log("success");
                             }
                         }

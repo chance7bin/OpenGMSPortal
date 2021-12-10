@@ -65,11 +65,6 @@
         }
     </style>
 
-<!--    <script th:inline="javascript">-->
-<!--        modelClassInfos = [[${modelClassInfos}]]-->
-<!--        console.log(modelClassInfos)-->
-
-<!--    </script>-->
 </head>
 <body class="scrollbar">
 <div id="app" class="flex-colDirect" style="height: 100%">
@@ -86,7 +81,7 @@
                 <div slot="header" class="clearfix text-center headerImg flex-colDirect flex-center" >
 <!--                    专题照片-->
                     <div class="editTheme themeImg flex-center" style="position: relative">
-                        <img v-if="edit_themeObj.themeImage!=undefined&&edit_themeObj.themeImage!=null&&edit_themeObj.themeImage!=''" class="themeImg" id="imgShow1" :src="edit_themeObj.themeImage">
+                        <img v-if="edit_themeObj.themeImage!=undefined&&edit_themeObj.themeImage!=null&&edit_themeObj.themeImage!=''" class="themeImg" id="imgShow" :src="edit_themeObj.themeImage">
                         <div v-show="editActiveIndex==1" class="shade flex-center"  style="align-items: center;position: absolute;top: 0px;justify-content: center;" @click="uploadImg">
                             <i class="fa fa-camera hoverIcon"></i>
                         </div>
@@ -404,6 +399,7 @@
                         </el-menu>
                     </div>
 <!--                    按钮组-->
+
                     <div class="cardEdit" th:if="${info.author==loginId}" style="padding:20px;">
                         <div class="editEnableButton" v-if="editActiveIndex==0">
                             <el-button id="controlEditButton" type="primary" @click="controlEdit">Enable editing</el-button>
@@ -967,28 +963,6 @@
             <el-card shadow="never">
                 <div class="panel-body" style="height: 570px">
                     <el-card>
-<!--                        <div style="width: 20%;float: left">-->
-<!--                            <el-card class="box-card">-->
-
-<!--                                <el-tree :data="themeModelData"-->
-<!--                                         :props="defaultModelProps"-->
-<!--                                         :current-node-key="currentModelNode"-->
-<!--                                         highlight-current-->
-<!--                                         node-key="id"-->
-<!--                                         default-expand-all-->
-<!--                                         :expand-on-click-node="false"-->
-<!--                                         @node-click="changeModelClassNode">-->
-<!--                                              <span class="custom-tree-node" slot-scope="{ node, data }">-->
-<!--                                                    <span>{{node.label}}</span>-->
-<!--&lt;!&ndash;                                                    <span>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                          <el-button type="text"  @click="() => appendModel(node,data)" icon="el-icon-plus"></el-button>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                          <el-button type="text"  @click="() => modifyModel(data)" icon="el-icon-edit" v-if="data.id!=1"></el-button>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                          <el-button type="text"  @click="() => removeModel(node, data)" icon="el-icon-delete" v-if="data.id!=1"></el-button>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                    </span>&ndash;&gt;-->
-<!--                                              </span>-->
-<!--                                </el-tree>-->
-<!--                            </el-card>-->
-<!--                        </div>-->
                         <div style="width: 100%;float: right">
                             <div v-if="parentModelNode" style="text-align: center">Please Select Children Model Class</div>
                             <div class='model-attr' v-if="childModelNode">
@@ -1134,28 +1108,6 @@
             <el-card  shadow="never">
                 <div class="panel-body" style="height: 570px">
                     <el-card>
-<!--                            <div style="width: 20%;float: left">-->
-<!--                                <el-card class="box-card">-->
-
-<!--                                    <el-tree :data="themeData"-->
-<!--                                             :props="defaultProps"-->
-<!--                                             :current-node-key="currentNode"-->
-<!--                                             highlight-current-->
-<!--                                             node-key="id"-->
-<!--                                             default-expand-all-->
-<!--                                             :expand-on-click-node="false"-->
-<!--                                             @node-click="changeClassNode">-->
-<!--                                                  <span class="custom-tree-node" slot-scope="{ node, data }">-->
-<!--                                                        <span>{{node.label}}</span>-->
-<!--                                                        <span>-->
-<!--                                                              <el-button type="text"  @click="() => append(node,data)" icon="el-icon-plus"></el-button>-->
-<!--                                                              <el-button type="text"  @click="() => modify(data)" icon="el-icon-edit" v-if="data.id!=1"></el-button>-->
-<!--                                                              <el-button type="text"  @click="() => remove(node, data)" icon="el-icon-delete" v-if="data.id!=1"></el-button>-->
-<!--                                                        </span>-->
-<!--                                                  </span>-->
-<!--                                    </el-tree>-->
-<!--                                </el-card>-->
-<!--                            </div>-->
                             <div style="width: 100%;float: right">
                                 <div v-if="parentNode" style="text-align: center">Please Select Children Model Class</div>
                                 <div class='model-attr' v-if="childNode">
@@ -1609,7 +1561,7 @@
 </div>
 
 </body>
-
+<script src="/static/js/apidoc/themeApi.js"></script>
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script src="/static/js/common/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>

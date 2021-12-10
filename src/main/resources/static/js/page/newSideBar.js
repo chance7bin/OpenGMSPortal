@@ -18,7 +18,7 @@ Vue.component('headSideBar', {
             userInfo:{
 
             },
-            message_num:0
+            noticeNum:0
         }
     },
 
@@ -186,7 +186,7 @@ Vue.component('headSideBar', {
                 url:"/theme/getnoticeNum",
                 type:"GET",
                 success:(data)=>{
-                    this.message_num = data;
+                    this.noticeNum = data;
                 }
             })
         }
