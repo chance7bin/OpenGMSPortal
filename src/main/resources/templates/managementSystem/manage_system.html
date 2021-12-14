@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Portal Management</title>
+    <title>Title</title>
+
+
 
     <script src="/static/js/common/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 
     <script src="/static/element-ui/index.js"></script>
     <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+
     <style>
+
         /*基本边距*/
         html,
         body,
@@ -37,15 +42,12 @@
         }
 
 
+        /*顶部栏*/
         .el-header, .el-footer {
             background-color: rgba(0, 0, 0, 0.1);
             color: #333;
             text-align: center;
             line-height: 60px;
-        }
-        .top_head{
-            display: flex;
-            justify-content: space-between;
         }
 
         .table_head {
@@ -150,21 +152,15 @@
             display: flex;
             justify-content: space-evenly;
         }
-
-
-
-
-
-
     </style>
 </head>
+
+
 <body>
-
-<div id="manage_system">
-    <el-container class="container">
-
-<!--        顶部-->
-        <el-header class="top_head">
+<div id="manage_system_app">
+    <el-container >
+        <!--顶部-->
+        <el-header class="flexRowBetween">
             <div>
                 <h2 style="font-family:微软雅黑;margin:0px 0px 0px 20px">门户后台管理</h2>
             </div>
@@ -173,638 +169,51 @@
             </el-link>
 
         </el-header>
-        <el-container>
 
-<!--            左侧导航栏-->
+        <el-container >
+            <!--左侧导航菜单-->
             <el-aside width="200px" >
-                <el-menu
-                        default-active="1"
-                        class="el-menu-vertical-demo">
-                    <el-menu-item index="1"  @click="pageChange(1)">
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">模型管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="2" @click="pageChange(2)">
-                        <i class="el-icon-document"></i>
-                        <span slot="title">用户管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="3" @click="pageChange(3)">
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">条目管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="4" @click="pageChange(4)">
-                        <i class="el-icon-document"></i>
-                        <span slot="title">版本审核</span>
-                    </el-menu-item>
-
-
-                </el-menu>
-            </el-aside>
-            <el-main>
-
-<!--====================================================================================================================================-->
-<!--            模型管理页面-->
-                <div v-if="pageShow==1" class="model_list_container">
-                    <div class="model_list_container">
-<!--                        表格上部菜单-->
-                        <div class="table_head">
-                            <div class="table_head_item1" >
-                                <h2  >模型列表</h2>
-                            </div>
-
-<!--                            搜索-->
-                            <div class="table_head_item2">
-                                <el-input
-                                        placeholder="请输入内容"
-                                        prefix-icon="el-icon-search"
-                                        v-model="searchInput"
-                                        @keyup.enter.native="getModelList()"
-                                >
-                                </el-input>
-                                &nbsp;&nbsp;
-                                <el-button  type="success" icon="el-icon-search" @click="searchModel()" >搜索</el-button>
-                            </div>
-
-<!--                            表格头部菜单-->
-                            <div class="table_head_item3" >
-                                    <el-button type="primary" @click="getHistoryList()">检测历史</el-button>
-
-                                <el-popover
-                                        placement="bottom"
-                                        width="345"
-                                        trigger="hover"
-                                        style="margin-left: 10px">
-                                    <el-table :data="waitCheckModels" :show-header="false" max-height="345" stripe>
-                                        <el-table-column type="index" width="40"></el-table-column>
-                                        <el-table-column width="255" property="modelName" label="名称"></el-table-column>
-                                        <el-table-column  label="操作" width="50">
-                                            <template slot-scope="scope" >
-                                                <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteCheckModel(scope.row.modelId)" circle></el-button>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>
-                                    <el-button  slot="reference"   type="success" >待检测模型</el-button>
-                                    <div class="flexRowEnd">
-                                        <el-button  size="medium" type="success" @click="checkSelectedModels()" >检测</el-button>
-                                    </div>
-                                </el-popover>
-                            </div>
-                            <div >
-                            </div>
-                        </div>
-
-                        <!-- 历史记录弹出框 -->
-                        <el-dialog title="检测历史记录" :visible.sync="historyTableVisible">
-
-                            <el-collapse v-model="activeHistoryItem" class="historyDiv" accordion>
-                                <el-collapse-item v-for="(item, index) in historyList"  :name="index">
-                                    <template slot="title">
-                                        <h4>{{item.draftName}}</h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <el-button
-                                                size="mini"
-                                                type="primary"
-                                                @click.stop="checkHistoryModels(item.modelList)">Check</el-button>
-                                        <el-button
-                                                size="mini"
-                                                type="success"
-                                                @click.stop="loadCheckedModel(item.modelList)">Load</el-button>
-                                        <el-button
-                                                size="mini"
-                                                type="warning"
-                                                @click.stop="deleteHistoryItem(item.id)">Delete</el-button>
-                                    </template>
-                                    <el-table :data="item.modelList" :show-header="false">
-                                        <el-table-column width="400" property="name" ></el-table-column>
-                                    </el-table>
-
-                                </el-collapse-item>
-                            </el-collapse>
-
-
-                            <el-pagination
-                                    layout="total,prev, pager, next"
-                                    :total="historyTotal"
-                                    @current-change="handleHistoryCurrentChange"
-                                    :current-page="historyNowPage"
-                                    :page-size="5"
-                                    class="flexRowCenter"
-                                >
-                            </el-pagination>
-
-                        </el-dialog>
-
-<!--                        模型列表-->
-                        <el-table
-                                ref="modelTable"
-                                @select="handelCheckbox"
-                                @select-all="handelAllCheck"
-                                :data="tableData"
-                                stripe
-                                style="width: 100%"
-                                height="65vh"
-                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
-                        >
-                            <el-table-column type="selection">
-                            </el-table-column>
-                            <el-table-column sortable prop="accessId" label="名称">
-                            </el-table-column>
-
-                            <el-table-column sortable prop="author" label="作者" >
-                            </el-table-column>
-
-                            <el-table-column sortable prop="viewCount"  label="访问量"></el-table-column>
-
-                            <el-table-column  label="操作" >
-                                <template slot-scope="scope">
-                                    <el-button
-                                            size="mini"
-                                            type="primary"
-                                            @click="checkModel(scope.row.id)">Check</el-button>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column  prop="status" label="状态">
-                                <template slot-scope="scope">
-                                    <el-tag
-                                            v-if="scope.row.checkedModel ===null"
-                                            type='info'
-                                            disable-transitions>未检测</el-tag>
-                                    <el-tag
-                                            v-if="scope.row.checkedModel !==null && (scope.row.checkedModel.status===-1 ||scope.row.checkedModel.hasInvokeSuccess===false||scope.row.checkedModel.hasTest===false)"
-                                            type='danger'
-                                            disable-transitions>{{scope.row.checkedModel.msg}}</el-tag>
-                                    <el-tag
-                                            v-if="scope.row.checkedModel !==null &&scope.row.checkedModel.hasInvokeSuccess===true&& scope.row.checkedModel.status===0 "
-                                            type='warning'
-                                            disable-transitions>正在排队检测</el-tag>
-                                    <el-tag
-                                            v-if="scope.row.checkedModel !==null &&scope.row.checkedModel.hasInvokeSuccess===true&& scope.row.checkedModel.status===1 "
-                                            type='primary'
-                                            disable-transitions>正在检测</el-tag>
-                                    <el-tag
-                                            v-if="scope.row.checkedModel !==null &&scope.row.checkedModel.hasInvokeSuccess===true&& scope.row.checkedModel.status===2 "
-                                            type='success'
-                                            disable-transitions>正常</el-tag>
-                                </template>
-                            </el-table-column>
-
-                        </el-table>
-                        <el-divider></el-divider>
-<!--                            模型列表分页-->
-                            <el-pagination
-                                    background
-                                    @size-change="handleSizeChange"
-                                    @current-change="handleCurrentChange"
-                                    :current-page="currentPage"
-                                    :page-sizes="[10, 20, 30, 40]"
-                                    :page-size="PageSize"
-                                    layout="total, sizes, prev, pager, next, jumper"
-                                    :total="totalModel"
-                                    class="flexRowCenter"
-                            >
-                            </el-pagination>
-                    </div>
-                </div>
-
-
-<!--====================================================================================================================================-->
-<!--             用户管理页面-->
-                <div v-if="pageShow==2" >
-                    <el-main class="middle_content">
-                        <!--                    <h2>测试</h2>-->
-                        <div class="table_head">
-                            <div class="table_head_item1" >
-                                <h2  >用户列表</h2>
-                            </div>
-
-                            <!--                            搜索-->
-                            <div class="table_head_item2">
-                                <el-input
-                                        placeholder="请输入内容"
-                                        prefix-icon="el-icon-search"
-                                        v-model="searchInputUser"
-                                        @keyup.enter.native="getUserList()"
-                                >
-                                </el-input>
-                                &nbsp;&nbsp;
-                                <el-button  type="success" icon="el-icon-search" @click="getUserList()" >搜索</el-button>
-                            </div>
-
-                            <!--                            表格头部菜单-->
-                            <div class="table_head_item3" >
-
-                            </div>
-
-                        </div>
-
-                        <el-table
-                                ref="userTable"
-                                :data="userTableData"
-                                stripe
-                                style="width: 100%"
-                                height="65vh"
-                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
-                        >
-
-                            <el-table-column sortable prop="name" label="姓名">
-                            </el-table-column>
-
-                            <el-table-column sortable prop="email" label="邮箱" >
-                            </el-table-column>
-                            <el-table-column sortable prop="userRole" label="权限" >
-                            </el-table-column>
-
-                            <el-table-column  label="操作">
-                                <template slot-scope="scope">
-                                    <el-dropdown >
-                                        <el-button type="primary"  size="mini">
-                                            权限设置<i class="el-icon-arrow-down el-icon--right"></i>
-                                        </el-button>
-                                        <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item @click.native="handleRoleSelect('ROLE_ROOT',scope.row.id)" >ROOT</el-dropdown-item>
-                                            <el-dropdown-item @click.native="handleRoleSelect('ROLE_ADMIN',scope.row.id)">ADMIN</el-dropdown-item>
-                                            <el-dropdown-item @click.native="handleRoleSelect('ROLE_USER',scope.row.id)">USER</el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
-                                </template>
-                            </el-table-column>
-
-
-                        </el-table>
-                        <el-divider></el-divider>
-
-                        <el-pagination
-                                background
-                                @size-change="handleSizeChangeUser"
-                                @current-change="handleCurrentChangeUser"
-                                :current-page="currentPageUser"
-                                :page-sizes="[10, 20, 30, 40]"
-                                :page-size="PageSizeUser"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="totalUser"
-                                class="flexRowCenter"
-                        >
-                        </el-pagination>
-
-
-                    </el-main>
-                </div>
-
-
-<!--====================================================================================================================================-->
-<!--             条目展示页面-->
-                <div v-if="pageShow==3">
-                    <el-main>
-                        <div class="flexRowBetween" >
-<!--                            左侧类型选择框-->
-                                <el-card class="box-card GeoItemLeftMenu">
-                                    <div slot="header" class="clearfix">
-                                        <span>Data item classification</span>
-                                    </div>
-                                    <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
-                                </el-card>
-<!--                            后侧内容-->
-                            <div class="flexColumnStart" style="width: 65vw">
-                                <div class="geoSubTopMenu ">
-                                    <div class="flexRowBetween">
-                                        <el-input
-                                                placeholder="请输入内容"
-                                                prefix-icon="el-icon-search"
-                                                v-model="searchInputGeo"
-                                                @keyup.enter.native="getGeoItemList()"
-                                        >
-                                        </el-input>
-                                        &nbsp;&nbsp;
-                                        <el-button  type="success" icon="el-icon-search" @click="getGeoItemList()" >搜索</el-button>
-                                    </div>
-                                </div>
-                                <div class="geoItemMainContent" >
-                                    <el-table
-                                            ref="geoItemTable"
-                                            :data="geoItemTableData"
-                                            stripe
-                                            style="width: 100%"
-                                            height="65vh"
-                                            :default-sort="{ prop: 'viewCount', order: 'descending' }"
-                                    >
-
-                                        <el-table-column sortable prop="name" label="名称">
-                                        </el-table-column>
-
-                                        <el-table-column sortable prop="author" label="贡献者" >
-                                        </el-table-column>
-                                        <el-table-column sortable prop="viewCount" label="查看数" >
-                                        </el-table-column>
-
-                                        <el-table-column  label="操作">
-                                            <template slot-scope="scope">
-                                                <el-button
-                                                        v-if="scope.row.status==='Public'"
-                                                        size="mini"
-                                                        type="success"
-                                                        icon="el-icon-unlock"
-                                                        @click="changeStatus(scope.row)">状态切换</el-button>
-                                                <el-button
-                                                        v-if="scope.row.status==='Private'"
-                                                        size="mini"
-                                                        type="warning"
-                                                        icon="el-icon-lock"
-                                                        @click="changeStatus(scope.row)">状态切换</el-button>
-                                                <el-button
-                                                        size="mini"
-                                                        type="primary"
-                                                        icon="el-icon-user"
-                                                        @click="setAdmin(scope.row.id)">管理员</el-button>
-                                            </template>
-
-                                        </el-table-column>
-                                    </el-table>
-                                    <el-divider></el-divider>
-
-                                    <el-pagination
-                                            background
-                                            @size-change="handleSizeChangeGeo"
-                                            @current-change="handleCurrentChangeGeo"
-                                            :current-page="currentPageGeo"
-                                            :page-sizes="[10, 20, 30, 40]"
-                                            :page-size="PageSizeGeo"
-                                            layout="total, sizes, prev, pager, next, jumper"
-                                            :total="totalGeo"
-                                            class="flexRowCenter"
-                                    >
-                                    </el-pagination>
-                                </div>
-                            </div>
-                        </div>
-                    </el-main>
-                </div>
-
-
-<!--====================================================================================================================================-->
-<!--             版本审核页面-->
-                <div v-if="pageShow==4">
-                    <el-main class="middle_content" style="height:85vh">
-                        <el-tabs tab-position="left" stretch="true" type="border-card" @tab-click="changeTabs" >
-<!--                            未审核页面-->
-                            <el-tab-pane label="未审核版本">
-                                <div class=" flexColumnStart">
-                                        <div class="flexRowBetween">
-                                            <el-input
-                                                    placeholder="请输入内容"
-                                                    prefix-icon="el-icon-search"
-                                                    v-model="searchInputWaitVersion"
-                                                    @keyup.enter.native="getWaitVersionList()"
-                                            >
-                                            </el-input>
-                                            &nbsp;&nbsp;
-                                            <el-button  type="success" icon="el-icon-search" @click="getWaitVersionList()" >搜索</el-button>
-                                        </div>
-                                    <div>
-                                        <el-table
-                                                ref="waitVersionTable"
-                                                :data="waitVersionTableData"
-                                                stripe
-                                                style="width: 100%"
-                                                height="58vh"
-
-                                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
-                                        >
-                                            <el-table-column sortable prop="submitTime" label="日期" >
-                                            </el-table-column>
-                                            <el-table-column sortable prop="itemName" label="名称">
-                                            </el-table-column>
-
-                                            <el-table-column sortable prop="type" label="类型" >
-                                            </el-table-column>
-                                            <el-table-column sortable prop="editor" label="修改者" >
-                                            </el-table-column>
-
-                                            <el-table-column  label="操作" width="240">
-                                                <template slot-scope="scope">
-                                                    <el-button
-                                                            size="mini"
-                                                            type="primary"
-                                                            @click="viewWaitVersion(scope.row.id)">查看</el-button>
-                                                    <el-button
-                                                            size="mini"
-                                                            type="success"
-                                                            @click="acceptVersion(scope.row.id)">接受</el-button>
-                                                    &nbsp;
-                                                    <el-button
-                                                            size="mini"
-                                                            type="danger"
-                                                            @click="rejectVersion(scope.row.id)">拒绝</el-button>
-                                                </template>
-
-                                            </el-table-column>
-
-                                        </el-table>
-                                        <el-divider></el-divider>
-
-                                        <el-pagination
-                                                background
-                                                @size-change="handleSizeChangeWaitVersion"
-                                                @current-change="handleCurrentChangeWaitVersion"
-                                                :current-page="currentPageWaitVersion"
-                                                :page-sizes="[10, 20, 30, 40]"
-                                                :page-size="PageSizeWaitVersion"
-                                                layout="total, sizes, prev, pager, next, jumper"
-                                                :total="totalWaitVersion"
-                                                class="flexRowCenter"
-                                        >
-                                        </el-pagination>
-                                    </div>
-                                </div>
-
-                            </el-tab-pane>
-<!--                                版本对比对话框-->
-                            <el-dialog title="版本对比" :visible.sync="dialogVersionComp" width="80%" center="true">
-
-                                <div class="flexRowEvenly">
-                                    <h1>原始版本</h1>
-                                    <el-divider direction="vertical"></el-divider>
-                                    <h1>审核版本</h1>
-                                </div>
-
-                                <div v-if="versionCompChangedField.authorships">
-                                    <h1>authorships:</h1>
-                                    <div class="flexRowBetween">
-                                        <div>
-                                            {{versionCompChangedField.authorships.original[0]}}
-                                        </div>
-                                        <el-divider direction="vertical"></el-divider>
-                                        <div>
-                                            {{versionCompChangedField.authorships.new[0]}}
-                                        </div>
-                                    </div>
-                                    <el-divider></el-divider>
-                                </div>
-
-                                <div v-if="versionCompChangedField.localizationList">
-                                    <h1>localizationList:</h1>
-                                    <div class="flexRowBetween">
-                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
-                                        <el-divider direction="vertical"></el-divider>
-                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
-                                    </div>
-                                    <el-divider></el-divider>
-
-                                </div>
-
-                                <div v-if="versionCompChangedField.localizationList">
-                                    <h1>localizationList:</h1>
-                                    <div class="flexRowBetween">
-                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
-                                        <el-divider direction="vertical"></el-divider>
-                                        <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
-                                    </div>
-                                    <el-divider></el-divider>
-
-                                </div>
-
-                                <el-button class="acceptBtn" type="success">接受</el-button>
-                                <el-button class="rejectBtn" type="danger">拒绝</el-button>
-
-                            </el-dialog>
-
-<!--                            接受页面-->
-                            <el-tab-pane label="接受版本">
-                                <div class=" flexColumnStart">
-                                    <div class="flexRowBetween">
-                                        <el-input
-                                                placeholder="请输入内容"
-                                                prefix-icon="el-icon-search"
-                                                v-model="searchInputAcceptVersion"
-                                                @keyup.enter.native="getAcceptVersionList()"
-                                        >
-                                        </el-input>
-                                        &nbsp;&nbsp;
-                                        <el-button  type="success" icon="el-icon-search" @click="getAcceptVersionList()" >搜索</el-button>
-                                    </div>
-                                    <div class="">
-                                        <el-table
-                                                ref="acceptVersionTable"
-                                                :data="acceptVersionTableData"
-                                                stripe
-                                                style="width: 100%"
-                                                height="58vh"
-                                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
-                                        >
-                                            <el-table-column sortable prop="submitTime" label="日期" >
-                                            </el-table-column>
-                                            <el-table-column sortable prop="itemName" label="名称">
-                                            </el-table-column>
-
-                                            <el-table-column sortable prop="type" label="类型" >
-                                            </el-table-column>
-                                            <el-table-column sortable prop="editor" label="修改者" >
-                                            </el-table-column>
-
-                                            <el-table-column  label="操作" width="240">
-                                                <template slot-scope="scope">
-                                                    <el-button
-                                                            size="mini"
-                                                            type="primary"
-                                                            @click="viewAcceptVersion(scope.row.id)">查看</el-button>
-                                                </template>
-
-                                            </el-table-column>
-
-                                        </el-table>
-                                        <el-divider></el-divider>
-
-                                        <el-pagination
-                                                background
-                                                @size-change="handleSizeChangeAcceptVersion"
-                                                @current-change="handleCurrentChangeAcceptVersion"
-                                                :current-page="currentPageAcceptVersion"
-                                                :page-sizes="[10, 20, 30, 40]"
-                                                :page-size="PageSizeAcceptVersion"
-                                                layout="total, sizes, prev, pager, next, jumper"
-                                                :total="totalAcceptVersion"
-                                                class="flexRowCenter"
-                                        >
-                                        </el-pagination>
-                                    </div>
-                                </div>
-
-                            </el-tab-pane>
-
-<!--                            拒绝页面-->
-                            <el-tab-pane label="拒接版本">
-                                <div class=" flexColumnStart">
-                                    <div class="flexRowBetween">
-                                        <el-input
-                                                placeholder="请输入内容"
-                                                prefix-icon="el-icon-search"
-                                                v-model="searchInputRejectVersion"
-                                                @keyup.enter.native="getRejectVersionList()"
-                                        >
-                                        </el-input>
-                                        &nbsp;&nbsp;
-                                        <el-button  type="success" icon="el-icon-search" @click="getRejectVersionList()" >搜索</el-button>
-                                    </div>
-                                    <div>
-                                        <el-table
-                                                ref="rejectVersionTable"
-                                                :data="rejectVersionTableData"
-                                                stripe
-                                                style="width: 100%"
-                                                height="58vh"
-                                                :default-sort="{ prop: 'viewCount', order: 'descending' }"
-                                        >
-                                            <el-table-column sortable prop="submitTime" label="日期" >
-                                            </el-table-column>
-                                            <el-table-column sortable prop="itemName" label="名称">
-                                            </el-table-column>
-
-                                            <el-table-column sortable prop="type" label="类型" >
-                                            </el-table-column>
-                                            <el-table-column sortable prop="editor" label="修改者" >
-                                            </el-table-column>
-
-                                            <el-table-column  label="操作" >
-                                                <template slot-scope="scope">
-                                                    <el-button
-                                                            size="mini"
-                                                            type="primary"
-                                                            @click="viewRejectVersion(scope.row.id)">查看</el-button>
-                                                </template>
-
-                                            </el-table-column>
-
-                                        </el-table>
-                                        <el-divider></el-divider>
-
-                                        <el-pagination
-                                                background
-                                                @size-change="handleSizeChangeRejectVersion"
-                                                @current-change="handleCurrentChangeRejectVersion"
-                                                :current-page="currentPageRejectVersion"
-                                                :page-sizes="[10, 20, 30, 40]"
-                                                :page-size="PageSizeRejectVersion"
-                                                layout="total, sizes, prev, pager, next, jumper"
-                                                :total="totalRejectVersion"
-                                                class="flexRowCenter"
-                                        >
-                                        </el-pagination>
-                                    </div>
-                                </div>
-                            </el-tab-pane>
-                        </el-tabs>
-                    </el-main>
-                </div>
-
-
+        <el-menu
+                router
+                default-active="modelManage"
+                class="el-menu-vertical-demo">
+            <el-menu-item index="/modelManage"  >
+                <i class="el-icon-menu"></i>
+                <span slot="title">模型管理</span>
+            </el-menu-item>
+            <el-menu-item index="/userManage" >
+                <i class="el-icon-user-solid"></i>
+                <span slot="title">用户管理</span>
+            </el-menu-item>
+            <el-menu-item index="/itemManage" >
+                <i class="el-icon-s-ticket"></i>
+                <span slot="title">条目管理</span>
+            </el-menu-item>
+            <el-menu-item index="/versionManage" >
+                <i class="el-icon-s-claim"></i>
+                <span slot="title">版本审核</span>
+            </el-menu-item>
+            <el-menu-item index="/commentManage" >
+                <i class="el-icon-s-comment"></i>
+                <span slot="title">评论管理</span>
+            </el-menu-item>
+            <el-menu-item index="/taskManage" >
+                <i class="el-icon-s-order"></i>
+                <span slot="title">任务监控</span>
+            </el-menu-item>
+        </el-menu>
+    </el-aside>
+            <!--右侧主内容-->
+            <el-main >
+                <router-view></router-view>
             </el-main>
         </el-container>
 
     </el-container>
 
-
 </div>
 
-
 </body>
-<script src="/static/js/managementSystem/manage_system.js"></script>
+<script type="module" src="/static/js/managementSystem/manage_system.js"></script>
+
 </html>
