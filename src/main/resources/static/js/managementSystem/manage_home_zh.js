@@ -1,8 +1,9 @@
 new Vue({
     el: '#manage_home',
     data:{
+
         serverNodes:[], //服务节点
-        serverNodeCoods:[],//服务节点坐标
+        serverNodeCoords:[],//服务节点坐标
 
         resourceCount:[], //资源数量
 
@@ -10,15 +11,16 @@ new Vue({
         userViewCount:[], //用户访问数量
         itemViewCount:[], //条目访问数量
 
-        defaultItemShow:"DataItem",// 默认显示的条目数量
+        defaultItemShow:"ModelItem",// 默认显示的条目数量
+
+        itemIndex:0,
+        itemNameEn:["ModelItem","DataItem","DataHub","DataMethod","Concept","SpatialReference","Template","Unit"],
+        itemNameZh:["模型条目","数据条目","数据仓库","数据方法","概念","空间参考","数据格式","单位"],
 
         serviceUseType:"computableModel", //默认展示模型服务调用
         serviceUseCount:[], //服务调用数量
 
         userCount:0, //用户数量
-
-        ctrlEarth:false,
-
     },
     mounted() {
 
@@ -36,24 +38,64 @@ new Vue({
 
         this.getUserCount()
 
+        this.autoChangeServiceCount()
+        this.autoChangeItemCount()
+
     },
     methods: {
+
+        //定时切换服务调用
+        autoChangeServiceCount(){
+            setInterval(()=>{
+                if(this.serviceUseType==="computableModel"){
+                    this.serviceUseType="dataMethod"
+                }else {
+                    this.serviceUseType="computableModel"
+                }
+                this.getServiceUseCount()
+
+            },2000)
+        },
+
+        //定时切换条目访问
+        autoChangeItemCount(){
+            setInterval(()=>{
+                this.itemIndex=(this.itemIndex+1)%8
+                this.getItemViewCount(this.itemNameEn[this.itemIndex])
+            },2000)
+        },
 
         //获取服务节点数据
         getServerNodes(){
             axios.get("/managementSystem/serverNodes")
                 .then(response=> {
                     this.serverNodes=response.data.data.data
+                    let nodes=[]
                     for(let i=0,len=this.serverNodes.length;i<len;i++){
-                        this.serverNodeCoods.push([parseFloat(this.serverNodes[i].geoJson.longitude),parseFloat(this.serverNodes[i].geoJson.latitude)])
+                        let cityName=this.serverNodes[i].geoJson.city
+                        let j=0,len2=nodes.length
+                        for(;j<len2;j++) {
+                            if (cityName === nodes[j].name) {
+                                break
+                            }
+                        }
+                        if(j===len2){
+                            nodes.push({
+                                name:cityName,
+                                count:1,
+                                value:[parseFloat(this.serverNodes[i].geoJson.longitude),parseFloat(this.serverNodes[i].geoJson.latitude)]
+                            })
+                        }else{
+                            nodes[j].count++
+                        }
                     }
+                    this.serverNodeCoords=nodes
                     this.loadEarth()
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
-
         //绘制地球
         loadEarth(){
             let myChart = echarts.init(document.getElementById('earthNodes'));
@@ -61,7 +103,7 @@ new Vue({
 
             myChart.setOption({
             title: {
-                text: '服务节点',
+                text: '服务节点分布',
                     left: 'center',
                 textStyle: {
                     color: '#ffffff'
@@ -88,22 +130,46 @@ new Vue({
                         autoRotateAfterStill: 2, // 在鼠标静止操作后恢复自动旋转的时间间隔,默认 3s
                         rotateSensitivity: 3, // 旋转操作的灵敏度，值越大越灵敏.设置为0后无法旋转。[1, 0]只能横向旋转.[0, 1]只能纵向旋转
                         targetCoord: [118.7778, 32.0617], // 定位到北京
-                        // maxDistance: 100,
-                        // minDistance: 300
                     }
                 },
+
                 series: {
                     type: 'scatter3D',
                     coordinateSystem: 'globe',
-                    blendMode: 'lighter',
-                    symbolSize: 8, // 点位大小
+                    // blendMode: 'lighter',
+                    symbolSize: 10, // 点位大小
                     itemStyle: {
-                        color: '#f00' ,// 各个点位的颜色设置
+                        color: 'rgba(245,5,5,0.99)' ,// 各个点位的颜色设置
                         opacity: 1, // 透明度
                         borderWidth: 1, // 边框宽度
-                        borderColor: 'rgba(20,15,2,0.8)' //rgba(180, 31, 107, 0.8)
+                        borderColor: 'rgba(20,15,2,0)' //rgba(180, 31, 107, 0.8)
                     },
-                    data: this.serverNodeCoods
+                    emphasis:{
+                        itemStyle:{
+                            color:'green',			//鼠标移到点上的颜色变化
+                            opacity:1,				//不透明度
+                            borderWidth:0,			//图像描边宽度
+                            borderColor:'#fff' 		//图形描边颜色
+                        },
+                        label:{
+                            show:true,				//鼠标移动到点上是否显示标签
+                            distance: 20,			//标签与点的距离
+                            position:'left',      	//标签位置
+                            textStyle:{
+                                color:'white', 		//文字颜色
+                                borderWidth:0,  	//标签上边框宽度
+                                borderColor:'white',//边框颜色
+                                fontFamily:'宋体',	//标签字体
+                                fontSize:14,		//字体大小
+                                fontWeight:'normal'	//是否加粗
+                            },
+                            formatter: function (val) {
+                                return val.data.name+":"+val.data.count
+                            },
+                        }
+                    },
+
+                    data: this.serverNodeCoords
                 }
             });
         },
@@ -128,10 +194,8 @@ new Vue({
             let resourceCountData=[]
 
             for(let i=0,len=this.resourceCount.length;i<len;i++){
-                resourceCountData.push({"value":this.resourceCount[i].count,"name":this.resourceCount[i].type})
+                resourceCountData.push({"value":this.resourceCount[i].count,"name":this.itemNameZh[i]})
             }
-
-            console.log(resourceCountData)
 
             myChart.setOption(
 
@@ -164,9 +228,7 @@ new Vue({
                                     width:60
                                 },
                             },
-
                             color: '#ffffff'
-
                         },
                     },
                     series: [
@@ -183,7 +245,6 @@ new Vue({
                                     color: '#ffffff'
                                 },
                             },
-
                             emphasis: {
                                 label: {
                                     show: true,
@@ -200,47 +261,6 @@ new Vue({
                         }
                     ]
                 }
-
-            //     {
-            //     title: {
-            //         text: '平台资源数量数量'
-            //     },
-            //     legend: {
-            //         top: 'bottom'
-            //     },
-            //     series: [
-            //         {
-            //             name: 'Access From',
-            //             type: 'pie',
-            //             minAngle: 10,  //设置扇形的最小占比
-            //             radius: ['30%', '70%'],
-            //             center: ['50%', '50%'],
-            //             roseType: 'area',
-            //             itemStyle: {
-            //                 borderRadius: 10,
-            //                 borderColor: '#fff',
-            //                 borderWidth: 2
-            //             },
-            //             label: {
-            //                 show: false,
-            //                 position: 'center'
-            //             },
-            //             emphasis: {
-            //                 label: {
-            //                     show: true,
-            //                     fontSize: '40',
-            //                     fontWeight: 'bold'
-            //                 }
-            //             },
-            //             labelLine: {
-            //                 show: true
-            //             },
-            //             data: resourceCountData
-            //         }
-            //     ]
-            // }
-
-
             )
 
 
@@ -257,7 +277,6 @@ new Vue({
                     console.log(error);
                 });
         },
-
         //绘制页面访问图
         drawPageViewCount(){
             let myChart =echarts.init( document.getElementById('pageView'));
@@ -267,7 +286,7 @@ new Vue({
             let yData=this.pageViewCount.map((item=>{
                 return item.count
             }))
-            console.log(xData,yData)
+
 
             myChart.setOption({
                 title: {
@@ -276,6 +295,11 @@ new Vue({
                     textStyle: {
                         color: '#ffffff'
                     }
+                },
+                grid: {
+                    top:"24%",
+                    bottom:'20%',
+                    x:"13%"
                 },
 
                 xAxis: {
@@ -290,8 +314,10 @@ new Vue({
                 },
                 yAxis: {
                     type: 'value',
+                    // scale: true,
+                    splitNumber:3,
                     axisLabel: {
-                        show: true,
+                        // show: true,
                         textStyle: {
                             color: '#ffffff'
                         }
@@ -316,10 +342,8 @@ new Vue({
                     this.drawUserViewCount()
                 })
                 .catch(function (error) {
-                    console.log(error);
                 });
         },
-
         //绘制用户访问数量
         drawUserViewCount(){
             let myChart =echarts.init( document.getElementById('userView'));
@@ -329,7 +353,6 @@ new Vue({
             let yData=this.userViewCount.map((item=>{
                 return item.count
             }))
-            console.log(xData,yData)
 
             myChart.setOption({
                 title: {
@@ -338,6 +361,11 @@ new Vue({
                     textStyle: {
                         color: '#ffffff'
                     }
+                },
+                grid: {
+                    top:"24%",
+                    bottom:'20%',
+                    x:"13%"
                 },
 
                 xAxis: {
@@ -363,17 +391,17 @@ new Vue({
                     {
                         data: yData,
                         type: 'line',
-                        smooth: true
+                        smooth: true,
+                        itemStyle : {
+                            normal : {
+                                lineStyle:{
+                                    color:'#23ec1b'
+                                }
+                            }
+                        }
                     }
                 ]
             })
-        },
-
-        //条目切换
-        handleItemSelect(val){
-            console.log(val)
-            this.defaultItemShow=val
-            this.getItemViewCount(this.defaultItemShow)
         },
 
         //获取条目访问数量
@@ -393,30 +421,65 @@ new Vue({
                     console.log(error);
                 });
         },
-
         //绘制条目访问数量
         drawItemViewCount(){
             let myChart =echarts.init( document.getElementById('itemView'));
+
             let xData=this.itemViewCount.map((item=>{
                 return item.name
             }))
             let yData=this.itemViewCount.map((item=>{
                 return item.viewCount
             }))
-            console.log(xData,yData)
 
+            // 为了柱状图每个柱子独立显示
+            let mySeries=this.itemViewCount.map((item=>{
+                return {
+                    data: [item.viewCount],
+                    name: item.name,
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        fontSize: '10',
+                        position: 'top',
+                        textStyle: {
+                            color: '#ffffff'
+                        },
+                    },
+                }
+            }))
             myChart.setOption({
                 title: {
-                    text: '条目访问数量',
+                    text: '条目访问数量-'+this.itemNameZh[this.itemIndex],
                     left: 'center',
                     textStyle: {
                         color: '#ffffff'
-                    }
+                    },
+                    top:"1%",
                 },
                 grid: {
                     // show: true,
-                    top:"20%",
-                    bottom:'20%',
+                    top:"15%",
+                    bottom:'35%',
+                    x:"13%"
+                },
+                legend: {
+                    show: true,
+                    top: 'bottom',
+                    itemHeight: 10,
+                    formatter: function (name) {
+                        return '{a|' +  name + '}'
+                    },
+                    textStyle: {
+                        fontSize: 10,
+                        backgroundColor: "transparent", // 文字块背景色，一定要加上，否则对齐不会生效
+                        rich: {
+                            a: {
+                                width:60
+                            },
+                        },
+                        color: '#ffffff'
+                    },
                 },
 
                 tooltip: {
@@ -427,7 +490,6 @@ new Vue({
                     formatter: function (value) {
                         let txt=""
                         txt+=xData[value[0].dataIndex]
-                        console.log(value)
                         return txt;
                     },
                     //调整提示框位置
@@ -461,14 +523,13 @@ new Vue({
                 },
                 xAxis: {
                     type: 'category',
-                    data: [1,2,3,4,5],
+                    data: [],
                     axisLabel: {
                         show: true,
                         textStyle: {
                             color: '#ffffff'
                         }
                     }
-
                 },
                 yAxis: {
                     type: 'value',
@@ -479,28 +540,9 @@ new Vue({
                         }
                     }
                 },
-                series: [
-                    {
-                        data: yData,
-                        type: 'bar',
-                        label: {
-                            show: true,
-                            fontSize: '10',
-                            position: 'top',
-                            textStyle: {
-                                color: '#ffffff'
-                            }
-
-                        },
-                    }
-                ],
+                series:mySeries,
 
             })
-        },
-
-        //服务调用切换
-        handleServiceUseType(){
-            this.getServiceUseCount()
         },
 
         //获取服务调用数量
@@ -520,7 +562,6 @@ new Vue({
                     console.log(error);
                 });
         },
-
         //绘制服务调用数量
         drawServiceUseCount(){
             let myChart =echarts.init( document.getElementById('serviceUse'));
@@ -531,10 +572,29 @@ new Vue({
                 return item.invokeCount
             }))
 
+            let serverName=this.defaultItemShow==="ModelItem"?"模型服务":"数据服务"
+
+            // 为了柱状图每个柱子独立显示
+            let mySeries=this.serviceUseCount.map((item=>{
+                return {
+                    data: [item.invokeCount],
+                    name: item.name,
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        fontSize: '10',
+                        position: 'top',
+                        textStyle: {
+                            color: '#ffffff'
+                        },
+                    },
+                }
+            }))
+
             myChart.setOption({
 
                 title: {
-                    text: '服务调用数量',
+                    text: '服务调用数量-'+serverName,
                     left: 'center',
                     textStyle: {
                         color: '#ffffff'
@@ -542,52 +602,36 @@ new Vue({
                 },
                 grid: {
                     // show: true,
-                    top:"20%",
-                    bottom:'10%',
+                    top:"15%",
+                    bottom:'35%',
+                    x:"10%"
+                },
+
+                legend: {
+                    show: true,
+                    top: 'bottom',
+                    itemHeight: 10,
+                    formatter: function (name) {
+                        return '{a|' +  name + '}'
+                    },
+                    textStyle: {
+                        fontSize: 10,
+                        backgroundColor: "transparent", // 文字块背景色，一定要加上，否则对齐不会生效
+                        rich: {
+                            a: {
+                                width:60
+                            },
+                        },
+                        color: '#ffffff'
+                    },
                 },
 
                 tooltip: {
                     trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow'
-                    },
-                    formatter: function (value) {
-                        let txt=""
-                        txt+=xData[value[0].dataIndex]
-                        console.log(value)
-                        return txt;
-                    },
-                    //调整提示框位置
-                    position: function(point, params, dom, rect, size){
-                        //其中point为当前鼠标的位置，size中有两个属性：viewSize和contentSize，分别为外层div和tooltip提示框的大小
-                        let x = point[0];//
-                        let y = point[1];
-                        let viewWidth = size.viewSize[0];
-                        let viewHeight = size.viewSize[1];
-                        let boxWidth = size.contentSize[0];
-                        let boxHeight = size.contentSize[1];
-                        let posX = 0;//x坐标位置
-                        let posY = 0;//y坐标位置
-
-                        if(x<boxWidth){//左边放不开
-                            posX = 5;
-                        }else{//左边放的下
-                            posX = x-boxWidth;
-                        }
-
-                        if(y<boxHeight){//上边放不开
-                            posY = 5;
-                        }else{//上边放得下
-                            posY = y-boxHeight;
-                        }
-
-                        return [posX,posY];
-
-                    }
                 },
                 xAxis: {
                     type: 'category',
-                    data: [1,2,3,4,5],
+                    data: [],
                     axisLabel: {
                         show: true,
                         textStyle: {
@@ -604,22 +648,7 @@ new Vue({
                         }
                     }
                 },
-                series: [
-                    {
-                        data: yData,
-                        type: 'bar',
-                        label: {
-                            show: true,
-                            fontSize: '10',
-                            position: 'top',
-                            textStyle: {
-                                color: '#ffffff'
-                            },
-
-                        },
-                    }
-                ],
-
+                series: mySeries,
             })
         },
 
@@ -634,7 +663,6 @@ new Vue({
                     console.log(error);
                 });
         },
-
         //绘制用户数量
         drawUserCount() {
             let myChart = echarts.init(document.getElementById('userCount'));

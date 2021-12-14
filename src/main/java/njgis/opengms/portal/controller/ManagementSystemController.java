@@ -45,7 +45,14 @@ public class ManagementSystemController {
     @GetMapping("/home")
     public ModelAndView getHomePage(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("managementSystem/manage_home");
+        modelAndView.setViewName("managementSystem/manage_home_zh");
+        return modelAndView;
+    }
+
+    @GetMapping("/home_en")
+    public ModelAndView getHomeEnPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("managementSystem/manage_home_en");
         return modelAndView;
     }
 
@@ -53,6 +60,13 @@ public class ManagementSystemController {
     public ModelAndView getSystemPage(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("managementSystem/manage_system");
+        return modelAndView;
+    }
+
+    @GetMapping("/routeTest")
+    public ModelAndView getRouteTestPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("managementSystem/routeTest/p1");
         return modelAndView;
     }
 
