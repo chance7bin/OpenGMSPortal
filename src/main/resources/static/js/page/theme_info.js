@@ -642,7 +642,7 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (data) => {
                         $.ajax({
-                            url: "/theme/getInfo/" + this.themeoid,
+                            url: getThemeInfoByidApi(this.themeoid),
                             type: "GET",
                             data: {},
                             success: (result) => {
@@ -949,7 +949,12 @@ var vue = new Vue({
 
             //更新detail
             var detail = this.edit_themeObj.themeDetail;
-            this.themeObj.detail = detail.trim();
+            if(typeof(detail) != 'undefined'){
+                this.themeObj.detail = detail.trim();
+            }
+            else{
+                this.themeObj.detail = ''
+            }
 
             //更新照片
             if(this.imgLog!=0){
@@ -1000,8 +1005,8 @@ var vue = new Vue({
             formData.append("info",file);
             let that = this;
             $.ajax({
-                url: "/theme/update",
-                type: "POST",
+                url: updateThemeApi(this.themeoid),
+                type: "PUT",
                 processData: false,
                 contentType: false,
                 async: true,
@@ -2068,6 +2073,8 @@ var vue = new Vue({
             }
         },
         controlEdit(){
+
+            // if()
             this.editActiveIndex = 1;
 
 
@@ -2416,9 +2423,10 @@ var vue = new Vue({
 
 
 
+        console.log(getMaintainerApi(this.themeoid))
         $.ajax({
             type:"GET",
-            url:"/theme/getMaintainer/"+this.themeoid,
+            url:getMaintainerApi(this.themeoid),
             success:(data) =>{
                 that.maintainer = data;
             }

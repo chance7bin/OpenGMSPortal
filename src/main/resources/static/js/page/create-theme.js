@@ -1832,7 +1832,7 @@ var createTheme = Vue.extend({
         $("#doiSearch").click(function () {
             $("#doi_searchBox").addClass("spinner")
             $.ajax({
-                data: "Get",
+                type: "Get",
                 url: "/theme/DOISearch",
                 data: {
                     doi: $("#doi_searchBox").val()
@@ -2003,7 +2003,6 @@ var createTheme = Vue.extend({
         });
 
         $(".finish").click(()=> {
-
             that.themeObj.themename = $("#nameInput").val();
 
             if(that.themeObj.themename.toString().trim()==''){
@@ -2011,25 +2010,21 @@ var createTheme = Vue.extend({
                 return;
             }
 
-            if(that.themeObj.application.length===1&&that.themeObj.application[0].applicationname===""&&that.themeObj.application[0].applicationlink===""
-                &&that.themeObj.application[0].upload_application_image===""){
-                let loading = this.$loading({
-                    lock: true,
-                    text: "Uploading...",
-                    spinner: "el-icon-loading",
-                    background: "rgba(0, 0, 0, 0.7)"
-                });
+            let loading = this.$loading({
+                lock: true,
+                text: "Uploading...",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)"
+            });
 
-            }
-            // else {
-            //     for(i = 0;i<that.themeObj.application.length; i++){
-            //         if (that.themeObj.application[i].applicationname === ""||that.themeObj.application[i].applicationlink ===""||
-            //             that.themeObj.application[i].upload_application_image===""){
-            //             that.$alert("Please complete the information"
-            //             );
-            //             return false;
-            //         }
-            //     }
+            // if(that.themeObj.application.length===1&&that.themeObj.application[0].applicationname===""&&that.themeObj.application[0].applicationlink===""
+            //     &&that.themeObj.application[0].upload_application_image===""){
+            //     let loading = this.$loading({
+            //         lock: true,
+            //         text: "Uploading...",
+            //         spinner: "el-icon-loading",
+            //         background: "rgba(0, 0, 0, 0.7)"
+            //     });
             // }
             //查看classinfo与dataClassInfo，如果存在一个也未输入，则删除
             if (that.themeObj.classinfo.length===1&&that.themeObj.classinfo[0].mcname===""&&that.themeObj.classinfo[0].modelsoid.length===0) {
@@ -2064,7 +2059,7 @@ var createTheme = Vue.extend({
                 formData.append("info",file);
 
                 $.ajax({
-                    url: "/theme/addTheme",
+                    url: addThemeApi(),
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -2075,22 +2070,6 @@ var createTheme = Vue.extend({
                             loading.close();
                         }
 
-                        // if (result.code == 0) {
-                        //     this.$confirm('<div style=\'font-size: 18px\'>Create theme  successfully!</div>', 'Tip', {
-                        //         dangerouslyUseHTMLString: true,
-                        //         confirmButtonText: 'View',
-                        //         cancelButtonText: 'Go Back',
-                        //         cancelButtonClass: 'fontsize-15',
-                        //         confirmButtonClass: 'fontsize-15',
-                        //         type: 'success',
-                        //         center: true,
-                        //         showClose: false,
-                        //     }).then(() => {
-                        //         window.location.href = "/repository/theme/" + result.data;//刷新当前页面
-                        //     }).catch(() => {
-                        //         window.location.href = "/user/userSpace#/userTheme";
-                        //     });
-                        // }
                         if (result.code == "0") {
                             console.log("success");
                                 that.$confirm('<div style=\'font-size: 18px\'>Create theme  successfully!</div>', 'Tip', {

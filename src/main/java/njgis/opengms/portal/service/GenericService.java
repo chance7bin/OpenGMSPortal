@@ -582,7 +582,7 @@ public class GenericService {
 
         Pageable pageable = PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
 
-        Page items = itemDao.findByAuthor(pageable, email);
+        Page items = itemDao.findAllByAuthor(email, pageable);
 
         JSONObject TemplateObject = new JSONObject();
         TemplateObject.put("count", items.getTotalElements());

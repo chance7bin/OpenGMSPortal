@@ -55,6 +55,14 @@ new Vue({
     },
     methods: {
 
+        //reset cancel
+        resetCancel(){
+            this.resetPassFormVisible = false
+            this.resetPassForm.newPass = ''
+            this.resetPassForm.verifyCode = ''
+
+        },
+
 
         //register form
         submitForm(formName) {
@@ -108,7 +116,7 @@ new Vue({
                         localStorage.setItem('password', this.ruleForm.password);
                         localStorage.setItem('remember', "yes");
                     }
-                    if (result == "1") {
+                    if (result.code == "0") {
                         this.$notify.success({
                             title: 'Success',
                             message: 'Login successful ! Redirecting...',
@@ -193,7 +201,7 @@ new Vue({
                                 });
                             }
                             this.sendingCode = false
-                        }, error: function (e) {
+                        }, error: (e)=> {
                             this.$alert('Send verification code error', 'Tip', {
                                     type: "warning",
                                     confirmButtonText: 'OK',

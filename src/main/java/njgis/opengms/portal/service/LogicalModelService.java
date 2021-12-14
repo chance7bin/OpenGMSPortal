@@ -316,7 +316,7 @@ public class LogicalModelService {
 //                    logicalModelVersion.setModifier(uid);
 //                    logicalModelVersion.setVerNumber(now.getTime());
 //                    logicalModelVersion.setVerStatus(0);
-//                    userService.messageNumPlusPlus(authorUserName);
+//                    userService.noticeNumPlusPlus(authorUserName);
 //                    logicalModelVersion.setModifyTime(now);
 //                    logicalModelVersion.setCreator(author0);
 //
