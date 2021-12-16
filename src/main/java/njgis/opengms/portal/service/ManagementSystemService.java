@@ -224,6 +224,9 @@ public class ManagementSystemService {
             List<Task> ts = tasks.getContent();
 
             if (ts.size() != 0){
+
+                checkedModel.setHasTest(true);
+
                 // 取索引第一个， 构造inputdata
                 List<TaskData> inputs = ts.get(0).getInputs();
                 // TaskData -> InputData
