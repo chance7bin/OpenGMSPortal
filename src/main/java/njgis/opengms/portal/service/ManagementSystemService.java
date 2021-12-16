@@ -556,10 +556,11 @@ public class ManagementSystemService {
         return ResultUtils.success(users);
     }
 
-
+    @Value(value = "Public,Discoverable,Private")
+    private List<String> allVisible;
 
     public JSONObject getItemInfo(ItemTypeEnum itemType, SpecificFindDTO specificFindDTO){
-        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType);
+        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType,allVisible);
 
         // 如果有字段需要筛选的话再加
 
