@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.service.ComputableModelService;
@@ -95,6 +94,17 @@ public class ManagementSystemController {
         return managementSystemService.invokeModel(modelId, email);
     }
 
+    // @LoginRequired
+    @ApiOperation(value = "批量模型调用")
+    @RequestMapping(value="/model/invoke/batch",method= RequestMethod.POST)
+    public JsonResult invokeModelBatch(@RequestBody List<String> modelIdList) {
+        // HttpSession session = request.getSession();
+        // String email = session.getAttribute("email").toString();
+        String email = "782807969@qq.com";
+
+        return managementSystemService.invokeModelBatch(modelIdList, email);
+    }
+
     // @ApiOperation(value = "模型批量调用")
     // @RequestMapping(value="/model/invoke/batch",method= RequestMethod.POST)
     // public JsonResult batchInvokeModel(@RequestBody FindDTO findDTO) {
@@ -114,16 +124,16 @@ public class ManagementSystemController {
 
 
     // @LoginRequired
-    @ApiOperation(value = "保存检查的模型列表")
-    @RequestMapping(value="/checkList/save",method= RequestMethod.POST)
-    public JsonResult saveCheckedList(@RequestBody TaskCheckListDTO taskCheckListDTO){
-
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
-        return managementSystemService.saveCheckedList(taskCheckListDTO,email);
-
-    }
+    // @ApiOperation(value = "保存检查的模型列表")
+    // @RequestMapping(value="/checkList/save",method= RequestMethod.POST)
+    // public JsonResult saveCheckedList(@RequestBody TaskCheckListDTO taskCheckListDTO){
+    //
+    //     // HttpSession session = request.getSession();
+    //     // String email = session.getAttribute("email").toString();
+    //     String email = "782807969@qq.com";
+    //     return managementSystemService.saveCheckedList(taskCheckListDTO,email);
+    //
+    // }
 
     // @LoginRequired
     @ApiOperation(value = "查找检查的模型列表")
