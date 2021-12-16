@@ -71,9 +71,9 @@ export var ModelTemplate = Vue.extend({
                                                 type="warning"
                                                 @click.stop="deleteHistoryItem(item.id)">Delete</el-button>
                                     </template>
-                                    <el-table :data="item.modelList" :show-header="false">
-                                        <el-table-column width="400" property="name" ></el-table-column>          
-                                        <el-table-column width="400" property="name" >
+                                    <el-table :data="item.historyList" :show-header="false">
+                                        <el-table-column  property="modelName" ></el-table-column>          
+                                        <el-table-column   >
                                             <template slot-scope="scope">
                                                 <el-tag
                                                 v-if="scope.row.checkedModel ===null"
@@ -81,12 +81,11 @@ export var ModelTemplate = Vue.extend({
                                                 disable-transitions>未检测</el-tag>
                                             </template>
                                         </el-table-column>  
-                                        <el-table-column width="400" property="name" >
+                                        <el-table-column >
                                             <template slot-scope="scope">
                                                 <el-tag
-                                                v-if="scope.row.checkedModel ===null"
                                                 type='info'
-                                                disable-transitions>ip</el-tag>
+                                                disable-transitions>{{scope.row.msrAddress}}</el-tag>
                                             </template>
                                         </el-table-column>  
                                     </el-table>
@@ -441,6 +440,7 @@ export var ModelTemplate = Vue.extend({
                 "sortField": "createTime"
             })
                 .then(response=> {
+                    console.log(response)
                     let returnData=response.data.data
                     this.historyList=returnData.content
                     this.historyTotal=returnData.totalElements
