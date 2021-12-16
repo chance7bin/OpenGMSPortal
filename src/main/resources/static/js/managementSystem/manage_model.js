@@ -33,9 +33,7 @@ export var ModelTemplate = Vue.extend({
                                     <el-table :data="waitCheckModels" :show-header="false" max-height="345" stripe>
                                         <el-table-column type="index" width="40"></el-table-column>
                                         <el-table-column width="255" property="modelName" label="名称">
-                                            <template slot-scope="scope" >
-                                                 <el-link href=https://geomodeling.njnu.edu.cn/computableModel/+"123" target="_blank">默认链接</el-link>
-                                            </template>
+
                                         </el-table-column>
                                         <el-table-column  label="操作" width="50">
                                             <template slot-scope="scope" >
@@ -74,12 +72,27 @@ export var ModelTemplate = Vue.extend({
                                                 @click.stop="deleteHistoryItem(item.id)">Delete</el-button>
                                     </template>
                                     <el-table :data="item.modelList" :show-header="false">
-                                        <el-table-column width="400" property="name" ></el-table-column>
+                                        <el-table-column width="400" property="name" ></el-table-column>          
+                                        <el-table-column width="400" property="name" >
+                                            <template slot-scope="scope">
+                                                <el-tag
+                                                v-if="scope.row.checkedModel ===null"
+                                                type='info'
+                                                disable-transitions>未检测</el-tag>
+                                            </template>
+                                        </el-table-column>  
+                                        <el-table-column width="400" property="name" >
+                                            <template slot-scope="scope">
+                                                <el-tag
+                                                v-if="scope.row.checkedModel ===null"
+                                                type='info'
+                                                disable-transitions>ip</el-tag>
+                                            </template>
+                                        </el-table-column>  
                                     </el-table>
 
                                 </el-collapse-item>
                             </el-collapse>
-
 
                             <el-pagination
                                     layout="total,prev, pager, next"
@@ -106,7 +119,11 @@ export var ModelTemplate = Vue.extend({
                         >
                             <el-table-column type="selection">
                             </el-table-column>
-                            <el-table-column sortable prop="accessId" label="名称">
+<!--                            <el-table-column sortable prop="accessId" label="名称">-->
+                            <el-table-column sortable label="名称">
+                                <template slot-scope="scope" >
+                                    <el-link :href="computableModelUrl+scope.row.id" target="_blank">{{scope.row.accessId}}</el-link>
+                                </template>
                             </el-table-column>
 
                             <el-table-column sortable prop="author" label="作者" >
@@ -185,6 +202,11 @@ export var ModelTemplate = Vue.extend({
             historyNowPage:1, //历史记录当前页
             activeHistoryItem:-1, //当前展开的条目
             waitCheckModels:[], //选中的待检测模型
+
+
+            computableModelUrl:"https://geomodeling.njnu.edu.cn/computableModel/", //门户计算模型的网址前缀
+
+
         }
     },
     mounted() {
@@ -222,7 +244,6 @@ export var ModelTemplate = Vue.extend({
         handleCurrentChange(val) {
             this.currentPage = val;
             this.getModelList();
-
         },
 
         //模型搜索

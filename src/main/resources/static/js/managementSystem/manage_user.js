@@ -1,7 +1,6 @@
 export var UserTemplate = Vue.extend({
     template: ` 
         <div >
-            <el-main class="middle_content">
                 <!--<h2>测试</h2>-->
                 <div class="table_head">
                     <div class="table_head_item1" >
@@ -36,7 +35,10 @@ export var UserTemplate = Vue.extend({
                         :default-sort="{ prop: 'viewCount', order: 'descending' }"
                 >
 
-                    <el-table-column sortable prop="name" label="姓名">
+                    <el-table-column sortable label="姓名">
+                        <template slot-scope="scope" >
+                            <el-link :href="userPageUrl+scope.row.accessId" target="_blank">{{scope.row.name}}</el-link>
+                        </template>
                     </el-table-column>
 
                     <el-table-column sortable prop="email" label="邮箱" >
@@ -75,7 +77,6 @@ export var UserTemplate = Vue.extend({
                         class="flexRowCenter"
                 >
                 </el-pagination>
-            </el-main>
         </div>
         `,
     data() {
@@ -85,6 +86,7 @@ export var UserTemplate = Vue.extend({
             PageSizeUser:10, //用户列表每页数目
             totalUser:0, //用户总数
             searchInputUser:"", //用户表搜索内容
+            userPageUrl:"https://geomodeling.njnu.edu.cn/profile/" // 门户个人主页
         }
     },
     mounted(){
