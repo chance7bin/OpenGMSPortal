@@ -167,19 +167,6 @@ var userTheme = Vue.extend(
                         this.getTheme();
                     else
                         this.searchItems();
-
-                    // if(this.researchIndex==1||this.researchIndex==2||this.researchIndex==3){
-                    //     this.resourceLoad = true;
-                    //     this.searchResult = [];
-                    //     //not result scroll
-                    //     //window.scrollTo(0, 0);
-                    //     this.curPage = pageNo;
-                    //     this.getPageList();
-                    //     this.pageSize=4;
-                    //     this.page = pageNo;
-                    //     this.getResearchItems();
-                    // }
-                    //this.changeCurPage.emit(this.curPage);
                 }
             },
 
@@ -195,20 +182,17 @@ var userTheme = Vue.extend(
             },
 
             deleteItem(oid) {
+                console.log(deleteThemeApi(oid))
                 this.$confirm("Are you sure to delete this item?",'',{
                     confirmButtonText:'Yes',
                     cancelButtonText:'No',
                     type:'warning'
                 }).then(()=>{
                     $.ajax({
-                        type: "POST",
-                        url: "/theme/delete",
-                        data: {
-                            oid: oid
-                        },
+                        type:'DELETE',
+                        url: deleteThemeApi(oid),
                         cache: false,
                         async: true,
-                        dataType: "json",
                         xhrFields: {
                             withCredentials: true
                         },
@@ -217,7 +201,7 @@ var userTheme = Vue.extend(
                             if (json.code == -1) {
                                 this.$alert("Please log in first!")
                             } else {
-                                if (json.data == 1) {
+                                if (json.msg == 'Success') {
                                     this.$message({message: "delete successfully!",
                                                   type:"success"});
                                     this.getTheme();
@@ -239,20 +223,20 @@ var userTheme = Vue.extend(
             getTheme() {
                 this.pageSize = 10;
                 this.isInSearch = 0;
-                var url = "/repository/getThemesByUserId";
+                var url = getThemesByUserId();
+                let data = {
+                    page: this.page,
+                    asc: false
+                };
                 var name = "themes";
                 this.await = true
                 $.ajax({
-                    type: "Get",
+                    type: "POST",
                     url: url,
-                    data: {
-                        page: this.page - 1,
-                        sortType: this.sortType,
-                        asc: -1
-                    },
+                    data: JSON.stringify(data),
                     cache: false,
                     async: true,
-
+                    contentType:"application/json",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -266,7 +250,8 @@ var userTheme = Vue.extend(
                             this.resourceLoad = false;
                             this.totalNum = data.count;
                             this.searchCount = Number.parseInt(data["count"]);
-                            this.$set(this,"searchResult",data[name]);
+                            this.$set(this,"searchResult",data.content);
+                            console.log(this.searchResult)
                             if (this.page == 1) {
                                 this.pageInit();
                             }
@@ -315,7 +300,7 @@ var userTheme = Vue.extend(
                                 this.resourceLoad = false;
                                 this.totalNum = data.count;
                                 this.searchCount = Number.parseInt(data["count"]);
-                                this.$set(this,"searchResult",data[name]);
+                                this.$set(this,"searchResult",data.content);
                                 console.log(this.searchResult);
                                 if (targetPage == 1) {
                                     this.pageInit();

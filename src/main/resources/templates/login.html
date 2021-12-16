@@ -78,7 +78,7 @@
         </div>
         <div th:replace="fragments/footer :: footer"></div>
 
-        <el-dialog title="Reset Password" :visible.sync="resetPassFormVisible" :close-on-click-modal="false" width="40%">
+        <el-dialog title="Reset Password" :visible.sync="resetPassFormVisible" :close-on-click-modal="false" width="40%"  :before-close="resetCancel">
             <el-steps :space="500" :active="guideActive" finish-status="success" align-center>
                 <el-step description="Send verification code"></el-step>
                 <el-step description="Submit new password"></el-step>
@@ -108,7 +108,7 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button @click="resetPassFormVisible = false">Cancel</el-button>
+                <el-button @click="resetCancel">Cancel</el-button>
                 <el-button type="primary" @click="guideActive--" v-show="guideActive==1" plain style="float:left">Previous</el-button>
                 <el-button type="primary" @click="resetPassword" v-show="guideActive==1">Submit</el-button>
             </div>

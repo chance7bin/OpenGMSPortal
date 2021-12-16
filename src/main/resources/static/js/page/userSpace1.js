@@ -232,7 +232,7 @@ var userspace = new Vue(
         data(){
             return{
                 fullscreenLoading:false,
-                message_num:0,
+                noticeNum:0,
                 tableData: [{
                     info:[],
                     model:[],
