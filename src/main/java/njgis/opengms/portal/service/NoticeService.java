@@ -272,10 +272,15 @@ public class NoticeService {
      * @Author bin
      **/
     public List<String> addItemAdmins(List<String> recipientList, List<String> itemAdmins){
+        if (itemAdmins == null)
+            return recipientList;
+
+
         for (String itemAdmin : itemAdmins) {
             if (!recipientList.contains(itemAdmin))
                 recipientList.add(itemAdmin);
         }
+
         return recipientList;
     }
 

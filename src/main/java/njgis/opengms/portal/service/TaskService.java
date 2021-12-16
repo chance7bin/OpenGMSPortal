@@ -107,7 +107,7 @@ public class TaskService {
     public JsonResult initTask(String id, String email) {
         //条目信息
         ComputableModel modelInfo = computableModelDao.findFirstById(id);
-        modelInfo.setViewCount(modelInfo.getViewCount() + 1);
+        modelInfo.setInvokeCount(modelInfo.getInvokeCount() + 1);
         computableModelDao.save(modelInfo);
 
         //用户信息
@@ -126,7 +126,7 @@ public class TaskService {
         JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(jsonResult.getData()));
         // System.out.println("task" + jsonResult);
         String msg = null;
-        if(code==1){
+        if(code==0){
             JSONObject dxServer = data.getJSONObject("dxServer");
             taskInfo.put("ip", data.getString("ip"));
             taskInfo.put("port", data.getString("port"));
@@ -538,7 +538,8 @@ public class TaskService {
      * @Author bin
      **/
     public JsonResult handleInvoke(JSONObject lists, String email) {
-
+        if (lists == null)
+            return ResultUtils.error();
 
         lists.put("username", email);
 
@@ -1199,9 +1200,8 @@ public class TaskService {
     }
 
 
-    public JSONObject getPublishedTasksByModelId(String modelId, int page, String userName) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "runTime");
-        Pageable pageable = PageRequest.of(page, 4, sort);
+    public JSONObject getPublishedTasksByModelId(String modelId, FindDTO findDTO) {
+        Pageable pageable = genericService.getPageable(findDTO);
 
         //获取published task
         Page<Task> tasks = taskDao.findByComputableIdAndPermissionAndStatus(modelId, "public", 2, pageable);
@@ -1642,7 +1642,6 @@ public class TaskService {
 //        if(task.getStatus()==1){
         for (int i = 0; i < task.getInputs().size(); i++) {
             ResultDataDTO resultDataDTO = new ResultDataDTO();
-            resultDataDTO.setUrl(task.getInputs().get(i).getUrl());
             resultDataDTO.setUrl(task.getInputs().get(i).getUrl());
             resultDataDTO.setState(task.getInputs().get(i).getStatename());
             resultDataDTO.setEvent(task.getInputs().get(i).getEvent());

@@ -1,6 +1,6 @@
 package njgis.opengms.portal.dao;
 
-import njgis.opengms.portal.entity.doo.CheckedModel;
+import njgis.opengms.portal.entity.doo.task.CheckedModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

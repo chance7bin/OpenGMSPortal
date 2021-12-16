@@ -2,7 +2,7 @@ package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.base.PortalId;
-import njgis.opengms.portal.entity.doo.task.ModelListItem;
+import njgis.opengms.portal.entity.doo.task.CheckedHistory;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CheckModelList extends PortalId {
 
     String draftName;
-    List<ModelListItem> modelList = new ArrayList<>();
+    List<CheckedHistory> historyList = new ArrayList<>();
     Date createTime = new Date();
     String operator; //操作人员email
 
