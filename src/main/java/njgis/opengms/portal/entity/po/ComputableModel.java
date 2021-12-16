@@ -1,7 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.CheckedModel;
+import njgis.opengms.portal.entity.doo.task.CheckedModel;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import org.springframework.data.mongodb.core.mapping.Document;

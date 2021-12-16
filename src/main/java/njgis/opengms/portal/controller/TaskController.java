@@ -205,8 +205,12 @@ public class TaskController {
     @ApiOperation(value = "获取其他用户发布的运行成功记录 [ /getPublishedTasksByModel ]")
     @RequestMapping(value="/publishedTasksByModel",method = RequestMethod.GET)
     public JsonResult getTasksByModel(@RequestParam(value = "modelId") String modelId, @RequestParam(value = "page")int page, HttpServletRequest request){
-        String email = request.getSession().getAttribute("email").toString();
-        return ResultUtils.success(taskService.getPublishedTasksByModelId(modelId,page,email));
+        FindDTO findDTO = new FindDTO();
+        findDTO.setSortField("runTime");
+        findDTO.setAsc(false);
+        findDTO.setPage(page + 1);
+        findDTO.setPageSize(4);
+        return ResultUtils.success(taskService.getPublishedTasksByModelId(modelId,findDTO));
     }
 
 

@@ -1,4 +1,4 @@
-package njgis.opengms.portal.entity.doo;
+package njgis.opengms.portal.entity.doo.task;
 
 import lombok.Data;
 
@@ -15,6 +15,7 @@ import java.util.List;
 public class CheckedModel {
     // String id;  //模型id
     // String name;  //模型名字
+    String invokeEmail; //调用者email
     Date lastCheckTime;  //最后一次检查时间
     boolean hasChecked = false;  //是否检查过
     boolean isOnline = true; //模型是否在线
@@ -23,4 +24,6 @@ public class CheckedModel {
     String msg; //调用模型返回的信息
     int status;  //模型状态  Started: 1, Finished: 2, Inited: 0, Error: -1
     List<String> taskIdList = new ArrayList<>(); //存放调用的任务的taskId的列表 (task表的taskId)
+
+    String msrAddress; //模型服务容器地址
 }

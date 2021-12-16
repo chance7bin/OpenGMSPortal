@@ -1,8 +1,5 @@
 package njgis.opengms.portal.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 /**
  * @EnumName ResultEnum
  * @Description 接口返回值枚举
@@ -18,16 +15,16 @@ public enum ResultEnum {
     UNAUTHORIZED(-3,"Unauthorized");
 
 
-    private Integer code;
+    private int code;
 
     private String msg;
 
-    ResultEnum(Integer code, String msg) {
+    ResultEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    public Integer getCode() {
+    public int getCode() {
         return code;
     }
 
