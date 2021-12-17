@@ -1,147 +1,16 @@
 export var ItemTemplate = Vue.extend({
-//     template: `
-//         <div>
-//             <el-main>
-//             <h1>sadasdasdasd</h1>
-//                 <div class="flexRowBetween" >
-// <!--                            左侧类型选择框-->
-//                         <el-card class="box-card GeoItemLeftMenu">
-//                             <div slot="header" class="clearfix">
-//                                 <span>Data item classification</span>
-//                             </div>
-//                             <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
-//                         </el-card>
-// <!--                            后侧内容-->
-//                     <div class="flexColumnStart" style="width: 65vw">
-//                                 <el-input
-//                                         placeholder="请输入内容"
-//                                         prefix-icon="el-icon-search"
-//                                         v-model="searchInputGeo"
-//                                         @keyup.enter.native="getGeoItemList()"
-//                                 >
-//                                 </el-input>
-//                                 &nbsp;&nbsp;
-//                                 <el-button  type="success" icon="el-icon-search" @click="getGeoItemList()" >搜索</el-button>
-//                             </div>
-//                         </div>
-//                         <div class="geoSubTopMenu ">
-//                             <div class="flexRowBetween">
-//                         <div class="geoItemMainContent" >
-//                             <el-table
-//                                     ref="geoItemTable"
-//                                     :data="geoItemTableData"
-//                                     stripe
-//                                     style="width: 100%"
-//                                     height="65vh"
-//                                     :default-sort="{ prop: 'viewCount', order: 'descending' }"
-//                             >
-//
-//                                 <el-table-column sortable prop="name" label="名称">
-//                                 </el-table-column>
-//
-//                                 <el-table-column sortable prop="author" label="贡献者" >
-//                                 </el-table-column>
-//                                 <el-table-column sortable prop="viewCount" label="查看数" >
-//                                 </el-table-column>
-//
-//                                 <el-table-column  label="操作">
-//                                     <template slot-scope="scope">
-//                                         <el-button
-//                                                 v-if="scope.row.status==='Public'"
-//                                                 size="mini"
-//                                                 type="success"
-//                                                 icon="el-icon-unlock"
-//                                                 @click="changeStatus(scope.row)">状态切换</el-button>
-//                                         <el-button
-//                                                 v-if="scope.row.status==='Private'"
-//                                                 size="mini"
-//                                                 type="warning"
-//                                                 icon="el-icon-lock"
-//                                                 @click="changeStatus(scope.row)">状态切换</el-button>
-//                                         <el-button
-//                                                 size="mini"
-//                                                 type="primary"
-//                                                 icon="el-icon-user"
-//                                                 @click="@click='adminSelectDialog = true'">管理员</el-button>
-//                                     </template>
-//
-//                                 </el-table-column>
-//                             </el-table>
-//                             <el-divider></el-divider>
-//                             <el-pagination
-//                                     background
-//                                     @size-change="handleSizeChangeGeo"
-//                                     @current-change="handleCurrentChangeGeo"
-//                                     :current-page="currentPageGeo"
-//                                     :page-sizes="[10, 20, 30, 40]"
-//                                     :page-size="PageSizeGeo"
-//                                     layout="total, sizes, prev, pager, next, jumper"
-//                                     :total="totalGeo"
-//                                     class="flexRowCenter"
-//                             >
-//                             </el-pagination>
-//
-// <!--                            <el-dialog title="管理员设置" :visible.sync="adminSelectDialog">-->
-// <!--                                 <div style="width: 50%" >-->
-// <!--                                     <div>-->
-// <!--                                        <el-input-->
-// <!--                                            placeholder="请输入名字"-->
-// <!--                                            prefix-icon="el-icon-search"-->
-// <!--                                            v-model="searchUserInput"-->
-// <!--                                            @keyup.enter.native="getUserList()"-->
-// <!--                                        >-->
-// <!--                                        </el-input>-->
-// <!--                                        &nbsp;&nbsp;-->
-// <!--                                        <el-button  type="success" icon="el-icon-search" @click="getUserList()" >搜索</el-button>-->
-// <!--                                    </div>-->
-// <!--                                    <el-table-->
-// <!--                                        :data="userTable"-->
-// <!--                                        stripe-->
-// <!--                                        style="width: 100%">-->
-// <!--                                        <el-table-column prop="name" label="姓名" > </el-table-column>-->
-// <!--                                        <el-table-column prop="email" label="邮箱"> </el-table-column>-->
-// <!--                                    </el-table>-->
-// <!--                                </div>-->
-// <!--                                <el-pagination-->
-// <!--                                    layout="total,prev, pager, next"-->
-// <!--                                    :total="userTotal"-->
-// <!--                                    @current-change="handleUserCurrentChange"-->
-// <!--                                    :current-page="userNowPage"-->
-// <!--                                    :page-size="10"-->
-// <!--                                    class="flexRowCenter"-->
-// <!--                                >-->
-// <!--                                </el-pagination>-->
-// <!--                                <div>-->
-// <!--                                    <el-tag-->
-// <!--                                      v-for="tag in tags"-->
-// <!--                                      :key="tag.name"-->
-// <!--                                      closable-->
-// <!--                                      :type="info"-->
-// <!--                                      @close="handleTagClose(tag)"-->
-// <!--                                      >-->
-// <!--                                      {{tag.name}}-->
-// <!--                                    </el-tag>-->
-// <!--                                </div>-->
-// <!--                            </el-dialog>-->
-//                         </div>
-//                     </div>
-//                 </div>
-//             </el-main>
-//         </div>
-//         `,
     template: `
     <div>
-        <el-main>
             <div class="flexRowBetween" >
 <!--                            左侧类型选择框-->
-                    <el-card class="box-card GeoItemLeftMenu">
+                    <el-card class="box-card" style="width: 15vw">
                         <div slot="header" class="clearfix">
                             <span>Data item classification</span>
                         </div>
                         <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
                     </el-card>
-<!--                            后侧内容-->
-                <div class="flexColumnStart" style="width: 65vw">
+<!--                            右侧内容-->
+                <div class="flexColumnStart" style="width: 68vw">
                     <div class="geoSubTopMenu ">
                         <div class="flexRowBetween">
                             <el-input
@@ -184,20 +53,20 @@ export var ItemTemplate = Vue.extend({
                                     <el-button
                                             v-if="scope.row.status==='Private'"
                                             size="mini"
-                                            type="warning"
+                                            type="info"
                                             icon="el-icon-lock"
                                             @click="changeStatus(scope.row)">状态切换</el-button>
                                     <el-button
                                             size="mini"
                                             type="primary"
                                             icon="el-icon-user"
-                                            @click="openDialog()">管理员</el-button>
+                                            @click="openDialog(scope.row)">管理员</el-button>
                                 </template>
 
                             </el-table-column>
                         </el-table>
                         <el-divider></el-divider>
-
+ 
                         <el-pagination
                                 background
                                 @size-change="handleSizeChangeGeo"
@@ -211,7 +80,6 @@ export var ItemTemplate = Vue.extend({
                         >
                         </el-pagination>
                     </div>
-                    
                             <el-dialog title="管理员设置" :visible.sync="adminSelectDialog" >
                                  <div class="flexRowBetween">
                                      <div style="width: 70%" >
@@ -232,9 +100,16 @@ export var ItemTemplate = Vue.extend({
 
                                             style=" height: 245px; overflow: auto;width: 100%;"
                                             >
-                                            <el-table-column type="selection" width="55">  </el-table-column>
                                             <el-table-column prop="name" label="姓名" > </el-table-column>
                                             <el-table-column prop="email" label="邮箱"> </el-table-column>
+                                            <el-table-column label="操作" width="80%">
+                                                <template  slot-scope="scope">
+                                                  <el-button
+                                                    size="mini"
+                                                    type="primary"
+                                                    @click="addAdmin(scope.row)">添加</el-button>                                               
+                                                </template>
+                                            </el-table-column>
                                         </el-table>
                                     <el-pagination
                                         layout="total,prev, pager, next"
@@ -249,8 +124,11 @@ export var ItemTemplate = Vue.extend({
                                     <div style="width: 25%; ">
                                         <h1>当前管理员：</h1>
                                         <div style="overflow: auto;height: 245px;">
+                                            <div :v-if="admins===[]">    
+                                                该条目暂无管理员
+                                            </div>
                                             <el-tag
-                                              v-for="tag in tags"
+                                              v-for="tag in admins"
                                               :key="tag.name"
                                               closable
                                               type=""
@@ -258,36 +136,27 @@ export var ItemTemplate = Vue.extend({
                                               style="margin: 3px"
                                               >
                                               {{tag.name}}
-                                            </el-tag>                                        
+                                            </el-tag>    
                                         </div>
-
+                                        <div>
+                                           <el-button  size="mini"  type="primary" @click="setAdmin()">更新管理员</el-button>                                      
+                                        </div>  
                                     </div>
                                 </div>
-                                 
                             </el-dialog>
                 </div>
             </div>
-        </el-main>
     </div>
     
     `,
+
     data() {
         return {
             adminSelectDialog:false, //管理员选择对话框显示控制
-            userTable:[],
-            adminNames:[],
-            tags: [
-                { name: '标签一asdasda', type: '' },
-                { name: '标签二', type: 'success' },
-                { name: '标签三', type: 'info' },
-                { name: '标签四', type: 'warning' },
-                { name: '标签五', type: 'danger' },
-                { name: '标签6', type: 'danger' },
-                { name: '标签7', type: 'danger' },
-                { name: '标签88', type: 'danger' },
-                { name: '标签9999', type: 'danger' }
+            userTable:[],//管理员设置dialog中展示的用户
+            admins:[], //当前item的管理员名字+邮箱
+            currentItemId:"", //当前的item id
 
-            ],
             userTotal:0, //用户总数
             userNowPage:1, //当前页
             searchUserInput:"",
@@ -400,14 +269,15 @@ export var ItemTemplate = Vue.extend({
                 .catch(function (error) {
                     console.log(error);
                 });
-
         },
 
-
-        //打开管理员dialog
-        openDialog(){
+        //打开管理员设置的dialog
+        openDialog(val){
             this.adminSelectDialog=true;
+            console.log(val)
+            this.admins=val.admins
             this.getUserList()
+            this.currentItemId=val.id
         },
         //获取用户列表
         getUserList(){
@@ -431,32 +301,49 @@ export var ItemTemplate = Vue.extend({
             this.userNowPage=val
             this.getUserList()
         },
-        //管理员选择表的搜索
-        searchName(){
 
+        //添加管理员
+        addAdmin(val){
+            if(this.admins===null||this.admins===[]||(this.admins!==null&&JSON.stringify(this.admins).indexOf(val.email)===-1)){
+                if(this.admins===null){
+                    this.admins=[]
+                }
+                this.admins.push({
+                    name:val.accessId,
+                    email:val.email
+                })
+            }else{
+                this.$message({
+                    message: '该用户已为管理员',
+                    type: 'warning'
+                });
+            }
         },
-
 
         //删除管理员名字
         handleTagClose(tag) {
-            this.tags.splice(this.tags.indexOf(tag), 1);
+            this.admins.splice(this.admins.indexOf(tag), 1);
         },
 
-        //设置管理员
-        setAdmin(val){
+        //发送请求，设置管理员
+        setAdmin(){
+            let adminEmails=this.admins.map((item)=>{
+                return item.email
+            })
 
-            console.log(val)
-
-            axios.post('/managementSystem/item/admin/'+this.itemType+'/'+val.id,
-                ["123"]
+            axios.post('/managementSystem/item/admin/'+this.itemType+'/'+this.currentItemId,
+                adminEmails
             )
                 .then(response=> {
-                    this.getGeoItemList()
+                    this.adminSelectDialog=false;
+                    this.$message({
+                        message: '更新设置管理员成功！',
+                        type: 'success'
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
-
     }
 })

@@ -29,6 +29,7 @@
         /*全局滚动条*/
         ::-webkit-scrollbar{
             width: 5px;
+            height: 6px;
         }
         ::-webkit-scrollbar-thumb{
             border-radius: 4px;
@@ -50,6 +51,12 @@
             line-height: 60px;
         }
 
+        /*右侧内容的内间距*/
+        .rightContent{
+            padding: 10px;
+        }
+
+        /*模型页面表格头部*/
         .table_head {
             display: flex;
             justify-content: space-between;
@@ -79,9 +86,6 @@
         }
 
 
-        .GeoItemLeftMenu{
-            width: 15vw;
-        }
 
 
         div[aria-label="版本对比"]{
@@ -204,7 +208,7 @@
         </el-menu>
     </el-aside>
             <!--右侧主内容-->
-            <el-main >
+            <el-main class="rightContent">
                 <router-view></router-view>
             </el-main>
         </el-container>
