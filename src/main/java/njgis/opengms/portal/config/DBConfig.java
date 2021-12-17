@@ -35,7 +35,7 @@ public class DBConfig {
 
 
     /**
-     * 得到taskServer的表
+     * 连TaskServer服务器，得到其中的collection
      * @param  table 数据库中的表名
      * @return com.mongodb.client.MongoCollection<org.bson.Document>
      * @Author bin
