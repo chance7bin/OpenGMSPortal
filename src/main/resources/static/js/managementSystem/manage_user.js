@@ -43,7 +43,7 @@ export var UserTemplate = Vue.extend({
 
                     <el-table-column sortable prop="email" label="邮箱" >
                     </el-table-column>
-                    <el-table-column sortable prop="userRole" label="权限" >
+                    <el-table-column prop="userRole" label="权限" >
                     </el-table-column>
 
                     <el-table-column  label="操作">
