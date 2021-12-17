@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Sorts;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
@@ -29,6 +30,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import njgis.opengms.portal.utils.XmlTool;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +127,7 @@ public class ManagementSystemService {
             o.put("checkedModel",computableModel.getCheckedModel());
 
             //得到 部署这个模型的模型容器地址
-            List<String> container = getModelContainerByComputableModel(computableModel.getMd5());
+            List<String> container = getModelContainerListByMd5(computableModel.getMd5());
             o.put("deployedMSR",container);
 
             jsonArray.add(o);
@@ -766,7 +768,7 @@ public class ManagementSystemService {
 
 
     //获取所有模型\数据容器
-    public JsonResult getAllServerNodes(){
+    public JSONArray getAllServerNodes(){
 
         JSONArray nodes = new JSONArray();
         //模型容器节点
@@ -828,7 +830,7 @@ public class ManagementSystemService {
             e.printStackTrace();
         }
 
-        return ResultUtils.success(nodes);
+        return nodes;
     }
 
 
@@ -878,7 +880,7 @@ public class ManagementSystemService {
      * @return java.util.List<java.lang.String>
      * @Author bin
      **/
-    public List<String> getModelContainerByComputableModel(String md5){
+    public List<String> getModelContainerListByMd5(String md5){
 
         Document filter = new Document();
         filter.append("s_services", md5);
@@ -891,6 +893,80 @@ public class ManagementSystemService {
 
         return MSRAddress;
 
+    }
+
+
+    /**
+     * 根据md5得到计算模型的名字
+     * @param md5
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String getComputableModelNameByMd5(String md5){
+
+        ComputableModel model = computableModelDao.findFirstByMd5(md5);
+        return model.getName();
+
+    }
+
+
+    public List<JSONObject> getTaskList(FindDTO findDTO){
+
+        // 查询的时候从第几个开始查
+        int skipIndex = (findDTO.getPage() - 1) * findDTO.getPageSize();
+
+        // 排序顺序
+        Bson sort = findDTO.getAsc() ? Sorts.ascending("t_datetime") : Sorts.descending("t_datetime");
+
+        FindIterable<Document> result = taskCollection
+            .find()
+            .sort(Sorts.orderBy(sort))
+            .skip(skipIndex)
+            .limit(findDTO.getPageSize());
+
+        List<JSONObject> jsonObject = new ArrayList<>();
+        for (Document document : result) {
+            // JSONObject o = JSONObject.parseObject(JSON.toJSONString(document));
+            JSONObject object = new JSONObject();
+            object.put("msrid",document.getString("t_msrid"));
+            User t_user = userService.getByEmail(document.getString("t_user"));
+            if (t_user != null)
+                object.put("user",t_user.getName());
+            else
+                object.put("user",document.getString("t_user"));
+            object.put("status",document.getString("t_status"));
+            object.put("date",genericService.dateFormat(document.getDate("t_datetime")));
+            object.put("server",document.getString("t_server"));
+            object.put("md5",document.getString("t_pid"));
+            object.put("computableModelName",getComputableModelNameByMd5(document.getString("t_pid")));
+            object.put("runServer",getModelContainerByTaskId(String.valueOf(document.get("_id"))));
+            object.put("deployedServer",getModelContainerListByMd5(document.getString("t_pid")));
+
+            jsonObject.add(object);
+        }
+
+
+        return jsonObject;
+    }
+
+
+    public List<JSONObject> getMscList(){
+
+
+        FindIterable<Document> result = serverCollection.find();
+
+        List<JSONObject> list = new ArrayList<>();
+
+        for (Document document : result) {
+            JSONObject object = new JSONObject();
+            object.put("ip",document.getString("s_ip"));
+            object.put("port",document.getInteger("s_port"));
+            object.put("type",document.getInteger("s_type"));
+            object.put("status",document.getBoolean("s_status"));
+            list.add(object);
+        }
+
+        return list;
     }
 
 }

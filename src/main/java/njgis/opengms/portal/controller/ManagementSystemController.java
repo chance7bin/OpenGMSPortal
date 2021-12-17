@@ -285,4 +285,18 @@ public class ManagementSystemController {
     }
 
 
+
+    @ApiOperation(value = "得到运行的任务列表")
+    @RequestMapping(value="/taskList",method= RequestMethod.POST)
+    public JsonResult getTaskList(@RequestBody FindDTO findDTO){
+        return ResultUtils.success(managementSystemService.getTaskList(findDTO));
+    }
+
+    @ApiOperation(value = "得到模型容器列表")
+    @RequestMapping(value="/mscList",method= RequestMethod.GET)
+    public JsonResult getMscList(){
+        return ResultUtils.success(managementSystemService.getMscList());
+    }
+
+
 }
