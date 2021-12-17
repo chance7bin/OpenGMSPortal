@@ -1,7 +1,6 @@
 export var VersionTemplate = Vue.extend({
     template: ` 
         <div>
-            <el-main class="middle_content" style="height:85vh">
                 <el-tabs tab-position="left" stretch="true" type="border-card" @tab-click="changeTabs" >
 <!--                            未审核页面-->
                     <el-tab-pane label="未审核版本">
@@ -250,7 +249,6 @@ export var VersionTemplate = Vue.extend({
                         </div>
                     </el-tab-pane>
                 </el-tabs>
-            </el-main>
         </div>
         `,
     data() {

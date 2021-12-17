@@ -577,6 +577,17 @@ public class ManagementSystemService {
             item.put("lastModifyTime", object.get("lastModifyTime"));
             item.put("status", object.get("status"));
             item.put("viewCount", object.get("viewCount"));
+            List<JSONObject> adminsList = new ArrayList<>();
+            List<String> adminsEmailList = (List<String>) object.get("admins");
+            if (adminsEmailList != null){
+                for (String email : adminsEmailList) {
+                    JSONObject admin = new JSONObject();
+                    admin.put("name",userService.getUserName(email));
+                    admin.put("email",email);
+                    adminsList.add(admin);
+                }
+            }
+            item.put("admins", adminsList);
             item.put("author", userService.getUserName(object.getString("author")));
             if (object.get("invokeCount") != null){
                 item.put("invokeCount", object.get("invokeCount"));
