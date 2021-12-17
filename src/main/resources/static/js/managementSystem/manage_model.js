@@ -100,7 +100,8 @@ export var ModelTemplate = Vue.extend({
                                         <el-table-column >
                                             <template slot-scope="scope">
                                                 <el-tag type='info' disable-transitions>
-                                                    <el-link :href="'http://'+scope.row.msrAddress+'/modelserrun/'+scope.row.taskId" target="_blank">{{scope.row.msrAddress}}</el-link>
+                                                    <el-link v-if="scope.row.msrAddress!==null" :href="'http://'+scope.row.msrAddress+'/modelserrun/'+scope.row.taskId" target="_blank">{{scope.row.msrAddress}}</el-link>
+                                                    <div v-else>未分配模型容器 </div>
                                                 </el-tag>
                                             </template>
                                         </el-table-column>  
@@ -143,14 +144,14 @@ export var ModelTemplate = Vue.extend({
                             </el-table-column>
 
                             <el-table-column sortable prop="viewCount" label="访问量"></el-table-column>
-                            <el-table-column sortable label="IP地址">
+                            <el-table-column sortable label="模型容器IP">
                                 <template slot-scope="scope" >
                                   <el-popover
                                     placement="bottom"
                                     title="服务器地址(点击前往):"
                                     width="200"
                                     trigger="hover">
-                                        <el-link v-for="(item,index) in scope.row.deployedMSR" :href="'http://'+item+'/modelser/all'" target="_blank">{{item}}</el-link>
+                                        <el-link type="primary" v-for="(item,index) in scope.row.deployedMSR" :href="'http://'+item+'/modelser/all'" target="_blank">{{item}}</el-link>
                                         <el-button size="mini" slot="reference">查看服务器IP</el-button>
                                   </el-popover>
                                 </template>

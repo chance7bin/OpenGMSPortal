@@ -7,7 +7,15 @@ export var ItemTemplate = Vue.extend({
                         <div slot="header" class="clearfix">
                             <span>Data item classification</span>
                         </div>
-                        <el-tree :data="geoItemMenuData" :props="defaultPropsGeoItem" @node-click="handleNodeClickGeoItem" default-expand-all></el-tree>
+                        <el-tree 
+                            ref="itemRef"
+                            :data="geoItemMenuData" 
+                            :props="defaultPropsGeoItem" 
+                            @node-click="handleNodeClickGeoItem" 
+                            highlight-current="true"
+                            node-key="id"
+                            default-expand-all 
+                           ></el-tree>
                     </el-card>
 <!--                            右侧内容-->
                 <div class="flexColumnStart" style="width: 68vw">
@@ -37,7 +45,7 @@ export var ItemTemplate = Vue.extend({
                             <el-table-column sortable prop="name" label="名称">
                             </el-table-column>
 
-                            <el-table-column sortable prop="author" label="贡献者" >
+                            <el-table-column prop="author" label="贡献者" >
                             </el-table-column>
                             <el-table-column sortable prop="viewCount" label="查看数" >
                             </el-table-column>
@@ -162,25 +170,35 @@ export var ItemTemplate = Vue.extend({
             searchUserInput:"",
 
             geoItemMenuData:[{
+                id:1,
                 label: 'Model',
             }, {
+                id:2,
                 label: 'Data',
                 children: [{
+                    id:3,
                     label: 'Hub Repository'
                 }, {
+                    id:4,
                     label: 'Item Repository',
                 },{
+                    id:5,
                     label:"Method Repository"
                 }]
             }, {
+                id:6,
                 label: 'Community',
                 children: [{
+                    id:7,
                     label: 'Concept & Semantic',
                 }, {
+                    id:8,
                     label: 'Spatiotemporal Reference',
                 },{
+                    id:9,
                     label: 'Data Template',
                 },{
+                    id:10,
                     label: 'Unit & Metric',
                 },]
             }], //条目页左侧菜单
@@ -193,11 +211,12 @@ export var ItemTemplate = Vue.extend({
             PageSizeGeo:10, //条目列表每页数目
             totalGeo:0, //条目总数
             searchInputGeo:"", //条目表搜索内容
-            itemType:"DataHub", //选择展示的条目类型
+            itemType:"ModelItem", //选择展示的条目类型
         }
     },
     mounted(){
         this.getGeoItemList()
+        this.$refs.itemRef.setCurrentKey("1");
     },
     methods: {
         //条目管理菜单

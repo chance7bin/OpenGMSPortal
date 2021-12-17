@@ -14,50 +14,50 @@ export var TaskTemplate = Vue.extend({
                         :data="taskData"
                         border
                         stripe
-                        style="width: 100%">
+                        style="width: 100%"
+                        height="65vh">
                         <el-table-column
-                                prop="t_msrid"
-                                label="Msrid"
-                                width="280">
+                                width="230px"
+                                prop="msrid"
+                                label="Msrid">
                         </el-table-column>
                         <el-table-column
-                                prop="t_user"
-                                label="User"
-                                width="280">
+                                prop="user"
+                                label="用户">
                         </el-table-column>
                         <el-table-column
-                                prop="t_status"
-                                sortable
-                                label="Status"
-                                width="100">
-
+                                prop="status"
+                                label="状态">
                         </el-table-column>
-                        <el-table-column label="Date">
+                        <el-table-column prop="date" label="时间">
+<!--                            <template slot-scope="scope">-->
+<!--                                {{formatDate(scope.row.t_datetime)}}-->
+<!--                            </template>-->
+                        </el-table-column>
+                        <el-table-column label="运行的模型容器">
                             <template slot-scope="scope">
-                                {{formatDate(scope.row.t_datetime)}}
+                                <el-link type="primary" :href="'http://'+scope.row.runServer+'/modelserrun/'+scope.row.msrid" target="_blank">{{scope.row.runServer}}</el-link>
                             </template>
                         </el-table-column>
-                        <el-table-column
-                                prop="t_server"
-                                sortable
-                                label="Server">
-                            <template slot-scope="scope">
-                                <div class="flexAlignCenter flexJustBetween">
-                                    <p class="noMargin">{{scope.row.t_server}}</p>
-                                    <el-button class="noMargin cursorPointer"
-                                               icon="el-icon-search"
-                                               type="primary"
-                                               plain
-                                               circle
-                                               @click="checkServer(scope.row)">
-                                    </el-button>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="t_pid"
-                                sortable
-                                label="Pid(md5)">
+                        <el-table-column label="模型名称" >
+                              <template slot-scope="scope">
+                                  <el-popover
+                                    placement="bottom"
+                                    title=""
+                                    width="255"
+                                    trigger="hover">
+                                    <h5 style="margin: 0">名称:</h5>
+                                    <p style="margin: 0">{{scope.row.computableModelName}}</p>
+                                    <h5 style="margin: 0">md5:</h5>
+                                    <p style="margin: 0">{{scope.row.md5}}</p>
+                                    <h5 style="margin: 0">部署的模型容器:</h5>
+                                    <el-link v-for="(item,index) in scope.row.deployedServer" type="primary" :href="'http://'+item+'/modelser/all'" target="_blank">{{item}}</el-link>
+                                    
+                                    <div slot="reference" style="width=100%;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;color: darkorange; ">
+                                        {{scope.row.computableModelName}}
+                                    <div/>
+                                  </el-popover>
+                                  </template>
                         </el-table-column>
                     </el-table>
                     <el-pagination style="text-align: center;margin-top:20px"
@@ -75,32 +75,19 @@ export var TaskTemplate = Vue.extend({
                         border
                         stripe
                         style="width: 100%">
-                        <el-table-column
-                                prop="s_ip"
-                                label="Ip">
-                        </el-table-column>
-                        <el-table-column
-                                prop="s_port"
-                                label="Port">
-                        </el-table-column>
-                        <el-table-column
-                                label="Status">
+                        <el-table-column prop="ip" label="Ip"></el-table-column>
+                        <el-table-column prop="port" label="Port"></el-table-column>
+                        <el-table-column prop="type" label="Type"></el-table-column>
+                        <el-table-column label="Status">
                             <template slot-scope="scope">
-                                <el-tag type="success" v-if="scope.row.s_status" >online</el-tag>
-                                <el-tag type="info" v-else>offline</el-tag>
+                                <el-tag type="success" v-if="scope.row.status" >online</el-tag>
+                                <el-tag type="danger" v-else>offline</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column
-                                label="Go Go Go">
-                            <template slot-scope="scope">
-                                <el-button class="noMargin cursorPointer"
-                                          icon="el-icon-right"
-                                           type="primary"
-                                           plain
-                                          circle
-                                          @click="window.open('http://'+scope.row.s_ip+':'+scope.row.s_port)">
-                                </el-button>
-                            </template>
+                        <el-table-column label="操作">
+                            <templat slot-scope="scope">
+                                 <el-link :href="'http://'+scope.row.ip+':'+scope.row.port" target="_blank">前往模型容器</el-link>
+                            </templat>
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
@@ -119,21 +106,22 @@ export var TaskTemplate = Vue.extend({
         }
     },
     mounted(){
-
+        this.getTaskList()
+        this.getContainerList()
     },
     methods: {
         getTaskList(){
-            axios.post('/managementSystem', {
+            axios.post('/managementSystem/taskList', {
                 "asc": false,
                 "page": this.taskCurrentPage,
                 "pageSize": 20,
                 "searchText": "",
-                "sortField": ""
+                "sortField": "createTime"
             })
                 .then(response=> {
                     let data=response.data.data
                     this.taskTotal=data.total
-                    this.taskData=data.content
+                    this.taskData=data.list
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -141,21 +129,14 @@ export var TaskTemplate = Vue.extend({
         },
 
         handleTaskPageChange(val){
-            this.currentPage = val;
+            this.taskCurrentPage = val;
             this.getTaskList();
         },
 
         getContainerList(){
-            axios.post('/managementSystem', {
-                "asc": false,
-                "page": 1,
-                "pageSize": 20,
-                "searchText": "",
-                "sortField": ""
-            })
+            axios.get('/managementSystem/mscList')
                 .then(response=> {
-                    let data=response.data.data
-                    this.containerData=data.content
+                    this.containerData=response.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
