@@ -1,0 +1,14 @@
+{
+  "en-us": {
+    "home": "Home",
+    "modelRep": "Repository",
+    "application": "Application"
+
+  },
+  "zh-cn": {
+    "home": "首页",
+    "modelRep": "Repository",
+    "application": "Application"
+
+  }
+}

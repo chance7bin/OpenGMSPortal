@@ -429,6 +429,9 @@ new Vue({
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
 
         //高级搜索
         conditionAppend(){
