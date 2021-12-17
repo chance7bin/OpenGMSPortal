@@ -16,29 +16,24 @@ export var TaskTemplate = Vue.extend({
                         stripe
                         style="width: 100%">
                         <el-table-column
-                                prop="t_msrid"
-                                label="Msrid"
-                                width="280">
+                                prop="msrid"
+                                label="Msrid">
                         </el-table-column>
                         <el-table-column
-                                prop="t_user"
-                                label="User"
-                                width="280">
+                                prop="user"
+                                label="User">
                         </el-table-column>
                         <el-table-column
-                                prop="t_status"
-                                sortable
-                                label="Status"
-                                width="100">
-
+                                prop="status"
+                                label="Status">
                         </el-table-column>
-                        <el-table-column label="Date">
-                            <template slot-scope="scope">
-                                {{formatDate(scope.row.t_datetime)}}
-                            </template>
+                        <el-table-column prop="date" label="Date">
+<!--                            <template slot-scope="scope">-->
+<!--                                {{formatDate(scope.row.t_datetime)}}-->
+<!--                            </template>-->
                         </el-table-column>
                         <el-table-column
-                                prop="t_server"
+                                prop="server"
                                 sortable
                                 label="Server">
                             <template slot-scope="scope">
@@ -123,17 +118,17 @@ export var TaskTemplate = Vue.extend({
     },
     methods: {
         getTaskList(){
-            axios.post('/managementSystem', {
+            axios.post('/managementSystem/taskList', {
                 "asc": false,
                 "page": this.taskCurrentPage,
                 "pageSize": 20,
                 "searchText": "",
-                "sortField": ""
+                "sortField": "createTime"
             })
                 .then(response=> {
-                    let data=response.data.data
+                    let data=response.data
                     this.taskTotal=data.total
-                    this.taskData=data.content
+                    this.taskData=data.data
                 })
                 .catch(function (error) {
                     console.log(error);
