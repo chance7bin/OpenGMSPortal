@@ -921,7 +921,7 @@ public class ManagementSystemService {
     }
 
 
-    public List<JSONObject> getTaskList(FindDTO findDTO){
+    public JSONObject getTaskList(FindDTO findDTO){
 
         // 查询的时候从第几个开始查
         int skipIndex = (findDTO.getPage() - 1) * findDTO.getPageSize();
@@ -935,6 +935,7 @@ public class ManagementSystemService {
             .skip(skipIndex)
             .limit(findDTO.getPageSize());
 
+        long total = taskCollection.countDocuments();
         List<JSONObject> jsonObject = new ArrayList<>();
         for (Document document : result) {
             // JSONObject o = JSONObject.parseObject(JSON.toJSONString(document));
@@ -956,8 +957,12 @@ public class ManagementSystemService {
             jsonObject.add(object);
         }
 
+        JSONObject returnRes = new JSONObject();
+        returnRes.put("list",jsonObject);
+        returnRes.put("total",total);
 
-        return jsonObject;
+
+        return returnRes;
     }
 
 
