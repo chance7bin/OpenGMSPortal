@@ -73,23 +73,38 @@ export var ModelTemplate = Vue.extend({
                                     </template>
                                     <el-table :data="item.historyList" :show-header="false">
                                         <el-table-column  property="modelName" ></el-table-column>          
-                                        <el-table-column   >
+                                        <el-table-column  >
                                             <template slot-scope="scope">
                                                 <el-tag
-                                                v-if="scope.row.checkedModel ===null"
-                                                type='info'
-                                                disable-transitions>未检测</el-tag>
+                                                        v-if="(scope.row.status===-1 ||scope.row.hasInvokeSuccess===false||scope.row.hasTest===false)&&scope.row.msg!=='未找到测试数据'"
+                                                        type='danger'
+                                                        disable-transitions>{{scope.row.msg}}</el-tag>
+                                                <el-tag
+                                                        v-if="(scope.row.status===-1 ||scope.row.hasInvokeSuccess===false||scope.row.hasTest===false)&&scope.row.msg==='未找到测试数据' "
+                                                        color="rgb(200 255 247)"
+                                                        disable-transitions>未找到测试数据</el-tag>
+                                                <el-tag
+                                                        v-if="scope.row.hasInvokeSuccess===true&& scope.row.status===0 "
+                                                        type='warning'
+                                                        disable-transitions>正在排队检测</el-tag>
+                                                <el-tag
+                                                        v-if="scope.row.hasInvokeSuccess===true&& scope.row.status===1 "
+                                                        type='primary'
+                                                        disable-transitions>正在检测</el-tag>
+                                                <el-tag
+                                                        v-if="scope.row.hasInvokeSuccess===true&& scope.row.status===2 "
+                                                        type='success'
+                                                        disable-transitions>正常</el-tag> 
                                             </template>
                                         </el-table-column>  
                                         <el-table-column >
                                             <template slot-scope="scope">
-                                                <el-tag
-                                                type='info'
-                                                disable-transitions>{{scope.row.msrAddress}}</el-tag>
+                                                <el-tag type='info' disable-transitions>
+                                                    <el-link :href="'http://'+scope.row.msrAddress+'/modelserrun/'+scope.row.taskId" target="_blank">{{scope.row.msrAddress}}</el-link>
+                                                </el-tag>
                                             </template>
                                         </el-table-column>  
                                     </el-table>
-
                                 </el-collapse-item>
                             </el-collapse>
 
@@ -118,7 +133,6 @@ export var ModelTemplate = Vue.extend({
                         >
                             <el-table-column type="selection">
                             </el-table-column>
-<!--                            <el-table-column sortable prop="accessId" label="名称">-->
                             <el-table-column sortable label="名称">
                                 <template slot-scope="scope" >
                                     <el-link :href="computableModelUrl+scope.row.id" target="_blank">{{scope.row.accessId}}</el-link>
@@ -128,7 +142,19 @@ export var ModelTemplate = Vue.extend({
                             <el-table-column sortable prop="author" label="作者" >
                             </el-table-column>
 
-                            <el-table-column sortable prop="viewCount"  label="访问量"></el-table-column>
+                            <el-table-column sortable prop="viewCount" label="访问量"></el-table-column>
+                            <el-table-column sortable label="IP地址">
+                                <template slot-scope="scope" >
+                                  <el-popover
+                                    placement="bottom"
+                                    title="服务器地址(点击前往):"
+                                    width="200"
+                                    trigger="hover">
+                                        <el-link v-for="(item,index) in scope.row.deployedMSR" :href="'http://'+item+'/modelser/all'" target="_blank">{{item}}</el-link>
+                                        <el-button size="mini" slot="reference">查看服务器IP</el-button>
+                                  </el-popover>
+                                </template>
+                            </el-table-column>
 
                             <el-table-column  label="操作" >
                                 <template slot-scope="scope">
@@ -204,7 +230,7 @@ export var ModelTemplate = Vue.extend({
 
 
             computableModelUrl:"https://geomodeling.njnu.edu.cn/computableModel/", //门户计算模型的网址前缀
-
+            mscUrl:"http://172.21.212.85:8060/modelserrun/61b88bfffb1ee50774d2683d",
 
         }
     },
@@ -351,7 +377,7 @@ export var ModelTemplate = Vue.extend({
             })
         },
 
-        //检测所选模型（多选）(循环调用单次检测方法)
+        //检测所选模型（多选）
         checkSelectedModels() {
             this.$confirm('是否开始检测所选全部模型?', '提示', {
                 confirmButtonText: '确定',
@@ -363,19 +389,15 @@ export var ModelTemplate = Vue.extend({
                     message: '开始检测!!!'
                 });
                 let selectedModelIds=this.waitCheckModels.map(item=>{
-                    this.checkModelSimple(item.modelId)
                     return item.modelId
                 })
-                axios.post('/managementSystem/checkList/save', {
-                    "draftName": new Date().toLocaleString(),
-                    "modelList": selectedModelIds,
+                axios.post('/managementSystem/model/invoke/batch',
+                    selectedModelIds
+                ).then(response=>{
+                    this.getModelList()
+                }).catch(function (error) {
+                    console.log(error);
                 })
-                    .then(response=> {
-                        // console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
                 this.waitCheckModels=[]
                 this.$refs.modelTable.clearSelection();
 
@@ -387,18 +409,6 @@ export var ModelTemplate = Vue.extend({
             });
         },
 
-        //检测模型（单个，用于多选循环调用）
-        checkModelSimple(modelId){
-            axios.get('/managementSystem/model/invoke/'+modelId)
-                .then( response=> {
-                    // console.log(response);
-                    this.getModelList()
-
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
         //检测模型（单个，用于响应单次检测按钮）
         checkModel(modelId){
             this.$confirm('是否开始检测所选模型?', '提示', {

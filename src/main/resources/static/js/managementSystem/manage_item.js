@@ -53,7 +53,7 @@ export var ItemTemplate = Vue.extend({
                                     <el-button
                                             v-if="scope.row.status==='Private'"
                                             size="mini"
-                                            type="warning"
+                                            type="info"
                                             icon="el-icon-lock"
                                             @click="changeStatus(scope.row)">状态切换</el-button>
                                     <el-button
@@ -124,8 +124,11 @@ export var ItemTemplate = Vue.extend({
                                     <div style="width: 25%; ">
                                         <h1>当前管理员：</h1>
                                         <div style="overflow: auto;height: 245px;">
+                                            <div :v-if="admins===[]">    
+                                                该条目暂无管理员
+                                            </div>
                                             <el-tag
-                                              v-for="tag in tags"
+                                              v-for="tag in admins"
                                               :key="tag.name"
                                               closable
                                               type=""
@@ -133,12 +136,13 @@ export var ItemTemplate = Vue.extend({
                                               style="margin: 3px"
                                               >
                                               {{tag.name}}
-                                            </el-tag>                                        
+                                            </el-tag>    
                                         </div>
-
+                                        <div>
+                                           <el-button  size="mini"  type="primary" @click="setAdmin()">更新管理员</el-button>                                      
+                                        </div>  
                                     </div>
                                 </div>
-                                 
                             </el-dialog>
                 </div>
             </div>
@@ -149,19 +153,10 @@ export var ItemTemplate = Vue.extend({
     data() {
         return {
             adminSelectDialog:false, //管理员选择对话框显示控制
-            userTable:[],
-            admins:[],
-            tags: [
-                { name: '标签一asdasda', type: '' },
-                { name: '标签二', type: 'success' },
-                { name: '标签三', type: 'info' },
-                { name: '标签四', type: 'warning' },
-                { name: '标签五', type: 'danger' },
-                { name: '标签6', type: 'danger' },
-                { name: '标签7', type: 'danger' },
-                { name: '标签88', type: 'danger' },
-                { name: '标签9999', type: 'danger' }
-            ],
+            userTable:[],//管理员设置dialog中展示的用户
+            admins:[], //当前item的管理员名字+邮箱
+            currentItemId:"", //当前的item id
+
             userTotal:0, //用户总数
             userNowPage:1, //当前页
             searchUserInput:"",
@@ -276,13 +271,13 @@ export var ItemTemplate = Vue.extend({
                 });
         },
 
-
         //打开管理员设置的dialog
         openDialog(val){
             this.adminSelectDialog=true;
             console.log(val)
             this.admins=val.admins
             this.getUserList()
+            this.currentItemId=val.id
         },
         //获取用户列表
         getUserList(){
@@ -307,16 +302,13 @@ export var ItemTemplate = Vue.extend({
             this.getUserList()
         },
 
-        //管理员选择表的搜索
-        searchName(){
-
-        },
-
         //添加管理员
         addAdmin(val){
-            console.log(val)
-            if(this.admins.indexOf(val.email)>-1){
-                this.admin.push({
+            if(this.admins===null||this.admins===[]||(this.admins!==null&&JSON.stringify(this.admins).indexOf(val.email)===-1)){
+                if(this.admins===null){
+                    this.admins=[]
+                }
+                this.admins.push({
                     name:val.accessId,
                     email:val.email
                 })
@@ -330,23 +322,24 @@ export var ItemTemplate = Vue.extend({
 
         //删除管理员名字
         handleTagClose(tag) {
-            // console.log(tag)
-            // console.log(this.tags.indexOf(tag))
-            this.tags.splice(this.tags.indexOf(tag), 1);
+            this.admins.splice(this.admins.indexOf(tag), 1);
         },
 
         //发送请求，设置管理员
-        setAdmin(val){
+        setAdmin(){
             let adminEmails=this.admins.map((item)=>{
                 return item.email
             })
 
-            axios.post('/managementSystem/item/admin/'+this.itemType+'/'+val.id,
-                tadminEmails
+            axios.post('/managementSystem/item/admin/'+this.itemType+'/'+this.currentItemId,
+                adminEmails
             )
                 .then(response=> {
-                    console.log(response)
-                    // this.getGeoItemList()
+                    this.adminSelectDialog=false;
+                    this.$message({
+                        message: '更新设置管理员成功！',
+                        type: 'success'
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);
