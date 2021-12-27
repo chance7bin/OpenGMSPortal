@@ -63,14 +63,14 @@ body{
 
 @font-face {
     font-family: 'aktiv-grotesk';
-    src: url("../fonts/aktivgroteskbold-webfont.woff2.ttf") format('truetype');
+    src: url("../font-awesome/fonts/aktivgroteskbold-webfont.woff2.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Multicolore-Regular';
-    src: url("../fonts/Multicolore-Regular.ttf") format('truetype');
+    src: url("../font-awesome/fonts/Multicolore-Regular.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }

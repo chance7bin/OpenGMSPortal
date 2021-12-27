@@ -860,11 +860,10 @@ new Vue({
         },
 
         Query(data, type) {
-            console.log(data)
             let sendDate = (new Date()).getTime();
             $.ajax({
-                type: "POST",
-                url: type == "normal" ? "/modelItem/list" : "/modelItem/advance",
+                type: "GET",
+                url: type == "normal" ? "/modelItem/queryList" : "/modelItem/advance",
                 data: data,
                 async: true,
                 success: (json) => {

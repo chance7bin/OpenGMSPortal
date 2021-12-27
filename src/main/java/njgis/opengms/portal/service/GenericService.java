@@ -137,7 +137,7 @@ public class GenericService {
         int totalElements = 0;
         try {
             Page itemsPage;
-            Pageable pageable = PageRequest.of(findDTO.getPage()-1, findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
+            Pageable pageable = PageRequest.of(findDTO.getPage(), findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
 
             // 从工厂中拿对应的dao
             JSONObject daoFactory = daoFactory(type);

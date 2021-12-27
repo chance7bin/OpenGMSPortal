@@ -738,7 +738,7 @@
                                     <div class="x_content data_item" :id="'dataMethodClass_edit'+index+'-'+index2" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div v-for="(item,index3) in dataMethod.tableData" class="col-md-2 model_col">
-                                                <a :href="'https://geomodeling.njnu.edu.cn/dataApplication/'+item.oid" target = "_blank">
+                                                <a :href="'https://geomodeling.njnu.edu.cn/dataMethod/detail'+item.id" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
                                                             <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
@@ -763,7 +763,7 @@
                                 <div class="x_content data_item" :id="'dataMethodClass_edit'+index" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div v-for="item in dataMethodClass.tableData" class="col-md-2 model_col">
-                                            <a :href="'https://geomodeling.njnu.edu.cn/dataApplication/'+item" target = "_blank">
+                                            <a :href="'https://geomodeling.njnu.edu.cn/dataMethod/detail'+item" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -794,7 +794,7 @@
                                     <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                                <a th:href="'https://geomodeling.njnu.edu.cn/dataApplication/'+${item.oid}" target = "_blank">
+                                                <a th:href="'https://geomodeling.njnu.edu.cn/dataMethod/detail'+${item.id}" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">

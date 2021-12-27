@@ -5,6 +5,7 @@ new Vue({
     },
     data: function () {
         return {
+            categoryName:"da70ad83-de57-4fc3-a85d-c1dcf4961433",
             activeIndex:'8-2',
             queryType: 'normal',
             searchText: '',
@@ -187,6 +188,9 @@ new Vue({
             classes.push(data.oid);
             this.classifications1 = classes;
             this.getChildren(data.children)
+            if(typeof(data.children) === "undefined") {
+                this.categoryName = data.oid
+            }
             this.pageOption.currentPage=1;
             this.searchText="";
             this.getModels();
@@ -239,7 +243,8 @@ new Vue({
 
             let url="";
             if(query.searchText.trim()==""){
-                url="/repository/getSpatialReferenceList";
+                url=getspatialReferenceList()
+                query.categoryName = this.categoryName
             }
             else{
                 url="/repository/searchSpatialReference";

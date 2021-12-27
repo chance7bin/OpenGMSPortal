@@ -22,7 +22,7 @@ var data_items = new Vue({
                 curQueryField:'',
                 sortField: 'viewCount',
             },
-            categoryName:'5f3e42070e989714e8364e9a',
+            categoryName:'a24cba2b-9ce1-44de-ac68-8ec36a535d0e',
             list:new Array(),
             users:[],
             classlist:[],
@@ -241,7 +241,7 @@ var data_items = new Vue({
         getData(){
             this.setFindDto()
             let that = this;
-            axios.post("/dataItem/Items/getItems", that.findDto)
+            axios.post(getItemList(), that.findDto)
                 .then(res =>{
                     setTimeout(()=>{
                         that.list=res.data.data.list;

@@ -941,7 +941,7 @@ var vue = new Vue({
                 curQueryField:'name',
                 method:classi
             }
-            axios.post("/dataApplication/methods/getApplication",data)
+            axios.post(getMethodList(),data)
                 .then((res)=>{
                     setTimeout(()=>{
                         this.dataMethodList=res.data.data.list;
