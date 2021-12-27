@@ -335,14 +335,14 @@
             </div>&nbsp;&nbsp;
 
             <!--description-->
-            <div th:if="${datainfo.data.detail!=''&&datainfo.data.detail!=null}" id="description" class="detail_block">
+            <div th:if="${datainfo.data.localizationList[0].description!=''&&datainfo.data.localizationList[0].description!=null}" id="description" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Detailed Description</h4>
                     </div>
                 </div>
                 <div class="block_content">
-                    <div id="detail" class="detailIntroducePanel" th:utext="${datainfo.data.detail}"
+                    <div id="detail" class="detailIntroducePanel" th:utext="${datainfo.data.localizationList[0].description}"
                          style="overflow:auto"></div>
                 </div>
                 <div class="fullPaper text-center hide">
@@ -849,7 +849,7 @@
                         <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
                             </div>
                         </div>
                     </div>
