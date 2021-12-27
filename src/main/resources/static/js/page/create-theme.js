@@ -1075,7 +1075,7 @@ var createTheme = Vue.extend({
                     contentType = "application/json";
                     break;
                 case "concept":
-                    url = this.relateSearch.trim() == "" ? "/repository/getConceptList" : "/repository/searchConcept";
+                    url = this.relateSearch.trim() == "" ? getConceptList() : "/repository/searchConcept";
                     data.asc = data.asc == true ? 0 : 1;
                     data = JSON.stringify(data);
                     contentType = "application/json";
@@ -1161,7 +1161,7 @@ var createTheme = Vue.extend({
                     contentType = "application/json";
                     break;
                 case "concept":
-                    url = this.relateSearch.trim() == "" ? "/repository/getConceptList" : "/repository/searchConcept";
+                    url = this.relateSearch.trim() == "" ? getConceptList() : "/repository/searchConcept";
                     data.asc = data.asc == true ? 0 : 1;
                     data = JSON.stringify(data);
                     contentType = "application/json";

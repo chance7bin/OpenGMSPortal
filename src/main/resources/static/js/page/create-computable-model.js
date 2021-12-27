@@ -282,11 +282,11 @@ var createComputableModel = Vue.extend({
                 sortType: "default",
                 classifications: ["all"],
             };
-            let url = "/modelItem/list";
+            let url = "/modelItem/queryList";
             let contentType = "application/x-www-form-urlencoded";
 
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: url,
                 data: data,
                 async: true,
