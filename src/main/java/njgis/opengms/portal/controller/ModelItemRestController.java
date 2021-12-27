@@ -7,6 +7,7 @@ import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
@@ -163,10 +164,10 @@ public class ModelItemRestController {
      * @Date 2021/7/7
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
-    @RequestMapping(value = "/queryList", method = RequestMethod.GET)
-    public JsonResult queryList(ModelItemFindDTO modelItemFindDTO) {
-
-        return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
+    @RequestMapping(value = "/queryList", method = RequestMethod.POST)
+    public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
+        return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
+        // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
 
     }
 

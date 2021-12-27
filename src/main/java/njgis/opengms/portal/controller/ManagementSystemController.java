@@ -8,10 +8,7 @@ import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
-import njgis.opengms.portal.service.ComputableModelService;
-import njgis.opengms.portal.service.ManagementSystemService;
-import njgis.opengms.portal.service.TaskService;
-import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +37,10 @@ public class ManagementSystemController {
 
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    ServerService serverService;
+
 
     @GetMapping("/home")
     public ModelAndView getHomePage(){
@@ -281,7 +282,7 @@ public class ManagementSystemController {
     @ApiOperation(value = "获取服务节点")
     @RequestMapping(value="/serverNodes",method= RequestMethod.GET)
     public JsonResult getAllServerNodes(){
-        return ResultUtils.success(managementSystemService.getAllServerNodes());
+        return ResultUtils.success(serverService.getAllServerNodes());
     }
 
 
