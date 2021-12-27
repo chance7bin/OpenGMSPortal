@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="info" th:object="${datainfo}">
-                        <p th:text="${datainfo.data.description}">description</p>
+                        <p th:text="${datainfo.data.overview}">description</p>
                         <div class="tags">
                             <span class="badge badge-info" th:each="key,iter : ${datainfo.data.keywords}"
                                   th:text="${iter.current}">itercurrent</span>
@@ -121,7 +121,7 @@
 
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.oid}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
                             </div>
                         </div>
                     </div>
@@ -135,19 +135,19 @@
             </div>
 
             <div id="Authorship0" class="detail_block minScreen"
-                 th:if="${datainfo.data.authorship!=null&&#lists.size(datainfo.data.authorship)!=0}">
+                 th:if="${datainfo.data.authorships!=null&&#lists.size(datainfo.data.authorships)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
-                    <div style="text-align: left;" th:each="author,key:${datainfo.data.authorship}">
+                    <div style="text-align: left;" th:each="author,key:${datainfo.data.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;">
-                            <a data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle" aria-expanded="true" >
+                            <a data-toggle="collapse" th:href="'#authorships'+${key.index}" class="detail-toggle" aria-expanded="true" >
                                 <i class="fa fa-caret-up" style="font-size: 21px"></i>
                             </a>
                         </span>
                         <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorship'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}"aria-expanded="true"
+                        <div th:id="'authorships'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}"aria-expanded="true"
                              style="">
                             <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
                                 <dl>
@@ -163,7 +163,7 @@
                             </div>
                         </div>
                     </div>
-                    <div th:if="${#lists.size(datainfo.data.authorship)>0}">
+                    <div th:if="${#lists.size(datainfo.data.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">Feed back</a></el-tag>
                     </div>
                 </div>
@@ -182,7 +182,7 @@
             </div>
 
             <!--data resource url-->
-            <div th:if="(${datainfo.data.reference!=null}) and (${datainfo.data.reference!=''})" id="data_url" class="detail_block">
+            <div th:if="(${datainfo.data.url!=null}) and (${datainfo.data.url!=''})" id="data_url" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Data Resource Url</h4>
@@ -190,9 +190,9 @@
                 </div>
                 <div class="block_content flex">
                     <div id="data-url" class="">
-                        <a th:href="${datainfo.data.reference}"  target="_blank="><span
+                        <a th:href="${datainfo.data.url}"  target="_blank="><span
                                 style="font-size: 17px;color: #67c23a;"
-                                th:text="${datainfo.data.reference}">current</span>
+                                th:text="${datainfo.data.url}">current</span>
                         </a>
                     </div>
 
@@ -490,11 +490,11 @@
 
                     <div th:if="${#lists.size(relatedModels)}!=0" style="width:100%">
                         <div class="list_panel clearfix" th:each="model:${relatedModels}">
-                            <a th:href="'/modelItem/'+${model.oid}" class="img">
+                            <a th:href="'/modelItem/'+${model.id}" class="img">
                                 <img src="/static/img/model/model.png">
                             </a>
                             <div class="info" style="margin-top:0px;">
-                                <a th:href="'/modelItem/'+${model.oid}" target="_blank"
+                                <a th:href="'/modelItem/'+${model.id}" target="_blank"
                                    th:text="${model.name}">Ground Water Flow System</a>
                                 <p style="margin-top: 0px" th:text="${model.description}">ANN-CA uses the artificial
                                     neural network method to extract
@@ -761,9 +761,9 @@
                 </div>
                 <div class="block_content" th:object="${datainfo}">
                     <div id="cite-text" class="">
-                        <span th:if="${authorship!=''}"
-                              th:text="${authorship}+' ('+${#dates.format(datainfo.data.createTime,'yyyy')}+'). '+${datainfo.data.name}+', Data Item, OpenGMS, '"></span>
-                        <span th:if="${authorship==''}"
+                        <span th:if="${authorships!=''}"
+                              th:text="${authorships}+' ('+${#dates.format(datainfo.data.createTime,'yyyy')}+'). '+${datainfo.data.name}+', Data Item, OpenGMS, '"></span>
+                        <span th:if="${authorships==''}"
                               th:text="${user.name}+' ('+${#dates.format(datainfo.data.createTime,'yyyy')}+'). '+${datainfo.data.name}+', Data Item, OpenGMS, '"></span>
                         <a style="word-break:break-all;"
                            th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${datainfo.data.id}"
@@ -863,18 +863,18 @@
             </div>
 
             <div id="Authorship" class="detail_block"
-                 th:if="${datainfo.data.authorship!=null&&#lists.size(datainfo.data.authorship)!=0}">
+                 th:if="${datainfo.data.authorships!=null&&#lists.size(datainfo.data.authorships)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${datainfo.data.authorship}">
+                    <div style="text-align: left;" th:each="author,key:${datainfo.data.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;"><a
-                                data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
+                                data-toggle="collapse" th:href="'#authorships'+${key.index}" class="detail-toggle"
                                 aria-expanded="true" ><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
                         <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorship'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}"aria-expanded="true"
+                        <div th:id="'authorships'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}"aria-expanded="true"
                              style="">
                             <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
                                 <dl>
@@ -891,7 +891,7 @@
                         </div>
                     </div>
 
-                    <div th:if="${#lists.size(datainfo.data.authorship)>0}">
+                    <div th:if="${#lists.size(datainfo.data.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">Feed back</a></el-tag>
                     </div>
 
@@ -942,7 +942,7 @@
                     <el-table-column
                             label="Name">
                         <template slot-scope="props">
-                            <a :href="'/modelItem/'+props.row.oid" target="_blank">{{props.row.name}}</a>
+                            <a :href="'/modelItem/'+props.row.id" target="_blank">{{props.row.name}}</a>
                         </template>
                     </el-table-column>
 
@@ -972,7 +972,7 @@
                         <template slot-scope="props">
                             <el-form label-position="left" inline class="demo-table-expand">
                                 <el-form-item label="Detail">
-                                    <span>{{ props.row.description }}</span>
+                                    <span>{{ props.row.overview }}</span>
                                 </el-form-item>
 
                             </el-form>
@@ -981,7 +981,7 @@
                     <el-table-column
                             label="Name">
                         <template slot-scope="props">
-                            <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                            <a :href="'/repository/'+relateType+'/'+props.row.id"
                                target="_blank">{{props.row.name}}</a>
                         </template>
                     </el-table-column>
