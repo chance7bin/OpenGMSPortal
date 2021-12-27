@@ -1137,7 +1137,7 @@ var createConcept = Vue.extend({
 
             let url = "";
             if (query.searchText.trim() == "") {
-                url = "/repository/getConceptList";
+                url = getConceptList();
             } else {
                 url = "/repository/searchConcept";
                 this.classifications1 = [""];
