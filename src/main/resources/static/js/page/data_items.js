@@ -177,7 +177,7 @@ var data_items = new Vue({
             this.getData()
         },
         goto(id){
-            return "/dataItem/"+id;
+            return getItemById(id)
         },
         view(id){
             axios.get("/dataItem/viewplus",{

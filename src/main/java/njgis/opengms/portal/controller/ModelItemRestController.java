@@ -96,7 +96,7 @@ public class ModelItemRestController {
      * @Date 21/10/12
      **/
     @ApiOperation(value = "根据id获取模型条目详情页面")
-    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
     ModelAndView get(@PathVariable("id") String id, HttpServletRequest request){
         PortalItem portalItem = genericService.getPortalItem(id, ItemTypeEnum.ModelItem);
         ModelAndView modelAndView = genericService.checkPrivatePageAccessPermission(portalItem, Utils.checkLoginStatus(request));
@@ -164,7 +164,7 @@ public class ModelItemRestController {
      * @Date 2021/7/7
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
-    @RequestMapping(value = "/queryList", method = RequestMethod.POST)
+    @RequestMapping(value = "/items", method = RequestMethod.POST)
     public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));

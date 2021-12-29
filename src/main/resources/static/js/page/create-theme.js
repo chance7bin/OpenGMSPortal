@@ -1062,7 +1062,7 @@ var createTheme = Vue.extend({
 
             switch (this.relateType) {
                 case "dataItem":
-                    url="/dataItem/searchByName";
+                    url=getItemList();
                     data = {
                         page: this.pageOption1.currentPage+1,
                         pageSize: 5,
@@ -1145,7 +1145,7 @@ var createTheme = Vue.extend({
             let url, contentType;
             switch (this.relateType) {
                 case "dataItem":
-                    url="/dataItem/searchByName";
+                    url=getItemList();
                     data = {
                         page: this.pageOption2.currentPage,
                         pageSize: 5,
@@ -1229,7 +1229,7 @@ var createTheme = Vue.extend({
             };
             let url, contentType;
 
-            url = "/dataApplication/searchByName";
+            url = getMethodList();
             data = JSON.stringify(data);
             contentType = "application/json";
 

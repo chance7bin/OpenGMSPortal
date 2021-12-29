@@ -985,7 +985,7 @@ var  data_item_info = new Vue({
 
             let that=this
             this.loading=true
-            axios.get("/modelItem/queryList",data)
+            axios.get("/modelItem/items",data)
                 .then((res)=>{
 
                     if(res.status===200){
@@ -1461,7 +1461,6 @@ var  data_item_info = new Vue({
     },
 
     mounted(){
-        console.log(11)
 
 
 

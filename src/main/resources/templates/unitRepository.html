@@ -135,10 +135,10 @@
                                     <i v-if="unit.status=='Public'" class="el-icon-unlock public fontsize-24 pull-right"></i>
                                     <i v-if="unit.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
-                                <a :class="unit.viewCount>500?'hot':''" :href="'/repository/unit/'+ unit.oid" target="_blank">{{unit.name}}&nbsp&nbsp</a>
+                                <a :class="unit.viewCount>500?'hot':''" :href="'/repository/unit/'+ unit.id" target="_blank">{{unit.name}}&nbsp&nbsp</a>
                             </div>
                             <div class="detail_overview">
-                                <a class="img" :href="'/repository/unit/'+ unit.oid" target="_blank">
+                                <a class="img" :href="'/repository/unit/'+ unit.id" target="_blank">
                                     <avatar :username="unit.name" :size="90" :rounded="false"></avatar>
                                     <!--<img v-if="modelItem.image!=''" :src="modelItem.image" style="width:90px;height: 90px;">-->
                                 </a>
@@ -154,7 +154,7 @@
                             <div class="detail_bottom">
                                 <div style="display:inline-block;float: left;">
                                     <!--<img :src="pageOption.users[key].image==''?'/static/img/icon/default.png':pageOption.users[key].image" class="round_icon" style="margin-top:-5px;width:30px;height: 30px;display: inline-block;">-->
-                                    <!--<a :href="'/profile/'+ pageOption.users[key].oid" target="_blank" style="display: inline-block;margin-left: 5px;"><h4>{{pageOption.users[key].name}}</h4></a>-->
+                                    <!--<a :href="'/profile/'+ pageOption.users[key].id" target="_blank" style="display: inline-block;margin-left: 5px;"><h4>{{pageOption.users[key].name}}</h4></a>-->
                                     <a :href="'/profile/'+ pageOption.users[key].userId">
 <!--                                        <img :src="pageOption.users[key].avatar==''?'/static/img/icon/default.png':'/static'+pageOption.users[key].avatar" class="round_icon" style="margin-top: -5px; width: 30px; height: 30px; display: inline-block;">-->
                                         <user-avatar :email="pageOption.users[key].email"
