@@ -104,7 +104,7 @@ public class ModelClassificationService {
             classResult.add(array1);
 
         }
-        System.out.println(classResult);
+        // System.out.println(classResult);
         return classResult;
     }
 

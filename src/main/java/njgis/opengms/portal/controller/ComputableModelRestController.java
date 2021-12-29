@@ -172,4 +172,16 @@ public class ComputableModelRestController {
         return ResultUtils.success(computableModelService.searchDeployedModel(findDTO));
     }
 
+
+    @RequestMapping(value="/selecttask",method = RequestMethod.GET)
+    public ModelAndView initTaskPage(HttpServletRequest req) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("task");
+
+        return modelAndView;
+
+    }
+
+
 }
