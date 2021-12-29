@@ -176,7 +176,6 @@ var data_items = new Vue({
         },
         goto(id){
             return getHubById(id)
-            // return "/dataItem/hub/"+id;
         },
 
         view(id){

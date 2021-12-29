@@ -5,8 +5,8 @@ new Vue({
     },
     data: function () {
         return {
+            categoryName:"a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
             statistic:['Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview'],
-
             activeIndex: '2',
             queryType: 'normal',
             searchText: '',
@@ -794,6 +794,9 @@ new Vue({
             classes.push(data.oid);
             this.classifications_new = classes;
             //this.getChildren(data.children)
+            if(typeof(data.children) === 'undefined') {
+                this.categoryName = data.oid
+            }
             this.pageOption.currentPage=1;
             this.searchText="";
             this.classType = 2;
@@ -836,6 +839,7 @@ new Vue({
                 page: this.pageOption.currentPage - 1,
                 pageSize: this.pageOption.pageSize,
                 queryField: this.curQueryField,
+                categoryName:this.categoryName
             };
             switch (this.queryType) {
                 case "normal":
@@ -861,14 +865,11 @@ new Vue({
 
         Query(data, type) {
             let sendDate = (new Date()).getTime();
-            $.ajax({
-                type: "GET",
-                url: type == "normal" ? "/modelItem/queryList" : "/modelItem/advance",
-                data: data,
-                async: true,
-                success: (json) => {
-                    if (json.code == 0) {
-                        let data = json.data;
+            axios.post(type == "normal" ? getModelItemList() : "/modelItem/advance",data)
+                .then(res => {
+                    result = res.data
+                    if (result.code == 0) {
+                        let data = result.data;
                         let receiveDate = (new Date()).getTime();
                         let responseTimeMs = receiveDate - sendDate;
                         let timeoutTime=0;
@@ -890,8 +891,41 @@ new Vue({
                     else {
                         console.log("query error!")
                     }
-                }
-            })
+
+                })
+            // $.ajax({
+            //     type: "POST",
+            //     url:'11',
+            //     data: JSON.stringify(data),
+            //     async: true,
+            //     success: (json) => {
+            //         console.log(11)
+            //
+            //         if (json.code == 0) {
+            //             let data = json.data;
+            //             let receiveDate = (new Date()).getTime();
+            //             let responseTimeMs = receiveDate - sendDate;
+            //             let timeoutTime=0;
+            //             //console.log(responseTimeMs)
+            //             if(responseTimeMs<450){
+            //                 timeoutTime=450-responseTimeMs;
+            //             }
+            //             setTimeout(() => {
+            //
+            //                 this.pageOption.total = data.total;
+            //                 this.pageOption.pages = data.pages;
+            //                 this.pageOption.searchResult = data.list;
+            //                 this.pageOption.users = data.users;
+            //                 this.pageOption.progressBar = false;
+            //                 this.pageOption.paginationShow=true;
+            //             }, timeoutTime);
+            //
+            //         }
+            //         else {
+            //             console.log("query error!")
+            //         }
+            //     }
+            // })
         },
         setUrl(){
             let newUrl;

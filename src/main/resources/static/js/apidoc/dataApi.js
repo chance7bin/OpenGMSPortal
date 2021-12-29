@@ -40,6 +40,11 @@ function getItemList(joinStr) {
     return joinByDataItem(url, joinStr)
 }
 
+function getItemById(joinStr) {
+    let url = '/detail'
+    return joinByDataItem(url, joinStr)
+}
+
 //method
 function getMethodList(joinStr) {
     let url = '/items'

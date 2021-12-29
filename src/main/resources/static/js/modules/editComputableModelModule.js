@@ -90,11 +90,11 @@ Vue.component("editComputableModelModule",
                     sortType: "default",
                     classifications: ["all"],
                 };
-                let url = "/modelItem/queryList";
+                let url = "/modelItem/items";
                 let contentType = "application/x-www-form-urlencoded";
 
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: url,
                     data: data,
                     async: true,

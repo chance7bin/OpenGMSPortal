@@ -38,6 +38,12 @@ function getConceptList(joinStr) {
 }
 
 //spatialReference
+function getspatialReferenceList(joinStr) {
+    let url = '/spatialReferenceList'
+    return joinBySpatialReference(url, joinStr)
+}
+
+//template
 function getTemplateList(joinStr) {
     let url = '/templateList'
     return joinByTemplate(url, joinStr)

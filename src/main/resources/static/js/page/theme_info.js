@@ -893,8 +893,8 @@ var vue = new Vue({
                                 this.themeImage = this.themeObj.themeImage;
 
                                 //显示theme detail
-                                this.themeObj.themeDetail = basicInfo.detail;
-                                this.themeDetail = basicInfo.detail;
+                                this.themeObj.themeDetail = basicInfo.localizationList[0].description;
+                                this.themeDetail = basicInfo.localizationList[0].description;
 
 
                                 //值复制
@@ -950,10 +950,10 @@ var vue = new Vue({
             //更新detail
             var detail = this.edit_themeObj.themeDetail;
             if(typeof(detail) != 'undefined'){
-                this.themeObj.detail = detail.trim();
+                this.themeObj.themeDetail = detail.trim();
             }
             else{
-                this.themeObj.detail = ''
+                this.themeObj.themeDetail = ''
             }
 
             //更新照片
@@ -1093,7 +1093,7 @@ var vue = new Vue({
         edit_themeDetail(){
 
             //显示detail
-            $("#themeText").html(this.themeObj.detail);
+            $("#themeText").html(this.themeObj.themeDetail);
             // if(++this.log_detail==1)
             // {
                 initTinymce('textarea#themeText')
@@ -1782,7 +1782,7 @@ var vue = new Vue({
             };
             let url, contentType;
 
-            url = "/dataItem/searchByName";
+            url = getItemList();
             data = JSON.stringify(data);
             contentType = "application/json";
 
@@ -1827,7 +1827,7 @@ var vue = new Vue({
             };
             let url, contentType;
 
-            url = "/dataApplication/searchByName";
+            url = getMethodList();
             data = JSON.stringify(data);
             contentType = "application/json";
 

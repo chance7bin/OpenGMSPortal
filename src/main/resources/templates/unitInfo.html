@@ -89,7 +89,7 @@
                     </div>
 
                     <div class="info">
-                        <p th:text="${info.description}" style="word-break: break-word;"></p>
+                        <p th:text="${info.overview}" style="word-break: break-word;"></p>
                         <div class="tags">
                             <span class="badge badge-info">Unit & Metric</span>
                         </div>
@@ -134,7 +134,7 @@
                         <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
                             </div>
                         </div>
                     </div>
@@ -303,8 +303,8 @@
                         <span th:text="${user.name}+' ('+${year}+'). '+${info.name}+', Unit & Metric, OpenGMS, '">
                         Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                         </span>
-                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.oid}"
-                           th:text="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.oid}">
+                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.id}">
                             https://geomodeling.njnu.edu.cn/modelitem/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -341,13 +341,13 @@
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
                                 <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/unit/'+${info.oid}" target="_blank">View
+                                        th:href="'/version/historyList/unit/'+${info.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -388,7 +388,7 @@
                         <user-avatar email="user.email" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
                             </div>
                         </div>
                     </div>
@@ -416,13 +416,13 @@
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
                                 <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/unit/'+${info.oid}" target="_blank">View
+                                        th:href="'/version/historyList/unit/'+${info.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -461,7 +461,7 @@
                 <div class="modal-body">
                     <form id="addConceptLocalizationForm" role="form" method="post">
                         <div class="form-group hidden">
-                            <input type="text" name="id" class="form-control" th:value="${info.oid}">
+                            <input type="text" name="id" class="form-control" th:value="${info.id}">
                         </div>
                         <div class="form-group">
                             <label>Language</label>
