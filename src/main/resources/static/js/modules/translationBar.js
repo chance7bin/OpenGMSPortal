@@ -110,7 +110,7 @@ Vue.component("translation-bar",
                     if(typeof jQuery == 'undefined'){//如果没有引入jq
                         this.getChildDomByTagByAttr(scopeDom,'all','translateId',key,targets)
                     }else{
-                        let searchString = `[translateId=${ele}]`
+                        let searchString = `[translateId=${key}]`
                         targets = $(searchString)
 
                     }
