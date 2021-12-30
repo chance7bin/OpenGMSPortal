@@ -92,12 +92,17 @@
                 <!--</a>-->
             <!--</div>-->
             <div class="el-row">
-                <h2 class="main-title">Model Application</h2>
+                <h2 class="main-title">{{htmlJSON.PageName}}</h2>
                 <!--<el-button type="primary">All</el-button>-->
                 <!--<el-button @click="window.location.href='/modelItem/repository1'">1</el-button>-->
                 <!--<el-button @click="window.location.href='/modelItem/repository2'">2</el-button>-->
-                <h4 class="sub-title">The practical application of models.</h4>
-
+                <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
+                <translation-bar
+                        json-file="modelApplication"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px"></translation-bar>
                 <hr>
             </div>
             <div class="flexJustCenter flexWrap">
@@ -110,20 +115,20 @@
                             <div>
                                 <div class="noMargin sectionTitle">
                                     <p>
-                                        Model Execution
+                                        {{htmlJSON.ModelExecution}}
                                     </p>
                                 </div>
 
                                 <div class="sectionDescribe" style="margin-top: 10px">
-                                    <p>We have deployed plenty of models on the web.</p>
-                                    <p>Choose what you need to execute!</p>
+                                    <p>{{htmlJSON.ModelExecution1}}</p>
+                                    <p>{{htmlJSON.ModelExecution2}}</p>
                                 </div>
 
                             </div>
                             <img src="/static/img/work.png" style="height: 30%;align-self: center;"/>
                             <button class="wzhBtn nutBtn plainBtn hoverPurple" @click="loadExecutionGuide()"
                                     style="align-self:flex-end">
-                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">Try it</p>
+                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.TryIt}}</p>
                             </button>
                         </div>
                     </div>
@@ -135,13 +140,13 @@
                             <div>
                                 <div class="noMargin sectionTitle">
                                     <p>
-                                        Model Integration
+                                        {{htmlJSON.ModelIntegration}}
                                     </p>
                                 </div>
 
                             <div class="sectionDescribe"  style="margin-top: 10px">
-                                <p>Single model can not satisfy your demand?</p>
-                                <p>You can integrate models to solve complicated problem.</p>
+                                <p>{{htmlJSON.ModelIntegration1}}</p>
+                                <p>{{htmlJSON.ModelIntegration2}}</p>
                             </div>
 
                             </div>
@@ -149,7 +154,7 @@
                             <button class="wzhBtn nutBtn plainBtn hoverJblue"
                                     @click="loadIntegratedGuideDialog"
                                     style="align-self:flex-end">
-                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">Try it</p>
+                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.TryIt}}</p>
                             </button>
                         </div>
                     </div>
@@ -161,31 +166,30 @@
                             <div>
                                 <div class="noMargin sectionTitle">
                                     <p>
-                                        Parameter Optimization
+                                        {{htmlJSON.ParameterOptimization}}
                                     </p>
                                 </div>
 
                                 <div class="sectionDescribe" style="margin-top: 10px">
-                                    <p>Model results are not exact?</p>
-                                    <p>Try to adjust parameters!</p>
+                                    <p>{{htmlJSON.ParameterOptimization1}}</p>
+                                    <p>{{htmlJSON.ParameterOptimization2}}</p>
                                 </div>
 
                             </div>
                             <img src="/static/img/work.png" style="height: 30%;align-self: center;"/>
                             <button class="wzhBtn nutBtn plainBtn hoverOrange" @click="loadParamOptimaGuideDialog()" style="align-self: center">
-                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">Under
-                                    Construction...</p>
+                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.UnderConstruct}} </p>
                             </button>
                         </div>
                     </div>
                 </section>
 
             </div>
-            <el-dialog title="Model Execution" center :visible.sync="modelExecutionDialog" width="58%">
+            <el-dialog :title=htmlJSON.ModelExecution center :visible.sync="modelExecutionDialog" width="58%">
                 <el-steps :active="guideActive" finish-status="success" align-center>
-                    <el-step title="Step 1" description="select computable model"></el-step>
-                    <el-step title="Step 2" description="load computable model"></el-step>
-                    <el-step title="Step 3" description="start to invoke"></el-step>
+                    <el-step title="Step 1" :description=htmlJSON.ModelExecDialog1 ></el-step>
+                    <el-step title="Step 2" :description=htmlJSON.ModelExecDialog2></el-step>
+                    <el-step title="Step 3" :description=htmlJSON.ModelExecDialog3></el-step>
                 </el-steps>
                 <div class="flexCenter" v-show="guideActive==0" >
                     <img src="/static/img/guide/modelExecuteGuide1.png" style="height: 381px">
@@ -198,21 +202,21 @@
                 </div>
 
                 <div style="margin-top: 10px">
-                    <el-button @click="modelExecutionDialog = false" style="float:left">Cancel</el-button>
+                    <el-button @click="modelExecutionDialog = false" style="float:left">{{htmlJSON.Cancel}}</el-button>
                     <el-button type="primary" v-if="guideActive==2" style="float:right"
-                               @click="window.open('/computableModel/selecttask')">Enter now</el-button>
-                    <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain style="float:right">Next</el-button>
-                    <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">Previous</el-button>
+                               @click="window.open('/computableModel/selecttask')">{{htmlJSON.EnterNow}}</el-button>
+                    <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain style="float:right">{{htmlJSON.Next}}</el-button>
+                    <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">{{htmlJSON.Previous}}</el-button>
                 </div>
 
 
             </el-dialog>
 
-            <el-dialog title="Integrated Modeling" center :visible.sync="integratedModelDialog" width="58%">
+            <el-dialog :title=htmlJSON.ModelIntegration center :visible.sync="integratedModelDialog" width="58%">
                 <el-steps :active="guideActive" finish-status="success" align-center>
-                    <el-step title="Step 1" description="select computable model"></el-step>
-                    <el-step title="Step 2" description="config integrated task"></el-step>
-                    <el-step title="Step 3" description="start to invoke"></el-step>
+                    <el-step title="Step 1" :description=htmlJSON.ModelIntegerDialog1></el-step>
+                    <el-step title="Step 2" :description=htmlJSON.ModelIntegerDialog2></el-step>
+                    <el-step title="Step 3" :description=htmlJSON.ModelIntegerDialog3></el-step>
                 </el-steps>
                 <div class="flexCenter" v-show="guideActive==0" >
                     <img src="/static/img/guide/integratedGuide1.png" style="height: 381px">
@@ -225,17 +229,17 @@
                 </div>
 
                 <div style="margin-top: 10px">
-                    <el-button @click="integratedModelDialog = false" style="float:left">Cancel</el-button>
+                    <el-button @click="integratedModelDialog = false" style="float:left">{{htmlJSON.Cancel}}</el-button>
                     <el-button type="primary" v-if="guideActive==2" style="float:right"
-                               @click="window.open('/computableModel/integratedModel')">Enter now</el-button>
-                    <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain  style="float:right">Next</el-button>
-                    <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">Previous</el-button>
+                               @click="window.open('/computableModel/integratedModel')">{{htmlJSON.EnterNow}}</el-button>
+                    <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain  style="float:right">{{htmlJSON.Next}}</el-button>
+                    <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">{{htmlJSON.Previous}}</el-button>
                 </div>
 
 
             </el-dialog>
 
-            <el-dialog title="Parameter Optimization" center :visible.sync="paramOptimaDialog" width="58%">
+            <el-dialog :title=htmlJSON.ParameterOptimization center :visible.sync="paramOptimaDialog" width="58%">
                 <el-steps :active="guideActive" finish-status="success" align-center>
                     <el-step title="Step 1" description=""></el-step>
                     <el-step title="Step 2" description=""></el-step>
@@ -252,11 +256,11 @@
                 </div>
 
                 <div style="margin-top: 10px">
-                    <el-button @click="integratedModelDialog = false" style="float:left">Cancel</el-button>
+                    <el-button @click="integratedModelDialog = false" style="float:left">{{htmlJSON.Cancel}}</el-button>
                     <el-button type="primary" v-if="guideActive==2" style="float:right"
-                               @click="underConstruction">Under construction...</el-button>
-                    <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain style="float:right">Next</el-button>
-                    <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">Previous</el-button>
+                               @click="underConstruction">{{htmlJSON.UnderConstruct}}</el-button>
+                    <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain style="float:right">{{htmlJSON.Next}}</el-button>
+                    <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">{{htmlJSON.Previous}}</el-button>
                 </div>
 
 
@@ -327,6 +331,11 @@
 <script src="/static/js/common/bootstrap-select.js"></script>
 
 <script src="/static/element-ui/umd/locale/en.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/page/modelApplication.js"></script>
 <script src="/static/js/common/navbar.js"></script>
 </html>

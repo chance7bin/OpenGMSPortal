@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
 
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/list.css">
@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="/static/css/page/model_items.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
+
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+
+
     <style>
         .el-card__body a:hover {
             color: #0886E9;
@@ -45,8 +50,15 @@
         <div class="el-col el-col-20 el-col-offset-2">
 
             <div class="el-row">
-                <h2 class="main-title">Thematic Center</h2>
-                <h4 class="sub-title">OpenGMS</h4>
+                <h2 class="main-title">{{htmlJSON.PageName}}</h2>
+                <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
+                <translation-bar
+                        json-file="Thematic"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px">
+                </translation-bar>
                 <hr>
             </div>
             <div class="el-row" style="margin-top:29px; margin-bottom:20px;">
@@ -281,10 +293,15 @@
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/js/common/bootstrap.js"></script>
 <script src="/static/js/common/bootstrap-select.js"></script>
-<script src="/static/js/page/spatialReferenceRepository.js"></script>
+<!--<script src="/static/js/page/spatialReferenceRepository.js"></script>-->
 <script src="/static/element-ui/umd/locale/en.js"></script>
+
+
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+<script src="/static/js/page/thematic.js"></script>
 <script src="/static/js/common/navbar.js"></script>
-
-
 
 </html>
