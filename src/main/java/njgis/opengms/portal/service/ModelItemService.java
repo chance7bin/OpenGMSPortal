@@ -106,12 +106,17 @@ public class ModelItemService {
 
         modelItemDao.save(modelInfo);
 
-        List<String> classifications = new ArrayList<>();
-        for (String classification : modelInfo.getClassifications()) {
-            classifications.add(classificationDao.findFirstById(classification).getNameEn());
-        }
+        // List<String> classifications = new ArrayList<>();
+        // for (String classification : modelInfo.getClassifications()) {
+        //     // classifications.add(classificationDao.findFirstById(classification).getNameEn());
+        //     // 拿到该分类的id
+        //     classifications.add(classificationDao.findFirstById(classification).getId());
+        // }
 
-        JSONArray classResult = modelClassificationService.getClassifications(classifications);
+        // 直接拿classification的id就可以了
+        // JSONArray classResult = modelClassificationService.getClassifications(classifications);
+        JSONArray classResult = modelClassificationService.getClassifications(modelInfo.getClassifications());
+
         //详情页面
 //        String detailResult;
 //        String model_detailDesc=modelInfo.getDetail();
