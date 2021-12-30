@@ -108,7 +108,7 @@ new Vue({
                         localStorage.setItem('password', this.ruleForm.password);
                         localStorage.setItem('remember', "yes");
                     }
-                    if (result == "1") {
+                    if (result.code == "0") {
                         this.$notify.success({
                             title: 'Success',
                             message: 'Login successful ! Redirecting...',
