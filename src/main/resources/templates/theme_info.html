@@ -421,9 +421,6 @@
                     <div class="title text-center" style="margin-bottom:40px;">
                         <h3>
                             <span>Theme Info</span>
-                            <!--<el-button class="editicon" type="primary" @click="edit_theme_info" icon="el-icon-edit" circle style="display: none"></el-button>-->
-<!--                            <el-button class="editIcon" type="primary" @click="edit_theme('0')" icon="el-icon-edit" style="display: none"></el-button>-->
-                            <!--<a href="javascript:void(0)" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit_theme_info"></a>-->
                         </h3>
                     </div>
                     <div v-html="edit_themeObj.themeDetail" v-show="DetailEditActiveIndex===0" id="detailinfo" class="detailIntroducePanel"></div>
@@ -605,7 +602,7 @@
                                     <div class="x_content data_item" :id="'dataClass_edit'+index+'-'+index2" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div v-for="(item,index3) in data.tableData" class="col-md-2 model_col">
-                                                <a :href="'https://geomodeling.njnu.edu.cn/dataItem/'+item.oid" target = "_blank">
+                                                <a :href="'/dataItem/detail/'+item.oid" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -630,7 +627,7 @@
                             <div class="x_content data_item" :id="'dataClass_edit'+index" style="width: 100%">
                                 <el-row type="center" id="content" >
                                     <div v-for="item in dataClass.tableData" class="col-md-2 model_col">
-                                        <a :href="'https://geomodeling.njnu.edu.cn/dataItem/'+item.oid" target = "_blank">
+                                        <a :href="'/dataItem/detail/'+item.oid" target = "_blank">
                                             <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                 <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                 <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -660,7 +657,7 @@
                                 <div class="x_content data_item" th:id="'dataClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                            <a th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${item.oid}" target = "_blank">
+                                            <a th:href="'/dataItem/detail/'+${item.oid}" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -685,7 +682,7 @@
                             <div class="x_content data_item" th:id="'dataClass'+${index.index}" style="width: 100%">
                                 <el-row type="center" id="content" >
                                     <div th:each="item:${dataClass.content}" class="col-md-2 model_col">
-                                        <a th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${item.oid}" target = "_blank">
+                                        <a th:href="'/dataItem/detail/'+${item.oid}" target = "_blank">
                                             <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                 <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                 <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -738,7 +735,7 @@
                                     <div class="x_content data_item" :id="'dataMethodClass_edit'+index+'-'+index2" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div v-for="(item,index3) in dataMethod.tableData" class="col-md-2 model_col">
-                                                <a :href="'https://geomodeling.njnu.edu.cn/dataApplication/'+item.oid" target = "_blank">
+                                                <a :href="'https://geomodeling.njnu.edu.cn/dataMethod/detail'+item.oid" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
                                                             <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
@@ -763,7 +760,7 @@
                                 <div class="x_content data_item" :id="'dataMethodClass_edit'+index" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div v-for="item in dataMethodClass.tableData" class="col-md-2 model_col">
-                                            <a :href="'https://geomodeling.njnu.edu.cn/dataApplication/'+item" target = "_blank">
+                                            <a :href="'https://geomodeling.njnu.edu.cn/dataMethod/detail'+item" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -794,7 +791,7 @@
                                     <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                                <a th:href="'https://geomodeling.njnu.edu.cn/dataApplication/'+${item.oid}" target = "_blank">
+                                                <a th:href="'https://geomodeling.njnu.edu.cn/dataMethod/detail'+${item.oid}" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -998,7 +995,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/'+relateType+'/'+props.row.oid"
+                                                <a :href="'/'+relateType+'/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1054,7 +1051,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                                <a :href="'/repository/'+relateType+'/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1142,7 +1139,7 @@
                                                     label="Name">
                                                 <template
                                                         slot-scope="props">
-                                                    <a :href="'/'+relateType+'/'+props.row.oid"
+                                                    <a :href="'/'+relateType+'/'+props.row.id"
                                                        target="_blank">{{props.row.name}}</a>
                                                 </template>
                                             </el-table-column>
@@ -1199,7 +1196,7 @@
                                                     label="Name">
                                                 <template
                                                         slot-scope="props">
-                                                    <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                                    <a :href="'/repository/'+relateType+'/'+props.row.id"
                                                        target="_blank">{{props.row.name}}</a>
                                                 </template>
                                             </el-table-column>
@@ -1310,7 +1307,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/'+relateType+'/'+props.row.oid"
+                                                <a :href="'/'+relateType+'/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1367,7 +1364,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                                <a :href="'/repository/'+relateType+'/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1574,7 +1571,7 @@
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
 <script src="/static/element-ui/umd/locale/en.js"></script>
-
+<script src="/static/js/apidoc/dataApi.js"></script>
 <script type="text/javascript" src="/static/js/common/pageEn.js"></script>
 <script src="/static/js/common/bootstrap.min.js"></script>
 

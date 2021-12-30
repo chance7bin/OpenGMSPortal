@@ -92,7 +92,7 @@ Vue.component("editConceptualModelModule",
                     sortType: "default",
                     classifications: ["all"],
                 };
-                let url = "/modelItem/list";
+                let url = "/modelItem/items";
                 let contentType = "application/x-www-form-urlencoded";
 
                 $.ajax({

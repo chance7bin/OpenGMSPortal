@@ -450,4 +450,13 @@ public class DataItemRestController {
         return genericService.getById(id, ItemTypeEnum.DataItem);
     }
 
+
+    @ApiOperation(value = "返回数据应用页面")
+    @RequestMapping("/application")
+    public ModelAndView getApplication(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("data_application");
+        modelAndView.addObject("dataType","application");
+        return modelAndView;
+    }
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${dataApplicationInfo.name}+' | Data Application | OpenGMS'">Data Application | OpenGMS</title>
+    <title th:text="${dataMethodInfo.name}+' | Data Application | OpenGMS'">Data Application | OpenGMS</title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -49,19 +49,19 @@
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title">
-                    <i th:if="${dataApplicationInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em pull-right"></i>
-                    <i th:if="${dataApplicationInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em pull-right"></i>
-                    <i th:if="${dataApplicationInfo.status=='Private'}" class="el-icon-lock private fontsize-2em pull-right"></i>
+                    <i th:if="${dataMethodInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em pull-right"></i>
+                    <i th:if="${dataMethodInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em pull-right"></i>
+                    <i th:if="${dataMethodInfo.status=='Private'}" class="el-icon-lock private fontsize-2em pull-right"></i>
                     <!--</el-tooltip>-->
-                    <h2 th:utext="${dataApplicationInfo.name}"
+                    <h2 th:utext="${dataMethodInfo.name}"
                         style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>
 
-                    <a href="javascript:void(0);" th:if="${dataApplicationInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x'
+                    <a href="javascript:void(0);" th:if="${dataMethodInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x'
                        aria-hidden='true'
                        @click="edit" style="float: right;">
                     </a>
                     <!--<el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="left">-->
-                        <!--<li th:if="${dataApplicationInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>-->
+                        <!--<li th:if="${dataMethodInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>-->
                     <!--</el-tooltip>-->
 
                     <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
@@ -70,27 +70,27 @@
                     <div  class="img">
                         <!--<img th:case="''" src="/static/img/model/calcModel.png">-->
                         <!--<img src="/static/img/model/logical.png">-->
-                        <!--<img th:case="*" th:src="'/static/img'+${dataApplicationInfo.image}">-->
-                        <div th:unless="${dataApplicationInfo.image}">
-                            <avatar th:username="${dataApplicationInfo.name}" :size="90" :rounded="false"></avatar>
+                        <!--<img th:case="*" th:src="'/static/img'+${dataMethodInfo.image}">-->
+                        <div th:unless="${dataMethodInfo.image}">
+                            <avatar th:username="${dataMethodInfo.name}" :size="90" :rounded="false"></avatar>
                         </div>
-                        <div th:if="${dataApplicationInfo.image}">
-                            <img th:src="'/static'+${dataApplicationInfo.image}" class="image">
+                        <div th:if="${dataMethodInfo.image}">
+                            <img th:src="'/static'+${dataMethodInfo.image}" class="image">
                         </div>
                     </div>
                     <div class="info" style="padding-top:0px">
-                        <p th:text="${dataApplicationInfo.description}"></p>
+                        <p th:text="${dataMethodInfo.overview}"></p>
                         <div class="tags">
                             <span class="label label-warning">
                                 Data Application
                             </span>
-                            <span th:if="${dataApplicationInfo.contentType=='Code'}" class="label label-info"
+                            <span th:if="${dataMethodInfo.contentType=='Code'}" class="label label-info"
                                   style="margin-left: 10px">Source Code</span>
-                            <span th:if="${dataApplicationInfo.contentType=='Library'}" class="label label-info"
+                            <span th:if="${dataMethodInfo.contentType=='Library'}" class="label label-info"
                                   style="margin-left: 10px">Library</span>
-                            <span th:if="${dataApplicationInfo.contentType=='Service URL'}" class="label label-info"
+                            <span th:if="${dataMethodInfo.contentType=='Service URL'}" class="label label-info"
                                   style="margin-left: 10px">Service</span>
-                            <span th:if="${dataApplicationInfo.contentType=='Link'}" class="label label-info"
+                            <span th:if="${dataMethodInfo.contentType=='Link'}" class="label label-info"
                                   style="margin-left: 10px">dataApplicationInfo</span>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                     <!--<div th:if="${history!=true}" class="detail_option">-->
                         <!--&lt;!&ndash;<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>&ndash;&gt;-->
                         <!--&lt;!&ndash;<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>&ndash;&gt;-->
-                        <!--<span th:if="${dataApplicationInfo.contentType=='Package'}">-->
+                        <!--<span th:if="${dataMethodInfo.contentType=='Package'}">-->
                             <!--<button th:unless="${modelInfo.deploy==true}" class="btn btn-lg btn-info" type="button"-->
                                     <!--@click="dialogVisible = true">Deploy-->
                             <!--</button>-->
@@ -148,7 +148,7 @@
             </div>
 
             <div id="Authorship0" class="detail_block minScreen"
-                 th:if="${dataApplicationInfo.authorship!=null&&#lists.size(dataApplicationInfo.authorship)!=0}">
+                 th:if="${dataMethodInfo.authorships!=null&&#lists.size(dataMethodInfo.authorships)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
                         <h4>Authorship</h4>
@@ -160,7 +160,7 @@
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${dataApplicationInfo.authorship}">
+                    <div style="text-align: left;" th:each="author,key:${dataMethodInfo.authorships}">
                         <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
@@ -184,14 +184,14 @@
                 </div>
             </div>
 
-            <div id="description" class="detail_block" th:if="${dataApplicationInfo.detail!=null&&dataApplicationInfo.detail!=''}">
+            <div id="description" class="detail_block" th:if="${#lists.size(dataMethodInfo.localizationList)} lt 0">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Detailed Description</h4>
                     </div>
                 </div>
                 <div class="block_content">
-                    <div th:utext="${dataApplicationInfo.detail}" id="detail" class="detailIntroducePanel">
+                    <div th:utext="${dataMethodInfo.localizationList[0].description}" id="detail" class="detailIntroducePanel">
                     </div>
                 </div>
                 <div class="fullPaper text-center hide">
@@ -203,7 +203,7 @@
             </div>
 
             <div id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"
-                 th:if="${(dataApplicationInfo.contentType=='Code'||dataApplicationInfo.contentType=='Library'||dataApplicationInfo.contentType=='Package')&&(dataApplicationInfo.resources!=null&&#lists.size(dataApplicationInfo.resources)>0)}">
+                 th:if="${(dataMethodInfo.contentType=='Code'||dataMethodInfo.contentType=='Library'||dataMethodInfo.contentType=='Package')&&(dataMethodInfo.resources!=null&&#lists.size(dataMethodInfo.resources)>0)}">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Resource</h4>
@@ -227,7 +227,7 @@
                              style="width: 150px;">
                             <i class="fas fa-file-download"></i>
                             <a target="_blank"
-                               th:href="'/static'+'/DataApplication/'+${dataApplicationInfo.contentType}+${data.path}"
+                               th:href="'/static'+'/DataApplication/'+${dataMethodInfo.contentType}+${data.path}"
                                style="color:black">
                                 <div class="resouceFile el-card__body">
                                     <div class="el-row">
@@ -287,7 +287,7 @@
             </div>
 
             <div id="link" class="detail_block"
-                 th:if="${dataApplicationInfo.contentType=='Link'||(dataApplicationInfo.contentType=='Service')}">
+                 th:if="${dataMethodInfo.contentType=='Link'||(dataMethodInfo.contentType=='Service')}">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Link</h4>
@@ -295,7 +295,7 @@
                 </div>
                 <div class="block_content flex">
                     <div id="link-text" class="width:100%">
-                        <a th:href="${dataApplicationInfo.url}" th:text="${dataApplicationInfo.url}" target="_blank">
+                        <a th:href="${dataMethodInfo.url}" th:text="${dataMethodInfo.url}" target="_blank">
                             https://geomodeling.njnu.edu.cn/conceptualmodel/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -358,14 +358,14 @@
                 <div class="block_content">
                     <div id="cite-text" class="width:100%">
                         <span th:if="${authorship!=''}"
-                              th:text="${authorship}+' ('+${year}+'). '+${dataApplicationInfo.name}+', Data Application, OpenGMS, '"></span>
+                              th:text="${authorship}+' ('+${year}+'). '+${dataMethodInfo.name}+', Data Application, OpenGMS, '"></span>
                         <span th:if="${authorship==''}"
-                              th:text="${user.name}+' ('+${year}+'). '+${dataApplicationInfo.name}+', Data Application, OpenGMS, '">
+                              th:text="${user.name}+' ('+${year}+'). '+${dataMethodInfo.name}+', Data Application, OpenGMS, '">
                             Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                             </span>
                         <a style="word-break:break-all;"
-                           th:href="'https://geomodeling.njnu.edu.cn/dataApplication/'+${dataApplicationInfo.oid}"
-                           th:text="'https://geomodeling.njnu.edu.cn/dataApplication/'+${dataApplicationInfo.oid}">
+                           th:href="'https://geomodeling.njnu.edu.cn/dataApplication/'+${dataMethodInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/dataApplication/'+${dataMethodInfo.id}">
                             https://geomodeling.njnu.edu.cn/computableModel/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -446,7 +446,7 @@
                         <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
                                     Marvolo Riddle</h4></a>
                             </div>
                         </div>
@@ -477,7 +477,7 @@
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${dataApplicationInfo.authorship}">
+                    <div style="text-align: left;" th:each="author,key:${dataMethodInfo.authorships}">
                         <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
@@ -498,13 +498,13 @@
                             </div>
                         </div>
                     </div>
-                    <div th:if="${dataApplicationInfo.authorship==null||#lists.size(dataApplicationInfo.authorship)==0}">
+                    <div th:if="${dataMethodInfo.authorships==null||#lists.size(dataMethodInfo.authorships)==0}">
                         <el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click=""
                                                                               style="text-decoration: underline">claim</a>
                             the item.
                         </el-tag>
                     </div>
-                    <div th:if="${#lists.size(dataApplicationInfo.authorship)>0}">
+                    <div th:if="${#lists.size(dataMethodInfo.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click=""
                                                                           style="text-decoration: underline">Feed
                             back</a></el-tag>

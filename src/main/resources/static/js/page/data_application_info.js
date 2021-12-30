@@ -455,7 +455,7 @@ var data_application_info = new Vue({
         }
     },
     mounted(){
-
+        console.log(11)
         this.lightenContributor = author
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)

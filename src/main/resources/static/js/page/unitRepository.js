@@ -5,6 +5,7 @@ new Vue({
     },
     data: function () {
         return {
+            categoryName:"58d45317-6dfa-4615-94a7-b0549125e2b0",
             activeIndex:'8-4',
             queryType: 'normal',
             searchText: '',
@@ -232,6 +233,9 @@ new Vue({
             classes.push(data.oid);
             this.classifications1 = classes;
             this.getChildren(data.children)
+            if(typeof(data.children) === "undefined") {
+                this.categoryName = data.oid
+            }
             this.pageOption.currentPage=1;
             this.searchText="";
             this.getModels();
@@ -284,7 +288,8 @@ new Vue({
 
             let url="";
             if(query.searchText.trim()==""){
-                url="/repository/getUnitList";
+                url=getUnitList();
+                query.categoryName = this.categoryName
             }
             else{
                 url="/repository/searchUnit";

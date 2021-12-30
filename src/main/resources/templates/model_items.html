@@ -285,13 +285,13 @@
                                     <i v-if="modelItem.status=='Discoverable'"
                                        class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
-                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/'+ modelItem.oid"
+                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/detail/'+ modelItem.id"
                                    target="_blank">{{modelItem.name}}&nbsp&nbsp</a>
                             </div>
                             <div :style="{'display':statistic[key]!='Overview'?'none':'block'}">
 
                                 <div class="detail_overview">
-                                    <a class="img" :href="'/modelItem/'+ modelItem.oid" target="_blank">
+                                    <a class="img" :href="'/modelItem/detail/'+ modelItem.id" target="_blank">
 
                                         <img v-if="modelItem.image==''" src="/static/img/model/model.png"
                                              style="width:90px;height: 90px;">
@@ -464,7 +464,7 @@
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>
 <script src="/static/js/modules/translationBar.js"></script>
-
+<script src="/static/js/apidoc/modelApi.js"></script>
 <script src="/static/js/page/model_items.js"></script>
 
 <script src="/static/element-ui/umd/locale/en.js"></script>

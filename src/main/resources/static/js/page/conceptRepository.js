@@ -10,7 +10,7 @@ new Vue({
             searchText: '',
             classifications1: ["13b822a2-fecd-4af7-aeb8-0503244abe8f"],
             classifications2: ["13b822a2-fecd-4af7-aeb8-0503244abe8f"],
-
+            categoryName:"13b822a2-fecd-4af7-aeb8-0503244abe8f",
             currentClass: "Lighting and visibility",
 
             pageOption: {
@@ -805,6 +805,10 @@ new Vue({
             classes.push(data.oid);
             this.classifications1 = classes;
             this.getChildren(data.children)
+
+            if(typeof(data.children) === "undefined")
+                this.categoryName = data.oid
+
             this.pageOption.currentPage=1;
             this.searchText="";
             this.getModels();
@@ -857,7 +861,8 @@ new Vue({
 
             let url="";
             if(query.searchText.trim()==""){
-                url="/repository/getConceptList";
+                url=getConceptList();
+                query.categoryName = this.categoryName
             }
             else{
                 url="/repository/searchConcept";

@@ -32,7 +32,7 @@ var data_items = new Vue({
             activeNames2:["1"],
             activeName:"first",
             category:[],
-            categoryName:'5f3e42070e989714e8364e9a',
+            categoryName:'a24cba2b-9ce1-44de-ac68-8ec36a535d0e',
             hubnbm:'',
             tObj:new Object(),
             categoryTree:[],
@@ -140,6 +140,7 @@ var data_items = new Vue({
         },
         // 切换类别
         chooseCate(item, event) {
+            console.log("here")
             let all_button=$('.cateButton')
             for (let i = 0; i < all_button.length; i++) {
                 all_button[i].style.color="";
@@ -178,11 +179,9 @@ var data_items = new Vue({
             this.getData()
         },
         goto(id){
-            return "/dataItem/hub/"+id;
+            return getHubById(id)
         },
-        // goto1(id){
-        //     return "/dataItem/hub/"+id;
-        // },
+
         view(id){
             axios.get("/dataItem/viewplus",{
                 params:{
@@ -245,7 +244,8 @@ var data_items = new Vue({
         getData(){
             this.setFindDto()
             let that = this;
-            axios.post("/dataItem/Items/getHubs",that.findDto)
+            console.log(11)
+            axios.post(getHubList(),that.findDto)
                 .then(res =>{
                     setTimeout(()=>{
                         that.list=res.data.data.list;
