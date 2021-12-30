@@ -94,6 +94,13 @@ Vue.component("translation-bar",
             async loadNavBar(){//需要加载navbar的网页触发翻译
                 let content = await this.getLangJson('navbar')
                 let scopeDom = document.getElementById("navBar")
+                let communityDom=document.getElementById("drop1")
+                if(this.currentLang==="zh-cn"){
+                    communityDom.style.width="77px"
+                }else{
+                    communityDom.style.width="127px"
+                }
+
                 this.defautTrans(content,scopeDom)
             },
 
