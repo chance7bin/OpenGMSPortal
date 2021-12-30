@@ -43,30 +43,18 @@ public class TaskMonitorService {
         MongoDatabase db = mongoClient.getDatabase(MONGO_DB_NAME);
         MongoCollection<Document> collection = db.getCollection(MONGO_COLLECTION_NAME);
 
-//        logger.info("---get db---");
         MongoCursor<Document> cursor = collection.find().sort(Sorts.orderBy(Sorts.descending("t_datetime"))).skip(page*10).limit(10).iterator();
-//        logger.info("---get result---");
         // collection.count新版本中已废弃了 ！
         long total = collection.countDocuments();
-//        logger.info("---^^^get result, totally" + total + "^^^---");
         JSONArray jsonArray = new JSONArray();
-//        logger.info("---while---");
         while (cursor.hasNext()){
-//            logger.info("---next---");
             JSONObject task = JSONObject.parseObject(cursor.next().toJson().toString()) ;
-//            logger.info("<---"+ task.getString("t_msrid") +"--->");
             String time = task.getJSONObject("t_datetime").getString("$date");
-//            logger.info("<---"+ time +"--->");
-//             Long lll = Long.parseLong(time);
-//            logger.info("<---"+ lll + lll.getClass()+"--->");
             try{
                 SimpleDateFormat origin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                 SimpleDateFormat target =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = origin.parse(time);
-                // Date date = new Date(lll);
-//                logger.info("<---"+ date +"--->");
                 task.put("t_datetime",target.format(date));
-//                logger.info("---get t_datetime---");
                 jsonArray.add(task);
             }catch (Exception e){
                 logger.error(e.getMessage());
@@ -78,7 +66,6 @@ public class TaskMonitorService {
         result.put("list",jsonArray);
         result.put("total",total);
 
-        logger.info("---get result, totally" + total + "---");
         return result;
     }
 

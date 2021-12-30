@@ -8,17 +8,17 @@
     <link href="/static/css/base/bootstrap.min.css" rel="stylesheet">
     <!--<link rel="stylesheet" th:href="@{/static/ol/ol.css}">-->
     <link rel="stylesheet" th:href="@{/static/leaflet/leaflet.css}">
-    <link rel="stylesheet" th:href="@{/static/css/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static//css/base/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" th:href="@{/static/css/base/style.css}">
     <link rel="stylesheet" th:href="@{/static/css/base/universal.css}">
     <link rel="stylesheet" th:href="@{/static/css/base/itemInfo.css}">
-    <link rel="stylesheet" th:href="@{/static/css/common/wzhFlexContainer.css}">
-    <link rel="stylesheet" th:href="@{/static/css/common/wzhStyle.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/wzhFlexContainer.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/wzhStyle.css}">
     <link rel="stylesheet" th:href="@{/static/css/page/model_item_info.css}">
     <link rel="stylesheet" th:href="@{/static/css/page/repositoryInfo.css}">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
     <style>
         #description h1{
             font-size: 24px;
@@ -127,7 +127,7 @@
                     </div>
 
                     <div class="info">
-                        <p th:text="${info.description != null ? info.description : info.wkt==null?info.wkname:info.wkt}" style="word-break: break-word;"></p>
+                        <p th:text="${info.overview != null ? info.overview : info.wkt==null?info.wkname:info.wkt}" style="word-break: break-word;"></p>
                         <div class="tags">
                             <span class="badge badge-info">Spatial Reference</span>
                         </div>
@@ -171,7 +171,7 @@
                         <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
                             </div>
                         </div>
                     </div>
@@ -499,8 +499,8 @@
                         <span th:text="${user.name}+' ('+${year}+'). '+${info.name}+', Spatiotemporal Reference, OpenGMS, '">
                         Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                         </span>
-                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/spatialReference/'+${info.oid}"
-                           th:text="'https://geomodeling.njnu.edu.cn/repository/spatialReference/'+${info.oid}">
+                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/spatialReference/'+${info.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/repository/spatialReference/'+${info.id}">
                             https://geomodeling.njnu.edu.cn/modelItem/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -543,7 +543,7 @@
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/spatialReference/'+${info.oid}" target="_blank">View
+                                        th:href="'/version/historyList/spatialReference/'+${info.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -585,7 +585,7 @@
                         <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
                             </div>
                         </div>
                     </div>
@@ -630,7 +630,7 @@
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/spatialReference/'+${info.oid}" target="_blank">View
+                                        th:href="'/version/historyList/spatialReference/'+${info.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -819,7 +819,7 @@
                 <div class="modal-body">
                     <form id="addConceptLocalizationForm" role="form" method="post">
                         <div class="form-group hidden">
-                            <input type="text" name="id" class="form-control" th:value="${info.oid}">
+                            <input type="text" name="id" class="form-control" th:value="${info.id}">
                         </div>
                         <div class="form-group">
                             <label>Language</label>

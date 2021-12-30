@@ -3,36 +3,41 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Sorts;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.CheckedModel;
 import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.UserDailyViewCount;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.support.ParamInfo;
+import njgis.opengms.portal.entity.doo.support.TaskData;
+import njgis.opengms.portal.entity.doo.task.CheckedHistory;
+import njgis.opengms.portal.entity.doo.task.CheckedModel;
 import njgis.opengms.portal.entity.doo.task.InputData;
 import njgis.opengms.portal.entity.doo.task.InputDataChildren;
-import njgis.opengms.portal.entity.doo.task.ModelListItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.task.ResultDataDTO;
-import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
 import njgis.opengms.portal.entity.dto.task.TaskInvokeDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
-import njgis.opengms.portal.utils.XmlTool;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -85,6 +90,14 @@ public class ManagementSystemService {
     @Value("${dataServerManager}")
     private String dataServerManager;
 
+    @Resource(name="taskCollection")
+    MongoCollection<Document> taskCollection;
+
+    @Resource(name="serverCollection")
+    MongoCollection<Document> serverCollection;
+
+
+
 
     public JsonResult searchDeployedModel(FindDTO findDTO) {
 
@@ -93,6 +106,7 @@ public class ManagementSystemService {
 
         //得到查到的结果并更新下计算模型的运行状态
         content = updateTaskStatus(content);
+
         JSONArray jsonArray = new JSONArray();
         for (ComputableModel computableModel : content) {
             JSONObject o = new JSONObject();
@@ -107,6 +121,11 @@ public class ManagementSystemService {
             o.put("dailyViewCount",computableModel.getDailyViewCount());
             o.put("md5",computableModel.getMd5());
             o.put("checkedModel",computableModel.getCheckedModel());
+
+            //得到 部署这个模型的模型容器地址
+            List<String> container = getModelContainerListByMd5(computableModel.getMd5());
+            o.put("deployedMSR",container);
+
             jsonArray.add(o);
         }
 
@@ -118,6 +137,15 @@ public class ManagementSystemService {
         return ResultUtils.success(result);
     }
 
+
+    /**
+     * invokeModel方法不管调用成功还是失败，都会把本次调用的情况存在checkedModel
+     * 调用成功才会有taskId，调用失败的话错误信息在CheckedModel的msg里
+     * @param modelId 调用模型id
+     * @param email 调用者email
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     * @Author bin
+     **/
     public JsonResult invokeModel(String modelId, String email) {
 
         ComputableModel computableModel = computableModelDao.findFirstById(modelId);
@@ -133,68 +161,161 @@ public class ManagementSystemService {
         JsonResult initTaskRes = taskService.initTask(modelId, email);
         JSONObject initTaskData = (JSONObject)initTaskRes.getData();
         int generateTaskFlag = (int) initTaskData.get("generateTaskFlag");
-        if (generateTaskFlag != 1){
+        if (generateTaskFlag != ResultEnum.SUCCESS.getCode()){
             if (generateTaskFlag == -2){
                 checkedModel.setOnline(false);
+                checkedModel.setStatus(-1);
                 saveComputableModel(computableModel,checkedModel,"未找到相应服务");
                 return ResultUtils.error("未找到相应服务");
             } else {
                 // checkedModel.setOnline(true);
+                checkedModel.setStatus(-1);
                 saveComputableModel(computableModel,checkedModel,"初始化任务失败");
                 return ResultUtils.error("初始化任务失败");
             }
         }
 
+        // 调用模型所需的参数
+        JSONObject invokeParams = null;
+
         //判断是否有测试数据
         JSONObject modelInfo = (JSONObject) initTaskData.get("modelInfo");
         boolean hasTest = (boolean) modelInfo.get("hasTest");
-        if (!hasTest){
-            checkedModel.setHasTest(false);
-            saveComputableModel(computableModel,checkedModel,"未找到测试数据");
-            return ResultUtils.error("未找到测试数据");
+        if (hasTest){
+            //如果modelInfo里的hasTest为true，就可以直接进行输入数据的构造了
+            checkedModel.setHasTest(true);
+
+            //加载数据
+            JsonResult loadTestDataRes = taskService.loadTestData(modelId, email);
+            if (loadTestDataRes.getCode() != ResultEnum.SUCCESS.getCode()){
+                checkedModel.setStatus(-1);
+                saveComputableModel(computableModel,checkedModel,"加载测试数据失败");
+                return ResultUtils.error("加载测试数据失败");
+            }
+
+            List<ResultDataDTO> loadTestDataData = (List<ResultDataDTO>)loadTestDataRes.getData();
+
+            TaskInvokeDTO taskInvokeDTO;
+            try {
+                taskInvokeDTO = buildInvokeParams(modelId,initTaskData,loadTestDataData);
+            }catch (Exception e){
+                // log.error(e.getMessage());
+                e.printStackTrace();
+                checkedModel.setStatus(-1);
+                saveComputableModel(computableModel,checkedModel,"构造输入数据出错");
+                return ResultUtils.error("构造输入数据出错");
+            }
+
+            invokeParams = JSON.parseObject(JSON.toJSONString(taskInvokeDTO));
+
+        }
+        else {
+            //hasTest为false的话，去task表里面找最先执行成功的那个inputs作为输入参数，没有的话才真的没有测试数据
+            FindDTO findDTO = new FindDTO();
+            findDTO.setSortField("runTime");
+            findDTO.setAsc(true);
+            findDTO.setPage(1);
+            findDTO.setPageSize(4);
+            Pageable pageable = genericService.getPageable(findDTO);
+            //获取published task
+            Page<Task> tasks = taskDao.findByComputableIdAndPermissionAndStatus(modelId, "public", 2, pageable);
+            List<Task> ts = tasks.getContent();
+
+            if (ts.size() != 0){
+
+                checkedModel.setHasTest(true);
+
+                // 取索引第一个， 构造inputdata
+                List<TaskData> inputs = ts.get(0).getInputs();
+                // TaskData -> InputData
+                List<InputData> inputDataList = new ArrayList<>();
+                for (TaskData input : inputs) {
+                    InputData inputData = new InputData();
+                    BeanUtils.copyProperties(input,inputData);
+                    inputDataList.add(inputData);
+                }
+
+                TaskInvokeDTO taskInvoke = new TaskInvokeDTO();
+                taskInvoke.setOid(modelId);
+                JSONObject taskInfo = (JSONObject) initTaskData.get("taskInfo");
+                taskInvoke.setIp(taskInfo.getString("ip"));
+                taskInvoke.setPort(taskInfo.getString("port"));
+                taskInvoke.setPid(taskInfo.getString("pid"));
+                taskInvoke.setInputs(inputDataList);
+
+                invokeParams = JSON.parseObject(JSON.toJSONString(taskInvoke));
+            } else {
+                checkedModel.setHasTest(false);
+                checkedModel.setStatus(-1);
+                saveComputableModel(computableModel,checkedModel,"未找到测试数据");
+                return ResultUtils.error("未找到测试数据");
+            }
         }
 
-        checkedModel.setHasTest(true);
 
-        //加载数据
-        JsonResult loadTestDataRes = taskService.loadTestData(modelId, email);
-        if (loadTestDataRes.getCode() != 1){
-            saveComputableModel(computableModel,checkedModel,"加载测试数据失败");
-            return ResultUtils.error("加载测试数据失败");
-        }
 
-        List<ResultDataDTO> loadTestDataData = (List<ResultDataDTO>)loadTestDataRes.getData();
 
-        TaskInvokeDTO taskInvokeDTO;
-        try {
-            taskInvokeDTO = buildInvokeParams(modelId,initTaskData,loadTestDataData);
-        }catch (Exception e){
-            log.error(e.getMessage());
-            e.printStackTrace();
-            saveComputableModel(computableModel,checkedModel,"构造输入数据出错");
-            return ResultUtils.error("构造输入数据出错");
-        }
-
-        JSONObject invokeParams = JSON.parseObject(JSON.toJSONString(taskInvokeDTO));
         JsonResult result = taskService.handleInvoke(invokeParams, email);
 
-        if (result.getCode() != 1){
+        if (result.getCode() != ResultEnum.SUCCESS.getCode()){
+            checkedModel.setStatus(-1);
             saveComputableModel(computableModel,checkedModel,"模型调用失败");
             return ResultUtils.error("模型调用失败");
         }
 
         JSONObject resultData = (JSONObject) result.getData();
         // 把检查记录存入表中
-        checkedModel.setStatus(0);
-        checkedModel.getTaskIdList().add(resultData.getString("tid"));
         checkedModel.setHasInvokeSuccess(true);
+        checkedModel.setStatus(0);
+        checkedModel.setInvokeEmail(email);
+        checkedModel.getTaskIdList().add(resultData.getString("tid"));
+        checkedModel.setMsrAddress(getModelContainerByTaskId(resultData.getString("tid")));
         saveComputableModel(computableModel,checkedModel,"模型调用成功");
 
         return result;
 
+    }
 
+
+
+    // 批量调用模型
+    public JsonResult invokeModelBatch(List<String> modelIdList, String email) {
+
+        List<CheckedHistory> checkedHistoryList = new ArrayList<>();
+
+        for (String modelId : modelIdList) {
+
+            // 记录检查的记录
+            CheckedHistory checkedHistory = new CheckedHistory();
+
+            //调用模型
+            JsonResult invokeResult = invokeModel(modelId, email);
+
+            ComputableModel model = computableModelDao.findFirstById(modelId);
+            CheckedModel checkedModel = model.getCheckedModel();
+            BeanUtils.copyProperties(checkedModel,checkedHistory,"taskIdList");
+            checkedHistory.setModelId(modelId);
+            checkedHistory.setModelName(model.getName());
+            User user = userDao.findFirstByEmail(model.getAuthor());
+            checkedHistory.setAuthor(user.getName());
+            if (invokeResult.getCode() == ResultEnum.SUCCESS.getCode()){
+                List<String> taskIdList = checkedModel.getTaskIdList();
+                int size = taskIdList.size();
+                checkedHistory.setTaskId(taskIdList.get(size - 1));
+            }
+
+            checkedHistoryList.add(checkedHistory);
+
+        }
+
+        JsonResult save = saveCheckedList(checkedHistoryList, email);
+        if (save.getCode() != ResultEnum.SUCCESS.getCode())
+            return save;
+
+        return ResultUtils.success(checkedHistoryList);
 
     }
+
 
     //更新模型的检查记录
     public void saveComputableModel(ComputableModel computableModel, CheckedModel checkedModel, String msg){
@@ -288,6 +409,8 @@ public class ManagementSystemService {
     }
 
 
+
+    //更新ComputableModel的运行状态
     public List<ComputableModel> updateTaskStatus(List<ComputableModel> content) {
 
         List<CheckedModel> modelList = new ArrayList<>();
@@ -335,31 +458,20 @@ public class ManagementSystemService {
     }
 
 
-    public JsonResult saveCheckedList(TaskCheckListDTO taskCheckListDTO, String email){
+    public JsonResult saveCheckedList(List<CheckedHistory> checkedHistoryList, String email){
 
         try {
             CheckModelList checkModelList = new CheckModelList();
             checkModelList.setOperator(email);
-            checkModelList.setDraftName(taskCheckListDTO.getDraftName());
-            List<ModelListItem> list = checkModelList.getModelList();
-            List<String> modelList = taskCheckListDTO.getModelList();
-            for (String model : modelList) {
-                ModelListItem modelListItem = new ModelListItem();
-                ComputableModel cm = computableModelDao.findFirstById(model);
-                modelListItem.setId(model);
-                modelListItem.setName(cm.getName());
-                User user = userDao.findFirstByEmail(cm.getAuthor());
-                modelListItem.setAuthor(user.getName());
-                list.add(modelListItem);
-            }
-            checkModelList.setModelList(list);
+            checkModelList.setDraftName(genericService.dateFormat(new Date()));
+
+            checkModelList.setHistoryList(checkedHistoryList);
 
             checkModelListDao.save(checkModelList);
         }catch (Exception e){
             return ResultUtils.error("save error");
         }
         return ResultUtils.success();
-
 
     }
 
@@ -368,10 +480,57 @@ public class ManagementSystemService {
         try {
             Pageable pageable = genericService.getPageable(findDTO);
             Page<CheckModelList> allByDraftName = checkModelListDao.findAllByDraftNameContainsIgnoreCase(findDTO.getSearchText(), pageable);
-            return ResultUtils.success(allByDraftName);
+            List<CheckModelList> content = allByDraftName.getContent();
+            List<CheckModelList> resultList = new ArrayList<>();
+            for (CheckModelList checkModelList : content) {
+                // 更新历史记录的模型运行状态
+                CheckModelList cml = updateHistoryStatus(checkModelList);
+                resultList.add(cml);
+            }
+
+            JSONObject result = new JSONObject();
+            result.put("total",allByDraftName.getTotalElements());
+            result.put("content",resultList);
+
+            return ResultUtils.success(result);
         }catch (Exception e){
             return ResultUtils.error("find error");
         }
+
+    }
+
+
+    // 更新模型检查历史记录的状态
+    public CheckModelList updateHistoryStatus(CheckModelList checkModelList){
+
+        List<CheckedHistory> historyList = checkModelList.getHistoryList();
+
+        //需要更新的taskId列表
+        List<String> ids = new ArrayList<>();
+        for (CheckedHistory history : historyList) {
+            if (history.isHasInvokeSuccess() && (history.getStatus() == 0 || history.getStatus() == 1)){
+                ids.add(history.getTaskId());
+            }
+        }
+
+        List<Task> ts = taskDao.findAllByTaskIdIn(ids);
+        List<Task> newTasks = taskService.updateUserTasks(ts);
+
+        for(Task newTask : newTasks){
+            for(CheckedHistory h:historyList){
+                if(newTask.getTaskId().equals(h.getTaskId())){
+                    // 更新model中checkedModel属性的状态，并保存
+                    h.setStatus(newTask.getStatus());
+                    break;
+                }
+            }
+        }
+
+        checkModelList.setHistoryList(historyList);
+        checkModelListDao.save(checkModelList);
+
+
+        return checkModelList;
 
     }
 
@@ -395,10 +554,11 @@ public class ManagementSystemService {
         return ResultUtils.success(users);
     }
 
-
+    @Value(value = "Public,Discoverable,Private")
+    private List<String> allVisible;
 
     public JSONObject getItemInfo(ItemTypeEnum itemType, SpecificFindDTO specificFindDTO){
-        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType);
+        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType,allVisible);
 
         // 如果有字段需要筛选的话再加
 
@@ -413,6 +573,17 @@ public class ManagementSystemService {
             item.put("lastModifyTime", object.get("lastModifyTime"));
             item.put("status", object.get("status"));
             item.put("viewCount", object.get("viewCount"));
+            List<JSONObject> adminsList = new ArrayList<>();
+            List<String> adminsEmailList = (List<String>) object.get("admins");
+            if (adminsEmailList != null){
+                for (String email : adminsEmailList) {
+                    JSONObject admin = new JSONObject();
+                    admin.put("name",userService.getUserName(email));
+                    admin.put("email",email);
+                    adminsList.add(admin);
+                }
+            }
+            item.put("admins", adminsList);
             item.put("author", userService.getUserName(object.getString("author")));
             if (object.get("invokeCount") != null){
                 item.put("invokeCount", object.get("invokeCount"));
@@ -459,8 +630,8 @@ public class ManagementSystemService {
         List<String> recipientList = Arrays.asList(item.getAuthor());
         recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
 
-        // notice的附加信息
-        String remark = "edited " + item.getName() + "'s status to" + item.getStatus();
+        // notice的附加信息 通知类型为Information时构造msg时使用
+        String remark = "edited " + item.getName() + "'s status to " + item.getStatus();
 
         noticeService.sendNoticeContains(email, OperationEnum.Inform,item.getId(),recipientList, remark);
         return ResultUtils.success();
@@ -603,71 +774,144 @@ public class ManagementSystemService {
     }
 
 
-    //获取所有模型\数据容器
-    public JsonResult getAllServerNodes(){
 
-        JSONArray nodes = new JSONArray();
-        //模型容器节点
-        List<ModelContainer> modelContainerList = modelContainerDao.findAll();
-        for(ModelContainer modelContainer : modelContainerList){
-            JSONObject node = new JSONObject();
-            node.put("geoJson",modelContainer.getGeoInfo());
-            node.put("type","model");
-            nodes.add(node);
+
+    /**
+     * 根据taskId得到运行该任务的模型服务容器地址
+     * @param taskId
+     * @return java.lang.String 模型服务容器地址 ip:port
+     * @Author bin
+     **/
+    public String getModelContainerByTaskId(String taskId){
+
+        //先根据taskId到task表找，得到模型容器的serverId
+        Document filter = new Document();
+        filter.append("_id", new ObjectId(taskId));
+        FindIterable<Document> taskRes = taskCollection.find(filter);
+
+        String serverId = null;
+        for (Document datum : taskRes) {
+            //对应TaskServer中server表的id
+            serverId = datum.getString("t_server");
         }
 
-        //数据容器节点
-        try {
-            HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-            httpRequestFactory.setConnectionRequestTimeout(6000);
-            httpRequestFactory.setConnectTimeout(6000);
-            httpRequestFactory.setReadTimeout(6000);
 
-            String url = "http://" + dataServerManager + "/onlineNodes";
+        if (serverId == null){
+            return "";
+        }
+        //拿到serverId之后再到server表找MSRAddress
+        Document filter2 = new Document();
+        filter2.append("_id", new ObjectId(serverId));
+        FindIterable<Document> serverRes = serverCollection.find(filter2);
 
-            RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
-            String xml = null;
-            try {
-                xml = restTemplate.getForObject(url, String.class);
-            } catch (Exception e) {
-
-            }
-
-            if (xml.equals("err")) {
-                xml = null;
-            }
-
-            if(xml!=null) {
-
-                JSONObject jsonObject = XmlTool.xml2Json(xml);
-                JSONObject jsonNodeInfo = jsonObject.getJSONObject("serviceNodes");
-
-
-
-                try {
-                    JSONArray dataNodes = jsonNodeInfo.getJSONArray("onlineServiceNode");
-
-                    for (int i = 0; i < dataNodes.size(); i++) {
-                        JSONObject dataNode = (JSONObject) dataNodes.get(i);
-                        JSONObject node = new JSONObject();
-                        node.put("geoJson", Utils.getGeoInfoMeta(dataNode.getString("ip")));
-                        node.put("type","data");
-                        nodes.add(node);
-                    }
-                } catch (Exception e) {
-                    JSONObject dataNode = jsonNodeInfo.getJSONObject("onlineServiceNode");
-                    JSONObject node = new JSONObject();
-                    node.put("geoJson",Utils.getGeoInfoMeta(dataNode.getString("ip")));
-                    node.put("type","data");
-                    nodes.add(node);
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        String MSRAddress = null;
+        for (Document server : serverRes) {
+            MSRAddress = server.getString("s_ip") + ":" + server.getInteger("s_port");
         }
 
-        return ResultUtils.success(nodes);
+        return MSRAddress == null ? "" : MSRAddress;
+
     }
 
+
+    /**
+     * 根据计算模型的md5得到部署该模型的模型服务容器列表
+     * @param md5
+     * @return java.util.List<java.lang.String>
+     * @Author bin
+     **/
+    public List<String> getModelContainerListByMd5(String md5){
+
+        Document filter = new Document();
+        filter.append("s_services", md5);
+        FindIterable<Document> serverRes = serverCollection.find(filter);
+
+        List<String> MSRAddress = new ArrayList<>();
+        for (Document server : serverRes) {
+            MSRAddress.add(server.getString("s_ip") + ":" + server.getInteger("s_port"));
+        }
+
+        return MSRAddress;
+
+    }
+
+
+    /**
+     * 根据md5得到计算模型的名字
+     * @param md5
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String getComputableModelNameByMd5(String md5){
+
+        ComputableModel model = computableModelDao.findFirstByMd5(md5);
+        return model.getName();
+
+    }
+
+
+    public JSONObject getTaskList(FindDTO findDTO){
+
+        // 查询的时候从第几个开始查
+        int skipIndex = (findDTO.getPage() - 1) * findDTO.getPageSize();
+
+        // 排序顺序
+        Bson sort = findDTO.getAsc() ? Sorts.ascending("t_datetime") : Sorts.descending("t_datetime");
+
+        FindIterable<Document> result = taskCollection
+            .find()
+            .sort(Sorts.orderBy(sort))
+            .skip(skipIndex)
+            .limit(findDTO.getPageSize());
+
+        long total = taskCollection.countDocuments();
+        List<JSONObject> jsonObject = new ArrayList<>();
+        for (Document document : result) {
+            // JSONObject o = JSONObject.parseObject(JSON.toJSONString(document));
+            JSONObject object = new JSONObject();
+            object.put("msrid",document.getString("t_msrid"));
+            User t_user = userService.getByEmail(document.getString("t_user"));
+            if (t_user != null)
+                object.put("user",t_user.getName());
+            else
+                object.put("user",document.getString("t_user"));
+            object.put("status",document.getString("t_status"));
+            object.put("date",genericService.dateFormat(document.getDate("t_datetime")));
+            object.put("server",document.getString("t_server"));
+            object.put("md5",document.getString("t_pid"));
+            object.put("computableModelName",getComputableModelNameByMd5(document.getString("t_pid")));
+            object.put("runServer",getModelContainerByTaskId(String.valueOf(document.get("_id"))));
+            object.put("deployedServer",getModelContainerListByMd5(document.getString("t_pid")));
+
+            jsonObject.add(object);
+        }
+
+        JSONObject returnRes = new JSONObject();
+        returnRes.put("list",jsonObject);
+        returnRes.put("total",total);
+
+
+        return returnRes;
+    }
+
+
+    public List<JSONObject> getMscList(){
+
+
+        FindIterable<Document> result = serverCollection.find();
+
+        List<JSONObject> list = new ArrayList<>();
+
+        for (Document document : result) {
+            JSONObject object = new JSONObject();
+            object.put("ip",document.getString("s_ip"));
+            object.put("port",document.getInteger("s_port"));
+            object.put("type",document.getInteger("s_type"));
+            object.put("status",document.getBoolean("s_status"));
+            list.add(object);
+        }
+
+        return list;
+    }
 
 }

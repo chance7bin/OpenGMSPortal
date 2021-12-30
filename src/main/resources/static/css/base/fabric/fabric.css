@@ -7679,329 +7679,329 @@
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-light.woff2') format('woff2'), url('../../fonts/leelawadeeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-semilight.woff2') format('woff2'), url('../../fonts/leelawadeeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-regular.woff2') format('woff2'), url('../../fonts/leelawadeeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-semibold.woff2') format('woff2'), url('../../fonts/leelawadeeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-bold.woff2') format('woff2'), url('../../fonts/leelawadeeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Arabic)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Arabic)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Arabic)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Arabic)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Arabic)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Cyrillic)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Cyrillic)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Cyrillic)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Cyrillic)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Cyrillic)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (East European)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (East European)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (East European)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (East European)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (East European)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Greek)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Greek)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Greek)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Greek)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Greek)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Hebrew)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Hebrew)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Hebrew)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Hebrew)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Hebrew)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Vietnamese)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Vietnamese)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Vietnamese)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Vietnamese)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (Vietnamese)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (West European)';
-  src: url('../../fonts/segoeui-light.woff2') format('woff2'), url('../../fonts/segoeui-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-light.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (West European)';
-  src: url('../../fonts/segoeui-semilight.woff2') format('woff2'), url('../../fonts/segoeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (West European)';
-  src: url('../../fonts/segoeui-regular.woff2') format('woff2'), url('../../fonts/segoeui-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-regular.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (West European)';
-  src: url('../../fonts/segoeui-semibold.woff2') format('woff2'), url('../../fonts/segoeui-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Segoe UI Web (West European)';
-  src: url('../../fonts/segoeui-bold.woff2') format('woff2'), url('../../fonts/segoeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/segoeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/segoeui-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Selawik Web';
-  src: url('../../fonts/selawik-light.woff2') format('woff2'), url('../../fonts/selawik-light.woff') format('woff');
+  src: url('../../font-awesome/fonts/selawik-light.woff2') format('woff2'), url('../../font-awesome/fonts/selawik-light.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Selawik Web';
-  src: url('../../fonts/selawik-semilight.woff2') format('woff2'), url('../../fonts/selawik-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/selawik-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/selawik-semilight.woff') format('woff');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Selawik Web';
-  src: url('../../fonts/selawik-regular.woff2') format('woff2'), url('../../fonts/selawik-regular.woff') format('woff');
+  src: url('../../font-awesome/fonts/selawik-regular.woff2') format('woff2'), url('../../font-awesome/fonts/selawik-regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Selawik Web';
-  src: url('../../fonts/selawik-semibold.woff2') format('woff2'), url('../../fonts/selawik-semibold.woff') format('woff');
+  src: url('../../font-awesome/fonts/selawik-semibold.woff2') format('woff2'), url('../../font-awesome/fonts/selawik-semibold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Selawik Web';
-  src: url('../../fonts/selawik-bold.woff2') format('woff2'), url('../../fonts/selawik-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/selawik-bold.woff2') format('woff2'), url('../../font-awesome/fonts/selawik-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-semilight.woff2') format('woff2'), url('../../fonts/leelawadeeui-semilight.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-semilight.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-semilight.woff') format('woff');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Leelawadee UI Web';
-  src: url('../../fonts/leelawadeeui-bold.woff2') format('woff2'), url('../../fonts/leelawadeeui-bold.woff') format('woff');
+  src: url('../../font-awesome/fonts/leelawadeeui-bold.woff2') format('woff2'), url('../../font-awesome/fonts/leelawadeeui-bold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
@@ -16062,7 +16062,7 @@
 @font-face {
   font-family: 'FabricMDL2Icons';
   /*src: url('https://static2.sharepointonline.com/files/fabric/assets/icons/fabricmdl2icons-3.54.woff') format('woff');*/
-  src: url('/static/css/common/fabric/fabricmdl2icons-3.54.woff') format('woff');
+  src: url('./fabricmdl2icons-3.54.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }

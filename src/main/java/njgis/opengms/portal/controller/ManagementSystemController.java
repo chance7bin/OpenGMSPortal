@@ -6,13 +6,9 @@ import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
-import njgis.opengms.portal.entity.dto.task.TaskCheckListDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
-import njgis.opengms.portal.service.ComputableModelService;
-import njgis.opengms.portal.service.ManagementSystemService;
-import njgis.opengms.portal.service.TaskService;
-import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +38,21 @@ public class ManagementSystemController {
     @Autowired
     TaskService taskService;
 
+    @Autowired
+    ServerService serverService;
+
+
     @GetMapping("/home")
     public ModelAndView getHomePage(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("managementSystem/manage_home");
+        modelAndView.setViewName("managementSystem/manage_home_zh");
+        return modelAndView;
+    }
+
+    @GetMapping("/home_en")
+    public ModelAndView getHomeEnPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("managementSystem/manage_home_en");
         return modelAndView;
     }
 
@@ -53,6 +60,13 @@ public class ManagementSystemController {
     public ModelAndView getSystemPage(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("managementSystem/manage_system");
+        return modelAndView;
+    }
+
+    @GetMapping("/routeTest")
+    public ModelAndView getRouteTestPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("managementSystem/routeTest/p1");
         return modelAndView;
     }
 
@@ -81,6 +95,17 @@ public class ManagementSystemController {
         return managementSystemService.invokeModel(modelId, email);
     }
 
+    // @LoginRequired
+    @ApiOperation(value = "批量模型调用")
+    @RequestMapping(value="/model/invoke/batch",method= RequestMethod.POST)
+    public JsonResult invokeModelBatch(@RequestBody List<String> modelIdList) {
+        // HttpSession session = request.getSession();
+        // String email = session.getAttribute("email").toString();
+        String email = "782807969@qq.com";
+
+        return managementSystemService.invokeModelBatch(modelIdList, email);
+    }
+
     // @ApiOperation(value = "模型批量调用")
     // @RequestMapping(value="/model/invoke/batch",method= RequestMethod.POST)
     // public JsonResult batchInvokeModel(@RequestBody FindDTO findDTO) {
@@ -100,16 +125,16 @@ public class ManagementSystemController {
 
 
     // @LoginRequired
-    @ApiOperation(value = "保存检查的模型列表")
-    @RequestMapping(value="/checkList/save",method= RequestMethod.POST)
-    public JsonResult saveCheckedList(@RequestBody TaskCheckListDTO taskCheckListDTO){
-
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
-        return managementSystemService.saveCheckedList(taskCheckListDTO,email);
-
-    }
+    // @ApiOperation(value = "保存检查的模型列表")
+    // @RequestMapping(value="/checkList/save",method= RequestMethod.POST)
+    // public JsonResult saveCheckedList(@RequestBody TaskCheckListDTO taskCheckListDTO){
+    //
+    //     // HttpSession session = request.getSession();
+    //     // String email = session.getAttribute("email").toString();
+    //     String email = "782807969@qq.com";
+    //     return managementSystemService.saveCheckedList(taskCheckListDTO,email);
+    //
+    // }
 
     // @LoginRequired
     @ApiOperation(value = "查找检查的模型列表")
@@ -257,7 +282,21 @@ public class ManagementSystemController {
     @ApiOperation(value = "获取服务节点")
     @RequestMapping(value="/serverNodes",method= RequestMethod.GET)
     public JsonResult getAllServerNodes(){
-        return ResultUtils.success(managementSystemService.getAllServerNodes());
+        return ResultUtils.success(serverService.getAllServerNodes());
+    }
+
+
+
+    @ApiOperation(value = "得到运行的任务列表")
+    @RequestMapping(value="/taskList",method= RequestMethod.POST)
+    public JsonResult getTaskList(@RequestBody FindDTO findDTO){
+        return ResultUtils.success(managementSystemService.getTaskList(findDTO));
+    }
+
+    @ApiOperation(value = "得到模型容器列表")
+    @RequestMapping(value="/mscList",method= RequestMethod.GET)
+    public JsonResult getMscList(){
+        return ResultUtils.success(managementSystemService.getMscList());
     }
 
 

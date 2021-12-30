@@ -55,6 +55,14 @@ new Vue({
     },
     methods: {
 
+        //reset cancel
+        resetCancel(){
+            this.resetPassFormVisible = false
+            this.resetPassForm.newPass = ''
+            this.resetPassForm.verifyCode = ''
+
+        },
+
 
         //register form
         submitForm(formName) {

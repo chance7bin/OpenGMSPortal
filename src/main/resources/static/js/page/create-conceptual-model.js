@@ -100,7 +100,7 @@ var createConceptualModel = Vue.extend({
                 sortType: "default",
                 classifications: ["all"],
             };
-            let url = "/modelItem/list";
+            let url = "/modelItem/items";
             let contentType = "application/x-www-form-urlencoded";
 
             $.ajax({
@@ -503,7 +503,7 @@ var createConceptualModel = Vue.extend({
         close: function () {
             console.log("socket已经关闭")
         },
-        getMessageNum(conceptualModel_oid){
+        getnoticeNum(conceptualModel_oid){
             this.message_num_socket = 0;//初始化消息数目
             let data = {
                 type: 'conceptualModel',
@@ -512,7 +512,7 @@ var createConceptualModel = Vue.extend({
 
             //根据oid去取该作者的被编辑的条目数量
             $.ajax({
-                url:"/theme/getAuthorMessageNum",
+                url:"/theme/getAuthornoticeNum",
                 type:"GET",
                 data:data,
                 async:false,
@@ -525,7 +525,7 @@ var createConceptualModel = Vue.extend({
                 oid : conceptualModel_oid,
             };
             $.ajax({
-                url:"/theme/getThemeMessageNum",
+                url:"/theme/getThemenoticeNum",
                 async:false,
                 type:"GET",
                 data:data_theme,
@@ -971,7 +971,7 @@ var createConceptualModel = Vue.extend({
                                 that.conceptualModel_oid = currentUrl.substring(index + 1,currentUrl.length);
                                 console.log(that.conceptualModel_oid);
                                 //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-                                // that.getMessageNum(that.conceptualModel_oid);
+                                // that.getnoticeNum(that.conceptualModel_oid);
                                 // let params = that.message_num_socket;
                                 // that.send(params);
                                 this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
@@ -1048,7 +1048,7 @@ var createConceptualModel = Vue.extend({
         //     that.conceptualModel_oid = currentUrl.substring(index + 1,currentUrl.length);
         //     console.log(that.conceptualModel_oid);
         //     //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-        //     that.getMessageNum(that.conceptualModel_oid);
+        //     that.getnoticeNum(that.conceptualModel_oid);
         //     let params = that.message_num_socket;
         //     that.send(params);
         // });

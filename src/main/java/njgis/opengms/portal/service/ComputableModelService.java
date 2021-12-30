@@ -592,7 +592,7 @@ public class ComputableModelService {
 //                computableModelVersion.setModifier(email);
 //                computableModelVersion.setVerNumber(now.getTime());
 //                computableModelVersion.setVerStatus(0);
-//                userService.messageNumPlusPlus(authorUserName);
+//                userService.noticeNumPlusPlus(authorUserName);
 //
 //                computableModelVersion.setModifyTime(now);
 //                computableModelVersion.setCreator(author0);

@@ -642,7 +642,7 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (data) => {
                         $.ajax({
-                            url: "/theme/getInfo/" + this.themeoid,
+                            url: getThemeInfoByidApi(this.themeoid),
                             type: "GET",
                             data: {},
                             success: (result) => {
@@ -893,8 +893,8 @@ var vue = new Vue({
                                 this.themeImage = this.themeObj.themeImage;
 
                                 //显示theme detail
-                                this.themeObj.themeDetail = basicInfo.detail;
-                                this.themeDetail = basicInfo.detail;
+                                this.themeObj.themeDetail = basicInfo.localizationList[0].description;
+                                this.themeDetail = basicInfo.localizationList[0].description;
 
 
                                 //值复制
@@ -949,7 +949,12 @@ var vue = new Vue({
 
             //更新detail
             var detail = this.edit_themeObj.themeDetail;
-            this.themeObj.detail = detail.trim();
+            if(typeof(detail) != 'undefined'){
+                this.themeObj.themeDetail = detail.trim();
+            }
+            else{
+                this.themeObj.themeDetail = ''
+            }
 
             //更新照片
             if(this.imgLog!=0){
@@ -1000,8 +1005,8 @@ var vue = new Vue({
             formData.append("info",file);
             let that = this;
             $.ajax({
-                url: "/theme/update",
-                type: "POST",
+                url: updateThemeApi(this.themeoid),
+                type: "PUT",
                 processData: false,
                 contentType: false,
                 async: true,
@@ -1088,7 +1093,7 @@ var vue = new Vue({
         edit_themeDetail(){
 
             //显示detail
-            $("#themeText").html(this.themeObj.detail);
+            $("#themeText").html(this.themeObj.themeDetail);
             // if(++this.log_detail==1)
             // {
                 initTinymce('textarea#themeText')
@@ -1777,7 +1782,7 @@ var vue = new Vue({
             };
             let url, contentType;
 
-            url = "/dataItem/searchByName";
+            url = getItemList();
             data = JSON.stringify(data);
             contentType = "application/json";
 
@@ -1822,7 +1827,7 @@ var vue = new Vue({
             };
             let url, contentType;
 
-            url = "/dataApplication/searchByName";
+            url = getMethodList();
             data = JSON.stringify(data);
             contentType = "application/json";
 
@@ -2068,6 +2073,8 @@ var vue = new Vue({
             }
         },
         controlEdit(){
+
+            // if()
             this.editActiveIndex = 1;
 
 
@@ -2416,9 +2423,10 @@ var vue = new Vue({
 
 
 
+        console.log(getMaintainerApi(this.themeoid))
         $.ajax({
             type:"GET",
-            url:"/theme/getMaintainer/"+this.themeoid,
+            url:getMaintainerApi(this.themeoid),
             success:(data) =>{
                 that.maintainer = data;
             }

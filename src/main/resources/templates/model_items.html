@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
 
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/list.css">
@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="/static/css/other/bootstrap-select.css">
     <link rel="stylesheet" href="/static/css/page/model_items.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
     <link rel="stylesheet" href="/static/driver/driver.min.css"/>
     <style>
 
@@ -68,16 +68,19 @@
 <body>
 <div id="app" class="app" v-cloak>
 
+
+
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div th:replace="fragments/backToTop :: backtop-up"></div>
+
+
 
     <div class="clearfix" style="margin-bottom: 40px;">
 
         <div class="guide el-backtop el-icon-question" title="Help" @click="showDriver"></div>
 
         <div class="mainContent">
-
             <div class="el-row">
                 <h2 class="main-title">Model Item Repository</h2>
                 <!--<el-button type="primary">All</el-button>-->
@@ -87,6 +90,12 @@
                 <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;"
                         @click="contribute()">+ Contribute
                 </button>
+                <translation-bar
+                        json-file="model_items"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px">fdvsdfvs</translation-bar>
                 <hr>
             </div>
             <div class="el-col el-col-6 minScreen_maxWidth" style="margin-top:29px;">
@@ -275,13 +284,13 @@
                                     <i v-if="modelItem.status=='Discoverable'"
                                        class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
-                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/'+ modelItem.oid"
+                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/detail/'+ modelItem.id"
                                    target="_blank">{{modelItem.name}}&nbsp&nbsp</a>
                             </div>
                             <div :style="{'display':statistic[key]!='Overview'?'none':'block'}">
 
                                 <div class="detail_overview">
-                                    <a class="img" :href="'/modelItem/'+ modelItem.oid" target="_blank">
+                                    <a class="img" :href="'/modelItem/detail/'+ modelItem.id" target="_blank">
 
                                         <img v-if="modelItem.image==''" src="/static/img/model/model.png"
                                              style="width:90px;height: 90px;">
@@ -447,9 +456,19 @@
 <script src="/static/js/common/generalInfo.js"></script>
 <script src="/static/driver/driver.min.js"></script>
 <script src="/static/js/modules/userAvatar.js"></script>
+<!--<script src="/static/js/page/model_items.js"></script>-->
+
+
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+<script src="/static/js/apidoc/modelApi.js"></script>
 <script src="/static/js/page/model_items.js"></script>
 
 <script src="/static/element-ui/umd/locale/en.js"></script>
 <script src="/static/js/common/navbar.js"></script>
+
+
 
 </html>

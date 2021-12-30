@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
 
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/list.css">
@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/static/css/other/bootstrap-select.css">
     <link rel="stylesheet" href="/static/css/page/model_items.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" >
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/common/footerResponse.css" >
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" >
     <link rel="stylesheet" href="/static/driver/driver.min.css"/>
     <style>
 
@@ -142,10 +142,10 @@
                                     <i v-if="concept.status=='Public'" class="el-icon-unlock public fontsize-24 pull-right"></i>
                                     <i v-if="concept.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
-                                <a :class="concept.viewCount>500?'hot':''" :href="'/repository/concept/'+ concept.oid" target="_blank">{{concept.name==''?concept.alias:concept.name}}&nbsp&nbsp</a>
+                                <a :class="concept.viewCount>500?'hot':''" :href="'/repository/concept/'+ concept.id" target="_blank">{{concept.name==''?concept.alias:concept.name}}&nbsp&nbsp</a>
                             </div>
                             <div class="detail_overview">
-                                <a class="img" :href="'/repository/concept/'+ concept.oid" target="_blank">
+                                <a class="img" :href="'/repository/concept/'+ concept.id" target="_blank">
                                     <avatar :username="concept.name" :size="90" :rounded="false"></avatar>
                                     <!--<avatar :username="concept.name==''?concept.alias:concept.name" :size="90" :rounded="false"></avatar>-->
                                     <!--<img v-if="modelItem.image!=''" :src="modelItem.image" style="width:90px;height: 90px;">-->
@@ -215,6 +215,7 @@
 <script src="/static/js/common/bootstrap.js"></script>
 <script src="/static/js/common/bootstrap-select.js"></script>
 <script src="/static/driver/driver.min.js"></script>
+<script src="/static/js/apidoc/communityApi.js"></script>
 <script src="/static/js/page/conceptRepository.js"></script>
 
 <script src="/static/js/modules/userAvatar.js"></script>

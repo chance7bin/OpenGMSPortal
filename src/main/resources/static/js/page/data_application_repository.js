@@ -5,6 +5,7 @@ var data_items = new Vue({
     },
     data: function () {
         return {
+
             activeIndex: '3',
             searchText: '',
             progressBar: true,
@@ -19,12 +20,12 @@ var data_items = new Vue({
                 pageSize: 10,
                 asc: false,
                 sortField:"viewCount",
-                method:'Conversion',
+                categoryName:'6117767e61ce444130b1a276',
                 searchText:'',
                 curQueryField:'',
             },
             list:new Array(),
-            method:'Conversion',
+            categoryName:'6117767e61ce444130b1a276',
             users:[],
             classlist:[],
             datacount: '',
@@ -54,6 +55,14 @@ var data_items = new Vue({
         }
     },
     methods: {
+        transFormCate(categoryName){
+            if (categoryName === '6117767e61ce444130b1a276')
+                return 'Conversion'
+            else if (categoryName === '6117767e61ce444130b1a277')
+                return 'Processing'
+            else
+                return 'Visualization'
+        },
         //显示功能引导框
         showDriver(){
             if(!this.driver){
@@ -149,14 +158,14 @@ var data_items = new Vue({
             this.changeCateColor()
             $(event.target).css('background-color','#d9edf7')
             this.currentPage = 1
-            this.method = item;
+            this.categoryName = item;
             this.datacount=-1
             this.loading=true
             this.progressBar=true;
             this.getData()
         },
         goto(id){
-            return "/dataApplication/"+id;
+            return getMethodById(id);
         },
         view(id){
             axios.get("/dataApplication/methods/viewplus",{
@@ -204,7 +213,7 @@ var data_items = new Vue({
             //把当前页码给dto
             this.findDto.page=this.currentPage;
             this.findDto.asc = this.asc;
-            this.findDto.method = this.method==='all'?'':this.method.toLowerCase()      // all 赋值为空来进行查询
+            this.findDto.categoryName = this.categoryName==='all'?'':this.categoryName.toLowerCase()      // all 赋值为空来进行查询
             if(this.sortField === "Create Time"){
                 this.findDto.sortField = "createTime"
             } else if(this.sortField === "Name"){
@@ -216,7 +225,7 @@ var data_items = new Vue({
         getData(){
             this.setFindDto()
             let that = this;
-            axios.post("/dataApplication/methods/getApplication",that.findDto)
+            axios.post(getMethodList(),that.findDto)
                 .then((res)=>{
                     setTimeout(()=>{
                         that.list=res.data.data.list;

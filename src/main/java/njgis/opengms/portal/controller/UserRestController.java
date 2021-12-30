@@ -461,7 +461,9 @@ public class UserRestController {
     public JsonResult getThemesByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme));
+        JSONObject result = genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme);
+        // List<Theme> content = (List<Theme>) result.get("content");
+        return ResultUtils.success(result);
     }
 
 
