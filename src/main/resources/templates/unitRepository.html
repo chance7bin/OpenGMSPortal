@@ -20,6 +20,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
     <link rel="stylesheet" href="/static/driver/driver.min.css"/>
+
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
 </head>
 <body>
 <div id="app" v-cloak>
@@ -34,16 +37,23 @@
         <div class="el-col mainContent">
 
             <div class="el-row">
-                <h2 class="main-title">Unit & Metric Repository</h2>
-                <h4 class="sub-title">The repository of unit and metric.</h4>
-                <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute()">+ Contribute</button>
+                <h2 class="main-title">{{htmlJSON.PageName}}</h2>
+                <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
+                <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute()">{{htmlJSON.Contribute}}</button>
+                <translation-bar
+                        json-file="unitRepository"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px">
+                </translation-bar>
                 <hr>
             </div>
             <div class="el-col el-col-6 minScreen_maxWidth" style="margin-top:29px;">
 
                 <el-card class="box-card categoryList">
                     <div slot="header" class="clearfix text-center">
-                        <span style="font-size: 20px;color:#444">Repository Collections</span>
+                        <span style="font-size: 20px;color:#444">{{htmlJSON.RepositoryCollections}}</span>
                     </div>
                     <el-tree
                             id="tree1"
@@ -75,8 +85,8 @@
             <div class="el-col el-col-18 minScreen_maxWidth">
                 <div class="searcherPanel">
                     <div class="searcherInputPanel" @keydown.enter="search()">
-                        <input id="searchBox" type="text" placeholder="Please enter the name..." v-model="searchText">
-                        <button @click="search()">Search</button>
+                        <input id="searchBox" type="text" :placeholder="htmlJSON.SearchHolding" v-model="searchText">
+                        <button @click="search()">{{htmlJSON.Search}}</button>
                     </div>
                 </div>
 
@@ -89,24 +99,24 @@
                 </div>
 
                 <div role="alert" class="alert alert-info" style="margin-bottom: 2px;">
-                    <strong class="minScreen_curClass">Current Classification: {{currentClass}} </strong>
-                    <strong v-if="pageOption.progressBar" style="float: right;">Loading... </strong>
-                    <strong v-if="!pageOption.progressBar" style="float: right;">{{pageOption.total}} items</strong>
+                    <strong class="minScreen_curClass">{{htmlJSON.CurrentClass}}{{currentClass}} </strong>
+                    <strong v-if="pageOption.progressBar" style="float: right;">{{htmlJSON.Loading}} </strong>
+                    <strong v-if="!pageOption.progressBar" style="float: right;">{{pageOption.total}} {{htmlJSON.items}}</strong>
 
                 </div>
 
                 <div class="modelPanel" v-loading="pageOption.progressBar">
                     <div v-if="pageOption.searchResult.length>0" style="margin:10px 0">
                         <div style="float:left;margin: 4px 0 4px 15px;">
-                            <span style="font-weight: bold;margin-right:5px;">Sorted By:</span>
+                            <span style="font-weight: bold;margin-right:5px;">{{htmlJSON.SortBy}}</span>
                             <el-dropdown trigger="click" @command="changeSortField" style="cursor:pointer;">
                             <span class="el-dropdown-link">
                                 {{sortTypeName}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">View Count</el-dropdown-item>
-                                    <el-dropdown-item command="Name">Name</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">Create Time</el-dropdown-item>
+                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
+                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
+                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}} </el-dropdown-item>
 
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -115,8 +125,8 @@
                                 {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">Asc.</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">Desc.</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -211,6 +221,11 @@
 <script src="/static/driver/driver.min.js"></script>
 <script src="/static/js/modules/userAvatar.js"></script>
 <script src="/static/js/apidoc/communityApi.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/page/unitRepository.js"></script>
 
 

@@ -1,0 +1,62 @@
+{
+  "en-us": {
+    "PageName": "Model Application",
+    "PageIntro":"The practical application of models.",
+
+    "ModelExecution": "Model Execution",
+    "ModelExecution1": "We have deployed plenty of models on the web.",
+    "ModelExecution2": "Choose what you need to execute!",
+
+    "ModelExecDialog1": "select computable model",
+    "ModelExecDialog2": "load computable model",
+    "ModelExecDialog3": "start to invoke",
+
+    "ModelIntegration": "Model Integration",
+    "ModelIntegration1": "Single model can not satisfy your demand?",
+    "ModelIntegration2": "You can integrate models to solve complicated problem.",
+    "UnderConstruct": "Under Construction...",
+    "ModelIntegerDialog1": "select computable model",
+    "ModelIntegerDialog2": "config integrated task",
+    "ModelIntegerDialog3": "start to invoke",
+
+    "ParameterOptimization": "Parameter Optimization",
+    "ParameterOptimization1": "Model results are not exact?",
+    "ParameterOptimization2": "Try to adjust parameters!",
+
+    "TryIt": "Try it",
+    "Cancel": "Cancel",
+    "Next": "Next",
+    "Previous": "Previous",
+    "EnterNow": "Enter now"
+  },
+  "zh-cn": {
+    "PageName": "模型应用",
+    "PageIntro":"模型的实际应用",
+
+    "ModelExecution": "模型运行",
+    "ModelExecution1": "我们拥有大量的模型在网站中。",
+    "ModelExecution2": "选择你想要使用的模型！",
+
+    "ModelExecDialog1": "选择计算模型",
+    "ModelExecDialog2": "加载计算模型",
+    "ModelExecDialog3": "开始运行",
+
+    "ModelIntegration": "模型整合",
+    "ModelIntegration1": "单个模型无法满足您的需要吗？",
+    "ModelIntegration2": "在这里你可以整合多个模型来解决复杂问题。",
+    "ModelIntegerDialog1": "选择计算模型",
+    "ModelIntegerDialog2": "加载计算模型",
+    "ModelIntegerDialog3": "开始运行",
+
+    "ParameterOptimization": "参数优化",
+    "ParameterOptimization1": "模型结果不准确吗？",
+    "ParameterOptimization2": "在这里尝试调整参数！",
+    "UnderConstruct": "正在建设中...",
+
+    "TryIt": "试一试",
+    "Cancel": "取消",
+    "Next": "下一步",
+    "Previous": "上一步",
+    "EnterNow": "进入"
+  }
+}

@@ -25,7 +25,7 @@ var data_items = new Vue({
             list:new Array(),
             users:[],
             classlist:[],
-            datacount: '',
+            datacount: 0,
             classclick:false,
             activeNames:["1"],
             activeNames1:["11"],
@@ -49,11 +49,15 @@ var data_items = new Vue({
 
             queryFields:["Name","Keyword","Content","Contributor"],
             curQueryField:"Name",
-            showCategoryName:'Land regions'
+            showCategoryName:'Land regions',
 
+            htmlJSON:{}
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
 
         //显示功能引导框
         showDriver(){

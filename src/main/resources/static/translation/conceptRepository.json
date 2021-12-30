@@ -1,17 +1,18 @@
 {
   "en-us": {
-    "PageName": "Data Hub Repository",
-    "PageIntro":"The hubs of data (one-stop hub with public shared data resources)",
+    "PageName": "Concept & Semantic Repository",
+    "PageIntro":"The repository of concept and semantic.",
     "Contribute": "+ Contribute",
 
-    "ModelClass": "Data Categories",
+    "RepositoryCollections": "Repository Collections",
 
     "AdvancedSearch": "Advanced Search with Multiple Query Conditions",
-    "SearchHolding": "Query String...",
+    "SearchHolding": "Please enter the name...",
     "Search": "Search",
-    "CurrentClass":"Current Classification:",
+    "CurrentClass":"Current Category: ",
     "Loading": "Loading...",
     "items": "items",
+    "NoData": "no data",
     "SortBy":"Sorted By:",
     "ViewCount": "View Count",
     "Name": "Name",
@@ -21,18 +22,19 @@
 
 },
   "zh-cn": {
-    "PageName": "模型条目仓库",
-    "PageIntro":"模型仓库（包含工具、算法、包等等）",
+    "PageName": "数据条目仓库",
+    "PageIntro":"数据仓库（公开共享数据资源的一站式枢纽）",
     "Contribute": "+ 添加",
 
-    "ModelClass": "模型类别",
+    "RepositoryCollections": "知识库集合",
 
     "AdvancedSearch": "高级搜索（多条件查询）",
-    "SearchHolding": "输入查询内容",
+    "SearchHolding": "输入名称",
     "Search": "搜索",
     "CurrentClass":"当前类别：",
     "Loading": "加载中...",
     "items": "个条目",
+    "NoData": "没有数据",
     "SortBy":"排序:",
     "ViewCount": "查看次数",
     "Name": "名字",

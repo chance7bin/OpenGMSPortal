@@ -1,6 +1,8 @@
 {
   "en-us": {
     "home": "Home",
+
+    "model": "Model",
     "modelRep": "Repository",
     "application": "Application",
 
@@ -14,7 +16,7 @@
     "spatial": "Spatiotemporal Reference",
     "template": "Data Template",
     "unit": "Unit & Metric",
-    "thema": "Thematic Center",
+    "theme": "Thematic Center",
     "servNodes": "Server Nodes",
 
     "help": "Help",
@@ -30,39 +32,59 @@
 
     "mySpace": "My Space",
     "myPage": "My Page",
-    "notice": "Notice"
+    "notice": "Notice",
+    "logOut": "Log Out",
+
+    "item": "Item",
+    "modelItem":"Model Item",
+    "dataItem": "Data Item",
+    "conceptualModel": "Conceptual Model",
+    "logicalModel": "Logical Model",
+    "computableModel": "Computable Model",
+    "supportive": "Supportive"
   },
   "zh-cn": {
     "home": "首页",
-    "modelRep": "Repository",
-    "application": "Application",
 
-    "data": "Data",
-    "dateHubRep": "Hub Repository",
-    "dateItemRep": "Item Repository",
-    "dateMethodRep": "Method Repository",
+    "model": "模型",
+    "modelRep": "仓库",
+    "application": "应用",
 
-    "community": "Commmunity",
-    "concept": "Concept & Semantic",
-    "spatial": "Spatiotemporal Reference",
-    "template": "Data Template",
-    "unit": "Unit & Metric",
-    "thema": "Thematic Center",
-    "servNodes": "Server Nodes",
+    "data": "数据",
+    "dateHubRep": "数据中心",
+    "dateItemRep": "条目仓库",
+    "dateMethodRep": "模型仓库",
 
-    "help": "Help",
-    "demo": "Demo",
-    "supp": "Support",
-    "cite": "Cite OpenGMS",
-    "dev": "Development",
+    "community": "社区",
+    "concept": "概念&语义信息仓库",
+    "spatial": "时空参考信息仓库",
+    "template": "数据模板",
+    "unit": "单位&度量标准仓库",
+    "theme": "主题中心",
+    "servNodes": "服务节点",
 
-    "aboutUs": "About Us",
+    "help": "帮助",
+    "demo": "案例",
+    "supp": "支持",
+    "cite": "引用OpenGMS",
+    "dev": "开发",
+
+    "aboutUs": "关于我们",
 
     "login": "登 录",
     "signup": "注 册",
 
     "mySpace": "个人中心",
     "myPage": "个人页面",
-    "notice": "事项"
+    "notice": "事项",
+    "logOut": "退出",
+
+    "item": "条目",
+    "modelItem":"模型条目",
+    "dataItem": "数据条目",
+    "conceptualModel": "概念模型",
+    "logicalModel": "逻辑模型",
+    "computableModel": "计算模型",
+    "supportive": "支持的"
   }
 }

@@ -76,10 +76,14 @@ new Vue({
             sortTypeName:"View Count",
             sortFieldName:"viewCount",
             sortOrder:"Desc.",
+
+            htmlJSON:{}
         }
     },
     methods: {
-
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         //显示功能引导框
         showDriver(){
             if(!this.driver){

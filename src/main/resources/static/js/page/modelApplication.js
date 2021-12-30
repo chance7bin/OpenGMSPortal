@@ -27,9 +27,15 @@ var vue = new Vue({
                 paramOptimaDialog:false,
 
                 guideActive:0,
+
+                htmlJSON:{}
             }
         },
         methods: {
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent
+            },
+
             setSession(name, value) {
                 window.sessionStorage.setItem(name, value);
             },
