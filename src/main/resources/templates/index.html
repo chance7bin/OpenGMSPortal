@@ -121,7 +121,7 @@
                 <div id="headerContentContainer" style="">
                     <header class="wzhHeader" >
                         <h1 id="headerSentence" v-html="htmlJSON.headerSentence">aa</h1>
-                        <h1 id="headerSentenceBig" v-html="htmlJSON.headerSentenceBig">Open Geographic Modeling </br>and Simulation (OpenGMS)</h1>
+                        <h1 id="headerSentenceBig" v-html="htmlJSON.headerSentenceBig">Open Geographic Modeling </br>and Simulation (OpenGMS) -GeoSimulator</h1>
                     </header>
                     <main style="margin-top: 1px;">
                         <p id="headerSection"style="">{{htmlJSON.headerSection}}</p>
@@ -147,6 +147,12 @@
 
     <div class="marquee str_wrap">
         <div class="str_move str_origin" style="left: 0px;">
+            <div style="margin-left: 200px; display: inline-block;">
+                <i class="fa fa-bullhorn fa-2x" style="margin: 0px 15px;"></i>
+                <a href="http://opengmsteam.com/achievements" target="_blank">
+                    {{htmlJSON.rollingNews_7}}
+                </a>
+            </div>
             <div style="margin-left: 200px; display: inline-block;">
                 <i class="fa fa-bullhorn fa-2x" style="margin: 0px 15px;"></i>
                 <a href="http://opengmsteam.com/news/15de28af-4172-45e0-b73c-741184e86cda" target="_blank">
@@ -844,7 +850,7 @@
 
                     <el-tabs tab-position=left style="height: 400px;">
 
-                        <el-tab-pane label="Model Service Container" style="text-align:left;margin-left: 30px;">
+                        <el-tab-pane :label="htmlJSON.modelSerCntner" style="text-align:left;margin-left: 30px;">
                             <div class="el-row">
                                 <div class="content-title">
                                     <i class="fa fa-globe"></i>
@@ -880,7 +886,7 @@
                             </div>
                         </el-tab-pane>
 
-                        <el-tab-pane label="Data Service Container" style="text-align:left;margin-left: 30px;">
+                        <el-tab-pane :label="htmlJSON.dateSerCntner" style="text-align:left;margin-left: 30px;">
                             <div class="el-row">
                                 <div class="content-title">
                                     <i class="fa fa-globe"></i>
@@ -918,7 +924,7 @@
                         </el-tab-pane>
 
 
-                        <el-tab-pane label="Model Wrapping Tools" style="text-align:left;margin-left: 30px;">
+                        <el-tab-pane :label="htmlJSON.modelWrap" style="text-align:left;margin-left: 30px;">
                             <div class="el-row">
                                 <div class="content-title">
                                     <i class="fa fa-globe"></i>
@@ -1010,7 +1016,7 @@
             </div>
             <br>
 
-            <center><q>Please <a href="mailto:opengms@njnu.edu.cn" style="color:blue">contact us</a> if you would
+            <center><q v-html="htmlJSON.contact">Please <a href="mailto:opengms@njnu.edu.cn" style="color:blue">contact us</a> if you would
                 like to cooperate with us. </q>
             </center>
 

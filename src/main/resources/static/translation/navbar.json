@@ -47,27 +47,27 @@
     "home": "首页",
 
     "model": "模型",
-    "modelRep": "仓库",
+    "modelRep": "资源库",
     "application": "应用",
 
     "data": "数据",
     "dateHubRep": "数据中心",
     "dateItemRep": "条目仓库",
-    "dateMethodRep": "模型仓库",
+    "dateMethodRep": "方法库",
 
     "community": "社区",
-    "concept": "概念&语义信息仓库",
-    "spatial": "时空参考信息仓库",
-    "template": "数据模板",
-    "unit": "单位&度量标准仓库",
-    "theme": "主题中心",
+    "concept": "概念&语义库",
+    "spatial": "时空参考库",
+    "template": "数据模板库",
+    "unit": "单位&度量库",
+    "theme": "专题中心",
     "servNodes": "服务节点",
 
     "help": "帮助",
-    "demo": "案例",
-    "supp": "支持",
+    "demo": "示例",
+    "supp": "帮助文档",
     "cite": "引用OpenGMS",
-    "dev": "开发",
+    "dev": "开发者网站",
 
     "aboutUs": "关于我们",
 
@@ -76,15 +76,15 @@
 
     "mySpace": "个人中心",
     "myPage": "个人页面",
-    "notice": "事项",
-    "logOut": "退出",
+    "notice": "通知",
+    "logOut": "登出",
 
     "item": "条目",
     "modelItem":"模型条目",
     "dataItem": "数据条目",
     "conceptualModel": "概念模型",
     "logicalModel": "逻辑模型",
-    "computableModel": "计算模型",
-    "supportive": "支持的"
+    "computableModel": "计算模型"
+
   }
 }

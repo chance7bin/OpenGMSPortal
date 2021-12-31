@@ -17,13 +17,13 @@ import java.util.List;
 public class Article {
     @Id
     String id;
-    String oid;
+//    String oid;
     String title;
     List<String> authors;
 
-    int viewCount;
+//    int viewCount;
 //    String contributor;
-    List<String> contributors = new ArrayList<>();
+//    List<String> contributors = new ArrayList<>();
 //    List<String> userAuthors = new ArrayList<>();
     String journal;
     String volume="";
@@ -31,6 +31,6 @@ public class Article {
     String link;
     String date;
     String doi="";
-    Date creatDate;
+    Date createDate;
 
 }
