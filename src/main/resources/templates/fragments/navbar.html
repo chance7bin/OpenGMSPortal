@@ -344,46 +344,6 @@
 
 </div>
 
-<div th:fragment="login">
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="#00001e"
-             text-color="#fff"
-             active-text-color="#00c0ff"
-             style="padding-top:10px;">
-        <div>
-            <a class="logo" href="/"></a>
-        </div>
-        <el-menu-item index="1"><a href="/" translateId="home">Home</a></el-menu-item>
-        <el-submenu index="2">
-            <template slot="title" translateId="item">Item</template>
-            <el-menu-item index="2-1"><a href="/modelItem/repository" translateId="modelItem">Model Item</a></el-menu-item>
-            <el-menu-item index="2-2"><a href="/dataItem/hubs" translateId="dataItem"> Data Item</a></el-menu-item>
-
-        </el-submenu>
-        <el-submenu index="3">
-            <template slot="title" translateId="cite">Model</template>
-            <el-menu-item index="3-1"><a href="/conceptualModel/repository" translateId="conceptualModel">Conceptual Model</a></el-menu-item>
-            <el-menu-item index="3-2"><a href="/logicalModel/repository" translateId="logicalModel">Logical Model</a></el-menu-item>
-            <el-menu-item index="3-3"><a href="/computableModel/repository" translateId="computableModel">Computable Model</a></el-menu-item>
-        </el-submenu>
-        <el-submenu index="4">
-            <template slot="title" translateId="help" >Help</template>
-            <el-menu-item index="4-1" translateId="demo">Demo</el-menu-item>
-            <el-menu-item index="4-2" translateId="supp">Support</el-menu-item>
-            <el-menu-item index="4-3" translateId="dev">Development</el-menu-item>
-            <el-menu-item index="4-4" translateId="supportive">Supportive</el-menu-item>
-        </el-submenu>
-        <el-menu-item index="5" translateId="aboutUs" > About Us</el-menu-item>
-        <el-menu-item index="7" style="float:right"><a href="/user/out" translateId="logOut">Log Out</a></el-menu-item>
-        <el-menu-item index="6" style="float:right">
-            <a href="/user/1">
-                <img class="round_icon" src="/static/img/icon/default.png" style="width:30px;height: 30px;display: inline-block;margin-right:10px">
-                <span>NNU_Group</span>
-            </a>
-        </el-menu-item>
-
-    </el-menu>
-
-</div>
 </body>
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script src="/static/js/common/navbar.js"></script>

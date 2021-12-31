@@ -113,9 +113,9 @@
 
   "zh-cn":
   {
-    "headerSentence": "<h1 id=\"headerSentence\">开放式地理建模与模拟</br>(OpenGMS)-地理模拟器</h1>",
+    "headerSentence": "<h1 id=\"headerSentence\">开放式地理建模与模拟</br>(OpenGMS)——地理模拟器</h1>",
 
-    "headerSentenceBig": "<h1 id=\"headerSentenceBig\" >开放式地理建模与模拟</br>(OpenGMS)-地理模拟器</h1>",
+    "headerSentenceBig": "<h1 id=\"headerSentenceBig\" >开放式地理建模与模拟</br>(OpenGMS)——地理模拟器</h1>",
 
     "headerSection": "OpenGMS为地理分析模型研究共享建模与模拟资源。此外，平台还为不同领域的研究人员提供了一个虚拟的协作社区。通过在网络环境下进行开放的分布式资源共享和协作，可以促进开放式地理建模和模拟，实现更广泛的参与和探索。",
 
