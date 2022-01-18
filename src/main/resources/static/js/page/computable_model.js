@@ -140,8 +140,8 @@ new Vue({
     methods: {
         claim(){
             $.get("/user/load",{},(result)=>{
-                let json = result;
-                if (json.oid == "") {
+                let json = result.data;
+                if (json.accessId == "") {
                     this.confirmLogin();
                 }
                 else {
@@ -151,8 +151,8 @@ new Vue({
         },
         feedBack(){
             $.get("/user/load",{},(result)=>{
-                let json = result;
-                if (json.oid == "") {
+                let json = result.data;
+                if (json.accessId == "") {
                     this.confirmLogin();
                 }
                 else {
@@ -172,8 +172,9 @@ new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
-                    if (data.oid == "") {
+                success: (result) => {
+                    let data = result.data
+                    if (data.accessId == "") {
                         this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
                             dangerouslyUseHTMLString: true,
                             confirmButtonText: 'Log In',
@@ -585,8 +586,8 @@ new Vue({
         axios.get("/user/load")
             .then((res) => {
                 if (res.status == 200) {
-                    if (res.data.oid != '') {
-                        this.useroid = res.data.oid;
+                    if (res.data.accessId != '') {
+                        this.useroid = res.data.accessId;
                         this.userId = res.data.userId;
                         this.userImg = res.data.image;
                     }
