@@ -361,11 +361,9 @@ var userTheme = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-
-                        console.log(data);
-
-                        if (data.oid == "") {
+                    success: (result) => {
+                        let data = result.data
+                        if (data.accessId == "") {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {

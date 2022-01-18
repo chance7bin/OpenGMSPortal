@@ -670,11 +670,9 @@ var userAccount = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-
-                        console.log(data);
-
-                        if (data.oid == "") {
+                    success: (result) => {
+                        let data = result.data
+                        if (data.accessId == "") {
                             this.$alert('Please login first', 'Tip', {
                                 type:"info",
                                 confirmButtonText: 'OK',

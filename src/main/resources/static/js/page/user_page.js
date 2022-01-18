@@ -1113,6 +1113,8 @@ new Vue({
                             this.locationInput = this.userPersonalInfo.location;
                             this.externalLinkInput = this.userPersonalInfo.externalLinks[0];
                             this.introductionInput = this.userPersonalInfo.introduction;
+                            if (!this.introductionInput || typeof(this.introductionInput) == 'undefined')
+                                this.introductionInput = ''
                             this.emailInput = this.userPersonalInfo.email;
                             if(this.userPersonalInfo.researchInterests == null)
                                 this.userPersonalInfo.researchInterests=[];
