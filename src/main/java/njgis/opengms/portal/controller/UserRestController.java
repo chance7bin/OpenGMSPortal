@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
@@ -16,6 +17,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -35,7 +37,7 @@ import java.net.URISyntaxException;
 
 @Slf4j
 @RestController
-@RequestMapping({"/user"})
+@RequestMapping({"/user","/profile"})
 public class UserRestController {
 
     @Autowired
@@ -62,11 +64,56 @@ public class UserRestController {
     @Autowired
     ManagementSystemService managementSystemService;
 
-    // @RequestMapping("/test")
-    // public String test(){
-    //     System.out.println("test controller");
-    //     return "test";
-    // }
+    @Value("${htmlLoadPath}")
+    private String htmlLoadPath;
+
+    /**
+     * @Description
+     * @param accessId user accessId
+     * @param req
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author kx
+     * @Date 22/2/23
+     **/
+    @ApiOperation(value = "访问用户个人主页")
+    @RequestMapping(value = "/{accessId}", method = RequestMethod.GET)
+    public ModelAndView getUserPage(@PathVariable("accessId") String accessId, HttpServletRequest req) {
+//        个人主页使用session的uid也就是username判断
+        ModelAndView modelAndView = new ModelAndView();
+        HttpSession session = req.getSession();
+
+        if(session.getAttribute("email") == null){
+            modelAndView.setViewName("login");
+            modelAndView.addObject("notice","After login, more functions will be unlocked.");
+            Object preUrl_obj = session.getAttribute("preUrl");
+            String preUrl = preUrl_obj==null? req.getHeader("REFERER"):preUrl_obj.toString();
+            preUrl = preUrl==null?req.getRequestURL().toString():preUrl;
+            modelAndView.addObject("preUrl",preUrl);
+            session.removeAttribute("preUrl");
+        }
+        else {
+//            通过userid在门户数据库拿到email
+            User userFromDb = userService.getByAccessId(accessId);
+            JSONObject user = userService.getInfoFromUserServer(userFromDb.getEmail());
+            JSONObject userInfo = (JSONObject) JSONObject.toJSON(user);
+            Object oid_obj = session.getAttribute("eid");
+            if(oid_obj!=null) {
+                String loginId = oid_obj.toString();
+                userInfo.put("loginId", loginId);
+            }else{
+                userInfo.put("loginId", null);
+            }
+            modelAndView.setViewName("user_page_overview");
+            modelAndView.addObject("userInfo", userInfo);
+
+            modelAndView.addObject("loadPath", htmlLoadPath);
+
+        }
+
+
+
+        return modelAndView;
+    }
 
     /**
      * @Description 用户登录
