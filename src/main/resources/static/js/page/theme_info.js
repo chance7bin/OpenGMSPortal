@@ -8,12 +8,12 @@ var vue = new Vue({
             //2021暑期
             editActiveIndex:0, //整体编辑
             NameEditActiveIndex:0, //编辑themename
-            DetailEditActiveIndex:0,//编辑themeDetail
+            DetailEditActiveIndex:0,//编辑detail
             editThemeName:"",
             themeImage:"",
             editThemeDetail:"",
             log_detail:0,
-            imgLog:1,
+            imgLog:0,
             //存model,data,dataMethod每一个条目的name,image,oid
             modelInfo:[],
             dataInfo:[],
@@ -123,7 +123,7 @@ var vue = new Vue({
             origin_themeObj:{
                 themeName:"",
                 themeImage:"",
-                themeDetail:"",
+                detail:"",
                 classinfo: [],
                 dataClassInfo: [],
                 dataMethodClassInfo: [],
@@ -132,7 +132,7 @@ var vue = new Vue({
             edit_themeObj: {
                 themeName: "",
                 themeImage: "",
-                themeDetail: "",
+                detail: "",
                 classinfo: [],
                 dataClassInfo: [],
                 dataMethodClassInfo: [],
@@ -141,7 +141,7 @@ var vue = new Vue({
             themeObj: {
                 themeName:"",
                 themeImage:"",
-                themeDetail:"",
+                detail:"",
                 classinfo: [],
                 dataClassInfo: [],
                 dataMethodClassInfo: [],
@@ -621,7 +621,7 @@ var vue = new Vue({
             }
             for(let i = 0;i<curObj.length;++i)
             {
-                if(curObj[i].oid == oid)
+                if(curObj[i].id == oid)
                     return curObj[i];
             }
             curObj.push(this.find_oid(oid,type))
@@ -887,14 +887,13 @@ var vue = new Vue({
                                 {
                                     //设为默认照片
                                     basicInfo.image = '/static/img/icon/default.png';
-                                    this.imgLog = 0;
                                 }
                                 this.themeObj.themeImage = basicInfo.image;
                                 this.themeImage = this.themeObj.themeImage;
 
                                 //显示theme detail
-                                this.themeObj.themeDetail = basicInfo.localizationList[0].description;
-                                this.themeDetail = basicInfo.localizationList[0].description;
+                                this.themeObj.detail = basicInfo.localizationList[0].description;
+                                this.detail = basicInfo.localizationList[0].description;
 
 
                                 //值复制
@@ -926,10 +925,10 @@ var vue = new Vue({
 
         },
         editDetailSave(){
-            this.edit_themeObj.themeDetail = tinyMCE.activeEditor.getContent();
+            this.edit_themeObj.detail = tinyMCE.activeEditor.getContent();
             this.DetailEditActiveIndex = 0;
         },
-        editSave() {
+        editSave_Finish() {
             //查看classinfo与dataClassInfo，如果存在一个也未输入，则删除
             // if (this.themeObj.classinfo.length==1&&this.themeObj.classinfo[0].mcname==""&&this.themeObj.classinfo[0].modelsoid.length==0) {
             //     this.themeObj.classinfo.splice(0,1);
@@ -945,27 +944,22 @@ var vue = new Vue({
             this.themeObj = JSON.parse(JSON.stringify(this.edit_themeObj))
 
             //更新themename
-            this.themeObj.themeName = this.edit_themeObj.themeName.trim();
+            this.themeObj.themename = this.edit_themeObj.themeName.trim();
 
             //更新detail
-            var detail = this.edit_themeObj.themeDetail;
+            var detail = this.edit_themeObj.detail;
             if(typeof(detail) != 'undefined'){
-                this.themeObj.themeDetail = detail.trim();
+                this.themeObj.detail = detail.trim();
             }
             else{
-                this.themeObj.themeDetail = ''
+                this.themeObj.detail = ''
             }
 
             //更新照片
-            if(this.imgLog!=0){
+            if(this.imgLog==1){
                 //img已更新
                 this.themeObj.image = $('#imgShow').get(0).src;
                 this.themeObj.uploadImage = $('#imgShow').get(0).currentSrc;//
-            }
-            else {
-                //未更新img
-                this.themeObj.image='';
-                this.themeObj.uploadImage='';
             }
 
             //更新application
@@ -1025,7 +1019,7 @@ var vue = new Vue({
                                 location.reload()
 
                             },1000)
-                            // window.location.href = "/repository/theme/" + result.data.oid;
+                            // window.location.href = "/repository/theme/" + result.data.id;
                         }
                         else{
                             this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
@@ -1036,7 +1030,7 @@ var vue = new Vue({
                                 }
                             });
                             that.dialogVisible3 = false;
-                            // window.location.href = "/repository/theme/" + result.data.oid;
+                            // window.location.href = "/repository/theme/" + result.data.id;
                             // alert("Success! Changes have been submitted, please wait for the author to review.");
                             //产生信号调用计数，启用websocket
                             // window.location.href = "/user/userSpace";
@@ -1093,7 +1087,7 @@ var vue = new Vue({
         edit_themeDetail(){
 
             //显示detail
-            $("#themeText").html(this.themeObj.themeDetail);
+            $("#themeText").html(this.themeObj.detail);
             // if(++this.log_detail==1)
             // {
                 initTinymce('textarea#themeText')
@@ -1175,7 +1169,7 @@ var vue = new Vue({
                             targetClass.modelsoid.splice(0,targetClass.modelsoid.length)
                             if(targetClass.modelsoid!=null){
                                 for(let j = 0;j<this.selectedModelTableData.length;++j){
-                                    targetClass.modelsoid.push(this.selectedModelTableData.oid)
+                                    targetClass.modelsoid.push(this.selectedModelTableData.id)
                                 }
                             }
                         break;
@@ -1217,7 +1211,7 @@ var vue = new Vue({
                             targetClass.datasoid.splice(0, targetClass.datasoid.length)
                             if (targetClass.datasoid != null) {
                                 for (let j = 0; j < this.selectedTableData.length; ++j) {
-                                    targetClass.datasoid.push(this.selectedTableData.oid)
+                                    targetClass.datasoid.push(this.selectedTableData.id)
                                 }
                             }
                             break;
@@ -1259,7 +1253,7 @@ var vue = new Vue({
                             targetClass.dataMethodsoid.splice(0, targetClass.dataMethodsoid.length)
                             if (targetClass.dataMethodsoid != null) {
                                 for (let j = 0; j < this.selecteddataMethodTableData.length; ++j) {
-                                    targetClass.dataMethodsoid.push(this.selecteddataMethodTableData.oid)
+                                    targetClass.dataMethodsoid.push(this.selecteddataMethodTableData.id)
                                 }
                             }
                             break;
@@ -1486,7 +1480,7 @@ var vue = new Vue({
             var flag = false
             //判断已选条目是否已存在
             for (var n = 0; n < this.selectedModelTableData.length; n++) {
-                if(this.selectedModelTableData[n].oid == row.oid){
+                if(this.selectedModelTableData[n].id == row.id){
                     flag = true
                     break
                 }
@@ -1499,18 +1493,18 @@ var vue = new Vue({
                 for (var n = 0; n < this.edit_themeObj.classinfo.length; n++) {
                     var modelsoid = this.findModelTableData(this.edit_themeObj.classinfo[n])
                     if(modelsoid != null){
-                        modelsoid.push(row.oid)
+                        modelsoid.push(row.id)
                         break
                     }
                 }
-                // this.themeObj.classinfo[num].modelsoid.push(row.oid);
+                // this.themeObj.classinfo[num].modelsoid.push(row.id);
             }
             console.log(this.themeModelData)
         },
         deleteModel(index, row) {
             // 删除数组中的模型
             for (var n = 0; n < this.selectedModelTableData.length; n++) {
-                if(this.selectedModelTableData[n].oid == row.oid){
+                if(this.selectedModelTableData[n].id == row.id){
                     this.selectedModelTableData.splice(n, 1);
 
 
@@ -1523,7 +1517,7 @@ var vue = new Vue({
                 var modelsoid = this.findModelTableData(this.edit_themeObj.classinfo[n])
                 if(modelsoid != null){
                     for (var m = 0; m < modelsoid.length; m++) {
-                        if(modelsoid[m] == row.oid){
+                        if(modelsoid[m] == row.id){
                             modelsoid.splice(m, 1);
                             break
                         }
@@ -1539,7 +1533,7 @@ var vue = new Vue({
             // 往数组中添加新模型
             var flag = false
             for (var n = 0; n < this.selectedTableData.length; n++) {
-                if(this.selectedTableData[n].oid == row.oid){
+                if(this.selectedTableData[n].id == row.id){
                     flag = true
                     break
                 }
@@ -1550,18 +1544,18 @@ var vue = new Vue({
                 for (var n = 0; n < this.edit_themeObj.dataClassInfo.length; n++) {
                     var datasoid = this.findTableData(this.edit_themeObj.dataClassInfo[n])
                     if(datasoid != null){
-                        datasoid.push(row.oid)
+                        datasoid.push(row.id)
                         break
                     }
                 }
-                // this.themeObj.dataClassInfo[num].datasoid.push(row.oid);
+                // this.themeObj.dataClassInfo[num].datasoid.push(row.id);
             }
 
         },
         deleteData(index, row) {
             // 删除数组中的模型
             for (var n = 0; n < this.selectedTableData.length; n++) {
-                if(this.selectedTableData[n].oid == row.oid){
+                if(this.selectedTableData[n].id == row.id){
                     this.selectedTableData.splice(n, 1);
                     break
                 }
@@ -1572,7 +1566,7 @@ var vue = new Vue({
                 var datasoid = this.findModelTableData(this.edit_themeObj.dataClassInfo[n])
                 if(datasoid != null){
                     for (var m = 0; m < datasoid.length; m++) {
-                        if(datasoid[m] == row.oid){
+                        if(datasoid[m] == row.id){
                             datasoid.splice(m, 1);
                             break
                         }
@@ -1587,7 +1581,7 @@ var vue = new Vue({
             // 往数组中添加新模型
             var flag = false
             for (var n = 0; n < this.selecteddataMethodTableData.length; n++) {
-                if(this.selecteddataMethodTableData[n].oid == row.oid){
+                if(this.selecteddataMethodTableData[n].id == row.id){
                     flag = true
                     break
                 }
@@ -1598,18 +1592,18 @@ var vue = new Vue({
                 for (var n = 0; n < this.edit_themeObj.dataMethodClassInfo.length; n++) {
                     var datasoid = this.findDataMethodTableData(this.edit_themeObj.dataMethodClassInfo[n])
                     if(datasoid != null){
-                        datasoid.push(row.oid)
+                        datasoid.push(row.id)
                         break
                     }
                 }
-                // this.themeObj.dataClassInfo[num].datasoid.push(row.oid);
+                // this.themeObj.dataClassInfo[num].datasoid.push(row.id);
             }
 
         },
         deleteDataMethod(index, row) {
             // 删除数组中的模型
             for (var n = 0; n < this.selecteddataMethodTableData.length; n++) {
-                if(this.selecteddataMethodTableData[n].oid == row.oid){
+                if(this.selecteddataMethodTableData[n].id == row.id){
                     this.selecteddataMethodTableData.splice(n, 1);
                     break
                 }
@@ -1620,7 +1614,7 @@ var vue = new Vue({
                 var datasoid = this.findDataMethodTableData(this.edit_themeObj.dataMethodClassInfo[n])
                 if(datasoid != null){
                     for (var m = 0; m < datasoid.length; m++) {
-                        if(datasoid[m] == row.oid){
+                        if(datasoid[m] == row.id){
                             datasoid.splice(m, 1);
                             break
                         }
@@ -1738,16 +1732,12 @@ var vue = new Vue({
                 classifications: ["all"],
             };
             let url, contentType;
-            url = "/" + this.relateType + "/list";
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                async: true,
-                contentType: contentType,
-                success: (json) => {
-                    if (json.code == 0) {
-                        let data = json.data;
+            url = getModelItemList()
+            axios.post(url,data)
+                .then(json => {
+                    result = json.data
+                    if (result.code == 0) {
+                        let data = result.data;
 
                         this.pageOption1.total = data.total;
                         this.pageOption1.pages = data.pages;
@@ -1760,8 +1750,31 @@ var vue = new Vue({
                     else {
                         console.log("query error!")
                     }
-                }
-            })
+
+                })
+            // $.ajax({
+            //     type: "POST",
+            //     url: url,
+            //     data: data,
+            //     async: true,
+            //     contentType: contentType,
+            //     success: (json) => {
+            //         if (json.code == 0) {
+            //             let data = json.data;
+            //
+            //             this.pageOption1.total = data.total;
+            //             this.pageOption1.pages = data.pages;
+            //             this.pageOption1.searchResult = data.list;
+            //             this.pageOption1.users = data.users;
+            //             this.pageOption1.progressBar = false;
+            //             this.pageOption1.paginationShow = true;
+            //
+            //         }
+            //         else {
+            //             console.log("query error!")
+            //         }
+            //     }
+            // })
         },
         // aaa(item){
         //     window.location.href='/profile/'+item.name
@@ -1918,7 +1931,7 @@ var vue = new Vue({
             }
             for (i = 0; i < this.editableTabs_model[num].tabledata.length; i++) {
                 let tableRow = this.editableTabs_model[num].tabledata[i];
-                if (tableRow.oid == row.oid) {
+                if (tableRow.id == row.id) {
                     flag = true;
                     break;
                 }
@@ -1927,7 +1940,7 @@ var vue = new Vue({
             if (!flag) {
                 this.editableTabs_model[num].tabledata.push(row);
                 // this.themeObj.classinfo[num].mcname = $("#categoryname"+this.tableflag1).val();
-                this.themeObj.classinfo[num].modelsoid.push(row.oid);
+                this.themeObj.classinfo[num].modelsoid.push(row.id);
             }
         },
         handleEdit1(index, row) {
@@ -1942,7 +1955,7 @@ var vue = new Vue({
             }
             for (i = 0; i < this.editableTabs_data[num].tabledata.length; i++) {
                 let tableRow = this.editableTabs_data[num].tabledata[i];
-                if (tableRow.oid == row.oid) {
+                if (tableRow.id == row.id) {
                     flag = true;
                     break;
                 }
@@ -1950,7 +1963,7 @@ var vue = new Vue({
             if (!flag) {
                 this.editableTabs_data[num].tabledata.push(row);
                 // this.themeObj.dataClassInfo[num].dcname = $("#categoryname2"+this.tableflag2).val();
-                this.themeObj.dataClassInfo[num].datasoid.push(row.oid);
+                this.themeObj.dataClassInfo[num].datasoid.push(row.id);
             }
         },
         handleDelete1(index, row) {
@@ -2042,7 +2055,7 @@ var vue = new Vue({
                     continue;
                 }
 
-                classes.push(checkedNodes[i].oid);
+                classes.push(checkedNodes[i].id);
                 str += checkedNodes[i].label;
                 if (i != checkedNodes.length - 1) {
                     str += ", ";
@@ -2193,13 +2206,13 @@ var vue = new Vue({
                 });
         },
         handleCurrentChange(data, checked, indeterminate) {
-            this.setUrl("/modelItem/repository?category=" + data.oid);
+            this.setUrl("/modelItem/repository?category=" + data.id);
             this.pageOption.searchResult = [];
             this.pageOption.total = 0;
             this.pageOption.paginationShow = false;
             this.currentClass = data.label;
             let classes = [];
-            classes.push(data.oid);
+            classes.push(data.id);
             this.classifications1 = classes;
             //this.getChildren(data.children)
             this.pageOption.currentPage = 1;
@@ -2212,7 +2225,7 @@ var vue = new Vue({
             let checkedNodes = this.$refs.tree2.getCheckedNodes()
             let classes = [];
             for (let i = 0; i < checkedNodes.length; i++) {
-                classes.push(checkedNodes[i].oid);
+                classes.push(checkedNodes[i].id);
             }
             this.classifications2 = classes;
             console.log(this.classifications2)
@@ -2227,7 +2240,7 @@ var vue = new Vue({
 
 
         uploadImg(){
-
+            let _this = this
             $("#imgFile").click();
             $("#imgFile").change(function () {
                 //获取input file的files文件数组;
@@ -2236,6 +2249,7 @@ var vue = new Vue({
                 var file = $('#imgFile').get(0).files[0];
                 //创建用来读取此文件的对象
                 var reader = new FileReader();
+                _this.imgLog = 1
                 //使用该对象读取file文件
                 reader.readAsDataURL(file);
                 //读取文件成功后执行的方法函数
@@ -2245,10 +2259,11 @@ var vue = new Vue({
                     //的base64编码格式的地址
                     $('#imgShow').get(0).src = e.target.result;
                     $('#imgShow').show();
+
+
                 }
             });
             //标识img已存在
-            this.imgLog = 1;
         },
         uploadApplicationImg(log){
             let that = this;

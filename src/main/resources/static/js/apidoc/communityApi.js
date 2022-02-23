@@ -24,7 +24,7 @@ function joinByTemplate(url, joinStr){
 }
 //unit
 function joinByUnit(url, joinStr){
-    if (typeof(joinStr) != 'undefined'){
+    if (typeof(joinStr) != 'undefined'){ ``
         return '/unit' + url + '/' + joinStr
     }
     return '/unit' + url

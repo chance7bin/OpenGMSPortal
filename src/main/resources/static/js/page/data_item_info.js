@@ -126,8 +126,8 @@ var  data_item_info = new Vue({
 
         feedBack(){
             $.get("/user/load",{},(result)=>{
-                let json = JSON.parse(result);
-                if (json.oid == "") {
+                let data = result.data
+                if (data.accessId == "") {
                     this.confirmLogin();
                 }
                 else {
@@ -409,9 +409,9 @@ var  data_item_info = new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
-                    data = JSON.parse(data);
-                    if (data.oid == "") {
+                success: (result) => {
+                    let data = result.data
+                    if (data.accessId === "") {
                         this.confirmLogin();
                     }
                     else {
@@ -439,9 +439,9 @@ var  data_item_info = new Vue({
                     withCredentials: true
                 },
                 crossDomain:true,
-                success: (data) => {
-                    data=JSON.parse(data);
-                    if (data.oid == "") {
+                success: (result) => {
+                    let data = result.data
+                    if (data.accessId == "") {
                         this.confirmLogin();
                     }
                     else{
@@ -1142,9 +1142,10 @@ var  data_item_info = new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
+                success: (result) => {
                     // data = JSON.parse(data);
-                    if (data.oid == "") {
+                    let data = result.data
+                    if (data.accessId == "") {
                         this.confirmLogin()
 
                     }
@@ -1503,11 +1504,11 @@ var  data_item_info = new Vue({
         axios.get("/user/load")
             .then((res) => {
                 if (res.status == 200) {
-                    if (res.data.oid != '') {
-                        this.useroid = res.data.oid;
-                        this.userUid = res.data.uid;
-                        this.userId = res.data.userId;
-                        this.userImg = res.data.image;
+                    if (res.data.accessId != '') {
+                        this.useroid = res.data.accessId;
+                        this.userUid = res.data.email;
+                        this.userId = res.data.accessId;
+                        this.userImg = res.data.avatar;
                     }
 
                 }

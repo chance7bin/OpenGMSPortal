@@ -22,7 +22,6 @@ function joinByDataMethod(url, joinStr){
 
 
 //get
-
 //hub
 function getHubById(joinStr) {
     let url = '/detail'
@@ -55,4 +54,5 @@ function getMethodById(joinStr) {
     let url = '/detail'
     return joinByDataMethod(url, joinStr)
 }
+
 

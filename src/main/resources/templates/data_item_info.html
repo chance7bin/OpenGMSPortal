@@ -335,7 +335,7 @@
             </div>&nbsp;&nbsp;
 
             <!--description-->
-            <div th:if="${datainfo.data.localizationList[0].description!=''&&datainfo.data.localizationList[0].description!=null}" id="description" class="detail_block">
+            <div th:if="${#lists.size(datainfo.data.localizationList)} lt 0" id="description" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Detailed Description</h4>
