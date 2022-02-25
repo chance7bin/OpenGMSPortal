@@ -16,6 +16,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -37,6 +38,9 @@ import java.net.URISyntaxException;
 @RestController
 @RequestMapping({"/user"})
 public class UserRestController {
+
+    @Value("${htmlLoadPath}")
+    private String htmlLoadPath;
 
     @Autowired
     UserService userService;
@@ -637,5 +641,44 @@ public class UserRestController {
         }
     }
 
+
+    @RequestMapping(value = "/{email}", method = RequestMethod.GET)            // 明明根据userId来写的，坑啊（有_id,oid,userID)
+    public ModelAndView getUserPage(@PathVariable("email") String email, HttpServletRequest req) {
+//        个人主页使用session的uid也就是username判断
+        ModelAndView modelAndView = new ModelAndView();
+        HttpSession session = req.getSession();
+
+        if(session.getAttribute("email") == null){
+            modelAndView.setViewName("login");
+            modelAndView.addObject("notice","After login, more functions will be unlocked.");
+            Object preUrl_obj = session.getAttribute("preUrl");
+            String preUrl = preUrl_obj==null? req.getHeader("REFERER"):preUrl_obj.toString();
+            preUrl = preUrl==null?req.getRequestURL().toString():preUrl;
+            modelAndView.addObject("preUrl",preUrl);
+            session.removeAttribute("preUrl");
+        }
+        else {
+//            通过userid在门户数据库拿到email
+//             User userFromDb = userService.getByUserId(id);
+            JSONObject user = userService.getInfoFromUserServer(email);
+            JSONObject userInfo = (JSONObject) JSONObject.toJSON(user);
+            Object oid_obj = session.getAttribute("eid");
+            if(oid_obj!=null) {
+                String loginId = oid_obj.toString();
+                userInfo.put("loginId", loginId);
+            }else{
+                userInfo.put("loginId", null);
+            }
+            modelAndView.setViewName("user_page_overview");
+            modelAndView.addObject("userInfo", userInfo);
+
+            modelAndView.addObject("loadPath", htmlLoadPath);
+
+        }
+
+
+
+        return modelAndView;
+    }
 
 }
