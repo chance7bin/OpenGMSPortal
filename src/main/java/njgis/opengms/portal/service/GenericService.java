@@ -137,7 +137,7 @@ public class GenericService {
         int totalElements = 0;
         try {
             Page itemsPage;
-            Pageable pageable = PageRequest.of(findDTO.getPage(), findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
+            Pageable pageable = PageRequest.of(findDTO.getPage() , findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
 
             // 从工厂中拿对应的dao
             JSONObject daoFactory = daoFactory(type);
@@ -228,6 +228,7 @@ public class GenericService {
                 jsonObject.put("createTime", simpleDateFormat.format(portalItem.getCreateTime()));
             }
             jsonObject.put("name",portalItem.getName());
+            jsonObject.put("image",htmlLoadPath+portalItem.getImage());
             jsonObject.put("keywords", portalItem.getKeywords());
             jsonObject.put("description",portalItem.getOverview());
             // jsonObject.put("type",portalItem.getType());
@@ -700,11 +701,12 @@ public class GenericService {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("error/404");
 
+        //如果用户是管理员，则放行
         User user = userDao.findFirstByEmail(email);
-        if(user.getUserRole().isAdmin()){
+        if(user != null && user.getUserRole().isAdmin()){
             return null;
         }
-
+        //判断条目是否私有，是否属于该用户
         if (item.getStatus().equals("Private")) {
             if (email == null) {
                 return modelAndView;
