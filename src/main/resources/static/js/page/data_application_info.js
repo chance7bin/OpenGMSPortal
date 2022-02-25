@@ -47,9 +47,14 @@ var data_application_info = new Vue({
             userId:'',
             dataApplicationId:'',
             addNewDialog:false,
+
+            htmlJSON:{}
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
 
         submitComment(){
             if(this.useroid==""||this.useroid==null||this.useroid==undefined){

@@ -14,6 +14,11 @@
     <link rel="stylesheet" th:href="@{/static/css/page/repositoryInfo.css}">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+
+
     <style>
         #description h1{
             font-size: 24px;
@@ -58,6 +63,14 @@
     <div th:replace="fragments/backToTop :: backtop-down"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
+
+        <translation-bar
+                json-file="unitInfo"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title">
@@ -151,7 +164,7 @@
             <div id="classification" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Classification(s)</h4>
+                        <h4>{{htmlJSON.Classification}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-top:20px;">
@@ -255,7 +268,7 @@
             <div id="description" th:if="${#lists.size(info.localizationList)>0}" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Detailed Description</h4>
+                        <h4>{{htmlJSON.DetailedDescription}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -294,7 +307,7 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -317,13 +330,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
-                    </div>
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}} </div>
                 </div>
             </div>
 
@@ -378,8 +390,8 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4 th:if="${history!=true}">Contributor</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
+                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -434,7 +446,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -509,6 +521,11 @@
     var oidcvt=[[${oid_cvt}]];
     var infoname = [[${info.name}]];
 </script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script type="text/javascript" src="/static/js/page/repositoryInfo.js"></script>
 <script src="/static/js/modules/comments.js"></script>
 <script src="/static/js/common/copy.js"></script>

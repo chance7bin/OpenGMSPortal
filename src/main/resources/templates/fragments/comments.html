@@ -9,7 +9,7 @@
         <div>
             <div class="block_head">
                 <div class="head_text">
-                    <h4>Comment(s)</h4>
+                    <h4 translateId="comment">Comment(s)</h4>
                 </div>
             </div>
             <div class="block_content">
@@ -17,7 +17,7 @@
                     <a :href="comment_userId==''?'/user/login':'/profile/'+comment_userId" class="round_icon">
                         <img :src="comment_userImg!=''?comment_userImg:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon pull-left" style="border: 1px solid #eee">
                     </a>
-                    <div class="flex"
+                    <div class="flex "
                          style="flex-direction:row;justify-content:space-between;flex-wrap: wrap;flex-grow:1;margin-left:15px">
 
                         <el-input
@@ -37,7 +37,7 @@
                             {{replyTo}}
                         </el-tag>
 
-                        <el-button type="primary" plain style="float:right" @click="submitComment">Submit</el-button>
+                        <el-button type="primary" plain style="float:right" @click="submitComment" translateId="submit">Submit</el-button>
 
                     </div>
                 </div>
@@ -62,13 +62,13 @@
                                         <!--<span>-->
                                         <!--<i class="thumbs-up">Like</i>-->
                                         <!--</span>-->
-                                        <a href="#comment" class="reply hover" @click="replyComment(comment)">
+                                        <a href="#comment" class="reply hover" @click="replyComment(comment)" translateId="reply">
                                                         <i class="el-icon-s-comment"></i>
                                                         Reply
                                         </a>
                                 </div>
                                 <div v-if="comment_userId==comment.author.userId" >
-                                                    <a class="delete hover" style="display: none;" @click="deleteComment(comment.oid)">
+                                                    <a class="delete hover" style="display: none;" @click="deleteComment(comment.oid)"  translateId="delete">
                                                         <i class="el-icon-delete-solid"></i>
                                                         Delete
                                                     </a>

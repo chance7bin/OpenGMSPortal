@@ -8,9 +8,15 @@ var vue = new Vue({
                 docLoading:false,
 
                 docTarget:'Model Resource',
+                htmlJSON:{}
+
             }
         },
         methods:{
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent
+            },
+
             showDoc(index){
                 let obj={
                     1:'How to use a model online?',
