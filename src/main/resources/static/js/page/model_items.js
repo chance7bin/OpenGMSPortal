@@ -426,6 +426,8 @@ new Vue({
             }],
 
             recordHistory:true,
+
+            htmlJSON:{}
         }
     },
     methods: {

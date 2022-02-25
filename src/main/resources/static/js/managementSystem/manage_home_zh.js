@@ -69,7 +69,7 @@ new Vue({
         getServerNodes(){
             axios.get("/managementSystem/serverNodes")
                 .then(response=> {
-                    this.serverNodes=response.data.data.data
+                    this.serverNodes=response.data.data
                     let nodes=[]
                     for(let i=0,len=this.serverNodes.length;i<len;i++){
                         let cityName=this.serverNodes[i].geoJson.city

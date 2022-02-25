@@ -82,20 +82,20 @@
 
         <div class="mainContent">
             <div class="el-row">
-                <h2 class="main-title">Model Item Repository</h2>
+                <h2 class="main-title">{{htmlJSON.PageName}}</h2>
                 <!--<el-button type="primary">All</el-button>-->
                 <!--<el-button @click="window.location.href='/modelItem/repository1'">1</el-button>-->
                 <!--<el-button @click="window.location.href='/modelItem/repository2'">2</el-button>-->
-                <h4 class="sub-title">The repository of models (include tools, algorithms, packages, et al.)</h4>
+                <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
                 <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;"
-                        @click="contribute()">+ Contribute
+                        @click="contribute()">{{htmlJSON.Contribute}}
                 </button>
                 <translation-bar
                         json-file="model_items"
                         @translate-page="translatePage"
                         initial-lang="en-us"
                         theme="dark"
-                        style="position: absolute;top: 10px;right:15px">fdvsdfvs</translation-bar>
+                        style="position: absolute;top: 10px;right:15px"></translation-bar>
                 <hr>
             </div>
             <div class="el-col el-col-6 minScreen_maxWidth" style="margin-top:29px;">
@@ -121,7 +121,7 @@
 
                 <el-card class="box-card categoryList" style="position:relative">
                     <div slot="header" class="clearfix text-center">
-                        <span style="font-size: 20px;color:#444">Model Classifications</span>
+                        <span style="font-size: 20px;color:#444">{{htmlJSON.ModelClass}}</span>
                     </div>
 
                     <el-tree v-if="queryType=='normal'"
@@ -153,7 +153,7 @@
             <div class="el-col el-col-18 minScreen_maxWidth">
                 <div class="searcherPanel">
                     <div class="searcherInputPanel" @keydown.enter="search()">
-                        <el-input v-model="searchText" placeholder="Query String..." style="border-radius: 0;">
+                        <el-input v-model="searchText" :placeholder=htmlJSON.SearchHolding style="border-radius: 0;">
                             <el-select v-model="curQueryField" slot="prepend" style="color:#606266;width:120px;border-radius: 0;">
                                 <el-option
                                         v-for="qf in queryFields"
@@ -162,7 +162,8 @@
                                         :value="qf">
                                 </el-option>
                             </el-select>
-                            <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">Search</el-button>
+                            <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">
+                                {{htmlJSON.Search}}</el-button>
                         </el-input>
                         <!--<input id="searchBox" type="text" placeholder="Model Item Name..." v-model="searchText">-->
                         <!--<button @click="search()"><i class="glyphicon glyphicon-search"></i> Search</button>-->
@@ -208,7 +209,7 @@
                             </section>
 
                         </div>
-                        <span style="vertical-align: -webkit-baseline-middle;font-weight: bold;">Advanced Search with Multiple Query Conditions </span>
+                        <span style="vertical-align: -webkit-baseline-middle;font-weight: bold;">{{htmlJSON.AdvancedSearch}}</span>
                         <div class="line pull-right">
 
                             <a id="drawback" href="javascript:void(0)" class="fa fa-angle-double-up fa-3x"
@@ -217,7 +218,7 @@
                                     style="display: inline-block;margin-top:-18px;margin-right:4px;height:34px;"
                                     type="button" @click="search()">
                                 <i class="glyphicon glyphicon-search"></i>
-                                Search
+                                {{htmlJSON.Search}}
                             </button>
 
                         </div>
@@ -233,9 +234,9 @@
                 </div>
 
                 <div id="curClassBar" role="alert" class="alert alert-info" style="margin-bottom: 2px;">
-                    <strong class="minScreen_curClass">Current Classification: {{currentClass}} </strong>
-                    <strong v-if="pageOption.progressBar" style="float: right;">Loading... </strong>
-                    <strong v-if="!pageOption.progressBar" style="float: right;">{{pageOption.total}} items</strong>
+                    <strong class="minScreen_curClass">{{htmlJSON.CurrentClass}}{{currentClass}} </strong>
+                    <strong v-if="pageOption.progressBar" style="float: right;">{{htmlJSON.Loading}} </strong>
+                    <strong v-if="!pageOption.progressBar" style="float: right;">{{pageOption.total}} {{htmlJSON.items}}</strong>
 
 
                 </div>
@@ -244,15 +245,15 @@
                 <div class="modelPanel fixedLoading" v-loading="pageOption.progressBar">
                     <div style="margin:10px 0" v-if="pageOption.searchResult.length>0">
                         <div style="float:left;margin: 4px 0 4px 15px;">
-                            <span style="font-weight: bold;margin-right:5px;">Sorted By:</span>
+                            <span style="font-weight: bold;margin-right:5px;">{{htmlJSON.SortBy}}</span>
                             <el-dropdown trigger="click" @command="changeSortField" style="cursor:pointer;">
                             <span class="el-dropdown-link">
                                 {{sortTypeName}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">View Count</el-dropdown-item>
-                                    <el-dropdown-item command="Name">Name</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">Create Time</el-dropdown-item>
+                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
+                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
+                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}}</el-dropdown-item>
 
                                 </el-dropdown-menu>
                             </el-dropdown>
