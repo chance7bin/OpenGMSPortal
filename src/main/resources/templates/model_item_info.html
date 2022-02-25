@@ -7,12 +7,12 @@
     <title th:text="${itemInfo.name}+' | Model Item | OpenGMS'">Model Item Info | OpenGMS</title>
     <meta name="keywords" th:attr="content=${itemInfo.name}+${metaKeywords}+', OpenGMS, geographic model'"/>
     <meta name="description"
-          th:attr="content=${itemInfo.description}+' | OpenGMS supports to share your resources in geographic modeling and simulation.'"/>
+          th:attr="content=${itemInfo.overview}+' | OpenGMS supports to share your resources in geographic modeling and simulation.'"/>
 
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
     <link rel="stylesheet" href="/static/css/base/universal.css">
@@ -251,12 +251,12 @@
 
                         <div th:if="${#lists.size(computableModels)}!=0">
                             <div class="list_panel clearfix" th:each="model:${computableModels}">
-                                <a th:href="'/computableModel/'+${model.oid}" class="img">
+                                <a th:href="'/computableModel/'+${model.id}" class="img">
                                     <img src="/static/img/model/calcModel.png">
                                 </a>
 
                                 <div class="info" style="margin-top:0px;">
-                                    <a th:href="'/computableModel/'+${model.oid}"
+                                    <a th:href="'/computableModel/'+${model.id}"
                                        th:text="${model.name}">Ground Water Flow System</a>
                                     <div style="display: inline-block;margin-left:5px">
                                         <span class="label label-success" th:if="${model.contentType == 'Package' || model.contentType == 'MD5'}">
@@ -275,7 +275,7 @@
                                             Downloadable Link
                                         </span>
                                     </div>
-                                    <p style="margin-top: 0px" th:text="${model.description}">ANN-CA uses the artificial
+                                    <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
                                         neural network method to extract
                                         land use change rules in the study area, and then applies the rules to
                                         subsequent
@@ -331,15 +331,15 @@
                         <div th:if="${#lists.size(conceptualModels)}!=0">
                             <div class="list_panel clearfix" th:each="model:${conceptualModels}">
                                 <!--<div th:text="${model.image}"></div>-->
-                                <a class="img" th:href="'/conceptualModel/'+${model.oid}" th:switch="${model.image}">
+                                <a class="img" th:href="'/conceptualModel/'+${model.id}" th:switch="${model.image}">
                                     <img th:case="''" src="/static/img/model/conceptual.png">
                                     <img th:case="null" src="/static/img/model/conceptual.png">
                                     <img th:case="*" th:src="${model.image}">
                                 </a>
                                 <div class="info" style="margin-top:0px;">
-                                    <a th:href="'/conceptualModel/'+${model.oid}"
+                                    <a th:href="'/conceptualModel/'+${model.id}"
                                        th:text="${model.name}">Ground Water Flow System</a>
-                                    <p style="margin-top: 0px" th:text="${model.description}">ANN-CA uses the artificial
+                                    <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
                                         neural network method to extract
                                         land use change rules in the study area, and then applies the rules to
                                         subsequent
@@ -394,15 +394,15 @@
                         </div>
                         <div th:if="${#lists.size(logicalModels)}!=0">
                             <div class="list_panel clearfix" th:each="model:${logicalModels}">
-                                <a th:href="'/logicalModel/'+${model.oid}" th:switch="${model.image}" class="img">
+                                <a th:href="'/logicalModel/'+${model.id}" th:switch="${model.image}" class="img">
                                     <img th:case="''" src="/static/img/model/logical.png">
                                     <img th:case="null" src="/static/img/model/logical.png">
                                     <img th:case="*" th:src="${model.image}">
                                 </a>
                                 <div class="info" style="margin-top:0px;">
-                                    <a th:href="'/logicalModel/'+${model.oid}" th:text="${model.name}">Ground
+                                    <a th:href="'/logicalModel/'+${model.id}" th:text="${model.name}">Ground
                                         Water Flow System</a>
-                                    <p style="margin-top: 0px" th:text="${model.description}">ANN-CA uses the artificial
+                                    <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
                                         neural network method to extract
                                         land use change rules in the study area, and then applies the rules to
                                         subsequent
@@ -480,7 +480,7 @@
                             <div v-if="!modelRelationGraphShow">
                                 <div class="list_panel clearfix" v-for="model,key in relatedModelItemsPage">
                                     <!--<div th:text="${model.image}"></div>-->
-                                    <a class="img" :href="'/modelItem/'+model.oid" >
+                                    <a class="img" :href="'/modelItem/'+model.id" >
                                         <img v-if="model.image==null" src="/static/img/model/model.png">
                                         <img v-else :src="model.image">
                                     </a>
@@ -491,9 +491,9 @@
                                                     placement="top">
                                             <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
                                         </el-tooltip>
-                                        <a :href="'/modelItem/'+model.oid">{{model.name}}</a>
+                                        <a :href="'/modelItem/'+model.id">{{model.name}}</a>
 
-                                        <p style="margin-top: 0px">{{model.description}}</p>
+                                        <p style="margin-top: 0px">{{model.overview}}</p>
                                     </div>
                                 </div>
                                 <el-pagination
@@ -518,7 +518,7 @@
                                                     <img v-if="curRelation.img != ''" :src="curRelation.img" style="width:90px;height:90px;">
                                                     <img v-else src="/static/img/model/model.png"/>
                                                 </div>
-                                                <a :href="'/modelItem/'+curRelation.oid" target="_blank" style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
+                                                <a :href="'/modelItem/'+curRelation.id" target="_blank" style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
                                             </div>
                                             <div v-if="curRelation.type=='ref'">
                                                 <div style="margin-bottom: 10px;">
@@ -651,7 +651,7 @@
                                 <div class="info" style="margin-top:0px;">
                                     <a th:href="'/dataItem/'+${model.id}"
                                        th:text="${model.name}">Ground Water Flow System</a>
-                                    <p style="margin-top: 0px" th:text="${model.description}">ANN-CA uses the artificial
+                                    <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
                                         neural network method to extract
                                         land use change rules in the study area, and then applies the rules to
                                         subsequent
@@ -818,14 +818,14 @@
 
                         </div>
                         <div th:if="${#lists.size(concepts)}!=0" class="list_panel clearfix" th:each="model:${concepts}">
-                            <a th:href="'/repository/concept/'+${model.oid}" class="img">
+                            <a th:href="'/repository/concept/'+${model.id}" class="img">
                                 <img src="/static/img/model/semantics.png">
                             </a>
                             <div class="info" style="margin-top:0px;">
-                                <a th:href="'/repository/concept/'+${model.oid}"
+                                <a th:href="'/repository/concept/'+${model.id}"
                                    th:text="${model.name}">Ground Water Flow System</a>
                                 <p style="margin-top: 0px"
-                                   th:text="${model.description!=null?model.description:model.description_ZH!=null?model.description_ZH:model.description_EN}">
+                                   th:text="${model.overview!=null?model.overview:model.overview_ZH!=null?model.overview_ZH:model.overview_EN}">
                                     ANN-CA uses the artificial
                                     neural network method to extract
                                     land use change rules in the study area, and then applies the rules to
@@ -834,14 +834,14 @@
                             </div>
                         </div>
                         <div th:if="${#lists.size(spatialReferences)}!=0" class="list_panel clearfix" th:each="model:${spatialReferences}">
-                            <a th:href="'/repository/spatialReference/'+${model.oid}" class="img">
+                            <a th:href="'/repository/spatialReference/'+${model.id}" class="img">
                                 <img src="/static/img/model/spatialreference.png">
                             </a>
                             <div class="info" style="margin-top:0px;">
-                                <a th:href="'/repository/spatialReference/'+${model.oid}"
+                                <a th:href="'/repository/spatialReference/'+${model.id}"
                                    th:text="${model.name}">Ground Water Flow System</a>
                                 <p style="margin-top: 0px"
-                                   th:text="${model.description!=null?model.description:model.wkname}">ANN-CA uses
+                                   th:text="${model.overview!=null?model.overview:model.wkname}">ANN-CA uses
                                     the artificial
                                     neural network method to extract
                                     land use change rules in the study area, and then applies the rules to
@@ -850,13 +850,13 @@
                             </div>
                         </div>
                         <div th:if="${#lists.size(templates)}!=0" class="list_panel clearfix" th:each="model:${templates}">
-                            <a th:href="'/repository/template/'+${model.oid}" class="img">
+                            <a th:href="'/repository/template/'+${model.id}" class="img">
                                 <img src="/static/img/model/template.png">
                             </a>
                             <div class="info" style="margin-top:0px;">
-                                <a th:href="'/repository/template/'+${model.oid}"
+                                <a th:href="'/repository/template/'+${model.id}"
                                    th:text="${model.name}">Ground Water Flow System</a>
-                                <p style="margin-top: 0px" th:text="${model.description}">ANN-CA
+                                <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA
                                     uses the artificial
                                     neural network method to extract
                                     land use change rules in the study area, and then applies the rules to
@@ -865,14 +865,14 @@
                             </div>
                         </div>
                         <div th:if="${#lists.size(units)}!=0" class="list_panel clearfix" th:each="model:${units}">
-                            <a th:href="'/repository/unit/'+${model.oid}" class="img">
+                            <a th:href="'/repository/unit/'+${model.id}" class="img">
                                 <img src="/static/img/model/unit.png">
                             </a>
                             <div class="info" style="margin-top:0px;">
-                                <a th:href="'/repository/unit/'+${model.oid}"
+                                <a th:href="'/repository/unit/'+${model.id}"
                                    th:text="${model.name}">Ground Water Flow System</a>
                                 <p style="margin-top: 0px"
-                                   th:text="${model.description}">
+                                   th:text="${model.overview}">
                                     ANN-CA uses the artificial
                                     neural network method to extract
                                     land use change rules in the study area, and then applies the rules to
@@ -888,7 +888,7 @@
                                 <a th:href="${model.url}"
                                    th:text="${model.name}">Ground Water Flow System</a>
                                 <!--                                <p style="margin-top: 0px"-->
-                                <!--                                   th:text="${model.description}">-->
+                                <!--                                   th:text="${model.overview}">-->
                                 <!--                                    ANN-CA uses the artificial-->
                                 <!--                                    neural network method to extract-->
                                 <!--                                    land use change rules in the study area, and then applies the rules to-->
@@ -904,7 +904,7 @@
                                 <a th:href="${model.content}"
                                    th:text="${model.name}">Ground Water Flow System</a>
                                 <!--                                <p style="margin-top: 0px"-->
-                                <!--                                   th:text="${model.description}">-->
+                                <!--                                   th:text="${model.overview}">-->
                                 <!--                                    ANN-CA uses the artificial-->
                                 <!--                                    neural network method to extract-->
                                 <!--                                    land use change rules in the study area, and then applies the rules to-->
@@ -1217,8 +1217,8 @@
                         Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                         </span>
                         <a style="word-break:break-all;"
-                           th:href="'https://geomodeling.njnu.edu.cn/modelItem/'+${itemInfo.oid}"
-                           th:text="'https://geomodeling.njnu.edu.cn/modelItem/'+${itemInfo.oid}">
+                           th:href="'https://geomodeling.njnu.edu.cn/modelItem/'+${itemInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/modelItem/'+${itemInfo.id}">
                             https://geomodeling.njnu.edu.cn/modelitem/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -1274,13 +1274,13 @@
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
                                 <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/modelItem/'+${itemInfo.oid}" target="_blank">View
+                                        th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -1326,7 +1326,7 @@
                     <div class="el-row"
                          style="margin-bottom: 3px;height: 40px;display: flex;align-items: center;">
                         <div class="el-col ">
-                            <a :href="'/profile/'+lightenContributor.userId" target="_blank">
+                            <a :href="'/profile/'+lightenContributor.accessId" target="_blank">
 <!--                            <img :src="lightenContributor.avatar==''?'/static/img/icon/default.png':lightenContributor.avatar"-->
 <!--                                 class="round_icon" style="width:35px;height: 35px;">-->
                                 <user-avatar ref="mainContributorAvatar" style="width:35px;height: 35px;"></user-avatar>
@@ -1334,7 +1334,7 @@
                         </div>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a :href="'/profile/'+lightenContributor.userId" target="_blank"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
+                                <a :href="'/profile/'+lightenContributor.accessId" target="_blank"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
                             </div>
                         </div>
                     </div>
@@ -1346,7 +1346,7 @@
                     </div>
                     <!--<div class="flexCenter" style=" white-space: nowrap; justify-content: normal;">-->
                         <!--<div class="wzhScrollbar ">-->
-                            <!--<div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.userId"-->
+                            <!--<div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.accessId"-->
                                  <!--class="inlineBlock cursorPointer" style="margin: 10px 5px;">-->
                                 <!--<el-tooltip effect="dark"-->
                                             <!--:content="contributor.name"-->
@@ -1373,12 +1373,12 @@
 
                     <div class="flexCenter" style=" white-space: nowrap; justify-content: normal;">
                         <div class="wzhScrollbar">
-                            <div  v-for="(contributor,index) in contributors" :key="contributor.userId"
+                            <div  v-for="(contributor,index) in contributors" :key="contributor.accessId"
                                  class="inlineBlock cursorPointer" style="margin: 10px 5px;">
                                 <el-tooltip effect="dark"
                                             :content="contributor.name"
                                             placement="bottom">
-                                    <a :href="'/profile/'+contributor.userId" target="_blank">
+                                    <a :href="'/profile/'+contributor.accessId" target="_blank">
 <!--                                    <img :src="contributor.avatar==''?'/static/img/icon/default.png':contributor.avatar" onerror="src='/static/img/icon/default.png'"-->
 <!--                                         class="round_icon iconImg">-->
                                         <user-avatar ref="coContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
@@ -1407,8 +1407,8 @@
                 <div class="block_content text-center" style="padding-left:10px">
 
                     <div style="text-align: left;"
-                         th:if="${itemInfo.authorship!=null&&#lists.size(itemInfo.authorship)!=0}"
-                         th:each="author,key:${itemInfo.authorship}">
+                         th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}"
+                         th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;"
                               th:class="${key.index==0?'ab':'ab transform180'}"><a
                                 data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
@@ -1430,13 +1430,13 @@
                             </div>
                         </div>
                     </div>
-                    <div th:if="${itemInfo.authorship==null||#lists.size(itemInfo.authorship)==0}">
+                    <div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">
                         <el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"
                                                                               style="text-decoration: underline">claim</a>
                             the item.
                         </el-tag>
                     </div>
-                    <div th:if="${history!=true && #lists.size(itemInfo.authorship)>0}">
+                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
                                                                           style="text-decoration: underline">Feedback</a></el-tag>
                     </div>
@@ -1470,13 +1470,13 @@
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
                                 <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/modelItem/'+${itemInfo.oid}" target="_blank">View
+                                        th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -1517,7 +1517,7 @@
                                 <img v-if="curRelation.img != ''" :src="curRelation.img" style="width:90px;height:90px;">
                                 <img v-else src="/static/img/model/model.png"/>
                             </div>
-                            <a :href="'/modelItem/'+curRelation.oid" target="_blank" style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
+                            <a :href="'/modelItem/'+curRelation.id" target="_blank" style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
                         </div>
                         <div v-if="curRelation.type=='ref'">
                             <div style="margin-bottom: 10px;">
@@ -1662,7 +1662,7 @@
 <!--                <el-table-column-->
 <!--                        label="Name">-->
 <!--                    <template slot-scope="props">-->
-<!--                        <a :href="'/'+relateType+'/'+props.row.oid" target="_blank">{{props.row.name}}</a>-->
+<!--                        <a :href="'/'+relateType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>-->
 <!--                    </template>-->
 <!--                </el-table-column>-->
 
@@ -1713,7 +1713,7 @@
 <!--                        <template slot-scope="props">-->
 <!--                            <el-form label-position="left" inline class="demo-table-expand">-->
 <!--                                <el-form-item label="Overview">-->
-<!--                                    <span>{{ props.row.description }}</span>-->
+<!--                                    <span>{{ props.row.overview }}</span>-->
 <!--                                </el-form-item>-->
 
 <!--                            </el-form>-->
@@ -1722,7 +1722,7 @@
 <!--                    <el-table-column sortable='custom'-->
 <!--                            label="Name">-->
 <!--                        <template slot-scope="props">-->
-<!--                            <a :href="'/repository/'+relateType+'/'+props.row.oid"-->
+<!--                            <a :href="'/repository/'+relateType+'/'+props.row.id"-->
 <!--                               target="_blank">{{props.row.name}}</a>-->
 <!--                        </template>-->
 <!--                    </el-table-column>-->
@@ -1775,7 +1775,7 @@
 <!--                        <template slot-scope="props">-->
 <!--                            <el-form label-position="left" inline class="demo-table-expand">-->
 <!--                                <el-form-item label="Overview">-->
-<!--                                    <span>{{ props.row.description }}</span>-->
+<!--                                    <span>{{ props.row.overview }}</span>-->
 <!--                                </el-form-item>-->
 
 <!--                            </el-form>-->
@@ -1784,7 +1784,7 @@
 <!--                    <el-table-column sortable='custom'-->
 <!--                            label="Name">-->
 <!--                        <template slot-scope="props">-->
-<!--                            <a :href="'/repository/'+relateType+'/'+props.row.oid"-->
+<!--                            <a :href="'/repository/'+relateType+'/'+props.row.id"-->
 <!--                               target="_blank">{{props.row.name}}</a>-->
 <!--                        </template>-->
 <!--                    </el-table-column>-->
@@ -1956,7 +1956,7 @@
                             <template slot-scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-form-item label="Overview">
-                                        <span>{{ props.row.description }}</span>
+                                        <span>{{ props.row.overview }}</span>
                                     </el-form-item>
 
                                 </el-form>
@@ -1965,7 +1965,7 @@
                         <el-table-column sortable='custom'
                                          label="Name">
                             <template slot-scope="props">
-                                <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                <a :href="'/repository/'+relateType+'/'+props.row.id"
                                    target="_blank">{{props.row.name}}</a>
                             </template>
                         </el-table-column>
@@ -2017,7 +2017,7 @@
                             <template slot-scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-form-item label="Overview">
-                                        <span>{{ props.row.description }}</span>
+                                        <span>{{ props.row.overview }}</span>
                                     </el-form-item>
 
                                 </el-form>
@@ -2026,7 +2026,7 @@
                         <el-table-column sortable='custom'
                                          label="Name">
                             <template slot-scope="props">
-                                <a :href="'/repository/'+relateType+'/'+props.row.oid"
+                                <a :href="'/repository/'+relateType+'/'+props.row.id"
                                    target="_blank">{{props.row.name}}</a>
                             </template>
                         </el-table-column>

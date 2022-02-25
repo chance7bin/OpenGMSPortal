@@ -550,6 +550,16 @@ public class UserService {
         }
     }
 
+    public User getByAccessId(String accessId) {
+        try {
+            return userDao.findFirstByAccessId(accessId);
+        } catch (Exception e) {
+            log.error("有人乱查数据库！！该UID不存在User对象");
+            // System.out.println("有人乱查数据库！！该UID不存在User对象");
+            throw new MyException(ResultEnum.NO_OBJECT);
+        }
+    }
+
     public String getAvatarFromUserServer(String email){
         HttpHeaders headers = new HttpHeaders();
         headers.set("user-agent","portal_backend");
