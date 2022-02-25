@@ -1,0 +1,23 @@
+{
+  "en-us": {
+    "PageName": "Demo",
+    "PageIntro":"Some examples about how to use OpenGMS.",
+
+    "info1":"How to run a model online?",
+    "info2": "How to run a integrated model online?",
+
+    "info3": "Learn More About OpenGMS →"
+
+
+  },
+  "zh-cn": {
+    "PageName": "案例",
+    "PageIntro": "关于如何使用OpenGMS",
+
+    "info1":"如何在线运行一个模型？",
+    "info2": "如何在线运行一个集成模型？",
+
+    "info3": "了解更多关于 OpenGMS →"
+  }
+
+}
