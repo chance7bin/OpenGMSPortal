@@ -192,7 +192,7 @@ public class ModelItemService {
                 modelItemJson.put("name", modelItemNew.getName());
                 modelItemJson.put("id", modelItemNew.getId());
                 modelItemJson.put("relation",modelItems.get(i).getRelation().getText());
-                modelItemJson.put("description", modelItemNew.getOverview());
+                modelItemJson.put("overview", modelItemNew.getOverview());
                 modelItemJson.put("image", modelItemNew.getImage().equals("") ? null : htmlLoadPath + modelItemNew.getImage());
                 modelItemArray.add(modelItemJson);
             }
@@ -207,7 +207,7 @@ public class ModelItemService {
             JSONObject conceptualJson = new JSONObject();
             conceptualJson.put("name",conceptualModel.getName());
             conceptualJson.put("id",conceptualModel.getId());
-            conceptualJson.put("description",conceptualModel.getOverview());
+            conceptualJson.put("overview",conceptualModel.getOverview());
             conceptualJson.put("image", conceptualModel.getImageList().size() == 0 ? null : htmlLoadPath + conceptualModel.getImageList().get(0));
             conceptualArray.add(conceptualJson);
         }
@@ -222,7 +222,7 @@ public class ModelItemService {
             JSONObject logicalJson = new JSONObject();
             logicalJson.put("name",logicalModel.getName());
             logicalJson.put("id",logicalModel.getId());
-            logicalJson.put("description",logicalModel.getOverview());
+            logicalJson.put("overview",logicalModel.getOverview());
             logicalJson.put("image", logicalModel.getImageList().size() == 0 ? null : htmlLoadPath + logicalModel.getImageList().get(0));
             logicalArray.add(logicalJson);
         }
@@ -237,7 +237,7 @@ public class ModelItemService {
             JSONObject computableJson = new JSONObject();
             computableJson.put("name",computableModel.getName());
             computableJson.put("id",computableModel.getId());
-            computableJson.put("description",computableModel.getOverview());
+            computableJson.put("overview",computableModel.getOverview());
             computableJson.put("contentType",computableModel.getContentType());
             computableArray.add(computableJson);
         }
@@ -263,7 +263,7 @@ public class ModelItemService {
                         break;
                     }
                 }
-                jsonObj.put("description", desc);
+                jsonObj.put("overview", desc);
 //                jsonObj.put("description_ZH", concept.getDescription_ZH());
 //                jsonObj.put("description_EN", concept.getDescription_EN());
                 conceptArray.add(jsonObj);
@@ -282,7 +282,7 @@ public class ModelItemService {
                 jsonObj.put("name", spatialReference.getName());
                 jsonObj.put("id", spatialReference.getId());
                 jsonObj.put("wkname", spatialReference.getWkname());
-                jsonObj.put("description", spatialReference.getOverview());
+                jsonObj.put("overview", spatialReference.getOverview());
                 spatialReferenceArray.add(jsonObj);
             }
         }
@@ -298,7 +298,7 @@ public class ModelItemService {
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("name", template.getName());
                 jsonObj.put("id", template.getId());
-                jsonObj.put("description", template.getOverview());
+                jsonObj.put("overview", template.getOverview());
                 jsonObj.put("type", template.getType());
                 templateArray.add(jsonObj);
             }
@@ -316,7 +316,7 @@ public class ModelItemService {
                 jsonObj.put("name", unit.getName());
                 jsonObj.put("id", unit.getId());
 
-                jsonObj.put("description", unit.getOverview());
+                jsonObj.put("overview", unit.getOverview());
 //                jsonObj.put("description_EN", unit.getDescription_EN());
                 unitArray.add(jsonObj);
             }
@@ -333,7 +333,7 @@ public class ModelItemService {
                 JSONObject dataJson=new JSONObject();
                 dataJson.put("name",dataItem.getName());
                 dataJson.put("id",dataItem.getId());
-                dataJson.put("description",dataItem.getOverview());
+                dataJson.put("overview",dataItem.getOverview());
                 dataItemArray.add(dataJson);
             }
         }
@@ -390,6 +390,7 @@ public class ModelItemService {
         modelAndView.addObject("classifications",classResult);
         modelAndView.addObject("detailLanguage",detailLanguage);
         modelAndView.addObject("languageList", languageList);
+//        modelAndView.addObject("description",modelInfo.getOverview());
         modelAndView.addObject("detail",detailResult);
         modelAndView.addObject("date",dateResult);
         modelAndView.addObject("year",calendar.get(Calendar.YEAR));

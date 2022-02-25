@@ -40,8 +40,8 @@
     "dataItem": "Data Item",
     "conceptualModel": "Conceptual Model",
     "logicalModel": "Logical Model",
-    "computableModel": "Computable Model",
-    "supportive": "Supportive"
+    "computableModel": "Computable Model"
+
   },
   "zh-cn": {
     "home": "首页",
