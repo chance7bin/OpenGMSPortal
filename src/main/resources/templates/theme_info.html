@@ -472,7 +472,7 @@
                                     <el-row type="center" id="content" >
                                         <div v-for="(item,index3) in model.tableData" class="col-md-2 model_col">
 
-                                            <a :href="'/modelItem/detail/'+item.id" target = "_blank">
+                                            <a :href="'/modelItem/'+item.id" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
                                                         <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
@@ -496,7 +496,7 @@
                                 <el-row type="center" id="content" >
                                     <div v-for="item in modelClass.tableData"  class="col-md-2 model_col">
 
-                                        <a :href="'/modelItem/detail/'+item.id" target = "_blank">
+                                        <a :href="'/modelItem/'+item.id" target = "_blank">
                                             <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                 <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
                                                     <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
@@ -526,7 +526,7 @@
                                     <div class="x_content model_item" th:id="'modelClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                                <a th:href="'/modelItem/detail/'+${item.id}" target = "_blank">
+                                                <a th:href="'/modelItem/'+${item.id}" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div th:unless="${item.image}!=''" style="text-align: center;justify-content: center">
@@ -551,7 +551,7 @@
                                 <div class="x_content model_item" th:id="'modelClass'+${index.index}" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div th:each="item:${modelClass.content}" class="col-md-2 model_col">
-                                            <a th:href="'/modelItem/detail/'+${item}" target = "_blank">
+                                            <a th:href="'/modelItem/'+${item}" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div th:unless="${item.image}!=''" style="text-align: center;justify-content: center">
@@ -602,7 +602,7 @@
                                     <div class="x_content data_item" :id="'dataClass_edit'+index+'-'+index2" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div v-for="(item,index3) in data.tableData" class="col-md-2 model_col">
-                                                <a :href="'/dataItem/detail/'+item.id" target = "_blank">
+                                                <a :href="'/dataItem/'+item.id" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -627,7 +627,7 @@
                             <div class="x_content data_item" :id="'dataClass_edit'+index" style="width: 100%">
                                 <el-row type="center" id="content" >
                                     <div v-for="item in dataClass.tableData" class="col-md-2 model_col">
-                                        <a :href="'/dataItem/detail/'+item.id" target = "_blank">
+                                        <a :href="'/dataItem/'+item.id" target = "_blank">
                                             <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                 <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                 <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -657,7 +657,7 @@
                                 <div class="x_content data_item" th:id="'dataClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                            <a th:href="'/dataItem/detail/'+${item.id}" target = "_blank">
+                                            <a th:href="'/dataItem/'+${item.id}" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -682,7 +682,7 @@
                             <div class="x_content data_item" th:id="'dataClass'+${index.index}" style="width: 100%">
                                 <el-row type="center" id="content" >
                                     <div th:each="item:${dataClass.content}" class="col-md-2 model_col">
-                                        <a th:href="'/dataItem/detail/'+${item}" target = "_blank">
+                                        <a th:href="'/dataItem/'+${item}" target = "_blank">
                                             <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                 <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                 <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -735,7 +735,7 @@
                                     <div class="x_content data_item" :id="'dataMethodClass_edit'+index+'-'+index2" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div v-for="(item,index3) in dataMethod.tableData" class="col-md-2 model_col">
-                                                <a :href="'/dataMethod/detail'+item.id" target = "_blank">
+                                                <a :href="'/dataMethod/'+item.id" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
                                                             <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
@@ -760,7 +760,7 @@
                                 <div class="x_content data_item" :id="'dataMethodClass_edit'+index" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div v-for="item in dataMethodClass.tableData" class="col-md-2 model_col">
-                                            <a :href="'/dataMethod/detail'+item.id" target = "_blank">
+                                            <a :href="'/dataMethod/'+item.id" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -791,7 +791,7 @@
                                     <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                                <a th:href="'/dataMethod/detail'+${item.id}" target = "_blank">
+                                                <a th:href="'/dataMethod/'+${item.id}" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">

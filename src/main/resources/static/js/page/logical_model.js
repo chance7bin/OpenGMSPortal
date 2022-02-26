@@ -16,9 +16,51 @@ new Vue({
             modelOid:'',
             editLogicalModelDialog :false,
             lightenContributor:{},
+
+            currentDetailLanguage:"",
         }
     },
     methods: {
+        changeDetailLanguage(command){
+            this.currentDetailLanguage = command;
+            let data = {
+                "oid": this.getOid(),
+                "language": this.currentDetailLanguage
+            };
+
+            if(window.location.href.indexOf("history")===-1) {
+                $.get("/modelItem/getDetailByLanguage", data, (result) => {
+                    this.detail = result.data;
+                })
+            }else{
+                $.get("/version/languageDetail/modelItem", data, (result) => {
+                    this.detail = result.data;
+                })
+            }
+        },
+        getDescription(){
+            axios.get('/modelItem/getDescription/'+this.modelOid
+            ).then(
+                res => {
+                    if(res.data.code==-1){
+                        this.confirmLogin()
+                    }else{
+                        this.editDescription = true
+                        let data = res.data.data
+                        Vue.nextTick(()=>{
+                            initTinymce('textarea#conceptText')
+                            this.localizationList = data
+                            let interval = setInterval(() => {
+                                this.changeLocalization(this.localizationList[0])
+                                clearInterval(interval);
+                            }, 1000);
+                        })
+
+                    }
+
+                }
+            )
+        },
         claim(){
             $.get("/user/load",{},(result)=>{
                 let json = result;

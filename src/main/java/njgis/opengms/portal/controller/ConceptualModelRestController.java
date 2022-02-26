@@ -35,7 +35,7 @@ import java.util.List;
  * @Version 1.0.0
  */
 @RestController
-@RequestMapping(value = "/conceptModel")
+@RequestMapping(value = "/conceptualModel")
 public class ConceptualModelRestController {
 
     @Autowired

@@ -285,13 +285,13 @@
                                     <i v-if="modelItem.status=='Discoverable'"
                                        class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
-                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/detail/'+ modelItem.id"
+                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/'+ modelItem.id"
                                    target="_blank">{{modelItem.name}}&nbsp&nbsp</a>
                             </div>
                             <div :style="{'display':statistic[key]!='Overview'?'none':'block'}">
 
                                 <div class="detail_overview">
-                                    <a class="img" :href="'/modelItem/detail/'+ modelItem.id" target="_blank">
+                                    <a class="img" :href="'/modelItem/'+ modelItem.id" target="_blank">
 
                                         <img v-if="modelItem.image==''" src="/static/img/model/model.png"
                                              style="width:90px;height: 90px;">

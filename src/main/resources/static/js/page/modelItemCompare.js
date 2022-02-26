@@ -585,7 +585,7 @@ new Vue({
         let dataitemid=currenturl.split("/");
 
         let that=this;
-        axios.get("/dataItem/briefrelateddata",{
+        axios.get("/modelItem/briefRelatedData",{
             params:{
                 id:dataitemid[dataitemid.length-1]
             }
