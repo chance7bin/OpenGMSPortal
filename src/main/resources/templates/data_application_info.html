@@ -23,6 +23,10 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
 
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+
+
     <style>
         .img img {
             width: 90px;
@@ -45,7 +49,13 @@
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
-
+        <translation-bar
+                json-file="data_application_info"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title">
@@ -206,7 +216,7 @@
                  th:if="${(dataMethodInfo.contentType=='Code'||dataMethodInfo.contentType=='Library'||dataMethodInfo.contentType=='Package')&&(dataMethodInfo.resources!=null&&#lists.size(dataMethodInfo.resources)>0)}">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Resource</h4>
+                        <h4>{{htmlJSON.Resource}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-right: 0;">
@@ -305,40 +315,40 @@
             <div id="invoke" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Service Instance</h4>
+                        <h4>{{htmlJSON.ServiceInstance}}</h4>
                     </div>
                 </div>
                 <div style="padding: 30px;margin-left:20px">
                      <el-table :data="methodsData" style="width: 100%">
-                            <el-table-column prop="name" label="Name"></el-table-column>
-                            <el-table-column prop="method" label="Method Type"></el-table-column>
+                            <el-table-column prop="name" :label="htmlJSON.TableName"></el-table-column>
+                            <el-table-column prop="method" :label="htmlJSON.TableMethodType"></el-table-column>
 <!--                            <el-table-column prop="serviceId" label = "suiyi" style="display: none"></el-table-column>-->
-                            <el-table-column label="Operation">
+                            <el-table-column :label="htmlJSON.Operation">
                                 <template slot-scope="scope">
                                     <el-tooltip class="item" effect="light" content="You can try to invoke the service" placement="top-start">
                                         <el-button @click = "gotoTask($event)" type="success" class="invokeBtn">
-                                            Invoke
+                                            {{htmlJSON.TableInvoke}}
                                         </el-button>
                                     </el-tooltip>
                                 </template>
                             </el-table-column>
                              <el-table-column
                                      prop="isPortal"
-                                     label="Origin"
+                                     :label="htmlJSON.TableOrigin"
                                      width="100"
                                     >
                                  <template slot-scope="scope">
                                      <el-tag
                                              :type="scope.row.isPortal == true ? 'primary' : 'success'"
-                                             disable-transitions v-if="scope.row.isPortal == true">Portal</el-tag>
+                                             disable-transitions v-if="scope.row.isPortal == true">{{htmlJSON.TablePortal}}</el-tag>
                                      <el-tag
                                              :type="scope.row.isPortal == true ? 'primary' : 'success'"
-                                             disable-transitions v-if="scope.row.isPortal == false">Other Node</el-tag>
+                                             disable-transitions v-if="scope.row.isPortal == false">{{htmlJSON.TableOtherNode}}</el-tag>
                                  </template>
                              </el-table-column>
                      </el-table>
                     <div class="addNew" style="text-align: center;margin: 10px">
-                        <span style="margin-right: 20px">You can click the plus sign to increase your service</span>
+                        <span style="margin-right: 20px">{{htmlJSON.TableInfo}}</span>
 <!--                        <el-tooltip class="item" style="margin: 4px" effect="light" content="There are two ways to create services. One is to download-->
 <!--                        the deployment package, create services in the personal container, and then bind them.-->
 <!--                        The other is to create application services in the personal center. Click the plus sign to jump to-->
@@ -352,7 +362,7 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -378,12 +388,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
                     </div>
                 </div>
             </div>
@@ -431,11 +441,10 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light"
-                                    content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item."
-                                    placement="top">
+                                    :content="htmlJSON.ContributorInfo"   placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;"></i>
                         </el-tooltip>
                     </div>
@@ -467,10 +476,9 @@
                  >
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>Authorship</h4>
+                        <h4>{{htmlJSON.Authorship}}</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light"
-                                    content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
-                                    placement="top">
+                                    :content="htmlJSON.AuthorshipInfo" placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;"></i>
                         </el-tooltip>
                     </div>
@@ -499,15 +507,14 @@
                         </div>
                     </div>
                     <div th:if="${dataMethodInfo.authorships==null||#lists.size(dataMethodInfo.authorships)==0}">
-                        <el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click=""
-                                                                              style="text-decoration: underline">claim</a>
-                            the item.
+                        <el-tag type="info">{{htmlJSON.AuthorshipInfo2}} <a href="javascript:void(0)" @click=""
+                                                                              style="text-decoration: underline">{{htmlJSON.AuthorshipInfo3}}</a>
+
                         </el-tag>
                     </div>
                     <div th:if="${#lists.size(dataMethodInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click=""
-                                                                          style="text-decoration: underline">Feed
-                            back</a></el-tag>
+                        <el-tag type="info">{{htmlJSON.AuthorshipInfo4}}<a href="javascript:void(0)" @click=""
+                                                                          style="text-decoration: underline">{{htmlJSON.AuthorshipInfo5}}</a></el-tag>
                     </div>
                 </div>
             </div>
@@ -516,7 +523,7 @@
                  th:if="${history!=true}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
+                        <h4>{{htmlJSON.History}}</h4>
                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
@@ -525,7 +532,7 @@
 
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
-                                <dt>Last modify time :&nbsp</dt>
+                                <dt>{{htmlJSON.HistoryInfo}}</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                             </dl>
                         </div>
@@ -537,7 +544,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -595,6 +602,10 @@
 <script src="/static/js/common/bootstrap.min.js"></script>
 <script src="/static/element-ui/umd/locale/en.js"></script>
 <script src="/static/js/common/vue-avatar.min.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/page/data_application_info.js"></script>
 <script src="/static/js/common/navbar.js"></script>

@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+
+
     <style>
         .cardborder{
             border: solid 1px #dedede;
@@ -39,14 +44,21 @@
         <div th:replace="fragments/navbar :: unlog"></div>
         <div class="titleSection" style="background-image: url('../static/img/support10.jpg');background-position-y:  -554px">
             <div class="fullMask text-center" style="color: whitesmoke"><br><br>
-                <h2>OpenGMS Support</h2>
+                <h2>{{htmlJSON.PageName}}</h2>
                 <h3>
-                    Use the links below to learn how to begin sharing and collaborating.
+                    {{htmlJSON.PageIntro}}
                 </h3>
             </div>
         </div>
 <!--        <img class="imgAsTitle" src="../static/img/support2.png" style="">-->
         <div class="clearfix" style="position: relative;" :style="{'min-height':ScreenMinHeight}">
+            <translation-bar
+                    json-file="support"
+                    @translate-page="translatePage"
+                    initial-lang="en-us"
+                    theme="dark"
+                    style="position: absolute;top: 10px;right:15px">
+            </translation-bar>
             <div class="grey95" >
                 <div class="col-lg-10 col-lg-offset-1 col-md-12">
                     <div class="flexJustAround" style="width: 100%;">
@@ -61,7 +73,7 @@
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==1?'cardHover':''"
                                          style="height: 200px;" @click="showDoc(1)">
                                         <img class="cardimg" src="/static/img/supportpics/1.png" />
-                                        <h4 class="h_lite">Introduce to OpenGMS</h4>
+                                        <h4 class="h_lite">{{htmlJSON.Introduce}}</h4>
                                     </div>
                                 </el-col>
                                 <el-col :span="5" >
@@ -69,7 +81,7 @@
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==2?'cardHover':''"
                                          style="height: 200px" @click="showDoc(2)">
                                         <img class="cardimg" src="/static/img/supportpics/2.png"  />
-                                        <h4 class="h_lite">Model Resource</h4>
+                                        <h4 class="h_lite">{{htmlJSON.ModelResource}}</h4>
                                     </div>
 
                                 </el-col>
@@ -77,7 +89,7 @@
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==3?'cardHover':''"
                                          style="height: 200px" @click="showDoc(3)">
                                         <img class="cardimg" src="/static/img/supportpics/3.png"  />
-                                        <h4 class="h_lite">Data Resource</h4>
+                                        <h4 class="h_lite">{{htmlJSON.DataResource}}</h4>
                                     </div>
                                 </el-col>
                             </el-row>
@@ -88,21 +100,21 @@
                                          style="height: 200px" @click="showDoc(4)">
                                         <img class="cardimg" src="/static/img/supportpics/4.png"  />
 
-                                        <h4 class="h_lite">Service and Reuse</h4>
+                                        <h4 class="h_lite">{{htmlJSON.ServiceReuse}}</h4>
                                     </div>
                                 </el-col>
                                 <el-col :span="5">
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==5?'cardHover':''"
                                          style="height: 200px" @click="showDoc(5)">
                                         <img class="cardimg" src="/static/img/supportpics/5.png"  />
-                                        <h4 class="h_lite">Server Nodes</h4>
+                                        <h4 class="h_lite">{{htmlJSON.ServerNodes}}</h4>
                                     </div>
                                 </el-col>
                                 <el-col :span="5">
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==6?'cardHover':''"
                                          style="height: 200px" @click="showDoc(6)">
                                         <img class="cardimg" src="/static/img/supportpics/6.png"  />
-                                        <h4 class="h_lite">Community</h4>
+                                        <h4 class="h_lite">{{htmlJSON.Community}}</h4>
                                     </div>
                                 </el-col>
 
@@ -113,14 +125,14 @@
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==7?'cardHover':''"
                                          style="height: 200px;" @click="showDoc(7)">
                                         <img class="cardimg" src="/static/img/supportpics/7.png"  />
-                                        <h4 class="h_lite">Thematic Center</h4>
+                                        <h4 class="h_lite">{{htmlJSON.ThematicCenter}}</h4>
                                     </div>
                                 </el-col>
                                 <el-col :span="5">
                                     <div class="flexCol flexColCenter cursorPointer quickToolsCard cardborder" :class="docIndex==8?'cardHover':''"
                                          style="height: 200px" @click="showDoc(8)">
                                         <img class="cardimg" src="/static/img/supportpics/8.png"  />
-                                        <h4 class="h_lite">User Center</h4>
+                                        <h4 class="h_lite">{{htmlJSON.UserCenter}}</h4>
                                     </div>
                                 </el-col>
 
@@ -132,7 +144,7 @@
             </div>
 
             <div class="clearfix"  style="padding: 90px 0;background-color: #e4e4e45e">
-                <h1 align="center" style="margin:0;"><a href="/help/demo">There Are Some Demos For You →</a></h1>
+                <h1 align="center" style="margin:0;"><a href="/help/demo">{{htmlJSON.info1}}</a></h1>
             </div>
         </div>
 
@@ -144,6 +156,10 @@
 <script src="/static/js/index/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/element-ui/umd/locale/en.js"></script>
 <script src="/static/js/page/support.js"></script>

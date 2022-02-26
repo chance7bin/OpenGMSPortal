@@ -119,11 +119,17 @@ export var TaskTemplate = Vue.extend({
                 "sortField": "createTime"
             })
                 .then(response=> {
+                    console.log("1111")
                     let data=response.data.data
                     this.taskTotal=data.total
                     this.taskData=data.list
+                    console.log(data)
+                    console.log("1111")
+
                 })
                 .catch(function (error) {
+                    console.log("1111")
+
                     console.log(error);
                 });
         },

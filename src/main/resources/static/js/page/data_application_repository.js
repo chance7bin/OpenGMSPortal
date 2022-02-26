@@ -52,9 +52,14 @@ var data_items = new Vue({
             queryFields:["Name","Keyword","Content","Contributor"],
             curQueryField:"Name",
 
+            htmlJSON:{}
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
+
         transFormCate(categoryName){
             if (categoryName === '6117767e61ce444130b1a276')
                 return 'Conversion'

@@ -24,6 +24,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
     <link rel="stylesheet" href="/static/driver/driver.min.css"/>
 
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+
     <style>
         .content-body .list-item:not(:first-child) {
             margin-top: -1px;
@@ -56,17 +59,23 @@
         <div class="mainContent">
             <div class="el-row">
                 <div class="data-top">
-                    <h2 class="main-title">Data Method Repository</h2>
-                    <h4 class="sub-title">The repository of data methods (one-stop hub with public shared data methods resources)
-                    </h4>
-                    <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute()">+ Contribute</button>
+                    <h2 class="main-title">{{htmlJSON.PageName}}</h2>
+                    <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
+                    <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute()">{{htmlJSON.Contribute}}</button>
                 </div>
+                <translation-bar
+                        json-file="data_methods"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px">
+                </translation-bar>
                 <hr>
             </div>
             <div class="el-col el-col-6 minScreen_maxWidth" style="margin-top:29px;">
                 <el-card class="box-card categoryList">
                     <div slot="header" class="clearfix text-center">
-                        <span style="font-size: 20px;color:#444">Method Categories</span>
+                        <span style="font-size: 20px;color:#444">{{htmlJSON.MethodClass}}</span>
                     </div>
                     <div id="classification" style="padding-top: 0px">
                         <div id="conversion" style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a276',$event)">Conversion</div>
@@ -81,7 +90,7 @@
                     <div class="searcherPanel">
 
                         <div class="searcherInputPanel" @keydown.enter="search()">
-                            <el-input v-model="searchText" placeholder="Query String..." style="border-radius: 0;">
+                            <el-input v-model="searchText" :placeholder="htmlJSON.SearchHolding" style="border-radius: 0;">
                                 <el-select v-model="curQueryField" slot="prepend" style="color:#606266;width:120px;border-radius: 0;">
                                     <el-option
                                             v-for="qf in queryFields"
@@ -90,7 +99,7 @@
                                             :value="qf">
                                     </el-option>
                                 </el-select>
-                                <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">Search</el-button>
+                                <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">{{htmlJSON.Search}}</el-button>
                             </el-input>
                         </div>
                     </div>
@@ -104,30 +113,33 @@
                 </div>
                 <div  class="alert alert-success" role="alert" style="margin-bottom: 2px;">
                     <span >
-                        <strong class="minScreen_curClass" style="border-right: 1px solid rgb(234, 234, 234)">
-                            {{categoryName===''?'':"Current Category: "+transFormCate(categoryName)}}
+                        <strong class="minScreen_curClass" style="border-right: 1px solid rgb(234, 234, 234)">{{htmlJSON.CurrentClass}}
+                            {{categoryName===''?'':transFormCate(categoryName)}}
                         </strong>
-                        <span style="width: 2px;height: 100%">{{searchText.length===0?'':'|'}}</span>
-                        <strong style="color: cornflowerblue">
-                            {{searchText.length===0?'':'Current ' + curQueryField + ': '+searchText}}
-                        </strong>
+<!--                        <span style="width: 2px;height: 100%">{{searchText.length===0?'':'|'}}</span>-->
+<!--                        <strong style="color: cornflowerblue">-->
+<!--                            {{searchText.length===0?'':'Current ' + curQueryField + ': '+searchText}}-->
+<!--                        </strong>-->
                         <strong style="float: right">
-                            {{datacount!=0 ?(datacount===-1?'loading...':datacount+' items'):'no data'}}
+<!--                            {{datacount!=0 ?(datacount===-1?'loading...':datacount+' items'):'no data'}}-->
+                                {{datacount!=0 ?(datacount===-1?htmlJSON.Loading:datacount+htmlJSON.items):htmlJSON.NoData}}
+
                         </strong>
+
                         </span><br>
                 </div>
                 <!--v-loading-->
                 <div class="maincontnt"  v-loading="loading">
                     <span style="float:left;margin-top: 12px;margin-left: 15px">
-                            <span style="font-weight: bold">Sorted By: </span>&nbsp;
+                            <span style="font-weight: bold">{{htmlJSON.SortBy}} </span>&nbsp;
                             <el-dropdown trigger="click" @command="changeSortField" style="cursor:pointer;">
                                 <span class="el-dropdown-link">
                                     {{sortField}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">View Count</el-dropdown-item>
-                                    <el-dropdown-item command="Name">Name</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">Create Time</el-dropdown-item>
+                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
+                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
+                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}}</el-dropdown-item>
 
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -136,8 +148,8 @@
                                     {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">Asc.</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">Desc.</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </span>
@@ -215,6 +227,11 @@
 <script src="/static/js/common/bootstrap-tagsinput.js"></script>
 <script src="/static/driver/driver.min.js"></script>
 <script src="/static/js/apidoc/dataApi.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/page/data_application_repository.js"></script>
 <script  async src="/static/js/common/loadUser.js" ></script>
 <script src="/static/element-ui/umd/locale/en.js"></script>

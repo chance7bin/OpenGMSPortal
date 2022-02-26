@@ -1,0 +1,76 @@
+{
+  "en-us": {
+
+
+    "Resource": "Resource",
+
+    "ServiceInstance": "Service Instance",
+    "TableName": "Name",
+    "TableMethodType": "Method Type",
+    "TableOperation": "Operation",
+    "TableInvoke": "Invoke",
+    "TableOrigin": "Origin",
+    "TablePortal": "Portal",
+    "TableOtherNode": "Other Node",
+    "TableInfo": "You can click the plus sign to increase your service",
+
+
+    "HowtoCite": "How to Cite",
+
+    "CopyrightAndDisclaimer":"Copyright and Disclaimer",
+    "CopyrightAndDisclaimerInfo": "All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.",
+
+
+    "Contributor":"Contributor",
+    "ContributorInfo": "Contributor is the person who contributes the item to OpenGMS, may not be the author of the item.",
+
+    "Authorship": "Authorship",
+    "AuthorshipInfo": "We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below.",
+    "AuthorshipInfo2": "Authorship is unclear, you can claim the item. ",
+    "AuthorshipInfo3": "Claim",
+    "AuthorshipInfo4": "Is authorship not correct?",
+    "AuthorshipInfo5": "Feed back",
+
+
+    "History": "History",
+    "HistoryInfo": "Last modify time : ",
+
+    "QRCode": "QR Code"
+  },
+  "zh-cn": {
+
+    "Resource": "资源",
+
+    "ServiceInstance": "服务实例",
+    "TableName": "名称",
+    "TableMethodType": "方法类型",
+    "TableOperation": "操作",
+    "TableInvoke": "调用",
+    "TableOrigin": "来源",
+    "TablePortal": "门户",
+    "TableOtherNode": "其他节点",
+    "TableInfo": "您可以点击加号来增加服务",
+
+    "HowtoCite": "如何引用",
+
+    "CopyrightAndDisclaimer":"版权及免责声明",
+    "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计师(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，投稿人应谨慎使用其他来源的材料，并给予适当的引用。",
+
+
+    "Contributor":"贡献者",
+    "ContributorInfo": "贡献者是将资源提交给OpenGMS的人，可能并不是该资源的所有者。",
+
+    "Authorship": "作者",
+    "AuthorshipInfo": "我们深刻明白一个模型可能来自于一个团队所有成员的贡献，如果有作者的信息没有列在此处，请向我们反馈。",
+    "AuthorshipInfo2": "作者信息未知，您可以认领该资源。 ",
+    "AuthorshipInfo3": "认领",
+    "AuthorshipInfo4": "作者信息不正确？",
+    "AuthorshipInfo5": "反馈",
+
+    "History": "历史",
+    "HistoryInfo": "上一次修改时间 ：",
+
+    "QRCode": "二维码"
+  }
+
+}

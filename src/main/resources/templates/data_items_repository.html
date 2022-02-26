@@ -167,7 +167,7 @@
                 <!--v-loading-->
                 <div class="maincontnt fixedLoading"  v-loading="loading">
                     <span style="float:left;margin-top: 12px;margin-left: 15px">
-                            <span style="font-weight: bold">Sorted By: </span>&nbsp;
+                            <span style="font-weight: bold">{{htmlJSON.SortBy}}</span>&nbsp;
                             <el-dropdown trigger="click" @command="changeSortField" style="cursor:pointer;">
                                 <span class="el-dropdown-link">
                                     {{sortField}}<i class="el-icon-arrow-down el-icon--right"></i>
