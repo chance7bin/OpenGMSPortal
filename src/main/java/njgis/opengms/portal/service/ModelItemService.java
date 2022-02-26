@@ -873,7 +873,44 @@ public class ModelItemService {
 
     }
 
+    /**
+     * @Description 获取模型贡献者信息
+     * @param id 模型id
+     * @Return com.alibaba.fastjson.JSONArray
+     * @Author kx
+     * @Date 22/2/25
+     **/
+    public JSONArray getContributors(String id){
 
+        ModelItem modelItem;
+
+        if(id.matches("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}")) {
+            modelItem = modelItemDao.findFirstById(id);
+        }else{
+            modelItem = modelItemDao.findFirstByAccessId(id);
+        }
+
+        List<String> contributors = modelItem.getContributors();
+        JSONArray jsonArray = new JSONArray();
+
+        if(contributors!=null&&contributors.size()>0){
+            for(String contributor : contributors){
+
+                JSONObject jsonObject = new JSONObject();
+                User user = userDao.findFirstByEmail(contributor);
+                jsonObject.put("name",user.getName());
+                jsonObject.put("userId",user.getAccessId());
+                jsonObject.put("email",user.getEmail());
+                jsonObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath+user.getAvatar());
+
+                jsonArray.add(jsonObject);
+
+            }
+
+        }
+
+        return jsonArray;
+    }
 
 
 }
