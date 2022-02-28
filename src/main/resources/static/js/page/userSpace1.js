@@ -260,6 +260,8 @@ var userspace = new Vue(
 
                 userspaceSocket:"",
 
+                htmlJSON:{}
+
             }
         },
 
@@ -270,6 +272,10 @@ var userspace = new Vue(
             }
         },
         methods:{
+
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent
+            },
             //公共功能
             formatDate(value,callback) {
                 const date = new Date(value);

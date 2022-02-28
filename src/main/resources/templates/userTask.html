@@ -70,12 +70,12 @@
                     <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
                     <div class="flexColContainer mainContent" style="padding:20px 10px;max-width: 1120px">
                         <section role="description" class="flexCol flexCenter contentSection">
-                            <h3>Task</h3>
-                            <h5 style="text-align: center">All of the tasks you have runned will be shown here, you can check the status of them</h5>
+                            <h3>{{htmlJson.Task}}</h3>
+                            <h5 style="text-align: center">{{htmlJson.TaskInfo1}}</h5>
                         </section>
                         <el-card>
                             <el-tabs v-model="activeTask" @tab-click="tabHandleClick" stretch="stretch">
-                                <el-tab-pane label="Normal Task" name="normal">
+                                <el-tab-pane :label="htmlJson.NormalTask" name="normal">
                                     <div class="page-content-wrap container-fluid" style="margin-top:10px">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -84,7 +84,7 @@
                                                         <div class="form-horizontal">
                                                             <div class="form-group flexRowContainer flexJustAround  flexColCenter">
                                                                 <div class="col-md-3 flexRowContainer flexColCenter wzhSelectContainer" style="">
-                                                                    Task status:
+                                                                    {{htmlJson.TaskStatus}}:
                                                                     <el-select v-model="taskStatus" placeholder="task status" size="mini" @change="changeTaskStatus" >
                                                                         <el-option
                                                                                 v-for="item in options"
@@ -98,9 +98,9 @@
                                                                 <div class="col-md-8">
                                                                     <div class="input-group" @keydown.enter="searchTasks(1)">
                                                                         <input type="text" class="form-control" name="searchText"
-                                                                               placeholder="please enter name" v-model="searchText" style="margin-top: 3px">
+                                                                               :placeholder="htmlJson.SearchInfo" v-model="searchText" style="margin-top: 3px">
                                                                         <div class="input-group-btn common-searchButton">
-                                                                            <button class="btn btn-primary" @click="searchTasks(1)">Search
+                                                                            <button class="btn btn-primary" @click="searchTasks(1)" style="width: max-content;">{{htmlJson.Search}}
                                                                             </button>
                                                                         </div>
                                                                         <div class="input-group-btn mini-searchButton">
@@ -256,11 +256,11 @@
                                                 <div v-if="resourceLoad">
                                                     <h4 class="col-sm-12 text-center" >
                                                         <i class="ms-Icon ms-Icon--ProgressRingDots rotate_cw_1" style="margin-right: 10px"></i>Loading ...</h4>
-                                                    <p>This possibly needs to spend some time</p>
+                                                    <p>{{htmlJson.SpendTime}}</p>
                                                 </div>
 
-                                                <h4 class="col-sm-12 text-center" v-if="searchResult.length==0&&resourceLoad==false">No
-                                                    calculation tasks</h4>
+                                                <h4 class="col-sm-12 text-center" v-if="searchResult.length==0&&resourceLoad==false">
+                                                    {{htmlJson.NoCalTask}}</h4>
                                             </div>
                                         </div>
                                         <div class="flexRowCenter">
@@ -302,7 +302,7 @@
                                         </div>
                                     </div>
                                 </el-tab-pane>
-                                <el-tab-pane label="Data Task" name="data">
+                                <el-tab-pane :label="htmlJson.DataTask" name="data">
                                     <div class="page-content-wrap container-fluid" style="margin-top:10px">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -311,7 +311,7 @@
                                                         <div class="form-horizontal">
                                                             <div class="form-group flexRowContainer flexJustAround  flexColCenter">
                                                                 <div class="col-md-3 flexRowContainer flexColCenter wzhSelectContainer" style="">
-                                                                    Task status:
+                                                                    {{htmlJson.TaskStatus}}:
                                                                     <el-select v-model="dataTaskStatus" placeholder="task status" size="mini" @change="changeDataTaskStatus" >
                                                                         <el-option
                                                                                 v-for="item in options"
@@ -325,9 +325,9 @@
                                                                 <div class="col-md-8">
                                                                     <div class="input-group" @keydown.enter="searchDataTasks()">
                                                                         <input type="text" class="form-control" name="searchText"
-                                                                               placeholder="please enter name" v-model="dataSearchText" style="margin-top: 3px">
+                                                                               :placeholder="htmlJson.SearchInfo" v-model="dataSearchText" style="margin-top: 3px">
                                                                         <div class="input-group-btn common-searchButton">
-                                                                            <button class="btn btn-primary" @click="searchDataTasks()">Search
+                                                                            <button class="btn btn-primary" @click="searchDataTasks()" style="width: max-content;">{{htmlJson.Search}}
                                                                             </button>
                                                                         </div>
                                                                         <div class="input-group-btn mini-searchButton">
@@ -515,7 +515,7 @@
                                         </div>
                                     </div>
                                 </el-tab-pane>
-                                <el-tab-pane label="Integrated Task" name="integrated">
+                                <el-tab-pane :label="htmlJson.IntegratedTask" name="integrated">
                                     <div class="page-content-wrap container-fluid" style="margin-top:10px">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -524,7 +524,7 @@
                                                         <div class="form-horizontal">
                                                             <div class="form-group flexRowContainer flexJustAround  flexColCenter">
                                                                 <div class="col-md-3 flexRowContainer flexColCenter wzhSelectContainer" style="">
-                                                                    Task status:
+                                                                    {{htmlJson.TaskStatus}}:
                                                                     <el-select v-model="itdTaskStatus" placeholder="task status" size="mini" @change="changeTaskStatus" >
                                                                         <el-option
                                                                                 v-for="item in itdOptions"
@@ -538,9 +538,9 @@
                                                                 <div class="col-md-8">
                                                                     <div class="input-group" @keydown.enter="listIntegrateTaskByStatus(1)">
                                                                         <input type="text" class="form-control" name="searchText"
-                                                                               placeholder="please enter name" v-model="itdSearchText" style="margin-top: 3px">
+                                                                               :placeholder="htmlJson.SearchInfo" v-model="itdSearchText" style="margin-top: 3px">
                                                                         <div class="input-group-btn common-searchButton">
-                                                                            <button class="btn btn-primary" @click="listIntegrateTaskByStatus(1)">Search
+                                                                            <button class="btn btn-primary" @click="listIntegrateTaskByStatus(1)" style="width: max-content;">{{htmlJson.Search}}
                                                                             </button>
                                                                         </div>
                                                                         <div class="input-group-btn mini-searchButton">

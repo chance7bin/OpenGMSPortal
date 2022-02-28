@@ -13,6 +13,7 @@ Vue.component("draft-box",
                 type: String,
                 default: 'modelItem'
             }
+
         },
         data() {
             return {

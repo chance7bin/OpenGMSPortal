@@ -1,6 +1,6 @@
 Vue.component('headSideBar', {
     template: '#headSideBar',
-    props: ['userInfoinParent','curindexParent'],
+    props: ['userInfoinParent','curindexParent',"htmlJson"],
 
     data() {
         return {
@@ -18,7 +18,10 @@ Vue.component('headSideBar', {
             userInfo:{
 
             },
-            noticeNum:0
+            noticeNum:0,
+
+            htmlJSON:{}
+
         }
     },
 
@@ -37,6 +40,7 @@ Vue.component('headSideBar', {
             },
             immediate: true
         },
+
 
         $route:{
             handler(to, from) {
@@ -194,9 +198,12 @@ Vue.component('headSideBar', {
 
     created(){
         this.getUserInfo()
+
+
     },
 
     mounted(){
+
         let that = this;
         //let that= this;
         //用于判断用户是否收到消息
