@@ -12,11 +12,11 @@ function joinByModelItem(url, joinStr){
 
 // modelItemList
 function getModelItemList(joinStr) {
-    let url = '/items'
+    let url = '/items';
     return joinByModelItem(url, joinStr)
 }
 
 function getModelItemById(joinStr) {
-    let url = '/detail'
+    let url = '';//'/detail'
     return joinByModelItem(url, joinStr)
 }

@@ -96,7 +96,7 @@ public class ModelItemRestController {
      * @Date 21/10/12
      **/
     @ApiOperation(value = "根据id获取模型条目详情页面")
-    @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
+    @RequestMapping(value="/{id}",method = RequestMethod.GET)
     ModelAndView get(@PathVariable("id") String id, HttpServletRequest request){
         PortalItem portalItem = genericService.getPortalItem(id, ItemTypeEnum.ModelItem);
         ModelAndView modelAndView = genericService.checkPrivatePageAccessPermission(portalItem, Utils.checkLoginStatus(request));
@@ -241,7 +241,7 @@ public class ModelItemRestController {
      * @Author bin
      **/
     @LoginRequired
-    @ApiOperation(value = "模型详情页面RelatedData，为模型添加关联的数据 [ /dataItem/data ]")
+    @ApiOperation(value = "模型详情页面RelatedData，为模型添加关联的数据 [ /modelItem/data ]")
     @RequestMapping(value = "/update/relatedData",method = RequestMethod.POST)
     JsonResult addRelatedData(@RequestParam(value = "modelId") String id,@RequestParam(value = "relatedData") List<String> relatedData){
         return modelItemService.addRelatedData(id,relatedData);
@@ -253,7 +253,7 @@ public class ModelItemRestController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "模型详情页面RelatedData，模型关联的3个数据 [ /dataItem/briefrelateddata ]")
+    @ApiOperation(value = "模型详情页面RelatedData，模型关联的3个数据 [ /modelItem/briefrelateddata ]")
     @RequestMapping(value = "/briefRelatedData",method = RequestMethod.GET)
     JsonResult getBriefRelatedData(@RequestParam(value = "id") String id){
         return ResultUtils.success(modelItemService.getRelatedData(id));
@@ -266,7 +266,7 @@ public class ModelItemRestController {
      * @param more
      * @return
      */
-    @ApiOperation(value = "模型详情页面RelatedData，模型关联的所有数据 [ /dataItem/allrelateddata ]")
+    @ApiOperation(value = "模型详情页面RelatedData，模型关联的所有数据 [ /modelItem/allrelateddata ]")
     @RequestMapping(value = "/allRelatedData",method = RequestMethod.GET)
     JsonResult getRelatedData(@RequestParam(value = "id") String id,@RequestParam(value = "more") Integer more){
         return ResultUtils.success(modelItemService.getAllRelatedData(id,more));
@@ -278,4 +278,9 @@ public class ModelItemRestController {
         return genericService.getById(id, ItemTypeEnum.ModelItem);
     }
 
+    @ApiOperation(value = "根据id得到模型条目贡献者信息 [/modelItem/getContributors]")
+    @RequestMapping(value="/contributors",method = RequestMethod.GET)
+    public JsonResult getContributors(@RequestParam(value="id") String oid){
+        return ResultUtils.success(modelItemService.getContributors(oid));
+    }
 }

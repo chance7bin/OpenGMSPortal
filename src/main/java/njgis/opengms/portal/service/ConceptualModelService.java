@@ -139,7 +139,7 @@ public class ConceptualModelService {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("conceptual_model");
-        modelAndView.addObject("modelInfo", conceptualModelInfo);
+        modelAndView.addObject("itemInfo", conceptualModelInfo);
         modelAndView.addObject("date", dateResult);
         modelAndView.addObject("year", calendar.get(Calendar.YEAR));
         modelAndView.addObject("user", userJson);

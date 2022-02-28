@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 public class ComputableModel extends PortalItem {
 
-    List<String> relatedModelItems;
+    List<String> relatedModelItems = new ArrayList<>();
 
     String contentType; // Package; Service; Code; Link; Library; MD5
     String url;

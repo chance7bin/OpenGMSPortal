@@ -24,7 +24,7 @@ function joinByDataMethod(url, joinStr){
 //get
 //hub
 function getHubById(joinStr) {
-    let url = '/detail'
+    let url = '';//'/detail'
     return joinByDataHub(url, joinStr)
 }
 
@@ -40,7 +40,7 @@ function getItemList(joinStr) {
 }
 
 function getItemById(joinStr) {
-    let url = '/detail'
+    let url = '';//'/detail'
     return joinByDataItem(url, joinStr)
 }
 
@@ -51,7 +51,7 @@ function getMethodList(joinStr) {
 }
 
 function getMethodById(joinStr) {
-    let url = '/detail'
+    let url = '';//'/detail'
     return joinByDataMethod(url, joinStr)
 }
 
