@@ -38,7 +38,7 @@ public class TaskMonitorController {
 
         HttpSession session = request.getSession();
         ModelAndView modelAndView = new ModelAndView();
-//        if(session.getAttribute("uid")==null||!session.getAttribute("name").toString().equals("wzh")){
+//        if(session.getAttribute("email")==null||!session.getAttribute("name").toString().equals("wzh")){
 //            modelAndView.setViewName("login");
 //        }
 //        else{}
@@ -51,7 +51,7 @@ public class TaskMonitorController {
     public JsonResult getTasks(@RequestBody Map<String,String> searchInfo, HttpServletRequest request){
 
         HttpSession session = request.getSession();
-//        if(session.getAttribute("uid")==null||!session.getAttribute("name").toString().equals("wzh")){
+//        if(session.getAttribute("email")==null||!session.getAttribute("name").toString().equals("wzh")){
 //            return null;
 //        }
 
@@ -69,7 +69,7 @@ public class TaskMonitorController {
     public JsonResult getContainers(@RequestBody Map<String,String> searchInfo, HttpServletRequest request){
 
         HttpSession session = request.getSession();
-//        if(session.getAttribute("uid")==null||!session.getAttribute("name").toString().equals("wzh")){
+//        if(session.getAttribute("email")==null||!session.getAttribute("name").toString().equals("wzh")){
 //            return null;
 //        }
 

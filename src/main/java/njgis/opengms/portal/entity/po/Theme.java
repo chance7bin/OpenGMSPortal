@@ -2,7 +2,7 @@ package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
-import njgis.opengms.portal.entity.doo.support.theme.*;
+import njgis.opengms.portal.entity.doo.theme.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;

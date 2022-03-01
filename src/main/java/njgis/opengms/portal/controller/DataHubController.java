@@ -161,7 +161,7 @@ public class DataHubController
     @RequestMapping(value="/itemInfo/{id}",method = RequestMethod.GET)
     public JsonResult getDataHubsByDataId(@PathVariable(value="id") String id){
         // HttpSession session = request.getSession();
-        // if(session.getAttribute("uid")==null){
+        // if(session.getAttribute("email")==null){
         //     return ResultUtils.error(-1,"no login");
         // }
         // else

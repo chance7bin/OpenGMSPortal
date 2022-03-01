@@ -8,7 +8,7 @@ import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
-import njgis.opengms.portal.entity.doo.support.theme.*;
+import njgis.opengms.portal.entity.doo.theme.*;
 import njgis.opengms.portal.entity.dto.AddDTO;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.*;

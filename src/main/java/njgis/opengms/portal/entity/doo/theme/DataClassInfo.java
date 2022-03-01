@@ -1,4 +1,4 @@
-package njgis.opengms.portal.entity.doo.support.theme;
+package njgis.opengms.portal.entity.doo.theme;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,16 +9,16 @@ import java.util.List;
 
 /**
  * @Auther mingyuan
- * @Data 2019.10.23 17:05
+ * @Data 2019.10.24 18:00
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassInfo {
+public class DataClassInfo {
     @Id
     String oid;
-    String mcname;
+    String dcname;
     //多级菜单子节点
-    List<ClassInfo> children;
-    List<String> modelsoid;
+    List<DataClassInfo > children;
+    List<String> datasoid;
 }

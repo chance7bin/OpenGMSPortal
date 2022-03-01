@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import njgis.opengms.portal.entity.doo.AuthorInfo;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;

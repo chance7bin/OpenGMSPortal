@@ -88,7 +88,7 @@ public class LogicalModelRestController {
         JSONObject jsonObject=JSONObject.parseObject(model);
 
         HttpSession session=request.getSession();
-        String email=session.getAttribute("uid").toString();
+        String email=session.getAttribute("email").toString();
 
         JSONObject result= logicalModelService.insert(files,jsonObject,email);
 

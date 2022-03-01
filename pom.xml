@@ -46,6 +46,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
 <!--            <scope>test</scope>-->
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
         <!--springfox-->
         <dependency>
@@ -153,6 +157,19 @@
             <version>2.6</version>
         </dependency>
 
+        <!-- Echarts -->
+        <dependency>
+            <groupId>com.github.abel533</groupId>
+            <artifactId>ECharts</artifactId>
+            <version>2.2.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!-- 加密 -->
         <dependency>
             <groupId>commons-codec</groupId>
@@ -240,9 +257,18 @@
         </dependency>
 
 
+        <!-- @NotNull -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+
+        <!--生成pdf-->
+        <dependency>
+            <groupId>org.xhtmlrenderer</groupId>
+            <artifactId>flying-saucer-pdf</artifactId>
+            <version>9.1.16</version>
         </dependency>
     </dependencies>
 

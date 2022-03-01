@@ -58,9 +58,9 @@ Vue.component("editClassificationModule",
                             if(children==null) {
                                 if (this.cls[i] == this.treeData[j].children[k].oid) {
                                     ids.push(this.treeData[j].children[k].id);
-                                    this.clsStr2 += this.treeData[j].children[k].label;
+                                    this.clsStr += this.treeData[j].children[k].label;
                                     if (i != this.cls.length - 1) {
-                                        this.clsStr2 += ", ";
+                                        this.clsStr += ", ";
                                     }
                                     break;
                                 }
@@ -69,9 +69,9 @@ Vue.component("editClassificationModule",
                                 for(x=0;x<children.length;x++){
                                     if (this.cls[i] == children[x].oid) {
                                         ids.push(children[x].id);
-                                        this.clsStr2 += children[x].label;
+                                        this.clsStr += children[x].label;
                                         if (i != this.cls.length - 1) {
-                                            this.clsStr2 += ", ";
+                                            this.clsStr += ", ";
                                         }
                                         break;
                                     }

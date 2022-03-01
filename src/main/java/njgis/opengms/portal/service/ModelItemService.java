@@ -912,5 +912,75 @@ public class ModelItemService {
         return jsonArray;
     }
 
+    /**
+     * @Description 获取模型分类信息
+     * @param id
+     * @Return java.util.List<java.lang.String>
+     * @Author kx
+     * @Date 22/3/1
+     **/
+    public List<String> getClassifications(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        return modelItem.getClassifications();
+    }
 
+    public String updateClassifications(String modelId,List<String> classi, String email){
+
+        ModelItem modelItem = modelItemDao.findFirstById(modelId);
+
+        String author = modelItem.getAuthor();
+
+        if(author.equals(email)) {
+            modelItem.setClassifications(classi);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemUpdateDTO.setName(modelItem.getName());
+            modelItemUpdateDTO.setAlias(modelItem.getAlias());
+            modelItemUpdateDTO.setUploadImage(modelItem.getImage());
+            modelItemUpdateDTO.setOverview(modelItem.getOverview());
+            modelItemUpdateDTO.setLocalizationList(modelItem.getLocalizationList());
+            modelItemUpdateDTO.setStatus(modelItem.getStatus());
+            modelItemUpdateDTO.setLocalizationList(modelItem.getLocalizationList());
+            modelItemUpdateDTO.setAuthorships(modelItem.getAuthorships());
+            modelItemUpdateDTO.setClassifications(classi);
+            modelItemUpdateDTO.setKeywords(modelItem.getKeywords());
+            modelItemUpdateDTO.setReferences(modelItem.getReferences());
+            modelItemUpdateDTO.setRelate(modelItem.getRelate());
+            modelItemUpdateDTO.setMetadata(modelItem.getMetadata());
+
+
+            modelItemService.update(modelItemUpdateDTO,email);
+
+            return "version";
+        }
+
+    }
+
+
+    /**
+     * @Description 获取模型浏览和相关计算模型调用次数
+     * @param id
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author kx
+     * @Date 22/2/28
+     **/
+    public JSONObject getDailyViewAndInvokeCount(String id) {
+
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        List<String> computableModelIds = modelItem.getRelate().getComputableModels();
+        List<ComputableModel> computableModelList=new ArrayList<>();
+        for(int i=0;i<computableModelIds.size();i++){
+            ComputableModel computableModel = computableModelDao.findFirstById(computableModelIds.get(i));
+            computableModelList.add(computableModel);
+        }
+
+        StatisticsService statisticsService = new StatisticsService();
+        JSONObject result = statisticsService.getDailyViewAndInvokeTimes(modelItem,computableModelList,30,null);
+
+        return result;
+    }
 }

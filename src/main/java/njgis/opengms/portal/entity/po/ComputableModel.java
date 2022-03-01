@@ -1,8 +1,9 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
+import njgis.opengms.portal.entity.doo.model.Resource;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.task.CheckedModel;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -30,7 +31,7 @@ public class ComputableModel extends PortalItem {
     Boolean deploy; //是否已经部署
     Boolean verify = false; //是否
 
-    List<String> resources;
+    List<Resource> resources;
 
     String mdl;
     String testDataPath;

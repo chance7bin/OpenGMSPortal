@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.ModifiedPropertyInfo;
 import njgis.opengms.portal.entity.doo.PropertyModelInfo;
 import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
+import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.doo.support.GeoInfoMeta;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -260,6 +261,37 @@ public class Utils {
      * @param result
      * @return java.util.List<java.lang.String>
      **/
+    public static List<Resource> saveResource(List<MultipartFile> files, String path, String uid, String suffix,List<Resource> result) {
+        new File(path).mkdirs();
+
+
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            fileName = "/" + uid + "/" + new Date().getTime() + "_" + fileName;
+            Resource resource = new Resource();
+            resource.setPath(suffix + fileName);
+            result.add(resource);
+            int size = (int) file.getSize();
+            log.info(fileName + "-->" + size);
+
+            if (file.isEmpty()) {
+                continue;
+            } else {
+                File dest = new File(path + fileName);
+                if (!dest.getParentFile().exists()) { // 判断文件父目录是否存在
+                    dest.getParentFile().mkdir();
+                }
+                try {
+                    file.transferTo(dest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return result;
+    }
+
     public static List<String> saveFiles(List<MultipartFile> files, String path, String uid, String suffix,List<String> result) {
         new File(path).mkdirs();
 

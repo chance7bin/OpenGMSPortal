@@ -889,7 +889,7 @@ var info=new Vue({
             let nodes = [];
             let links = [];
 
-            $.post("/modelItem/getRelationGraph",{"oid":this.modelOid,"isFull":this.fullRelationShow},(result)=>{
+            $.post("/modelItem/getRelationGraph",{"oid":this.modelId,"isFull":this.fullRelationShow},(result)=>{
                 console.log(result);
                 nodes = result.data.nodes;
                 links = result.data.links;
@@ -1281,51 +1281,9 @@ var info=new Vue({
             }
         },
 
-        handleCheckChange(data, checked, indeterminate) {
-            // let checkedNodes = this.$refs.tree2.getCheckedNodes()
-            // let classes = [];
-            // let str='';
-            // for (let i = 0; i < checkedNodes.length; i++) {
-            //     // console.log(checkedNodes[i].children)
-            //     if(checkedNodes[i].children!=undefined){
-            //         continue;
-            //     }
-            //
-            //     classes.push(checkedNodes[i].oid);
-            //     str+=checkedNodes[i].label;
-            //     if(i!=checkedNodes.length-1){
-            //         str+=", ";
-            //     }
-            // }
-            // this.cls=classes;
-            // this.clsStr=str;
-
-        },
-
-        handleCheckChange2(data, checked, indeterminate) {
-            let checkedNodes = this.$refs.tree4.getCheckedNodes()
-            let classes = [];
-            let str='';
-            for (let i = 0; i < checkedNodes.length; i++) {
-                // console.log(checkedNodes[i].children)
-                if(checkedNodes[i].children!=undefined){
-                    continue;
-                }
-
-                classes.push(checkedNodes[i].oid);
-                str+=checkedNodes[i].label;
-                if(i!=checkedNodes.length-1){
-                    str+=", ";
-                }
-            }
-            this.cls2=classes;
-            this.clsStr2=str;
-
-        },
-
         getAlias(){
             this.editAliasDialog = true
-            axios.get('/modelItem/getAlias/'+this.modelOid
+            axios.get('/modelItem/getAlias/'+this.modelId
             ).then(res => {
                 if(res.data.code == -1){
                     this.confirmLogin()
@@ -1353,7 +1311,7 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelOid,
+                oid:this.modelId,
                 alias:alias,
             };
             $.post("/modelItem/updateAlias",data,(result)=>{
@@ -1396,19 +1354,18 @@ var info=new Vue({
         },
 
         getClassifications(){
-            $.get("/modelItem/getClassification/"+this.modelOid,{},(result)=>{
+            $.get("/modelItem/classifications/"+this.modelId,{},(result)=>{
                 if (result.code == -1) {
                     this.confirmLogin()
                 }else{
                     //cls
 
-
                     this.editClassification = true;
 
-                    this.cls = result.data.class2;
+                    this.cls = result.data;
 
                     this.$nextTick(()=>{
-                        this.$refs.editClassificationModule.insertClassifications( this.cls)
+                        this.$refs.editClassificationModule.insertClassifications(this.cls)
                     })
 
                 }
@@ -1418,39 +1375,43 @@ var info=new Vue({
         },
         submitClassifications(){
             let data = {
-                oid:this.modelOid,
+                id:this.modelId,
                 // class1:this.cls,
-                class:this.cls2,
+                class:this.cls,
             };
-            $.post("/modelItem/updateClass",data,(result)=>{
-                if (result.code == -1) {
-                    this.confirmLogin()
-                }else{
-                    if(result.data=='suc'){
-                        this.$alert("Change classification successfully!", 'Success', {
-                            type: 'success',
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                window.location.reload();
-                            }
-                        });
-                    }else if(result.data=='version'){
-                        this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
-                            type: 'success',
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                window.location.reload();
-                            }
-                        })
+            $.ajax({
+                type: "PUT",
+                url: "/modelItem/classifications",
+                data: data,
+                cache: false,
+                async: false,
+                success: (result) => {
+                    if (result.code == -1) {
+                        this.confirmLogin()
+                    }else{
+                        if(result.data=='suc'){
+                            this.$alert("Change classification successfully!", 'Success', {
+                                type: 'success',
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    window.location.reload();
+                                }
+                            });
+                        }else if(result.data=='version'){
+                            this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
+                                type: 'success',
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    window.location.reload();
+                                }
+                            })
+                        }
                     }
                 }
-
-
-
             })
         },
         getClassificationFromCom(cls,clsStr){
-            this.cls2=cls;
+            this.cls=cls;
             this.clsStr2=clsStr;
         },
         addLocalization() {
@@ -1661,7 +1622,7 @@ var info=new Vue({
         },
 
         getDescription(){
-            axios.get('/modelItem/getDescription/'+this.modelOid
+            axios.get('/modelItem/getDescription/'+this.modelId
             ).then(
                 res => {
                     if(res.data.code==-1){
@@ -1686,7 +1647,7 @@ var info=new Vue({
 
         getMetadata(){
 
-            axios.get('/modelItem/getMetadata/'+this.modelOid
+            axios.get('/modelItem/getMetadata/'+this.modelId
             ).then(
                 res => {
                     if(res.data.code==-1){
@@ -1702,7 +1663,7 @@ var info=new Vue({
 
         submitMetadata(){
             let data = {}
-            data.oid = this.modelOid
+            data.oid = this.modelId
             data.metadata = JSON.stringify(this.getMetaData())
 
             $.ajax({
@@ -1750,7 +1711,7 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelOid,
+                oid:this.modelId,
                 localization:JSON.stringify(this.localizationList)
             }
 
@@ -1797,7 +1758,7 @@ var info=new Vue({
         getReference(){
             this.editReference = true
 
-            axios.get('/modelItem/getReference/'+this.modelOid).then(
+            axios.get('/modelItem/getReference/'+this.modelId).then(
                 res =>{
                     if (res.data.code == -1) {
                         this.confirmLogin()
@@ -1866,7 +1827,7 @@ var info=new Vue({
                     url: "/modelItem/searchByDOI",
                     data: {
                         doi: this.doi,
-                        modelOid:this.modelOid
+                        modelOid:this.modelId
                     },
                     cache: false,
                     async: true,
@@ -2068,7 +2029,7 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelOid,
+                oid:this.modelId,
                 reference:JSON.stringify(references)
             }
 
@@ -2388,7 +2349,7 @@ var info=new Vue({
             // let href = window.location.href;
             // let hrefs = href.split('/');
             // let oid = hrefs[hrefs.length - 1].split("#")[0];
-            this.modelOid = itemInfo.id;
+            this.modelId = itemInfo.id;
             this.editModelItemDialog = true
         },
 
@@ -3477,7 +3438,7 @@ var info=new Vue({
                 res=>{
                     this.contributors = res.data.data
 
-                    vue.$nextTick(()=>{
+                    this.$nextTick(()=>{
 
                     })
                 }
@@ -3525,7 +3486,7 @@ var info=new Vue({
         // let href = window.location.href;
         // let hrefs = href.split('/');
         // let oid = hrefs[hrefs.length - 1].split("#")[0];
-        this.modelOid = itemInfo.id;
+        this.modelId = itemInfo.id;
 
         let currenturl = window.location.href;
         let dataitemid = currenturl.split("/");
