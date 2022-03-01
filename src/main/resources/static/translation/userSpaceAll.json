@@ -1,0 +1,235 @@
+{
+  "en-us": {
+    "Home": "Home",
+    "Model":"Model",
+    "Data": "Data",
+    "Server": "Server",
+    "Task": "Task",
+    "Community": "Community",
+    "Theme": "Theme",
+    "MyAccount": "My Account",
+    "Notice": "Notice",
+    "DraftBox": "Draft Box",
+    "Feedback":"Feedback",
+
+
+    "HomeSplit": "-------------------",
+    "HomeTitle": "My Space",
+    "HomeInfo": "You can manage your model and data here",
+    "HomeModelInfo": "You can manage model provided by yourself",
+    "HomeDataInfo": "You can manage data provided by yourself",
+    "HomeTaskInfo": "You can manage task provided by yourself",
+    "HomeCommunityInfo": "You can manage community provided by yourself",
+    "QuickTools": "Quick Tools",
+    "IntegratedModeling": "Integrated Modeling",
+    "ModelApplication": "Model Application",
+    "GoTo": "Go to!",
+
+
+    "ModelSplit": "-------------------",
+
+    "DataSplit": "-------------------",
+
+    "ServerSplit": "-------------------",
+    "ServerInfo": "You can manage your model/data server here",
+    "ServerModel": "Model Server",
+    "ServerModelInfo": "You can add your model server and manage it here.",
+    "ServerData": "Data Server",
+    "ServerDataInfo": "You can check status of your data server and manage content of it.",
+    "ServerManage": "manage",
+
+
+    "TaskSplit": "-------------------",
+    "TaskInfo1": "All of the tasks you have runned will be shown here, you can check the status of them",
+    "NormalTask": "Normal Task",
+    "DataTask": "Data Task",
+    "IntegratedTask": "Integrated Task",
+    "TaskStatus": "Task status",
+    "Search": "SEARCH",
+    "SearchInfo": "please enter name",
+    "SpendTime": "This possibly needs to spend some time",
+    "NoCalTask": "No calculation tasks",
+
+
+    "CommunitySplit": "-------------------",
+
+    "ThemeSplit": "-------------------",
+    "ThemeInfo": "A theme is a page contains models that aim at a practical application",
+    "SearchFor": "Search for ...",
+    "CreateNew": "create new",
+    "NoFound": "No Result Found ...",
+
+
+    "MyAccountSplit": "-------------------",
+    "Welcome": "Welcome",
+    "PersonalInformation": "Personal Information",
+    "Name": "Name",
+    "Email": "Email",
+    "Title": "Title",
+    "Phone": "Phone",
+    "HomePage": "Home Page",
+    "Organizations": "Organizations",
+    "Domain": "Domain",
+    "Introduction": "Introduction",
+    "EditInformation": "Edit Information",
+    "ChangePassword": "Change Password",
+    "Setting": "Setting",
+    "Subscribe": "Subscribe",
+    "SubscribeInfo": "Whether receive reports of your resources from OpenGMS.",
+    "SubModel": "Subscribed Computable Model",
+    "Edit": "Edit",
+
+
+
+    "NoticeSplit": "-------------------",
+    "Sort": "Sort",
+    "ReverseOrder": "Reverse order",
+    "PositiveOrder": "Positive order",
+    "OverView": "OverView",
+    "Version": "Version",
+    "UnapprovedVersion": "Unapproved version",
+    "AcceptedVersion": "Accepted version",
+    "RejectedVersion": "Rejected version",
+    "Comment": "Comment",
+    "MyEdition": "MyEdition",
+    "OthersEdition": "Others Edition",
+    "Reply": "Reply",
+    "EmptyInfo": "This page is temporarily empty",
+
+
+    "DraftBoxSplit": "-------------------",
+    "ModelItem": "Model Item",
+    "SortByTime": "Sort by time",
+    "DataItem": "Data Item",
+
+
+    "FeedbackSplit": "-------------------",
+    "APPRECIATE": "APPRECIATE !",
+    "APPRECIATEInfo": "We sincerely appreciate for using our platform, your feedback will be taken seriously.",
+    "SendFeedback": "Send Feedback",
+    "FeedBackInfo": "Enter your feedback here",
+    "Send": "Send"
+
+
+
+
+
+
+
+
+  },
+  "zh-cn": {
+    "Home": "主页",
+    "Model":"模型",
+    "Data": "数据",
+    "Server": "服务",
+    "Task": "任务",
+    "Community": "社区",
+    "Theme": "专题",
+    "MyAccount": "我的账户",
+    "Notice": "消息",
+    "DraftBox": "草稿箱",
+    "Feedback":"反馈",
+
+
+    "HomeSplit": "-------------------",
+    "HomeTitle": "我的空间",
+    "HomeInfo": "您可以在此处管理自己的模型和数据",
+    "HomeModelInfo": "您可以管理自己的模型",
+    "HomeDataInfo": "您可以管理自己的数据",
+    "HomeTaskInfo": "您可以管理自己提交的任务",
+    "HomeCommunityInfo": "您可以管理自己的社区信息",
+    "QuickTools": "快捷工具",
+    "IntegratedModeling": "集成建模",
+    "ModelApplication": "模型应用",
+    "GoTo": "进入",
+
+
+    "ModelSplit": "-------------------",
+
+    "DataSplit": "-------------------",
+
+    "ServerSplit": "-------------------",
+    "ServerInfo": "您可以在此处管理自己的模型/数据服务",
+    "ServerModel": "模型服务",
+    "ServerModelInfo": "您可以在此处查看、管理自己的模型服务",
+    "ServerData": "数据服务",
+    "ServerDataInfo": "您可以在此处查看、管理自己的数据服务",
+    "ServerManage": "管理",
+
+
+    "TaskSplit": "-------------------",
+    "TaskInfo1": "您运行的所有模型都展示在这里，您可以查看它们的状态",
+    "NormalTask": "普通任务",
+    "DataTask": "数据任务",
+    "IntegratedTask": "集成任务",
+    "TaskStatus": "任务状态",
+    "Search": "搜索",
+    "SearchInfo": "请输入名称",
+    "SpendTime": "这可能会花费一点时间",
+    "NoCalTask":"没有计算任务",
+
+
+    "CommunitySplit": "-------------------",
+
+    "ThemeSplit": "-------------------",
+    "ThemeInfo": "专题是一个包含特定实际应用目的的模型集合",
+    "SearchFor": "搜索...",
+    "CreateNew": "创建",
+    "NoFound": "没有结果...",
+
+
+    "MyAccountSplit": "-------------------",
+    "Welcome": "欢迎",
+    "PersonalInformation": "个人信息",
+    "Name": "名称",
+    "Email": "邮箱",
+    "Title": "标题",
+    "Phone": "电话",
+    "HomePage": "主页",
+    "Organizations": "机构",
+    "Domain": "域",
+    "Introduction": "介绍",
+    "EditInformation": "编辑信息",
+    "ChangePassword": "修改密码",
+    "Setting": "设置",
+    "Subscribe": "订阅",
+    "SubscribeInfo": "是否接受来自OpenGMS的关于您个人资源的报告",
+    "SubModel": "订阅计算模型",
+    "Edit": "编辑",
+
+
+    "NoticeSplit": "-------------------",
+    "Sort": "排序",
+    "ReverseOrder": "逆序",
+    "PositiveOrder": "正序",
+    "OverView": "概览",
+    "Version": "版本",
+    "UnapprovedVersion": "未接受版本",
+    "AcceptedVersion": "已接受版本",
+    "RejectedVersion": "已拒绝版本",
+    "Comment": "评论",
+    "MyEdition": "我的编辑",
+    "OthersEdition": "其他的编辑",
+    "Reply": "回复",
+    "EmptyInfo": "此页面暂时为空",
+
+
+
+
+    "DraftBoxSplit": "-------------------",
+    "ModelItem": "模型条目",
+    "SortByTime": "按时间排序",
+    "DataItem": "数据条目",
+
+
+
+    "FeedbackSplit": "-------------------",
+    "APPRECIATE": "感谢！",
+    "APPRECIATEInfo": "真诚地感谢您使用我们的平台，我们将认真考虑您的反馈。",
+    "SendFeedback": "发送反馈",
+    "FeedBackInfo": "在这里输入您的反馈内容",
+    "Send": "发送"
+
+  }
+}

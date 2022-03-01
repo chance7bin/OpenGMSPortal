@@ -1,6 +1,7 @@
 var userSpaceHome = Vue.extend(
     {
         template:'#userSpaceHome',
+        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -33,7 +34,9 @@ var userSpaceHome = Vue.extend(
                     date: '2016-05-03',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1516 弄'
-                }]
+                }],
+
+                htmlJSON:{}
 
 
             }
@@ -102,6 +105,7 @@ var userSpaceHome = Vue.extend(
         },
 
         created() {
+
         },
 
         mounted() {
