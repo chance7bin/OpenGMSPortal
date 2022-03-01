@@ -14,10 +14,17 @@ var data_application = new Vue({
             UDXRadio: '1',
             selectedFiles: [],
             fileList:[],
-            templateName: ""
+            templateName: "",
+
+            htmlJSON:{}
+
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
+
         initDataApplication(){
 
         },

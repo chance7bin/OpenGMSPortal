@@ -150,7 +150,7 @@ public class DataMethodController {
      * @return org.springframework.web.servlet.ModelAndView
      **/
     @ApiOperation(value = "根据id获取method条目界面 [ /dataApplication/{id} ]")
-    @RequestMapping (value="/detail/{id}",method = RequestMethod.GET)
+    @RequestMapping (value="/{id}",method = RequestMethod.GET)
     public ModelAndView get(@PathVariable("id") String id){
         return dataMethodService.getPage(id);
     }

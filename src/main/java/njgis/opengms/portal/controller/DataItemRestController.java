@@ -209,7 +209,7 @@ public class DataItemRestController {
      * @return org.springframework.web.servlet.ModelAndView
      **/
     @ApiOperation(value = "根据id返回详情界面")
-    @RequestMapping (value = "/detail/{id}", method = RequestMethod.GET)
+    @RequestMapping (value = "/{id}", method = RequestMethod.GET)
     public ModelAndView getItem(@ApiParam(name = "id", value = "dataItem的id", required = true)
                          @PathVariable("id") String id) throws IOException, URISyntaxException, DocumentException {
         return dataItemService.getPage(id, dataItemDao);

@@ -1,5 +1,6 @@
 var notice = Vue.extend({
     template:"#notice",
+    props:["htmlJson"],
     components: {
         'avatar': VueAvatar.Avatar
     },

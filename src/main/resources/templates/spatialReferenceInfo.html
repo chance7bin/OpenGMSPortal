@@ -19,6 +19,10 @@
     <link rel="stylesheet" th:href="@{/static/css/page/repositoryInfo.css}">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+
     <style>
         #description h1{
             font-size: 24px;
@@ -95,7 +99,13 @@
     <div th:replace="fragments/backToTop :: backtop-down"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
-
+        <translation-bar
+                json-file="spatialReferenceInfo"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title">
@@ -199,7 +209,7 @@
             <div id="classification" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Classification(s)</h4>
+                        <h4>{{htmlJSON.Classification}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-top:20px;">
@@ -217,15 +227,15 @@
             <div id="transform" class="detail_block" v-cloak>
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Transform</h4>
+                        <h4>{{htmlJSON.Transform}}</h4>
                     </div>
                 </div>
                 <div class="block_content transformContainer " th:if="${isTemporal} eq 'other'">
                     <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">Input coordinate system</h5>
+                        <h5 style="font-size: 16px;">{{htmlJSON.InputCoordinate}}</h5>
                         <div class="flexJustBetween flexAlignCenter inputForm">
                             <h5><span style="color: #7d7d7d">Name: </span> {{inputCoordinate.name}}</h5>
-                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(0)">Select</el-button>
+                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(0)">{{htmlJSON.Select}}</el-button>
                         </div>
                         <div v-if="judgeUnit(inputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
                             <p>X: </p>
@@ -248,16 +258,16 @@
                     </div>
                     <div class="flexCol flexCenter positionRelative" style="height: 150px">
                         <el-button type="primary" size="medium" style="margin: 0 20px" @click="transformClick">
-                            Transform
+                            {{htmlJSON.Transform}}
                         </el-button>
                         <i class="el-icon-sort cursorPointer exchangeButton" @click="exchangeIO" style="color: #0069ba;font-size: 18px;margin-top: 5px"></i>
-                        <p class="cursorPointer batchInputButton" role="button" style="" @click="batchInput">Batch input</p>
+                        <p class="cursorPointer batchInputButton" role="button" style="" @click="batchInput"> {{htmlJSON.BatchInput}}</p>
                     </div>
                     <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">Output coordinate system</h5>
+                        <h5 style="font-size: 16px;">{{htmlJSON.OutputCoordinate}}</h5>
                         <div class="flexJustBetween flexAlignCenter inputForm">
                             <h5><span style="color: #7d7d7d">Name: </span> {{outputCoordinate.name}}</h5>
-                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(1)">Select</el-button>
+                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(1)">{{htmlJSON.Select}}</el-button>
                         </div>
                         <div v-if="judgeUnit(outputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
                             <p>X: </p>
@@ -491,7 +501,7 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -513,13 +523,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
-                    </div>
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}}     </div>
                 </div>
             </div>
 
@@ -575,8 +584,8 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4 th:if="${history!=true}">Contributor</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
+                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -642,7 +651,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -870,6 +879,11 @@
     var proj_name = [[${info.name}]];
     var author=[[${user}]];
 </script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script type="text/javascript" src="/static/js/page/repositoryInfo.js"></script>
 
 

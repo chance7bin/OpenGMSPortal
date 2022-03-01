@@ -124,6 +124,43 @@ public class ComputableModelService {
 
             }
 
+            //排序
+            List<Localization> locals = computableModel.getLocalizationList();
+            Collections.sort(locals);
+
+            String detailResult = "";
+            String detailLanguage = "";
+            //先找中英文描述
+            for(Localization localization:locals){
+                String local = localization.getLocalCode();
+                if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
+                    String localDesc = localization.getDescription();
+                    if(localDesc!=null&&!localDesc.equals("")) {
+                        detailLanguage = localization.getLocalName();
+                        detailResult = localization.getDescription();
+                        break;
+                    }
+                }
+            }
+            //如果没有中英文，则使用其他语言描述
+            if(detailResult.equals("")){
+                for(Localization localization:locals){
+                    String localDesc = localization.getDescription();
+                    if(localDesc!=null&&!localDesc.equals("")) {
+                        detailLanguage = localization.getLocalName();
+                        detailResult = localization.getDescription();
+                        break;
+                    }
+                }
+            }
+
+            //语言列表
+            List<String> languageList = new ArrayList<>();
+            for(Localization local:locals){
+                languageList.add(local.getLocalName());
+            }
+
+
             String lastModifyTime = simpleDateFormat.format(computableModel.getLastModifyTime());
 
             //修改者信息
@@ -155,13 +192,17 @@ public class ComputableModelService {
 
             modelAndView.setViewName("computable_model");
 
-            modelAndView.addObject("modelInfo", computableModel);
+            modelAndView.addObject("itemInfo", computableModel);
 //            modelAndView.addObject("classifications", classResult);
             modelAndView.addObject("date", dateResult);
             modelAndView.addObject("year", calendar.get(Calendar.YEAR));
             modelAndView.addObject("user", userJson);
             modelAndView.addObject("authorship", authorshipString);
             modelAndView.addObject("resources", resourceArray);
+            modelAndView.addObject("detailLanguage",detailLanguage);
+            modelAndView.addObject("languageList", languageList);
+//        modelAndView.addObject("description",modelInfo.getOverview());
+            modelAndView.addObject("detail",detailResult);
             if(computableModel.getMdl()!=null) {
                 modelAndView.addObject("mdlJson", ModelServiceUtils.convertMdl(computableModel.getMdl()).getJSONObject("mdl"));
             }

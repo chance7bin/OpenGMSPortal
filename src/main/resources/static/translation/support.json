@@ -1,0 +1,37 @@
+{
+  "en-us": {
+    "PageName": "OpenGMS Support",
+    "PageIntro":"Use the links below to learn how to begin sharing and collaborating.",
+
+    "Introduce":"Introduce to OpenGMS",
+    "ModelResource": "Model Resource",
+    "DataResource": "Data Resource",
+    "ServiceReuse": "Service and Reuse",
+    "ServerNodes": "Server Nodes",
+    "Community": "Community",
+    "ThematicCenter": "Thematic Center",
+    "UserCenter": "User Center",
+
+    "info1": "There Are Some Demos For You →"
+
+
+
+
+  },
+  "zh-cn": {
+    "PageName": "OpenGMS帮助",
+    "PageIntro": "通过下方的链接学习如何使用OpenGMS进行共享与合作",
+
+    "Introduce":"OpenGMS介绍",
+    "ModelResource": "模型资源",
+    "DataResource": "数据资源",
+    "ServiceReuse": "服务与复用",
+    "ServerNodes": "服务节点",
+    "Community": "社区",
+    "ThematicCenter": "专题中心",
+    "UserCenter": "用户中心",
+
+    "info1": "一些对您有帮助的案例 →"
+  }
+
+}

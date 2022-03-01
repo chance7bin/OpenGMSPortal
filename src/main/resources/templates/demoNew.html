@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+
     <style>
         .cardborder{
             border: solid 1px #dedede;
@@ -39,14 +43,22 @@
         <div th:replace="fragments/navbar :: unlog"></div>
         <div class="titleSection" style="background-image: url('../static/img/support6.jpeg');background-position-y:  -400px">
             <div class="fullMask text-center fontWhite" ><br><br>
-                <h2>Demo</h2>
+                <h2>{{htmlJSON.PageName}}</h2>
                 <h3>
-                    Some examples about how to use OpenGMS.
+                    {{htmlJSON.PageIntro}}
                 </h3>
             </div>
         </div>
+
 <!--        <img class="imgAsTitle" src="../static/img/support2.png" style="">-->
         <div class="clearfix" style="position: relative;" :style="{'min-height':ScreenMinHeight}">
+            <translation-bar
+                    json-file="demo"
+                    @translate-page="translatePage"
+                    initial-lang="en-us"
+                    theme="dark"
+                    style="position: absolute;top: 10px;right:15px">
+            </translation-bar>
             <div class="grey95" >
                 <div class="col-lg-10 col-lg-offset-1 col-md-12">
                     <div class="flexJustAround" style="width: 100%;">
@@ -56,12 +68,13 @@
                     </div>
                     <div class="detail">
 
+
                         <el-row justify="center" type="flex" :gutter="20" style="margin: 20px">
                             <el-col :span="15" style="border: 1px black">
                                 <div class="cursorPointer quickToolsCard cardborder" :class="docIndex==1?'cardHover':''"
                                      style="height: 200px;display: flex;" @click="showDoc(1)">
                                         <img style="width:33.3%;border-radius: 10px 0 0 10px;" src="/static/img/support10.jpg">
-                                        <h3 style="width:66.6%;margin: auto;line-height:40px;">How to run a model online?</h3>
+                                        <h3 style="width:66.6%;margin: auto;line-height:40px;">{{htmlJSON.info1}}</h3>
                                 </div>
                             </el-col>
                         </el-row>
@@ -71,7 +84,7 @@
                                 <div class="cursorPointer quickToolsCard cardborder" :class="docIndex==1?'cardHover':''"
                                      style="height: 200px;display: flex;" @click="showDoc(2)">
                                     <img style="width:33.3%;border-radius: 10px 0 0 10px;" src="/static/img/support5.jpg">
-                                    <h3 style="width:66.6%;margin: auto;line-height:40px;">How to run a integrated model online?</h3>
+                                    <h3 style="width:66.6%;margin: auto;line-height:40px;">{{htmlJSON.info2}}</h3>
                                 </div>
                             </el-col>
                         </el-row>
@@ -81,7 +94,7 @@
             </div>
 
             <div class="clearfix"  style="padding: 90px 0;background-color: #e4e4e45e">
-                <h1 align="center" style="margin:0;"><a href="/help/support">Learn More About OpenGMS →</a></h1>
+                <h1 align="center" style="margin:0;"><a href="/help/support">{{htmlJSON.info3}}</a></h1>
             </div>
         </div>
 
@@ -93,6 +106,11 @@
 <script src="/static/js/index/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 
 <script src="/static/element-ui/umd/locale/en.js"></script>
 <script src="/static/js/page/demoNew.js"></script>

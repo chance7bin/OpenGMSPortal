@@ -85,10 +85,17 @@
         <div class="mainContent">
             <div class="el-row">
                 <div class="data-top">
-                    <h2 class="main-title">Data Application</h2>
-                    <h4 class="sub-title">The application of data
+                    <h2 class="main-title">{{htmlJSON.PageName}}</h2>
+                    <h4 class="sub-title">{{htmlJSON.PageIntro}}
                     </h4>
                 </div>
+                <translation-bar
+                        json-file="data_application"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px">
+                </translation-bar>
                 <hr>
             </div>
             <template>
@@ -103,19 +110,19 @@
                                 <div>
                                     <div class="noMargin sectionTitle" >
                                         <p>
-                                            Processing
+                                            {{htmlJSON.Processing}}
                                         </p>
                                     </div>
 
                                     <div class="sectionDescribe"  style="margin-top: 10px">
-                                        <p>You can view the existing processing services and invoke them.</p>
-                                        <p>Choose what you need to invoke!</p>
+                                        <p>{{htmlJSON.Processing_info1}}</p>
+                                        <p>{{htmlJSON.Processing_info2}}</p>
                                     </div>
 
                                 </div>
                                 <img src="/static/img/work.png" style="height: 30%;align-self: center"/>
                                 <button class="wzhBtn nutBtn plainBtn hoverPurple" style="align-self: center">
-                                    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">Under Construction...</p>
+                                    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.UnderConstruction}}</p>
                                 </button>
                             </div>
                         </div>
@@ -127,19 +134,19 @@
                                 <div>
                                     <div class="noMargin sectionTitle" >
                                         <p>
-                                            Visualization
+                                            {{htmlJSON.Visualization}}
                                         </p>
                                     </div>
 
                                     <div class="sectionDescribe"  style="margin-top: 10px">
-                                        <p>You can view the existing visualization services and invoke them.</p>
-                                        <p>Choose what you need to invoke!</p>
+                                        <p>{{htmlJSON.Visualization_info1}}</p>
+                                        <p>{{htmlJSON.Visualization_info2}}</p>
                                     </div>
 
                                 </div>
                                 <img src="/static/img/work.png" style="height: 30%;align-self: center"/>
                                 <button class="wzhBtn nutBtn plainBtn hoverJblue" style="align-self: center">
-                                    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">Under Construction...</p>
+                                    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.UnderConstruction}}</p>
                                 </button>
                             </div>
                         </div>
@@ -151,19 +158,19 @@
                                 <div>
                                     <div class="noMargin sectionTitle" >
                                         <p>
-                                            Integration
+                                            {{htmlJSON.Integration}}
                                         </p>
                                     </div>
 
                                     <div class="sectionDescribe"  style="margin-top: 10px">
-                                        <p>You can view the existing Integrate services and invoke them.</p>
-                                        <p>Choose what you need to invoke!</p>
+                                        <p>{{htmlJSON.Integration_info1}}</p>
+                                        <p>{{htmlJSON.Integration_info2}}</p>
                                     </div>
 
                                 </div>
                                 <img src="/static/img/work.png" style="height: 30%;align-self: center"/>
                                 <button class="wzhBtn nutBtn plainBtn hoverOrange" style="align-self: center">
-                                    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">Under Construction...</p>
+                                    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.UnderConstruction}}</p>
                                 </button>
                             </div>
                         </div>
@@ -392,6 +399,11 @@
 <script src="/static/js/common/bootstrap.js"></script>
 <script src="/static/js/common/bootstrap-select.js"></script>
 <script src="/static/js/common/bootstrap-tagsinput.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/page/data_application.js"></script>
 <script async src="/static/js/common/loadUser.js"></script>
 <script src="/static/element-ui/umd/locale/en.js"></script>

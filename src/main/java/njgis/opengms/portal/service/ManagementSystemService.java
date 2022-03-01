@@ -845,8 +845,9 @@ public class ManagementSystemService {
     public String getComputableModelNameByMd5(String md5){
 
         ComputableModel model = computableModelDao.findFirstByMd5(md5);
+        if (model==null)
+            return "";
         return model.getName();
-
     }
 
 

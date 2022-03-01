@@ -6,6 +6,9 @@ var userServer = Vue.extend(
                 type: String,
                 default: 'default'
             },
+            htmlJson:{
+                type:Object,
+            }
         },
         data() {
             return {

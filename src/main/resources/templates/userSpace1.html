@@ -199,17 +199,34 @@
     </div>
     <div v-loading.fullscreen.lock="fullscreenLoading"></div>
 
+
     <div class="page-container" style="height: 2000px;" v-cloak>
-        <head-side-bar :user-infoin-parent="userInfo" :curindex-parent="curIndex"></head-side-bar>
+
+        <translation-bar
+                json-file="userSpaceAll"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 80px;right:80px;z-index: 1;">
+        </translation-bar>
+
+        <head-side-bar :user-infoin-parent="userInfo" :curindex-parent="curIndex" :html-Json="htmlJSON"></head-side-bar>
+
         <router-view @com-sendcurindex="changecurIndex"
                      @com-senditemindex="changeitemIndex"
                      @com-senduserinfo="updateUserInfo"
                      @com-format-date="formatDate"
+                     :html-Json="htmlJSON"
         ></router-view>
+
 
     </div>
 
 </div>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/apidoc/themeApi.js"></script>
 <!--sideBar组件-->

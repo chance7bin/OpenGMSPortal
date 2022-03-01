@@ -465,9 +465,15 @@ new Vue({
         outMin:"",
         outSec:"",
         intime:"01:01:01",
-        outtime:""
+        outtime:"",
+
+        htmlJSON:{}
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
+
         select_prebase(value, loc, x, tag) {
             //选择转换前后的单位
             if (tag == 1)

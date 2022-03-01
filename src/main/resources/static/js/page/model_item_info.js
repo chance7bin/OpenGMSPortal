@@ -2388,7 +2388,7 @@ var info=new Vue({
             // let href = window.location.href;
             // let hrefs = href.split('/');
             // let oid = hrefs[hrefs.length - 1].split("#")[0];
-            this.modelOid = itemInfo.oid;
+            this.modelOid = itemInfo.id;
             this.editModelItemDialog = true
         },
 
@@ -3469,9 +3469,9 @@ var info=new Vue({
 
         getContributors(){
 
-            axios.get('/modelItem/getContributors',{
+            axios.get('/modelItem/contributors',{
                 params:{
-                    id:this.itemInfo.oid
+                    id:this.itemInfo.id
                 }
             }).then(
                 res=>{
@@ -3525,15 +3525,15 @@ var info=new Vue({
         // let href = window.location.href;
         // let hrefs = href.split('/');
         // let oid = hrefs[hrefs.length - 1].split("#")[0];
-        this.modelOid = itemInfo.oid;
+        this.modelOid = itemInfo.id;
 
         let currenturl = window.location.href;
         let dataitemid = currenturl.split("/");
 
         let that = this
-        axios.get("/dataItem/briefrelateddata", {
+        axios.get("/modelItem/briefRelatedData", {
             params: {
-                id: this.itemInfo.oid,
+                id: this.itemInfo.id,
             }
         })
             .then((res) => {
@@ -3635,7 +3635,7 @@ var info=new Vue({
             this.activeName = "logical Model";
         }
 
-        if(relate.modelItems.length>0){
+        if(relate.modelRelationList.length>0){
             this.activeName1 = "Model Item";
         }else if(relate.dataItems.length>0){
             this.activeName1 = "Data Item";

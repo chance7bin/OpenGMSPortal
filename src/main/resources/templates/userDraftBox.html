@@ -20,8 +20,7 @@
                     <div class="flexRowContainer flexColCenter" style="margin-bottom: 20px">
 <!--                        <i class="ms-Icon ms-Icon&#45;&#45;EditNote"-->
 <!--                           style="margin-top: 7px;font-size: 40px;color: #05c4ff;"></i>-->
-                        <h3 style="margin-left: 10px">Draft Box</h3>
-
+                        <h3 style="margin-left: 10px">{{htmlJson.DraftBox}}</h3>
                     </div>
                     <!--                        <h5>You can manager your model and data here</h5>-->
 
@@ -29,11 +28,11 @@
 
                 <el-card id="draftBoxContainer">
                     <el-tabs v-model="activeName" stretch="stretch">
-                        <el-tab-pane label="Model Item" name="first">
+                        <el-tab-pane :label="htmlJson.ModelItem" name="first">
                             <el-card>
                                 <div class="block">
                                     <div class="flexJustStart flexAlignCenter">
-                                        Sort by time:
+                                        {{htmlJson.SortByTime}}:
                                         <el-button size="mini" type="primary" plain @click="changeSort" style=";margin-left: 5px;padding: 5px 6px;">
                                             <i v-if="!asc" class="fa fa-sort-numeric-desc" style="font-size: 14px"></i>
                                             <i v-else class="fa fa-sort-numeric-asc" style="font-size: 14px"></i>
@@ -347,9 +346,9 @@
                                 </div>
                             </el-card>
                         </el-tab-pane>
-                        <el-tab-pane label="Data Item" name="second">
+                        <el-tab-pane :label="htmlJson.DataItem" name="second">
                             <div slot="label">
-                                Data Item
+                                {{htmlJson.DataItem}}
                             </div>
 
                             <el-tabs type="border-card"  stretch="stretch">
@@ -357,11 +356,11 @@
                             </el-tabs>
 
                         </el-tab-pane>
-                        <el-tab-pane label="Community" name="third">
+                        <el-tab-pane :label="htmlJson.Community" name="third">
                             <el-card>
                                 <div class="block">
                                     <div class="flexJustStart flexAlignCenter">
-                                        Sort by time:
+                                        {{htmlJson.SortByTime}}:
                                         <el-button size="mini" type="primary" plain @click="changeSort" style=";margin-left: 5px;padding: 5px 6px;">
                                             <i v-if="!asc" class="fa fa-sort-numeric-desc" style="font-size: 14px"></i>
                                             <i v-else class="fa fa-sort-numeric-asc" style="font-size: 14px"></i>

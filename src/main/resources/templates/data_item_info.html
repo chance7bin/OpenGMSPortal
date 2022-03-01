@@ -29,6 +29,10 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
 
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+
+
     <style type="text/css" th:inline="css">
         .col-md-5 {
             float: none;
@@ -55,6 +59,14 @@
 
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
+        <translation-bar
+                json-file="dataItemInfo"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
+
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title" th:object="${datainfo}">
@@ -185,7 +197,7 @@
             <div th:if="(${datainfo.data.url!=null}) and (${datainfo.data.url!=''})" id="data_url" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Data Resource Url</h4>
+                        <h4>{{htmlJSON.DataResourceUrl}}</h4>
                     </div>
                 </div>
                 <div class="block_content flex">
@@ -483,7 +495,7 @@
             <div id="relatedmodels" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Related Models</h4>
+                        <h4>{{htmlJSON.RelatedModels}}</h4>
                     </div>
                 </div>
                 <div class="block_content flex">
@@ -510,7 +522,7 @@
                     </div>
                     <div class="text-center" style="width:100%" th:if="${#lists.size(relatedModels)}==0">
                         <h5 style="margin-bottom: 10px;display: inline-block;">
-                            There is no related model item. You can link one.
+                            {{htmlJSON.RelatedModelsInfo}}
                         </h5>
                         <button class="btn btn-default" type="button"
                                 style="display: inline-block;" @click="addRelation()">
@@ -756,7 +768,7 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content" th:object="${datainfo}">
@@ -782,12 +794,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
                     </div>
                 </div>
             </div>
@@ -816,7 +828,7 @@
             <div id="classification" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Category Tags</h4>
+                        <h4>{{htmlJSON.CategoryTags}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-bottom:10px;">
@@ -836,8 +848,8 @@
 <!--                        <h4 th:if="${history!=true}">Contributor</h4>-->
 <!--                        <h4 th:if="${history==true}">Modifier</h4>-->
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>Contributor</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                        <h4>{{htmlJSON.Contributor}}</h4>
+                        <el-tooltip popper-class="fontsize-15" effect="light" :content=htmlJSON.ContributorInfo placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
                         </el-tooltip>
                     </div>
@@ -865,7 +877,13 @@
             <div id="Authorship" class="detail_block"
                  th:if="${datainfo.data.authorships!=null&&#lists.size(datainfo.data.authorships)!=0}">
                 <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
+                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+                        <h4>{{htmlJSON.Authorship}}</h4>
+                        <el-tooltip popper-class="fontsize-15" effect="light"
+                                    :content="htmlJSON.AuthorshipInfo"
+                                    placement="top">
+                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+                        </el-tooltip>   </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
@@ -892,7 +910,7 @@
                     </div>
 
                     <div th:if="${#lists.size(datainfo.data.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">Feed back</a></el-tag>
+                        <el-tag type="info">{{htmlJSON.AuthorshipInfo4}} <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">{{htmlJSON.AuthorshipInfo5}}</a></el-tag>
                     </div>
 
                 </div>
@@ -901,7 +919,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -1062,6 +1080,10 @@
 <script src="/static/js/common/vue-avatar.min.js"></script>
 
 <script src="/static/js/common/axios.min.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/common/qrcode.min.js"></script>
 <script src="/static/js/apidoc/dataApi.js"></script>

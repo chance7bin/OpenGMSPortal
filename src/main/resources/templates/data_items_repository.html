@@ -167,7 +167,7 @@
                 <!--v-loading-->
                 <div class="maincontnt fixedLoading"  v-loading="loading">
                     <span style="float:left;margin-top: 12px;margin-left: 15px">
-                            <span style="font-weight: bold">Sorted By: </span>&nbsp;
+                            <span style="font-weight: bold">{{htmlJSON.SortBy}}</span>&nbsp;
                             <el-dropdown trigger="click" @command="changeSortField" style="cursor:pointer;">
                                 <span class="el-dropdown-link">
                                     {{sortField}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -207,7 +207,7 @@
                                     <a :class="item.viewCount>100?'hot':''" :href="goto(item.id)" target="_blank" >{{item.name}}&nbsp&nbsp</a>
                                 </div>
                                 <div class="detail_overview">
-                                    <a class="img" :href="'/dataItem/detail/'+ item.id" target="_blank">
+                                    <a class="img" :href="'/dataItem/'+ item.id" target="_blank">
                                         <avatar  :username="item.name" :size="90"
                                                  :rounded="false"></avatar>
                                     </a>

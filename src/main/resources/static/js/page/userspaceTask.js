@@ -1,6 +1,7 @@
 var userTask = Vue.extend(
     {
         template:'#userTask',
+        props: ["htmlJson"],
         data() {
             return {
                 //页面样式控制
