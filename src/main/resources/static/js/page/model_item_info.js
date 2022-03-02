@@ -69,13 +69,13 @@ var info=new Vue({
                 authors: 'Zhao Y.,Liu H.,Yan J.,An W.,Liu J.,Zhang X.,Wang H.,Liu Y.,Jiang H.,Li Q.,Wang Y.,Li X.-Z.,Mandrus D.,Xie X.~C.,Pan M.,Wang J.',
                 date: 'jul 2015',
                 journal: 'prb',
-                pages: "041104"
+                pageRange: "041104"
             }, {
                 title: 'Detection of a Flow Induced Magnetic Field Eigenmode in the Riga Dynamo Facility',
                 authors: 'Gailitis A.,Lielausis O.,Dement\'ev S.,Platacis E.,Cifersons A.,Gerbeth G.,Gundrum T.,Stefani F.,Christen M.,Hanel H.,Will G.',
                 date: 'may 2000',
                 journal: 'Physical Review Letters',
-                pages: "4365-4368"
+                pageRange: "4365-4368"
             }],
 
             useroid: '',
@@ -503,7 +503,7 @@ var info=new Vue({
 
             itemInfo:{},
 
-            relationPageSize:4,
+            relationPageSize:3,
 
             modelRelationGraphShow:false,
             modelRelationGraphSideBarShow:false,
@@ -1253,7 +1253,7 @@ var info=new Vue({
             this.search(this.activeName_dialog);
         },
 
-        getOid(){
+        getModelId(){
             let url = window.location.href;
             let urls = url.split("/");
             for(i=0;i<urls.length;i++){
@@ -1266,12 +1266,12 @@ var info=new Vue({
         changeDetailLanguage(command){
             this.currentDetailLanguage = command;
             let data = {
-                "oid": this.getOid(),
+                "id": this.getModelId(),
                 "language": this.currentDetailLanguage
             };
 
             if(window.location.href.indexOf("history")===-1) {
-                $.get("/modelItem/getDetailByLanguage", data, (result) => {
+                $.get("/modelItem/detailByLanguage", data, (result) => {
                     this.detail = result.data;
                 })
             }else{
@@ -1283,7 +1283,7 @@ var info=new Vue({
 
         getAlias(){
             this.editAliasDialog = true
-            axios.get('/modelItem/getAlias/'+this.modelId
+            axios.get('/modelItem/alias/'+this.modelId
             ).then(res => {
                 if(res.data.code == -1){
                     this.confirmLogin()
@@ -1622,7 +1622,7 @@ var info=new Vue({
         },
 
         getDescription(){
-            axios.get('/modelItem/getDescription/'+this.modelId
+            axios.get('/modelItem/localizationList/'+this.modelId
             ).then(
                 res => {
                     if(res.data.code==-1){
@@ -1758,7 +1758,7 @@ var info=new Vue({
         getReference(){
             this.editReference = true
 
-            axios.get('/modelItem/getReference/'+this.modelId).then(
+            axios.get('/modelItem/references/'+this.modelId).then(
                 res =>{
                     if (res.data.code == -1) {
                         this.confirmLogin()
@@ -1783,12 +1783,12 @@ var info=new Vue({
                                 var ref = references[i];
                                 this.dynamicTable.row.add([
                                     ref.title,
-                                    ref.author,
+                                    ref.authors,
                                     ref.date,
                                     ref.journal,
                                     ref.volume,
-                                    ref.pages,
-                                    ref.links,
+                                    ref.pageRange,
+                                    ref.link,
                                     ref.doi,
                                     "<center><a href='javascript:;' class='fa fa-times refClose' style='color:red'></a></center>"]).draw();
                             }
@@ -2017,12 +2017,12 @@ var info=new Vue({
                     ref.title = ref_prop.eq(0).text();
                     if (ref.title == "No data available in table")
                         break;
-                    ref.author = ref_prop.eq(1).text().split(",");
+                    ref.authors = ref_prop.eq(1).text().split(",");
                     ref.date = ref_prop.eq(2).text();
                     ref.journal = ref_prop.eq(3).text();
                     ref.volume = ref_prop.eq(4).text();
-                    ref.pages = ref_prop.eq(5).text();
-                    ref.links = ref_prop.eq(6).text();
+                    ref.pageRange = ref_prop.eq(5).text();
+                    ref.link = ref_prop.eq(6).text();
                     ref.doi = ref_prop.eq(7).text();
                     references.push(ref);
                 }
@@ -3431,10 +3431,11 @@ var info=new Vue({
         }
 
         let refs = $("#ref").val();
+        refs = refs.replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}")
         if (refs != null) {
             let json = JSON.parse(refs);
             for (i = 0; i < json.length; i++) {
-                json[i].author = json[i].author.join(", ");
+                json[i].authors = json[i].authors.join(", ");
             }
             console.log(json);
             this.refTableData = json;

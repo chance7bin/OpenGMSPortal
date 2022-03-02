@@ -99,6 +99,10 @@ public class ModelItemService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ArticleDao articleDao;
+
+
     public ModelAndView getPage(PortalItem portalItem) {
         ModelAndView modelAndView=new ModelAndView();
 
@@ -409,7 +413,7 @@ public class ModelItemService {
         modelAndView.addObject("authorship", authorshipString);
         modelAndView.addObject("lastModifier", modifierJson);
         modelAndView.addObject("lastModifyTime", lastModifyTime);
-        modelAndView.addObject("references", JSONArray.parseArray(JSON.toJSONString(modelInfo.getReferences())));
+        modelAndView.addObject("references", getReferences(modelInfo.getId()));
 
         return modelAndView;
     }
@@ -923,6 +927,210 @@ public class ModelItemService {
         ModelItem modelItem = modelItemDao.findFirstById(id);
         return modelItem.getClassifications();
     }
+
+    public List<String> getAlias(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        return modelItem.getAlias();
+    }
+
+    public List<Localization> getLocalizationList(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        return modelItem.getLocalizationList();
+    }
+
+    public JSONArray getReferences(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        List<String> reference_ids = modelItem.getReferences();
+        JSONArray references = new JSONArray();
+        for(int i=0;i<reference_ids.size();i++) {
+            Article article = articleDao.findFirstById(reference_ids.get(i));
+            references.add(JSONObject.toJSONString(article));
+            System.out.println(references.get(i));
+        }
+        return references;
+    }
+
+
+    public String getDetailByLanguage(String id, String language){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        List<Localization> localizationList = modelItem.getLocalizationList();
+        for(Localization localization : localizationList){
+            if(localization.getLocalName().equals(language)){
+                return localization.getDescription();
+            }
+        }
+        return null;
+    }
+
+    public JSONArray getRelation(String oid,String type){
+
+        JSONArray result=new JSONArray();
+        ModelItem modelItem=modelItemDao.findFirstById(oid);
+        ModelItemRelate relation=modelItem.getRelate();
+        List<String> list=new ArrayList<>();
+
+        switch (type){
+            case "dataItem":
+                list=relation.getDataItems();
+                if(list!=null){
+                    for(String id:list){
+                        DataItem dataItem=dataItemDao.findFirstById(id);
+                        if(dataItem.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item=new JSONObject();
+                        item.put("oid",dataItem.getId());
+                        item.put("name",dataItem.getName());
+                        User user=userDao.findFirstByEmail(dataItem.getAuthor());
+                        item.put("author_name",user.getName());
+                        item.put("author_email", user.getEmail());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "modelItem":
+                List<ModelRelation> modelRelationList = relation.getModelRelationList();
+                if (modelRelationList != null) {
+                    for (ModelRelation modelRelation : modelRelationList) {
+                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getId());
+                        if (modelItem1.getStatus().equals("Private")) {
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", modelItem1.getId());
+                        item.put("name", modelItem1.getName());
+                        item.put("relation", modelRelation.getRelation().getText());
+                        item.put("author_name", userDao.findFirstByEmail(modelItem1.getAuthor()).getName());
+                        item.put("author_email", modelItem1.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "conceptualModel":
+                list=relation.getConceptualModels();
+                if(list!=null) {
+                    for (String id : list) {
+                        ConceptualModel conceptualModel = conceptualModelDao.findFirstById(id);
+                        if(conceptualModel.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", conceptualModel.getId());
+                        item.put("name", conceptualModel.getName());
+                        item.put("author_name", userDao.findFirstByEmail(conceptualModel.getAuthor()).getName());
+                        item.put("author_email", conceptualModel.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "logicalModel":
+                list=relation.getLogicalModels();
+                if(list!=null) {
+                    for (String id : list) {
+                        LogicalModel logicalModel = logicalModelDao.findFirstById(id);
+                        if(logicalModel.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("oid", logicalModel.getId());
+                        item.put("name", logicalModel.getName());
+                        item.put("author_name", userDao.findFirstByEmail(logicalModel.getAuthor()).getName());
+                        item.put("author_email", logicalModel.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "computableModel":
+                list=relation.getComputableModels();
+                if(list!=null) {
+                    for (String id : list) {
+                        ComputableModel computableModel = computableModelDao.findFirstById(id);
+                        if(computableModel.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("oid", computableModel.getId());
+                        item.put("name", computableModel.getName());
+                        item.put("author_name", userDao.findFirstByEmail(computableModel.getAuthor()).getName());
+                        item.put("author_email", computableModel.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "concept":
+                list=relation.getConcepts();
+                if(list!=null) {
+                    for (String id : list) {
+                        Concept concept = conceptDao.findFirstById(id);
+                        if(concept.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("oid", concept.getId());
+                        item.put("name", concept.getName());
+                        item.put("author_name", userDao.findFirstByEmail(concept.getAuthor()).getName());
+                        item.put("author_email", concept.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "spatialReference":
+                list=relation.getSpatialReferences();
+                if(list!=null) {
+                    for (String id : list) {
+                        SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                        if(spatialReference.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("oid", spatialReference.getId());
+                        item.put("name", spatialReference.getName());
+                        item.put("author_name", userDao.findFirstByEmail(spatialReference.getAuthor()).getName());
+                        item.put("author_email", spatialReference.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "template":
+                list=relation.getTemplates();
+                if(list!=null) {
+                    for (String id : list) {
+                        Template template = templateDao.findFirstById(id);
+                        if(template.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("oid", template.getId());
+                        item.put("name", template.getName());
+                        item.put("author_name", userDao.findFirstByEmail(template.getAuthor()).getName());
+                        item.put("author_email", template.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "unit":
+                list=relation.getUnits();
+                if(list!=null) {
+                    for (String id : list) {
+                        Unit unit = unitDao.findFirstById(id);
+                        if(unit.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("oid", unit.getId());
+                        item.put("name", unit.getName());
+                        item.put("author_name", userDao.findFirstByEmail(unit.getAuthor()).getName());
+                        item.put("author_email", unit.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+
+        }
+
+        return result;
+    }
+
 
     public String updateClassifications(String modelId,List<String> classi, String email){
 

@@ -662,12 +662,12 @@ var createModelItem = Vue.extend({
                     ref.title = ref_prop.eq(0).text();
                     if (ref.title == "No data available in table")
                         break;
-                    ref.author = ref_prop.eq(1).text().split(",");
+                    ref.authors = ref_prop.eq(1).text().split(",");
                     ref.date = ref_prop.eq(2).text();
                     ref.journal = ref_prop.eq(3).text();
                     ref.volume = ref_prop.eq(4).text();
-                    ref.pages = ref_prop.eq(5).text();
-                    ref.links = ref_prop.eq(6).text();
+                    ref.pageRange = ref_prop.eq(5).text();
+                    ref.link = ref_prop.eq(6).text();
                     ref.doi = ref_prop.eq(7).text();
                     modelItemObj.references.push(ref);
                 }
@@ -935,12 +935,12 @@ var createModelItem = Vue.extend({
                 var ref = basicInfo.references[i];
                 this.dynamicTable.row.add([
                     ref.title,
-                    ref.author,
+                    ref.authors,
                     ref.date,
                     ref.journal,
                     ref.volume,
-                    ref.pages,
-                    ref.links,
+                    ref.pageRange,
+                    ref.link,
                     ref.doi,
                     "<center><a href='javascript:;' class='fa fa-times refClose' style='color:red'></a></center>"]).draw();
             }

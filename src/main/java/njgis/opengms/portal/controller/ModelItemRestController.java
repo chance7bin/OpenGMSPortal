@@ -244,6 +244,54 @@ public class ModelItemRestController {
         return ResultUtils.success(modelItemService.getClassifications(id));
     }
 
+    @ApiOperation(value = "获取模型条目分类信息", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/localizationList/{id}", method = RequestMethod.GET)
+    JsonResult getLocalizationList(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getLocalizationList(id));
+    }
+
+    @ApiOperation(value = "获取模型条目不同语言的详情描述")
+    @RequestMapping(value = "/detailByLanguage", method = RequestMethod.GET)
+    JsonResult getDetailByLanguage(@RequestParam(value="id") String id, @RequestParam(value="language") String language){
+
+        String detail = modelItemService.getDetailByLanguage(id, language);
+        if(detail==null){
+            return ResultUtils.error(-1,"language does not exist in this model item.");
+        }else{
+            return ResultUtils.success(detail);
+        }
+    }
+
+    @ApiOperation(value = "获取模型条目别名", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/alias/{id}", method = RequestMethod.GET)
+    JsonResult getAlias(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getAlias(id));
+    }
+
+    @ApiOperation(value = "获取模型条目关联的其他条目", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/relation", method = RequestMethod.GET)
+    JsonResult getRelation(@RequestParam(value = "type") String type,@RequestParam(value = "id") String id,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getAlias(id));
+    }
+
+    @ApiOperation(value = "获取模型参考文献", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/references/{id}", method = RequestMethod.GET)
+    JsonResult getReferences(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getReferences(id));
+    }
+
     @ApiOperation(value = "更新模型条目分类信息", notes = "@LoginRequired\n")
     @RequestMapping(value = "/classifications", method = RequestMethod.PUT)
     public JsonResult updateClass(@RequestParam(value = "id") String id,

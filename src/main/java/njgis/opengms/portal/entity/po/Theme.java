@@ -36,7 +36,7 @@ public class Theme extends PortalItem {
     List<SubDataInfo> subDataInfos;
     List<Application> application;
     List<SubApplication> subApplications;
-    List<Reference> references;
+    List<String> references;
     List<Maintainer> maintainer;//其余的维护者为下标0之后存储
 
     List<ThemeData> themeData;  // 多级菜单保存下来，为了后面好编辑
