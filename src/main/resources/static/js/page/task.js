@@ -3106,7 +3106,7 @@ var vue = new Vue({
             this.taskLoading = true
             let res = {}
             try{
-                res = await (await fetch("/task/TaskInit/" + id).catch(
+                res = await (await fetch("/task/init/" + id).catch(
                     ()=>{
                         this.taskLoading = false
                         this.$confirm('Initialization failure: an error occured on the server.' + '<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Error', {

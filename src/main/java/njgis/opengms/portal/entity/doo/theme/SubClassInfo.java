@@ -1,22 +1,23 @@
-package njgis.opengms.portal.entity.doo.support.theme;
+package njgis.opengms.portal.entity.doo.theme;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Auther mingyuan
- * @Data 2020.01.02 15:41
+ * @Data 2019.12.30 22:26
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubDetail {
+public class SubClassInfo {
     String uid;
-    String detail;
     Date time;
     String status;
+    List<ClassInfo> sub_classInfo;
     String formatTime;
 }

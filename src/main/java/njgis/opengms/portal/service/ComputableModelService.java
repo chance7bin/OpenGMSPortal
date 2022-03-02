@@ -11,6 +11,7 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
+import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.model.ComputableModelResultDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
@@ -36,6 +37,7 @@ import java.util.*;
 
 import static njgis.opengms.portal.utils.ModelServiceUtils.checkMdlJson;
 import static njgis.opengms.portal.utils.Utils.saveFiles;
+import static njgis.opengms.portal.utils.Utils.saveResource;
 
 /**
  * @Description Computable Model Service
@@ -101,12 +103,12 @@ public class ComputableModelService {
             JSONObject userJson = userService.getItemUserInfoByEmail(computableModel.getAuthor());
             //资源信息
             JSONArray resourceArray = new JSONArray();
-            List<String> resources = computableModel.getResources();
+            List<Resource> resources = computableModel.getResources();
 
             if (resources != null) {
                 for (int i = 0; i < resources.size(); i++) {
 
-                    String path = resources.get(i);
+                    String path = resources.get(i).getPath();
 
                     String[] arr = path.split("\\.");
                     String suffix = arr[arr.length - 1];
@@ -238,7 +240,12 @@ public class ComputableModelService {
         computableModelResultDTO.setRelatedModelItemInfoList(genericService.getRelatedModelInfoList(relatedModelItems));
 
         //资源信息
-        List<SimpleFileInfo> simpleFileInfoList = genericService.getSimpleFileInfoList(computableModel.getResources());
+        List<String> resourcePaths = new ArrayList<>();
+        List<Resource> resourceList = computableModel.getResources();
+        for(int i = 0;i<resourceList.size();i++){
+            resourcePaths.add(resourceList.get(i).getPath());
+        }
+        List<SimpleFileInfo> simpleFileInfoList = genericService.getSimpleFileInfoList(resourcePaths);
         computableModelResultDTO.setResourceJson(simpleFileInfoList);
 
         return computableModelResultDTO;
@@ -251,8 +258,8 @@ public class ComputableModelService {
 
         String path = resourcePath + "/computableModel/" + jsonObject.getString("contentType");
 
-        List<String> resources = new ArrayList<>();
-        saveFiles(files, path, uid, "",resources);
+        List<Resource> resources = new ArrayList<>();
+        saveResource(files, path, uid, "",resources);
         if (resources == null) {
             result.put("code", -1);
         } else {
@@ -467,8 +474,8 @@ public class ComputableModelService {
             String path = resourcePath + "/computableModel/" + jsonObject.getString("contentType");
             //如果上传新文件
             if (files.size() > 0) {
-                List<String> resources =new ArrayList<>();
-                saveFiles(files, path, email, "",resources);
+                List<Resource> resources =new ArrayList<>();
+                saveResource(files, path, email, "",resources);
                 if (resources == null) {
                     result.put("code", -1);
                     return result;
@@ -658,9 +665,9 @@ public class ComputableModelService {
         if (computableModel != null) {
             //删除资源
             String path = resourcePath + "/computableModel/" + computableModel.getContentType();
-            List<String> resources = computableModel.getResources();
+            List<Resource> resources = computableModel.getResources();
             for (int i = 0; i < resources.size(); i++) {
-                Utils.delete(path + resources.get(i));
+                Utils.delete(path + resources.get(i).getPath());
             }
 
             //计算模型删除

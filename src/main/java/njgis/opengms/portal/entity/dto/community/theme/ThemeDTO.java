@@ -1,7 +1,7 @@
 package njgis.opengms.portal.entity.dto.community.theme;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.support.theme.*;
+import njgis.opengms.portal.entity.doo.theme.*;
 import njgis.opengms.portal.entity.dto.AddDTO;
 
 import java.util.List;

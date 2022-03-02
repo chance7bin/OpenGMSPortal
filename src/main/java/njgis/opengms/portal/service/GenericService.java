@@ -7,6 +7,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.RelatedModelInfoDTO;
@@ -643,6 +644,7 @@ public class GenericService {
         for(int i = 0;i<relatedModelItems.size();i++){
             String relatedModelItemId = relatedModelItems.get(i);
             ModelItem modelItem=modelItemDao.findFirstById(relatedModelItemId);
+            if(modelItem==null) continue;
             RelatedModelInfoDTO relatedModelInfoDTO = new RelatedModelInfoDTO();
             relatedModelInfoDTO.setName(modelItem.getName());
             relatedModelInfoDTO.setId(modelItem.getId());

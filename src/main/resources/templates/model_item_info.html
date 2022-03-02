@@ -696,6 +696,7 @@
                             </el-tooltip>
 
                         </div>
+
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -731,9 +732,9 @@
                                         width="200">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="author"
+                                        prop="authors"
                                         sortable
-                                        label="Author"
+                                        label="Author(s)"
                                         width="200">
                                 </el-table-column>
                                 <el-table-column
@@ -749,19 +750,19 @@
                                         label="Volume">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="pages"
-                                        label="Pages">
+                                        prop="pageRange"
+                                        label="Page Range">
                                 </el-table-column>
                                 <el-table-column
-                                        label="Links">
+                                        label="Link">
                                     <template slot-scope="scope">
-                                        <el-button v-if="scope.row.links!=''"
+                                        <el-button v-if="scope.row.link!=''"
                                                    class="refLink"
                                                    size="mini"
                                                    type="danger"
-                                                   @click="link(scope.row.links)">View
+                                                   @click="link(scope.row.link)">View
                                         </el-button>
-                                        <div v-if="scope.row.links==''">No link</div>
+                                        <div v-if="scope.row.link==''">No link</div>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -2258,11 +2259,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editDescription = false">Cancel</el-button>
-            <el-button type="primary" @click="submitDescription">Submit</el-button>
-            <el-button @click="editClassification = false">Cancel</el-button>
-            <el-popconfirm
-  confirm-button-text='Yes'
-  cancel-button-text='No'
+            <el-popconfirm confirm-button-text='Yes' cancel-button-text='No'
                     title="Are you sure to submit changes?"
                     @confirm="submitDescription"
             >

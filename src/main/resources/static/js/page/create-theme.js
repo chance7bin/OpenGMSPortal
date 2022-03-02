@@ -1713,11 +1713,11 @@ var createTheme = Vue.extend({
                         var ref = basicInfo.references[i];
                         table.row.add([
                             ref.title,
-                            ref.author,
+                            ref.authors,
                             ref.date,
                             ref.journal,
-                            ref.pages,
-                            ref.links,
+                            ref.pageRange,
+                            ref.link,
                             "<center><a href='javascript:;' class='fa fa-times refClose' style='color:red'></a></center>"]).draw();
                     }
                     if (basicInfo.references.length > 0) {

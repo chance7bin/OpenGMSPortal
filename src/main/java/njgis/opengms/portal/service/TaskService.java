@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.component.AbstractTask.AsyncTask;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.intergrate.Model;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.support.ParamInfo;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.doo.support.ZipStreamEntity;
@@ -1239,11 +1239,11 @@ public class TaskService {
     }
 
 
-    public JSONObject getTasksByModelByUser(String modelId, int page, String userName) {
+    public JSONObject getTasksByModelByUser(String modelId, int page, String email) {
         Sort sort = Sort.by(Sort.Direction.DESC, "runTime");
         Pageable pageable = PageRequest.of(page, 4, sort);
         //获取该用户所有关于task
-        Page<Task> tasksOfUser = taskDao.findByComputableIdAndEmailAndStatus(modelId, userName, 2, pageable);
+        Page<Task> tasksOfUser = taskDao.findByComputableIdAndEmailAndStatus(modelId, email, 2, pageable);
         JSONArray taskArray = new JSONArray();
         List<Task> ts = tasksOfUser.getContent();
         long total = tasksOfUser.getTotalElements();

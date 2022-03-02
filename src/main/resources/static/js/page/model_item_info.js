@@ -69,13 +69,13 @@ var info=new Vue({
                 authors: 'Zhao Y.,Liu H.,Yan J.,An W.,Liu J.,Zhang X.,Wang H.,Liu Y.,Jiang H.,Li Q.,Wang Y.,Li X.-Z.,Mandrus D.,Xie X.~C.,Pan M.,Wang J.',
                 date: 'jul 2015',
                 journal: 'prb',
-                pages: "041104"
+                pageRange: "041104"
             }, {
                 title: 'Detection of a Flow Induced Magnetic Field Eigenmode in the Riga Dynamo Facility',
                 authors: 'Gailitis A.,Lielausis O.,Dement\'ev S.,Platacis E.,Cifersons A.,Gerbeth G.,Gundrum T.,Stefani F.,Christen M.,Hanel H.,Will G.',
                 date: 'may 2000',
                 journal: 'Physical Review Letters',
-                pages: "4365-4368"
+                pageRange: "4365-4368"
             }],
 
             useroid: '',
@@ -503,7 +503,7 @@ var info=new Vue({
 
             itemInfo:{},
 
-            relationPageSize:4,
+            relationPageSize:3,
 
             modelRelationGraphShow:false,
             modelRelationGraphSideBarShow:false,
@@ -889,7 +889,7 @@ var info=new Vue({
             let nodes = [];
             let links = [];
 
-            $.post("/modelItem/getRelationGraph",{"oid":this.modelOid,"isFull":this.fullRelationShow},(result)=>{
+            $.post("/modelItem/getRelationGraph",{"oid":this.modelId,"isFull":this.fullRelationShow},(result)=>{
                 console.log(result);
                 nodes = result.data.nodes;
                 links = result.data.links;
@@ -1253,7 +1253,7 @@ var info=new Vue({
             this.search(this.activeName_dialog);
         },
 
-        getOid(){
+        getModelId(){
             let url = window.location.href;
             let urls = url.split("/");
             for(i=0;i<urls.length;i++){
@@ -1266,12 +1266,12 @@ var info=new Vue({
         changeDetailLanguage(command){
             this.currentDetailLanguage = command;
             let data = {
-                "oid": this.getOid(),
+                "id": this.getModelId(),
                 "language": this.currentDetailLanguage
             };
 
             if(window.location.href.indexOf("history")===-1) {
-                $.get("/modelItem/getDetailByLanguage", data, (result) => {
+                $.get("/modelItem/detailByLanguage", data, (result) => {
                     this.detail = result.data;
                 })
             }else{
@@ -1281,51 +1281,9 @@ var info=new Vue({
             }
         },
 
-        handleCheckChange(data, checked, indeterminate) {
-            // let checkedNodes = this.$refs.tree2.getCheckedNodes()
-            // let classes = [];
-            // let str='';
-            // for (let i = 0; i < checkedNodes.length; i++) {
-            //     // console.log(checkedNodes[i].children)
-            //     if(checkedNodes[i].children!=undefined){
-            //         continue;
-            //     }
-            //
-            //     classes.push(checkedNodes[i].oid);
-            //     str+=checkedNodes[i].label;
-            //     if(i!=checkedNodes.length-1){
-            //         str+=", ";
-            //     }
-            // }
-            // this.cls=classes;
-            // this.clsStr=str;
-
-        },
-
-        handleCheckChange2(data, checked, indeterminate) {
-            let checkedNodes = this.$refs.tree4.getCheckedNodes()
-            let classes = [];
-            let str='';
-            for (let i = 0; i < checkedNodes.length; i++) {
-                // console.log(checkedNodes[i].children)
-                if(checkedNodes[i].children!=undefined){
-                    continue;
-                }
-
-                classes.push(checkedNodes[i].oid);
-                str+=checkedNodes[i].label;
-                if(i!=checkedNodes.length-1){
-                    str+=", ";
-                }
-            }
-            this.cls2=classes;
-            this.clsStr2=str;
-
-        },
-
         getAlias(){
             this.editAliasDialog = true
-            axios.get('/modelItem/getAlias/'+this.modelOid
+            axios.get('/modelItem/alias/'+this.modelId
             ).then(res => {
                 if(res.data.code == -1){
                     this.confirmLogin()
@@ -1353,7 +1311,7 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelOid,
+                oid:this.modelId,
                 alias:alias,
             };
             $.post("/modelItem/updateAlias",data,(result)=>{
@@ -1396,19 +1354,18 @@ var info=new Vue({
         },
 
         getClassifications(){
-            $.get("/modelItem/getClassification/"+this.modelOid,{},(result)=>{
+            $.get("/modelItem/classifications/"+this.modelId,{},(result)=>{
                 if (result.code == -1) {
                     this.confirmLogin()
                 }else{
                     //cls
 
-
                     this.editClassification = true;
 
-                    this.cls = result.data.class2;
+                    this.cls = result.data;
 
                     this.$nextTick(()=>{
-                        this.$refs.editClassificationModule.insertClassifications( this.cls)
+                        this.$refs.editClassificationModule.insertClassifications(this.cls)
                     })
 
                 }
@@ -1418,39 +1375,43 @@ var info=new Vue({
         },
         submitClassifications(){
             let data = {
-                oid:this.modelOid,
+                id:this.modelId,
                 // class1:this.cls,
-                class:this.cls2,
+                class:this.cls,
             };
-            $.post("/modelItem/updateClass",data,(result)=>{
-                if (result.code == -1) {
-                    this.confirmLogin()
-                }else{
-                    if(result.data=='suc'){
-                        this.$alert("Change classification successfully!", 'Success', {
-                            type: 'success',
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                window.location.reload();
-                            }
-                        });
-                    }else if(result.data=='version'){
-                        this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
-                            type: 'success',
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                window.location.reload();
-                            }
-                        })
+            $.ajax({
+                type: "PUT",
+                url: "/modelItem/classifications",
+                data: data,
+                cache: false,
+                async: false,
+                success: (result) => {
+                    if (result.code == -1) {
+                        this.confirmLogin()
+                    }else{
+                        if(result.data=='suc'){
+                            this.$alert("Change classification successfully!", 'Success', {
+                                type: 'success',
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    window.location.reload();
+                                }
+                            });
+                        }else if(result.data=='version'){
+                            this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
+                                type: 'success',
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    window.location.reload();
+                                }
+                            })
+                        }
                     }
                 }
-
-
-
             })
         },
         getClassificationFromCom(cls,clsStr){
-            this.cls2=cls;
+            this.cls=cls;
             this.clsStr2=clsStr;
         },
         addLocalization() {
@@ -1661,7 +1622,7 @@ var info=new Vue({
         },
 
         getDescription(){
-            axios.get('/modelItem/getDescription/'+this.modelOid
+            axios.get('/modelItem/localizationList/'+this.modelId
             ).then(
                 res => {
                     if(res.data.code==-1){
@@ -1686,7 +1647,7 @@ var info=new Vue({
 
         getMetadata(){
 
-            axios.get('/modelItem/getMetadata/'+this.modelOid
+            axios.get('/modelItem/getMetadata/'+this.modelId
             ).then(
                 res => {
                     if(res.data.code==-1){
@@ -1702,7 +1663,7 @@ var info=new Vue({
 
         submitMetadata(){
             let data = {}
-            data.oid = this.modelOid
+            data.oid = this.modelId
             data.metadata = JSON.stringify(this.getMetaData())
 
             $.ajax({
@@ -1750,7 +1711,7 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelOid,
+                oid:this.modelId,
                 localization:JSON.stringify(this.localizationList)
             }
 
@@ -1797,7 +1758,7 @@ var info=new Vue({
         getReference(){
             this.editReference = true
 
-            axios.get('/modelItem/getReference/'+this.modelOid).then(
+            axios.get('/modelItem/references/'+this.modelId).then(
                 res =>{
                     if (res.data.code == -1) {
                         this.confirmLogin()
@@ -1822,12 +1783,12 @@ var info=new Vue({
                                 var ref = references[i];
                                 this.dynamicTable.row.add([
                                     ref.title,
-                                    ref.author,
+                                    ref.authors,
                                     ref.date,
                                     ref.journal,
                                     ref.volume,
-                                    ref.pages,
-                                    ref.links,
+                                    ref.pageRange,
+                                    ref.link,
                                     ref.doi,
                                     "<center><a href='javascript:;' class='fa fa-times refClose' style='color:red'></a></center>"]).draw();
                             }
@@ -1866,7 +1827,7 @@ var info=new Vue({
                     url: "/modelItem/searchByDOI",
                     data: {
                         doi: this.doi,
-                        modelOid:this.modelOid
+                        modelOid:this.modelId
                     },
                     cache: false,
                     async: true,
@@ -2056,19 +2017,19 @@ var info=new Vue({
                     ref.title = ref_prop.eq(0).text();
                     if (ref.title == "No data available in table")
                         break;
-                    ref.author = ref_prop.eq(1).text().split(",");
+                    ref.authors = ref_prop.eq(1).text().split(",");
                     ref.date = ref_prop.eq(2).text();
                     ref.journal = ref_prop.eq(3).text();
                     ref.volume = ref_prop.eq(4).text();
-                    ref.pages = ref_prop.eq(5).text();
-                    ref.links = ref_prop.eq(6).text();
+                    ref.pageRange = ref_prop.eq(5).text();
+                    ref.link = ref_prop.eq(6).text();
                     ref.doi = ref_prop.eq(7).text();
                     references.push(ref);
                 }
             }
 
             let data = {
-                oid:this.modelOid,
+                oid:this.modelId,
                 reference:JSON.stringify(references)
             }
 
@@ -2188,132 +2149,6 @@ var info=new Vue({
                 })
         },
 
-        // //comment
-        // submitComment(){
-        //     if(this.useroid==""||this.useroid==null||this.useroid==undefined){
-        //         this.$message({
-        //             dangerouslyUseHTMLString: true,
-        //             message: '<strong>Please <a href="/user/login">log in</a> first.</strong>',
-        //             offset: 40,
-        //             showClose: true,
-        //         });
-        //     }else if(this.commentText.trim()==""){
-        //         this.$message({
-        //             message: 'Comment can not be empty!',
-        //             offset: 40,
-        //             showClose: true,
-        //         });
-        //     }else {
-        //
-        //         let hrefs = window.location.href.split("/");
-        //         let id = hrefs[hrefs.length - 1].substring(0, 36);
-        //         let typeName = hrefs[hrefs.length-2];
-        //         let data = {
-        //             parentId: this.commentParentId,
-        //             content: this.commentText,
-        //             // authorId: this.useroid,
-        //             replyToUserId: this.replyToUserId,
-        //             relateItemId: id,
-        //             relateItemTypeName: typeName,
-        //         };
-        //         $.ajax({
-        //             url: "/comment/add",
-        //             async: true,
-        //             type: "POST",
-        //             contentType: 'application/json',
-        //
-        //             data: JSON.stringify(data),
-        //             success: (result) => {
-        //                 console.log(result)
-        //                 if(result.code==-1){
-        //                     window.location.href="/user/login"
-        //                 }else if (result.code == 0) {
-        //                     this.commentText = "";
-        //                     this.$message({
-        //                         message: 'Comment submitted successfully!',
-        //                         type: 'success',
-        //                         offset: 40,
-        //                         showClose: true,
-        //                     });
-        //                     this.getComments();
-        //                 } else {
-        //                     this.$message({
-        //                         message: 'Submit Error!',
-        //                         type: 'error',
-        //                         offset: 40,
-        //                         showClose: true,
-        //                     });
-        //                 }
-        //             }
-        //         });
-        //     }
-        //
-        // },
-        // deleteComment(oid){
-        //     $.ajax({
-        //         url: "/comment/delete",
-        //         async: true,
-        //         type: "POST",
-        //
-        //
-        //         data: {
-        //             oid:oid,
-        //         },
-        //         success: (result) => {
-        //             console.log(result)
-        //             if(result.code==-1){
-        //                 window.location.href="/user/login"
-        //             }else if (result.code == 0) {
-        //                 this.commentText = "";
-        //                 this.$message({
-        //                     message: 'Comment deleted successfully!',
-        //                     type: 'success',
-        //                     offset: 40,
-        //                     showClose: true,
-        //                 });
-        //                 this.getComments();
-        //             } else {
-        //                 this.$message({
-        //                     message: 'Delete Error!',
-        //                     type: 'error',
-        //                     offset: 40,
-        //                     showClose: true,
-        //                 });
-        //             }
-        //         }
-        //     });
-        // },
-        // getComments(){
-        //     let hrefs=window.location.href.split("/");
-        //     let type=hrefs[hrefs.length-2];
-        //     let oid=hrefs[hrefs.length-1].substring(0,36);
-        //     let data={
-        //         type:type,
-        //         oid:oid,
-        //         sort:-1,
-        //     };
-        //     $.get("/comment/getCommentsByTypeAndOid",data,(result)=>{
-        //         this.commentList=result.data.commentList;
-        //     })
-        // },
-        // replyComment(comment){
-        //     this.commentParentId=comment.oid;
-        //     this.replyToUserId=comment.author.oid;
-        //     this.replyTo="Reply to "+comment.author.name;
-        //     setTimeout(function () { $("#commentTextArea").focus();}, 1);
-        // },
-        // replySubComment(comment,subComment){
-        //     this.commentParentId=comment.oid;
-        //     this.replyToUserId=subComment.author.oid;
-        //     // this.commentTextAreaPlaceHolder="Reply to "+subComment.author.name;
-        //     this.replyTo="Reply to "+subComment.author.name;
-        //     setTimeout(function () { $("#commentTextArea").focus();}, 1);
-        // },
-        // tagClose(){
-        //     this.replyTo="";
-        //     this.replyToUserId="";
-        //     this.commentParentId=null;
-        // },
 
         confirmLogin(){
             window.sessionStorage.setItem("history", window.location.href);
@@ -2388,7 +2223,7 @@ var info=new Vue({
             // let href = window.location.href;
             // let hrefs = href.split('/');
             // let oid = hrefs[hrefs.length - 1].split("#")[0];
-            this.modelOid = itemInfo.id;
+            this.modelId = itemInfo.id;
             this.editModelItemDialog = true
         },
 
@@ -3477,7 +3312,7 @@ var info=new Vue({
                 res=>{
                     this.contributors = res.data.data
 
-                    vue.$nextTick(()=>{
+                    this.$nextTick(()=>{
 
                     })
                 }
@@ -3525,7 +3360,7 @@ var info=new Vue({
         // let href = window.location.href;
         // let hrefs = href.split('/');
         // let oid = hrefs[hrefs.length - 1].split("#")[0];
-        this.modelOid = itemInfo.id;
+        this.modelId = itemInfo.id;
 
         let currenturl = window.location.href;
         let dataitemid = currenturl.split("/");
@@ -3596,10 +3431,11 @@ var info=new Vue({
         }
 
         let refs = $("#ref").val();
+        refs = refs.replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}")
         if (refs != null) {
             let json = JSON.parse(refs);
             for (i = 0; i < json.length; i++) {
-                json[i].author = json[i].author.join(", ");
+                json[i].authors = json[i].authors.join(", ");
             }
             console.log(json);
             this.refTableData = json;

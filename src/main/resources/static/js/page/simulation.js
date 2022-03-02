@@ -251,7 +251,7 @@ var vue = new Vue({
         async configureTask(model) {
             this.taskConfigurationDialog = true
             this.taskConfigurationLoading = true
-            let {data} = await (await fetch("/task/TaskInit/" + model.oid)).json();
+            let {data} = await (await fetch("/task/init/" + model.oid)).json();
             if (data == null || data == undefined) {
                 this.$alert('Initialization failure: an error occured on the server.<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Error', {
                     type: "error",
