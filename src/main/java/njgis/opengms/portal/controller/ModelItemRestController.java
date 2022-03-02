@@ -280,7 +280,7 @@ public class ModelItemRestController {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
-        return ResultUtils.success(modelItemService.getAlias(id));
+        return ResultUtils.success(modelItemService.getRelation(id,type));
     }
 
     @ApiOperation(value = "获取模型参考文献", notes = "@LoginRequired\n")

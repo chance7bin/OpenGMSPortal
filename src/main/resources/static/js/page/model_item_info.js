@@ -32,6 +32,7 @@ var info=new Vue({
             detailLanguageList:[],
             detail:"",
 
+            modelReferences: [],
 
             pageOption_my: {
                 paginationShow: false,
@@ -78,10 +79,13 @@ var info=new Vue({
                 pageRange: "4365-4368"
             }],
 
-            useroid: '',
-            userId: "",
-            userUid:"",
-            userImg:"",
+            user:{
+                email: "",
+                accessId: "",
+                name: "",
+                avatar: "",
+            },
+
             loading: false,
             related3Models: [],
             value1: '1',
@@ -507,6 +511,7 @@ var info=new Vue({
 
             modelRelationGraphShow:false,
             modelRelationGraphSideBarShow:false,
+
             relatedModelItems:[],
             relatedModelItemsPage:[],
             curRelation:{},
@@ -862,9 +867,10 @@ var info=new Vue({
                     let start = (page-1)*this.relationPageSize;
                     let end = page * this.relationPageSize;
                     this.relatedModelItemsPage = [];
-                    for(i=start;i<this.relatedModelItems.length;i++){
+                    let relatedModelItems = this.relation.modelItems;
+                    for(i=start;i<relatedModelItems.length;i++){
                         if(i===end) break;
-                        this.relatedModelItemsPage.push(this.relatedModelItems[i]);
+                        this.relatedModelItemsPage.push(relatedModelItems[i]);
                     }
                     break;
             }
@@ -2299,7 +2305,7 @@ var info=new Vue({
 
         addRelatedModel() {
 
-            if (this.useroid == '') {
+            if (this.user.email == '') {
                 this.confirmLogin()
 
             } else {
@@ -2365,7 +2371,7 @@ var info=new Vue({
                 page: this.searchAddModelPage,
                 asc: false,
                 pageSize: 5,
-                userOid: this.useroid
+                email: this.user.email
 
 
             }
@@ -2675,36 +2681,6 @@ var info=new Vue({
             }
         },
 
-        // getRelation() {
-        //     //从地址栏拿到oid
-        //     let arr = window.location.href.split("/");
-        //     let oid = arr[arr.length - 1].split("#")[0];
-        //     let data = {
-        //         oid: oid,
-        //         type: this.relateType
-        //     };
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "/modelItem/getRelation",
-        //         data: data,
-        //         async: true,
-        //         success: (json) => {
-        //             if (json.code == 0) {
-        //                 let data = json.data;
-        //                 console.log(data)
-        //
-        //                 this.tableData = data;
-        //
-        //             }else if(json.code == -1){
-        //                 this.confirmLogin()
-        //             }
-        //             else {
-        //                 console.log("query error!")
-        //             }
-        //         }
-        //     })
-        // },
-
         getRelatedResources() {
             //从地址栏拿到oid
             let arr = window.location.href.split("/");
@@ -2801,95 +2777,7 @@ var info=new Vue({
             }
         },
 
-        // confirm() {
-        //     //从地址栏拿到oid
-        //     let arr = window.location.href.split("/");
-        //     let oid = arr[arr.length - 1].split("#")[0];
-        //
-        //     let relateArr = [];
-        //     let url = '';
-        //     let data;
-        //     let contentType;
-        //
-        //     if(this.relateType !== "modelItem") {
-        //         url = "/modelItem/setRelation";
-        //         this.tableData.forEach(function (item, index) {
-        //             relateArr.push(item.oid);
-        //         })
-        //         data = {
-        //             oid: oid,
-        //             type: this.relateType,
-        //             relations: relateArr
-        //         };
-        //         contentType = "application/x-www-form-urlencoded;charset=UTF-8";
-        //     }else{
-        //         url = "/modelItem/setModelRelation/"+oid;
-        //         this.tableData.forEach(function (item, index) {
-        //             let obj = {
-        //                 oid : item.oid,
-        //                 relation : item.relation,
-        //             };
-        //             relateArr.push(obj);
-        //         });
-        //         data = {
-        //             relations: relateArr,
-        //         };
-        //         data = JSON.stringify(data);
-        //         contentType = "application/json;charset=UTF-8";
-        //     }
-        //
-        //     $.ajax({
-        //         type: "POST",
-        //         url: url,
-        //         data: data,
-        //         contentType:contentType,
-        //         async: true,
-        //         success: (result) => {
-        //             if(result.code == -1){
-        //                 this.confirmLogin()
-        //             }else{
-        //                 let info = result.data.type;
-        //                 if(info === 'suc'){
-        //                     this.$alert('Success!', 'Tip', {
-        //                         type:'success',
-        //                         confirmButtonText: 'OK',
-        //                         callback: action => {
-        //                             this.dialogTableVisible = false;
-        //                             if(this.relateType === "modelItem"){
-        //                                 this.relatedModelItems = result.data.data;
-        //                                 this.setRelatedModelItemsPage();
-        //                                 if(this.modelRelationGraphShow){
-        //                                     this.generateModelRelationGraph();
-        //                                 }
-        //
-        //                             }else {
-        //                                 window.location.reload();
-        //                             }
-        //                         }
-        //                     });
-        //                 }else if(info==='version'){
-        //                     this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
-        //                         type: 'success',
-        //                         confirmButtonText: 'OK',
-        //                         callback: action => {
-        //                             window.location.reload();
-        //                         }
-        //                     })
-        //                 }
-        //             }
-        //
-        //         },
-        //         error: (json) => {
-        //             this.$alert('Submitted failed!', 'Error', {
-        //                 type:'error',
-        //                 confirmButtonText: 'OK',
-        //                 callback: action => {
-        //
-        //                 }
-        //             });
-        //         }
-        //     })
-        // },
+
 
         addRelateResources(){
             let formData=new FormData();
@@ -3098,20 +2986,29 @@ var info=new Vue({
                         this.pageOption_all.relateSearch = "";
 
                         let arr = window.location.href.split("/");
-                        let oid = arr[arr.length - 1].split("#")[0];
+                        let id = arr[arr.length - 1].split("#")[0];
                         let targetType = arr[arr.length - 2]
 
-                        this.$nextTick(()=>{
-                            this.$refs.linkRelatedItemModule.manualInit(oid,targetType,this.relateType)
+                        axios.get("/user/load")
+                            .then((res) => {
+                                console.log(res);
+                                if(res.data.code == 0){
+                                    this.dialogTableVisible = true;
+                                    this.$nextTick(()=>{
+                                        this.$refs.linkRelatedItemModule.manualInit(id,targetType,this.relateType)
+                                    })
+                                }else{
+                                    this.confirmLogin();
+                                }
+                            })
 
-                        })
 
                         // this.getRelation();
                         // this.search(this.activeName_dialog);
                         // if(this.activeName_dialog!="all"){
                         //     this.search("all");
                         // }
-                        this.dialogTableVisible = true;
+
                     }
                 }
             })
@@ -3131,7 +3028,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.oid == "") {
+                    if (data.email == "") {
                         this.confirmLogin()
                     }
                     else {
@@ -3294,10 +3191,11 @@ var info=new Vue({
 
         setRelatedModelItemsPage(){
             this.relatedModelItemsPage = [];
-            if(this.relatedModelItems!=null) {
-                for (i = 0; i < this.relatedModelItems.length; i++) {
+            let relatedModelItems = this.relation.modelItems;
+            if(relatedModelItems!=null) {
+                for (i = 0; i < relatedModelItems.length; i++) {
                     if (i === this.relationPageSize) break;
-                    this.relatedModelItemsPage.push(this.relatedModelItems[i]);
+                    this.relatedModelItemsPage.push(relatedModelItems[i]);
                 }
             }
         },
@@ -3341,8 +3239,9 @@ var info=new Vue({
 
     created(){
         this.itemInfo = itemInfo;
-        this.relatedModelItems = modelItemList;
-        this.metadata = itemInfo.metadata
+        this.relation = relation;
+        this.metadata = itemInfo.metadata;
+        this.modelReferences = modelReferences;
 
         this.getContributors()
     },
@@ -3386,11 +3285,11 @@ var info=new Vue({
         axios.get("/user/load")
             .then((res) => {
                 if (res.status == 200) {
-                    if (res.data.oid != '') {
-                        this.useroid = res.data.oid;
-                        this.userUid = res.data.uid;
-                        this.userId = res.data.userId;
-                        this.userImg = res.data.image;
+                    if (res.data.email != '') {
+                        this.user.email = res.data.email;
+                        this.user.accessId = res.data.accessId;
+                        this.user.name = res.data.name;
+                        this.user.avatar = res.data.avatar;
                     }
 
                 }
@@ -3430,15 +3329,17 @@ var info=new Vue({
             $(".fullPaper").removeClass("hide");
         }
 
-        let refs = $("#ref").val();
-        refs = refs.replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}")
+        let refs = this.modelReferences;
+        // refs = refs.replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}")
         if (refs != null) {
-            let json = JSON.parse(refs);
-            for (i = 0; i < json.length; i++) {
-                json[i].authors = json[i].authors.join(", ");
+            let jsonArray = [];
+            for (i = 0; i < refs.length; i++) {
+                let json = JSON.parse(refs[i].replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}"));
+                json.authors = json.authors.join(", ");
+                jsonArray.push(json);
             }
-            console.log(json);
-            this.refTableData = json;
+            // console.log(json);
+            this.refTableData = jsonArray;
         }
 
         $("#fullPaper").click(function () {

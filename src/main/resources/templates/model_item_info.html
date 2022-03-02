@@ -243,14 +243,14 @@
                         <div slot="label">
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
                             Computable Model List
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(computableModels)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(computableModels)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.computableModels)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.computableModels)}">
                             </span>
 
                         </div>
 
-                        <div th:if="${#lists.size(computableModels)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${computableModels}">
+                        <div th:if="${#lists.size(relation.computableModels)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.computableModels}">
                                 <a th:href="'/computableModel/'+${model.id}" class="img">
                                     <img src="/static/img/model/calcModel.png">
                                 </a>
@@ -298,7 +298,7 @@
 
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(computableModels)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.computableModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related computable model. You can link computable models.
                             </h5>
@@ -324,12 +324,12 @@
                     </el-tab-pane>
                     <el-tab-pane name="Conceptual Model">
                         <div slot="label">Conceptual-schematic Model List
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(conceptualModels)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(conceptualModels)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.conceptualModels)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.conceptualModels)}">
                             </span>
                         </div>
-                        <div th:if="${#lists.size(conceptualModels)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${conceptualModels}">
+                        <div th:if="${#lists.size(relation.conceptualModels)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.conceptualModels}">
                                 <!--<div th:text="${model.image}"></div>-->
                                 <a class="img" th:href="'/conceptualModel/'+${model.id}" th:switch="${model.image}">
                                     <img th:case="''" src="/static/img/model/conceptual.png">
@@ -363,7 +363,7 @@
 
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(conceptualModels)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.conceptualModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related conceptual model. You can link conceptual models.
                             </h5>
@@ -388,12 +388,12 @@
                     </el-tab-pane>
                     <el-tab-pane name="Logical Model">
                         <div slot="label">Logical-schematic Model List
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(logicalModels)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(logicalModels)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.logicalModels)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.logicalModels)}">
                             </span>
                         </div>
-                        <div th:if="${#lists.size(logicalModels)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${logicalModels}">
+                        <div th:if="${#lists.size(relation.logicalModels)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.logicalModels}">
                                 <a th:href="'/logicalModel/'+${model.id}" th:switch="${model.image}" class="img">
                                     <img th:case="''" src="/static/img/model/logical.png">
                                     <img th:case="null" src="/static/img/model/logical.png">
@@ -426,7 +426,7 @@
 
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(logicalModels)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.logicalModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related logical model. You can link logical models.
                             </h5>
@@ -462,13 +462,13 @@
                 <el-tabs class="block_content" v-model="activeName1" type="border-card" stretch="true">
                     <el-tab-pane name="Model Item">
                         <div slot="label">Model Item
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(modelItems)==0} ? 'background-color: #bbbbbb' : '')}"
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.modelItems)==0} ? 'background-color: #bbbbbb' : '')}"
                                  >
-                                {{relatedModelItems.length}}
+                                {{relation.modelItems.length}}
                             </span>
                             <el-switch
                                     style="margin-left: 10px;"
-                                    v-if="relatedModelItems.length > 0"
+                                    v-if="relation.modelItems.length > 0"
                                     v-model="modelRelationGraphShow"
                                     active-text="Graph View"
                                     active-color="#13ce66"
@@ -476,9 +476,9 @@
                                     >
                             </el-switch>
                         </div>
-                        <div v-if="relatedModelItems!=0">
+                        <div v-if="relation.modelItems!=0">
                             <div v-if="!modelRelationGraphShow">
-                                <div class="list_panel clearfix" v-for="model,key in relatedModelItemsPage">
+                                <div class="list_panel clearfix" v-for="model,key in relation.modelItemsPage">
                                     <!--<div th:text="${model.image}"></div>-->
                                     <a class="img" :href="'/modelItem/'+model.id" >
                                         <img v-if="model.image==null" src="/static/img/model/model.png">
@@ -502,7 +502,7 @@
                                         layout="prev, pager, next"
                                         :hide-on-single-page="true"
                                         :page-size="relationPageSize"
-                                        :total="relatedModelItems.length"
+                                        :total="relation.modelItems.length"
                                         @current-change="handleRelationCurrentChange($event,'modelItem')">
                                 </el-pagination>
                             </div>
@@ -614,7 +614,7 @@
                             <!--</el-button>-->
 
                         </div>
-                        <div class="text-center" v-if="relatedModelItems==0">
+                        <div class="text-center" v-if="relation.modelItems==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related model item. You can link model items.
                             </h5>
@@ -638,12 +638,12 @@
                     </el-tab-pane>
                     <el-tab-pane name="Data Item">
                         <div slot="label">Data Item
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(dataItems)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.dataItems)}">
                             </span>
                         </div>
-                        <div th:if="${#lists.size(dataItems)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${dataItems}">
+                        <div th:if="${#lists.size(relation.dataItems)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.dataItems}">
                                 <!--<div th:text="${model.image}"></div>-->
                                 <a class="img" th:href="'/dataItem/'+${model.id}">
                                     <img src="/static/img/model/data.png">
@@ -674,7 +674,7 @@
                             </el-tooltip>
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(dataItems)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.dataItems)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related data item. You can link data items.
                             </h5>
@@ -813,12 +813,12 @@
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
                             Material
                             <span class="el-badge__content el-badge__content--undefined"
-                                  th:style="@{(${#lists.size(concepts)+#lists.size(spatialReferences)+#lists.size(templates)+#lists.size(units)+#lists.size(dataSpaceFiles)+#lists.size(exLinks)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(concepts)+#lists.size(spatialReferences)+#lists.size(templates)+#lists.size(units)+#lists.size(dataSpaceFiles)+#lists.size(exLinks)}">
+                                  th:style="@{(${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)+#lists.size(relation.dataSpaceFiles)+#lists.size(relation.exLinks)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)+#lists.size(relation.dataSpaceFiles)+#lists.size(relation.exLinks)}">
                             </span>
 
                         </div>
-                        <div th:if="${#lists.size(concepts)}!=0" class="list_panel clearfix" th:each="model:${concepts}">
+                        <div th:if="${#lists.size(relation.concepts)}!=0" class="list_panel clearfix" th:each="model:${relation.concepts}">
                             <a th:href="'/repository/concept/'+${model.id}" class="img">
                                 <img src="/static/img/model/semantics.png">
                             </a>
@@ -834,7 +834,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(spatialReferences)}!=0" class="list_panel clearfix" th:each="model:${spatialReferences}">
+                        <div th:if="${#lists.size(relation.spatialReferences)}!=0" class="list_panel clearfix" th:each="model:${relation.spatialReferences}">
                             <a th:href="'/repository/spatialReference/'+${model.id}" class="img">
                                 <img src="/static/img/model/spatialreference.png">
                             </a>
@@ -850,7 +850,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(templates)}!=0" class="list_panel clearfix" th:each="model:${templates}">
+                        <div th:if="${#lists.size(relation.templates)}!=0" class="list_panel clearfix" th:each="model:${relation.templates}">
                             <a th:href="'/repository/template/'+${model.id}" class="img">
                                 <img src="/static/img/model/template.png">
                             </a>
@@ -865,7 +865,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(units)}!=0" class="list_panel clearfix" th:each="model:${units}">
+                        <div th:if="${#lists.size(relation.units)}!=0" class="list_panel clearfix" th:each="model:${relation.units}">
                             <a th:href="'/repository/unit/'+${model.id}" class="img">
                                 <img src="/static/img/model/unit.png">
                             </a>
@@ -881,7 +881,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(dataSpaceFiles)}!=0" class="list_panel clearfix" th:each="model:${dataSpaceFiles}">
+                        <div th:if="${#lists.size(relation.dataSpaceFiles)}!=0" class="list_panel clearfix" th:each="model:${relation.dataSpaceFiles}">
                             <a th:href="${model.url}" class="img">
                                 <i class="fa fa-file-o" style="font-size: 60px;margin: 15px 0 0 20px;color: #11c2fd"></i>
                             </a>
@@ -897,7 +897,7 @@
                                 <!--                                    simulations and predictions.</p>-->
                             </div>
                         </div>
-                        <div th:if="${#lists.size(exLinks)}!=0" class="list_panel clearfix" th:each="model:${exLinks}">
+                        <div th:if="${#lists.size(relation.exLinks)}!=0" class="list_panel clearfix" th:each="model:${relation.exLinks}">
                             <a th:href="${model.content}" class="img">
                                 <i class="fa fa-link" style="font-size: 60px;margin: 15px 0 0 20px;color: #11c2fd"></i>
                             </a>
@@ -914,8 +914,8 @@
                             </div>
                         </div>
 
-                        <div class="text-center" th:if="${#lists.size(concepts)==0 && #lists.size(spatialReferences)==0 &&
-                    #lists.size(templates)==0 && #lists.size(units)==0 && #lists.size(dataSpaceFiles)==0&& #lists.size(exLinks)==0}">
+                        <div class="text-center" th:if="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                    #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0&& #lists.size(relation.exLinks)==0}">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related material. You can link materials to it.
                             </h5>
@@ -938,8 +938,8 @@
 
                         </div>
                         <div th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}">
-                            <el-button th:unless="${#lists.size(concepts)==0 && #lists.size(spatialReferences)==0 &&
-                         #lists.size(templates)==0 && #lists.size(units)==0 && #lists.size(dataSpaceFiles)==0 && #lists.size(exLinks)==0}"
+                            <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                         #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0 && #lists.size(relation.exLinks)==0}"
                                        @click="addRelatedResouece()" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
                                 Edit related material
@@ -950,8 +950,8 @@
                                     popper-class="fontsize-15"
                                     content="There is another version haven't been reviewed, you can edit it later or contact us."
                                     effect="light" placement="top">
-                            <el-button th:unless="${#lists.size(concepts)==0 && #lists.size(spatialReferences)==0 &&
-                        #lists.size(templates)==0 && #lists.size(units)==0 && #lists.size(dataSpaceFiles)==0 && #lists.size(exLinks)==0}"
+                            <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                        #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0 && #lists.size(relation.exLinks)==0}"
                                        plain type="info" icon="el-icon-plus"
                                        style="width: 100%">
                                 Edit related material
@@ -961,7 +961,6 @@
 
                 </el-tabs>
             </div>
-            <input id="ref" th:value="${references}" style="display: none;">
             <!--
             <div v-cloak th:if="${#lists.size(references)}!=0" id="references" class="detail_block">
 
@@ -2793,8 +2792,9 @@
 
 <script th:inline="javascript">
     var itemInfo = [[${itemInfo}]];
-    var modelItemList=[[${modelItems}]];
+    var relation = [[${relation}]]
     var author=[[${user}]];
+    var modelReferences = [[${references}]];
 </script>
 
 

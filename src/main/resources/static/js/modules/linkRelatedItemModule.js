@@ -146,15 +146,15 @@ Vue.component("linkRelatedItemModule",
             },
 
             getRelation() {
-                //从地址栏拿到oid
-                let oid = this.targetItemId;
+                //从地址栏拿到id
+                let id = this.targetItemId;
                 let data = {
-                    oid: oid,
+                    id: id,
                     type: this.relateItemType
                 };
                 $.ajax({
                     type: "GET",
-                    url: "/"+this.targetItemType+"/getRelation",
+                    url: "/"+this.targetItemType+"/relation",
                     data: data,
                     async: true,
                     success: (json) => {
@@ -169,9 +169,9 @@ Vue.component("linkRelatedItemModule",
                             if(this.inDialog){
                                 this.postMsg(window.module_msg.no_login)
                                 this.$emit('close-father-dialog')
-                            }else{
-                                this.confirmLogin()
                             }
+                            this.confirmLogin()
+
 
                         }
                         else {
@@ -183,10 +183,10 @@ Vue.component("linkRelatedItemModule",
 
 
             getRelatedResources() {
-                //从地址栏拿到oid
-                let oid = this.targetItemId;
+                //从地址栏拿到id
+                let id = this.targetItemId;
                 let data = {
-                    oid: oid,
+                    id: id,
                 };
 
                 $.ajax({
