@@ -56,7 +56,7 @@ new Vue({
             relatedModelItems:[],
             modelRelationGraphShow:false,
             relatedModelItemsPage:[],
-            relationPageSize:4,
+            relationPageSize:3,
 
             references_o:[],
             references_n:[],

@@ -187,7 +187,7 @@
 
                     <el-tabs class="right-content" v-model="activeNameGraph" type="border-card" stretch="true">
                         <el-tab-pane label="Image" name="Image"  th:if="${itemInfo.contentType}!='MxGraph'">
-                            <center th:each="image:${itemInfo.image}"><img th:src="${loadPath}+${image}">
+                            <center th:each="image:${itemInfo.imageList}"><img th:src="${loadPath}+${image}">
                             </center>
                         </el-tab-pane>
                         <el-tab-pane label="Image" name="Image"  style="position: unset"  th:if="${itemInfo.contentType}=='MxGraph'">

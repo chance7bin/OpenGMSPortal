@@ -9,6 +9,7 @@ import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
+import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.doo.support.MetaData;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
@@ -148,11 +149,11 @@ public class DataMethodService {
             JSONObject userJson = userService.getItemUserInfoByEmail(dataMethod.getAuthor());
             //资源信息
             JSONArray resourceArray = new JSONArray();
-            List<String> resources = dataMethod.getResources();
+            List<Resource> resources = dataMethod.getResources();
 
             if (resources != null) {
                 for (int i = 0; i < resources.size(); i++) {
-                    String path = resources.get(i);
+                    String path = resources.get(i).getPath();
                     String[] arr = path.split("\\.");
                     String suffix = arr[arr.length - 1];
                     arr = path.split("/");
@@ -604,8 +605,8 @@ public class DataMethodService {
         cls.add(methodClassificationDao.findFirstByNameEn(dataMethod.getMethod()).getId());
         dataMethod.setClassifications(cls);
 
-        List<String> resources = new ArrayList<>();
-        Utils.saveFiles(files, path, email, "", resources);
+        List<Resource> resources = new ArrayList<>();
+        Utils.saveResource(files, path, email, "", resources);
 
         if (resources == null){
             result = ResultUtils.error("resources is null");
@@ -945,8 +946,8 @@ public class DataMethodService {
             String path = resourcePath + "/DataApplication/" + updateDTO.getContentType();
             //如果上传新文件
             if (files.size() > 0) {
-                List<String> resources =new ArrayList<>();
-                Utils.saveFiles(files, path, email, "",resources);
+                List<Resource> resources =new ArrayList<>();
+                Utils.saveResource(files, path, email, "",resources);
                 if (resources == null) {
                     return null;
                 }
@@ -995,12 +996,12 @@ public class DataMethodService {
 //        computableModelResultDTO.setRelateModelItemName(modelItem.getName());
 
         JSONArray resourceArray = new JSONArray();
-        List<String> resources = dataMethod.getResources();
+        List<Resource> resources = dataMethod.getResources();
 
         if (resources != null) {
             for (int i = 0; i < resources.size(); i++) {
 
-                String path = resources.get(i);
+                String path = resources.get(i).getPath();
 
                 String[] arr = path.split("\\.");
                 String suffix = arr[arr.length - 1];
@@ -1046,7 +1047,7 @@ public class DataMethodService {
         if (dataMethod != null) {
             //删除资源
             String path = resourcePath + "/DataApplication/" + dataMethod.getContentType();
-            List<String> resources = dataMethod.getResources();
+            List<Resource> resources = dataMethod.getResources();
             for (int i = 0; i < resources.size(); i++) {
                 Utils.delete(path + resources.get(i));
             }

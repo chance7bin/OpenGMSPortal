@@ -11,6 +11,7 @@ import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
+import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.GenericService;
@@ -19,6 +20,7 @@ import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -232,6 +235,78 @@ public class ModelItemRestController {
         }
     }
 
+    @ApiOperation(value = "获取模型条目分类信息", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/classifications/{id}", method = RequestMethod.GET)
+    JsonResult getClass(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getClassifications(id));
+    }
+
+    @ApiOperation(value = "获取模型条目分类信息", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/localizationList/{id}", method = RequestMethod.GET)
+    JsonResult getLocalizationList(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getLocalizationList(id));
+    }
+
+    @ApiOperation(value = "获取模型条目不同语言的详情描述")
+    @RequestMapping(value = "/detailByLanguage", method = RequestMethod.GET)
+    JsonResult getDetailByLanguage(@RequestParam(value="id") String id, @RequestParam(value="language") String language){
+
+        String detail = modelItemService.getDetailByLanguage(id, language);
+        if(detail==null){
+            return ResultUtils.error(-1,"language does not exist in this model item.");
+        }else{
+            return ResultUtils.success(detail);
+        }
+    }
+
+    @ApiOperation(value = "获取模型条目别名", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/alias/{id}", method = RequestMethod.GET)
+    JsonResult getAlias(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getAlias(id));
+    }
+
+    @ApiOperation(value = "获取模型条目关联的其他条目", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/relation", method = RequestMethod.GET)
+    JsonResult getRelation(@RequestParam(value = "type") String type,@RequestParam(value = "id") String id,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getAlias(id));
+    }
+
+    @ApiOperation(value = "获取模型参考文献", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/references/{id}", method = RequestMethod.GET)
+    JsonResult getReferences(@PathVariable("id") String id ,HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getReferences(id));
+    }
+
+    @ApiOperation(value = "更新模型条目分类信息", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/classifications", method = RequestMethod.PUT)
+    public JsonResult updateClass(@RequestParam(value = "id") String id,
+                                  @RequestParam(value = "class[]") List<String> classi,
+                                  HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+
+        return ResultUtils.success(modelItemService.updateClassifications(id,classi,email));
+    }
+
 
     /**
      * 模型详情页面RelatedData，为模型添加关联的数据
@@ -282,5 +357,11 @@ public class ModelItemRestController {
     @RequestMapping(value="/contributors",method = RequestMethod.GET)
     public JsonResult getContributors(@RequestParam(value="id") String oid){
         return ResultUtils.success(modelItemService.getContributors(oid));
+    }
+
+    @ApiOperation(value = "根据id得到模型条目每日访问量以及关联计算模型的调用量 [/modelItem/getDailyViewCount]")
+    @RequestMapping (value="/dailyViewAndInvokeCount",method = RequestMethod.GET)
+    public JsonResult getDailyViewCount(@RequestParam(value="id") String id) {
+        return ResultUtils.success(modelItemService.getDailyViewAndInvokeCount(id));
     }
 }

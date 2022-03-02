@@ -219,8 +219,8 @@ public class TaskController {
     @RequestMapping(value="/tasksByModelByUser",method = RequestMethod.GET)
     public JsonResult getTasksByModelByUser(@RequestParam(value = "modelId") String modelId, @RequestParam(value = "page")int page, HttpServletRequest request){
         HttpSession session = request.getSession();
-        String userName = request.getSession().getAttribute("uid").toString();
-        return ResultUtils.success(taskService.getTasksByModelByUser(modelId,page,userName));
+        String email = request.getSession().getAttribute("email").toString();
+        return ResultUtils.success(taskService.getTasksByModelByUser(modelId,page,email));
     }
 
     @LoginRequired

@@ -27,10 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static njgis.opengms.portal.utils.Utils.saveFiles;
 
@@ -100,6 +97,42 @@ public class LogicalModelService {
 
         logicalModelDao.save(logicalModelInfo);
 
+        //排序
+        List<Localization> locals = logicalModelInfo.getLocalizationList();
+        Collections.sort(locals);
+
+        String detailResult = "";
+        String detailLanguage = "";
+        //先找中英文描述
+        for(Localization localization:locals){
+            String local = localization.getLocalCode();
+            if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
+                }
+            }
+        }
+        //如果没有中英文，则使用其他语言描述
+        if(detailResult.equals("")){
+            for(Localization localization:locals){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
+                }
+            }
+        }
+
+        //语言列表
+        List<String> languageList = new ArrayList<>();
+        for(Localization local:locals){
+            languageList.add(local.getLocalName());
+        }
+
         //时间
         Date date = logicalModelInfo.getCreateTime();
         Calendar calendar = Calendar.getInstance();
@@ -142,7 +175,9 @@ public class LogicalModelService {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("conceptual_model");
-        modelAndView.addObject("modelInfo", logicalModelInfo);
+        modelAndView.addObject("itemInfo", logicalModelInfo);
+        modelAndView.addObject("detailLanguage",detailLanguage);
+        modelAndView.addObject("languageList", languageList);
         modelAndView.addObject("date", dateResult);
         modelAndView.addObject("year", calendar.get(Calendar.YEAR));
         modelAndView.addObject("user", userJson);
