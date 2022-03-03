@@ -1501,14 +1501,13 @@ var vue = new Vue({
         },
 
         getUserTaskInfo() {
-            let {code, data, msg} = fetch("/user/getUserInfo", {
+            let {code, data, msg} = fetch("/user/getFullUserInfo", {
                 method: "GET",
             }).then((response) => {
                 return response.json();
             }).then((data) => {
-                this.userInfo = data.data.userInfo;
+                this.userInfo = data.data;
                 this.userTaskInfo = this.userInfo.runTask;
-                console.log(this.userInfo);
                 setTimeout(() => {
                     $('.el-loading-mask').css('display', 'none');
                 }, 355)

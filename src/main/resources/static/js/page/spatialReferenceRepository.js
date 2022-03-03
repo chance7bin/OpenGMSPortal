@@ -245,17 +245,18 @@ new Vue({
             }
             query.searchText=data.searchText;
 
-            let url="";
-            if(query.searchText.trim()==""){
-                url=getspatialReferenceList()
-                query.categoryName = this.categoryName
-            }
-            else{
-                url="/repository/searchSpatialReference";
-                this.classifications1=[""];
-                this.currentClass="ALL";
-                this.$refs.tree1.setCurrentKey(null);
-            }
+            let url=getspatialReferenceList()
+            // if(query.searchText.trim()==""){
+            //     url=getspatialReferenceList()
+            //     query.categoryName = this.categoryName
+            // }
+            // else{
+            //     url="/repository/searchSpatialReference";
+            //     this.classifications1=[""];
+            //     this.currentClass="ALL";
+            //     this.$refs.tree1.setCurrentKey(null);
+            // }
+            query.categoryName = this.categoryName
 
             let sendDate = (new Date()).getTime();
             $.ajax({

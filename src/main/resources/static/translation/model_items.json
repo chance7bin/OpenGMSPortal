@@ -1,7 +1,7 @@
 {
   "en-us": {
-    "PageName": "Data Hub Repository",
-    "PageIntro":"The hubs of data (one-stop hub with public shared data resources)",
+    "PageName": "Model Item Repository",
+    "PageIntro":"The repository of models (include tools, algorithms, packages, et al.)",
     "Contribute": "+ Contribute",
 
     "ModelClass": "Data Categories",

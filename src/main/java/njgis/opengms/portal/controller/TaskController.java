@@ -107,9 +107,9 @@ public class TaskController {
     @RequestMapping(value="/taskInfo",method = RequestMethod.POST )
     public JsonResult getTasksByUserByStatus(@RequestBody TaskFindDTO taskFindDTO, HttpServletRequest request) {
 
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+         HttpSession session = request.getSession();
+         String email = session.getAttribute("email").toString();
+//        String email = "782807969@qq.com";
         return taskService.getTasksByUserByStatus(email,taskFindDTO);
 
     }

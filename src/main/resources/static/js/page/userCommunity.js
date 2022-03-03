@@ -82,6 +82,7 @@ var userCommunity = Vue.extend(
                 };
 
 
+                let _this= this
                 $.ajax({
                     type: "GET",
                     url: "/user/load",
@@ -92,37 +93,19 @@ var userCommunity = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-
-                        console.log(data);
-
-                        if (data.oid == "") {
-                            alert("Please login");
-                            window.location.href = "/user/login";
-                        } else {
-                            this.countInfo = data.countInfo
-                            this.userId = data.oid;
-                            this.userName = data.name;
-                            console.log(this.userId)
-                            this.sendUserToParent(this.userId)
-                            // this.addAllData()
-
-                            // axios.get("/dataItem/amountofuserdata",{
-                            //     params:{
-                            //         userOid:this.userId
-                            //     }
-                            // }).then(res=>{
-                            //     that.dcount=res.data
-                            // });
-
-                            $("#author").val(this.userName);
-
+                    success: function (result) {
+                        if (result.code === 0) {
+                            let data = result.data
+                            _this.userId = data.email;
+                            _this.userName = data.name;
+                            _this.sendUserToParent(_this.userId)
+                            $("#author").val(_this.userName);
                             var index = window.sessionStorage.getItem("index");
                             if (index != null && index != undefined && index != "" && index != NaN) {
-                                this.defaultActive = index;
-                                this.handleSelect(index, null);
+                                _this.defaultActive = index;
+                                _this.handleSelect(index, null);
                                 window.sessionStorage.removeItem("index");
-                                this.curIndex=index
+                                _this.curIndex = index
 
                             } else {
                                 // this.changeRter(1);
@@ -130,10 +113,31 @@ var userCommunity = Vue.extend(
 
                             window.sessionStorage.removeItem("tap");
                             //this.getTasksInfo();
-                            this.load = false;
+                            _this.load = false;
+
+                        } else {
+                            alert("Please login");
+                            window.location.href = "/user/login";
                         }
                     }
                 })
+                    .then(function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/user/resourceCount",
+                            data: {},
+                            cache: false,
+                            async: false,
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            crossDomain: true,
+                            success: (result) => {
+                                _this.countInfo = result.data
+                                console.log(_this.countInfo)
+                            }
+                        })
+                    })
 
 
                 //this.getModels();

@@ -1893,7 +1893,7 @@ var createModelItem = Vue.extend({
                 });
                 formData.append("info",file);
                 $.ajax({
-                    url: "/modelItem/add",
+                    url: "/modelItem/",
                     type: "POST",
                     processData: false,
                     contentType: false,

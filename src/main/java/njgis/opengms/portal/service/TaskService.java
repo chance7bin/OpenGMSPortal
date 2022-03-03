@@ -823,7 +823,7 @@ public class TaskService {
     public JsonResult getTasksByUserByStatus(String email, TaskFindDTO taskFindDTO) {
 
         Sort sort = Sort.by(taskFindDTO.getAsc() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, taskFindDTO.getSortType());
-        Pageable pageable = PageRequest.of(taskFindDTO.getPage() - 1, taskFindDTO.getPageSize(), sort);
+        Pageable pageable = PageRequest.of(taskFindDTO.getPage(), taskFindDTO.getPageSize(), sort);
         Page<Task> tasks = Page.empty();
         String status = taskFindDTO.getStatus();
         try{
