@@ -666,10 +666,10 @@ let vue = new Vue({
         this.applicationOid = str[str.length-3];
         this.serviceId = str[str.length-2]
 
-        axios.get("/user/getUserInfo")
+        axios.get("/user/getFullUserInfo")
             .then((res) => {
                 if (res.status === 200) {
-                    that.user = res.data.data.userInfo
+                    that.user = res.data
                 }
 
             })

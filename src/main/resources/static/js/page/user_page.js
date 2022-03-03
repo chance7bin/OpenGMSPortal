@@ -601,46 +601,46 @@ new Vue({
             }
         },
 
-        editIntro7RIS(){
-            this.Intro7RISdialog = true
-            this.introduction = this.userPersonalInfo.introduction
-            if ($("#researchInterestInput").nextAll().length == 0) {//如果不存在tageditor,则创建一个
-                Vue.nextTick(() => {
-                    $("#researchInterestInput").tagEditor({
-                        forceLowercase: false
-                    })
-                    $('#researchInterestInput').tagEditor('destroy');
-                    $('#researchInterestInput').tagEditor({
-                        initialTags: this.userPersonalInfo.researchInterests,
-                        forceLowercase: false,
-                    });
+        // editIntro7RIS(){
+        //     this.Intro7RISdialog = true
+        //     this.introduction = this.userPersonalInfo.introduction
+        //     if ($("#researchInterestInput").nextAll().length == 0) {//如果不存在tageditor,则创建一个
+        //         Vue.nextTick(() => {
+        //             $("#researchInterestInput").tagEditor({
+        //                 forceLowercase: false
+        //             })
+        //             $('#researchInterestInput').tagEditor('destroy');
+        //             $('#researchInterestInput').tagEditor({
+        //                 initialTags: this.userPersonalInfo.researchInterests,
+        //                 forceLowercase: false,
+        //             });
+        //
+        //         })
+        //     } else {
+        //         Vue.nextTick(() => {
+        //             $('#researchInterestInput').tagEditor('destroy');
+        //             $('#researchInterestInput').tagEditor({
+        //                 initialTags: this.userPersonalInfo.researchInterests,
+        //                 forceLowercase: false,
+        //             });
+        //         })
+        //     }
+        //
+        //     $('#researchInterestInput').tagEditor('destroy');
+        //     $('#researchInterestInput').tagEditor({
+        //         initialTags:  [''],
+        //         forceLowercase: false,
+        //     });
+        // },
 
-                })
-            } else {
-                Vue.nextTick(() => {
-                    $('#researchInterestInput').tagEditor('destroy');
-                    $('#researchInterestInput').tagEditor({
-                        initialTags: this.userPersonalInfo.researchInterests,
-                        forceLowercase: false,
-                    });
-                })
-            }
-
-            $('#researchInterestInput').tagEditor('destroy');
-            $('#researchInterestInput').tagEditor({
-                initialTags:  [''],
-                forceLowercase: false,
-            });
-        },
-
-        uploadIntro7RISConfirm(){
-            this.Intro7RISdialog=false
-            this.descriptionAddToBack();
-            var tags = $('#researchInterestInput').tagEditor('getTags')[0].tags;
-            for (i = 0; i < tags.length; i++) { $('#researchInterestInput').tagEditor('removeTag', tags[i]); }
-            this.researchInterests=tags;
-            this.researchInterestAddToBack();
-        },
+        // uploadIntro7RISConfirm(){
+        //     this.Intro7RISdialog=false
+        //     this.descriptionAddToBack();
+        //     var tags = $('#researchInterestInput').tagEditor('getTags')[0].tags;
+        //     for (i = 0; i < tags.length; i++) { $('#researchInterestInput').tagEditor('removeTag', tags[i]); }
+        //     this.researchInterests=tags;
+        //     this.researchInterestAddToBack();
+        // },
 
         editExLink(){
             this.externalLinkDialog = true
@@ -944,18 +944,18 @@ new Vue({
 
         },
 
-        editLabClick(){
-            $('#userLaboratory').val(this.userPersonalInfo.lab.name);
-            if(this.userPersonalInfo.lab.position=="leader"){
-                $("input[type='radio'][name='labPosition'][value='0']").attr("checked",true);
-            }else if(this.userPersonalInfo.lab.position=="member"){
-                $("input[type='radio'][name='labPosition'][value='1']").attr("checked",true);
-            }
-        },
+        // editLabClick(){
+        //     $('#userLaboratory').val(this.userPersonalInfo.lab.name);
+        //     if(this.userPersonalInfo.lab.position=="leader"){
+        //         $("input[type='radio'][name='labPosition'][value='0']").attr("checked",true);
+        //     }else if(this.userPersonalInfo.lab.position=="member"){
+        //         $("input[type='radio'][name='labPosition'][value='1']").attr("checked",true);
+        //     }
+        // },
 
-        addLabClick(){
-
-        },
+        // addLabClick(){
+        //
+        // },
 
         saveLabClick(){
             console.log($('#userLaboratory').val());
@@ -977,35 +977,35 @@ new Vue({
 
         },
 
-        addEduXpceClick(){
-            $('#userEduInstitution').val('');
-            $('#userEduDepartment').val('');
-            $('#userEduAcaDegree').val('');
-            $('#userEduStartTime').val('');
-            $('#userEduEndTime').val('');
-            $('#userEduLocation').val('');
-        },
+        // addEduXpceClick(){
+        //     $('#userEduInstitution').val('');
+        //     $('#userEduDepartment').val('');
+        //     $('#userEduAcaDegree').val('');
+        //     $('#userEduStartTime').val('');
+        //     $('#userEduEndTime').val('');
+        //     $('#userEduLocation').val('');
+        // },
 
-        saveEduExperience(){
-            this.eduExpAddToBack.institution=$('#userEduInstitution').val();
-            this.eduExpAddToBack.department=$('#userEduDepartment').val();
-            this.eduExpAddToBack.acaDegree=$('#userEduAcaDegree').val();
-            this.eduExpAddToBack.startTime=new Date($('#userEduStartTime').val());
-            this.eduExpAddToBack.endTime=new Date($('#userEduEndTime').val());
-            this.eduExpAddToBack.location=$('#userEduLocation').val();
-            console.log(this.eduExpAddToBack);
+        // saveEduExperience(){
+        //     this.eduExpAddToBack.institution=$('#userEduInstitution').val();
+        //     this.eduExpAddToBack.department=$('#userEduDepartment').val();
+        //     this.eduExpAddToBack.acaDegree=$('#userEduAcaDegree').val();
+        //     this.eduExpAddToBack.startTime=new Date($('#userEduStartTime').val());
+        //     this.eduExpAddToBack.endTime=new Date($('#userEduEndTime').val());
+        //     this.eduExpAddToBack.location=$('#userEduLocation').val();
+        //     console.log(this.eduExpAddToBack);
+        //
+        //     this.eduExperienceAddtoBack();
+        // },
 
-            this.eduExperienceAddtoBack();
-        },
-
-        saveAwdHonor(){
-            this.awdHonor.name=$('#userAwdName').val();
-            this.awdHonor.awardAgency=$('#userAwdAgency').val();
-            this.awdHonor.awardTime=new Date($('#userAwdTime').val());
-
-            console.log(this.awdHonor);
-            this.awdHonorAddtoBack();
-        },
+        // saveAwdHonor(){
+        //     this.awdHonor.name=$('#userAwdName').val();
+        //     this.awdHonor.awardAgency=$('#userAwdAgency').val();
+        //     this.awdHonor.awardTime=new Date($('#userAwdTime').val());
+        //
+        //     console.log(this.awdHonor);
+        //     this.awdHonorAddtoBack();
+        // },
 
         // addDescriptionClick(){
         //     $('#addDescriptionButton').css('display','none');
@@ -1044,7 +1044,6 @@ new Vue({
             $('#addResearchInterestButton').css('display','none');
             $('#researchInterestInputContainer').css({display:'block'});
             $('#researchInterestConfirm').css({display:'block'});
-            // $('#researchInterestInputContainer').animate({width:'65%'},500);
         },
 
         editResearchInterestClick(){
@@ -1052,7 +1051,6 @@ new Vue({
             $('#editResearchInterestButton').css({display:'none'});
             $('#researchInterestInputContainer').css({display:'block'});
             $('#researchInterestConfirm').css({display:'block'});
-            // $('#researchInterestInput').val(this.userPersonalInfo.researchInterests);
             $("#researchInterestInput").tagEditor("destroy");
             $('#researchInterestInput').tagEditor({
                 initialTags: this.userPersonalInfo.researchInterests,
@@ -1101,28 +1099,77 @@ new Vue({
             $.ajax({
                 data:{oid:hrefs[hrefs.length-1]},
                 type:'GET',
-                url:'/user/getUserInfoInUserPage',
+                url:'/user/getFullUserInfo',
                 async:true,
                 success:(json) => {
                     if(json.code==0){
                         const data = json.data;
                         console.log(data)
                         setTimeout(() => {
-                            this.userPersonalInfo = data.userInfo;
+                            this.userPersonalInfo = data;
+                            // if(typeof this.userPersonalInfo == "undefined"){
+                            //     this.userPersonalInfo = {
+                            //         "image": "/static/userServer/avatar/d698540a-2130-4880-825f-2492e8635847.jpg",
+                            //         "awdHonors": null,
+                            //         "subscribe": true,
+                            //         "wiki": "",
+                            //         "oid": "223",
+                            //         "userName": "1274316792@qq.com",
+                            //         "lab": {
+                            //             "name": null,
+                            //             "position": null
+                            //         },
+                            //         "userId": "Xiaoyu_He",
+                            //         "homePage": null,
+                            //         "runTask": null,
+                            //         "phone": "",
+                            //         "faceBook": null,
+                            //         "affiliation": {
+                            //             "name": "11",
+                            //             "department": "22",
+                            //             "location": "44",
+                            //             "position": "33"
+                            //         },
+                            //         "organizations": [
+                            //             "17782784170"
+                            //         ],
+                            //         "name": "XiaoYu He",
+                            //         "weChat": null,
+                            //         "externalLinks": [],
+                            //         "location": null,
+                            //         "subjectAreas": [
+                            //             ""
+                            //         ],
+                            //         "researchInterests": [
+                            //             "eat",
+                            //             "drink",
+                            //             "slepp"
+                            //         ],
+                            //         "eduExperiences": null,
+                            //         "email": "1274316792@qq.com",
+                            //         "introduction": "this is introduction"
+                            //     }
+                            // }
                             this.organizationInput = this.userPersonalInfo.organizations[0];
+
                             this.locationInput = this.userPersonalInfo.location;
+                            if(!this.locationInput || typeof(this.locationInput) == "undefined")
+                                this.locationInput = ''
+
                             this.externalLinkInput = this.userPersonalInfo.externalLinks[0];
+                            if(!this.externalLinkInput || typeof(this.externalLinkInput) == "undefined")
+                                this.externalLinkInput = ''
+
                             this.introductionInput = this.userPersonalInfo.introduction;
                             if (!this.introductionInput || typeof(this.introductionInput) == 'undefined')
                                 this.introductionInput = ''
+                            
                             this.emailInput = this.userPersonalInfo.email;
-                            if(this.userPersonalInfo.researchInterests == null)
+
+                            if(!this.userPersonalInfo.researchInterests || typeof(this.userPersonalInfo.researchInterests) == 'undefined')
                                 this.userPersonalInfo.researchInterests=[];
 
                             this.researchInterests = this.userPersonalInfo.researchInterests;
-
-
-                            console.log(this.userPersonalInfo)
                         }, 0);
                     } else {
                         console.log("UserInfo get wrong.")
@@ -1134,96 +1181,203 @@ new Vue({
 
 
         modelItemHandleCurrentChange: function (val) {
-            // console.log(this.modelItems.currentPage);
+            
             this.pageOption.currentPage = val;
-            // console.log(this.modelItems.currentPage);
             $('html,body').animate({scrollTop: '0px'}, 220);
             const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/modelItem/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success:(json) => {
-
-                    if (json.code == 0) {
-                        const data = json.data;
-
-                        setTimeout(() => {
-
-                            this.modelItems.total = data.total;
-                            this.modelItems.result = data.list;
-                            this.pageOption.progressBar = false;
-
-                        }, 500);
-                    } else {
-                        console.log("search model item failed.")
-                    }
-                }
-            })
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/modelItem/listByUserOid",
+            //     data: {
+            //         page: this.pageOption.currentPage - 1,
+            //         asc: this.pageOption.sortAsc,
+            //         pageSize: this.pageOption.pageSize,
+            //         // sortElement:'viewCount',
+            //         sortElement:'createTime',
+            //         oid: hrefs[hrefs.length - 1],
+            //     },
+            //     async: true,
+            //     success:(json) => {
+            //
+            //         if (json.code == 0) {
+            //             const data = json.data;
+            //
+            //             setTimeout(() => {
+            //
+            //                 this.modelItems.total = data.total;
+            //                 this.modelItems.result = data.list;
+            //                 this.pageOption.progressBar = false;
+            //
+            //             }, 500);
+            //         } else {
+            //             console.log("search model item failed.")
+            //         }
+            //     }
+            // })
 
         },
+        conceptualModelHandleCurrentChange: function (val) {
+            this.pageOption.currentPage = val;
+            $('html,body').animate({scrollTop: '0px'}, 220);
+            const hrefs = window.location.href.split("/");
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/conceptualModel/listByUserOid",
+            //     data: {
+            //         page: this.pageOption.currentPage - 1,
+            //         asc: this.pageOption.sortAsc,
+            //         pageSize: this.pageOption.pageSize,
+            //         // sortElement:'viewCount',
+            //         sortElement:'createTime',
+            //         oid: hrefs[hrefs.length - 1],
+            //     },
+            //     async: true,
+            //     success: (json) => {
+            //
+            //         if (json.code == 0) {
+            //             const data = json.data;
+            //
+            //             setTimeout(() => {
+            //
+            //                 this.conceptualModels.total = data.total;
+            //                 this.conceptualModels.result = data.list;
+            //                 this.pageOption.progressBar = false;
+            //
+            //             }, 500);
+            //         } else {
+            //             console.log("search conceptual model failed.")
+            //         }
+            //     }
+            // })
+        },
 
+        logicalModelHandleCurrentChange: function (val) {
+            this.pageOption.currentPage = val;
+            $('html,body').animate({scrollTop: '0px'}, 220);
+
+            const hrefs = window.location.href.split("/");
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/logicalModel/listByUserOid",
+            //     data: {
+            //         page: this.pageOption.currentPage - 1,
+            //         asc: this.pageOption.sortAsc,
+            //         pageSize: this.pageOption.pageSize,
+            //         // sortElement:'viewCount',
+            //         sortElement:'createTime',
+            //         oid: hrefs[hrefs.length - 1],
+            //     },
+            //     async: true,
+            //     success: (json) => {
+            //
+            //         if (json.code == 0) {
+            //             const data = json.data;
+            //
+            //             setTimeout(() => {
+            //
+            //                 this.logicalModels.total = data.total;
+            //                 this.logicalModels.result = data.list;
+            //                 this.pageOption.progressBar = false;
+            //                 }, 500);
+            //         } else {
+            //             console.log("search logical model failed.")
+            //         }
+            //     }
+            // })
+        },
+
+        computableModelHandleCurrentChange: function (val) {
+            this.pageOption.currentPage = val;
+            $('html,body').animate({scrollTop: '0px'}, 220);
+            const hrefs = window.location.href.split("/");
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/computableModel/listByUserOid",
+            //     data: {
+            //         page: this.pageOption.currentPage - 1,
+            //         asc: this.pageOption.sortAsc,
+            //         pageSize: this.pageOption.pageSize,
+            //         // sortElement:'viewCount',
+            //         sortElement:'createTime',
+            //         oid: hrefs[hrefs.length - 1],
+            //     },
+            //     async: true,
+            //     success: (json) => {
+            //
+            //         if (json.code == 0) {
+            //             const data = json.data;
+            //             // console.log(data.list);
+            //             if(data.list.length!=0)
+            //                 setTimeout(() => {
+            //
+            //                     this.computableModels.total = data.total;
+            //                     this.computableModels.result = data.list;
+            //                     this.pageOption.progressBar = false;
+            //                     }, 500);
+            //         } else {
+            //             console.log("search computable model failed.")
+            //         }
+            //     }
+            // })
+        },
         //dataApplication
         dataMethodHandleCurrentChange: function(val){
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
             const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/dataApplication/listByUserOid",
-                data:{
-                    page: this.pageOption.currentPage-1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: 6,
-                    oid: hrefs[hrefs.length - 1],
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    searchText:'',
-                } ,
-                async: true,
-                success: (json) => {
 
-                    if (json.code == 0) {
-                        const data = json.data;
-
-                        setTimeout(() => {
-
-                            this.dataMethods.total = data.total;
-                            this.dataMethods.result = data.list;
-                            this.pageOption.progressBar = false;
-
-                        }, 500);
-                    } else {
-                        console.log("search data item failed.")
-                    }
-                }
-            })
+            //后台请求方式不同，待改 2022.02.25
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/user/dataMethodList",
+            //     data: {
+            //         page: this.pageOption.currentPage,
+            //         asc: this.pageOption.sortAsc,
+            //         pageSize: 6,
+            //         oid: hrefs[hrefs.length - 1],
+            //         // sortElement:'viewCount',
+            //         sortElement:'createTime',
+            //         searchText:'',
+            //     },
+            //     contentType: "application/json",
+            //     async: true,
+            //     success: (json) => {
+            //
+            //         if (json.code == 0) {
+            //             const data = json.data;
+            //
+            //             setTimeout(() => {
+            //
+            //                 this.dataMethods.total = data.total;
+            //                 this.dataMethods.result = data.list;
+            //                 this.pageOption.progressBar = false;
+            //
+            //             }, 500);
+            //         } else {
+            //             console.log("search data item failed.")
+            //         }
+            //     }
+            // })
         },
 
         dataItemHandleCurrentChange: function (val) {
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
             const hrefs = window.location.href.split("/");
+            let data = JSON.stringify({
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                pageSize: 6,
+                oid: hrefs[hrefs.length - 1],
+                // sortElement:'viewCount',
+                sortElement:'createTime',
+                searchText:'',
+            })
             $.ajax({
-                type: "GET",
-                url: "/dataItem/searchByNameByOid",
-                data:{
-                    page: this.pageOption.currentPage-1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: 6,
-                    oid: hrefs[hrefs.length - 1],
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    searchText:'',
-                } ,
+                type: "POST",
+                url: "/user/dataItemList",
+                data: data,
+                contentType: "application/json",
                 async: true,
                 success: (json) => {
 
@@ -1232,8 +1386,8 @@ new Vue({
 
                         setTimeout(() => {
 
-                            this.dataItems.total = data.total;
-                            this.dataItems.result = data.list;
+                            this.dataItems.total = data.count;
+                            this.dataItems.result = data.content;
                             this.pageOption.progressBar = false;
 
                         }, 500);
@@ -1249,18 +1403,20 @@ new Vue({
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
             const hrefs = window.location.href.split("/");
+            let data = JSON.stringify({
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                pageSize: 6,
+                oid: hrefs[hrefs.length - 1],
+                // sortElement:'viewCount',
+                sortElement:'createTime',
+                searchText:'',
+            })
             $.ajax({
-                type: "GET",
-                url: "/dataHub/listByUserOid",
-                data:{
-                    page: this.pageOption.currentPage-1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: 6,
-                    oid: hrefs[hrefs.length - 1],
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    searchText:'',
-                } ,
+                type: "POST",
+                url: "/user/dataHubList",
+                data: data,
+                contentType: "application/json",
                 async: true,
                 success: (json) => {
 
@@ -1268,9 +1424,8 @@ new Vue({
                         const data = json.data;
 
                         setTimeout(() => {
-
-                            this.dataHubs.total = data.total;
-                            this.dataHubs.result = data.list;
+                            this.dataHubs.total = data.count;
+                            this.dataHubs.result = data.content;
                             this.pageOption.progressBar = false;
 
                         }, 500);
@@ -1281,130 +1436,28 @@ new Vue({
             })
         },
 
-        conceptualModelHandleCurrentChange: function (val) {
-            this.pageOption.currentPage = val;
-            $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/conceptualModel/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success: (json) => {
 
-                    if (json.code == 0) {
-                        const data = json.data;
-
-                        setTimeout(() => {
-
-                            this.conceptualModels.total = data.total;
-                            this.conceptualModels.result = data.list;
-                            this.pageOption.progressBar = false;
-
-                        }, 500);
-                    } else {
-                        console.log("search conceptual model failed.")
-                    }
-                }
-            })
-        },
-
-        logicalModelHandleCurrentChange: function (val) {
-            this.pageOption.currentPage = val;
-            $('html,body').animate({scrollTop: '0px'}, 220);
-
-            const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/logicalModel/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success: (json) => {
-
-                    if (json.code == 0) {
-                        const data = json.data;
-
-                        setTimeout(() => {
-
-                            this.logicalModels.total = data.total;
-                            this.logicalModels.result = data.list;
-                            this.pageOption.progressBar = false;
-                            }, 500);
-                    } else {
-                        console.log("search logical model failed.")
-                    }
-                }
-            })
-        },
-
-        computableModelHandleCurrentChange: function (val) {
-            this.pageOption.currentPage = val;
-            $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/computableModel/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success: (json) => {
-
-                    if (json.code == 0) {
-                        const data = json.data;
-                        // console.log(data.list);
-                        if(data.list.length!=0)
-                            setTimeout(() => {
-
-                                this.computableModels.total = data.total;
-                                this.computableModels.result = data.list;
-                                this.pageOption.progressBar = false;
-                                }, 500);
-                    } else {
-                        console.log("search computable model failed.")
-                    }
-                }
-            })
-        },
 
         conceptHandleCurrentChange(val){
             this.pageOption.currentPage = val;
             const hrefs = window.location.href.split("/");
             let name='concepts';
+            let data = JSON.stringify({
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortElement:"createTime",
+                pageSize: this.pageOption.pageSize,
+                // sortElement:'viewCount',
+                sortElement:'createTime',
+                oid: hrefs[hrefs.length - 1],
+            })
             $.ajax({
-                type: "Get",
-                url: "/concept/listConceptsByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
+                type: "POST",
+                url: "/user/conceptList",
+                data: data,
                 cache: false,
                 async: true,
-
+                contentType: "application/json",
                 xhrFields:{
                     withCredentials:true
                 },
@@ -1435,139 +1488,140 @@ new Vue({
         spatialHandleCurrentChange(val){
             this.pageOption.currentPage = val;
             const hrefs = window.location.href.split("/");
-            var url = "/spatial/listSpatialsByOid";
+            var url = "/spatialReference/listByUser";
             var name = "spatials";
-
-            $.ajax({
-                type: "Get",
-                url: url,
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    oid: hrefs[hrefs.length - 1],
-                },
-                cache: false,
-                async: true,
-
-                xhrFields:{
-                    withCredentials:true
-                },
-                crossDomain: true,
-                success: (json) => {
-                    if (json.code != 0) {
-                        alert("Please login first!");
-                        window.location.href = "/user/login";
-                    }else {
-                        const data = json.data;
-                        if(data[name].length>0){
-                            setTimeout(()=>{
-                                const data = json.data;
-                                this.spatials.total= data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.spatials.result = data[name];
-                                this.pageOption.progressBar = false;
-                            },200)
-                            // console.log(this.pageOption.currentPage);
-                        }else {
-                            // console.log("search spatial failed.")
-                        }
-                    }
-                }
+            let data = JSON.stringify({
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortElement:"createTime",
+                pageSize: this.pageOption.pageSize,
+                oid: hrefs[hrefs.length - 1],
             })
+            // $.ajax({
+            //     type: "POST",
+            //     url: url,
+            //     data: data,
+            //     cache: false,
+            //     async: true,
+            //     contentType: "application/json",
+            //     xhrFields:{
+            //         withCredentials:true
+            //     },
+            //     crossDomain: true,
+            //     success: (json) => {
+            //         if (json.code != 0) {
+            //             alert("Please login first!");
+            //             window.location.href = "/user/login";
+            //         }else {
+            //             const data = json.data;
+            //             if(data[name].length>0){
+            //                 setTimeout(()=>{
+            //                     const data = json.data;
+            //                     this.spatials.total= data.count;
+            //                     this.searchCount = Number.parseInt(data["count"]);
+            //                     this.spatials.result = data[name];
+            //                     this.pageOption.progressBar = false;
+            //                 },200)
+            //                 // console.log(this.pageOption.currentPage);
+            //             }else {
+            //                 // console.log("search spatial failed.")
+            //             }
+            //         }
+            //     }
+            // })
         },
 
         templateHandleCurrentChange(val){
             this.pageOption.currentPage = val;
             const hrefs = window.location.href.split("/");
-            var url = "/template/listTemplatesByOid";
+            var url = "/user/templateList";
             var name = "templates";
-
-            $.ajax({
-                type: "Get",
-                url: url,
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    oid: hrefs[hrefs.length - 1],
-                },
-                cache: false,
-                async: true,
-
-                xhrFields:{
-                    withCredentials:true
-                },
-                crossDomain: true,
-                success: (json) => {
-                    if (json.code != 0) {
-                        alert("Please login first!");
-                        window.location.href = "/user/login";
-                    }else {
-                        const data = json.data;
-                        if(data[name].length>0){
-                            setTimeout(()=>{
-                                const data = json.data;
-                                this.templates.total= data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.templates.result = data[name];
-                                this.pageOption.progressBar = false;
-                            },200)
-
-                        }else {
-                            // console.log("search template failed.")
-                        }
-                    }
-                }
+            let data = JSON.stringify({
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortElement:"createTime",
+                pageSize: this.pageOption.pageSize,
+                oid: hrefs[hrefs.length - 1],
             })
+
+            // $.ajax({
+            //     type: "POST",
+            //     url: url,
+            //     data: data,
+            //     cache: false,
+            //     async: true,
+            //     contentType: "application/json",
+            //     xhrFields:{
+            //         withCredentials:true
+            //     },
+            //     crossDomain: true,
+            //     success: (json) => {
+            //         if (json.code != 0) {
+            //             alert("Please login first!");
+            //             window.location.href = "/user/login";
+            //         }else {
+            //             const data = json.data;
+            //             if(data[name].length>0){
+            //                 setTimeout(()=>{
+            //                     const data = json.data;
+            //                     this.templates.total= data.count;
+            //                     this.searchCount = Number.parseInt(data["count"]);
+            //                     this.templates.result = data[name];
+            //                     this.pageOption.progressBar = false;
+            //                 },200)
+            //
+            //             }else {
+            //                 // console.log("search template failed.")
+            //             }
+            //         }
+            //     }
+            // })
         },
 
         unitHandleCurrentChange(val){
             this.pageOption.currentPage = val;
             const hrefs = window.location.href.split("/");
-            var url = "/unit/listUnitsByOid";
+            var url = "/unit/listByUser";
             var name = "units";
-
-            $.ajax({
-                type: "Get",
-                url: url,
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    oid: hrefs[hrefs.length - 1],
-                },
-                cache: false,
-                async: true,
-
-                xhrFields:{
-                    withCredentials:true
-                },
-                crossDomain: true,
-                success: (json) => {
-                    if (json.code != 0) {
-                        alert("Please login first!");
-                        window.location.href = "/user/login";
-                    }else {
-                        const data = json.data;
-                        if(data[name].length>0){
-                            setTimeout(()=>{
-                                const data = json.data;
-                                this.units.total= data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.units.result = data[name];
-                                this.pageOption.progressBar = false;
-                            },200)
-
-                        }else {
-                            // console.log("search unit failed.")
-                        }
-                    }
-                }
+            let data = JSON.stringify({
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortElement:"createTime",
+                pageSize: this.pageOption.pageSize,
+                oid: hrefs[hrefs.length - 1],
             })
+            // $.ajax({
+            //     type: "POST",
+            //     url: url,
+            //     data: data,
+            //     cache: false,
+            //     async: true,
+            //     contentType: "application/json",
+            //     xhrFields:{
+            //         withCredentials:true
+            //     },
+            //     crossDomain: true,
+            //     success: (json) => {
+            //         if (json.code != 0) {
+            //             alert("Please login first!");
+            //             window.location.href = "/user/login";
+            //         }else {
+            //             const data = json.data;
+            //             if(data[name].length>0){
+            //                 setTimeout(()=>{
+            //                     const data = json.data;
+            //                     this.units.total= data.count;
+            //                     this.searchCount = Number.parseInt(data["count"]);
+            //                     this.units.result = data[name];
+            //                     this.pageOption.progressBar = false;
+            //                 },200)
+            //
+            //             }else {
+            //                 // console.log("search unit failed.")
+            //             }
+            //         }
+            //     }
+            // })
         },
 
         resourceHandleCurrentChange(val){
@@ -1643,97 +1697,97 @@ new Vue({
             this.pageOption.currentPage=val;
             this.barIndex=1;
             const hrefs=window.location.href.split('/');
-            $.ajax({
-                type:"GET",
-                url:"/user/listArticle",
-                data:{
-                    page:this.pageOption.currentPage-1,
-                    userId:hrefs[hrefs.length - 1],
-                },
-                async:true,
-                success: (json)=>{
-
-                    if (json.code == 0) {
-                        const data=json.data;
-                        setTimeout(() => {
-
-                            this.articles.total=data.total;
-                            this.articles.result=data.list;
-                            this.pageOption.progressBar=false;
-                        }, 500);
-                    } else {
-                        console.log("search computable model failed.")
-                    }
-
-                }
-
-            })
+            // $.ajax({
+            //     type:"GET",
+            //     url:"/user/listArticle",
+            //     data:{
+            //         page:this.pageOption.currentPage-1,
+            //         userId:hrefs[hrefs.length - 1],
+            //     },
+            //     async:true,
+            //     success: (json)=>{
+            //
+            //         if (json.code == 0) {
+            //             const data=json.data;
+            //             setTimeout(() => {
+            //
+            //                 this.articles.total=data.total;
+            //                 this.articles.result=data.list;
+            //                 this.pageOption.progressBar=false;
+            //             }, 500);
+            //         } else {
+            //             console.log("search computable model failed.")
+            //         }
+            //
+            //     }
+            //
+            // })
 
         },
 
         projectHandleCurrentChange: function (val) {
             this.pageOption.currentPage=val;
             const hrefs=window.location.href.split('/');
-            $.ajax({
-                type:"GET",
-                url:"/project/listByUserOid",
-                data:{
-                    page:this.pageOption.currentPage-1,
-                    pageSize:this.pageOption.pageSize,
-                    asc:this.projects.sortAsc,
-                    sortElement:"creatDate",
-                    oid:hrefs[hrefs.length - 1],
-                },
-                async:true,
-                success: (json)=>{
-
-                    if (json.code == 0) {
-                        const data=json.data;
-                        setTimeout(() => {
-
-                            this.projects.total=data.total;
-                            this.projects.result=data.list;
-                            this.pageOption.progressBar=false;
-
-                        }, 500);
-                    } else {
-                        console.log("search computable model failed.")
-                    }
-
-                }
-
-            })
+            // $.ajax({
+            //     type:"GET",
+            //     url:"/project/listByUserOid",
+            //     data:{
+            //         page:this.pageOption.currentPage-1,
+            //         pageSize:this.pageOption.pageSize,
+            //         asc:this.projects.sortAsc,
+            //         sortElement:"creatDate",
+            //         oid:hrefs[hrefs.length - 1],
+            //     },
+            //     async:true,
+            //     success: (json)=>{
+            //
+            //         if (json.code == 0) {
+            //             const data=json.data;
+            //             setTimeout(() => {
+            //
+            //                 this.projects.total=data.total;
+            //                 this.projects.result=data.list;
+            //                 this.pageOption.progressBar=false;
+            //
+            //             }, 500);
+            //         } else {
+            //             console.log("search computable model failed.")
+            //         }
+            //
+            //     }
+            //
+            // })
 
         },
 
         conferenceHandleCurrentChange(val) {
             this.pageOption.currentPage=val;
             const hrefs=window.location.href.split("/");
-            $.ajax({
-                type:"GET",
-                url:"/conference/listByUserOid",
-                data:{
-                    page:this.pageOption.currentPage-1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    sortElement:"creatDate",
-                    oid:hrefs[hrefs.length-1],
-                },
-                async:true,
-                success:(json)=>{
-                    if(json.code==0){
-                        const data=json.data;
-                        setTimeout(
-                            ()=>{
-                                this.conferences.total=data.total;
-                                this.conferences.result=data.list;
-                                this.pageOption.progressBar=false;
-                            },500)
-                    }else{
-                        console.log("search data item failed.")
-                    }
-                }
-            })
+            // $.ajax({
+            //     type:"GET",
+            //     url:"/conference/listByUserOid",
+            //     data:{
+            //         page:this.pageOption.currentPage-1,
+            //         asc: this.pageOption.sortAsc,
+            //         pageSize: this.pageOption.pageSize,
+            //         sortElement:"creatDate",
+            //         oid:hrefs[hrefs.length-1],
+            //     },
+            //     async:true,
+            //     success:(json)=>{
+            //         if(json.code==0){
+            //             const data=json.data;
+            //             setTimeout(
+            //                 ()=>{
+            //                     this.conferences.total=data.total;
+            //                     this.conferences.result=data.list;
+            //                     this.pageOption.progressBar=false;
+            //                 },500)
+            //         }else{
+            //             console.log("search data item failed.")
+            //         }
+            //     }
+            // })
 
         },
 
@@ -1762,47 +1816,47 @@ new Vue({
 
         articleNewestLoad(){
             const hrefs=window.location.href.split('/');
-            $.ajax({
-                data:{
-                    page:0,
-                    pageSize:1,
-                    asc:false,
-                    oid:hrefs[hrefs.length-1],
-                },
-                type:"GET",
-                url:"/article/findNewest",
-                async:true,
-                success: (json)=>{
-                    if(json.code==0){
-                        const data=json.data;
-                        setTimeout(
-                            ()=>{
-                                // this.newestArticle.total=data.total;
-                                this.newestArticle.result=data.list;
-                                this.pageOption.progressBar=false;
-                            },500)
-                        // console.log(this.newestArticle);
-                    }else{
-                        console.log("search data item failed.")
-                    }
-                }
-
-            })
+            // $.ajax({
+            //     data:{
+            //         page:0,
+            //         pageSize:1,
+            //         asc:false,
+            //         oid:hrefs[hrefs.length-1],
+            //     },
+            //     type:"GET",
+            //     url:"/article/findNewest",
+            //     async:true,
+            //     success: (json)=>{
+            //         if(json.code==0){
+            //             const data=json.data;
+            //             setTimeout(
+            //                 ()=>{
+            //                     // this.newestArticle.total=data.total;
+            //                     this.newestArticle.result=data.list;
+            //                     this.pageOption.progressBar=false;
+            //                 },500)
+            //             // console.log(this.newestArticle);
+            //         }else{
+            //             console.log("search data item failed.")
+            //         }
+            //     }
+            //
+            // })
         },
 
-        addAwdHonorClick(){
+        // addAwdHonorClick(){
+        //
+        // },
 
-        },
+        // awdTimeClick(){
+        //     $('.panel').animate({height:'480px'},200);
+        // },
 
-        awdTimeClick(){
-            $('.panel').animate({height:'480px'},200);
-        },
-
-        awdfoldClick(){
-            this.clickCount++;
-            if(this.clickCount%2==0)
-                $('.panel').animate({height:'280px'},200);
-        },
+        // awdfoldClick(){
+        //     this.clickCount++;
+        //     if(this.clickCount%2==0)
+        //         $('.panel').animate({height:'280px'},200);
+        // },
 
         awardandHonorLoad(val) {
             this.awardandHonor.currentPage=val;
@@ -1891,29 +1945,29 @@ new Vue({
             const hrefs=window.location.href.split('/');
             var oid=hrefs[hrefs.length-1];
 
-            $.ajax({
-                data:{
-                    oid:oid
-                },
-                type:"GET",
-                url: "/lab/findByName",
-                async:true,
-                success:(json)=>{
-                    if(json.code==0){
-                        const data=json.data;
-                        setTimeout(
-                            ()=>{
-                                this.userLab.labInfo=data.lab;
-                                // this.userLab.leader=data.labLeader;
-                                this.userLab.members=data.labMembers;
-                                // this.pageOption.progressBar=false;
-                                // console.log(this.userLab.leader);
-                            },200)
-                    }else{
-                        console.log("search data item failed.")
-                    }
-                }
-            })
+            // $.ajax({
+            //     data:{
+            //         oid:oid
+            //     },
+            //     type:"GET",
+            //     url: "/lab/findByName",
+            //     async:true,
+            //     success:(json)=>{
+            //         if(json.code==0){
+            //             const data=json.data;
+            //             setTimeout(
+            //                 ()=>{
+            //                     this.userLab.labInfo=data.lab;
+            //                     // this.userLab.leader=data.labLeader;
+            //                     this.userLab.members=data.labMembers;
+            //                     // this.pageOption.progressBar=false;
+            //                     // console.log(this.userLab.leader);
+            //                 },200)
+            //         }else{
+            //             console.log("search data item failed.")
+            //         }
+            //     }
+            // })
         },
 
         addArticleClick(){
@@ -2186,7 +2240,7 @@ new Vue({
                 8:'/template/searchByNameByOid',
                 9:'/unit/searchByNameByOid',
                 10:'/dataApplication/searchByNameByOid',
-                11:'/dataItem/searchByNameByOid'
+                11:'/dataItem/itemsByNameAndAuthor'
 
             }
             let hrefs = window.location.href.split("/");
@@ -2473,103 +2527,103 @@ new Vue({
             }
         },
 
-        deleteEduExp(oid){
-            if (confirm("Are you sure to delete this item?")){
-                let data={
-                    oid:oid
-                };
-
-                $.ajax({
-                    type:"POST",
-                    url:'/educationExperience/deleteByOid',
-                    data:data,
-                    // contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    async: true,
-                    // dataType: "json",
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true,
-                    success: (json) => {
-                        if(json.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    window.location.href = "/user/login";
-                                }
-                            });
-                        }
-                        else{
-                            if(json.data==1){
-                                alert("delete successfully!")
-                                this.educationExperienceLoad(1);
-                            }
-                            else{
-                                alert("delete failed!")
-                            }
-                        }
-
-                    },
-                    error:(json)=>{
-                        // console.log(json);
-                    }
-
-
-
-                })
-            }
-        },
-
-        deleteAwdHonor(oid){
-            if (confirm("Are you sure to delete this item?")){
-                let data={
-                    oid:oid
-                };
-
-                $.ajax({
-                    type:"POST",
-                    url:'/awardandHonor/deleteByOid',
-                    data:data,
-                    // contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    async: true,
-                    // dataType: "json",
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true,
-                    success: (json) => {
-                        if(json.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    window.location.href = "/user/login";
-                                }
-                            });
-                        }
-                        else{
-                            if(json.data==1){
-                                alert("delete successfully!")
-                                this.awardandHonorLoad(1);
-                            }
-                            else{
-                                alert("delete failed!")
-                            }
-                        }
-
-                    },
-                    error:(json)=>{
-                        // console.log(json);
-                    }
-
-
-
-                })
-            }
-        },
+        // deleteEduExp(oid){
+        //     if (confirm("Are you sure to delete this item?")){
+        //         let data={
+        //             oid:oid
+        //         };
+        //
+        //         $.ajax({
+        //             type:"POST",
+        //             url:'/educationExperience/deleteByOid',
+        //             data:data,
+        //             // contentType: "application/json; charset=utf-8",
+        //             cache: false,
+        //             async: true,
+        //             // dataType: "json",
+        //             xhrFields: {
+        //                 withCredentials: true
+        //             },
+        //             crossDomain: true,
+        //             success: (json) => {
+        //                 if(json.code==-1) {
+        //                     this.$alert('Please login first!', 'Error', {
+        //                         type:"error",
+        //                         confirmButtonText: 'OK',
+        //                         callback: action => {
+        //                             window.location.href = "/user/login";
+        //                         }
+        //                     });
+        //                 }
+        //                 else{
+        //                     if(json.data==1){
+        //                         alert("delete successfully!")
+        //                         this.educationExperienceLoad(1);
+        //                     }
+        //                     else{
+        //                         alert("delete failed!")
+        //                     }
+        //                 }
+        //
+        //             },
+        //             error:(json)=>{
+        //                 // console.log(json);
+        //             }
+        //
+        //
+        //
+        //         })
+        //     }
+        // },
+        //
+        // deleteAwdHonor(oid){
+        //     if (confirm("Are you sure to delete this item?")){
+        //         let data={
+        //             oid:oid
+        //         };
+        //
+        //         $.ajax({
+        //             type:"POST",
+        //             url:'/awardandHonor/deleteByOid',
+        //             data:data,
+        //             // contentType: "application/json; charset=utf-8",
+        //             cache: false,
+        //             async: true,
+        //             // dataType: "json",
+        //             xhrFields: {
+        //                 withCredentials: true
+        //             },
+        //             crossDomain: true,
+        //             success: (json) => {
+        //                 if(json.code==-1) {
+        //                     this.$alert('Please login first!', 'Error', {
+        //                         type:"error",
+        //                         confirmButtonText: 'OK',
+        //                         callback: action => {
+        //                             window.location.href = "/user/login";
+        //                         }
+        //                     });
+        //                 }
+        //                 else{
+        //                     if(json.data==1){
+        //                         alert("delete successfully!")
+        //                         this.awardandHonorLoad(1);
+        //                     }
+        //                     else{
+        //                         alert("delete failed!")
+        //                     }
+        //                 }
+        //
+        //             },
+        //             error:(json)=>{
+        //                 // console.log(json);
+        //             }
+        //
+        //
+        //
+        //         })
+        //     }
+        // },
 
         articleAddToBack(){
             if(this.articleToBack.title.trim()==""||this.articleToBack.authors.length==0)
@@ -3010,71 +3064,71 @@ new Vue({
             })
         },
 
-        eduExperienceAddtoBack(){
-            if(this.eduExpAddToBack.institution.trim()==""||isNaN(this.eduExpAddToBack.startTime.getDate())||isNaN(this.eduExpAddToBack.endTime.getDate()))
-                alert("Please enter the Institution and Time.");
-            else
-            {
-                let obj=
-                    {
-                        institution:this.eduExpAddToBack.institution,
-                        department:this.eduExpAddToBack.department,
-                        academicDegree: this.eduExpAddToBack.acaDegree,
-                        startTime: this.eduExpAddToBack.startTime,
-                        endTime:this.eduExpAddToBack.endTime,
-                        eduLocation:this.eduExpAddToBack.location
-                    }
-                $.ajax({
-                    url: "/educationExperience/add",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(obj),
+        // eduExperienceAddtoBack(){
+        //     if(this.eduExpAddToBack.institution.trim()==""||isNaN(this.eduExpAddToBack.startTime.getDate())||isNaN(this.eduExpAddToBack.endTime.getDate()))
+        //         alert("Please enter the Institution and Time.");
+        //     else
+        //     {
+        //         let obj=
+        //             {
+        //                 institution:this.eduExpAddToBack.institution,
+        //                 department:this.eduExpAddToBack.department,
+        //                 academicDegree: this.eduExpAddToBack.acaDegree,
+        //                 startTime: this.eduExpAddToBack.startTime,
+        //                 endTime:this.eduExpAddToBack.endTime,
+        //                 eduLocation:this.eduExpAddToBack.location
+        //             }
+        //         $.ajax({
+        //             url: "/educationExperience/add",
+        //             type: "POST",
+        //             contentType: "application/json",
+        //             data: JSON.stringify(obj),
+        //
+        //             async:true,
+        //             success:(json)=>{
+        //                 if(json.code==0){
+        //                     alert("Save Success");
+        //                     this.educationExperienceLoad(1);
+        //                 }
+        //                 else alert("Add Error");//此处error信息不明确，记得后加
+        //             }
+        //
+        //         })
+        //         $("#editEduXpce").modal("hide");
+        //
+        //     }
+        //
+        // },
 
-                    async:true,
-                    success:(json)=>{
-                        if(json.code==0){
-                            alert("Save Success");
-                            this.educationExperienceLoad(1);
-                        }
-                        else alert("Add Error");//此处error信息不明确，记得后加
-                    }
-
-                })
-                $("#editEduXpce").modal("hide");
-
-            }
-
-        },
-
-        awdHonorAddtoBack(){
-            if(this.awdHonor.name.trim()==""||this.awdHonor.awardAgency.trim()=="")
-                alert("Please enter the award name and award agency.");
-            else{
-            var  obj={
-                name:this.awdHonor.name,
-                awardAgency:this.awdHonor.awardAgency,
-                awardTime:this.awdHonor.awardTime
-            };
-            $.ajax({
-                data:JSON.stringify(obj),
-                url:"/awardandHonor/add",
-                type:'POST',
-                async:true,
-                contentType: "application/json",
-                success:(json)=>{
-                    if(json.code==0){
-                        alert("Save Success");
-                        this.awardandHonorLoad(1);
-                    }
-                    else alert("Add Error");//此处error信息不明确，记得后加
-                }
-
-            })
-
-            $("#editAwdHonor").modal("hide");
-            }
-
-        },
+        // awdHonorAddtoBack(){
+        //     if(this.awdHonor.name.trim()==""||this.awdHonor.awardAgency.trim()=="")
+        //         alert("Please enter the award name and award agency.");
+        //     else{
+        //     var  obj={
+        //         name:this.awdHonor.name,
+        //         awardAgency:this.awdHonor.awardAgency,
+        //         awardTime:this.awdHonor.awardTime
+        //     };
+        //     $.ajax({
+        //         data:JSON.stringify(obj),
+        //         url:"/awardandHonor/add",
+        //         type:'POST',
+        //         async:true,
+        //         contentType: "application/json",
+        //         success:(json)=>{
+        //             if(json.code==0){
+        //                 alert("Save Success");
+        //                 this.awardandHonorLoad(1);
+        //             }
+        //             else alert("Add Error");//此处error信息不明确，记得后加
+        //         }
+        //
+        //     })
+        //
+        //     $("#editAwdHonor").modal("hide");
+        //     }
+        //
+        // },
 
         contactAddToBack(){
             var  obj={
@@ -3295,8 +3349,8 @@ new Vue({
         this.projectHandleCurrentChange(1);
         this.conferenceHandleCurrentChange(1);
         this.articleNewestLoad();
-        this.awardandHonorLoad(1);
-        this.educationExperienceLoad(1);
+        // this.awardandHonorLoad(1);
+        // this.educationExperienceLoad(1);
         this.labLoad();
 
     },

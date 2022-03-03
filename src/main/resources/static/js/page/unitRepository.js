@@ -286,18 +286,18 @@ new Vue({
             }
             query.searchText=data.searchText;
 
-            let url="";
-            if(query.searchText.trim()==""){
-                url=getUnitList();
-                query.categoryName = this.categoryName
-            }
-            else{
-                url="/repository/searchUnit";
-                this.classifications1=[""];
-                this.currentClass="ALL";
-                this.$refs.tree1.setCurrentKey(null);
-            }
-
+            let url=getUnitList();
+            // if(query.searchText.trim()==""){
+            //     url=getUnitList();
+            //     query.categoryName = this.categoryName
+            // }
+            // else{
+            //     url="/repository/searchUnit";
+            //     this.classifications1=[""];
+            //     this.currentClass="ALL";
+            //     this.$refs.tree1.setCurrentKey(null);
+            // }
+            query.categoryName = this.categoryName
             let sendDate = (new Date()).getTime();
             $.ajax({
                 type: "POST",

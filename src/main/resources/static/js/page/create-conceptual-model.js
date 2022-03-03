@@ -100,13 +100,13 @@ var createConceptualModel = Vue.extend({
                 sortType: "default",
                 classifications: ["all"],
             };
-            let url = "/modelItem/items";
-            let contentType = "application/x-www-form-urlencoded";
+            let url = getModelItemList()
+            let contentType = "application/json";
 
             $.ajax({
                 type: "POST",
                 url: url,
-                data: data,
+                data: JSON.stringify(data),
                 async: true,
                 contentType: contentType,
                 success: (json) => {

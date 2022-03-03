@@ -96,7 +96,7 @@ public class UserRestController {
             User userFromDb = userService.getByAccessId(accessId);
             JSONObject user = userService.getInfoFromUserServer(userFromDb.getEmail());
             JSONObject userInfo = (JSONObject) JSONObject.toJSON(user);
-            Object oid_obj = session.getAttribute("eid");
+            Object oid_obj = session.getAttribute("email");
             if(oid_obj!=null) {
                 String loginId = oid_obj.toString();
                 userInfo.put("loginId", loginId);
@@ -464,6 +464,10 @@ public class UserRestController {
 
     /**
      * 得到用户template
+     *
+     *
+     *
+     *
      * @param findDTO
      * @param request
      * @return njgis.opengms.portal.entity.doo.JsonResult
@@ -517,7 +521,7 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
     @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
-    public JsonResult getUserEditVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    public JsonResult getUserEditVersion(HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return versionService.getUserEditVersion(email);
@@ -527,7 +531,7 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
     @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
-    public JsonResult getUserReviewVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    public JsonResult getUserReviewVersion(HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return versionService.getUserReviewVersion(email);
