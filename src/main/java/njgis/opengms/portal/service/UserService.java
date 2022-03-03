@@ -3,12 +3,14 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.dao.FeedbackDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
 import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
 import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
+import njgis.opengms.portal.entity.po.Feedback;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
@@ -17,6 +19,7 @@ import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -69,6 +72,9 @@ public class UserService {
 
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    FeedbackDao feedbackDao;
 
     /**
      * @Description 用户相关条目计数 加一+++++
@@ -797,5 +803,142 @@ public class UserService {
 
 
     }
+
+    public JSONObject getFileByPathFromUserServer(List<String> paths, String email) throws Exception {
+        String token = tokenService.checkToken(email);
+        if(token.equals("out")){
+            return null;
+        }else{
+            JSONObject result = new JSONObject();
+
+            if(paths.get(0).equals("0")){
+                result = getUserResource(email);
+
+            }
+
+            try {
+                String pathStr = StringUtils.join(paths.toArray(),",");
+
+                String url = "http://" + userServer + "/auth/res/" + pathStr;
+
+                RestTemplate restTemplate = new RestTemplate();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authorization","Bearer " + token);
+                headers.set("user-agent","portal_backend");
+                HttpEntity<JSONObject> httpEntity = new HttpEntity<>(headers);
+                ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url,HttpMethod.GET, httpEntity, JSONObject.class);
+                result = responseEntity.getBody();
+
+                if(result.getInteger("code")!=0){
+                    return null;
+                }
+                JSONObject obj = new JSONObject();
+                obj.put("data", result.getJSONArray("data"));
+                return obj;
+            }catch (Exception e){
+                return null;
+            }
+
+        }
+
+
+    }
+
+    public String sendFeedback(String content, String email) {
+        Feedback feedback = new Feedback();
+        feedback.setContent(content);
+        feedback.setEmail(email);
+        Date now = new Date();
+        feedback.setTime(now);
+
+        feedbackDao.save(feedback);
+
+        return "success";
+    }
+
+
+    public String updateIntroduction(String introduction, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setIntroduction(introduction);
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updateOrganizations(List<String> organizations, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setOrganizations(organizations);
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updatelocation(String location, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setLocation(location);
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updateExternalLinks(List<String> externalLinks, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setExternalLinks(externalLinks);
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updateResearchInterest(List<String> researchInterests, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setResearchInterests(researchInterests);
+//                System.out.println(user.getResearchInterests());
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+    }
+
+
+
 
 }

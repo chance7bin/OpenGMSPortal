@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.user.UserInfoUpdateDTO;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.*;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * @Description 用户控制器
@@ -689,5 +691,58 @@ public class UserRestController {
         }
     }
 
+    @LoginRequired
+    @ApiOperation(value = "[ /user/getFileByPath ]")
+    @RequestMapping(value = "/fileByPath", method = RequestMethod.GET)
+    JsonResult getFileByPath(@RequestParam(value = "paths[]") List<String> paths, HttpServletRequest request) throws Exception {
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        JSONObject result = userService.getFileByPathFromUserServer(paths, email);
+
+        if(result == null){
+            return ResultUtils.error(-2, "err");
+        }
+
+        return ResultUtils.success(result);
+    }
+
+    @LoginRequired
+    @RequestMapping(value="/userSpace/sendFeedback",method = RequestMethod.POST)
+    JsonResult sendFeedback(@RequestParam("content") String content,  HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        String result = userService.sendFeedback(content,email);
+        return ResultUtils.success(result);
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/updateUserInfo",method = RequestMethod.POST)
+    JsonResult updateUserInfo(@RequestBody UserInfoUpdateDTO userInfoUpdateDTO, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        String email = session.getAttribute("email").toString();
+        String introduction = userInfoUpdateDTO.getIntroduction();
+//        String email = userInfoUpdateDTO.getEmail();
+        List<String> organizations = userInfoUpdateDTO.getOrganizations();
+        List<String> externalLinks = userInfoUpdateDTO.getExternalLinks();
+        String location = userInfoUpdateDTO.getLocation();
+        List<String> researchInterests = userInfoUpdateDTO.getResearchInterests();
+        String result1 = userService.updateIntroduction(introduction, email);
+        String result2 = userService.updateOrganizations(organizations,email);
+        String result3 = userService.updatelocation(location,email);
+        String result4 = userService.updateExternalLinks(externalLinks,email);
+        String result5 = userService.updateResearchInterest(researchInterests,email);
+//        String result5 = userService.updateEmail(email,userName);
+
+        JSONObject result = new JSONObject();
+        result.put("int", result1);
+        result.put("org", result2);
+        result.put("loc", result3);
+        result.put("exl", result4);
+        result.put("res", result5);
+//        result.put("ema", result5);
+        return ResultUtils.success(result);
+    }
 
 }

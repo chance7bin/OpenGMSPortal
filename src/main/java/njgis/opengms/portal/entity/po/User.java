@@ -109,4 +109,10 @@ public class User extends PortalIdPlus {
     TokenInfo tokenInfo = new TokenInfo();
 
     UserRoleEnum userRole;
+
+
+    // 从旧门户新加的
+    List<String> researchInterests;
+    String location;
+
 }
