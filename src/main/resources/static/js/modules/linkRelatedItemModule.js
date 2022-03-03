@@ -267,9 +267,9 @@ Vue.component("linkRelatedItemModule",
                 switch (this.relateItemType) {
                     case "dataItem":
                         if(scope=="all") {
-                            url = "/dataItem/searchByName";
+                            url = "/dataItem/list";
                         }else{
-                            url = "/dataItem/searchByNameAndAuthor";
+                            url = "/dataItem/listByAuthor";
                         }
                         data = {
                             page: data.page+1,

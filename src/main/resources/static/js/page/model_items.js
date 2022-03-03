@@ -5,7 +5,7 @@ new Vue({
     },
     data: function () {
         return {
-
+            categoryId: "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
             statistic:['Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview'],
             activeIndex: '2',
             queryType: 'normal',
@@ -14,7 +14,7 @@ new Vue({
             classifications_advance: [],//advance
             classifications_new: [],
 
-            currentClass:"a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
+            currentClass:"Land regions",
 
             pageOption: {
                 paginationShow:false,
@@ -796,9 +796,9 @@ new Vue({
             classes.push(data.oid);
             this.classifications_new = classes;
             //this.getChildren(data.children)
-            if(typeof(data.children) === 'undefined') {
-                this.currentClass = data.oid
-            }
+
+            this.categoryId = data.oid
+
             this.pageOption.currentPage=1;
             this.searchText="";
             this.classType = 2;
@@ -841,7 +841,7 @@ new Vue({
                 page: this.pageOption.currentPage - 1,
                 pageSize: this.pageOption.pageSize,
                 queryField: this.curQueryField,
-                categoryName:this.currentClass,
+                categoryName:this.categoryId,
             };
             switch (this.queryType) {
                 case "normal":
