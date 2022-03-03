@@ -167,8 +167,8 @@ public class ModelItemRestController {
      * @Date 2021/7/7
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
-    @RequestMapping(value = "/items", method = RequestMethod.POST)
-    public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
+    @RequestMapping(value = {"/items","/list"}, method = RequestMethod.POST)
+    public JsonResult queryList(SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
 
@@ -182,7 +182,7 @@ public class ModelItemRestController {
      * @Date 2021/7/7
      **/
     @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
-    @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
     public JsonResult queryListOfAuthor(ModelItemFindDTO modelItemFindDTO) {
 
         return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
@@ -198,7 +198,7 @@ public class ModelItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
-    @RequestMapping(value = "/queryListOfAuthorSelf", method = RequestMethod.GET)
+    @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(ModelItemFindDTO modelItemFindDTO) {
 
         return ResultUtils.success(modelItemService.query(modelItemFindDTO, true));
@@ -280,7 +280,7 @@ public class ModelItemRestController {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
-        return ResultUtils.success(modelItemService.getAlias(id));
+        return ResultUtils.success(modelItemService.getRelation(id,type));
     }
 
     @ApiOperation(value = "获取模型参考文献", notes = "@LoginRequired\n")

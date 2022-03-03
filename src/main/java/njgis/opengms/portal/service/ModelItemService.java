@@ -187,7 +187,7 @@ public class ModelItemService {
         JSONArray modelItemArray=new JSONArray();
         if(modelItems!=null) {
             for (int i = 0; i < modelItems.size(); i++) {
-                String idNew = modelItems.get(i).getId();
+                String idNew = modelItems.get(i).getModelId();
                 ModelItem modelItemNew = modelItemDao.findFirstById(idNew);
                 if (modelItemNew.getStatus().equals("Private")) {
                     continue;
@@ -344,6 +344,22 @@ public class ModelItemService {
 
         //TODO dataHubs dataMethod
 
+        JSONObject relationJson = new JSONObject();
+        relationJson.put("modelItems",modelItemArray);
+        relationJson.put("conceptualModels",conceptualArray);
+        relationJson.put("logicalModels",logicalArray);
+        relationJson.put("computableModels",computableArray);
+
+        relationJson.put("dataItems",dataItemArray);
+
+        relationJson.put("concepts",conceptArray);
+        relationJson.put("spatialReferences",spatialReferenceArray);
+        relationJson.put("templates",templateArray);
+        relationJson.put("units",unitArray);
+
+        relationJson.put("exLinks",exLinks);
+        relationJson.put("dataSpaceFiles",dataSpaceFiles);
+
 
         //用户信息
         JSONObject userJson = userService.getItemUserInfoByEmail(modelInfo.getAuthor());
@@ -398,17 +414,7 @@ public class ModelItemService {
         modelAndView.addObject("detail",detailResult);
         modelAndView.addObject("date",dateResult);
         modelAndView.addObject("year",calendar.get(Calendar.YEAR));
-        modelAndView.addObject("modelItems",modelItemArray);
-        modelAndView.addObject("conceptualModels",conceptualArray);
-        modelAndView.addObject("logicalModels",logicalArray);
-        modelAndView.addObject("computableModels",computableArray);
-        modelAndView.addObject("concepts",conceptArray);
-        modelAndView.addObject("spatialReferences",spatialReferenceArray);
-        modelAndView.addObject("templates",templateArray);
-        modelAndView.addObject("units",unitArray);
-        modelAndView.addObject("exLinks",exLinks);
-        modelAndView.addObject("dataSpaceFiles",dataSpaceFiles);
-        modelAndView.addObject("dataItems",dataItemArray);
+        modelAndView.addObject("relation",relationJson);
         modelAndView.addObject("user", userJson);
         modelAndView.addObject("authorship", authorshipString);
         modelAndView.addObject("lastModifier", modifierJson);
@@ -501,10 +507,10 @@ public class ModelItemService {
             //删除与之关联模型中的记录
             List<ModelRelation> relatedModelList=modelItem.getRelate().getModelRelationList();
             for(int i=0;i<relatedModelList.size();i++){
-                ModelItem modelItem1 = modelItemDao.findFirstById(relatedModelList.get(i).getId());
+                ModelItem modelItem1 = modelItemDao.findFirstById(relatedModelList.get(i).getModelId());
                 List<ModelRelation> relatedModelList1 = modelItem1.getRelate().getModelRelationList();
                 for(int j = 0;j<relatedModelList1.size();j++){
-                    if(relatedModelList1.get(j).getId().equals(modelItem.getId())){
+                    if(relatedModelList1.get(j).getModelId().equals(modelItem.getId())){
                         modelItem1.getRelate().getModelRelationList().remove(j);
                         modelItemDao.save(modelItem1);
                     }
@@ -945,7 +951,7 @@ public class ModelItemService {
         for(int i=0;i<reference_ids.size();i++) {
             Article article = articleDao.findFirstById(reference_ids.get(i));
             references.add(JSONObject.toJSONString(article));
-            System.out.println(references.get(i));
+//            System.out.println(references.get(i));
         }
         return references;
     }
@@ -962,10 +968,10 @@ public class ModelItemService {
         return null;
     }
 
-    public JSONArray getRelation(String oid,String type){
+    public JSONArray getRelation(String modelId,String type){
 
         JSONArray result=new JSONArray();
-        ModelItem modelItem=modelItemDao.findFirstById(oid);
+        ModelItem modelItem=modelItemDao.findFirstById(modelId);
         ModelItemRelate relation=modelItem.getRelate();
         List<String> list=new ArrayList<>();
 
@@ -979,7 +985,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item=new JSONObject();
-                        item.put("oid",dataItem.getId());
+                        item.put("id",dataItem.getId());
                         item.put("name",dataItem.getName());
                         User user=userDao.findFirstByEmail(dataItem.getAuthor());
                         item.put("author_name",user.getName());
@@ -992,7 +998,7 @@ public class ModelItemService {
                 List<ModelRelation> modelRelationList = relation.getModelRelationList();
                 if (modelRelationList != null) {
                     for (ModelRelation modelRelation : modelRelationList) {
-                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getId());
+                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
                         if (modelItem1.getStatus().equals("Private")) {
                             continue;
                         }
@@ -1032,7 +1038,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item = new JSONObject();
-                        item.put("oid", logicalModel.getId());
+                        item.put("id", logicalModel.getId());
                         item.put("name", logicalModel.getName());
                         item.put("author_name", userDao.findFirstByEmail(logicalModel.getAuthor()).getName());
                         item.put("author_email", logicalModel.getAuthor());
@@ -1049,7 +1055,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item = new JSONObject();
-                        item.put("oid", computableModel.getId());
+                        item.put("id", computableModel.getId());
                         item.put("name", computableModel.getName());
                         item.put("author_name", userDao.findFirstByEmail(computableModel.getAuthor()).getName());
                         item.put("author_email", computableModel.getAuthor());
@@ -1066,7 +1072,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item = new JSONObject();
-                        item.put("oid", concept.getId());
+                        item.put("id", concept.getId());
                         item.put("name", concept.getName());
                         item.put("author_name", userDao.findFirstByEmail(concept.getAuthor()).getName());
                         item.put("author_email", concept.getAuthor());
@@ -1083,7 +1089,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item = new JSONObject();
-                        item.put("oid", spatialReference.getId());
+                        item.put("id", spatialReference.getId());
                         item.put("name", spatialReference.getName());
                         item.put("author_name", userDao.findFirstByEmail(spatialReference.getAuthor()).getName());
                         item.put("author_email", spatialReference.getAuthor());
@@ -1100,7 +1106,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item = new JSONObject();
-                        item.put("oid", template.getId());
+                        item.put("id", template.getId());
                         item.put("name", template.getName());
                         item.put("author_name", userDao.findFirstByEmail(template.getAuthor()).getName());
                         item.put("author_email", template.getAuthor());
@@ -1117,7 +1123,7 @@ public class ModelItemService {
                             continue;
                         }
                         JSONObject item = new JSONObject();
-                        item.put("oid", unit.getId());
+                        item.put("id", unit.getId());
                         item.put("name", unit.getName());
                         item.put("author_name", userDao.findFirstByEmail(unit.getAuthor()).getName());
                         item.put("author_email", unit.getAuthor());

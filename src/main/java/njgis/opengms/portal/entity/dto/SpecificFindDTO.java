@@ -1,7 +1,9 @@
 package njgis.opengms.portal.entity.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Description 查询条件对象
@@ -10,6 +12,8 @@ import lombok.Data;
  * @Version 1.0.0
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SpecificFindDTO extends FindDTO {
     @ApiModelProperty(value = "目录分类", example = "specific uuid")
     private String categoryName; //目录分类

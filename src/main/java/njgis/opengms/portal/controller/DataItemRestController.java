@@ -315,7 +315,7 @@ public class DataItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "得到用户上传的data item [ /dataItem/searchByNameAndAuthor[searchByNameByOid/searchDataByUserId] ]")
-    @RequestMapping(value="/itemsByNameAndAuthor",method = RequestMethod.POST)
+    @RequestMapping(value={"/itemsByNameAndAuthor","/listByAuthor"},method = RequestMethod.GET)
     public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
         HttpSession session=request.getSession();
         String email=session.getAttribute("email").toString();
