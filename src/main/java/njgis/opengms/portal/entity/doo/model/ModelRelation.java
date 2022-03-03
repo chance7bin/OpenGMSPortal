@@ -10,6 +10,6 @@ import njgis.opengms.portal.enums.RelationTypeEnum;
 @NoArgsConstructor
 public class ModelRelation {
 
-    String id;
+    String modelId;
     RelationTypeEnum relation;
 }

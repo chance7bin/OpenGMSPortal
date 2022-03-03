@@ -122,6 +122,10 @@ public class GenericService {
      **/
     public JSONObject searchItems(SpecificFindDTO findDTO, ItemTypeEnum type){
 
+        if(findDTO.getSortField().equals("default")){
+            findDTO.setSortField("name");
+        }
+
         JSONObject jsonObject = searchDBItems(findDTO, type, itemStatusVisible);
 
 
@@ -154,7 +158,7 @@ public class GenericService {
             //把查询到的结果放在try中,如果按照之前return null的话前端页面会加载不出来，所以如果查询报错的话那allPortalItem大小就为0
             allPortalItem = itemsPage.getContent();
             totalElements = (int) itemsPage.getTotalElements();
-        } catch (MyException err) {
+        } catch (Exception err) {
             log.error(String.valueOf(err));
             allPortalItem = new ArrayList<>();
             // TODO 查询数据库出错要做什么处理
@@ -164,9 +168,6 @@ public class GenericService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("allPortalItem",allPortalItem);
         jsonObject.put("totalElements",totalElements);
-
-
-
 
         return jsonObject;
     }
@@ -383,14 +384,14 @@ public class GenericService {
         List<String> classifications = new ArrayList<>();
 
         // 构建classifications集合,如果没有childrenId则表示只查询一个分类条目，有的话表示有多个分类条目
-        if (categoryName != null && !categoryName.equals(""))
+        if (categoryName != null && !categoryName.equals("ALL") && !categoryName.equals(""))
             classifications = buildClassifications(categoryName, genericCategoryDao);
 
         Page result;
         try {
             // Object categoryById = genericCategoryDao.findFirstById(categoryName);
             // categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
-            if(categoryName == null || categoryName.equals("")) {          // 不分类的情况
+            if(categoryName == null || categoryName.equals("ALL") || categoryName.equals("")) {          // 不分类的情况
                 if(searchText.equals("")){
                     result = genericItemDao.findAllByStatusIn(visible,pageable);
                     // result = genericItemDao.findAll(pageable);

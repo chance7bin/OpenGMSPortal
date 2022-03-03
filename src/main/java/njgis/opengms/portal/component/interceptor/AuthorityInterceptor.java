@@ -50,8 +50,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (methodAnnotation != null) {
             // 这写你拦截需要干的事儿，比如取缓存，SESSION，权限判断等
             if (userOid_obj==null){
-                //若未登录，则记录用户试图访问的接口，在登录后自动请求
-                session.setAttribute("preUrl",request.getRequestURI());
 
                 // 判断拦截的方法返回值是什么，如果是JsonResult返回JSON，如果是ModelAndView跳转到login页面
                 if (name.equals("JsonResult")){
@@ -62,6 +60,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                     returnJson(response,jsonObject.toJSONString());
                 }
                 else {
+                    //若未登录，则记录用户试图访问的接口，在登录后自动请求
+                    session.setAttribute("preUrl",request.getRequestURI());
                     response.sendRedirect("/user/login");
                 }
                 return false;
