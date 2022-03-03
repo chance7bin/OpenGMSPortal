@@ -206,7 +206,7 @@
                         <el-tooltip class="item" effect="dark" content="Research Interests" placement="top-start" >
                             <i class="el-icon-star-on"></i>
                         </el-tooltip>
-                        <el-input id="researchInterestInput" size="mini"   style="margin-left: 5px">
+                        <el-input id="researchInterestInput" size="mini"  placeholder="Research Interests"  style="margin-left: 5px">
                         </el-input>
                     </div>
                     <div class="websiteEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
@@ -774,7 +774,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="dataHub.name" placement="bottom-end">
-                                                                        <a :href="'/dataItem/hub/'+ dataHub.id" target="_blank">
+                                                                        <a :href="'/dataHub/detail/'+ dataHub.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataHub.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -787,7 +787,8 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataHub/'+ dataHub.oid" target="_blank">
+
+                                                                    <a class="img" :href="'/dataHub/detail/'+ dataHub.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="dataItem.image==''||dataItem.image==null"  :username="dataItem.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
                                                                         <img v-if="dataHub.image!=''&&dataHub.image!=null" :src="'/static'+dataHub.image" onerror=src="../static/img/model/myData.png"
@@ -890,7 +891,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="dataMethod.name" placement="bottom-end">
-                                                                        <a :href="'/dataApplication/'+dataMethod.oid" target="_blank">
+                                                                        <a :href="'/dataMethod/detail'+dataMethod.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataMethod.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -903,7 +904,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataApplication/'+ dataMethod.oid" target="_blank">
+                                                                    <a class="img" :href="'/dataMethod/'+ dataMethod.id" target="_blank">
                                                                         <!--                                                                        <i class="fa fa-database" style="font-size: 66px; color: rgb(0, 192, 255); font-weight: 600; margin-bottom: 5px;"></i>-->
                                                                         <img v-if="dataMethod.image!=''&&dataMethod.image!=null" :src="'/static'+dataMethod.image"
                                                                              style="width:100px;height: 100px;">
@@ -991,7 +992,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="dataItem.name" placement="bottom-end">
-                                                                        <a :href="'/dataItem/'+ dataItem.id" target="_blank">
+                                                                        <a :href="'/dataItem/detail/'+ dataItem.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataItem.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -1004,7 +1005,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataItem/'+ dataItem.oid" target="_blank">
+                                                                    <a class="img" :href="'/dataItem/detail/'+ dataItem.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="dataItem.image==''||dataItem.image==null"  :username="dataItem.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
                                                                         <img v-if="dataItem.image!=''&&dataItem.image!=null" :src="'/static'+dataItem.image"
@@ -1072,9 +1073,9 @@
                         </el-tab-pane>
                         <el-tab-pane label="Community" name="Community">
                              <span slot="label">
-<!--                                <i class="el-icon-s-order" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>-->
-                                 <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"
-                                    style="font-size: 18px;color: rgb(5, 196, 255);margin: 4px;font-weight: 400;position: relative;top: 2px;"></i>
+                                 <i class="el-icon-s-opportunity" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
+                                 <!--                                 <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"-->
+<!--                                    style="font-size: 18px;color: rgb(5, 196, 255);margin: 4px;font-weight: 400;position: relative;top: 2px;"></i>-->
                                 <span>Community</span>
                             </span>
                             <div class="defaultTabs Community-tabs deleteBorder">
