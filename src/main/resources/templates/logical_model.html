@@ -125,7 +125,7 @@
                         <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
                                     Marvolo Riddle</h4></a>
                             </div>
                         </div>
@@ -224,23 +224,24 @@
                 </div>
             </div>
 
-            <div id="description" class="detail_block" th:if="${modelInfo.detail!=null&&modelInfo.detail!=''}">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Detailed Description</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div th:utext="${modelInfo.detail}" id="detail" class="detailIntroducePanel">
-                    </div>
-                </div>
-                <div class="fullPaper text-center hide">
-                    <a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i
-                            class="fa fa-angle-down"
-                            style="margin-left: 10px;color:red;font-weight: bold"
-                            aria-hidden="true"></i></a>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: description"></div>
+            <!--<div id="description" class="detail_block" th:if="${modelInfo.detail!=null&&modelInfo.detail!=''}">-->
+                <!--<div class="block_head">-->
+                    <!--<div class="head_text">-->
+                        <!--<h4>Detailed Description</h4>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="block_content">-->
+                    <!--<div th:utext="${modelInfo.detail}" id="detail" class="detailIntroducePanel">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="fullPaper text-center hide">-->
+                    <!--<a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i-->
+                            <!--class="fa fa-angle-down"-->
+                            <!--style="margin-left: 10px;color:red;font-weight: bold"-->
+                            <!--aria-hidden="true"></i></a>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <div id="related_models" class="detail_block">
                 <div class="block_head">
@@ -326,7 +327,7 @@
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
                                 <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
@@ -377,7 +378,7 @@
                         <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
                         <div class="el-col">
                             <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.userId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
+                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
                                     Marvolo Riddle</h4></a>
                             </div>
                         </div>
@@ -447,7 +448,7 @@
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
                                 <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.userId}"
+                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>

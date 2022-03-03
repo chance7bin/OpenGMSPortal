@@ -1,0 +1,15 @@
+{
+  "en-us": {
+    "PageName": "Server Nodes",
+    "PageIntro":"OpenGMS's server nodes in the world.",
+    "Contribute": "+ Contribute"
+
+
+  },
+  "zh-cn": {
+    "PageName": "服务节点",
+    "PageIntro": "OpenGMS在世界范围内的服务器节点分布",
+    "Contribute": "+ 添加"
+  }
+
+}

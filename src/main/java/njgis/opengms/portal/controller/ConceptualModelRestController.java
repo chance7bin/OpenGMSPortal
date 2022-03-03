@@ -35,7 +35,7 @@ import java.util.List;
  * @Version 1.0.0
  */
 @RestController
-@RequestMapping(value = "/conceptModel")
+@RequestMapping(value = "/conceptualModel")
 public class ConceptualModelRestController {
 
     @Autowired
@@ -90,7 +90,7 @@ public class ConceptualModelRestController {
         JSONObject jsonObject=JSONObject.parseObject(model);
 
         HttpSession session=request.getSession();
-        String email=session.getAttribute("uid").toString();
+        String email=session.getAttribute("email").toString();
 
         JSONObject result=conceptualModelService.insert(files,jsonObject,email);
 

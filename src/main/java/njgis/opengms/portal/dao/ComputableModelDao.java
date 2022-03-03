@@ -18,4 +18,6 @@ public interface ComputableModelDao  extends MongoRepository<ComputableModel,Str
 
     ComputableModel findFirstByMd5(String md5);
 
+    ComputableModel findFirstById(String id);
+
 }

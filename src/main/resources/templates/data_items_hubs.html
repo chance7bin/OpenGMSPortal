@@ -138,7 +138,7 @@
                                         :value="qf">
                                 </el-option>
                             </el-select>
-                            <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">{{htmlJSON.SearchHolding}}</el-button>
+                            <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">{{htmlJSON.Search}}</el-button>
                         </el-input>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                                     <!---->
                                 </div>
                                 <div class="detail_overview">
-                                    <a class="img" :href="'/dataHub/detail/'+ item.id" target="_blank">
+                                    <a class="img" :href="'/dataHub/'+ item.id" target="_blank">
                                         <avatar  :username="item.name" :size="90"
                                                  :rounded="false"></avatar>
                                     </a>

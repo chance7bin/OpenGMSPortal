@@ -31,11 +31,13 @@ Vue.component("comments",
             //comment
             loadUser(){
                 $.get("/user/load",{},(result)=>{
-                    let data = result.data
-                    if(data.email != "") {
-                        this.comment_userId = data.accessId;
-                        this.comment_userImg = data.avatar;
-                        this.comment_userOid = data.accessId;
+                    if(result.code == 0) {
+                        let data = result.data
+                        if (data.email != "") {
+                            this.comment_userId = data.accessId;
+                            this.comment_userImg = data.avatar;
+                            this.comment_userOid = data.accessId;
+                        }
                     }
                 })
             },

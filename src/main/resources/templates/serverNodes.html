@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="/static/css/page/model_items.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
     <style>
         .el-card__body a:hover {
             color: #0886E9;
@@ -43,11 +46,18 @@
         <div class="el-col el-col-20 el-col-offset-2">
 
             <div class="el-row">
-                <h2 class="main-title">Server Nodes</h2>
-                <h4 class="sub-title">OpenGMS's server nodes in the world.</h4>
+                <h2 class="main-title">{{htmlJSON.PageName}}</h2>
+                <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
                 <button id="contributeBtn"  class="btn btn-success btn-lg" style="font-size: 15px;margin-left:10px;vertical-align: baseline;"
-                        onclick="window.open('/user/userSpace#/server')">+ Contribute
+                        onclick="window.open('/user/userSpace#/server')">{{htmlJSON.Contribute}}
                 </button>
+                <translation-bar
+                        json-file="serverNodes"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px">
+                </translation-bar>
                 <hr>
             </div>
             <div class="el-row" style="margin-top:20px;font-size: 20px">
@@ -82,13 +92,22 @@
 <script src="/static/js/common/echarts.min.js"></script>
 <script src="/static/js/common/world.js"></script>
 
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script>
     new Vue({
         el: "#app",
         data: {
             activeName: 'overview',
+            htmlJSON:{}
         },
         methods: {
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent
+            },
+
             handleClick(tab, event) {
                 console.log(tab);
                 if(tab.name=="server"){
@@ -560,6 +579,9 @@
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/js/common/bootstrap.js"></script>
 <script src="/static/element-ui/umd/locale/en.js"></script>
+
+
+
 
 <script src="/static/js/common/navbar.js"></script>
 

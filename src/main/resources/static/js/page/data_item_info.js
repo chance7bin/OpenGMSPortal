@@ -119,10 +119,14 @@ var  data_item_info = new Vue({
             authorshipFormVisible:false,
             invokeServices:[],
 
+            htmlJSON:{}
         }
 
     } ,
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
 
         feedBack(){
             $.get("/user/load",{},(result)=>{

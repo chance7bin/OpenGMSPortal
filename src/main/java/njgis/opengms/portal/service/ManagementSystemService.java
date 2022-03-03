@@ -8,7 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Sorts;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.UserDailyViewCount;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
@@ -845,8 +845,9 @@ public class ManagementSystemService {
     public String getComputableModelNameByMd5(String md5){
 
         ComputableModel model = computableModelDao.findFirstByMd5(md5);
+        if (model==null)
+            return "";
         return model.getName();
-
     }
 
 

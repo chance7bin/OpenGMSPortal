@@ -143,7 +143,7 @@ public class DataHubController
      * @return org.springframework.web.servlet.ModelAndView
      **/
     @ApiOperation(value = "根据id返回详情界面 [ /dataItem/hub/{id} ]")
-    @RequestMapping (value = "/detail/{id}", method = RequestMethod.GET)
+    @RequestMapping (value = "/{id}", method = RequestMethod.GET)
     public ModelAndView getHub(@PathVariable("id") String id) throws IOException, URISyntaxException, DocumentException {
         return dataItemService.getPage(id, dataHubDao);
     }
@@ -161,7 +161,7 @@ public class DataHubController
     @RequestMapping(value="/itemInfo/{id}",method = RequestMethod.GET)
     public JsonResult getDataHubsByDataId(@PathVariable(value="id") String id){
         // HttpSession session = request.getSession();
-        // if(session.getAttribute("uid")==null){
+        // if(session.getAttribute("email")==null){
         //     return ResultUtils.error(-1,"no login");
         // }
         // else

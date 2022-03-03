@@ -7,6 +7,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.RelatedModelInfoDTO;
@@ -14,6 +15,7 @@ import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +47,12 @@ public class GenericService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    ConceptualModelDao conceptualModelDao;
+
+    @Autowired
+    LogicalModelDao logicalModelDao;
 
     @Autowired
     DataHubDao dataHubDao;
@@ -228,7 +236,11 @@ public class GenericService {
                 jsonObject.put("createTime", simpleDateFormat.format(portalItem.getCreateTime()));
             }
             jsonObject.put("name",portalItem.getName());
-            jsonObject.put("image",htmlLoadPath+portalItem.getImage());
+            String imageStr = portalItem.getImage();
+            if(imageStr!=null&&!imageStr.trim().equals("")){
+                imageStr = htmlLoadPath+portalItem.getImage();
+            }
+            jsonObject.put("image",imageStr);
             jsonObject.put("keywords", portalItem.getKeywords());
             jsonObject.put("description",portalItem.getOverview());
             // jsonObject.put("type",portalItem.getType());
@@ -264,6 +276,16 @@ public class GenericService {
         switch (type){
             case ModelItem:{
                 daoUtils.put("itemDao",modelItemDao);
+                daoUtils.put("classificationDao",classificationDao);
+                break;
+            }
+            case ConceptualModel:{
+                daoUtils.put("itemDao",conceptualModelDao);
+                daoUtils.put("classificationDao",classificationDao);
+                break;
+            }
+            case LogicalModel:{
+                daoUtils.put("itemDao",logicalModelDao);
                 daoUtils.put("classificationDao",classificationDao);
                 break;
             }
@@ -622,9 +644,13 @@ public class GenericService {
         for(int i = 0;i<relatedModelItems.size();i++){
             String relatedModelItemId = relatedModelItems.get(i);
             ModelItem modelItem=modelItemDao.findFirstById(relatedModelItemId);
+            if(modelItem==null) continue;
             RelatedModelInfoDTO relatedModelInfoDTO = new RelatedModelInfoDTO();
             relatedModelInfoDTO.setName(modelItem.getName());
             relatedModelInfoDTO.setId(modelItem.getId());
+            relatedModelInfoDTO.setImg(htmlLoadPath+modelItem.getImage());
+            relatedModelInfoDTO.setDescription(modelItem.getOverview());
+
             relatedModelInfoDTOList.add(relatedModelInfoDTO);
         }
         return relatedModelInfoDTOList;
@@ -703,7 +729,11 @@ public class GenericService {
 
         //如果用户是管理员，则放行
         User user = userDao.findFirstByEmail(email);
-        if(user != null && user.getUserRole().isAdmin()){
+        UserRoleEnum userRole = null;
+        if(user != null) {
+            userRole = user.getUserRole();
+        }
+        if(userRole != null && userRole.isAdmin()){
             return null;
         }
         //判断条目是否私有，是否属于该用户

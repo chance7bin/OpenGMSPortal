@@ -63,46 +63,46 @@
 <!--                                    <img :src="(userInfo.avatar==''||userInfo.avatar==undefined)?'/static/img/icon/default.png':userInfo.avatar">-->
                                     <user-avatar :email="userInfo.email" ref="userAvatar" style="width:105px;height: 105px;float:left;"></user-avatar>
                                 </div>
-                                <h4>Welcome, <a :href="'/profile/'+userInfo.userId">{{userInfo.name}}</a></h4>
+                                <h4>{{htmlJson.Welcome}}, <a :href="'/profile/'+userInfo.userId">{{userInfo.name}}</a></h4>
                             </section>
                             <section class="flexRowContainer flexWrap contentSection">
                                 <div class="contentCard flexCol flexColCenter" style="height: 450px">
                                     <div v-cloak class="col-md-12">
 
                                         <div class="panel-body ">
-                                            <h4 style="margin-left: -5px">Personal Infomation</h4>
+                                            <h4 style="margin-left: -5px">{{htmlJson.PersonalInformation}}</h4>
                                             <ul class="p-info wzhScrollbar" style="overflow: auto;height: 250px;">
                                                 <li>
-                                                    <div class="title"><h5>Name</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Name}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.name}}</h5></div>
                                                 </li>
                                                 <li>
-                                                    <div class="title"><h5>Email</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Email}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.email}}</h5></div>
                                                 </li>
                                                 <li v-if="userInfo.title!=undefined&&userInfo.title!=''">
-                                                    <div class="title"><h5>Title</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Title}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.title}}</h5></div>
                                                 </li>
                                                 <li v-if="userInfo.phone!=undefined&&userInfo.phone!=''">
-                                                    <div class="title"><h5>Phone</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Phone}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.phone}}</h5></div>
                                                 </li>
                                                 <li v-if="userInfo.homepage!=undefined&&userInfo.homepage!=''">
-                                                    <div class="title"><h5>Home Page</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.HomePage}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.homepage}}</h5></div>
                                                 </li>
                                                 <li v-if="userInfo.orgStr!=undefined&&userInfo.orgStr!=''">
-                                                    <div class="title"><h5>Organizations</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Organizations}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.orgStr}}</h5></div>
                                                 </li>
 
                                                 <li v-if="userInfo.saStr!=undefined&&userInfo.saStr!=''">
-                                                    <div class="title"><h5>Domain</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Domain}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.saStr}}</h5></div>
                                                 </li>
                                                 <li v-if="userInfo.introduction!=undefined&&userInfo.introduction!=''">
-                                                    <div class="title"><h5>Introduction</h5></div>
+                                                    <div class="title"><h5>{{htmlJson.Introduction}}</h5></div>
                                                     <div class="desk"><h5>{{userInfo.introduction}}</h5></div>
                                                 </li>
                                             </ul>
@@ -116,14 +116,14 @@
                                             <button id="edit"
                                                     class="btn btn-noShadow btn-info btn-round btn-block btn-lg"
                                                     style="text-transform: capitalize;font-size: 16px"
-                                                    @click="editUserInfo">Edit Infomation
+                                                    @click="editUserInfo">{{htmlJson.EditInformation}}
                                             </button>
                                             <br/>
                                             <button id="changePass"
                                                     class="btn btn-noShadow btn-default btn-round btn-block btn-lg"
                                                     @click="changePassword"
                                                     style="color: #fff;text-transform: capitalize;font-size: 16px">
-                                                Change Password
+                                                {{htmlJson.ChangePassword}}
                                             </button>
                                         </div>
                                     </div>
@@ -133,12 +133,12 @@
                                     <div v-cloak class="col-md-12" style="width:100%">
 
                                         <div class="panel-body">
-                                            <h4 style="margin-left: -5px">Setting</h4>
+                                            <h4 style="margin-left: -5px">{{htmlJson.Setting}}</h4>
 
                                             <ul class="p-info">
                                                 <li style="margin-top:15px;text-align: center">
                                                     <div class="title">
-                                                        <h5>Subscribe</h5>
+                                                        <h5>{{htmlJson.Subscribe}}</h5>
                                                     </div>
                                                     <div class="desk">
                                                         <el-switch
@@ -149,15 +149,14 @@
                                                                 @change="setSubscribe()">
                                                         </el-switch>
                                                     </div>
-                                                    <el-tag type="info" style="margin-top: 10px">Whether receive reports of your resources
-                                                        from OpenGMS.
+                                                    <el-tag type="info" style="margin-top: 10px">{{htmlJson.SubscribeInfo}}
                                                     </el-tag>
 
                                                     <div v-if="subscribe">
                                                         <div style="margin-top:30px">
-                                                            <h5 style="display: inline;margin-right:20px">Subscribed Computable Model</h5>
+                                                            <h5 style="display: inline;margin-right:20px">{{htmlJson.SubModel}}</h5>
                                                             <el-button type="primary" size="mini"
-                                                                       @click="editSubscribedList" round>Edit
+                                                                       @click="editSubscribedList" round>{{htmlJson.Edit}}
                                                             </el-button>
                                                         </div>
                                                         <div style="width: 100%;height:230px;overflow: auto">

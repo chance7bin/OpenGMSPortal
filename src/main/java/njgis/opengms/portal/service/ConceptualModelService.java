@@ -98,6 +98,42 @@ public class ConceptualModelService {
 
         conceptualModelDao.save(conceptualModelInfo);
 
+        //排序
+        List<Localization> locals = conceptualModelInfo.getLocalizationList();
+        Collections.sort(locals);
+
+        String detailResult = "";
+        String detailLanguage = "";
+        //先找中英文描述
+        for(Localization localization:locals){
+            String local = localization.getLocalCode();
+            if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
+                }
+            }
+        }
+        //如果没有中英文，则使用其他语言描述
+        if(detailResult.equals("")){
+            for(Localization localization:locals){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
+                }
+            }
+        }
+
+        //语言列表
+        List<String> languageList = new ArrayList<>();
+        for(Localization local:locals){
+            languageList.add(local.getLocalName());
+        }
+
         //时间
         Date date = conceptualModelInfo.getCreateTime();
         Calendar calendar = Calendar.getInstance();
@@ -139,7 +175,9 @@ public class ConceptualModelService {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("conceptual_model");
-        modelAndView.addObject("modelInfo", conceptualModelInfo);
+        modelAndView.addObject("itemInfo", conceptualModelInfo);
+        modelAndView.addObject("detailLanguage",detailLanguage);
+        modelAndView.addObject("languageList", languageList);
         modelAndView.addObject("date", dateResult);
         modelAndView.addObject("year", calendar.get(Calendar.YEAR));
         modelAndView.addObject("user", userJson);

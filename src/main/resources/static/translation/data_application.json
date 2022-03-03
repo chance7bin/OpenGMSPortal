@@ -1,0 +1,41 @@
+{
+  "en-us": {
+    "PageName": "Data Application",
+    "PageIntro":"The application of data",
+
+    "UnderConstruction": "Under Construction...",
+
+    "Processing": "Processing",
+    "Processing_info1": "You can view the existing processing services and invoke them.",
+    "Processing_info2": "Choose what you need to invoke!",
+
+    "Visualization": "Visualization",
+    "Visualization_info1": "You can view the existing visualization services and invoke them.",
+    "Visualization_info2": "Choose what you need to invoke!",
+
+    "Integration": "Integration",
+    "Integration_info1": "You can view the existing Integrate services and invoke them.",
+    "Integration_info2": "Choose what you need to invoke!"
+
+
+  },
+  "zh-cn": {
+    "PageName": "数据应用",
+    "PageIntro":"数据应用",
+
+    "UnderConstruction": "正在建设中...",
+
+    "Processing": "数据处理",
+    "Processing_info1": "你可以浏览仓库中存在的数据处理服务并调用它们",
+    "Processing_info2": "选择你需要的服务并执行！",
+
+    "Visualization": "数据可视化",
+    "Visualization_info1": "你可以浏览仓库中存在的数据可视化服务并调用它们",
+    "Visualization_info2": "选择你需要的服务并执行！",
+
+    "Integration": "集成",
+    "Integration_info1": "你可以浏览仓库中存在的数据集成服务并调用它们",
+    "Integration_info2": "选择你需要的服务并执行！"
+
+  }
+}

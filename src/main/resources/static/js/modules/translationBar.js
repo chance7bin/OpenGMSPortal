@@ -39,7 +39,7 @@ Vue.component("translation-bar",
             },
 
             async getLangJson(jsonFile){
-                let path = "../static/translation/"+jsonFile+".json"
+                let path = "/static/translation/"+jsonFile+".json"
                 let result
                 $.ajax({
                     url:path,
@@ -88,12 +88,15 @@ Vue.component("translation-bar",
                     this.transLateTargetPage()
                     this.loadNavBar()
                     this.loadFooter()
+                    this.loadComment()
                 }
             },
 
             async loadNavBar(){//需要加载navbar的网页触发翻译
                 let content = await this.getLangJson('navbar')
                 let scopeDom = document.getElementById("navBar")
+
+                //导航栏community英汉间距改变 --- add by wyjq
                 let communityDom=document.getElementById("drop1")
                 if(this.currentLang==="zh-cn"){
                     communityDom.style.width="77px"
@@ -109,6 +112,13 @@ Vue.component("translation-bar",
                 let scopeDom = document.getElementById("footer")
                 this.defautTrans(content,scopeDom)
             },
+
+            async loadComment(){//需要加载评论区的页面触发翻译 --- add by wyjq
+                let content = await this.getLangJson('comment')
+                let scopeDom = document.getElementById("comment")
+                this.defautTrans(content,scopeDom)
+            },
+
 
             defautTrans(content,scopeDom){
                 content = content[this.currentLang]

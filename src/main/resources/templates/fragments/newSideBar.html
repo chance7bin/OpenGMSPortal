@@ -75,7 +75,7 @@
                                  @click="changeRter(1)">
                                 <div class="flexRow flexColCenter">
                                     <i class="el-icon-location" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
-                                    <p>Home</p>
+                                    <p>{{htmlJson.Home}}</p>
                                 </div>
                             </div>
                         </li>
@@ -84,7 +84,7 @@
                                  @click="changeRter(2)">
                                 <div class="flexRow flexColCenter">
                                     <img class="squareMini" src="/static/img/model/model.png">
-                                    <p>Model</p>
+                                    <p>{{htmlJson.Model}}</p>
                                 </div>
 
                             </div>
@@ -94,7 +94,7 @@
                                  @click="changeRter(3)">
                                 <div class="flexRow flexColCenter">
                                     <i class="fa fa-database" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
-                                    <p>Data</p>
+                                    <p>{{htmlJson.Data}}</p>
                                 </div>
 
                             </div>
@@ -104,7 +104,7 @@
                                  @click="changeRter(4)">
                                 <div class="flexRow flexColCenter">
                                     <img class="squareMini" src="/static/img/model/server.png">
-                                    <p>Server</p>
+                                    <p>{{htmlJson.Server}}</p>
                                 </div>
                             </div>
                         </li>
@@ -113,7 +113,7 @@
                                  @click="changeRter(5)">
                                 <div class="flexRow flexColCenter">
                                     <i class="el-icon-s-tools" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
-                                    <p>Task</p>
+                                    <p>{{htmlJson.Task}}</p>
                                 </div>
                             </div>
                         </li>
@@ -123,7 +123,7 @@
                                 <div class="flexRow flexColCenter">
                                     <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"
                                        style="font-size: 18px;font-weight: 600; color: #05c4ff;margin: 4px;"></i>
-                                    <p>Community</p>
+                                    <p>{{htmlJson.Community}}</p>
                                 </div>
                             </div>
                         </li>
@@ -132,7 +132,7 @@
                                  @click="changeRter(7)">
                                 <div class="flexRow flexColCenter">
                                     <i class="el-icon-s-order" style="font-size: 18px;color: #05c4ff;margin: 4px;"></i>
-                                    <p>Theme</p>
+                                    <p>{{htmlJson.Theme}}</p>
                                 </div>
                             </div>
                         </li>
@@ -143,7 +143,7 @@
                                 <div class="flexRow flexColCenter">
                                     <i class="fa fa-user-circle-o"
                                        style="font-size: 18px;color: #d48634;margin: 4px;"></i>
-                                    <p>My Account</p>
+                                    <p>{{htmlJson.MyAccount}}</p>
                                 </div>
                             </div>
                         </li>
@@ -151,7 +151,7 @@
                             <div class="liContent flexCol mainCenter" :class="curIndex == 10?'showLeftBorder':''" @click="changeRter(10)">
                                 <div class="flexRow flexColCenter">
                                     <i class="el-icon-chat-dot-square" style="font-size: 18px;color: #d48634;margin: 4px;" ></i>
-                                    <p>Notice</p>
+                                    <p>{{htmlJson.Notice}}</p>
                                 </div>
                             </div>
                         </li>
@@ -161,7 +161,7 @@
                                 <div class="flexRow flexColCenter">
                                     <i class="ms-Icon ms-Icon--EditNote"
                                        style="font-size: 18px;color: #d48634;margin: 4px;"></i>
-                                    <p>Draft Box</p>
+                                    <p>{{htmlJson.DraftBox}}</p>
                                 </div>
                             </div>
                         </li>
@@ -171,7 +171,7 @@
                                 <div class="flexRow flexColCenter">
                                     <i class="fa fa-paper-plane"
                                        style="font-size: 18px;color: #d48634;margin: 4px;"></i>
-                                    <p>Feedback</p>
+                                    <p>{{htmlJson.Feedback}}</p>
                                 </div>
                             </div>
                         </li>

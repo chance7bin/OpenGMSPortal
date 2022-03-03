@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import njgis.opengms.portal.entity.doo.AuthorInfo;
-import njgis.opengms.portal.entity.doo.DailyViewCount;
 import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -32,9 +32,9 @@ public class PortalItem extends PortalIdPlus implements Serializable {
     List<String> keywords; //关键字
 
     String author; //贡献者email
-    List<AuthorInfo> authorships; //资源所有者
-    List<String> admins; //管理者
-    List<String> contributors; //修改者
+    List<AuthorInfo> authorships = new ArrayList<>(); //资源所有者
+    List<String> admins = new ArrayList<>(); //管理者
+    List<String> contributors = new ArrayList<>(); //修改者
 
 //    @JsonFormat(pattern = "yyyy-MM-dd")//是否有用待测试
     Date createTime; //创建时间
@@ -45,7 +45,7 @@ public class PortalItem extends PortalIdPlus implements Serializable {
 
     //版本控制 + contributors + lastModifyTime
     String lastModifier; //最后修改者
-    List<String> versions; //历史版本
+    List<String> versions = new ArrayList<>(); //历史版本
     boolean lock = false; //同一时间只能有一个待审核的版本。当有版本待审核时，lock为true，且不允许用户编辑条目
 
     //statistic
