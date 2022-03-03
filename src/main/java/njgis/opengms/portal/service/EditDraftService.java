@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @Description
@@ -133,6 +132,13 @@ public class EditDraftService {
             return ResultUtils.error("can not find item");
         editDraftDao.delete(editDraft);
         return ResultUtils.success();
+    }
+
+
+    public List<EditDraft> listByUser(String user,Boolean asc){
+        Sort sort=Sort.by(asc == true ? Sort.Direction.ASC : Sort.Direction.DESC, "lastModifyTime");
+        List<EditDraft> editDrafts = editDraftDao.findByUserOrderByLastModifyTime(user,sort);
+        return editDrafts;
     }
     
 }
