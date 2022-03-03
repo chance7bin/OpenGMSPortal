@@ -5,16 +5,16 @@ new Vue({
     },
     data: function () {
         return {
-            categoryName:"a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
+
             statistic:['Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview'],
             activeIndex: '2',
             queryType: 'normal',
             searchText: '',
-            classifications_old: ["652bf1f8-2f3e-4f93-b0dc-f66505090873"],
+            classifications_old: ["a24cba2b-9ce1-44de-ac68-8ec36a535d0e"],
             classifications_advance: [],//advance
             classifications_new: [],
 
-            currentClass:"",
+            currentClass:"a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
 
             pageOption: {
                 paginationShow:false,
@@ -797,7 +797,7 @@ new Vue({
             this.classifications_new = classes;
             //this.getChildren(data.children)
             if(typeof(data.children) === 'undefined') {
-                this.categoryName = data.oid
+                this.currentClass = data.oid
             }
             this.pageOption.currentPage=1;
             this.searchText="";
@@ -841,7 +841,7 @@ new Vue({
                 page: this.pageOption.currentPage - 1,
                 pageSize: this.pageOption.pageSize,
                 queryField: this.curQueryField,
-                categoryName:this.categoryName
+                categoryName:this.currentClass,
             };
             switch (this.queryType) {
                 case "normal":

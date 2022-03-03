@@ -2546,118 +2546,118 @@ var info=new Vue({
             this.search(scope);
         },
 
-        //relate search
-        search(scope) {
-            let data;
-            if(scope=="all"){
-                // this.pageOption_all.currentPage = 1;
-                data = {
-                    asc: this.pageOption_all.sortAsc,
-                    page: this.pageOption_all.currentPage-1,
-                    pageSize: this.pageOption_all.pageSize,
-                    searchText: this.pageOption_all.relateSearch.trim(),
-                    sortField: this.pageOption_all.sortField,
-                    classifications: ["all"],
-                }
-            }else {
-                // this.pageOption_my.currentPage = 1;
-                data = {
-                    asc: this.pageOption_my.sortAsc,
-                    page: this.pageOption_my.currentPage-1,
-                    pageSize: this.pageOption_my.pageSize,
-                    searchText: this.pageOption_my.relateSearch,
-                    sortField: this.pageOption_my.sortField,
-                    classifications: ["all"],
-                };
-            }
-            let url, contentType;
-            switch (this.relateType) {
-                case "dataItem":
-                    if(scope=="all") {
-                        url = "/dataItem/searchByName";
-                    }else{
-                        url = "/dataItem/searchByNameAndAuthor";
-                    }
-                    data = {
-                        page: data.page+1,
-                        pageSize: data.pageSize,
-                        asc: true,
-                        classifications: [],
-                        category: '',
-                        searchText: data.searchText,
-                        tabType: "repository",
-                        sortField: data.sortField,
-                    };
-                    data = JSON.stringify(data);
-                    contentType = "application/json";
-                    break;
-                case "concept":
-                    url = "/repository/searchConcept";
-                    data.asc = data.asc == true ? 0 : 1;
-                    data = JSON.stringify(data);
-                    contentType = "application/json";
-                    break;
-                case "spatialReference":
-                    url = "/repository/searchSpatialReference";
-                    data.asc = data.asc == true ? 0 : 1;
-                    data = JSON.stringify(data);
-                    contentType = "application/json";
-                    break;
-                case "template":
-                    url = "/repository/searchTemplate";
-                    data.asc = data.asc == true ? 0 : 1;
-                    data = JSON.stringify(data);
-                    contentType = "application/json";
-                    break;
-                case "unit":
-                    url = "/repository/searchUnit";
-                    data.asc = data.asc == true ? 0 : 1;
-                    data = JSON.stringify(data);
-                    contentType = "application/json";
-                    break;
-                default:
-                    if(scope=="all") {
-                        url = "/" + this.relateType + "/list";
-                    }else{
-                        url = "/" + this.relateType + "/listByAuthor";
-                    }
-                    contentType = "application/x-www-form-urlencoded";
-                    data.classType=1;
-            }
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                async: true,
-                contentType: contentType,
-                success: (json) => {
-                    if (json.code == 0) {
-                        let data = json.data;
-                        console.log(data)
-
-                        if(scope=="all") {
-                            this.pageOption_all.total = data.total;
-                            this.pageOption_all.pages = data.pages;
-                            this.pageOption_all.searchResult = data.list;
-                            this.pageOption_all.users = data.users;
-                            this.pageOption_all.progressBar = false;
-                            this.pageOption_all.paginationShow = true;
-                        }else{
-                            this.pageOption_my.total = data.total;
-                            this.pageOption_my.pages = data.pages;
-                            this.pageOption_my.searchResult = data.list;
-                            this.pageOption_my.users = data.users;
-                            this.pageOption_my.progressBar = false;
-                            this.pageOption_my.paginationShow = true;
-                        }
-
-                    }
-                    else {
-                        console.log("query error!")
-                    }
-                }
-            })
-        },
+        // //relate search
+        // search(scope) {
+        //     let data;
+        //     if(scope=="all"){
+        //         // this.pageOption_all.currentPage = 1;
+        //         data = {
+        //             asc: this.pageOption_all.sortAsc,
+        //             page: this.pageOption_all.currentPage-1,
+        //             pageSize: this.pageOption_all.pageSize,
+        //             searchText: this.pageOption_all.relateSearch.trim(),
+        //             sortField: this.pageOption_all.sortField,
+        //             classifications: ["all"],
+        //         }
+        //     }else {
+        //         // this.pageOption_my.currentPage = 1;
+        //         data = {
+        //             asc: this.pageOption_my.sortAsc,
+        //             page: this.pageOption_my.currentPage-1,
+        //             pageSize: this.pageOption_my.pageSize,
+        //             searchText: this.pageOption_my.relateSearch,
+        //             sortField: this.pageOption_my.sortField,
+        //             classifications: ["all"],
+        //         };
+        //     }
+        //     let url, contentType;
+        //     switch (this.relateType) {
+        //         case "dataItem":
+        //             if(scope=="all") {
+        //                 url = "/dataItem/searchByName";
+        //             }else{
+        //                 url = "/dataItem/searchByNameAndAuthor";
+        //             }
+        //             data = {
+        //                 page: data.page+1,
+        //                 pageSize: data.pageSize,
+        //                 asc: true,
+        //                 classifications: [],
+        //                 category: '',
+        //                 searchText: data.searchText,
+        //                 tabType: "repository",
+        //                 sortField: data.sortField,
+        //             };
+        //             data = JSON.stringify(data);
+        //             contentType = "application/json";
+        //             break;
+        //         case "concept":
+        //             url = "/repository/searchConcept";
+        //             data.asc = data.asc == true ? 0 : 1;
+        //             data = JSON.stringify(data);
+        //             contentType = "application/json";
+        //             break;
+        //         case "spatialReference":
+        //             url = "/repository/searchSpatialReference";
+        //             data.asc = data.asc == true ? 0 : 1;
+        //             data = JSON.stringify(data);
+        //             contentType = "application/json";
+        //             break;
+        //         case "template":
+        //             url = "/repository/searchTemplate";
+        //             data.asc = data.asc == true ? 0 : 1;
+        //             data = JSON.stringify(data);
+        //             contentType = "application/json";
+        //             break;
+        //         case "unit":
+        //             url = "/repository/searchUnit";
+        //             data.asc = data.asc == true ? 0 : 1;
+        //             data = JSON.stringify(data);
+        //             contentType = "application/json";
+        //             break;
+        //         default:
+        //             if(scope=="all") {
+        //                 url = "/" + this.relateType + "/list";
+        //             }else{
+        //                 url = "/" + this.relateType + "/listByAuthor";
+        //             }
+        //             contentType = "application/x-www-form-urlencoded";
+        //             data.classType=1;
+        //     }
+        //     $.ajax({
+        //         type: "GET",
+        //         url: url,
+        //         data: data,
+        //         async: true,
+        //         contentType: contentType,
+        //         success: (json) => {
+        //             if (json.code == 0) {
+        //                 let data = json.data;
+        //                 console.log(data)
+        //
+        //                 if(scope=="all") {
+        //                     this.pageOption_all.total = data.total;
+        //                     this.pageOption_all.pages = data.pages;
+        //                     this.pageOption_all.searchResult = data.list;
+        //                     this.pageOption_all.users = data.users;
+        //                     this.pageOption_all.progressBar = false;
+        //                     this.pageOption_all.paginationShow = true;
+        //                 }else{
+        //                     this.pageOption_my.total = data.total;
+        //                     this.pageOption_my.pages = data.pages;
+        //                     this.pageOption_my.searchResult = data.list;
+        //                     this.pageOption_my.users = data.users;
+        //                     this.pageOption_my.progressBar = false;
+        //                     this.pageOption_my.paginationShow = true;
+        //                 }
+        //
+        //             }
+        //             else {
+        //                 console.log("query error!")
+        //             }
+        //         }
+        //     })
+        // },
 
         receiveModuleMsg(msg){
             let m_code = msg.m_code

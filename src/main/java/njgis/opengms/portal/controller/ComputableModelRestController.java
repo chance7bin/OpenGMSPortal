@@ -156,11 +156,15 @@ public class ComputableModelRestController {
     @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
     public JsonResult queryListByAuthor(FindDTO queryDTO, HttpServletRequest request) {
         String email = Utils.checkLoginStatus(request);
-        SpecificFindDTO specificFindDTO = (SpecificFindDTO) queryDTO;
+        SpecificFindDTO specificFindDTO = new SpecificFindDTO();
+        specificFindDTO.setPage(queryDTO.getPage());
+        specificFindDTO.setPageSize(queryDTO.getPageSize());
+        specificFindDTO.setAsc(queryDTO.getAsc());
+        specificFindDTO.setSearchText(queryDTO.getSearchText());
+        specificFindDTO.setSortField(queryDTO.getSortField());
         specificFindDTO.setCurQueryField("author");
         specificFindDTO.setSearchText(email);
         return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.ComputableModel));
-
     }
 
     @ApiOperation(value = "查找部署的模型 [ /searchDeployedModel ]")

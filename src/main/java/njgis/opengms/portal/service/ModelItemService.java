@@ -187,7 +187,7 @@ public class ModelItemService {
         JSONArray modelItemArray=new JSONArray();
         if(modelItems!=null) {
             for (int i = 0; i < modelItems.size(); i++) {
-                String idNew = modelItems.get(i).getId();
+                String idNew = modelItems.get(i).getModelId();
                 ModelItem modelItemNew = modelItemDao.findFirstById(idNew);
                 if (modelItemNew.getStatus().equals("Private")) {
                     continue;
@@ -507,10 +507,10 @@ public class ModelItemService {
             //删除与之关联模型中的记录
             List<ModelRelation> relatedModelList=modelItem.getRelate().getModelRelationList();
             for(int i=0;i<relatedModelList.size();i++){
-                ModelItem modelItem1 = modelItemDao.findFirstById(relatedModelList.get(i).getId());
+                ModelItem modelItem1 = modelItemDao.findFirstById(relatedModelList.get(i).getModelId());
                 List<ModelRelation> relatedModelList1 = modelItem1.getRelate().getModelRelationList();
                 for(int j = 0;j<relatedModelList1.size();j++){
-                    if(relatedModelList1.get(j).getId().equals(modelItem.getId())){
+                    if(relatedModelList1.get(j).getModelId().equals(modelItem.getId())){
                         modelItem1.getRelate().getModelRelationList().remove(j);
                         modelItemDao.save(modelItem1);
                     }
@@ -998,7 +998,7 @@ public class ModelItemService {
                 List<ModelRelation> modelRelationList = relation.getModelRelationList();
                 if (modelRelationList != null) {
                     for (ModelRelation modelRelation : modelRelationList) {
-                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getId());
+                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
                         if (modelItem1.getStatus().equals("Private")) {
                             continue;
                         }
