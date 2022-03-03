@@ -1,7 +1,9 @@
 package njgis.opengms.portal.entity.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -11,6 +13,8 @@ import java.io.Serializable;
  * @Date 2021/09/02
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FindDTO implements Serializable {
     @ApiModelProperty(value = "当前页数", example = "1")
     private Integer page = 1; //当前页数

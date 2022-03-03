@@ -142,7 +142,12 @@ public class ConceptualModelRestController {
     public JsonResult queryListByAuthor(FindDTO queryDTO, HttpServletRequest request) {
         String email = Utils.checkLoginStatus(request);
         if(email != null) {
-            SpecificFindDTO specificFindDTO = (SpecificFindDTO) queryDTO;
+            SpecificFindDTO specificFindDTO = new SpecificFindDTO();
+            specificFindDTO.setPage(queryDTO.getPage());
+            specificFindDTO.setPageSize(queryDTO.getPageSize());
+            specificFindDTO.setAsc(queryDTO.getAsc());
+            specificFindDTO.setSearchText(queryDTO.getSearchText());
+            specificFindDTO.setSortField(queryDTO.getSortField());
             specificFindDTO.setCurQueryField("author");
             specificFindDTO.setSearchText(email);
             return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.ConceptualModel));
