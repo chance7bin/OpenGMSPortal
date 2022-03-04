@@ -9,6 +9,7 @@ import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,10 +28,10 @@ public class DataItem extends PortalItem {
 
     String url;//reference 若dataType为Url，则需填写该字段
 
-    List<String> imageList;//displays 以图片的形式展示数据内容
-    List<DataMeta> dataList; //若dataType为File, 则添加上传至数据容器的文件元数据
+    List<String> imageList = new ArrayList<>();//displays 以图片的形式展示数据内容
+    List<DataMeta> dataList = new ArrayList<>(); //若dataType为File, 则添加上传至数据容器的文件元数据
     String dataType; //Url File
-    List<String> relatedModels;
+    List<String> relatedModels = new ArrayList<>();
     String tabType;//标识四个tabs，包括hubs、repository、network与application
 
 

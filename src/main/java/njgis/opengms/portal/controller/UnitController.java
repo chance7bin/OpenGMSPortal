@@ -44,7 +44,7 @@ public class UnitController {
      * @Author bin
      **/
     @ApiOperation(value = "unit列表信息 [ /repository/getUnitList ] 删除[/repository/searchUnit]接口")
-    @RequestMapping(value="/unitList",method = RequestMethod.POST)
+    @RequestMapping(value={"/unitList", "/list"},method = RequestMethod.POST)
     public JsonResult getUnitList(@RequestBody SpecificFindDTO repositoryQueryDTO){
         return unitService.getUnitList(repositoryQueryDTO);
     }

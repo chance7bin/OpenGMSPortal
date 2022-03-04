@@ -90,7 +90,7 @@ public class TemplateController {
      * @Author bin
      **/
     @ApiOperation(value = "template列表信息 [ /repository/getTemplateList ] 删除[/repository/searchTemplate]接口")
-    @RequestMapping(value="/templateList",method = RequestMethod.POST)
+    @RequestMapping(value={"/templateList","/list"},method = RequestMethod.POST)
     public JsonResult getTemplateList(@RequestBody SpecificFindDTO repositoryQueryDTO){
         return templateService.getTemplateList(repositoryQueryDTO);
     }

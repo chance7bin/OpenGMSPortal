@@ -29,6 +29,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +171,7 @@ public class ModelItemRestController {
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
     @RequestMapping(value = {"/items","/list"}, method = RequestMethod.POST)
-    public JsonResult queryList(SpecificFindDTO modelItemFindDTO) {
+    public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
     }
@@ -198,8 +201,9 @@ public class ModelItemRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(ModelItemFindDTO modelItemFindDTO) {
-
+    public JsonResult queryListOfAuthorSelf(@RequestBody ModelItemFindDTO modelItemFindDTO, HttpServletRequest request) {
+        String email = Utils.checkLoginStatus(request);
+        modelItemFindDTO.setAuthorEmail(email);
         return ResultUtils.success(modelItemService.query(modelItemFindDTO, true));
 
     }
@@ -282,6 +286,29 @@ public class ModelItemRestController {
         return ResultUtils.success(modelItemService.getRelation(id,type));
     }
 
+    @ApiOperation(value = "门户所有模型的关系图页面")
+    @RequestMapping(value="/modelRelationGraph",method = RequestMethod.GET)
+    public ModelAndView relationGraph() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("modelRelationGraph");
+
+        return modelAndView;
+
+    }
+
+    @ApiOperation(value = "刷新门户所有模型的关系图Json，并存储于本地文件")
+    @RequestMapping(value="/refreshFullRelationGraph",method = RequestMethod.POST)
+    public JsonResult refreshFullRelationGraph(){
+        return ResultUtils.success(modelItemService.refreshFullRelationGraph());
+    }
+
+    @ApiOperation(value = "返回指定模型的关系图Json")
+    @RequestMapping(value="/relationGraph",method = RequestMethod.POST)
+    public JsonResult getRelationGraph(@RequestParam(value="id") String id,@RequestParam(value="isFull") Boolean isFull){
+        return ResultUtils.success(modelItemService.getRelationGraph(id,isFull));
+    }
+
     @ApiOperation(value = "获取模型参考文献", notes = "@LoginRequired\n")
     @RequestMapping(value = "/references/{id}", method = RequestMethod.GET)
     JsonResult getReferences(@PathVariable("id") String id ,HttpServletRequest request){
@@ -289,6 +316,16 @@ public class ModelItemRestController {
             return ResultUtils.error(-1, "no login");
         }
         return ResultUtils.success(modelItemService.getReferences(id));
+    }
+
+    @ApiOperation(value = "获取模型相关资源", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/relatedResources/{id}", method = RequestMethod.GET)
+    JsonResult getRelatedResources(@PathVariable("id") String id ,HttpServletRequest request){
+        System.out.println("test");
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getRelatedResources(id));
     }
 
     @ApiOperation(value = "更新模型条目分类信息", notes = "@LoginRequired\n")

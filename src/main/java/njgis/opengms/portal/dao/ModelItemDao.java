@@ -24,7 +24,7 @@ public interface ModelItemDao extends MongoRepository<ModelItem,String>, Generic
     ModelItem findFirstById(String id);
 
     ////服务于QueryList////
-    Page<ModelItemResultDTO> findByNameContainsIgnoreCase(String name, Pageable pageable);
+    Page<ModelItemResultDTO> findByNameContainsIgnoreCaseAndAuthor(String name, String author, Pageable pageable);
 
     Page<ModelItemResultDTO> findByNameContainsIgnoreCaseAndStatusIn(String name, List<String> status, Pageable pageable);
 
@@ -32,7 +32,7 @@ public interface ModelItemDao extends MongoRepository<ModelItem,String>, Generic
 
     // ?0表明使用第一个变量，以此类推
     @Query("{'keywords':{'$regex': '?0','$options':'i'}}")
-    Page<ModelItemResultDTO> findByKeywordsIgnoreCaseIn(String keyword, Pageable pageable);
+    Page<ModelItemResultDTO> findByKeywordsIgnoreCaseInAndAuthor(String keyword, String author, Pageable pageable);
 
     @Query("{'keywords':{'$regex': '?0','$options':'i'}, 'status':{$in:?1}}")
     Page<ModelItemResultDTO> findByKeywordsIgnoreCaseInAndStatusIn(String keyword, List<String> status,Pageable pageable);
@@ -42,7 +42,7 @@ public interface ModelItemDao extends MongoRepository<ModelItem,String>, Generic
 
 
     @Query("{$or:[{ 'overview':{'$regex': '?0','$options':'i'}}, {'localizationList.description': {'$regex': '?0','$options':'i'}}]}")
-    Page<ModelItemResultDTO> findByOverviewContainsIgnoreCaseAndLocalizationDescription(String overview, Pageable pageable);
+    Page<ModelItemResultDTO> findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthor(String overview, String author, Pageable pageable);
 
     //    @Query("{$and:[{$or:[{ 'description':{'$regex':/swat/,'$options':'i'}}, {'localizationList.description': {'$regex':/swat/,'$options':'i'}}]},{'status':{$in:['Private','Public']}}]}")
     @Query("{$and:[{$or:[{ 'overview':{'$regex': '?0','$options':'i'}}, {'localizationList.description': {'$regex': '?0','$options':'i'}}]},{'status':{$in:?1}}]}")
@@ -55,6 +55,8 @@ public interface ModelItemDao extends MongoRepository<ModelItem,String>, Generic
     Page<ModelItemResultDTO> findByAuthorInAndStatusInOrContributorsInAndStatusIn(List<String> authors, List<String> status0, List<String> contributors, List<String> status1,Pageable pageable);
 
     Page<ModelItemResultDTO> findByClassificationsInAndStatusIn(List<String> classes, List<String> status, Pageable pageable);
+
+
 
     ////END////
 
