@@ -57,7 +57,7 @@ public class SpatialReferenceController {
      * @Author bin
      **/
     @ApiOperation(value = "spatialReference列表信息 [ /repository/getSpatialReferenceList ] 删除[/repository/searchSpatialReference]接口")
-    @RequestMapping(value="/spatialReferenceList",method = RequestMethod.POST)
+    @RequestMapping(value={"/spatialReferenceList", "/list"},method = RequestMethod.POST)
     public JsonResult getSpatialReferenceList(@RequestBody SpecificFindDTO repositoryQueryDTO){
         return spatialReferenceService.getSpatialReferenceList(repositoryQueryDTO);
     }

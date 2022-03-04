@@ -34,6 +34,8 @@ Vue.component("linkRelatedItemModule",
                 targetItemType:'',
                 relateItemType:'',
 
+                relateItemType_trim:'',//data和model页面中关于modelitem的关系不同，前端页面展示也不同
+
                 pageOption_my: {
                     paginationShow: false,
                     progressBar: true,
@@ -122,9 +124,10 @@ Vue.component("linkRelatedItemModule",
             },
 
             manualInit(targetItemId,targetItemType,relateItemType){
-                this.targetItemId = targetItemId
-                this.targetItemType = targetItemType
-                this.relateItemType = relateItemType
+                this.targetItemId = targetItemId;
+                this.targetItemType = targetItemType;
+                this.relateItemType = relateItemType;
+                this.relateItemType_trim = this.relateItemType.split("-")[0];
 
                 this.pageOption_my.currentPage = 1;
                 this.pageOption_my.searchResult = [];
@@ -146,11 +149,12 @@ Vue.component("linkRelatedItemModule",
             },
 
             getRelation() {
+
                 //从地址栏拿到id
                 let id = this.targetItemId;
                 let data = {
                     id: id,
-                    type: this.relateItemType
+                    type: this.relateItemType_trim
                 };
                 $.ajax({
                     type: "GET",
@@ -246,86 +250,59 @@ Vue.component("linkRelatedItemModule",
                     // this.pageOption_all.currentPage = 1;
                     data = {
                         asc: this.pageOption_all.sortAsc,
-                        page: this.pageOption_all.currentPage-1,
+                        page: this.pageOption_all.currentPage,
                         pageSize: this.pageOption_all.pageSize,
                         searchText: this.pageOption_all.relateSearch.trim(),
                         sortField: this.pageOption_all.sortField,
-                        classifications: ["all"],
+                        categoryId: "",
                     }
                 }else {
                     // this.pageOption_my.currentPage = 1;
                     data = {
                         asc: this.pageOption_my.sortAsc,
-                        page: this.pageOption_my.currentPage-1,
+                        page: this.pageOption_my.currentPage,
                         pageSize: this.pageOption_my.pageSize,
-                        searchText: this.pageOption_my.relateSearch,
+                        searchText: this.pageOption_my.relateSearch.trim(),
                         sortField: this.pageOption_my.sortField,
-                        classifications: ["all"],
+                        categoryId: "",
                     };
                 }
                 let url, contentType;
-                switch (this.relateItemType) {
-                    case "dataItem":
-                        if(scope=="all") {
-                            url = "/dataItem/list";
-                        }else{
-                            url = "/dataItem/listByAuthor";
-                        }
-                        data = {
-                            page: data.page+1,
-                            pageSize: data.pageSize,
-                            asc: true,
-                            classifications: [],
-                            category: '',
-                            searchText: data.searchText,
-                            tabType: "repository",
-                            sortField: data.sortField,
-                        };
-                        data = JSON.stringify(data);
-                        contentType = "application/json";
-                        break;
-                    default:
-                        if(scope=="all") {
-                            url = "/" + this.relateItemType + "/list";
-                        }else{
-                            url = "/" + this.relateItemType + "/listByAuthor";
-                        }
-                        contentType = "application/x-www-form-urlencoded";
-                        data.classType=1;
+
+                if(scope=="all") {
+                    url = "/" + this.relateItemType_trim + "/list";
+                }else{
+                    url = "/" + this.relateItemType_trim + "/listByAuthor";
                 }
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: data,
-                    async: true,
-                    contentType: contentType,
-                    success: (json) => {
-                        if (json.code == 0) {
-                            let data = json.data;
-                            console.log(data)
 
-                            if(scope=="all") {
-                                this.pageOption_all.total = data.total;
-                                this.pageOption_all.pages = data.pages;
-                                this.pageOption_all.searchResult = data.list;
-                                this.pageOption_all.users = data.users;
-                                this.pageOption_all.progressBar = false;
-                                this.pageOption_all.paginationShow = true;
-                            }else{
-                                this.pageOption_my.total = data.total;
-                                this.pageOption_my.pages = data.pages;
-                                this.pageOption_my.searchResult = data.list;
-                                this.pageOption_my.users = data.users;
-                                this.pageOption_my.progressBar = false;
-                                this.pageOption_my.paginationShow = true;
-                            }
+                axios.post(url, data).then(res => {
+                    let json = res.data;
+                    if (json.code == 0) {
+                        let data = json.data;
+                        console.log(data)
 
+                        if(scope=="all") {
+                            this.pageOption_all.total = data.total;
+                            this.pageOption_all.pages = data.pages;
+                            this.pageOption_all.searchResult = data.list;
+                            this.pageOption_all.users = data.users;
+                            this.pageOption_all.progressBar = false;
+                            this.pageOption_all.paginationShow = true;
+                        }else{
+                            this.pageOption_my.total = data.total;
+                            this.pageOption_my.pages = data.pages;
+                            this.pageOption_my.searchResult = data.list;
+                            this.pageOption_my.users = data.users;
+                            this.pageOption_my.progressBar = false;
+                            this.pageOption_my.paginationShow = true;
                         }
-                        else {
-                            console.log("query error!")
-                        }
+
+                    }
+                    else {
+                        console.log("query error!")
                     }
                 })
+
             },
 
             jump() {
@@ -352,7 +329,7 @@ Vue.component("linkRelatedItemModule",
                             let arr = window.location.href.split("/");
                             let bindOid = arr[arr.length - 1].split("#")[0];
                             this.setSession("bindOid", bindOid);
-                            switch (this.relateItemType) {
+                            switch (this.relateItemType_trim) {
                                 case "modelItem":
                                     window.open("/user/userSpace#/model/createModelItem", "_blank")
                                     break;
@@ -424,7 +401,7 @@ Vue.component("linkRelatedItemModule",
 
             handleEdit(index, row) {
                 console.log(row);
-                row.type=this.relateItemType
+                row.type=this.relateItemType_trim
                 let flag = false;
                 for (i = 0; i < this.tableData_model.length; i++) {
                     let tableRow = this.tableData_model[i];
@@ -454,8 +431,8 @@ Vue.component("linkRelatedItemModule",
                 let data;
                 let contentType;
 
-                if(this.relateItemType !== "modelItem") {
-                    url = "/modelItem/setRelation";
+                if(this.relateItemType == "modelItem-D" || this.relateItemType_trim !== "modelItem") {
+                    url = "/"+this.targetItemType+"/setRelation";
                     this.tableData_model.forEach(function (item, index) {
                         relateArr.push(item.id);
                     })
@@ -466,7 +443,7 @@ Vue.component("linkRelatedItemModule",
                     };
                     contentType = "application/x-www-form-urlencoded;charset=UTF-8";
                 }else{
-                    url = "/modelItem/setModelRelation/"+id;
+                    url = "/"+this.targetItemType+"/setModelRelation/"+id;
                     this.tableData_model.forEach(function (item, index) {
                         let obj = {
                             id : item.id,
