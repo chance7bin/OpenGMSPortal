@@ -134,7 +134,7 @@ public class UnitController {
      **/
     @LoginRequired
     @ApiOperation(value = "根据用户得到unit [ /unit/listUnitsByOid ]")
-    @RequestMapping (value = "/listByUser",method = RequestMethod.GET)
+    @RequestMapping (value = "/listByUser",method = RequestMethod.POST)
     public JsonResult listByUserOid(FindDTO findDTO, HttpServletRequest request){
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();

@@ -146,12 +146,13 @@ Vue.component("draft-box",
 
             loadCreateDraft(){//
                 this.matchedCreateDraft=[]
-                axios.get('/draft/getCreateDraftByUserByType',{
+                axios.get('/draft/draftByUserAndType',{
                     params:{
                         itemType:this.itemType,
                         editType:'create',
                     }
                 }).then(res=>{
+                    console.log(res)
                     if(res.data.code==0){
                         if(res.data.data.length>=1){
                             this.matchedCreateDraft=res.data.data;

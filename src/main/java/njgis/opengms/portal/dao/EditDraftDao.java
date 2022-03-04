@@ -22,4 +22,6 @@ public interface EditDraftDao extends MongoRepository<EditDraft, String> {
 
     Page<EditDraft> findByUserAndItemType(String user, String itemType, Pageable pageable);
 
+    List<EditDraft> findByUserOrderByLastModifyTime(String user, Sort sort);
+
 }

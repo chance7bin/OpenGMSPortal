@@ -174,7 +174,6 @@ public class ModelItemRestController {
     public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
-
     }
 
     /**

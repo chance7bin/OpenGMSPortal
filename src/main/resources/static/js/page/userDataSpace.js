@@ -274,12 +274,12 @@ var userDataSpace = Vue.extend(
 
             //data space相关
             getUserTaskInfo() {
-                let {code, data, msg} = fetch("/user/getUserInfo", {
+                let {code, data, msg} = fetch("/user/getFullUserInfo", {
                     method: "GET",
                 }).then((response) => {
                     return response.json();
                 }).then((data) => {
-                    this.userInfo = data.data.userInfo;
+                    this.userInfo = data.data;
                     this.userTaskInfo = this.userInfo.runTask;
                     // console.log(this.userInfo);
                     setTimeout(() => {
@@ -1918,7 +1918,7 @@ var userDataSpace = Vue.extend(
                 };
                 $.ajax({
                     type: "POST",
-                    url: "/repository/searchTemplate",
+                    url: "/template/templateList",
                     data: JSON.stringify(query),
                     async: true,
                     contentType: "application/json",

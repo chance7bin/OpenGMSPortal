@@ -7,7 +7,6 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.draft.EditDraftDTO;
 import njgis.opengms.portal.service.EditDraftService;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -119,5 +118,14 @@ public class EditDraftController {
     public JsonResult updateDraft(@RequestBody EditDraftDTO editDraftDTO){
         return ResultUtils.success(editDraftService.update(editDraftDTO));
     }
-    
+
+
+    @ApiOperation(value = "得到用户的草稿信息")
+    @RequestMapping(value = "/listByUser",method = RequestMethod.GET)
+    public JsonResult listByUser(HttpServletRequest httpServletRequest,@RequestParam("sort") Boolean sort){
+        HttpSession session = httpServletRequest.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(editDraftService.listByUser(email,sort));
+    }
+
 }

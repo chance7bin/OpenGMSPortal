@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.ModelContainerDao;
 import njgis.opengms.portal.entity.po.ModelContainer;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.utils.Utils;
 import njgis.opengms.portal.utils.XmlTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class ServerService {
 
     @Value("${dataServerManager}")
     private String dataServerManager;
+
+
+    @Autowired
+    UserService userService;
 
 
     //获取所有模型\数据容器
@@ -96,6 +101,25 @@ public class ServerService {
         }
 
         return nodes;
+    }
+
+
+    public List<ModelContainer> getModelContainerByUserName(String email){
+
+        List<ModelContainer> modelContainerList;
+
+        modelContainerList = modelContainerDao.findAllByAccount(email);
+
+        //数据库中的account有的时候是accessId，有的时候是email
+        if (modelContainerList.size() == 0){
+            // 用email找不到的话再换成用accessId找
+            User user = userService.getByEmail(email);
+            modelContainerList = modelContainerDao.findAllByAccount(user.getAccessId());
+
+        }
+
+        return modelContainerList;
+
     }
 
 }

@@ -1,8 +1,8 @@
 var userModel = Vue.extend(
     {
         template: "#userModel",
-        data(){
-            return{
+        data() {
+            return {
                 //页面样式控制
                 loading: 'false',
                 load: true,
@@ -10,23 +10,19 @@ var userModel = Vue.extend(
                 ScreenMaxHeight: "0px",
 
                 //显示控制
-                curIndex:2,
+                curIndex: 2,
 
                 //
-                userInfo:{
+                userInfo: {},
 
-                },
-
-                countInfo:{
-
-                },
+                countInfo: {},
 
             }
         },
 
-        props:['itemindexRaw'],
+        props: ['itemindexRaw'],
 
-        methods:{
+        methods: {
             //公共功能
 
             setSession(name, value) {
@@ -34,41 +30,41 @@ var userModel = Vue.extend(
                 // this.editOid = sessionStorage.getItem('editItemOid');
             },
 
-            creatItem(index){
-                var urls={
-                    1:'/user/userSpace#/model/createModelItem',
-                    2:'/user/userSpace#/model/createConceptualModel',
-                    3:'/user/userSpace#/model/createLogicalModel',
-                    4:'/user/userSpace#/model/createComputableModel',
+            creatItem(index) {
+                var urls = {
+                    1: '/user/userSpace#/model/createModelItem',
+                    2: '/user/userSpace#/model/createConceptualModel',
+                    3: '/user/userSpace#/model/createLogicalModel',
+                    4: '/user/userSpace#/model/createComputableModel',
                 }
                 window.sessionStorage.removeItem('editOid');
-                window.location.href=urls[index]
+                window.location.href = urls[index]
             },
 
-            manageItem(index){
+            manageItem(index) {
                 //此处跳转至统一页面，vue路由管理显示
-                var urls={
-                    1:'/user/userSpace#/models/modelitem',
-                    2:'/user/userSpace#/models/conceptualmodel',
-                    3:'/user/userSpace#/models/logicalmodel',
-                    4:'/user/userSpace#/models/computablemodel',
+                var urls = {
+                    1: '/user/userSpace#/models/modelitem',
+                    2: '/user/userSpace#/models/conceptualmodel',
+                    3: '/user/userSpace#/models/logicalmodel',
+                    4: '/user/userSpace#/models/computablemodel',
                 }
 
                 this.senditemIndexToParent(index)
-                window.location.href=urls[index]
+                window.location.href = urls[index]
 
             },
 
-            sendcurIndexToParent(){
-                this.$emit('com-sendcurindex',this.curIndex)
+            sendcurIndexToParent() {
+                this.$emit('com-sendcurindex', this.curIndex)
             },
 
-            senditemIndexToParent(index){
-                this.$emit('com-senditemindex',index)
+            senditemIndexToParent(index) {
+                this.$emit('com-senditemindex', index)
             },
 
-            sendUserToParent(userId){
-                this.$emit('com-senduserinfo',userId)
+            sendUserToParent(userId) {
+                this.$emit('com-senduserinfo', userId)
             },
 
         },
@@ -79,77 +75,80 @@ var userModel = Vue.extend(
         mounted() {
 
             $(() => {
-                let height = document.documentElement.clientHeight;
-                this.ScreenMinHeight = (height) + "px";
-                this.ScreenMaxHeight = (height) + "px";
-
-                window.onresize = () => {
-                    console.log('come on ..');
-                    height = document.documentElement.clientHeight;
+                    let height = document.documentElement.clientHeight;
                     this.ScreenMinHeight = (height) + "px";
                     this.ScreenMaxHeight = (height) + "px";
-                };
 
+                    window.onresize = () => {
+                        console.log('come on ..');
+                        height = document.documentElement.clientHeight;
+                        this.ScreenMinHeight = (height) + "px";
+                        this.ScreenMaxHeight = (height) + "px";
+                    };
+                    let _this= this
+                    $.ajax({
+                        type: "GET",
+                        url: "/user/load",
+                        data: {},
+                        cache: false,
+                        async: false,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        crossDomain: true,
+                        success: function (result) {
+                            if (result.code === 0) {
+                                let data = result.data
+                                _this.userId = data.email;
+                                _this.userName = data.name;
+                                _this.sendUserToParent(_this.userId)
+                                $("#author").val(_this.userName);
+                                var index = window.sessionStorage.getItem("index");
+                                if (index != null && index != undefined && index != "" && index != NaN) {
+                                    _this.defaultActive = index;
+                                    _this.handleSelect(index, null);
+                                    window.sessionStorage.removeItem("index");
+                                    _this.curIndex = index
 
-                $.ajax({
-                    type: "GET",
-                    url: "/user/load",
-                    data: {},
-                    cache: false,
-                    async: false,
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true,
-                    success: (data) => {
-                        console.log(data);
+                                } else {
+                                    // this.changeRter(1);
+                                }
 
-                        if (data.oid == "") {
-                            alert("Please login");
-                            window.location.href = "/user/login";
-                        } else {
-                            this.countInfo=data.countInfo
-                            this.userId = data.oid;
-                            this.userName = data.name;
-                            console.log(this.userId)
-                            this.sendUserToParent(this.userId)
-                            // this.addAllData()
-
-                            // axios.get("/dataItem/amountofuserdata",{
-                            //     params:{
-                            //         userOid:this.userId
-                            //     }
-                            // }).then(res=>{
-                            //     that.dcount=res.data
-                            // });
-
-                            $("#author").val(this.userName);
-
-                            var index = window.sessionStorage.getItem("index");
-                            if (index != null && index != undefined && index != "" && index != NaN) {
-                                this.defaultActive = index;
-                                this.handleSelect(index, null);
-                                window.sessionStorage.removeItem("index");
-                                this.curIndex=index
+                                window.sessionStorage.removeItem("tap");
+                                //this.getTasksInfo();
+                                _this.load = false;
 
                             } else {
-                                // this.changeRter(1);
+                                alert("Please login");
+                                window.location.href = "/user/login";
                             }
-
-                            window.sessionStorage.removeItem("tap");
-                            //this.getTasksInfo();
-                            this.load = false;
                         }
-                    }
-                })
+                    })
+                    .then(function () {
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/user/resourceCount",
+                                    data: {},
+                                    cache: false,
+                                    async: false,
+                                    xhrFields: {
+                                        withCredentials: true
+                                    },
+                                    crossDomain: true,
+                                    success: (result) => {
+                                        _this.countInfo = result.data
+                                        console.log(_this.countInfo)
+                                    }
+                                })
+                            })
 
 
-                //this.getModels();
-            });
 
-            //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
-            this.sendcurIndexToParent()
+
+                    //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
+                    this.sendcurIndexToParent()
+                }
+            )
         },
-
     }
 )
