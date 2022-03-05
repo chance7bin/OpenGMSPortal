@@ -33,10 +33,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -483,14 +480,15 @@ public class UserService {
 
             User user = userDao.findFirstByEmail(email);
 
+            List<String> exLinks = new ArrayList<>();
+            exLinks.add(user.getHomepage());
             j_result.put("id",user.getId());
             j_result.put("userId", user.getAccessId());
             j_result.put("email", user.getEmail());
             j_result.put("phone", user.getPhone());
-            j_result.put("weChat", user.getWeChat());
-            j_result.put("faceBook", user.getFaceBook());
             j_result.put("lab", user.getLab());
-            j_result.put("externalLinks", user.getExternalLinks());
+            j_result.put("homepage", user.getHomepage());
+            j_result.put("externalLinks", exLinks);
             j_result.put("eduExperiences", user.getEducationExperiences());
             j_result.put("awdHonors", user.getAwardsHonors());
             j_result.put("runTask", user.getRunTask());
@@ -890,27 +888,11 @@ public class UserService {
 
     }
 
-    public String updatelocation(String location, String email) {
-        try {
-            User user = userDao.findFirstByEmail(email);
-            if (user != null) {
-                user.setLocation(location);
-                userDao.save(user);
-                return "success";
-            } else
-                return "no user";
-
-        } catch (Exception e) {
-            return "fail";
-        }
-
-    }
-
     public String updateExternalLinks(List<String> externalLinks, String email) {
         try {
             User user = userDao.findFirstByEmail(email);
             if (user != null) {
-                user.setExternalLinks(externalLinks);
+                user.setHomepage(externalLinks.get(0));
                 userDao.save(user);
                 return "success";
             } else
@@ -926,7 +908,7 @@ public class UserService {
         try {
             User user = userDao.findFirstByEmail(email);
             if (user != null) {
-                user.setResearchInterests(researchInterests);
+                user.setDomain(researchInterests);
 //                System.out.println(user.getResearchInterests());
                 userDao.save(user);
                 return "success";
