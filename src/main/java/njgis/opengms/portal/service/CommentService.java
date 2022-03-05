@@ -1,9 +1,11 @@
 package njgis.opengms.portal.service;
 
 import njgis.opengms.portal.dao.CommentDao;
+import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.comment.CommentDTO;
 import njgis.opengms.portal.entity.po.Comment;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,12 +26,17 @@ public class CommentService {
     @Autowired
     CommentDao commentDao;
 
+    @Autowired
+    UserDao userDao;
+
     public JsonResult addComment(CommentDTO commentDTO, String authorEmail){
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
 
+        User user = userDao.findFirstByEmail(authorEmail);
+
         comment.setDate(new Date());
-        comment.setAuthorId(authorEmail);
+        comment.setAuthorId(user.getId());
         comment.setRelateItemType(ItemTypeEnum.getItemTypeByName(commentDTO.getRelateItemTypeName()));
         comment.setReadStatus(0);
 

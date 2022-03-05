@@ -724,7 +724,6 @@ public class UserRestController {
         List<String> researchInterests = userInfoUpdateDTO.getResearchInterests();
         String result1 = userService.updateIntroduction(introduction, email);
         String result2 = userService.updateOrganizations(organizations,email);
-        String result3 = userService.updatelocation(location,email);
         String result4 = userService.updateExternalLinks(externalLinks,email);
         String result5 = userService.updateResearchInterest(researchInterests,email);
 //        String result5 = userService.updateEmail(email,userName);
@@ -732,7 +731,6 @@ public class UserRestController {
         JSONObject result = new JSONObject();
         result.put("int", result1);
         result.put("org", result2);
-        result.put("loc", result3);
         result.put("exl", result4);
         result.put("res", result5);
 //        result.put("ema", result5);

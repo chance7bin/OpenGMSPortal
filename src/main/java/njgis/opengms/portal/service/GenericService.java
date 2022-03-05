@@ -130,9 +130,10 @@ public class GenericService {
         if(findDTO.getSortField().equals("default")){
             findDTO.setSortField("name");
         }
+        //页码前端从1开始，后端需要减一
+        findDTO.setPage(findDTO.getPage()-1);
 
         JSONObject jsonObject = searchDBItems(findDTO, type, itemStatusVisible);
-
 
         return generateSearchResult((List<PortalItem>) jsonObject.get("allPortalItem"), jsonObject.getIntValue("totalElements"));
     }

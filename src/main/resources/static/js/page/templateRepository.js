@@ -198,9 +198,9 @@ new Vue({
             classes.push(data.oid);
             this.classifications1 = classes;
             this.getChildren(data.children)
-            if(typeof(data.children) === "undefined"){
-                this.categoryName = data.oid
-            }
+
+            this.categoryName = data.oid
+
             this.pageOption.currentPage=1;
             this.searchText="";
             this.getModels();
@@ -231,7 +231,7 @@ new Vue({
             this.pageOption.progressBar = true;
             var data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage - 1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText : this.searchText,
                 classifications : this.classifications1.length == 0 ? ["all"] : this.classifications1

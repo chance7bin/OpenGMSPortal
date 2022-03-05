@@ -50,7 +50,7 @@ public class ConceptController {
      * @Author bin
      **/
     @ApiOperation(value = "concept列表信息 [ /repository/getConceptList ] 删除[/repository/searchConcept]接口")
-    @RequestMapping(value="/conceptList",method = RequestMethod.POST)
+    @RequestMapping(value={"/conceptList", "/list"},method = RequestMethod.POST)
     public JsonResult getConceptList(@RequestBody SpecificFindDTO repositoryQueryDTO){
         return conceptService.getConceptList(repositoryQueryDTO);
     }

@@ -5,16 +5,15 @@ new Vue({
     },
     data: function () {
         return {
-
+            categoryId: "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
             statistic:['Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview'],
             activeIndex: '2',
             queryType: 'normal',
             searchText: '',
-            classifications_old: ["a24cba2b-9ce1-44de-ac68-8ec36a535d0e"],
-            classifications_advance: [],//advance
-            classifications_new: [],
 
-            currentClass:"a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
+            currentClass:"Land regions",
+
+            classifications_advance: [],
 
             pageOption: {
                 paginationShow:false,
@@ -750,7 +749,7 @@ new Vue({
             this.switchInit();
 
             this.pageOption.currentPage = 1;
-            this.classifications_new=["all"];
+            this.categoryId = "";
             if(this.queryType=='normal') {
                 this.$refs.treeNew.setCurrentKey(null);
             }
@@ -767,24 +766,6 @@ new Vue({
             this.getModels(this.classType);
         },
 
-        handleCurrentChange(data) {
-
-            this.switchInit();
-
-            // this.pageOption.searchResult=[];
-            this.pageOption.total=0;
-            this.pageOption.paginationShow=false;
-            this.currentClass=data.label;
-            let classes = [];
-            classes.push(data.oid);
-            this.classifications_old = classes;
-            //this.getChildren(data.children)
-            this.pageOption.currentPage=1;
-            this.searchText="";
-            this.classType = 1;
-            this.getModels(this.classType);
-        },
-
         handleCurrentChange2(data) {
 
             this.switchInit();
@@ -792,13 +773,8 @@ new Vue({
             this.pageOption.total=0;
             this.pageOption.paginationShow=false;
             this.currentClass=data.label;
-            let classes = [];
-            classes.push(data.oid);
-            this.classifications_new = classes;
-            //this.getChildren(data.children)
-            if(typeof(data.children) === 'undefined') {
-                this.currentClass = data.oid
-            }
+            this.categoryId = data.oid
+
             this.pageOption.currentPage=1;
             this.searchText="";
             this.classType = 2;
@@ -838,21 +814,14 @@ new Vue({
             var data = {
                 sortField:this.sortFieldName,
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage - 1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 queryField: this.curQueryField,
-                categoryName:this.currentClass,
+                categoryName:this.categoryId,
             };
             switch (this.queryType) {
                 case "normal":
                     data.searchText = this.searchText.trim();
-                    if(classType==2) {
-                        data.classifications = this.classifications_new.length == 0 ? ["all"] : this.classifications_new;
-                        data.classType=classType;
-                    }else{
-                        data.classifications = this.classifications_old.length == 0 ? ["all"] : this.classifications_old;
-                        data.classType=1;
-                    }
 
                     break;
                 case "advanced":
@@ -1020,9 +989,8 @@ new Vue({
             console.log(category,page)
             //按分类查询
             if(category!=null) {
-                this.searchText="";
-                this.classifications_new=[];
-                this.classifications_new.push(category);
+                this.searchText = "";
+                this.categoryId = category;
                 for(i=0;i<this.treeData2.length;i++){
                     if(category==this.treeData2[i].oid){
                         this.$refs.treeNew.setCurrentKey(this.treeData2[i].id);
@@ -1079,14 +1047,13 @@ new Vue({
             //按queryString查询
             else if(searchText!=null) {
                 this.$refs.treeNew.setCurrentKey(null);
-                this.classifications_new=["all"];
+                this.categoryId = "";
                 this.currentClass="ALL";
                 this.searchText = searchText;
                 this.curQueryField = field;
             }else{
                 this.$refs.treeNew.setCurrentKey(24);
-                this.classifications_new=[];
-                this.classifications_new.push("9f7816be-c6e3-44b6-addf-98251e3d2e19");
+                this.categoryId = "9f7816be-c6e3-44b6-addf-98251e3d2e19";
                 this.currentClass="Application-focused categories";
             }
 

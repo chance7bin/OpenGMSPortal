@@ -131,14 +131,14 @@ public class ConceptualModelRestController {
 
     @ApiOperation(value = "条目查询 ")
     @RequestMapping (value="/list",method = RequestMethod.POST)
-    public JsonResult queryList(SpecificFindDTO queryDTO) {
+    public JsonResult queryList(@RequestBody SpecificFindDTO queryDTO) {
         return ResultUtils.success(genericService.searchItems(queryDTO, ItemTypeEnum.ConceptualModel));
     }
 
     @LoginRequired
     @ApiOperation(value = "查询由登录用户创建的所有条目")
     @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
-    public JsonResult queryListByAuthor(FindDTO queryDTO, HttpServletRequest request) {
+    public JsonResult queryListByAuthor(@RequestBody FindDTO queryDTO, HttpServletRequest request) {
         String email = Utils.checkLoginStatus(request);
         if(email != null) {
             SpecificFindDTO specificFindDTO = new SpecificFindDTO();
