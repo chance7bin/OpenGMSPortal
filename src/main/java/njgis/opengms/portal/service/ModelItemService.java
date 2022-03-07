@@ -1,6 +1,5 @@
 package njgis.opengms.portal.service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
@@ -11,8 +10,6 @@ import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -23,10 +20,6 @@ import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -543,13 +536,13 @@ public class ModelItemService {
 
 
     /**
-     * @Description 根据查询条件查询符合条件的模型条目
-     * @param modelItemFindDTO
-     * @Return com.alibaba.fastjson.JSONObject
-     * @Author kx
-     * @Date 2021/7/7
+     // * @Description 根据查询条件查询符合条件的模型条目
+     // * @param modelItemFindDTO
+     // * @Return com.alibaba.fastjson.JSONObject
+     // * @Author kx
+     // * @Date 2021/7/7
      **/
-    public JSONObject query(ModelItemFindDTO modelItemFindDTO, Boolean containPrivate) {
+/*    public JSONObject query(ModelItemFindDTO modelItemFindDTO, Boolean containPrivate) {
         JSONObject queryResult = new JSONObject();
 
         //查询条件梳理
@@ -651,7 +644,7 @@ public class ModelItemService {
 
         return queryResult;
 
-    }
+    }*/
 
 
     public JSONObject update(ModelItemUpdateDTO modelItemUpdateDTO, String uid){

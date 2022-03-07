@@ -3,6 +3,7 @@ package njgis.opengms.portal.dao;
 import njgis.opengms.portal.entity.dto.ResultDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,5 +64,37 @@ public interface GenericItemDao<T>{
     Page<T> findAllByAuthor(String author, Pageable pageable);
 
     long count();
+
+
+    //queryByUser
+    Page<ResultDTO> findByNameContainsIgnoreCaseAndStatusIn(String name, List<String> status, Pageable pageable);
+
+    @Query("{'keywords':{'$regex': '?0','$options':'i'}, 'status':{$in:?1}}")
+    Page<ResultDTO> findByKeywordsIgnoreCaseInAndStatusIn(String keyword, List<String> status, Pageable pageable);
+
+    @Query("{$and:[{$or:[{ 'overview':{'$regex': '?0','$options':'i'}}, {'localizationList.description': {'$regex': '?0','$options':'i'}}]},{'status':{$in:?1}}]}")
+    Page<ResultDTO> findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndStatusIn(String overview, List<String> status, Pageable pageable);
+
+    Page<ResultDTO> findByAuthorInAndStatusInOrContributorsInAndStatusIn(List<String> authors, List<String> status0, List<String> contributors, List<String> status1, Pageable pageable);
+
+    Page<ResultDTO> findByClassificationsInAndStatusIn(List<String> classes, List<String> status, Pageable pageable);
+
+    Page<ResultDTO> findByNameContainsIgnoreCaseAndAuthorAndStatusIn(String name, String email, List<String> status, Pageable pageable);
+
+    @Query("{'keywords':{'$regex': '?0','$options':'i'}, 'author':?1, 'status':{$in:?2}}")
+    Page<ResultDTO> findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(String keyword, String email, List<String> status, Pageable pageable);
+
+    @Query("{$and:[{$or:[{ 'overview':{'$regex': '?0','$options':'i'}}, {'localizationList.description': {'$regex': '?0','$options':'i'}}]},{'author':?1},{'status':{$in:?2}}]}")
+    Page<ResultDTO> findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(String overview, String email, List<String> status, Pageable pageable);
+
+    Page<ResultDTO> findByNameContainsIgnoreCase(String name, Pageable pageable);
+
+    @Query("{'keywords':{'$regex': '?0','$options':'i'}}")
+    Page<ResultDTO> findByKeywordsIgnoreCaseIn(String keyword, Pageable pageable);
+
+    @Query("{$or:[{ 'overview':{'$regex': '?0','$options':'i'}}, {'localizationList.description': {'$regex': '?0','$options':'i'}}]}")
+    Page<ResultDTO> findByOverviewContainsIgnoreCaseAndLocalizationDescription(String overview, Pageable pageable);
+
+
 
 }

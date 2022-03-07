@@ -11,7 +11,6 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.user.UserInfoUpdateDTO;
 import njgis.opengms.portal.entity.po.User;
-import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -378,147 +377,142 @@ public class UserRestController {
 
     }
 
-    /**
-     * 得到用户上传的dataItem
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
-    @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
-    JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
-    }
+    // /**
+    //  * 得到用户上传的dataItem
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
+    // @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
+    // JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
+    // }
 
-    /**
-     * 得到用户上传的dataHub
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的dataHub [/user(profile)/getDataHubs]")
-    @RequestMapping(value = "/dataHubList", method = RequestMethod.POST)
-    JsonResult getUserUploadDataHubs(@RequestBody FindDTO findDTO,HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataHub));
-    }
+    // /**
+    //  * 得到用户上传的dataHub
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的dataHub [/user(profile)/getDataHubs]")
+    // @RequestMapping(value = "/dataHubList", method = RequestMethod.POST)
+    // JsonResult getUserUploadDataHubs(@RequestBody FindDTO findDTO,HttpServletRequest request) {
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataHub));
+    // }
 
-    /**
-     * 得到用户上传的dataMethod
-     * @param email
-     * @param page
-     * @param pagesize
-     * @param asc
-     * @param type
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
-    @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
-    public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
-                                        @RequestParam(value = "page", required = false) Integer page,
-                                        @RequestParam(value = "pagesize", required = false) Integer pagesize,
-                                        @RequestParam(value = "asc", required = false) Integer asc,
-                                        @ApiParam(name = "type", value = "区分process与visual") @RequestParam(value = "type", required = false) String type
-    ) {
-        return ResultUtils.success(dataMethodService.getUsersUploadData(email, page, pagesize, asc, type));
-    }
-
-
-    /**
-     * 得到用户上传的concept
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的concept [/repository/getConceptsByUserId]")
-    @RequestMapping(value = "/conceptList",method = RequestMethod.POST)
-    public JsonResult getConceptsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Concept));
-    }
-
-    /**
-     * 得到用户上传的spatialReference
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的spatialReference [/repository/getSpatialsByUserId]")
-    @RequestMapping(value = "/spatialReferenceList",method = RequestMethod.POST)
-    public JsonResult getSpatialsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.SpatialReference));
-    }
+    // /**
+    //  * 得到用户上传的dataMethod
+    //  * @param email
+    //  * @param page
+    //  * @param pagesize
+    //  * @param asc
+    //  * @param type
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
+    // @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
+    // public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
+    //                                     @RequestParam(value = "page", required = false) Integer page,
+    //                                     @RequestParam(value = "pagesize", required = false) Integer pagesize,
+    //                                     @RequestParam(value = "asc", required = false) Integer asc,
+    //                                     @ApiParam(name = "type", value = "区分process与visual") @RequestParam(value = "type", required = false) String type
+    // ) {
+    //     return ResultUtils.success(dataMethodService.getUsersUploadData(email, page, pagesize, asc, type));
+    // }
 
 
-    /**
-     * 得到用户template
-     *
-     *
-     *
-     *
-     * @param findDTO
-     * @param request
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户template [ /repository/getTemplatesByUserId ]")
-    @RequestMapping(value = "/templateList",method = RequestMethod.POST)
-    public JsonResult getTemplatesByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Template));
-    }
+    // /**
+    //  * 得到用户上传的concept
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的concept [/repository/getConceptsByUserId]")
+    // @RequestMapping(value = "/conceptList",method = RequestMethod.POST)
+    // public JsonResult getConceptsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Concept));
+    // }
+
+    // /**
+    //  * 得到用户上传的spatialReference
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的spatialReference [/repository/getSpatialsByUserId]")
+    // @RequestMapping(value = "/spatialReferenceList",method = RequestMethod.POST)
+    // public JsonResult getSpatialsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.SpatialReference));
+    // }
 
 
-    /**
-     * 得到用户unit
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户unit [ /repository/getUnitsByUserId ]")
-    @RequestMapping(value = "/unitList",method = RequestMethod.POST)
-    public JsonResult getUnitsByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
-    }
+    // /**
+    //  * 得到用户template
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户template [ /repository/getTemplatesByUserId ]")
+    // @RequestMapping(value = "/templateList",method = RequestMethod.POST)
+    // public JsonResult getTemplatesByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Template));
+    // }
 
-    /**
-     * 得到用户上传的theme
-     * @param findDTO
-     * @param request
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户theme [ /repository/getThemesByUserId ]")
-    @RequestMapping(value = "/themeList",method = RequestMethod.POST)
-    public JsonResult getThemesByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        JSONObject result = genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme);
-        // List<Theme> content = (List<Theme>) result.get("content");
-        return ResultUtils.success(result);
-    }
+
+    // /**
+    //  * 得到用户unit
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户unit [ /repository/getUnitsByUserId ]")
+    // @RequestMapping(value = "/unitList",method = RequestMethod.POST)
+    // public JsonResult getUnitsByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
+    // }
+
+    // /**
+    //  * 得到用户上传的theme
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户theme [ /repository/getThemesByUserId ]")
+    // @RequestMapping(value = "/themeList",method = RequestMethod.POST)
+    // public JsonResult getThemesByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     JSONObject result = genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme);
+    //     // List<Theme> content = (List<Theme>) result.get("content");
+    //     return ResultUtils.success(result);
+    // }
 
 
     @LoginRequired
