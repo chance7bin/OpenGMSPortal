@@ -12,9 +12,9 @@ import java.util.List;
  */
 @Data
 public class UserInfoUpdateDTO {
-    String introduction;
-    List<String> organizations = new ArrayList<>();
-    String location;
+    String introduction; //userServer的信息
+    List<String> organizations = new ArrayList<>(); //userServer的信息
+    // String location;
     List<String> externalLinks = new ArrayList<>();//存放用户的外部网站个人页面
     List<String> researchInterests = new ArrayList<>(); //researchInterests
 }

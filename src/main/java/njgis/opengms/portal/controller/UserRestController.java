@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.dto.user.UserInfoUpdateDTO;
+import njgis.opengms.portal.entity.dto.user.*;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
@@ -712,29 +712,146 @@ public class UserRestController {
 
 
     @LoginRequired
+    @ApiOperation(value = "更新userInfo")
     @RequestMapping(value = "/updateUserInfo",method = RequestMethod.POST)
     JsonResult updateUserInfo(@RequestBody UserInfoUpdateDTO userInfoUpdateDTO, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
         String email = session.getAttribute("email").toString();
-        String introduction = userInfoUpdateDTO.getIntroduction();
-//        String email = userInfoUpdateDTO.getEmail();
-        List<String> organizations = userInfoUpdateDTO.getOrganizations();
-        List<String> externalLinks = userInfoUpdateDTO.getExternalLinks();
-        String location = userInfoUpdateDTO.getLocation();
-        List<String> researchInterests = userInfoUpdateDTO.getResearchInterests();
-        String result1 = userService.updateIntroduction(introduction, email);
-        String result2 = userService.updateOrganizations(organizations,email);
-        String result4 = userService.updateExternalLinks(externalLinks,email);
-        String result5 = userService.updateResearchInterest(researchInterests,email);
-//        String result5 = userService.updateEmail(email,userName);
 
-        JSONObject result = new JSONObject();
-        result.put("int", result1);
-        result.put("org", result2);
-        result.put("exl", result4);
-        result.put("res", result5);
-//        result.put("ema", result5);
-        return ResultUtils.success(result);
+        // String introduction = userInfoUpdateDTO.getIntroduction();
+        // List<String> organizations = userInfoUpdateDTO.getOrganizations();
+        // List<String> externalLinks = userInfoUpdateDTO.getExternalLinks();
+        // String location = userInfoUpdateDTO.getLocation();
+        // List<String> researchInterests = userInfoUpdateDTO.getResearchInterests();
+        // String result1 = userService.updateIntroduction(introduction, email);
+        // String result2 = userService.updateOrganizations(organizations,email);
+        // String result4 = userService.updateExternalLinks(externalLinks,email);
+        // String result5 = userService.updateResearchInterest(researchInterests,email);
+        // JSONObject result = new JSONObject();
+        // result.put("int", result1);
+        // result.put("org", result2);
+        // result.put("exl", result4);
+        // result.put("res", result5);
+
+        User user = userService.updateUserInfo(userInfoUpdateDTO, email);
+
+        if (user == null)
+            return ResultUtils.error();
+        else
+            return ResultUtils.success(user);
+
     }
+
+    @ApiOperation(value = "更新用户服务器的信息")
+    @RequestMapping(value = "/updateUsertoServer", method = RequestMethod.POST)
+    public JsonResult updateUserServer(HttpServletRequest req, @RequestBody UserShuttleDTO userShuttleDTO) throws Exception {
+        HttpSession session = req.getSession();
+        JSONObject jsonObject = new JSONObject();
+
+        if (session.getAttribute("email") == null || !session.getAttribute("email").toString().equals(userShuttleDTO.getEmail())) {
+            return ResultUtils.error(-1,"out");
+
+        } else {
+
+            String email = session.getAttribute("email").toString();
+            int result = userService.updateUsertoServer(userShuttleDTO);
+            if(result == -1){
+
+                return ResultUtils.error(-1,"out");
+            }else if(result == -2) {
+                return ResultUtils.error(-2,"error");
+            }
+
+            req.setAttribute("name", userShuttleDTO.getName());
+            return ResultUtils.success("suc");
+        }
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新articles")
+    @RequestMapping(value="/update/articles",method = RequestMethod.POST)
+    public JsonResult updateArticles(@RequestBody ArticlesDTO articlesDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateArticles(articlesDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新projects")
+    @RequestMapping(value="/update/projects",method = RequestMethod.POST)
+    public JsonResult updateProjects(@RequestBody ProjectDTO projectDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateProjects(projectDTO,email);
+        return ResultUtils.success(user);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新conferences")
+    @RequestMapping(value="/update/conferences",method = RequestMethod.POST)
+    public JsonResult updateConferences(@RequestBody ConferenceDTO conferenceDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateConferences(conferenceDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新academicServices")
+    @RequestMapping(value="/update/academicServices",method = RequestMethod.POST)
+    public JsonResult updateAcademicServices(@RequestBody AcademicServiceDTO academicServiceDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateAcademicServices(academicServiceDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新awardsHonors")
+    @RequestMapping(value="/update/awardsHonors",method = RequestMethod.POST)
+    public JsonResult updateAwardsHonors(@RequestBody AwardandHonorDTO awardandHonorDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateAwardsHonors(awardandHonorDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新educationExperiences")
+    @RequestMapping(value="/update/educationExperiences",method = RequestMethod.POST)
+    public JsonResult updateEducationExperiences(@RequestBody EducationExperienceDTO educationExperienceDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateEducationExperiences(educationExperienceDTO,email);
+        return ResultUtils.success(user);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新userLab")
+    @RequestMapping(value="/update/userLab",method = RequestMethod.POST)
+    public JsonResult updateLab(@RequestBody UserLabDTO userLabDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateLab(userLabDTO,email);
+        return ResultUtils.success(user);
+    }
+
 
 }

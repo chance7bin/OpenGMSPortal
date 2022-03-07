@@ -3,7 +3,6 @@ package njgis.opengms.portal.entity.doo.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
@@ -11,10 +10,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EducationExperience {
-    @Id
-    String id;
-
-    String oid;
     String academicDegree;
     String institution;
     String department;
@@ -22,6 +17,4 @@ public class EducationExperience {
     Date endTime;
     String eduLocation;
     String contributor;
-    Date creatDate;
-
 }

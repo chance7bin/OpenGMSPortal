@@ -9,7 +9,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
 import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
-import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
+import njgis.opengms.portal.entity.dto.user.*;
 import njgis.opengms.portal.entity.po.Feedback;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
@@ -920,7 +921,174 @@ public class UserService {
         }
     }
 
+    public int updateUsertoServer(UserShuttleDTO userShuttleDTO) throws Exception {
+        String token = tokenService.checkToken(userShuttleDTO.getEmail());
+        if(token.equals("out")){
+            return -1;
+        }
+
+        try {
+            String url = "http://" + userServer + "/auth/update";
+            HttpHeaders httpHeaders = new HttpHeaders();
+            MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
+            httpHeaders.setContentType(mediaType);
+            httpHeaders.set("user-agent","portal_backend");
+            httpHeaders.add("Authorization","Bearer " + token);
+            RestTemplate restTemplate = new RestTemplate();
+
+            HashMap<String,Object> params = new HashMap<>();
+            putValueToMap(params,userShuttleDTO);
+
+            HttpEntity<Object> httpEntity = new HttpEntity<>(params, httpHeaders);
+            ResponseEntity<JSONObject> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
+
+            if(result.getBody().getInteger("code")==-2){
+                return -2;
+            }
+
+            User user = userDao.findFirstByEmail(userShuttleDTO.getEmail());
+            updatePortalUser(result.getBody().getJSONObject("data"),user);
+
+            return 1;
+        }catch (Exception e){
+            return -2;
+        }
+
+    }
+
+    public void putValueToMap(Map<String,Object> map,Object obj) throws IllegalAccessException {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        if(map instanceof LinkedMultiValueMap){
+            map = (LinkedMultiValueMap)map;
+        }
+        for(int i=0;i<fields.length;i++){
+            String name = fields[i].getName();
+            //设置对象的访问权限，保证对private的属性的访问
+            fields[i].setAccessible(true);
+            if(fields[i].get(obj)!=null){
+                Object ele = fields[i].get(obj);
+                map.put(name,ele);
+            }
+
+        }
+    }
+
+    public void updatePortalUser(JSONObject updateUserInfo,User portalUser) throws NoSuchFieldException, IllegalAccessException {
+
+        try {
+            UserShuttleDTO userShuttleDTO = updateUserInfo.toJavaObject(UserShuttleDTO.class);
+
+            if(portalUser==null){
+                portalUser = new User();
+            }
+            for (Field shuttleField : userShuttleDTO.getClass().getDeclaredFields()) {
+                String keyName = shuttleField.getName();
+                if(keyName.equals("userId")){
+                    continue;
+                }
+                Field field = null;
+                try{
+                    field = portalUser.getClass().getDeclaredField(keyName);
+                    shuttleField = userShuttleDTO.getClass().getDeclaredField(keyName);
+                }catch (Exception e){
+
+                }
+                if(field != null){
+                    field.setAccessible(true);
+                    shuttleField.setAccessible(true);
+                    if (field.get(portalUser)!=null&&!field.get(portalUser).equals(shuttleField.get(userShuttleDTO))) {
+                        if(shuttleField.getName().equals("avatar")){//用户头像单独处理
+                            String avatar = (String) shuttleField.get(userShuttleDTO);
+                            avatar = "/userServer" + avatar;
+                            field.set(portalUser, avatar);
+                        }else{
+                            field.set(portalUser, shuttleField.get(userShuttleDTO));
+                        }
+
+                    }
 
 
+                }
 
+
+            }
+            userDao.save(portalUser);
+        }catch (Exception e){
+
+        }
+
+    }
+
+    public User updateArticles(ArticlesDTO articlesDTO, String email){
+
+        User user = userDao.findFirstByEmail(email);
+        user.setArticles(articlesDTO.getIdList());
+        return userDao.save(user);
+    }
+
+
+    public User updateProjects(ProjectDTO projectDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setProjects(projectDTO.getProjects());
+        return userDao.save(user);
+    }
+
+    public User updateConferences(ConferenceDTO conferenceDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setConferences(conferenceDTO.getConferences());
+        return userDao.save(user);
+
+    }
+
+    public User updateAcademicServices(AcademicServiceDTO academicServiceDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setAcademicServices(academicServiceDTO.getAcademicServices());
+        return userDao.save(user);
+    }
+
+    public User updateAwardsHonors(AwardandHonorDTO awardandHonorDTO, String email) {
+
+        User user = userDao.findFirstByEmail(email);
+        user.setAwardsHonors(awardandHonorDTO.getAwardandHonors());
+        return userDao.save(user);
+    }
+
+    public User updateEducationExperiences(EducationExperienceDTO educationExperienceDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setEducationExperiences(educationExperienceDTO.getEducationExperiences());
+        return userDao.save(user);
+    }
+
+    public User updateLab(UserLabDTO userLabDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setLab(userLabDTO.getUserLabs());
+        return userDao.save(user);
+    }
+
+    public User updateUserInfo(UserInfoUpdateDTO userInfoUpdateDTO, String email) {
+
+        //获取用户服务器的信息
+        JSONObject commonInfo = getInfoFromUserServer(email);
+        UserShuttleDTO userShuttleDTO = JSONObject.toJavaObject(commonInfo, UserShuttleDTO.class);
+        User user = userDao.findFirstByEmail(email);
+
+        //更新用户服务器的信息
+        userShuttleDTO.setIntroduction(userInfoUpdateDTO.getIntroduction());
+        userShuttleDTO.setOrganizations((ArrayList<String>) userInfoUpdateDTO.getOrganizations());
+        try {
+            updateUsertoServer(userShuttleDTO);
+        }catch (Exception e){
+           return null;
+        }
+
+        user.setHomepage(userInfoUpdateDTO.getExternalLinks().get(0));
+        user.setDomain(userInfoUpdateDTO.getResearchInterests());
+        user.setIntroduction(userInfoUpdateDTO.getIntroduction());
+        user.setOrganizations(userInfoUpdateDTO.getOrganizations());
+        userDao.save(user);
+
+        return user;
+
+
+    }
 }
