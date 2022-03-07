@@ -67,6 +67,9 @@ public interface GenericItemDao<T>{
 
 
     //queryByUser
+    Page<ResultDTO> findByStatusIn(List<String> status, Pageable pageable);
+
+
     Page<ResultDTO> findByNameContainsIgnoreCaseAndStatusIn(String name, List<String> status, Pageable pageable);
 
     @Query("{'keywords':{'$regex': '?0','$options':'i'}, 'status':{$in:?1}}")
@@ -78,6 +81,9 @@ public interface GenericItemDao<T>{
     Page<ResultDTO> findByAuthorInAndStatusInOrContributorsInAndStatusIn(List<String> authors, List<String> status0, List<String> contributors, List<String> status1, Pageable pageable);
 
     Page<ResultDTO> findByClassificationsInAndStatusIn(List<String> classes, List<String> status, Pageable pageable);
+
+    Page<ResultDTO> findByAuthorAndStatusIn(String email, List<String> status, Pageable pageable);
+
 
     Page<ResultDTO> findByNameContainsIgnoreCaseAndAuthorAndStatusIn(String name, String email, List<String> status, Pageable pageable);
 

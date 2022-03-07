@@ -109,6 +109,9 @@ public class GenericService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
+    @Value(value = "Public,Discoverable,Private")
+    private List<String> allVisible;
+
     @Value("${resourcePath}")
     private String resourcePath;
 
@@ -845,6 +848,7 @@ public class GenericService {
         String searchText = userFindDTO.getSearchText();
         String authorEmail = userFindDTO.getAuthorEmail();
         String categoryName = userFindDTO.getCategoryName();
+        String curQueryField = userFindDTO.getCurQueryField();
 
         Pageable pageable = getPageable(userFindDTO);
 
@@ -865,24 +869,32 @@ public class GenericService {
         if(authorEmail == null || authorEmail.trim().equals("")) {
             //未指定分类
             if(classIdList.size()==0) {
-                switch (userFindDTO.getCurQueryField()) {
-                    case "name":
-                        itemPage = itemDao.findByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
-                        break;
-                    case "keyword":
-                        itemPage = itemDao.findByKeywordsIgnoreCaseInAndStatusIn(searchText, itemStatusVisible, pageable);
-                        break;
-                    case "content":
-                        itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndStatusIn(searchText, itemStatusVisible, pageable);
-                        break;
-                    case "contributor":
-                        List<User> userList = userDao.findAllByNameContainsIgnoreCase(searchText);
-                        List<String> emailList = new ArrayList<>();
-                        for (User user : userList) {
-                            emailList.add(user.getEmail());
-                        }
-                        itemPage = itemDao.findByAuthorInAndStatusInOrContributorsInAndStatusIn(emailList, itemStatusVisible, emailList, itemStatusVisible, pageable);
-                        break;
+                if (searchText.equals("")){
+                    itemPage = itemDao.findByStatusIn(itemStatusVisible, pageable);
+                }
+                else if (curQueryField == null || curQueryField.equals("")){
+                    itemPage = itemDao.findByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
+                }
+                else {
+                    switch (curQueryField) {
+                        case "name":
+                            itemPage = itemDao.findByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
+                            break;
+                        case "keyword":
+                            itemPage = itemDao.findByKeywordsIgnoreCaseInAndStatusIn(searchText, itemStatusVisible, pageable);
+                            break;
+                        case "content":
+                            itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndStatusIn(searchText, itemStatusVisible, pageable);
+                            break;
+                        case "contributor":
+                            List<User> userList = userDao.findAllByNameContainsIgnoreCase(searchText);
+                            List<String> emailList = new ArrayList<>();
+                            for (User user : userList) {
+                                emailList.add(user.getEmail());
+                            }
+                            itemPage = itemDao.findByAuthorInAndStatusInOrContributorsInAndStatusIn(emailList, itemStatusVisible, emailList, itemStatusVisible, pageable);
+                            break;
+                    }
                 }
             } else{ //获取某一分类下所有条目
                 // TODO: 2022/3/5 这里还要再分类
@@ -891,28 +903,44 @@ public class GenericService {
         }else{
             //指定查询某一用户公开条目
             if(!containPrivate){
-                switch (userFindDTO.getCurQueryField()) {
-                    case "name":
-                        itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
-                        break;
-                    case "keyword":
-                        itemPage = itemDao.findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
-                        break;
-                    case "content":
-                        itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
-                        break;
+                if (searchText.equals("")){
+                    itemPage = itemDao.findByAuthorAndStatusIn(authorEmail, itemStatusVisible, pageable);
+                }
+                else if (curQueryField == null || curQueryField.equals("")){
+                    itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                }
+                else {
+                    switch (curQueryField) {
+                        case "name":
+                            itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                            break;
+                        case "keyword":
+                            itemPage = itemDao.findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                            break;
+                        case "content":
+                            itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                            break;
+                    }
                 }
             }else{//查询某一用户所有条目
-                switch (userFindDTO.getCurQueryField()) {
-                    case "name":
-                        itemPage = itemDao.findByNameContainsIgnoreCase(searchText, pageable);
-                        break;
-                    case "keyword":
-                        itemPage = itemDao.findByKeywordsIgnoreCaseIn(searchText, pageable);
-                        break;
-                    case "content":
-                        itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescription(searchText, pageable);
-                        break;
+                if (searchText.equals("")){
+                    itemPage = itemDao.findByAuthorAndStatusIn(authorEmail, allVisible, pageable);
+                }
+                else if (curQueryField == null || curQueryField.equals("")){
+                    itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                }
+                else {
+                    switch (curQueryField) {
+                        case "name":
+                            itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                            break;
+                        case "keyword":
+                            itemPage = itemDao.findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                            break;
+                        case "content":
+                            itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                            break;
+                    }
                 }
             }
 
