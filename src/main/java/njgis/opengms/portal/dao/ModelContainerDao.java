@@ -12,4 +12,9 @@ import java.util.List;
  */
 public interface ModelContainerDao extends MongoRepository<ModelContainer,String> {
     List<ModelContainer> findAllByAccount(String email);
+
+    ModelContainer findFirstByAccountAndMac(String user,String mac);
+
+
+    ModelContainer findByMac(String mac);
 }

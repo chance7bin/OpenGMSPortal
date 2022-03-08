@@ -11,10 +11,9 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
-import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.RelationTypeEnum;
@@ -34,11 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -176,40 +171,35 @@ public class ModelItemRestController {
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
     @RequestMapping(value = {"/items","/list"}, method = RequestMethod.POST)
-    public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
+    public JsonResult queryList(SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
     }
 
     /**
      * @Description 某用户查询他人的模型条目
-     * @param modelItemFindDTO
+     * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author kx
-     * @Date 2021/7/7
      **/
     @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
     @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
-    public JsonResult queryListOfAuthor(ModelItemFindDTO modelItemFindDTO) {
+    public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
 
-        return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem,findDTO, false));
 
     }
 
     /**
      * @Description 某用户查询自己的模型条目
-     * @param modelItemFindDTO
+     * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author kx
-     * @Date 2021/7/7
      **/
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(@RequestBody ModelItemFindDTO modelItemFindDTO, HttpServletRequest request) {
-        String email = Utils.checkLoginStatus(request);
-        modelItemFindDTO.setAuthorEmail(email);
-        return ResultUtils.success(modelItemService.query(modelItemFindDTO, true));
+    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem,findDTO, true));
 
     }
 
@@ -233,6 +223,7 @@ public class ModelItemRestController {
         String model=IOUtils.toString(file.getInputStream(),"utf-8");
         JSONObject jsonObject=JSONObject.parseObject(model);
         ModelItemUpdateDTO modelItemUpdateDTO=JSONObject.toJavaObject(jsonObject,ModelItemUpdateDTO.class);
+
         JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
         if(result==null){
             return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
