@@ -1,12 +1,15 @@
 package njgis.opengms.portal.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
@@ -14,6 +17,7 @@ import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.RelationTypeEnum;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.ModelItemService;
 import njgis.opengms.portal.service.UserService;
@@ -21,6 +25,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -228,7 +233,6 @@ public class ModelItemRestController {
         String model=IOUtils.toString(file.getInputStream(),"utf-8");
         JSONObject jsonObject=JSONObject.parseObject(model);
         ModelItemUpdateDTO modelItemUpdateDTO=JSONObject.toJavaObject(jsonObject,ModelItemUpdateDTO.class);
-
         JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
         if(result==null){
             return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
@@ -297,7 +301,7 @@ public class ModelItemRestController {
 
     }
 
-    @ApiOperation(value = "刷新门户所有模型的关系图Json，并存储于本地文件")
+    @ApiOperation(value = "刷新门户所有模型的关系图Json，并存储于服务器本地")
     @RequestMapping(value="/refreshFullRelationGraph",method = RequestMethod.POST)
     public JsonResult refreshFullRelationGraph(){
         return ResultUtils.success(modelItemService.refreshFullRelationGraph());
@@ -311,7 +315,7 @@ public class ModelItemRestController {
 
     @ApiOperation(value = "获取模型参考文献", notes = "@LoginRequired\n")
     @RequestMapping(value = "/references/{id}", method = RequestMethod.GET)
-    JsonResult getReferences(@PathVariable("id") String id ,HttpServletRequest request){
+    JsonResult getReferences(@PathVariable("id") String id, HttpServletRequest request){
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
@@ -320,12 +324,27 @@ public class ModelItemRestController {
 
     @ApiOperation(value = "获取模型相关资源", notes = "@LoginRequired\n")
     @RequestMapping(value = "/relatedResources/{id}", method = RequestMethod.GET)
-    JsonResult getRelatedResources(@PathVariable("id") String id ,HttpServletRequest request){
+    JsonResult getRelatedResources(@PathVariable("id") String id, HttpServletRequest request){
         System.out.println("test");
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
         return ResultUtils.success(modelItemService.getRelatedResources(id));
+    }
+
+    @ApiOperation(value = "更新模型条目别名信息", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/Alias", method = RequestMethod.PUT)
+    public JsonResult updateAlias(@RequestParam(value = "id") String id,
+                                  @RequestParam(value = "alias[]") List<String> alias,
+                                  HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+
+        return ResultUtils.success(modelItemService.updateAlias(id,alias,email));
     }
 
     @ApiOperation(value = "更新模型条目分类信息", notes = "@LoginRequired\n")
@@ -343,45 +362,64 @@ public class ModelItemRestController {
         return ResultUtils.success(modelItemService.updateClassifications(id,classi,email));
     }
 
+    @ApiOperation(value = "更新模型条目详情描述列表", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/localizations", method = RequestMethod.PUT)
+    public JsonResult updateLocals(@RequestParam(value = "id") String id,
+                                  @RequestParam(value = "localizations") String localizations_str,
+                                  HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
 
-    /**
-     * 模型详情页面RelatedData，为模型添加关联的数据
-     * @param id 模型id
-     * @param relatedData
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "模型详情页面RelatedData，为模型添加关联的数据 [ /modelItem/data ]")
-    @RequestMapping(value = "/update/relatedData",method = RequestMethod.POST)
-    JsonResult addRelatedData(@RequestParam(value = "modelId") String id,@RequestParam(value = "relatedData") List<String> relatedData){
-        return modelItemService.addRelatedData(id,relatedData);
+        List<Localization> localizations = JSONObject.parseArray(localizations_str, Localization.class);
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+
+        return ResultUtils.success(modelItemService.updateLocalizations(id,localizations,email));
     }
 
+    @ApiOperation(value = "更新模型条目关联条目,除related ModelItem", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/relation", method = RequestMethod.PUT)
+    public JsonResult updateRelation(@RequestParam(value = "id") String id,
+                                     @RequestParam(value="type") String type,
+                                    @RequestParam(value = "relations[]") List<String> relations,
+                                    HttpServletRequest request){
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
 
-    /**
-     * 模型详情页面RelatedData，模型关联的3个数据
-     * @param id
-     * @return
-     */
-    @ApiOperation(value = "模型详情页面RelatedData，模型关联的3个数据 [ /modelItem/briefrelateddata ]")
-    @RequestMapping(value = "/briefRelatedData",method = RequestMethod.GET)
-    JsonResult getBriefRelatedData(@RequestParam(value = "id") String id){
-        return ResultUtils.success(modelItemService.getRelatedData(id));
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+
+        return ResultUtils.success(modelItemService.setRelation(id,type,relations,email));
     }
 
+    @ApiOperation(value = "更新模型条目related ModelItem", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/modelRelation/{id}", method = RequestMethod.PUT)
+    JsonResult setModelRelation(@PathVariable("id") String id,
+                                @RequestParam(value = "relations[]") JSONArray relations ,
+                                HttpServletRequest request) {
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        HttpSession session=request.getSession();
+        String email=session.getAttribute("email").toString();
+        List<ModelRelation> modelRelationList = new ArrayList<>();
 
-    /**
-     * 模型详情页面RelatedData，模型关联的所有数据
-     * @param id
-     * @param more
-     * @return
-     */
-    @ApiOperation(value = "模型详情页面RelatedData，模型关联的所有数据 [ /modelItem/allrelateddata ]")
-    @RequestMapping(value = "/allRelatedData",method = RequestMethod.GET)
-    JsonResult getRelatedData(@RequestParam(value = "id") String id,@RequestParam(value = "more") Integer more){
-        return ResultUtils.success(modelItemService.getAllRelatedData(id,more));
+        for (int i = 0; i < relations.size(); i++) {
+            JSONObject object = relations.getJSONObject(i);
+            ModelRelation modelRelation = new ModelRelation();
+            modelRelation.setModelId(object.getString("id"));
+            modelRelation.setRelation(RelationTypeEnum.getRelationTypeByText(object.getString("relation")));
+            modelRelationList.add(modelRelation);
+        }
+
+        JSONObject result = modelItemService.setModelRelation(id, modelRelationList,email);
+
+        return ResultUtils.success(result);
+
     }
+
 
     @ApiOperation(value = "根据id得到模型条目信息")
     @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)

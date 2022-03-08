@@ -884,7 +884,7 @@ public class DataMethodService {
     /**
      * 更新dataMethod
      * @param files
-     * @param email
+     * @param email 修改者email
      * @param updateDTO
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
@@ -966,11 +966,12 @@ public class DataMethodService {
             } else {
                 Version version = versionService.addVersion(dataMethod, email,originalItemName);
                 //发送通知
-                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
-                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
-                recipientList = noticeService.addPortalAdmins(recipientList);
-                recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
+                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), version.getId(), OperationEnum.Edit);
+//                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
+//                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
+//                recipientList = noticeService.addPortalAdmins(recipientList);
+//                recipientList = noticeService.addPortalRoot(recipientList);
+//                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
                 result.put("versionId", version.getId());
                 return result;

@@ -182,7 +182,11 @@ public class UserRestController {
             JSONObject user = new JSONObject();
             return ResultUtils.unauthorized();
         } else {
-            return userService.loadUser(email);
+            JsonResult result = userService.loadUser(email);
+            if(result.getCode()==-3){
+                userService.removeUserSession(request);
+            }
+            return result;
         }
     }
 
