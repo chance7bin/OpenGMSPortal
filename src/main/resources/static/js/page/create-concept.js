@@ -34,7 +34,7 @@ var createConcept = Vue.extend({
 
             queryType: 'normal',
             searchText: '',
-            classifications1: ["34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP"],
+            classifications1: "34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP",
             classifications2: ["13b822a2-fecd-4af7-aeb8-0503244abe8f"],
             currentClass: "Sedris",
             pageOption: {
@@ -1089,9 +1089,7 @@ var createConcept = Vue.extend({
             this.pageOption.total = 0;
             this.pageOption.paginationShow = false;
             this.currentClass = data.label;
-            let classes = [];
-            classes.push(data.oid);
-            this.classifications1 = classes;
+            this.classifications1 = data.oid;
             this.getChildren(data.children)
             this.pageOption.currentPage = 1;
             this.searchText = "";
@@ -1118,7 +1116,7 @@ var createConcept = Vue.extend({
                 page: this.pageOption.currentPage - 1,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.searchText,
-                classifications: this.classifications1.length == 0 ? ["all"] : this.classifications1
+                classifications: this.classifications1
 
             };
             this.Query(data, this.queryType);
@@ -1128,6 +1126,7 @@ var createConcept = Vue.extend({
             query.oid = data.classifications[0];
             query.page = data.page;
             query.sortType = this.pageOption.sortType;
+            query.categoryName = data.classifications
             if (data.asc) {
                 query.asc = 0;
             } else {
@@ -1135,12 +1134,9 @@ var createConcept = Vue.extend({
             }
             query.searchText = data.searchText;
 
-            let url = "";
-            if (query.searchText.trim() == "") {
-                url = getConceptList();
-            } else {
-                url = "/repository/searchConcept";
-                this.classifications1 = [""];
+            let url = getConceptList();
+            if (query.searchText.trim() != "") {
+                this.classifications1 = "all";
                 this.currentClass = "ALL";
                 this.$refs.tree1.setCurrentKey(null);
             }
@@ -1805,7 +1801,7 @@ var createConcept = Vue.extend({
                 });
                 formData.append("info", file);
                 $.ajax({
-                    url: "/repository/addConcept",
+                    url: "/concept/",
                     type: "POST",
                     cache: false,
                     processData: false,

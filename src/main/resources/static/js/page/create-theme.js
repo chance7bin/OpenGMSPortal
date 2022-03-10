@@ -1075,25 +1075,25 @@ var createTheme = Vue.extend({
                     contentType = "application/json";
                     break;
                 case "concept":
-                    url = this.relateSearch.trim() == "" ? getConceptList() : "/repository/searchConcept";
+                    url = getConceptList();
                     data.asc = data.asc == true ? 0 : 1;
                     data = JSON.stringify(data);
                     contentType = "application/json";
                     break;
                 case "spatialReference":
-                    url = this.relateSearch.trim() == "" ? "/repository/getSpatialReferenceList" : "/repository/searchSpatialReference";
+                    url = getSpatialReferenceList()
                     data.asc = data.asc == true ? 0 : 1;
                     data = JSON.stringify(data);
                     contentType = "application/json";
                     break;
                 case "template":
-                    url = this.relateSearch.trim() == "" ? "/repository/getTemplateList" : "/repository/searchTemplate";
+                    url = getTemplateList()
                     data.asc = data.asc == true ? 0 : 1;
                     data = JSON.stringify(data);
                     contentType = "application/json";
                     break;
                 case "unit":
-                    url = this.relateSearch.trim() == "" ? "/repository/getUnitList" : "/repository/searchUnit";
+                    url = getUnitList()
                     data.asc = data.asc == true ? 0 : 1;
                     data = JSON.stringify(data);
                     contentType = "application/json";
@@ -2044,7 +2044,6 @@ var createTheme = Vue.extend({
 
             var detail = tinyMCE.activeEditor.getContent();
             that.themeObj.detail = detail.trim();
-            console.log(that.themeObj);
 
             that.themeObj.uploadImage = $('#imgShow').get(0).currentSrc;
             that.themeObj.tabledata = that.editableTabs_model;

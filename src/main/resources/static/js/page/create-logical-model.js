@@ -2,6 +2,7 @@ var createLogicalModel = Vue.extend({
     template: "#createLogicalModel",
     data() {
         return {
+            bindLoaing:false,
             defaultActive: '2-3',
             curIndex: '2',
 
@@ -73,9 +74,8 @@ var createLogicalModel = Vue.extend({
     },
     methods: {
         selectModelItem(index,info){
-            console.log(info);
             this.itemInfo.relateModelItemName = info.name;
-            this.itemInfo.relateModelItem = info.oid;
+            this.itemInfo.relateModelItem = info.id;
             this.bindModelItemDialogVisible = false;
         },
         handlePageChange(val) {
@@ -90,35 +90,34 @@ var createLogicalModel = Vue.extend({
             this.searchModelItem();
         },
         searchModelItem(){
+            this.bindLoaing = true
             let data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage-1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.pageOption.searchText,
                 sortType: "default",
                 classifications: ["all"],
             };
-            let url = "/modelItem/items";
-            let contentType = "application/x-www-form-urlencoded";
+            let url = getModelItemList();
+            let contentType = "application/json";
 
             $.ajax({
                 type: "POST",
                 url: url,
-                data: data,
+                data: JSON.stringify(data),
                 async: true,
                 contentType: contentType,
                 success: (json) => {
                     if (json.code == 0) {
                         let data = json.data;
-                        console.log(data)
-
                         this.pageOption.total = data.total;
                         this.pageOption.pages = data.pages;
                         this.pageOption.searchResult = data.list;
                         this.pageOption.users = data.users;
                         this.pageOption.progressBar = false;
                         this.pageOption.paginationShow = true;
-
+                        this.bindLoaing = true
                     }
                     else {
                         console.log("query error!")
@@ -596,8 +595,9 @@ var createLogicalModel = Vue.extend({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
+                success: (result) => {
 
+                    let data = result.data
                     console.log(data);
 
                     if (data.oid == "") {
@@ -609,7 +609,7 @@ var createLogicalModel = Vue.extend({
                             }
                         });
                     } else {
-                        this.userId = data.oid;
+                        this.userId = data.email;
                         this.userName = data.name;
                         console.log(this.userId)
                         this.sendUserToParent(this.userId)
@@ -672,52 +672,7 @@ var createLogicalModel = Vue.extend({
             file.value='';
         })
 
-        $.ajax({
-            type: "GET",
-            url: "/user/load",
-            data: {},
-            cache: false,
-            async: false,
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: (data) => {
-                if (data.oid == "") {
-                    this.$alert('Please login first!', 'Error', {
-                        type:"error",
-                        confirmButtonText: 'OK',
-                        callback: action => {
-                            window.location.href="/user/login";
-                        }
-                    });
-                }
-                else {
-                    this.userId = data.uid;
-                    this.userName = data.name;
 
-                    var relateModelItem = this.getSession("relateModelItem");
-                    this.itemInfo.relateModelItem = relateModelItem;
-                    $.ajax({
-                        type: "Get",
-                        url: "/modelItem/getInfo/" + relateModelItem,
-                        data: {},
-                        cache: false,
-                        async: true,
-                        success: (json) => {
-                            if (json.data != null) {
-
-                                this.itemInfo.relateModelItemName = json.data.name;
-                                this.clearSession();
-                            }
-                            else {
-
-                            }
-                        }
-                    })
-                }
-            }
-        })
 
 
         var oid = this.$route.params.editId;//取得所要edit的id
@@ -846,8 +801,8 @@ var createLogicalModel = Vue.extend({
                 });
                 this.formData.append("logicalModel", file)
                 $.ajax({
-                    url: '/logicalModel/add',
-                    type: 'post',
+                    url: '/logicalModel/',
+                    type: 'POST',
                     data: this.formData,
                     cache: false,
                     processData: false,

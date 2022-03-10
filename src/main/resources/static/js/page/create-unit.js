@@ -870,7 +870,7 @@ var createUnit =Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/addUnit",
+                    url: "/unit/",
                     type: "POST",
                     cache: false,
                     processData: false,

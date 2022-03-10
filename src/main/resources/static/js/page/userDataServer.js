@@ -151,7 +151,7 @@ var userDataServer = Vue.extend(
                 this.dataNode.status = 0
                 $.ajax({
                     type: "GET",
-                    url: "/dataServer/getUserNodes",
+                    url: "/dataServer/userNodes",
                     async: true,
                     success: (res) => {
                         if (res.code == -1) {

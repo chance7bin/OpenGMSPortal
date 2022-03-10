@@ -90,7 +90,7 @@ public class DataHubService {
      **/
     public JsonResult delete(String id, String email){
         DataHub data = new DataHub();
-        data = (DataHub) genericService.getById(id,dataItemDao);
+        data = (DataHub) genericService.getById(id,dataHubDao);
 
         if(!data.getAuthor().equals(email))
             return ResultUtils.error("Unauthorized");

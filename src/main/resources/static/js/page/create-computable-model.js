@@ -259,7 +259,7 @@ var createComputableModel = Vue.extend({
         selectModelItem(index,info){
             console.log(info);
             this.itemInfo.relateModelItemName = info.name;
-            this.itemInfo.relateModelItem = info.oid;
+            this.itemInfo.relateModelItem = info.id;
             this.bindModelItemDialogVisible = false;
         },
         handlePageChange(val) {
@@ -276,26 +276,24 @@ var createComputableModel = Vue.extend({
         searchModelItem(){
             let data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage-1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.pageOption.searchText,
                 sortType: "default",
                 classifications: ["all"],
             };
-            let url = "/modelItem/items";
-            let contentType = "application/x-www-form-urlencoded";
+            let url = getModelItemList();
+            let contentType = "application/json";
 
             $.ajax({
                 type: "POST",
                 url: url,
-                data: data,
+                data: JSON.stringify(data),
                 async: true,
                 contentType: contentType,
                 success: (json) => {
                     if (json.code == 0) {
                         let data = json.data;
-                        console.log(data)
-
                         this.pageOption.total = data.total;
                         this.pageOption.pages = data.pages;
                         this.pageOption.searchResult = data.list;
@@ -1255,7 +1253,7 @@ var createComputableModel = Vue.extend({
                 // $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/computableModel/add',
+                    url: '/computableModel/',
                     type: 'post',
                     data: this.formData,
                     cache: false,
@@ -1264,8 +1262,6 @@ var createComputableModel = Vue.extend({
                     async: true
                 }).done((res) => {
                     loading.close();
-                    // $("#step").css("display", "block");
-                    // $(".uploading").css("display", "none");
                     switch (res.data.code) {
                         case 1:
                             this.deleteDraft()

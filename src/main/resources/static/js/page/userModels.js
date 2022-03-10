@@ -67,7 +67,7 @@ var modelItem = Vue.extend({
         modelStats(){
             let chart=echarts.init(document.getElementById('chart'));
             chart.showLoading();
-            $.get("/modelItem/getDailyViewCount",{oid:this.currentOid},(result)=> {
+            $.get("/modelItem/dailyViewAndInvokeCount",{oid:this.currentOid},(result)=> {
                 let valueList = result.data.valueList;//[0, 0, 0, 0, 0];
                 console.log(result)
                 chart.hideLoading();
@@ -446,36 +446,37 @@ var userModels = Vue.extend(
                 var name = "";
                 console.log(this.searchResult);
                 if (a === 'modelitem') {
-                    url = "/modelItem/getModelItemsByUserId";
+                    // url = "/modelItem/queryListOfAuthorSelf";
+                    url = QueryModelItemListOfAuthorSelf()
                     name = "modelItems";
                 } else if (a === 'conceptualmodel') {
-                    url = "/conceptualModel/getConceptualModelsByUserId"
+                    // url = "/conceptualModel/queryListOfAuthorSelf"
+                    url = QueryConceptualModelListOfAuthorSelf()
                     name = "conceptualModels";
                 } else if (a === 'logicalmodel') {
-                    url = "/logicalModel/getLogicalModelsByUserId"
+                    // url = "/logicalModel/queryListOfAuthorSelf"
+                    url = QueryLogicalModelListOfAuthorSelf()
                     name = "logicalModels";
                 } else if (a === 'computablemodel') {
-                    url = "/computableModel/getComputableModelsByUserId";
+                    // url = "/computableModel/queryListOfAuthorSelf";
+                    url = QueryComputableModelListOfAuthorSelf()
                     name = "computableModels";
                 }
 
                 this.$forceUpdate();
 
                 $.ajax({
-                    type: "Get",
+                    type: "POST",
                     url: url,
-                    data: {
-                        page: this.page - 1,
+                    data: JSON.stringify({
+                        page: this.page,
                         sortType: this.sortType,
-                        asc: -1
-                    },
+                        asc: true,
+                        authorEmail: this.userId,
+                    }),
+                    contentType:"application/json",
                     cache: false,
                     async: true,
-
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
                             alert("Please login first!");
@@ -483,15 +484,8 @@ var userModels = Vue.extend(
                         } else {
                             data = json.data;
                             this.resourceLoad = false;
-                            this.totalNum = data.count;
-                            // this.searchCount = Number.parseInt(data["count"]);
-                            //this.searchResult = data[name];
-                            // for (var i = 0; i < data[name].length; i++) {
-                            //     // this.searchResult.push(data[name][i]);
-                            //     this.searchResult.splice(i, 0, data[name][i]);
-                            //     console.log(data[name][i]);
-                            // }
-                            this.$set(this,"searchResult",data[name]);
+                            this.totalNum = data.total;
+                            this.$set(this,"searchResult",data.list);
                             console.log(this.searchResult);
                             //this.modelItemResult = data[name];
                             if (this.page == 1) {
@@ -610,18 +604,18 @@ var userModels = Vue.extend(
                             instance.confirmButtonText = 'deleting...';
                             setTimeout(() => {
                                 var urls = {
-                                    'modelitem': "/modelItem/delete",
-                                    'conceptualmodel': "/conceptualModel/delete",
-                                    'logicalmodel': "/logicalModel/delete",
-                                    'computablemodel': "/computableModel/delete",
+                                    'modelitem': "/modelItem/",
+                                    'conceptualmodel': "/conceptualModel/",
+                                    'logicalmodel': "/logicalModel/",
+                                    'computablemodel': "/computableModel/",
                                 };
 
 
                                 $.ajax({
-                                    type: "POST",
+                                    type: "DELETE",
                                     url: urls[a],
                                     data: {
-                                        oid: oid
+                                        id: oid
                                     },
                                     cache: false,
                                     async: true,
@@ -688,12 +682,6 @@ var userModels = Vue.extend(
             },
         },
 
-
-        created() {
-
-
-        },
-
         mounted() {
 
             $(() => {
@@ -720,27 +708,17 @@ var userModels = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-
+                    success: (result) => {
+                        let data = result.data
                         console.log(data);
 
                         if (data.oid == "") {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            this.userId = data.email;
                             this.userName = data.name;
-                            console.log(this.userId)
                             this.sendUserToParent(this.userId)
-                            // this.addAllData()
-
-                            // axios.get("/dataItem/amountofuserdata",{
-                            //     params:{
-                            //         userOid:this.userId
-                            //     }
-                            // }).then(res=>{
-                            //     that.dcount=res.data
-                            // });
 
                             $("#author").val(this.userName);
 

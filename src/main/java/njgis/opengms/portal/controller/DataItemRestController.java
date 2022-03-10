@@ -482,7 +482,7 @@ public class DataItemRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem,findDTO, true));
 

@@ -89,7 +89,7 @@ var userData = Vue.extend(
                 $(".dataLine").show();
             }
             // var tha = this
-            // axios.get("/dataItem/createTree")
+            // axios.get("/dataItem/categoryTree")
             //     .then(res => {
             //         tha.tObj = res.data;
             //         for (var e in tha.tObj) {

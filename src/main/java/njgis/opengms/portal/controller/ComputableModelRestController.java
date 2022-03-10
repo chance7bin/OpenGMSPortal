@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
@@ -139,8 +140,10 @@ public class ComputableModelRestController {
 
     @LoginRequired
     @ApiOperation(value = "删除computableModel [ /delete ]")
-    @DeleteMapping(value = "/{id}")
-    public JsonResult delete(@PathVariable(value="id") String id,  HttpServletRequest request){
+    @RequestMapping(value = "/", method = RequestMethod.DELETE)
+    public JsonResult delete(@ApiParam(name = "Id", value = "模型条目Id", required = true)
+                             @RequestParam(value="id") String id,
+                             HttpServletRequest request){
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
         return computableModelService.delete(id,email);
@@ -205,7 +208,7 @@ public class ComputableModelRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ComputableModel,findDTO, true));
 

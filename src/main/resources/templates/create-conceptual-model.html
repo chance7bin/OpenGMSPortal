@@ -421,6 +421,7 @@
                         <el-table
                                 :data="pageOption.searchResult"
                                 style="margin-top:17px;"
+                                v-loading="bindLoaing"
                         >
                             <el-table-column type="expand">
                                 <template slot-scope="props">
@@ -469,9 +470,8 @@
         </div>
     </div>
 </body>
-
-<script src="/static/js/common/vue.min.js"></script>
 <script src="/static/js/apidoc/modelApi.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
 <script src="/static/js/common/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/tinymce/tinymce.min.js"></script>
