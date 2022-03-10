@@ -399,6 +399,7 @@ var userspace = new Vue(
             },
 
             getUserInfo() {
+                console.log(this.userId)
                 axios.get('/user/getFullUserInfo').then(
                     res => {
                         if(res.data.code==0){
@@ -457,9 +458,6 @@ var userspace = new Vue(
             this.userspaceSocket.onclose = this.close
         },
 
-        created() {
-        },
-
         mounted() {
             let that= this;
             that.initWebSkt();//初始化websocket
@@ -477,18 +475,6 @@ var userspace = new Vue(
             })
 
             $(() => {
-                // let height = document.documentElement.clientHeight;
-                // this.ScreenMinHeight = (height) + "px";
-                // this.ScreenMaxHeight = (height) + "px";
-                //
-                // window.onresize = () => {
-                //     console.log('come on ..');
-                //     height = document.documentElement.clientHeight;
-                //     this.ScreenMinHeight = (height) + "px";
-                //     this.ScreenMaxHeight = (height) + "px";
-                // };
-
-
                 $.ajax({
                     type: "GET",
                     url: "/user/load",
@@ -499,10 +485,9 @@ var userspace = new Vue(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-
-                        // console.log(data);
-
+                    success: (result) => {
+                        let data = result.data
+                        console.log(data);
                         if (data.oid == "") {
                             this.$alert('Please login first!', 'Error', {
                                 type:'error',
@@ -512,9 +497,8 @@ var userspace = new Vue(
                                 }
                             });
                         } else {
-                            this.userId = data.oid;
+                            this.userId = data.email;
                             this.userName = data.name;
-                            console.log(this.userId)
                             // this.addAllData()
 
                             // axios.get("/dataItem/amountofuserdata",{

@@ -2465,7 +2465,7 @@ Vue.component("user-data",
 
                 var that = this
                 //获取data item分类树
-                // axios.get("/dataItem/createTree")
+                // axios.get("/dataItem/categoryTree")
                 //     .then(res => {
                 //         that.tObj = res.data;
                 //         for (var e in that.tObj) {

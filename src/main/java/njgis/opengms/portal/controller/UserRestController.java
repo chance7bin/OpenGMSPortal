@@ -272,10 +272,10 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户基础信息", notes = "@loginRequired")
     @RequestMapping(value = "/getInfoFromUserServer", method = RequestMethod.GET)
-    public JsonResult getInfoFromUserServer(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+    public JsonResult getInfoFromUserServer(@RequestParam(value = "email") String email, HttpServletRequest request) throws Exception {
+//        HttpSession session = request.getSession();
 
-        String email = session.getAttribute("email").toString();
+//        String email = session.getAttribute("email").toString();
         JSONObject j_result = userService.getInfoFromUserServer(email);
 
         if(j_result.getString("msg").equals("out")){
@@ -300,11 +300,14 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户详细信息", notes = "@loginRequired")
     @RequestMapping(value = "/getFullUserInfo", method = RequestMethod.GET)
-    public JsonResult getFullUserInfo(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+    public JsonResult getFullUserInfo(@RequestParam(value = "email",required = false,defaultValue = "loginUser")String email,HttpServletRequest request) throws Exception {
 
-        String email = session.getAttribute("email").toString();
+        if(email.equals("loginUser")){
+            HttpSession session = request.getSession();
+            email = session.getAttribute("email").toString();
+        }
         JSONObject j_result = userService.getFullUserInfo(email);
+
 
         if(j_result.getString("msg").equals("out")){
             ResultUtils.error(-1,"out");
@@ -326,10 +329,10 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户文件资源", notes = "@loginRequired")
     @RequestMapping(value = "/getUserResource", method = RequestMethod.GET)
-    public JsonResult getUserResource(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+    public JsonResult getUserResource(@RequestParam(value = "email") String email, HttpServletRequest request) throws Exception {
+//        HttpSession session = request.getSession();
 
-        String email = session.getAttribute("email").toString();
+//        String email = session.getAttribute("email").toString();
         JSONObject j_result = userService.getUserResource(email);
 
         if(j_result.getString("msg").equals("out")){
@@ -659,6 +662,13 @@ public class UserRestController {
     public JsonResult getUserName(@PathParam("email") String email){
         return ResultUtils.success(userService.getUserName(email));
     }
+
+    @ApiOperation(value = "根据用户名得到email")
+    @RequestMapping (value = "/email", method = RequestMethod.GET)
+    public JsonResult getUserEmail(@PathParam("userName") String userName){
+        return ResultUtils.success(userService.getUserEmail(userName));
+    }
+
 
     @ApiOperation(value = "通过用户服务器发送验证码")
     @RequestMapping(value = "/sendResetByUserserver", method = RequestMethod.POST)

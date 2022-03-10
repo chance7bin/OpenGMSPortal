@@ -115,7 +115,7 @@ var userModelServer = Vue.extend(
 
             refreshUserNodes(){
                 this.nodeLoading = true
-                axios.get('/server/modelContainer/getModelContainerByUserName'
+                axios.get('/server/modelContainerByUser'
                 ).then(res=>{
                     this.nodeLoading = false
                     let data = res.data

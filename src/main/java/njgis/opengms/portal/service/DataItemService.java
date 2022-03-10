@@ -331,10 +331,10 @@ public class DataItemService {
         try {
             PortalItem item = null;
             JSONObject daoFactory = genericService.daoFactory(type);
-            if (type.equals("dataItem")){
+            if (type.getText().equals("dataItem")){
                 item = new DataItem();
             }
-            else if (type.equals("dataHub")){
+            else if (type.getText().equals("dataHub")){
                 item = new DataHub();
             }
             else {

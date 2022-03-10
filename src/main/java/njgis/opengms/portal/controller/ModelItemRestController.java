@@ -166,7 +166,7 @@ public class ModelItemRestController {
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
     @RequestMapping(value = {"/items","/list"}, method = RequestMethod.POST)
-    public JsonResult queryList(SpecificFindDTO modelItemFindDTO) {
+    public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
     }
@@ -192,7 +192,7 @@ public class ModelItemRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem,findDTO, true));
 

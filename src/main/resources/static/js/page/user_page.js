@@ -6,6 +6,20 @@ new Vue({
     },
     data() {
         return {
+            resourceCount:{
+                computableModel: 0,
+                concept: 0,
+                conceptualModel: 0,
+                dataHub: 0,
+                dataItem: 0,
+                dataMethod: 0,
+                logicalModel: 0,
+                modelItem: 0,
+                spatialReference: 0,
+                template: 0,
+                theme: 0,
+                unit: 0
+            },
             //tab的默认标签页
             mainActiveName:'Model',
             modelActiveName:"ModelItem",
@@ -34,8 +48,8 @@ new Vue({
             activeIndex:'',
             // activeName: 'Model Item',
             currentPage: 1,
-
-
+            loginUserEmail:'',
+            isLoginUser:true,
             introduction:'',
             researchInterests:[],
             subjectAreas:[],
@@ -330,7 +344,7 @@ new Vue({
                 ''
             ],
 
-            resourceSortElement:'viewCount',
+            resourcesortField:'viewCount',
             resourceSortEleText:'View Count',
         }
     },
@@ -513,7 +527,8 @@ new Vue({
 
         saveUpdateUserInfo() {
             var researchInterests = $('#researchInterestInput').tagEditor('getTags')[0].tags;
-            this.researchInterests = JSON.parse(JSON.stringify(researchInterests));
+            if(!researchInterests && typeof(researchInterests) != 'undefined')
+                this.researchInterests = JSON.parse(JSON.stringify(researchInterests));
             console.log(this.researchInterests)
             console.log(this.userPersonalInfo)
             if(this.introductionInput!=this.userPersonalInfo.introduction
@@ -1094,89 +1109,70 @@ new Vue({
 
         },
 
-        getUserInfo(){
+        async getUserInfo(){
             let hrefs = window.location.href.split("/");
-            $.ajax({
-                data:{oid:hrefs[hrefs.length-1]},
-                type:'GET',
-                url:'/user/getFullUserInfo',
-                async:true,
-                success:(json) => {
-                    if(json.code==0){
-                        const data = json.data;
-                        console.log(data)
-                        setTimeout(() => {
-                            this.userPersonalInfo = data;
-                            // if(typeof this.userPersonalInfo == "undefined"){
-                            //     this.userPersonalInfo = {
-                            //         "image": "/static/userServer/avatar/d698540a-2130-4880-825f-2492e8635847.jpg",
-                            //         "awdHonors": null,
-                            //         "subscribe": true,
-                            //         "wiki": "",
-                            //         "oid": "223",
-                            //         "userName": "1274316792@qq.com",
-                            //         "lab": {
-                            //             "name": null,
-                            //             "position": null
-                            //         },
-                            //         "userId": "Xiaoyu_He",
-                            //         "homePage": null,
-                            //         "runTask": null,
-                            //         "phone": "",
-                            //         "faceBook": null,
-                            //         "affiliation": {
-                            //             "name": "11",
-                            //             "department": "22",
-                            //             "location": "44",
-                            //             "position": "33"
-                            //         },
-                            //         "organizations": [
-                            //             "17782784170"
-                            //         ],
-                            //         "name": "XiaoYu He",
-                            //         "weChat": null,
-                            //         "externalLinks": [],
-                            //         "location": null,
-                            //         "subjectAreas": [
-                            //             ""
-                            //         ],
-                            //         "researchInterests": [
-                            //             "eat",
-                            //             "drink",
-                            //             "slepp"
-                            //         ],
-                            //         "eduExperiences": null,
-                            //         "email": "1274316792@qq.com",
-                            //         "introduction": "this is introduction"
-                            //     }
-                            // }
-                            this.organizationInput = this.userPersonalInfo.organizations[0];
-
-                            this.locationInput = this.userPersonalInfo.location;
-                            if(!this.locationInput || typeof(this.locationInput) == "undefined")
-                                this.locationInput = ''
-
-                            this.externalLinkInput = this.userPersonalInfo.externalLinks[0];
-                            if(!this.externalLinkInput || typeof(this.externalLinkInput) == "undefined")
-                                this.externalLinkInput = ''
-
-                            this.introductionInput = this.userPersonalInfo.introduction;
-                            if (!this.introductionInput || typeof(this.introductionInput) == 'undefined')
-                                this.introductionInput = ''
-                            
-                            this.emailInput = this.userPersonalInfo.email;
-
-                            if(!this.userPersonalInfo.researchInterests || typeof(this.userPersonalInfo.researchInterests) == 'undefined')
-                                this.userPersonalInfo.researchInterests=[];
-
-                            this.researchInterests = this.userPersonalInfo.researchInterests;
-                        }, 0);
-                    } else {
-                        console.log("UserInfo get wrong.")
+            let email;
+            let _this = this;
+            // $.ajax()
+           await  axios.get('/user/email',{params:{userName:hrefs[hrefs.length-1]}})
+                .then(function (result) {
+                    if(result.data.code == 0){
+                        email = result.data.data
+                        console.log(email)
                     }
-                }
-
-            })
+                })
+                 .then(async function () {
+                     if (email != null) {
+                         await axios.get('/user/getFullUserInfo', {params: {email: email}})
+                             .then(function (result) {
+                                 result = result.data
+                                 if (result.code == 0) {
+                                     const data = result.data;
+                                     setTimeout(() => {
+                                         _this.userPersonalInfo = data;
+                                         _this.organizationInput = _this.userPersonalInfo.organizations[0];
+                                         if (!_this.userPersonalInfo.location || typeof (_this.userPersonalInfo.location) == "undefined") {
+                                             _this.userPersonalInfo.location = ''
+                                             _this.locationInput = _this.userPersonalInfo.location;
+                                         }
+                                         if (!_this.userPersonalInfo.externalLinks[0] || typeof (_this.userPersonalInfo.externalLinks[0]) == "undefined") {
+                                             _this.userPersonalInfo.externalLinks[0] = ''
+                                             _this.externalLinkInput = _this.userPersonalInfo.externalLinks[0];
+                                         }
+                                         if (!_this.userPersonalInfo.introduction || typeof (_this.userPersonalInfo.introduction) == 'undefined') {
+                                             _this.userPersonalInfo.introduction = ''
+                                             _this.introductionInput = _this.userPersonalInfo.introduction;
+                                         }
+                                         _this.emailInput = _this.userPersonalInfo.email;
+                                         if (!_this.userPersonalInfo.researchInterests || typeof (_this.userPersonalInfo.researchInterests) == 'undefined') {
+                                             _this.userPersonalInfo.researchInterests = [];
+                                             _this.researchInterests = _this.userPersonalInfo.researchInterests;
+                                         }
+                                     }, 0);
+                                 } else {
+                                     console.log("UserInfo get wrong.")
+                                 }
+                             })
+                     }
+                 })
+                 .then( async () => {
+                     if (email != null) {
+                         await axios.get('/user/load').then(
+                             (result) => {
+                                 this.loginUserEmail = result.data.data.email
+                                 if (this.loginUserEmail != email) {
+                                     this.isLoginUser = false
+                                 }
+                             })
+                     }
+                 })
+                 .then(async () => {
+                     await axios.get(' /user/resourceCount').then(res => {
+                         if(res.data.code == 0){
+                             _this.resourceCount = JSON.parse(JSON.stringify(res.data.data))
+                         }
+                     })
+                 })
         },
 
 
@@ -1184,141 +1180,142 @@ new Vue({
             
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/modelItem/listByUserOid",
-            //     data: {
-            //         page: this.pageOption.currentPage - 1,
-            //         asc: this.pageOption.sortAsc,
-            //         pageSize: this.pageOption.pageSize,
-            //         // sortElement:'viewCount',
-            //         sortElement:'createTime',
-            //         oid: hrefs[hrefs.length - 1],
-            //     },
-            //     async: true,
-            //     success:(json) => {
-            //
-            //         if (json.code == 0) {
-            //             const data = json.data;
-            //
-            //             setTimeout(() => {
-            //
-            //                 this.modelItems.total = data.total;
-            //                 this.modelItems.result = data.list;
-            //                 this.pageOption.progressBar = false;
-            //
-            //             }, 500);
-            //         } else {
-            //             console.log("search model item failed.")
-            //         }
-            //     }
-            // })
+            console.log(this.userPersonalInfo.email)
+            $.ajax({
+                type: "POST",
+                url: this.isLoginUser ? QueryModelItemListOfAuthorSelf() : QueryModelItemListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success:(json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+
+                        setTimeout(() => {
+
+                            this.modelItems.total = data.total;
+                            this.modelItems.result = data.list;
+                            this.pageOption.progressBar = false;
+
+                        }, 500);
+                    } else {
+                        console.log("search model item failed.")
+                    }
+                }
+            })
 
         },
+
         conceptualModelHandleCurrentChange: function (val) {
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/conceptualModel/listByUserOid",
-            //     data: {
-            //         page: this.pageOption.currentPage - 1,
-            //         asc: this.pageOption.sortAsc,
-            //         pageSize: this.pageOption.pageSize,
-            //         // sortElement:'viewCount',
-            //         sortElement:'createTime',
-            //         oid: hrefs[hrefs.length - 1],
-            //     },
-            //     async: true,
-            //     success: (json) => {
-            //
-            //         if (json.code == 0) {
-            //             const data = json.data;
-            //
-            //             setTimeout(() => {
-            //
-            //                 this.conceptualModels.total = data.total;
-            //                 this.conceptualModels.result = data.list;
-            //                 this.pageOption.progressBar = false;
-            //
-            //             }, 500);
-            //         } else {
-            //             console.log("search conceptual model failed.")
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type: "post",
+                url: this.isLoginUser ? QueryConceptualModelListOfAuthorSelf() : QueryConceptualModelListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success: (json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+
+                        setTimeout(() => {
+
+                            this.conceptualModels.total = data.total;
+                            this.conceptualModels.result = data.list;
+                            this.pageOption.progressBar = false;
+
+                        }, 500);
+                    } else {
+                        console.log("search conceptual model failed.")
+                    }
+                }
+            })
         },
 
         logicalModelHandleCurrentChange: function (val) {
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
+            $.ajax({
+                type: "post",
+                url: this.isLoginUser ? QueryLogicalModelListOfAuthorSelf() : QueryLogicalModelListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success: (json) => {
 
-            const hrefs = window.location.href.split("/");
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/logicalModel/listByUserOid",
-            //     data: {
-            //         page: this.pageOption.currentPage - 1,
-            //         asc: this.pageOption.sortAsc,
-            //         pageSize: this.pageOption.pageSize,
-            //         // sortElement:'viewCount',
-            //         sortElement:'createTime',
-            //         oid: hrefs[hrefs.length - 1],
-            //     },
-            //     async: true,
-            //     success: (json) => {
-            //
-            //         if (json.code == 0) {
-            //             const data = json.data;
-            //
-            //             setTimeout(() => {
-            //
-            //                 this.logicalModels.total = data.total;
-            //                 this.logicalModels.result = data.list;
-            //                 this.pageOption.progressBar = false;
-            //                 }, 500);
-            //         } else {
-            //             console.log("search logical model failed.")
-            //         }
-            //     }
-            // })
+                    if (json.code == 0) {
+                        const data = json.data;
+
+                        setTimeout(() => {
+
+                            this.logicalModels.total = data.total;
+                            this.logicalModels.result = data.list;
+                            this.pageOption.progressBar = false;
+                            }, 500);
+                    } else {
+                        console.log("search logical model failed.")
+                    }
+                }
+            })
         },
 
         computableModelHandleCurrentChange: function (val) {
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/computableModel/listByUserOid",
-            //     data: {
-            //         page: this.pageOption.currentPage - 1,
-            //         asc: this.pageOption.sortAsc,
-            //         pageSize: this.pageOption.pageSize,
-            //         // sortElement:'viewCount',
-            //         sortElement:'createTime',
-            //         oid: hrefs[hrefs.length - 1],
-            //     },
-            //     async: true,
-            //     success: (json) => {
-            //
-            //         if (json.code == 0) {
-            //             const data = json.data;
-            //             // console.log(data.list);
-            //             if(data.list.length!=0)
-            //                 setTimeout(() => {
-            //
-            //                     this.computableModels.total = data.total;
-            //                     this.computableModels.result = data.list;
-            //                     this.pageOption.progressBar = false;
-            //                     }, 500);
-            //         } else {
-            //             console.log("search computable model failed.")
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type: "POST",
+                url: this.isLoginUser ? QueryComputableModelListOfAuthorSelf() : QueryComputableModelListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success: (json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+                        // console.log(data.list);
+                        if(data.list.length!=0)
+                            setTimeout(() => {
+
+                                this.computableModels.total = data.total;
+                                this.computableModels.result = data.list;
+                                this.pageOption.progressBar = false;
+                                }, 500);
+                    } else {
+                        console.log("search computable model failed.")
+                    }
+                }
+            })
         },
         //dataApplication
         dataMethodHandleCurrentChange: function(val){
@@ -1326,56 +1323,52 @@ new Vue({
             $('html,body').animate({scrollTop: '0px'}, 220);
             const hrefs = window.location.href.split("/");
 
-            //后台请求方式不同，待改 2022.02.25
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/user/dataMethodList",
-            //     data: {
-            //         page: this.pageOption.currentPage,
-            //         asc: this.pageOption.sortAsc,
-            //         pageSize: 6,
-            //         oid: hrefs[hrefs.length - 1],
-            //         // sortElement:'viewCount',
-            //         sortElement:'createTime',
-            //         searchText:'',
-            //     },
-            //     contentType: "application/json",
-            //     async: true,
-            //     success: (json) => {
-            //
-            //         if (json.code == 0) {
-            //             const data = json.data;
-            //
-            //             setTimeout(() => {
-            //
-            //                 this.dataMethods.total = data.total;
-            //                 this.dataMethods.result = data.list;
-            //                 this.pageOption.progressBar = false;
-            //
-            //             }, 500);
-            //         } else {
-            //             console.log("search data item failed.")
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type: "POST",
+                url: this.isLoginUser ? QueryMethodListOfAuthorSelf() : QueryMethodListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType: "application/json",
+                async: true,
+                success: (json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+
+                        setTimeout(() => {
+
+                            this.dataMethods.total = data.total;
+                            this.dataMethods.result = data.list;
+                            this.pageOption.progressBar = false;
+
+                        }, 500);
+                    } else {
+                        console.log("search data item failed.")
+                    }
+                }
+            })
         },
 
         dataItemHandleCurrentChange: function (val) {
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
             let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
                 page: this.pageOption.currentPage,
                 asc: this.pageOption.sortAsc,
                 pageSize: 6,
-                oid: hrefs[hrefs.length - 1],
-                // sortElement:'viewCount',
-                sortElement:'createTime',
+                sortField:'createTime',
                 searchText:'',
             })
             $.ajax({
                 type: "POST",
-                url: "/user/dataItemList",
+                url: this.isLoginUser ? QueryItemListOfAuthorSelf() : QueryItemListOfAuthor(),
                 data: data,
                 contentType: "application/json",
                 async: true,
@@ -1386,8 +1379,8 @@ new Vue({
 
                         setTimeout(() => {
 
-                            this.dataItems.total = data.count;
-                            this.dataItems.result = data.content;
+                            this.dataItems.total = data.total;
+                            this.dataItems.result = data.list;
                             this.pageOption.progressBar = false;
 
                         }, 500);
@@ -1402,32 +1395,28 @@ new Vue({
 
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
             let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
                 page: this.pageOption.currentPage,
                 asc: this.pageOption.sortAsc,
                 pageSize: 6,
-                oid: hrefs[hrefs.length - 1],
-                // sortElement:'viewCount',
-                sortElement:'createTime',
+                // sortField:'viewCount',
+                sortField:'createTime',
                 searchText:'',
             })
             $.ajax({
                 type: "POST",
-                url: "/user/dataHubList",
                 data: data,
+                url: this.isLoginUser ? QueryHubListOfAuthorSelf() : QueryHubListOfAuthor(),
                 contentType: "application/json",
                 async: true,
                 success: (json) => {
-
                     if (json.code == 0) {
                         const data = json.data;
-
                         setTimeout(() => {
-                            this.dataHubs.total = data.count;
-                            this.dataHubs.result = data.content;
+                            this.dataHubs.total = data.total;
+                            this.dataHubs.result = data.list;
                             this.pageOption.progressBar = false;
-
                         }, 500);
                     } else {
                         console.log("search data item failed.")
@@ -1436,24 +1425,19 @@ new Vue({
             })
         },
 
-
-
         conceptHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            let name='concepts';
             let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
                 page: this.pageOption.currentPage,
                 asc: this.pageOption.sortAsc,
-                sortElement:"createTime",
+                sortField:"createTime",
                 pageSize: this.pageOption.pageSize,
-                // sortElement:'viewCount',
-                sortElement:'createTime',
-                oid: hrefs[hrefs.length - 1],
+                sortField:'createTime',
             })
             $.ajax({
                 type: "POST",
-                url: "/user/conceptList",
+                url: this.isLoginUser ? QueryConceptListOfAuthorSelf() : QueryConceptListOfAuthor(),
                 data: data,
                 cache: false,
                 async: true,
@@ -1468,11 +1452,11 @@ new Vue({
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
-                        if (data.count > 0) {
+                        if (data.total > 0) {
                             setTimeout(() => {
-                                this.concepts.total = data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.concepts.result = data[name];
+                                this.concepts.total = data.total;
+                                this.searchCount = Number.parseInt(data.total);
+                                this.concepts.result = data.list;
                                 this.pageOption.progressBar = false;
                             }, 200)
                             // console.log(this.pageOption.currentPage);
@@ -1487,141 +1471,137 @@ new Vue({
 
         spatialHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            var url = "/spatialReference/listByUser";
+            var url = this.isLoginUser ? QuerySpatialListOfAuthorSelf() : QuerySpatialListOfAuthor()
             var name = "spatials";
             let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
                 page: this.pageOption.currentPage,
                 asc: this.pageOption.sortAsc,
-                sortElement:"createTime",
+                sortField:"createTime",
                 pageSize: this.pageOption.pageSize,
-                oid: hrefs[hrefs.length - 1],
             })
-            // $.ajax({
-            //     type: "POST",
-            //     url: url,
-            //     data: data,
-            //     cache: false,
-            //     async: true,
-            //     contentType: "application/json",
-            //     xhrFields:{
-            //         withCredentials:true
-            //     },
-            //     crossDomain: true,
-            //     success: (json) => {
-            //         if (json.code != 0) {
-            //             alert("Please login first!");
-            //             window.location.href = "/user/login";
-            //         }else {
-            //             const data = json.data;
-            //             if(data[name].length>0){
-            //                 setTimeout(()=>{
-            //                     const data = json.data;
-            //                     this.spatials.total= data.count;
-            //                     this.searchCount = Number.parseInt(data["count"]);
-            //                     this.spatials.result = data[name];
-            //                     this.pageOption.progressBar = false;
-            //                 },200)
-            //                 // console.log(this.pageOption.currentPage);
-            //             }else {
-            //                 // console.log("search spatial failed.")
-            //             }
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                cache: false,
+                async: true,
+                contentType: "application/json",
+                xhrFields:{
+                    withCredentials:true
+                },
+                crossDomain: true,
+                success: (json) => {
+                    if (json.code != 0) {
+                        alert("Please login first!");
+                        window.location.href = "/user/login";
+                    }else {
+                        const data = json.data;
+                        if(data.total>0){
+                            setTimeout(()=>{
+                                const data = json.data;
+                                this.spatials.total= data.total;
+                                this.searchCount = Number.parseInt(data.total);
+                                this.spatials.result = data.list;
+                                this.pageOption.progressBar = false;
+                            },200)
+                        }else {
+                            console.log("search spatial failed.")
+                        }
+                    }
+                }
+            })
         },
 
         templateHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            var url = "/user/templateList";
+            var url = this.isLoginUser ? QueryTemplateListOfAuthorSelf() : QueryTemplateListOfAuthor()
             var name = "templates";
             let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
                 page: this.pageOption.currentPage,
                 asc: this.pageOption.sortAsc,
-                sortElement:"createTime",
+                sortField:"createTime",
                 pageSize: this.pageOption.pageSize,
-                oid: hrefs[hrefs.length - 1],
             })
 
-            // $.ajax({
-            //     type: "POST",
-            //     url: url,
-            //     data: data,
-            //     cache: false,
-            //     async: true,
-            //     contentType: "application/json",
-            //     xhrFields:{
-            //         withCredentials:true
-            //     },
-            //     crossDomain: true,
-            //     success: (json) => {
-            //         if (json.code != 0) {
-            //             alert("Please login first!");
-            //             window.location.href = "/user/login";
-            //         }else {
-            //             const data = json.data;
-            //             if(data[name].length>0){
-            //                 setTimeout(()=>{
-            //                     const data = json.data;
-            //                     this.templates.total= data.count;
-            //                     this.searchCount = Number.parseInt(data["count"]);
-            //                     this.templates.result = data[name];
-            //                     this.pageOption.progressBar = false;
-            //                 },200)
-            //
-            //             }else {
-            //                 // console.log("search template failed.")
-            //             }
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                cache: false,
+                async: true,
+                contentType: "application/json",
+                xhrFields:{
+                    withCredentials:true
+                },
+                crossDomain: true,
+                success: (json) => {
+                    if (json.code != 0) {
+                        alert("Please login first!");
+                        window.location.href = "/user/login";
+                    }else {
+                        const data = json.data;
+                        if(data.total>0){
+                            setTimeout(()=>{
+                                const data = json.data;
+                                this.templates.total= data.total;
+                                this.searchCount = Number.parseInt(data.total);
+                                this.templates.result = data.list;
+                                this.pageOption.progressBar = false;
+                            },200)
+
+                        }else {
+                            // console.log("search template failed.")
+                        }
+                    }
+                }
+            })
         },
 
         unitHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            var url = "/unit/listByUser";
+            var url = this.isLoginUser ? QueryUnitListOfAuthorSelf() : QueryUnitListOfAuthor()
             var name = "units";
             let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
                 page: this.pageOption.currentPage,
                 asc: this.pageOption.sortAsc,
-                sortElement:"createTime",
+                sortField:"createTime",
                 pageSize: this.pageOption.pageSize,
-                oid: hrefs[hrefs.length - 1],
             })
-            // $.ajax({
-            //     type: "POST",
-            //     url: url,
-            //     data: data,
-            //     cache: false,
-            //     async: true,
-            //     contentType: "application/json",
-            //     xhrFields:{
-            //         withCredentials:true
-            //     },
-            //     crossDomain: true,
-            //     success: (json) => {
-            //         if (json.code != 0) {
-            //             alert("Please login first!");
-            //             window.location.href = "/user/login";
-            //         }else {
-            //             const data = json.data;
-            //             if(data[name].length>0){
-            //                 setTimeout(()=>{
-            //                     const data = json.data;
-            //                     this.units.total= data.count;
-            //                     this.searchCount = Number.parseInt(data["count"]);
-            //                     this.units.result = data[name];
-            //                     this.pageOption.progressBar = false;
-            //                 },200)
-            //
-            //             }else {
-            //                 // console.log("search unit failed.")
-            //             }
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                cache: false,
+                async: true,
+                contentType: "application/json",
+                xhrFields:{
+                    withCredentials:true
+                },
+                crossDomain: true,
+                success: (json) => {
+                    if (json.code != 0) {
+                        alert("Please login first!");
+                        window.location.href = "/user/login";
+                    }else {
+                        const data = json.data;
+                        if(data.total>0){
+                            setTimeout(()=>{
+                                const data = json.data;
+                                this.units.total= data.total;
+                                this.searchCount = Number.parseInt(data.toal);
+                                this.units.result = data.list;
+                                this.pageOption.progressBar = false;
+                            },200)
+
+                        }else {
+                            console.log("search unit failed.")
+                        }
+                    }
+                }
+            })
         },
 
         resourceHandleCurrentChange(val){
@@ -1696,98 +1676,99 @@ new Vue({
         articleHandleCurrentChange: function (val) {
             this.pageOption.currentPage=val;
             this.barIndex=1;
-            const hrefs=window.location.href.split('/');
-            // $.ajax({
-            //     type:"GET",
-            //     url:"/user/listArticle",
-            //     data:{
-            //         page:this.pageOption.currentPage-1,
-            //         userId:hrefs[hrefs.length - 1],
-            //     },
-            //     async:true,
-            //     success: (json)=>{
-            //
-            //         if (json.code == 0) {
-            //             const data=json.data;
-            //             setTimeout(() => {
-            //
-            //                 this.articles.total=data.total;
-            //                 this.articles.result=data.list;
-            //                 this.pageOption.progressBar=false;
-            //             }, 500);
-            //         } else {
-            //             console.log("search computable model failed.")
-            //         }
-            //
-            //     }
-            //
-            // })
+            $.ajax({
+                type:"POST",
+                url:this.isLoginUser ? QueryArticleListOfAuthorSelf() : QueryArticleListOfAuthor(),
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
+                }),
+                contentType:"application/json",
+                async:true,
+                success: (json)=>{
+
+                    if (json.code == 0) {
+                        const data=json.data;
+                        setTimeout(() => {
+
+                            this.articles.total=data.total;
+                            this.articles.result=data.list;
+                            this.pageOption.progressBar=false;
+                        }, 500);
+                    } else {
+                        console.log("search computable model failed.")
+                    }
+
+                }
+
+            })
 
         },
 
         projectHandleCurrentChange: function (val) {
             this.pageOption.currentPage=val;
-            const hrefs=window.location.href.split('/');
-            // $.ajax({
-            //     type:"GET",
-            //     url:"/project/listByUserOid",
-            //     data:{
-            //         page:this.pageOption.currentPage-1,
-            //         pageSize:this.pageOption.pageSize,
-            //         asc:this.projects.sortAsc,
-            //         sortElement:"creatDate",
-            //         oid:hrefs[hrefs.length - 1],
-            //     },
-            //     async:true,
-            //     success: (json)=>{
-            //
-            //         if (json.code == 0) {
-            //             const data=json.data;
-            //             setTimeout(() => {
-            //
-            //                 this.projects.total=data.total;
-            //                 this.projects.result=data.list;
-            //                 this.pageOption.progressBar=false;
-            //
-            //             }, 500);
-            //         } else {
-            //             console.log("search computable model failed.")
-            //         }
-            //
-            //     }
-            //
-            // })
+            $.ajax({
+                type:"POST",
+                url:this.isLoginUser ? QueryProjectListOfAuthorSelf() : QueryProjectListOfAuthor(),
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
+                    pageSize:this.pageOption.pageSize,
+                    asc:this.projects.sortAsc,
+                    sortField:"createTime",
+                }),
+                async:true,
+                contentType:"application/json",
+                success: (json)=>{
+
+                    if (json.code == 0) {
+                        const data=json.data;
+                        setTimeout(() => {
+
+                            this.projects.total=data.total;
+                            this.projects.result=data.list;
+                            this.pageOption.progressBar=false;
+
+                        }, 500);
+                    } else {
+                        console.log("search computable model failed.")
+                    }
+
+                }
+
+            })
 
         },
 
         conferenceHandleCurrentChange(val) {
             this.pageOption.currentPage=val;
             const hrefs=window.location.href.split("/");
-            // $.ajax({
-            //     type:"GET",
-            //     url:"/conference/listByUserOid",
-            //     data:{
-            //         page:this.pageOption.currentPage-1,
-            //         asc: this.pageOption.sortAsc,
-            //         pageSize: this.pageOption.pageSize,
-            //         sortElement:"creatDate",
-            //         oid:hrefs[hrefs.length-1],
-            //     },
-            //     async:true,
-            //     success:(json)=>{
-            //         if(json.code==0){
-            //             const data=json.data;
-            //             setTimeout(
-            //                 ()=>{
-            //                     this.conferences.total=data.total;
-            //                     this.conferences.result=data.list;
-            //                     this.pageOption.progressBar=false;
-            //                 },500)
-            //         }else{
-            //             console.log("search data item failed.")
-            //         }
-            //     }
-            // })
+            $.ajax({
+                type:"POST",
+                url:this.isLoginUser ? QueryConferenceListOfAuthorSelf() : QueryConferenceListOfAuthor(),
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    sortField:"createTime",
+                }),
+                async:true,
+                contentType:"application/json",
+                success:(json)=>{
+                    if(json.code==0){
+                        const data=json.data;
+                        setTimeout(
+                            ()=>{
+                                this.conferences.total=data.total;
+                                this.conferences.result=data.list;
+                                this.pageOption.progressBar=false;
+                            },500)
+                    }else{
+                        console.log("search data item failed.")
+                    }
+                }
+            })
 
         },
 
@@ -1868,7 +1849,7 @@ new Vue({
                 data:{
                     page:this.awardandHonor.currentPage-1,
                     asc: this.pageOption.sortAsc,
-                    sortElement:'awardTime',
+                    sortField:'awardTime',
                     pageSize: 3,
                     oid:hrefs[hrefs.length-1],
                 },
@@ -1909,7 +1890,7 @@ new Vue({
                     page:this.educationExperience.currentPage-1,
                     asc: this.pageOption.sortAsc,
                     pageSize: 3,
-                    sortElement:'endTime',
+                    sortField:'endTime',
                     oid:hrefs[hrefs.length-1],
                 },
                 async:true,
@@ -2127,23 +2108,7 @@ new Vue({
             $('#conferenceInfo').modal('hide')
         },
 
-        // searchArticlesClick(){
-        //     ++this.clickCount;
-        //     if (this.clickCount%2==1){
-        //         $('#articleSearchContainer').css('display','flex');
-        //         $('#searchArticle').animate({width:'88%'},500);
-        //         $('.searchInput').val('');
-        //     }
-        //     if (this.clickCount%2==0){
-        //         $('#searchArticle').animate({width:'0'},500);
-        //         setTimeout(()=>{
-        //             console.log('aaaddd');
-        //             $('#articleSearchContainer').css('display','none');
-        //             },500);
-        //
-        //     }
-        //
-        // },
+
 
         searchProjectsClick(){
             ++this.clickCount;
@@ -2215,7 +2180,7 @@ new Vue({
         },
 
         selectSortEle(command){
-            this.resourceSortElement = command
+            this.resourcesortField = command
             let text={
                 'viewCount':'View Count',
                 'name':'Name',
@@ -2230,32 +2195,31 @@ new Vue({
             $('html,body').animate({scrollTop:'0px'},200);
             this.isInSearch=1;
             var urls={
-                1:'/modelItem/searchByNameByOid',
-                2:'/dataHub/searchByNameByOid',
-                3:'/conceptualModel/searchByNameByOid',
-                4:'/logicalModel/searchByNameByOid',
-                5:'/computableModel/searchByNameByOid',
-                6:'/concept/searchByNameByOid',
-                7:'/spatial/searchByNameByOid',
-                8:'/template/searchByNameByOid',
-                9:'/unit/searchByNameByOid',
-                10:'/dataApplication/searchByNameByOid',
-                11:'/dataItem/itemsByNameAndAuthor'
+                1:this.isLoginUser ? QueryModelItemListOfAuthorSelf() : QueryModelItemListOfAuthor(),
+                2: this.isLoginUser ? QueryHubListOfAuthorSelf() : QueryHubListOfAuthor(),
+                3:this.isLoginUser ? QueryConceptualModelListOfAuthorSelf() : QueryConceptualModelListOfAuthor(),
+                4:this.isLoginUser ? QueryLogicalModelListOfAuthorSelf() : QueryLogicalModelListOfAuthor(),
+                5:this.isLoginUser ? QueryComputableModelListOfAuthorSelf() : QueryComputableModelListOfAuthor(),
+                6:this.isLoginUser ? QueryConceptListOfAuthorSelf() : QueryConceptListOfAuthor(),
+                7:this.isLoginUser ? QuerySpatialListOfAuthorSelf() : QuerySpatialListOfAuthor(),
+                8:this.isLoginUser ? QueryTemplateListOfAuthorSelf() : QueryTemplateListOfAuthor(),
+                9:this.isLoginUser ? QueryUnitListOfAuthorSelf() : QueryUnitListOfAuthor(),
+                10: this.isLoginUser ? QueryMethodListOfAuthorSelf() : QueryMethodListOfAuthor(),
+                11:this.isLoginUser ? QueryItemListOfAuthorSelf() : QueryItemListOfAuthor(),
 
             }
-            let hrefs = window.location.href.split("/");
             $.ajax({
-                type:"GET",
+                type:"post",
                 url:urls[this.resourceIndex],
-                data:{
-                    page:this.pageOption.currentPage-1,
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
                     pageSize:this.pageOption.pageSize,
                     asc:this.pageOption.sortAsc,
-                    sortElement:this.resourceSortElement,
-                    // sortElement:'createTime',
+                    sortField:this.resourcesortField,
                     searchText:this.searchText,
-                    oid:hrefs[hrefs.length-1]
-                },
+                }),
+                contentType:"application/json",
                 cache: false,
                 async: true,
                 // dataType: "json",
@@ -2391,7 +2355,7 @@ new Vue({
                     page:this.pageOption.currentPage-1,
                     pageSize:this.pageOption.pageSize,
                     asc:this.projects.sortAsc,
-                    sortElement:"creatDate",
+                    sortField:"creatDate",
                     searchText:this.searchText,
                     oid:hrefs[hrefs.length-1]
                 },
@@ -2433,7 +2397,7 @@ new Vue({
                     page:this.pageOption.currentPage-1,
                     pageSize:this.pageOption.pageSize,
                     asc:this.conferences.sortAsc,
-                    sortElement:"creatDate",
+                    sortField:"creatDate",
                     searchText:this.searchText,
                     oid:hrefs[hrefs.length-1]
                 },
@@ -3332,8 +3296,8 @@ new Vue({
 
     },
 
-    created(){
-        this.getUserInfo();
+    async created(){
+        await this.getUserInfo();
         this.modelItemHandleCurrentChange(1);
         this.dataItemHandleCurrentChange(1);
         this.dataHubHandleCurrentChange(1);
@@ -3354,8 +3318,8 @@ new Vue({
         this.labLoad();
 
     },
-
     mounted() {
+
         let that=this;
         $('#userEduStartTime').dcalendarpicker({
             format:'yyyy/mm/dd'

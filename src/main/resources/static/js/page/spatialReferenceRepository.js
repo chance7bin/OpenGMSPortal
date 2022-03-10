@@ -245,9 +245,9 @@ new Vue({
             }
             query.searchText=data.searchText;
 
-            let url=getspatialReferenceList()
+            let url=getSpatialReferenceList()
             // if(query.searchText.trim()==""){
-            //     url=getspatialReferenceList()
+            //     url=getSpatialReferenceList()
             //     query.categoryName = this.categoryName
             // }
             // else{

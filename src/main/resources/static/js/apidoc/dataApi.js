@@ -33,6 +33,16 @@ function getHubList(joinStr) {
     return joinByDataHub(url, joinStr)
 }
 
+function QueryHubListOfAuthorSelf(joinStr){
+    let url = '/queryListOfAuthorSelf'
+    return joinByDataHub(url, joinStr)
+}
+
+function QueryHubListOfAuthor(joinStr){
+    let url = '/queryListOfAuthor'
+    return joinByDataHub(url, joinStr)
+}
+
 //item
 function getItemList(joinStr) {
     let url = '/items'
@@ -41,6 +51,16 @@ function getItemList(joinStr) {
 
 function getItemById(joinStr) {
     let url = '';//'/detail'
+    return joinByDataItem(url, joinStr)
+}
+
+function QueryItemListOfAuthorSelf(joinStr){
+    let url = '/queryListOfAuthorSelf'
+    return joinByDataItem(url, joinStr)
+}
+
+function QueryItemListOfAuthor(joinStr){
+    let url = '/queryListOfAuthor'
     return joinByDataItem(url, joinStr)
 }
 
@@ -54,5 +74,18 @@ function getMethodById(joinStr) {
     let url = '';//'/detail'
     return joinByDataMethod(url, joinStr)
 }
+
+function QueryMethodListOfAuthorSelf(joinStr){
+    let url = '/queryListOfAuthorSelf'
+    return joinByDataMethod(url, joinStr)
+}
+
+function QueryMethodListOfAuthor(joinStr){
+    let url = '/queryListOfAuthor'
+    return joinByDataMethod(url, joinStr)
+}
+
+
+
 
 
