@@ -14,6 +14,7 @@ import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -227,13 +228,33 @@ public class VersionService {
      **/
     public JsonResult getVersionByConcreteStatus(FindDTO findDTO, int status) {
         try {
+            int count;
+            List<Version> versionList;
             if (findDTO == null){
-                return ResultUtils.success(versionDao.findAllByStatus(status));
+                versionList = versionDao.findAllByStatus(status);
+                count = versionList.size();
+
+                // return ResultUtils.success(versionDao.findAllByStatus(status));
             }
             else {
                 Pageable pageable = genericService.getPageable(findDTO);
-                return ResultUtils.success(versionDao.findAllByStatus(status,pageable));
+                Page<Version> allByStatus = versionDao.findAllByStatus(status, pageable);
+                versionList = allByStatus.getContent();
+                count = (int) allByStatus.getTotalElements();
+                // return ResultUtils.success(versionDao.findAllByStatus(status,pageable));
             }
+
+            List<Version> versions = new ArrayList<>();
+            for (Version version : versionList) {
+                Version newV = new Version();
+                BeanUtils.copyProperties(version, newV, "content","changedField");
+                versions.add(newV);
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("content",versions);
+            jsonObject.put("count",count);
+            return ResultUtils.success(jsonObject);
 
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
