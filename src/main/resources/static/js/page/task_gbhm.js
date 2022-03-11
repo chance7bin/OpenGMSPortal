@@ -1501,14 +1501,13 @@ var vue = new Vue({
         },
 
         getUserTaskInfo() {
-            let {code, data, msg} = fetch("/user/getUserInfo", {
+            let {code, data, msg} = fetch("/user/getFullUserInfo", {
                 method: "GET",
             }).then((response) => {
                 return response.json();
             }).then((data) => {
-                this.userInfo = data.data.userInfo;
+                this.userInfo = data.data;
                 this.userTaskInfo = this.userInfo.runTask;
-                console.log(this.userInfo);
                 setTimeout(() => {
                     $('.el-loading-mask').css('display', 'none');
                 }, 355)
@@ -3346,7 +3345,7 @@ var vue = new Vue({
 
             try{
                 res = await (
-                    await fetch("/task/TaskInit/" + id).catch(
+                    await fetch("/task/init/" + id).catch(
                     ()=>{
                         this.taskLoading = false
                         this.$confirm('Initialization failure: an error occured on the server.' + '<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Error', {
@@ -3524,7 +3523,7 @@ var vue = new Vue({
             };
         })
 
-        axios.get("/dataItem/createTree")
+        axios.get("/dataItem/categoryTree")
             .then(res => {
                 tha.tObj = res.data;
                 for (var e in tha.tObj) {

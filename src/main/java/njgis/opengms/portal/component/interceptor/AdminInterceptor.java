@@ -35,7 +35,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         Method method = handlerMethod.getMethod();
         // 判断接口是否需要管理员权限
         AdminRequired methodAnnotation = method.getAnnotation(AdminRequired.class);
-        // 有 @LoginRequired 注解，需要认证
+        // 有 @AdminRequired 注解，需要认证
         if (methodAnnotation != null) {
             // 这写你拦截需要干的事儿，比如取缓存，SESSION，权限判断等
             if (role == null){ //未登录，直接拦截至登录页面

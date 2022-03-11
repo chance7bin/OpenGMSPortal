@@ -7,6 +7,8 @@ var  data_item_info = new Vue({
     },
     data:function () {
         return{
+            itemInfo:{},
+
             lightenContributor:{},
             activeIndex:'2-2',
             activeName: 'Conceptual Model',
@@ -68,9 +70,9 @@ var  data_item_info = new Vue({
                 progressBar: true,
                 sortAsc: false,
                 currentPage: 1,
-                pageSize: 6,
+                pageSize: 5,
 
-                total: 264,
+                total: 0,
                 searchResult: [],
             },
 
@@ -303,7 +305,7 @@ var  data_item_info = new Vue({
             };
             $.ajax({
                 type: "GET",
-                url: "/dataItem/getRelation",
+                url: "/dataItem/relation",
                 data: data,
                 async: true,
                 success: (json) => {
@@ -414,17 +416,18 @@ var  data_item_info = new Vue({
                 },
                 crossDomain: true,
                 success: (result) => {
-                    let data = result.data
-                    if (data.accessId === "") {
+                    if (result.code === -3) {
                         this.confirmLogin();
                     }
                     else {
-                        this.tableData = [];
-                        this.pageOption.searchResult = [];
-                        this.relateSearch = "";
-                        this.getRelation();
-                        this.search();
+                        let arr = window.location.href.split("/");
+                        let id = arr[arr.length - 1].split("#")[0];
+                        let targetType = arr[arr.length - 2];
+
                         this.dialogTableVisible = true;
+                        this.$nextTick(()=>{
+                            this.$refs.linkRelatedItemModule.manualInit(id,targetType,"modelItem-D");
+                        })
                     }
                 }
             })
@@ -444,8 +447,7 @@ var  data_item_info = new Vue({
                 },
                 crossDomain:true,
                 success: (result) => {
-                    let data = result.data
-                    if (data.accessId == "") {
+                    if (result.code == -3) {
                         this.confirmLogin();
                     }
                     else{
@@ -462,39 +464,31 @@ var  data_item_info = new Vue({
         search(){
             var data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage - 1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.relateSearch,
                 sortType:"default",
-                classifications: ["all"],
             };
-            let url,contentType;
+            let url;
 
             url="/modelItem/listByAuthor";
-            contentType="application/x-www-form-urlencoded";
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                async: true,
-                contentType:contentType,
-                success: (json) => {
-                    if (json.code == 0) {
-                        let data = json.data;
-                        console.log(data)
+            axios.post(url, data).then(res => {
+                let json = res.data;
+                if (json.code == 0) {
+                    let data = json.data;
+                    console.log(data)
 
-                        this.pageOption.total = data.total;
-                        this.pageOption.pages = data.pages;
-                        this.pageOption.searchResult = data.list;
-                        this.pageOption.users = data.users;
-                        this.pageOption.progressBar = false;
-                        this.pageOption.paginationShow=true;
+                    this.pageOption.total = data.total;
+                    this.pageOption.pages = data.pages;
+                    this.pageOption.searchResult = data.list;
+                    this.pageOption.users = data.users;
+                    this.pageOption.progressBar = false;
+                    this.pageOption.paginationShow=true;
 
-                    }
-                    else {
-                        console.log("query error!")
-                    }
+                }
+                else {
+                    console.log("query error!")
                 }
             })
         },
@@ -1461,7 +1455,29 @@ var  data_item_info = new Vue({
                     })
                 }
             }
-        }
+        },
+        receiveModuleMsg(msg){
+            let m_code = msg.m_code
+            let m_msg = msg.m_msg
+
+            if(m_code==-1){
+                if(m_msg.toLowerCase()==='nologin'&&this.dialogTableVisible){
+                    this.confirmLogin()
+                    this.dialogTableVisible = false
+                }
+            }else if(m_code==0){
+                if(m_msg.toLowerCase()==='pending'&&this.dialogTableVisible){
+                    this.dialogTableVisible = false
+                    window.location.reload();
+                }
+            }else if(m_code==1){
+                if(m_msg.toLowerCase()==='suc'&&this.dialogTableVisible){
+                    this.dialogTableVisible = false
+                    window.location.reload();
+                }
+            }
+        },
+
 
     },
 

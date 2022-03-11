@@ -646,262 +646,259 @@ var vue = new Vue({
                             type: "GET",
                             data: {},
                             success: (result) => {
-                                console.log(result)
+                                if(result.code == 0){
+                                    let basicInfo = result.data;
+                                    //classinfo是model,dataClassInfo是data
+                                    let classinfo_edit = basicInfo.classinfo;
+                                    // console.log(classinfo_edit);
 
-                                let basicInfo = result.data;
-                                //classinfo是model,dataClassInfo是data
-                                let classinfo_edit = basicInfo.classinfo;
-                                // console.log(classinfo_edit);
-
-                                this.categorynameModel = [];
-                                for (let i = 0; i < classinfo_edit.length - 1; i++) {
-                                    //先将classinfo中的数据存储到themeObj中
-                                    this.modelClass_add();
-                                }
-
-                                //从数据库获取数据，存放到editableTans_model里，此数组在前端渲染
-                                for (let i = 0; i < classinfo_edit.length; i++) {
-                                    //把category name数据存储起来
-                                    // this.categorynameModel.push(classinfo_edit[i].mcname);
-
-
-                                    this.editableTabs_model[0].children.push({
-                                        id: ++this.tabIndex_model,
-                                        label: classinfo_edit[i].mcname,
-                                        children: [],
-                                        tableData: [],
-                                        editActiveIndex:0,
-                                    });
-                                    this.themeObj.classinfo.push({
-                                        id: this.tabIndex_model,
-                                        mcname: classinfo_edit[i].mcname,
-                                        children:[],
-                                        modelsoid: classinfo_edit[i].modelsoid,
-                                    })
-
-                                    //处理孩子
-                                    if(classinfo_edit[i].children!=null&&classinfo_edit[i].children!=undefined&&classinfo_edit[i].children.length!=0){
-                                        for(let j = 0;j<classinfo_edit[i].children.length;++j)
-                                        {
-                                            this.editableTabs_model[0].children[i].children.push({
-                                                id:++this.tabIndex_model,
-                                                label : classinfo_edit[i].children[j].mcname,
-                                                children:[],
-                                                tableData : [],
-                                                editActiveIndex:0,
-
-                                            })
-                                            this.themeObj.classinfo[i].children.push({
-                                                id:this.tabIndex_model,
-                                                mcname : classinfo_edit[i].children[j].mcname,
-                                                children : [],
-                                                modelsoid : classinfo_edit[i].children[j].modelsoid
-                                            })
-
-                                            for(let k = 0;k<classinfo_edit[i].children[j].modelsoid.length;++k){
-                                                this.find_oid(classinfo_edit[i].children[j].modelsoid[k], 1);//1代表type为modelitem
-                                                this.editableTabs_model[0].children[i].children[j].tableData.push(this.tabledata_get);
-                                                this.modelInfo.push(this.tabledata_get);
-
-                                            }
-                                        }
+                                    this.categorynameModel = [];
+                                    for (let i = 0; i < classinfo_edit.length - 1; i++) {
+                                        //先将classinfo中的数据存储到themeObj中
+                                        this.modelClass_add();
                                     }
 
-                                    for (let j = 0; j < classinfo_edit[i].modelsoid.length; j++) {
-                                        this.find_oid(classinfo_edit[i].modelsoid[j], 1);//1代表type为modelitem
-                                        this.editableTabs_model[0].children[i].tableData.push(this.tabledata_get);
-                                        this.modelInfo.push(this.tabledata_get);
-                                    }
-                                }
-
-                                this.themeModelData = JSON.parse(JSON.stringify(this.editableTabs_model));
-                                this.origin_themeModelData = JSON.parse(JSON.stringify(this.editableTabs_model))
+                                    //从数据库获取数据，存放到editableTans_model里，此数组在前端渲染
+                                    for (let i = 0; i < classinfo_edit.length; i++) {
+                                        //把category name数据存储起来
+                                        // this.categorynameModel.push(classinfo_edit[i].mcname);
 
 
-                                //data部分
-                                let dataClassInfo_edit = basicInfo.dataClassInfo;
-                                this.categorynameData = [];
-                                for (let i = 0; i < dataClassInfo_edit.length - 1; i++) {
-                                    this.dataClass_add();
-                                }
-
-                                for (let i = 0; i < dataClassInfo_edit.length; i++) {
-                                    this.editableTabs_data[0].children.push({
-                                        id:++this.tabIndex_data,
-                                        label : dataClassInfo_edit[i].dcname,
-                                        children : [],
-                                        tableData : [],
-                                        editActiveIndex:0,
-
-                                    });
-                                    this.themeObj.dataClassInfo.push({
-                                        id : this.tabIndex_data,
-                                        dcname : dataClassInfo_edit[i].dcname,
-                                        children : [],
-                                        datasoid : dataClassInfo_edit[i].datasoid
-                                    })
-                                    if(dataClassInfo_edit[i].children!=null&&dataClassInfo_edit[i].children!=undefined&&dataClassInfo_edit[i].children.length!=0){
-                                        for(let j = 0;j<dataClassInfo_edit[i].children.length;++j)
-                                        {
-                                            this.editableTabs_data[0].children[i].children.push({
-                                                id : ++this.tabIndex_data,
-                                                label : dataClassInfo_edit[i].children[j].dcname,
-                                                children : [],
-                                                tableData : [],
-                                                editActiveIndex:0,
-
-                                            });
-                                            this.themeObj.dataClassInfo[i].children.push({
-                                                id : this.tabIndex_data,
-                                                dcname : dataClassInfo_edit[i].children[j].dcname,
-                                                children : [],
-                                                datasoid : dataClassInfo_edit[i].children[j].datasoid
-                                            })
-                                            for (let k = 0;k<dataClassInfo_edit[i].children[j].datasoid.length;++k){
-                                                this.find_oid(dataClassInfo_edit[i].children[j].datasoid[k],2);//2代表type为dataItem
-                                                this.editableTabs_data[0].children[i].children[j].tableData.push(this.tabledata_get);
-                                                this.dataInfo.push(this.tabledata_get);
-                                            }
-                                        }
-                                    }
-
-                                    for (let j = 0; j < dataClassInfo_edit[i].datasoid.length; j++) {
-                                        this.find_oid(dataClassInfo_edit[i].datasoid[j], 2);
-                                        this.editableTabs_data[0].children[i].tableData.push(this.tabledata_get);
-                                        this.dataInfo.push(this.tabledata_get);
-
-                                    }
-                                }
-                                this.themeData = JSON.parse(JSON.stringify(this.editableTabs_data));
-                                this.origin_themeData = JSON.parse(JSON.stringify(this.editableTabs_data));
-
-
-                                //data Method
-                                let dataMethodClassInfo_edit = basicInfo.dataMethodClassInfo;
-                                if(dataMethodClassInfo_edit!=null&&dataMethodClassInfo_edit!=undefined){
-                                    for(let i = 0;i < dataMethodClassInfo_edit.length;++i){
-                                        this.editableTabs_dataMethod[0].children.push({
-                                            id:++this.tabIndex_dataMethod,
-                                            label : dataMethodClassInfo_edit[i].dmcname,
-                                            children : [],
-                                            tableData : [],
+                                        this.editableTabs_model[0].children.push({
+                                            id: ++this.tabIndex_model,
+                                            label: classinfo_edit[i].mcname,
+                                            children: [],
+                                            tableData: [],
                                             editActiveIndex:0,
-
                                         });
-                                        this.themeObj.dataMethodClassInfo.push({
-                                            id : this.tabIndex_dataMethod,
-                                            dmcname : dataMethodClassInfo_edit[i].dmcname,
-                                            children : [],
-                                            dataMethodsoid : dataMethodClassInfo_edit[i].dataMethodsoid
+                                        this.themeObj.classinfo.push({
+                                            id: this.tabIndex_model,
+                                            mcname: classinfo_edit[i].mcname,
+                                            children:[],
+                                            modelsoid: classinfo_edit[i].modelsoid,
                                         })
-                                        if(dataMethodClassInfo_edit[i].children!=null&&dataMethodClassInfo_edit[i].children!=undefined&&dataMethodClassInfo_edit[i].children.length!=0){
-                                            for(let j = 0;j<dataMethodClassInfo_edit[i].children.length;++j)
+
+                                        //处理孩子
+                                        if(classinfo_edit[i].children!=null&&classinfo_edit[i].children!=undefined&&classinfo_edit[i].children.length!=0){
+                                            for(let j = 0;j<classinfo_edit[i].children.length;++j)
                                             {
-                                                this.editableTabs_dataMethod[0].children[i].children.push({
-                                                    id : ++this.tabIndex_dataMethod,
-                                                    label : dataMethodClassInfo_edit[i].children[j].dmcname,
-                                                    children : [],
+                                                this.editableTabs_model[0].children[i].children.push({
+                                                    id:++this.tabIndex_model,
+                                                    label : classinfo_edit[i].children[j].mcname,
+                                                    children:[],
                                                     tableData : [],
                                                     editActiveIndex:0,
 
-                                                });
-                                                this.themeObj.dataMethodClassInfo[i].children.push({
-                                                    id : this.tabIndex_dataMethod,
-                                                    dmcname : dataMethodClassInfo_edit[i].children[j].dmcname,
-                                                    children : [],
-                                                    dataMethodsoid : dataMethodClassInfo_edit[i].children[j].dataMethodsoid
                                                 })
-                                                for (let k = 0;k<dataMethodClassInfo_edit[i].children[j].dataMethodsoid.length;++k){
-                                                    this.find_oid(dataMethodClassInfo_edit[i].children[j].dataMethodsoid[k],3);//3代表type为dataMethod
-                                                    this.editableTabs_dataMethod[0].children[i].children[j].tableData.push(this.tabledata_get);
-                                                    this.dataMethodInfo.push(this.tabledata_get);
+                                                this.themeObj.classinfo[i].children.push({
+                                                    id:this.tabIndex_model,
+                                                    mcname : classinfo_edit[i].children[j].mcname,
+                                                    children : [],
+                                                    modelsoid : classinfo_edit[i].children[j].modelsoid
+                                                })
+
+                                                for(let k = 0;k<classinfo_edit[i].children[j].modelsoid.length;++k){
+                                                    this.find_oid(classinfo_edit[i].children[j].modelsoid[k], 1);//1代表type为modelitem
+                                                    this.editableTabs_model[0].children[i].children[j].tableData.push(this.tabledata_get);
+                                                    this.modelInfo.push(this.tabledata_get);
 
                                                 }
                                             }
                                         }
 
-                                        for (let j = 0; j < dataMethodClassInfo_edit[i].dataMethodsoid.length; j++) {
-                                            this.find_oid(dataMethodClassInfo_edit[i].dataMethodsoid[j], 3);
-                                            this.editableTabs_dataMethod[0].children[i].tableData.push(this.tabledata_get);
-                                            this.dataMethodInfo.push(this.tabledata_get);
+                                        for (let j = 0; j < classinfo_edit[i].modelsoid.length; j++) {
+                                            this.find_oid(classinfo_edit[i].modelsoid[j], 1);//1代表type为modelitem
+                                            this.editableTabs_model[0].children[i].tableData.push(this.tabledata_get);
+                                            this.modelInfo.push(this.tabledata_get);
                                         }
                                     }
 
-                                }
-                                this.themeDataMethod = JSON.parse(JSON.stringify(this.editableTabs_dataMethod));
-                                this.origin_themeDataMethod = JSON.parse(JSON.stringify(this.editableTabs_dataMethod));
+                                    this.themeModelData = JSON.parse(JSON.stringify(this.editableTabs_model));
+                                    this.origin_themeModelData = JSON.parse(JSON.stringify(this.editableTabs_model))
 
 
-
-
-
-                                //application
-                                let application_edit = basicInfo.application;
-                                if(application_edit!=null&&application_edit!=undefined){
-                                    for (let i = 0; i < application_edit.length; i++) {
-                                        let app = {};
-                                        app.applicationname = basicInfo.application[i].applicationname;
-                                        app.applicationlink = basicInfo.application[i].applicationlink;
-                                        app.upload_application_image = basicInfo.application[i].application_image;
-                                        app.imageTag = 0;
-                                        if(app.upload_application_image!=''&&app.upload_application_image!=undefined){
-                                            //有图
-                                            app.imageTag = 1;
-                                        }
-
-                                        this.themeApplicationData.push(app);
-                                        this.themeObj.application.push(app)
-
-                                        //用作id
-                                        this.themeApplicationData[i].name = 'application'+(this.tabIndex_application++).toString();
+                                    //data部分
+                                    let dataClassInfo_edit = basicInfo.dataClassInfo;
+                                    this.categorynameData = [];
+                                    for (let i = 0; i < dataClassInfo_edit.length - 1; i++) {
+                                        this.dataClass_add();
                                     }
-                                    if(this.themeApplicationData.length == 0){
-                                        this.themeApplicationData.push({
-                                            name:'tagDelte',
-                                            applicationname:'New Tab',
-                                            applicationlink:'',
-                                            upload_application_image:'',
-                                            imageTag:0,
+
+                                    for (let i = 0; i < dataClassInfo_edit.length; i++) {
+                                        this.editableTabs_data[0].children.push({
+                                            id:++this.tabIndex_data,
+                                            label : dataClassInfo_edit[i].dcname,
+                                            children : [],
+                                            tableData : [],
+                                            editActiveIndex:0,
+
+                                        });
+                                        this.themeObj.dataClassInfo.push({
+                                            id : this.tabIndex_data,
+                                            dcname : dataClassInfo_edit[i].dcname,
+                                            children : [],
+                                            datasoid : dataClassInfo_edit[i].datasoid
                                         })
-                                        this.editableTabsValue_applications = 'tagDelte'
+                                        if(dataClassInfo_edit[i].children!=null&&dataClassInfo_edit[i].children!=undefined&&dataClassInfo_edit[i].children.length!=0){
+                                            for(let j = 0;j<dataClassInfo_edit[i].children.length;++j)
+                                            {
+                                                this.editableTabs_data[0].children[i].children.push({
+                                                    id : ++this.tabIndex_data,
+                                                    label : dataClassInfo_edit[i].children[j].dcname,
+                                                    children : [],
+                                                    tableData : [],
+                                                    editActiveIndex:0,
+
+                                                });
+                                                this.themeObj.dataClassInfo[i].children.push({
+                                                    id : this.tabIndex_data,
+                                                    dcname : dataClassInfo_edit[i].children[j].dcname,
+                                                    children : [],
+                                                    datasoid : dataClassInfo_edit[i].children[j].datasoid
+                                                })
+                                                for (let k = 0;k<dataClassInfo_edit[i].children[j].datasoid.length;++k){
+                                                    this.find_oid(dataClassInfo_edit[i].children[j].datasoid[k],2);//2代表type为dataItem
+                                                    this.editableTabs_data[0].children[i].children[j].tableData.push(this.tabledata_get);
+                                                    this.dataInfo.push(this.tabledata_get);
+                                                }
+                                            }
+                                        }
+
+                                        for (let j = 0; j < dataClassInfo_edit[i].datasoid.length; j++) {
+                                            this.find_oid(dataClassInfo_edit[i].datasoid[j], 2);
+                                            this.editableTabs_data[0].children[i].tableData.push(this.tabledata_get);
+                                            this.dataInfo.push(this.tabledata_get);
+
+                                        }
                                     }
+                                    this.themeData = JSON.parse(JSON.stringify(this.editableTabs_data));
+                                    this.origin_themeData = JSON.parse(JSON.stringify(this.editableTabs_data));
+
+
+                                    //data Method
+                                    let dataMethodClassInfo_edit = basicInfo.dataMethodClassInfo;
+                                    if(dataMethodClassInfo_edit!=null&&dataMethodClassInfo_edit!=undefined){
+                                        for(let i = 0;i < dataMethodClassInfo_edit.length;++i){
+                                            this.editableTabs_dataMethod[0].children.push({
+                                                id:++this.tabIndex_dataMethod,
+                                                label : dataMethodClassInfo_edit[i].dmcname,
+                                                children : [],
+                                                tableData : [],
+                                                editActiveIndex:0,
+
+                                            });
+                                            this.themeObj.dataMethodClassInfo.push({
+                                                id : this.tabIndex_dataMethod,
+                                                dmcname : dataMethodClassInfo_edit[i].dmcname,
+                                                children : [],
+                                                dataMethodsoid : dataMethodClassInfo_edit[i].dataMethodsoid
+                                            })
+                                            if(dataMethodClassInfo_edit[i].children!=null&&dataMethodClassInfo_edit[i].children!=undefined&&dataMethodClassInfo_edit[i].children.length!=0){
+                                                for(let j = 0;j<dataMethodClassInfo_edit[i].children.length;++j)
+                                                {
+                                                    this.editableTabs_dataMethod[0].children[i].children.push({
+                                                        id : ++this.tabIndex_dataMethod,
+                                                        label : dataMethodClassInfo_edit[i].children[j].dmcname,
+                                                        children : [],
+                                                        tableData : [],
+                                                        editActiveIndex:0,
+
+                                                    });
+                                                    this.themeObj.dataMethodClassInfo[i].children.push({
+                                                        id : this.tabIndex_dataMethod,
+                                                        dmcname : dataMethodClassInfo_edit[i].children[j].dmcname,
+                                                        children : [],
+                                                        dataMethodsoid : dataMethodClassInfo_edit[i].children[j].dataMethodsoid
+                                                    })
+                                                    for (let k = 0;k<dataMethodClassInfo_edit[i].children[j].dataMethodsoid.length;++k){
+                                                        this.find_oid(dataMethodClassInfo_edit[i].children[j].dataMethodsoid[k],3);//3代表type为dataMethod
+                                                        this.editableTabs_dataMethod[0].children[i].children[j].tableData.push(this.tabledata_get);
+                                                        this.dataMethodInfo.push(this.tabledata_get);
+
+                                                    }
+                                                }
+                                            }
+
+                                            for (let j = 0; j < dataMethodClassInfo_edit[i].dataMethodsoid.length; j++) {
+                                                this.find_oid(dataMethodClassInfo_edit[i].dataMethodsoid[j], 3);
+                                                this.editableTabs_dataMethod[0].children[i].tableData.push(this.tabledata_get);
+                                                this.dataMethodInfo.push(this.tabledata_get);
+                                            }
+                                        }
+
+                                    }
+                                    this.themeDataMethod = JSON.parse(JSON.stringify(this.editableTabs_dataMethod));
+                                    this.origin_themeDataMethod = JSON.parse(JSON.stringify(this.editableTabs_dataMethod));
+
+
+
+
+
+                                    //application
+                                    let application_edit = basicInfo.application;
+                                    if(application_edit!=null&&application_edit!=undefined){
+                                        for (let i = 0; i < application_edit.length; i++) {
+                                            let app = {};
+                                            app.applicationname = basicInfo.application[i].applicationname;
+                                            app.applicationlink = basicInfo.application[i].applicationlink;
+                                            app.upload_application_image = basicInfo.application[i].application_image;
+                                            app.imageTag = 0;
+                                            if(app.upload_application_image!=''&&app.upload_application_image!=undefined){
+                                                //有图
+                                                app.imageTag = 1;
+                                            }
+
+                                            this.themeApplicationData.push(app);
+                                            this.themeObj.application.push(app)
+
+                                            //用作id
+                                            this.themeApplicationData[i].name = 'application'+(this.tabIndex_application++).toString();
+                                        }
+                                        if(this.themeApplicationData.length == 0){
+                                            this.themeApplicationData.push({
+                                                name:'tagDelte',
+                                                applicationname:'New Tab',
+                                                applicationlink:'',
+                                                upload_application_image:'',
+                                                imageTag:0,
+                                            })
+                                            this.editableTabsValue_applications = 'tagDelte'
+                                        }
+                                    }
+
+
+                                    this.origin_themeApplicationData = JSON.parse(JSON.stringify(this.themeApplicationData));
+
+
+                                    //显示themename
+                                    //themename实现双向数据绑定
+                                    // $("#nameInput").val(basicInfo.themename);
+                                    this.themeName = basicInfo.themename;
+                                    this.editThemeName = this.themeName;
+                                    this.themeObj.themeName = basicInfo.themename;
+
+
+                                    //显示themeimg
+                                    //themeimg实现双向数据绑定
+                                    // $('#imgShow').attr("src", basicInfo.image);
+                                    // $('#imgShow').show();
+                                    if(basicInfo.image==''||basicInfo.image==null)
+                                    {
+                                        //设为默认照片
+                                        basicInfo.image = '/static/img/icon/default.png';
+                                    }
+                                    this.themeObj.themeImage = basicInfo.image;
+                                    this.themeImage = this.themeObj.themeImage;
+
+                                    //显示theme detail
+                                    this.themeObj.detail = basicInfo.localizationList[0].description;
+                                    this.detail = basicInfo.localizationList[0].description;
+
+
+                                    //值复制
+                                    this.edit_themeObj = JSON.parse(JSON.stringify(this.themeObj))
+                                    this.origin_themeObj = JSON.parse(JSON.stringify(this.themeObj))
                                 }
-
-
-                                this.origin_themeApplicationData = JSON.parse(JSON.stringify(this.themeApplicationData));
-
-
-                                //显示themename
-                                //themename实现双向数据绑定
-                                // $("#nameInput").val(basicInfo.themename);
-                                this.themeName = basicInfo.themename;
-                                this.editThemeName = this.themeName;
-                                this.themeObj.themeName = basicInfo.themename;
-
-
-                                //显示themeimg
-                                //themeimg实现双向数据绑定
-                                // $('#imgShow').attr("src", basicInfo.image);
-                                // $('#imgShow').show();
-                                if(basicInfo.image==''||basicInfo.image==null)
-                                {
-                                    //设为默认照片
-                                    basicInfo.image = '/static/img/icon/default.png';
-                                }
-                                this.themeObj.themeImage = basicInfo.image;
-                                this.themeImage = this.themeObj.themeImage;
-
-                                //显示theme detail
-                                this.themeObj.detail = basicInfo.localizationList[0].description;
-                                this.detail = basicInfo.localizationList[0].description;
-
-
-                                //值复制
-                                this.edit_themeObj = JSON.parse(JSON.stringify(this.themeObj))
-                                this.origin_themeObj = JSON.parse(JSON.stringify(this.themeObj))
-
-                                console.log(this.themeObj)
-                                console.log(this.themeData)
                             }
                         })
                     }

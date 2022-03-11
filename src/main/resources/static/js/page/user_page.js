@@ -6,6 +6,20 @@ new Vue({
     },
     data() {
         return {
+            resourceCount:{
+                computableModel: 0,
+                concept: 0,
+                conceptualModel: 0,
+                dataHub: 0,
+                dataItem: 0,
+                dataMethod: 0,
+                logicalModel: 0,
+                modelItem: 0,
+                spatialReference: 0,
+                template: 0,
+                theme: 0,
+                unit: 0
+            },
             //tab的默认标签页
             mainActiveName:'Model',
             modelActiveName:"ModelItem",
@@ -34,8 +48,8 @@ new Vue({
             activeIndex:'',
             // activeName: 'Model Item',
             currentPage: 1,
-
-
+            loginUserEmail:'',
+            isLoginUser:true,
             introduction:'',
             researchInterests:[],
             subjectAreas:[],
@@ -330,7 +344,7 @@ new Vue({
                 ''
             ],
 
-            resourceSortElement:'viewCount',
+            resourcesortField:'viewCount',
             resourceSortEleText:'View Count',
         }
     },
@@ -513,7 +527,8 @@ new Vue({
 
         saveUpdateUserInfo() {
             var researchInterests = $('#researchInterestInput').tagEditor('getTags')[0].tags;
-            this.researchInterests = JSON.parse(JSON.stringify(researchInterests));
+            if(!researchInterests && typeof(researchInterests) != 'undefined')
+                this.researchInterests = JSON.parse(JSON.stringify(researchInterests));
             console.log(this.researchInterests)
             console.log(this.userPersonalInfo)
             if(this.introductionInput!=this.userPersonalInfo.introduction
@@ -601,46 +616,46 @@ new Vue({
             }
         },
 
-        editIntro7RIS(){
-            this.Intro7RISdialog = true
-            this.introduction = this.userPersonalInfo.introduction
-            if ($("#researchInterestInput").nextAll().length == 0) {//如果不存在tageditor,则创建一个
-                Vue.nextTick(() => {
-                    $("#researchInterestInput").tagEditor({
-                        forceLowercase: false
-                    })
-                    $('#researchInterestInput').tagEditor('destroy');
-                    $('#researchInterestInput').tagEditor({
-                        initialTags: this.userPersonalInfo.researchInterests,
-                        forceLowercase: false,
-                    });
+        // editIntro7RIS(){
+        //     this.Intro7RISdialog = true
+        //     this.introduction = this.userPersonalInfo.introduction
+        //     if ($("#researchInterestInput").nextAll().length == 0) {//如果不存在tageditor,则创建一个
+        //         Vue.nextTick(() => {
+        //             $("#researchInterestInput").tagEditor({
+        //                 forceLowercase: false
+        //             })
+        //             $('#researchInterestInput').tagEditor('destroy');
+        //             $('#researchInterestInput').tagEditor({
+        //                 initialTags: this.userPersonalInfo.researchInterests,
+        //                 forceLowercase: false,
+        //             });
+        //
+        //         })
+        //     } else {
+        //         Vue.nextTick(() => {
+        //             $('#researchInterestInput').tagEditor('destroy');
+        //             $('#researchInterestInput').tagEditor({
+        //                 initialTags: this.userPersonalInfo.researchInterests,
+        //                 forceLowercase: false,
+        //             });
+        //         })
+        //     }
+        //
+        //     $('#researchInterestInput').tagEditor('destroy');
+        //     $('#researchInterestInput').tagEditor({
+        //         initialTags:  [''],
+        //         forceLowercase: false,
+        //     });
+        // },
 
-                })
-            } else {
-                Vue.nextTick(() => {
-                    $('#researchInterestInput').tagEditor('destroy');
-                    $('#researchInterestInput').tagEditor({
-                        initialTags: this.userPersonalInfo.researchInterests,
-                        forceLowercase: false,
-                    });
-                })
-            }
-
-            $('#researchInterestInput').tagEditor('destroy');
-            $('#researchInterestInput').tagEditor({
-                initialTags:  [''],
-                forceLowercase: false,
-            });
-        },
-
-        uploadIntro7RISConfirm(){
-            this.Intro7RISdialog=false
-            this.descriptionAddToBack();
-            var tags = $('#researchInterestInput').tagEditor('getTags')[0].tags;
-            for (i = 0; i < tags.length; i++) { $('#researchInterestInput').tagEditor('removeTag', tags[i]); }
-            this.researchInterests=tags;
-            this.researchInterestAddToBack();
-        },
+        // uploadIntro7RISConfirm(){
+        //     this.Intro7RISdialog=false
+        //     this.descriptionAddToBack();
+        //     var tags = $('#researchInterestInput').tagEditor('getTags')[0].tags;
+        //     for (i = 0; i < tags.length; i++) { $('#researchInterestInput').tagEditor('removeTag', tags[i]); }
+        //     this.researchInterests=tags;
+        //     this.researchInterestAddToBack();
+        // },
 
         editExLink(){
             this.externalLinkDialog = true
@@ -944,18 +959,18 @@ new Vue({
 
         },
 
-        editLabClick(){
-            $('#userLaboratory').val(this.userPersonalInfo.lab.name);
-            if(this.userPersonalInfo.lab.position=="leader"){
-                $("input[type='radio'][name='labPosition'][value='0']").attr("checked",true);
-            }else if(this.userPersonalInfo.lab.position=="member"){
-                $("input[type='radio'][name='labPosition'][value='1']").attr("checked",true);
-            }
-        },
+        // editLabClick(){
+        //     $('#userLaboratory').val(this.userPersonalInfo.lab.name);
+        //     if(this.userPersonalInfo.lab.position=="leader"){
+        //         $("input[type='radio'][name='labPosition'][value='0']").attr("checked",true);
+        //     }else if(this.userPersonalInfo.lab.position=="member"){
+        //         $("input[type='radio'][name='labPosition'][value='1']").attr("checked",true);
+        //     }
+        // },
 
-        addLabClick(){
-
-        },
+        // addLabClick(){
+        //
+        // },
 
         saveLabClick(){
             console.log($('#userLaboratory').val());
@@ -977,35 +992,35 @@ new Vue({
 
         },
 
-        addEduXpceClick(){
-            $('#userEduInstitution').val('');
-            $('#userEduDepartment').val('');
-            $('#userEduAcaDegree').val('');
-            $('#userEduStartTime').val('');
-            $('#userEduEndTime').val('');
-            $('#userEduLocation').val('');
-        },
+        // addEduXpceClick(){
+        //     $('#userEduInstitution').val('');
+        //     $('#userEduDepartment').val('');
+        //     $('#userEduAcaDegree').val('');
+        //     $('#userEduStartTime').val('');
+        //     $('#userEduEndTime').val('');
+        //     $('#userEduLocation').val('');
+        // },
 
-        saveEduExperience(){
-            this.eduExpAddToBack.institution=$('#userEduInstitution').val();
-            this.eduExpAddToBack.department=$('#userEduDepartment').val();
-            this.eduExpAddToBack.acaDegree=$('#userEduAcaDegree').val();
-            this.eduExpAddToBack.startTime=new Date($('#userEduStartTime').val());
-            this.eduExpAddToBack.endTime=new Date($('#userEduEndTime').val());
-            this.eduExpAddToBack.location=$('#userEduLocation').val();
-            console.log(this.eduExpAddToBack);
+        // saveEduExperience(){
+        //     this.eduExpAddToBack.institution=$('#userEduInstitution').val();
+        //     this.eduExpAddToBack.department=$('#userEduDepartment').val();
+        //     this.eduExpAddToBack.acaDegree=$('#userEduAcaDegree').val();
+        //     this.eduExpAddToBack.startTime=new Date($('#userEduStartTime').val());
+        //     this.eduExpAddToBack.endTime=new Date($('#userEduEndTime').val());
+        //     this.eduExpAddToBack.location=$('#userEduLocation').val();
+        //     console.log(this.eduExpAddToBack);
+        //
+        //     this.eduExperienceAddtoBack();
+        // },
 
-            this.eduExperienceAddtoBack();
-        },
-
-        saveAwdHonor(){
-            this.awdHonor.name=$('#userAwdName').val();
-            this.awdHonor.awardAgency=$('#userAwdAgency').val();
-            this.awdHonor.awardTime=new Date($('#userAwdTime').val());
-
-            console.log(this.awdHonor);
-            this.awdHonorAddtoBack();
-        },
+        // saveAwdHonor(){
+        //     this.awdHonor.name=$('#userAwdName').val();
+        //     this.awdHonor.awardAgency=$('#userAwdAgency').val();
+        //     this.awdHonor.awardTime=new Date($('#userAwdTime').val());
+        //
+        //     console.log(this.awdHonor);
+        //     this.awdHonorAddtoBack();
+        // },
 
         // addDescriptionClick(){
         //     $('#addDescriptionButton').css('display','none');
@@ -1044,7 +1059,6 @@ new Vue({
             $('#addResearchInterestButton').css('display','none');
             $('#researchInterestInputContainer').css({display:'block'});
             $('#researchInterestConfirm').css({display:'block'});
-            // $('#researchInterestInputContainer').animate({width:'65%'},500);
         },
 
         editResearchInterestClick(){
@@ -1052,7 +1066,6 @@ new Vue({
             $('#editResearchInterestButton').css({display:'none'});
             $('#researchInterestInputContainer').css({display:'block'});
             $('#researchInterestConfirm').css({display:'block'});
-            // $('#researchInterestInput').val(this.userPersonalInfo.researchInterests);
             $("#researchInterestInput").tagEditor("destroy");
             $('#researchInterestInput').tagEditor({
                 initialTags: this.userPersonalInfo.researchInterests,
@@ -1096,60 +1109,90 @@ new Vue({
 
         },
 
-        getUserInfo(){
+        async getUserInfo(){
             let hrefs = window.location.href.split("/");
-            $.ajax({
-                data:{oid:hrefs[hrefs.length-1]},
-                type:'GET',
-                url:'/user/getUserInfoInUserPage',
-                async:true,
-                success:(json) => {
-                    if(json.code==0){
-                        const data = json.data;
-                        console.log(data)
-                        setTimeout(() => {
-                            this.userPersonalInfo = data.userInfo;
-                            this.organizationInput = this.userPersonalInfo.organizations[0];
-                            this.locationInput = this.userPersonalInfo.location;
-                            this.externalLinkInput = this.userPersonalInfo.externalLinks[0];
-                            this.introductionInput = this.userPersonalInfo.introduction;
-                            if (!this.introductionInput || typeof(this.introductionInput) == 'undefined')
-                                this.introductionInput = ''
-                            this.emailInput = this.userPersonalInfo.email;
-                            if(this.userPersonalInfo.researchInterests == null)
-                                this.userPersonalInfo.researchInterests=[];
-
-                            this.researchInterests = this.userPersonalInfo.researchInterests;
-
-
-                            console.log(this.userPersonalInfo)
-                        }, 0);
-                    } else {
-                        console.log("UserInfo get wrong.")
+            let email;
+            let _this = this;
+            // $.ajax()
+           await  axios.get('/user/email',{params:{userName:hrefs[hrefs.length-1]}})
+                .then(function (result) {
+                    if(result.data.code == 0){
+                        email = result.data.data
+                        console.log(email)
                     }
-                }
-
-            })
+                })
+                 .then(async function () {
+                     if (email != null) {
+                         await axios.get('/user/getFullUserInfo', {params: {email: email}})
+                             .then(function (result) {
+                                 result = result.data
+                                 if (result.code == 0) {
+                                     const data = result.data;
+                                     setTimeout(() => {
+                                         _this.userPersonalInfo = data;
+                                         _this.organizationInput = _this.userPersonalInfo.organizations[0];
+                                         if (!_this.userPersonalInfo.location || typeof (_this.userPersonalInfo.location) == "undefined") {
+                                             _this.userPersonalInfo.location = ''
+                                             _this.locationInput = _this.userPersonalInfo.location;
+                                         }
+                                         if (!_this.userPersonalInfo.externalLinks[0] || typeof (_this.userPersonalInfo.externalLinks[0]) == "undefined") {
+                                             _this.userPersonalInfo.externalLinks[0] = ''
+                                             _this.externalLinkInput = _this.userPersonalInfo.externalLinks[0];
+                                         }
+                                         if (!_this.userPersonalInfo.introduction || typeof (_this.userPersonalInfo.introduction) == 'undefined') {
+                                             _this.userPersonalInfo.introduction = ''
+                                             _this.introductionInput = _this.userPersonalInfo.introduction;
+                                         }
+                                         _this.emailInput = _this.userPersonalInfo.email;
+                                         if (!_this.userPersonalInfo.researchInterests || typeof (_this.userPersonalInfo.researchInterests) == 'undefined') {
+                                             _this.userPersonalInfo.researchInterests = [];
+                                             _this.researchInterests = _this.userPersonalInfo.researchInterests;
+                                         }
+                                     }, 0);
+                                 } else {
+                                     console.log("UserInfo get wrong.")
+                                 }
+                             })
+                     }
+                 })
+                 .then( async () => {
+                     if (email != null) {
+                         await axios.get('/user/load').then(
+                             (result) => {
+                                 this.loginUserEmail = result.data.data.email
+                                 if (this.loginUserEmail != email) {
+                                     this.isLoginUser = false
+                                 }
+                             })
+                     }
+                 })
+                 .then(async () => {
+                     await axios.get(' /user/resourceCount').then(res => {
+                         if(res.data.code == 0){
+                             _this.resourceCount = JSON.parse(JSON.stringify(res.data.data))
+                         }
+                     })
+                 })
         },
 
 
         modelItemHandleCurrentChange: function (val) {
-            // console.log(this.modelItems.currentPage);
+            
             this.pageOption.currentPage = val;
-            // console.log(this.modelItems.currentPage);
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
+            console.log(this.userPersonalInfo.email)
             $.ajax({
-                type: "GET",
-                url: "/modelItem/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
+                type: "POST",
+                url: this.isLoginUser ? QueryModelItemListOfAuthorSelf() : QueryModelItemListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
                     asc: this.pageOption.sortAsc,
                     pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
                 async: true,
                 success:(json) => {
 
@@ -1171,23 +1214,127 @@ new Vue({
 
         },
 
+        conceptualModelHandleCurrentChange: function (val) {
+            this.pageOption.currentPage = val;
+            $('html,body').animate({scrollTop: '0px'}, 220);
+            $.ajax({
+                type: "post",
+                url: this.isLoginUser ? QueryConceptualModelListOfAuthorSelf() : QueryConceptualModelListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success: (json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+
+                        setTimeout(() => {
+
+                            this.conceptualModels.total = data.total;
+                            this.conceptualModels.result = data.list;
+                            this.pageOption.progressBar = false;
+
+                        }, 500);
+                    } else {
+                        console.log("search conceptual model failed.")
+                    }
+                }
+            })
+        },
+
+        logicalModelHandleCurrentChange: function (val) {
+            this.pageOption.currentPage = val;
+            $('html,body').animate({scrollTop: '0px'}, 220);
+            $.ajax({
+                type: "post",
+                url: this.isLoginUser ? QueryLogicalModelListOfAuthorSelf() : QueryLogicalModelListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success: (json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+
+                        setTimeout(() => {
+
+                            this.logicalModels.total = data.total;
+                            this.logicalModels.result = data.list;
+                            this.pageOption.progressBar = false;
+                            }, 500);
+                    } else {
+                        console.log("search logical model failed.")
+                    }
+                }
+            })
+        },
+
+        computableModelHandleCurrentChange: function (val) {
+            this.pageOption.currentPage = val;
+            $('html,body').animate({scrollTop: '0px'}, 220);
+            $.ajax({
+                type: "POST",
+                url: this.isLoginUser ? QueryComputableModelListOfAuthorSelf() : QueryComputableModelListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
+                    asc: this.pageOption.sortAsc,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType:"application/json",
+                async: true,
+                success: (json) => {
+
+                    if (json.code == 0) {
+                        const data = json.data;
+                        // console.log(data.list);
+                        if(data.list.length!=0)
+                            setTimeout(() => {
+
+                                this.computableModels.total = data.total;
+                                this.computableModels.result = data.list;
+                                this.pageOption.progressBar = false;
+                                }, 500);
+                    } else {
+                        console.log("search computable model failed.")
+                    }
+                }
+            })
+        },
         //dataApplication
         dataMethodHandleCurrentChange: function(val){
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
             const hrefs = window.location.href.split("/");
+
             $.ajax({
-                type: "GET",
-                url: "/dataApplication/listByUserOid",
-                data:{
-                    page: this.pageOption.currentPage-1,
+                type: "POST",
+                url: this.isLoginUser ? QueryMethodListOfAuthorSelf() : QueryMethodListOfAuthor(),
+                data: JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page: this.pageOption.currentPage,
                     asc: this.pageOption.sortAsc,
-                    pageSize: 6,
-                    oid: hrefs[hrefs.length - 1],
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    searchText:'',
-                } ,
+                    pageSize: this.pageOption.pageSize,
+                    // sortField:'viewCount',
+                    sortField:'createTime',
+                }),
+                contentType: "application/json",
                 async: true,
                 success: (json) => {
 
@@ -1211,19 +1358,19 @@ new Vue({
         dataItemHandleCurrentChange: function (val) {
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
+            let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                pageSize: 6,
+                sortField:'createTime',
+                searchText:'',
+            })
             $.ajax({
-                type: "GET",
-                url: "/dataItem/searchByNameByOid",
-                data:{
-                    page: this.pageOption.currentPage-1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: 6,
-                    oid: hrefs[hrefs.length - 1],
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    searchText:'',
-                } ,
+                type: "POST",
+                url: this.isLoginUser ? QueryItemListOfAuthorSelf() : QueryItemListOfAuthor(),
+                data: data,
+                contentType: "application/json",
                 async: true,
                 success: (json) => {
 
@@ -1248,31 +1395,28 @@ new Vue({
 
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
+            let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                pageSize: 6,
+                // sortField:'viewCount',
+                sortField:'createTime',
+                searchText:'',
+            })
             $.ajax({
-                type: "GET",
-                url: "/dataHub/listByUserOid",
-                data:{
-                    page: this.pageOption.currentPage-1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: 6,
-                    oid: hrefs[hrefs.length - 1],
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    searchText:'',
-                } ,
+                type: "POST",
+                data: data,
+                url: this.isLoginUser ? QueryHubListOfAuthorSelf() : QueryHubListOfAuthor(),
+                contentType: "application/json",
                 async: true,
                 success: (json) => {
-
                     if (json.code == 0) {
                         const data = json.data;
-
                         setTimeout(() => {
-
                             this.dataHubs.total = data.total;
                             this.dataHubs.result = data.list;
                             this.pageOption.progressBar = false;
-
                         }, 500);
                     } else {
                         console.log("search data item failed.")
@@ -1281,130 +1425,23 @@ new Vue({
             })
         },
 
-        conceptualModelHandleCurrentChange: function (val) {
-            this.pageOption.currentPage = val;
-            $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/conceptualModel/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success: (json) => {
-
-                    if (json.code == 0) {
-                        const data = json.data;
-
-                        setTimeout(() => {
-
-                            this.conceptualModels.total = data.total;
-                            this.conceptualModels.result = data.list;
-                            this.pageOption.progressBar = false;
-
-                        }, 500);
-                    } else {
-                        console.log("search conceptual model failed.")
-                    }
-                }
-            })
-        },
-
-        logicalModelHandleCurrentChange: function (val) {
-            this.pageOption.currentPage = val;
-            $('html,body').animate({scrollTop: '0px'}, 220);
-
-            const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/logicalModel/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success: (json) => {
-
-                    if (json.code == 0) {
-                        const data = json.data;
-
-                        setTimeout(() => {
-
-                            this.logicalModels.total = data.total;
-                            this.logicalModels.result = data.list;
-                            this.pageOption.progressBar = false;
-                            }, 500);
-                    } else {
-                        console.log("search logical model failed.")
-                    }
-                }
-            })
-        },
-
-        computableModelHandleCurrentChange: function (val) {
-            this.pageOption.currentPage = val;
-            $('html,body').animate({scrollTop: '0px'}, 220);
-            const hrefs = window.location.href.split("/");
-            $.ajax({
-                type: "GET",
-                url: "/computableModel/listByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
-                async: true,
-                success: (json) => {
-
-                    if (json.code == 0) {
-                        const data = json.data;
-                        // console.log(data.list);
-                        if(data.list.length!=0)
-                            setTimeout(() => {
-
-                                this.computableModels.total = data.total;
-                                this.computableModels.result = data.list;
-                                this.pageOption.progressBar = false;
-                                }, 500);
-                    } else {
-                        console.log("search computable model failed.")
-                    }
-                }
-            })
-        },
-
         conceptHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            let name='concepts';
+            let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortField:"createTime",
+                pageSize: this.pageOption.pageSize,
+                sortField:'createTime',
+            })
             $.ajax({
-                type: "Get",
-                url: "/concept/listConceptsByUserOid",
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    // sortElement:'viewCount',
-                    sortElement:'createTime',
-                    oid: hrefs[hrefs.length - 1],
-                },
+                type: "POST",
+                url: this.isLoginUser ? QueryConceptListOfAuthorSelf() : QueryConceptListOfAuthor(),
+                data: data,
                 cache: false,
                 async: true,
-
+                contentType: "application/json",
                 xhrFields:{
                     withCredentials:true
                 },
@@ -1415,11 +1452,11 @@ new Vue({
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
-                        if (data.count > 0) {
+                        if (data.total > 0) {
                             setTimeout(() => {
-                                this.concepts.total = data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.concepts.result = data[name];
+                                this.concepts.total = data.total;
+                                this.searchCount = Number.parseInt(data.total);
+                                this.concepts.result = data.list;
                                 this.pageOption.progressBar = false;
                             }, 200)
                             // console.log(this.pageOption.currentPage);
@@ -1434,23 +1471,22 @@ new Vue({
 
         spatialHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            var url = "/spatial/listSpatialsByOid";
+            var url = this.isLoginUser ? QuerySpatialListOfAuthorSelf() : QuerySpatialListOfAuthor()
             var name = "spatials";
-
+            let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortField:"createTime",
+                pageSize: this.pageOption.pageSize,
+            })
             $.ajax({
-                type: "Get",
+                type: "POST",
                 url: url,
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    oid: hrefs[hrefs.length - 1],
-                },
+                data: data,
                 cache: false,
                 async: true,
-
+                contentType: "application/json",
                 xhrFields:{
                     withCredentials:true
                 },
@@ -1461,17 +1497,16 @@ new Vue({
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
-                        if(data[name].length>0){
+                        if(data.total>0){
                             setTimeout(()=>{
                                 const data = json.data;
-                                this.spatials.total= data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.spatials.result = data[name];
+                                this.spatials.total= data.total;
+                                this.searchCount = Number.parseInt(data.total);
+                                this.spatials.result = data.list;
                                 this.pageOption.progressBar = false;
                             },200)
-                            // console.log(this.pageOption.currentPage);
                         }else {
-                            // console.log("search spatial failed.")
+                            console.log("search spatial failed.")
                         }
                     }
                 }
@@ -1480,23 +1515,23 @@ new Vue({
 
         templateHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            var url = "/template/listTemplatesByOid";
+            var url = this.isLoginUser ? QueryTemplateListOfAuthorSelf() : QueryTemplateListOfAuthor()
             var name = "templates";
+            let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortField:"createTime",
+                pageSize: this.pageOption.pageSize,
+            })
 
             $.ajax({
-                type: "Get",
+                type: "POST",
                 url: url,
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    oid: hrefs[hrefs.length - 1],
-                },
+                data: data,
                 cache: false,
                 async: true,
-
+                contentType: "application/json",
                 xhrFields:{
                     withCredentials:true
                 },
@@ -1507,12 +1542,12 @@ new Vue({
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
-                        if(data[name].length>0){
+                        if(data.total>0){
                             setTimeout(()=>{
                                 const data = json.data;
-                                this.templates.total= data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.templates.result = data[name];
+                                this.templates.total= data.total;
+                                this.searchCount = Number.parseInt(data.total);
+                                this.templates.result = data.list;
                                 this.pageOption.progressBar = false;
                             },200)
 
@@ -1526,23 +1561,22 @@ new Vue({
 
         unitHandleCurrentChange(val){
             this.pageOption.currentPage = val;
-            const hrefs = window.location.href.split("/");
-            var url = "/unit/listUnitsByOid";
+            var url = this.isLoginUser ? QueryUnitListOfAuthorSelf() : QueryUnitListOfAuthor()
             var name = "units";
-
+            let data = JSON.stringify({
+                authorEmail: this.userPersonalInfo.email,
+                page: this.pageOption.currentPage,
+                asc: this.pageOption.sortAsc,
+                sortField:"createTime",
+                pageSize: this.pageOption.pageSize,
+            })
             $.ajax({
-                type: "Get",
+                type: "POST",
                 url: url,
-                data: {
-                    page: this.pageOption.currentPage - 1,
-                    asc: this.pageOption.sortAsc,
-                    sortElement:"createTime",
-                    pageSize: this.pageOption.pageSize,
-                    oid: hrefs[hrefs.length - 1],
-                },
+                data: data,
                 cache: false,
                 async: true,
-
+                contentType: "application/json",
                 xhrFields:{
                     withCredentials:true
                 },
@@ -1553,17 +1587,17 @@ new Vue({
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
-                        if(data[name].length>0){
+                        if(data.total>0){
                             setTimeout(()=>{
                                 const data = json.data;
-                                this.units.total= data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.units.result = data[name];
+                                this.units.total= data.total;
+                                this.searchCount = Number.parseInt(data.toal);
+                                this.units.result = data.list;
                                 this.pageOption.progressBar = false;
                             },200)
 
                         }else {
-                            // console.log("search unit failed.")
+                            console.log("search unit failed.")
                         }
                     }
                 }
@@ -1642,14 +1676,14 @@ new Vue({
         articleHandleCurrentChange: function (val) {
             this.pageOption.currentPage=val;
             this.barIndex=1;
-            const hrefs=window.location.href.split('/');
             $.ajax({
-                type:"GET",
-                url:"/user/listArticle",
-                data:{
-                    page:this.pageOption.currentPage-1,
-                    userId:hrefs[hrefs.length - 1],
-                },
+                type:"POST",
+                url:this.isLoginUser ? QueryArticleListOfAuthorSelf() : QueryArticleListOfAuthor(),
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
+                }),
+                contentType:"application/json",
                 async:true,
                 success: (json)=>{
 
@@ -1673,18 +1707,18 @@ new Vue({
 
         projectHandleCurrentChange: function (val) {
             this.pageOption.currentPage=val;
-            const hrefs=window.location.href.split('/');
             $.ajax({
-                type:"GET",
-                url:"/project/listByUserOid",
-                data:{
-                    page:this.pageOption.currentPage-1,
+                type:"POST",
+                url:this.isLoginUser ? QueryProjectListOfAuthorSelf() : QueryProjectListOfAuthor(),
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
                     pageSize:this.pageOption.pageSize,
                     asc:this.projects.sortAsc,
-                    sortElement:"creatDate",
-                    oid:hrefs[hrefs.length - 1],
-                },
+                    sortField:"createTime",
+                }),
                 async:true,
+                contentType:"application/json",
                 success: (json)=>{
 
                     if (json.code == 0) {
@@ -1710,16 +1744,17 @@ new Vue({
             this.pageOption.currentPage=val;
             const hrefs=window.location.href.split("/");
             $.ajax({
-                type:"GET",
-                url:"/conference/listByUserOid",
-                data:{
-                    page:this.pageOption.currentPage-1,
+                type:"POST",
+                url:this.isLoginUser ? QueryConferenceListOfAuthorSelf() : QueryConferenceListOfAuthor(),
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
                     asc: this.pageOption.sortAsc,
                     pageSize: this.pageOption.pageSize,
-                    sortElement:"creatDate",
-                    oid:hrefs[hrefs.length-1],
-                },
+                    sortField:"createTime",
+                }),
                 async:true,
+                contentType:"application/json",
                 success:(json)=>{
                     if(json.code==0){
                         const data=json.data;
@@ -1762,47 +1797,47 @@ new Vue({
 
         articleNewestLoad(){
             const hrefs=window.location.href.split('/');
-            $.ajax({
-                data:{
-                    page:0,
-                    pageSize:1,
-                    asc:false,
-                    oid:hrefs[hrefs.length-1],
-                },
-                type:"GET",
-                url:"/article/findNewest",
-                async:true,
-                success: (json)=>{
-                    if(json.code==0){
-                        const data=json.data;
-                        setTimeout(
-                            ()=>{
-                                // this.newestArticle.total=data.total;
-                                this.newestArticle.result=data.list;
-                                this.pageOption.progressBar=false;
-                            },500)
-                        // console.log(this.newestArticle);
-                    }else{
-                        console.log("search data item failed.")
-                    }
-                }
-
-            })
+            // $.ajax({
+            //     data:{
+            //         page:0,
+            //         pageSize:1,
+            //         asc:false,
+            //         oid:hrefs[hrefs.length-1],
+            //     },
+            //     type:"GET",
+            //     url:"/article/findNewest",
+            //     async:true,
+            //     success: (json)=>{
+            //         if(json.code==0){
+            //             const data=json.data;
+            //             setTimeout(
+            //                 ()=>{
+            //                     // this.newestArticle.total=data.total;
+            //                     this.newestArticle.result=data.list;
+            //                     this.pageOption.progressBar=false;
+            //                 },500)
+            //             // console.log(this.newestArticle);
+            //         }else{
+            //             console.log("search data item failed.")
+            //         }
+            //     }
+            //
+            // })
         },
 
-        addAwdHonorClick(){
+        // addAwdHonorClick(){
+        //
+        // },
 
-        },
+        // awdTimeClick(){
+        //     $('.panel').animate({height:'480px'},200);
+        // },
 
-        awdTimeClick(){
-            $('.panel').animate({height:'480px'},200);
-        },
-
-        awdfoldClick(){
-            this.clickCount++;
-            if(this.clickCount%2==0)
-                $('.panel').animate({height:'280px'},200);
-        },
+        // awdfoldClick(){
+        //     this.clickCount++;
+        //     if(this.clickCount%2==0)
+        //         $('.panel').animate({height:'280px'},200);
+        // },
 
         awardandHonorLoad(val) {
             this.awardandHonor.currentPage=val;
@@ -1814,7 +1849,7 @@ new Vue({
                 data:{
                     page:this.awardandHonor.currentPage-1,
                     asc: this.pageOption.sortAsc,
-                    sortElement:'awardTime',
+                    sortField:'awardTime',
                     pageSize: 3,
                     oid:hrefs[hrefs.length-1],
                 },
@@ -1855,7 +1890,7 @@ new Vue({
                     page:this.educationExperience.currentPage-1,
                     asc: this.pageOption.sortAsc,
                     pageSize: 3,
-                    sortElement:'endTime',
+                    sortField:'endTime',
                     oid:hrefs[hrefs.length-1],
                 },
                 async:true,
@@ -1891,29 +1926,29 @@ new Vue({
             const hrefs=window.location.href.split('/');
             var oid=hrefs[hrefs.length-1];
 
-            $.ajax({
-                data:{
-                    oid:oid
-                },
-                type:"GET",
-                url: "/lab/findByName",
-                async:true,
-                success:(json)=>{
-                    if(json.code==0){
-                        const data=json.data;
-                        setTimeout(
-                            ()=>{
-                                this.userLab.labInfo=data.lab;
-                                // this.userLab.leader=data.labLeader;
-                                this.userLab.members=data.labMembers;
-                                // this.pageOption.progressBar=false;
-                                // console.log(this.userLab.leader);
-                            },200)
-                    }else{
-                        console.log("search data item failed.")
-                    }
-                }
-            })
+            // $.ajax({
+            //     data:{
+            //         oid:oid
+            //     },
+            //     type:"GET",
+            //     url: "/lab/findByName",
+            //     async:true,
+            //     success:(json)=>{
+            //         if(json.code==0){
+            //             const data=json.data;
+            //             setTimeout(
+            //                 ()=>{
+            //                     this.userLab.labInfo=data.lab;
+            //                     // this.userLab.leader=data.labLeader;
+            //                     this.userLab.members=data.labMembers;
+            //                     // this.pageOption.progressBar=false;
+            //                     // console.log(this.userLab.leader);
+            //                 },200)
+            //         }else{
+            //             console.log("search data item failed.")
+            //         }
+            //     }
+            // })
         },
 
         addArticleClick(){
@@ -2073,23 +2108,7 @@ new Vue({
             $('#conferenceInfo').modal('hide')
         },
 
-        // searchArticlesClick(){
-        //     ++this.clickCount;
-        //     if (this.clickCount%2==1){
-        //         $('#articleSearchContainer').css('display','flex');
-        //         $('#searchArticle').animate({width:'88%'},500);
-        //         $('.searchInput').val('');
-        //     }
-        //     if (this.clickCount%2==0){
-        //         $('#searchArticle').animate({width:'0'},500);
-        //         setTimeout(()=>{
-        //             console.log('aaaddd');
-        //             $('#articleSearchContainer').css('display','none');
-        //             },500);
-        //
-        //     }
-        //
-        // },
+
 
         searchProjectsClick(){
             ++this.clickCount;
@@ -2161,7 +2180,7 @@ new Vue({
         },
 
         selectSortEle(command){
-            this.resourceSortElement = command
+            this.resourcesortField = command
             let text={
                 'viewCount':'View Count',
                 'name':'Name',
@@ -2176,32 +2195,31 @@ new Vue({
             $('html,body').animate({scrollTop:'0px'},200);
             this.isInSearch=1;
             var urls={
-                1:'/modelItem/searchByNameByOid',
-                2:'/dataHub/searchByNameByOid',
-                3:'/conceptualModel/searchByNameByOid',
-                4:'/logicalModel/searchByNameByOid',
-                5:'/computableModel/searchByNameByOid',
-                6:'/concept/searchByNameByOid',
-                7:'/spatial/searchByNameByOid',
-                8:'/template/searchByNameByOid',
-                9:'/unit/searchByNameByOid',
-                10:'/dataApplication/searchByNameByOid',
-                11:'/dataItem/searchByNameByOid'
+                1:this.isLoginUser ? QueryModelItemListOfAuthorSelf() : QueryModelItemListOfAuthor(),
+                2: this.isLoginUser ? QueryHubListOfAuthorSelf() : QueryHubListOfAuthor(),
+                3:this.isLoginUser ? QueryConceptualModelListOfAuthorSelf() : QueryConceptualModelListOfAuthor(),
+                4:this.isLoginUser ? QueryLogicalModelListOfAuthorSelf() : QueryLogicalModelListOfAuthor(),
+                5:this.isLoginUser ? QueryComputableModelListOfAuthorSelf() : QueryComputableModelListOfAuthor(),
+                6:this.isLoginUser ? QueryConceptListOfAuthorSelf() : QueryConceptListOfAuthor(),
+                7:this.isLoginUser ? QuerySpatialListOfAuthorSelf() : QuerySpatialListOfAuthor(),
+                8:this.isLoginUser ? QueryTemplateListOfAuthorSelf() : QueryTemplateListOfAuthor(),
+                9:this.isLoginUser ? QueryUnitListOfAuthorSelf() : QueryUnitListOfAuthor(),
+                10: this.isLoginUser ? QueryMethodListOfAuthorSelf() : QueryMethodListOfAuthor(),
+                11:this.isLoginUser ? QueryItemListOfAuthorSelf() : QueryItemListOfAuthor(),
 
             }
-            let hrefs = window.location.href.split("/");
             $.ajax({
-                type:"GET",
+                type:"post",
                 url:urls[this.resourceIndex],
-                data:{
-                    page:this.pageOption.currentPage-1,
+                data:JSON.stringify({
+                    authorEmail: this.userPersonalInfo.email,
+                    page:this.pageOption.currentPage,
                     pageSize:this.pageOption.pageSize,
                     asc:this.pageOption.sortAsc,
-                    sortElement:this.resourceSortElement,
-                    // sortElement:'createTime',
+                    sortField:this.resourcesortField,
                     searchText:this.searchText,
-                    oid:hrefs[hrefs.length-1]
-                },
+                }),
+                contentType:"application/json",
                 cache: false,
                 async: true,
                 // dataType: "json",
@@ -2337,7 +2355,7 @@ new Vue({
                     page:this.pageOption.currentPage-1,
                     pageSize:this.pageOption.pageSize,
                     asc:this.projects.sortAsc,
-                    sortElement:"creatDate",
+                    sortField:"creatDate",
                     searchText:this.searchText,
                     oid:hrefs[hrefs.length-1]
                 },
@@ -2379,7 +2397,7 @@ new Vue({
                     page:this.pageOption.currentPage-1,
                     pageSize:this.pageOption.pageSize,
                     asc:this.conferences.sortAsc,
-                    sortElement:"creatDate",
+                    sortField:"creatDate",
                     searchText:this.searchText,
                     oid:hrefs[hrefs.length-1]
                 },
@@ -2473,103 +2491,103 @@ new Vue({
             }
         },
 
-        deleteEduExp(oid){
-            if (confirm("Are you sure to delete this item?")){
-                let data={
-                    oid:oid
-                };
-
-                $.ajax({
-                    type:"POST",
-                    url:'/educationExperience/deleteByOid',
-                    data:data,
-                    // contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    async: true,
-                    // dataType: "json",
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true,
-                    success: (json) => {
-                        if(json.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    window.location.href = "/user/login";
-                                }
-                            });
-                        }
-                        else{
-                            if(json.data==1){
-                                alert("delete successfully!")
-                                this.educationExperienceLoad(1);
-                            }
-                            else{
-                                alert("delete failed!")
-                            }
-                        }
-
-                    },
-                    error:(json)=>{
-                        // console.log(json);
-                    }
-
-
-
-                })
-            }
-        },
-
-        deleteAwdHonor(oid){
-            if (confirm("Are you sure to delete this item?")){
-                let data={
-                    oid:oid
-                };
-
-                $.ajax({
-                    type:"POST",
-                    url:'/awardandHonor/deleteByOid',
-                    data:data,
-                    // contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    async: true,
-                    // dataType: "json",
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true,
-                    success: (json) => {
-                        if(json.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    window.location.href = "/user/login";
-                                }
-                            });
-                        }
-                        else{
-                            if(json.data==1){
-                                alert("delete successfully!")
-                                this.awardandHonorLoad(1);
-                            }
-                            else{
-                                alert("delete failed!")
-                            }
-                        }
-
-                    },
-                    error:(json)=>{
-                        // console.log(json);
-                    }
-
-
-
-                })
-            }
-        },
+        // deleteEduExp(oid){
+        //     if (confirm("Are you sure to delete this item?")){
+        //         let data={
+        //             oid:oid
+        //         };
+        //
+        //         $.ajax({
+        //             type:"POST",
+        //             url:'/educationExperience/deleteByOid',
+        //             data:data,
+        //             // contentType: "application/json; charset=utf-8",
+        //             cache: false,
+        //             async: true,
+        //             // dataType: "json",
+        //             xhrFields: {
+        //                 withCredentials: true
+        //             },
+        //             crossDomain: true,
+        //             success: (json) => {
+        //                 if(json.code==-1) {
+        //                     this.$alert('Please login first!', 'Error', {
+        //                         type:"error",
+        //                         confirmButtonText: 'OK',
+        //                         callback: action => {
+        //                             window.location.href = "/user/login";
+        //                         }
+        //                     });
+        //                 }
+        //                 else{
+        //                     if(json.data==1){
+        //                         alert("delete successfully!")
+        //                         this.educationExperienceLoad(1);
+        //                     }
+        //                     else{
+        //                         alert("delete failed!")
+        //                     }
+        //                 }
+        //
+        //             },
+        //             error:(json)=>{
+        //                 // console.log(json);
+        //             }
+        //
+        //
+        //
+        //         })
+        //     }
+        // },
+        //
+        // deleteAwdHonor(oid){
+        //     if (confirm("Are you sure to delete this item?")){
+        //         let data={
+        //             oid:oid
+        //         };
+        //
+        //         $.ajax({
+        //             type:"POST",
+        //             url:'/awardandHonor/deleteByOid',
+        //             data:data,
+        //             // contentType: "application/json; charset=utf-8",
+        //             cache: false,
+        //             async: true,
+        //             // dataType: "json",
+        //             xhrFields: {
+        //                 withCredentials: true
+        //             },
+        //             crossDomain: true,
+        //             success: (json) => {
+        //                 if(json.code==-1) {
+        //                     this.$alert('Please login first!', 'Error', {
+        //                         type:"error",
+        //                         confirmButtonText: 'OK',
+        //                         callback: action => {
+        //                             window.location.href = "/user/login";
+        //                         }
+        //                     });
+        //                 }
+        //                 else{
+        //                     if(json.data==1){
+        //                         alert("delete successfully!")
+        //                         this.awardandHonorLoad(1);
+        //                     }
+        //                     else{
+        //                         alert("delete failed!")
+        //                     }
+        //                 }
+        //
+        //             },
+        //             error:(json)=>{
+        //                 // console.log(json);
+        //             }
+        //
+        //
+        //
+        //         })
+        //     }
+        // },
 
         articleAddToBack(){
             if(this.articleToBack.title.trim()==""||this.articleToBack.authors.length==0)
@@ -3010,71 +3028,71 @@ new Vue({
             })
         },
 
-        eduExperienceAddtoBack(){
-            if(this.eduExpAddToBack.institution.trim()==""||isNaN(this.eduExpAddToBack.startTime.getDate())||isNaN(this.eduExpAddToBack.endTime.getDate()))
-                alert("Please enter the Institution and Time.");
-            else
-            {
-                let obj=
-                    {
-                        institution:this.eduExpAddToBack.institution,
-                        department:this.eduExpAddToBack.department,
-                        academicDegree: this.eduExpAddToBack.acaDegree,
-                        startTime: this.eduExpAddToBack.startTime,
-                        endTime:this.eduExpAddToBack.endTime,
-                        eduLocation:this.eduExpAddToBack.location
-                    }
-                $.ajax({
-                    url: "/educationExperience/add",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(obj),
+        // eduExperienceAddtoBack(){
+        //     if(this.eduExpAddToBack.institution.trim()==""||isNaN(this.eduExpAddToBack.startTime.getDate())||isNaN(this.eduExpAddToBack.endTime.getDate()))
+        //         alert("Please enter the Institution and Time.");
+        //     else
+        //     {
+        //         let obj=
+        //             {
+        //                 institution:this.eduExpAddToBack.institution,
+        //                 department:this.eduExpAddToBack.department,
+        //                 academicDegree: this.eduExpAddToBack.acaDegree,
+        //                 startTime: this.eduExpAddToBack.startTime,
+        //                 endTime:this.eduExpAddToBack.endTime,
+        //                 eduLocation:this.eduExpAddToBack.location
+        //             }
+        //         $.ajax({
+        //             url: "/educationExperience/add",
+        //             type: "POST",
+        //             contentType: "application/json",
+        //             data: JSON.stringify(obj),
+        //
+        //             async:true,
+        //             success:(json)=>{
+        //                 if(json.code==0){
+        //                     alert("Save Success");
+        //                     this.educationExperienceLoad(1);
+        //                 }
+        //                 else alert("Add Error");//此处error信息不明确，记得后加
+        //             }
+        //
+        //         })
+        //         $("#editEduXpce").modal("hide");
+        //
+        //     }
+        //
+        // },
 
-                    async:true,
-                    success:(json)=>{
-                        if(json.code==0){
-                            alert("Save Success");
-                            this.educationExperienceLoad(1);
-                        }
-                        else alert("Add Error");//此处error信息不明确，记得后加
-                    }
-
-                })
-                $("#editEduXpce").modal("hide");
-
-            }
-
-        },
-
-        awdHonorAddtoBack(){
-            if(this.awdHonor.name.trim()==""||this.awdHonor.awardAgency.trim()=="")
-                alert("Please enter the award name and award agency.");
-            else{
-            var  obj={
-                name:this.awdHonor.name,
-                awardAgency:this.awdHonor.awardAgency,
-                awardTime:this.awdHonor.awardTime
-            };
-            $.ajax({
-                data:JSON.stringify(obj),
-                url:"/awardandHonor/add",
-                type:'POST',
-                async:true,
-                contentType: "application/json",
-                success:(json)=>{
-                    if(json.code==0){
-                        alert("Save Success");
-                        this.awardandHonorLoad(1);
-                    }
-                    else alert("Add Error");//此处error信息不明确，记得后加
-                }
-
-            })
-
-            $("#editAwdHonor").modal("hide");
-            }
-
-        },
+        // awdHonorAddtoBack(){
+        //     if(this.awdHonor.name.trim()==""||this.awdHonor.awardAgency.trim()=="")
+        //         alert("Please enter the award name and award agency.");
+        //     else{
+        //     var  obj={
+        //         name:this.awdHonor.name,
+        //         awardAgency:this.awdHonor.awardAgency,
+        //         awardTime:this.awdHonor.awardTime
+        //     };
+        //     $.ajax({
+        //         data:JSON.stringify(obj),
+        //         url:"/awardandHonor/add",
+        //         type:'POST',
+        //         async:true,
+        //         contentType: "application/json",
+        //         success:(json)=>{
+        //             if(json.code==0){
+        //                 alert("Save Success");
+        //                 this.awardandHonorLoad(1);
+        //             }
+        //             else alert("Add Error");//此处error信息不明确，记得后加
+        //         }
+        //
+        //     })
+        //
+        //     $("#editAwdHonor").modal("hide");
+        //     }
+        //
+        // },
 
         contactAddToBack(){
             var  obj={
@@ -3278,8 +3296,8 @@ new Vue({
 
     },
 
-    created(){
-        this.getUserInfo();
+    async created(){
+        await this.getUserInfo();
         this.modelItemHandleCurrentChange(1);
         this.dataItemHandleCurrentChange(1);
         this.dataHubHandleCurrentChange(1);
@@ -3295,13 +3313,13 @@ new Vue({
         this.projectHandleCurrentChange(1);
         this.conferenceHandleCurrentChange(1);
         this.articleNewestLoad();
-        this.awardandHonorLoad(1);
-        this.educationExperienceLoad(1);
+        // this.awardandHonorLoad(1);
+        // this.educationExperienceLoad(1);
         this.labLoad();
 
     },
-
     mounted() {
+
         let that=this;
         $('#userEduStartTime').dcalendarpicker({
             format:'yyyy/mm/dd'

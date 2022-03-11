@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.ComputableModelService;
 import njgis.opengms.portal.service.GenericService;
@@ -138,8 +140,10 @@ public class ComputableModelRestController {
 
     @LoginRequired
     @ApiOperation(value = "删除computableModel [ /delete ]")
-    @DeleteMapping(value = "/{id}")
-    public JsonResult delete(@PathVariable(value="id") String id,  HttpServletRequest request){
+    @RequestMapping(value = "/", method = RequestMethod.DELETE)
+    public JsonResult delete(@ApiParam(name = "Id", value = "模型条目Id", required = true)
+                             @RequestParam(value="id") String id,
+                             HttpServletRequest request){
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
         return computableModelService.delete(id,email);
@@ -147,23 +151,23 @@ public class ComputableModelRestController {
 
     @ApiOperation(value = "条目查询 ")
     @RequestMapping (value="/list",method = RequestMethod.POST)
-    public JsonResult queryList(SpecificFindDTO queryDTO) {
+    public JsonResult queryList(@RequestBody SpecificFindDTO queryDTO) {
         return ResultUtils.success(genericService.searchItems(queryDTO, ItemTypeEnum.ComputableModel));
     }
 
     @LoginRequired
     @ApiOperation(value = "查询由登录用户创建的所有条目")
     @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
-    public JsonResult queryListByAuthor(FindDTO queryDTO, HttpServletRequest request) {
+    public JsonResult queryListByAuthor(@RequestBody FindDTO queryDTO, HttpServletRequest request) {
         String email = Utils.checkLoginStatus(request);
-        if(email != null) {
-            SpecificFindDTO specificFindDTO = (SpecificFindDTO) queryDTO;
-            specificFindDTO.setCurQueryField("author");
-            specificFindDTO.setSearchText(email);
-            return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.ComputableModel));
-        }else{
-            return ResultUtils.unauthorized();
-        }
+        SpecificFindDTO specificFindDTO = new SpecificFindDTO();
+        specificFindDTO.setPage(queryDTO.getPage());
+        specificFindDTO.setPageSize(queryDTO.getPageSize());
+        specificFindDTO.setAsc(queryDTO.getAsc());
+        specificFindDTO.setSearchText(queryDTO.getSearchText());
+        specificFindDTO.setSortField(queryDTO.getSortField());
+        specificFindDTO.setCurQueryField("author");
+        return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.ComputableModel));
     }
 
     @ApiOperation(value = "查找部署的模型 [ /searchDeployedModel ]")
@@ -183,5 +187,31 @@ public class ComputableModelRestController {
 
     }
 
+    /**
+     * @Description 某用户查询他人的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
+    @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
+    public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ComputableModel,findDTO, false));
+
+    }
+
+    /**
+     * @Description 某用户查询自己的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @LoginRequired
+    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ComputableModel,findDTO, true));
+
+    }
 
 }

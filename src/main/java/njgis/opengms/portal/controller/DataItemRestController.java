@@ -13,6 +13,7 @@ import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -196,7 +197,7 @@ public class DataItemRestController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @ApiOperation(value = "获取Item Repository下的数据 [ /dataItem/Items/getItems ]")
-    @RequestMapping(value = "/items",method = RequestMethod.POST)
+    @RequestMapping(value = {"/items","/list"},method = RequestMethod.POST)
     public JsonResult getItems(@RequestBody SpecificFindDTO dataItemFindDTO){
         return  dataItemService.getItems(dataItemFindDTO);
     }
@@ -315,7 +316,7 @@ public class DataItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "得到用户上传的data item [ /dataItem/searchByNameAndAuthor[searchByNameByOid/searchDataByUserId] ]")
-    @RequestMapping(value="/itemsByNameAndAuthor",method = RequestMethod.POST)
+    @RequestMapping(value={"/itemsByNameAndAuthor","/listByAuthor"},method = RequestMethod.POST)
     public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
         HttpSession session=request.getSession();
         String email=session.getAttribute("email").toString();
@@ -458,5 +459,32 @@ public class DataItemRestController {
         modelAndView.setViewName("data_application");
         modelAndView.addObject("dataType","application");
         return modelAndView;
+    }
+
+    /**
+     * @Description 某用户查询他人的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
+    @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
+    public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem,findDTO, false));
+
+    }
+
+    /**
+     * @Description 某用户查询自己的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @LoginRequired
+    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem,findDTO, true));
+
     }
 }

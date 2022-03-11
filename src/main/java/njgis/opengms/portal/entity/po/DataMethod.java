@@ -3,6 +3,7 @@ package njgis.opengms.portal.entity.po;
 import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.data.TestData;
+import njgis.opengms.portal.entity.doo.model.Resource;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 public class DataMethod extends DataItem{
 
-    List<String> resources;
+    List<Resource> resources;
 
     String contentType; //Package
 

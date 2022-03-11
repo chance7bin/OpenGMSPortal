@@ -4,11 +4,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.GenericCategory;
+import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.model.RelatedModelInfoDTO;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
@@ -103,6 +109,9 @@ public class GenericService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
+    @Value(value = "Public,Discoverable,Private")
+    private List<String> allVisible;
+
     @Value("${resourcePath}")
     private String resourcePath;
 
@@ -121,8 +130,13 @@ public class GenericService {
      **/
     public JSONObject searchItems(SpecificFindDTO findDTO, ItemTypeEnum type){
 
-        JSONObject jsonObject = searchDBItems(findDTO, type, itemStatusVisible);
+        if(findDTO.getSortField().equals("default")){
+            findDTO.setSortField("name");
+        }
+        //页码前端从1开始，后端需要减一
+        findDTO.setPage(findDTO.getPage()-1);
 
+        JSONObject jsonObject = searchDBItems(findDTO, type, itemStatusVisible);
 
         return generateSearchResult((List<PortalItem>) jsonObject.get("allPortalItem"), jsonObject.getIntValue("totalElements"));
     }
@@ -153,7 +167,7 @@ public class GenericService {
             //把查询到的结果放在try中,如果按照之前return null的话前端页面会加载不出来，所以如果查询报错的话那allPortalItem大小就为0
             allPortalItem = itemsPage.getContent();
             totalElements = (int) itemsPage.getTotalElements();
-        } catch (MyException err) {
+        } catch (Exception err) {
             log.error(String.valueOf(err));
             allPortalItem = new ArrayList<>();
             // TODO 查询数据库出错要做什么处理
@@ -163,9 +177,6 @@ public class GenericService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("allPortalItem",allPortalItem);
         jsonObject.put("totalElements",totalElements);
-
-
-
 
         return jsonObject;
     }
@@ -382,14 +393,14 @@ public class GenericService {
         List<String> classifications = new ArrayList<>();
 
         // 构建classifications集合,如果没有childrenId则表示只查询一个分类条目，有的话表示有多个分类条目
-        if (categoryName != null && !categoryName.equals(""))
+        if (categoryName != null && !categoryName.equals("ALL") && !categoryName.equals(""))
             classifications = buildClassifications(categoryName, genericCategoryDao);
 
         Page result;
         try {
             // Object categoryById = genericCategoryDao.findFirstById(categoryName);
             // categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
-            if(categoryName == null || categoryName.equals("")) {          // 不分类的情况
+            if(categoryName == null || categoryName.equals("ALL") || categoryName.equals("")) {          // 不分类的情况
                 if(searchText.equals("")){
                     result = genericItemDao.findAllByStatusIn(visible,pageable);
                     // result = genericItemDao.findAll(pageable);
@@ -643,6 +654,7 @@ public class GenericService {
         for(int i = 0;i<relatedModelItems.size();i++){
             String relatedModelItemId = relatedModelItems.get(i);
             ModelItem modelItem=modelItemDao.findFirstById(relatedModelItemId);
+            if(modelItem==null) continue;
             RelatedModelInfoDTO relatedModelInfoDTO = new RelatedModelInfoDTO();
             relatedModelInfoDTO.setName(modelItem.getName());
             relatedModelInfoDTO.setId(modelItem.getId());
@@ -826,6 +838,145 @@ public class GenericService {
     public String dateFormat(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
+    }
+
+    // 根据查询条件查询符合条件的模型条目(主要用于根据user查询)
+    public JSONObject queryByUser(ItemTypeEnum itemType,UserFindDTO userFindDTO, Boolean containPrivate) {
+        JSONObject queryResult = new JSONObject();
+
+        //查询条件梳理
+        String searchText = userFindDTO.getSearchText();
+        String authorEmail = userFindDTO.getAuthorEmail();
+        String categoryName = userFindDTO.getCategoryName();
+        String curQueryField = userFindDTO.getCurQueryField();
+
+        Pageable pageable = getPageable(userFindDTO);
+
+        JSONObject daoFactory = daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
+        GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+
+        List<String> classIdList = new ArrayList<>();
+
+        //取出要查询的所有分类
+        if (categoryName != null && !categoryName.equals("")){
+            classIdList = buildClassifications(categoryName, classificationDao);
+        }
+
+        //根据不同的查询字段进行查询
+        Page<ResultDTO> itemPage = null;
+        //若未指定author，则查询全部公开的条目
+        if(authorEmail == null || authorEmail.trim().equals("")) {
+            //未指定分类
+            if(classIdList.size()==0) {
+                if (searchText.equals("")){
+                    itemPage = itemDao.findByStatusIn(itemStatusVisible, pageable);
+                }
+                else if (curQueryField == null || curQueryField.equals("")){
+                    itemPage = itemDao.findByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
+                }
+                else {
+                    switch (curQueryField) {
+                        case "name":
+                            itemPage = itemDao.findByNameContainsIgnoreCaseAndStatusIn(searchText, itemStatusVisible, pageable);
+                            break;
+                        case "keyword":
+                            itemPage = itemDao.findByKeywordsIgnoreCaseInAndStatusIn(searchText, itemStatusVisible, pageable);
+                            break;
+                        case "content":
+                            itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndStatusIn(searchText, itemStatusVisible, pageable);
+                            break;
+                        case "contributor":
+                            List<User> userList = userDao.findAllByNameContainsIgnoreCase(searchText);
+                            List<String> emailList = new ArrayList<>();
+                            for (User user : userList) {
+                                emailList.add(user.getEmail());
+                            }
+                            itemPage = itemDao.findByAuthorInAndStatusInOrContributorsInAndStatusIn(emailList, itemStatusVisible, emailList, itemStatusVisible, pageable);
+                            break;
+                    }
+                }
+            } else{ //获取某一分类下所有条目
+                // TODO: 2022/3/5 这里还要再分类
+                itemPage = itemDao.findByClassificationsInAndStatusIn(classIdList, itemStatusVisible, pageable);
+            }
+        }else{
+            //指定查询某一用户公开条目
+            if(!containPrivate){
+                if (searchText.equals("")){
+                    itemPage = itemDao.findByAuthorAndStatusIn(authorEmail, itemStatusVisible, pageable);
+                }
+                else if (curQueryField == null || curQueryField.equals("")){
+                    itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                }
+                else {
+                    switch (curQueryField) {
+                        case "name":
+                            itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                            break;
+                        case "keyword":
+                            itemPage = itemDao.findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                            break;
+                        case "content":
+                            itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(searchText, authorEmail, itemStatusVisible, pageable);
+                            break;
+                    }
+                }
+            }else{//查询某一用户所有条目
+                if (searchText.equals("")){
+                    itemPage = itemDao.findByAuthorAndStatusIn(authorEmail, allVisible, pageable);
+                }
+                else if (curQueryField == null || curQueryField.equals("")){
+                    itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                }
+                else {
+                    switch (curQueryField) {
+                        case "name":
+                            itemPage = itemDao.findByNameContainsIgnoreCaseAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                            break;
+                        case "keyword":
+                            itemPage = itemDao.findByKeywordsIgnoreCaseInAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                            break;
+                        case "content":
+                            itemPage = itemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthorAndStatusIn(searchText, authorEmail, allVisible, pageable);
+                            break;
+                    }
+                }
+            }
+
+        }
+
+        //获取模型条目的创建者信息
+        List<ResultDTO> items = itemPage.getContent();
+        JSONArray users = new JSONArray();
+        for (int i = 0; i < items.size(); i++) {
+            ResultDTO item = items.get(i);
+            String image = item.getImage();
+            if (image!=null && !image.equals("")) {
+                item.setImage(htmlLoadPath + image);
+            }
+
+            JSONObject userObj = new JSONObject();
+            User user = userDao.findFirstByEmail(item.getAuthor());
+            if (user != null){
+                userObj.put("accessId", user.getAccessId());
+                userObj.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
+                userObj.put("name", user.getName());
+            } else {
+                userObj.put("name", "unknown");
+            }
+
+            users.add(userObj);
+
+        }
+
+        queryResult.put("list", items);
+        queryResult.put("total", itemPage.getTotalElements());
+        queryResult.put("pages", itemPage.getTotalPages());
+        queryResult.put("users", users);
+
+        return queryResult;
+
     }
 
 }

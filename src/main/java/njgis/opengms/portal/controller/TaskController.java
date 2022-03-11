@@ -107,9 +107,9 @@ public class TaskController {
     @RequestMapping(value="/taskInfo",method = RequestMethod.POST )
     public JsonResult getTasksByUserByStatus(@RequestBody TaskFindDTO taskFindDTO, HttpServletRequest request) {
 
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+         HttpSession session = request.getSession();
+         String email = session.getAttribute("email").toString();
+//        String email = "782807969@qq.com";
         return taskService.getTasksByUserByStatus(email,taskFindDTO);
 
     }
@@ -219,8 +219,8 @@ public class TaskController {
     @RequestMapping(value="/tasksByModelByUser",method = RequestMethod.GET)
     public JsonResult getTasksByModelByUser(@RequestParam(value = "modelId") String modelId, @RequestParam(value = "page")int page, HttpServletRequest request){
         HttpSession session = request.getSession();
-        String userName = request.getSession().getAttribute("uid").toString();
-        return ResultUtils.success(taskService.getTasksByModelByUser(modelId,page,userName));
+        String email = request.getSession().getAttribute("email").toString();
+        return ResultUtils.success(taskService.getTasksByModelByUser(modelId,page,email));
     }
 
     @LoginRequired

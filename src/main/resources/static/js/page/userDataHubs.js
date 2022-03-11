@@ -33,7 +33,7 @@ var userDataHubs = Vue.extend(
                 totalNum: 0,
 
                 //用户
-                userId:-1,
+                userEmail:-1,
 
                 //展示变量\
                 itemTitle:'Model Item',
@@ -178,30 +178,26 @@ var userDataHubs = Vue.extend(
                 this.pageSize = 10;
                 this.isInSearch = 0;
                 this.await = true
-                var da = {
-                    userOid: this.userId,
+                var data = {
+                    authorEmail: this.userEmail,
                     page: this.page,
                     pagesize: this.pageSize,
                     asc: -1
                 }
-
                 this.loading = true
-                var that = this;
-                //todo 从后台拿到用户创建的data—item
-                axios.get("/user/getDataHubs", {
-                    params: da
-                }).then(res => {
-
-                    this.searchResult = res.data.data.content
-                    this.resourceLoad = false;
-                    this.totalNum = res.data.data.totalElements;
-                    if (this.page == 1) {
-                        this.pageInit();
+                var _this = this;
+                // todo 从后台拿到用户创建的data—item
+                axios.post(QueryHubListOfAuthorSelf(), data).then(res => {
+                    const data = res.data.data;
+                    _this.searchResult = data.list
+                    _this.resourceLoad = false;
+                    _this.totalNum = data.total
+                    if (_this.page == 1) {
+                        _this.pageInit();
                     }
-                    this.data_show = true
-                    this.loading = false
-                    this.await = false
-
+                    _this.data_show = true
+                    _this.loading = false
+                    _this.await = false
                 })
 
 
@@ -237,11 +233,8 @@ var userDataHubs = Vue.extend(
                             setTimeout(() => {
 
                                 $.ajax({
-                                    type: "GET",
-                                    url: "/dataItem/delHubs/",
-                                    data: {
-                                        id: id
-                                    },
+                                    type: "delete",
+                                    url: "/dataHub/"+id,
                                     cache: false,
                                     async: true,
                                     dataType: "json",
@@ -258,7 +251,10 @@ var userDataHubs = Vue.extend(
                                             } else if (json.data == -1) {
                                                 this.$alert("delete failed!")
                                             } else
-                                                this.$alert("please refresh the page!")
+                                                this.$message({
+                                                    message: 'delete successful!',
+                                                    type: 'success'
+                                                });
                                         }
                                         if (this.searchText.trim() != "") {
                                             this.searchDataItem();
@@ -277,12 +273,7 @@ var userDataHubs = Vue.extend(
                             done();
                         }
                     }
-                }).then(action => {
-                    this.$message({
-                        type: 'success',
-                        message: 'delete successful '
-                    });
-                });
+                })
             },
 
             searchItems(page){
@@ -293,7 +284,7 @@ var userDataHubs = Vue.extend(
                 var that = this;
                 let targetPage = page==undefined?this.page:page
                 var da = {
-                    userOid: this.userId,
+                    userOid: this.userEmail,
                     page: targetPage - 1,
                     pageSize: this.pageSize,
                     asc:-1,
@@ -328,8 +319,8 @@ var userDataHubs = Vue.extend(
                 this.$emit('com-sendcurindex',this.curIndex)
             },
 
-            sendUserToParent(userId){
-                this.$emit('com-senduserinfo',userId)
+            sendUserToParent(userEmail){
+                this.$emit('com-senduserinfo',userEmail)
             },
 
         },
@@ -343,7 +334,7 @@ var userDataHubs = Vue.extend(
             //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
             this.sendcurIndexToParent()
 
-            $(() => {
+            $(async () => {
 
                 let height = document.documentElement.clientHeight;
                 this.ScreenMinHeight = (height) + "px";
@@ -357,45 +348,33 @@ var userDataHubs = Vue.extend(
                 };
 
 
-                $.ajax({
+                await $.ajax({
                     type: "GET",
                     url: "/user/load",
                     data: {},
                     cache: false,
-                    async: false,
+                    async: true,
                     xhrFields: {
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
 
-                        console.log(data);
-
+                        console.log(result);
+                        let data = result.data
                         if (data.oid == "") {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.countInfo = data.countInfo
-                            this.userId = data.oid;
+                            this.userEmail = data.email;
                             this.userName = data.name;
-                            console.log(this.userId)
-                            this.sendUserToParent(this.userId)
-                            // this.addAllData()
-
-                            // axios.get("/dataItem/amountofuserdata",{
-                            //     params:{
-                            //         userOid:this.userId
-                            //     }
-                            // }).then(res=>{
-                            //     that.dcount=res.data
-                            // });
-
+                            this.sendUserToParent(this.userEmail)
                             $("#author").val(this.userName);
 
                             var index = window.sessionStorage.getItem("index");
                             //判断显示哪一个item
                             var itemIndex = window.sessionStorage.getItem("itemIndex");
-                            this.itemIndex=itemIndex
+                            this.itemIndex = itemIndex
                             // this.getModels(this.itemIndex);
 
                             this.getDataHubs();
@@ -404,7 +383,7 @@ var userDataHubs = Vue.extend(
                                 this.defaultActive = index;
                                 this.handleSelect(index, null);
                                 window.sessionStorage.removeItem("index");
-                                this.curIndex=index
+                                this.curIndex = index
 
 
                             } else {

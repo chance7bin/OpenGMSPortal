@@ -598,7 +598,7 @@ new Vue({
 
                 let chart=echarts.init(document.getElementById('chart'+key));
                 chart.showLoading();
-                $.get("/modelItem/getDailyViewCount",{oid:this.pageOption.searchResult[key].oid},(result)=> {
+                $.get("/modelItem/dailyViewAndInvokeCount",{oid:this.pageOption.searchResult[key].oid},(result)=> {
                     let valueList = result.data.valueList;//[0, 0, 0, 0, 0];
                     console.log(result)
                     chart.hideLoading();

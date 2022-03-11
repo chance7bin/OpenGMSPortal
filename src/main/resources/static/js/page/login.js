@@ -70,7 +70,7 @@ new Vue({
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         if (!this.ruleForm.remember) {
-                            localStorage.removeItem('account');
+                            // localStorage.removeItem('account');
                             localStorage.removeItem('password');
                             localStorage.setItem('remember', "no");
                         }

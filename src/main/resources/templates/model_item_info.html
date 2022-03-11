@@ -243,14 +243,14 @@
                         <div slot="label">
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
                             Computable Model List
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(computableModels)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(computableModels)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.computableModels)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.computableModels)}">
                             </span>
 
                         </div>
 
-                        <div th:if="${#lists.size(computableModels)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${computableModels}">
+                        <div th:if="${#lists.size(relation.computableModels)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.computableModels}">
                                 <a th:href="'/computableModel/'+${model.id}" class="img">
                                     <img src="/static/img/model/calcModel.png">
                                 </a>
@@ -298,7 +298,7 @@
 
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(computableModels)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.computableModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related computable model. You can link computable models.
                             </h5>
@@ -324,12 +324,12 @@
                     </el-tab-pane>
                     <el-tab-pane name="Conceptual Model">
                         <div slot="label">Conceptual-schematic Model List
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(conceptualModels)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(conceptualModels)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.conceptualModels)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.conceptualModels)}">
                             </span>
                         </div>
-                        <div th:if="${#lists.size(conceptualModels)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${conceptualModels}">
+                        <div th:if="${#lists.size(relation.conceptualModels)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.conceptualModels}">
                                 <!--<div th:text="${model.image}"></div>-->
                                 <a class="img" th:href="'/conceptualModel/'+${model.id}" th:switch="${model.image}">
                                     <img th:case="''" src="/static/img/model/conceptual.png">
@@ -363,7 +363,7 @@
 
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(conceptualModels)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.conceptualModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related conceptual model. You can link conceptual models.
                             </h5>
@@ -388,12 +388,12 @@
                     </el-tab-pane>
                     <el-tab-pane name="Logical Model">
                         <div slot="label">Logical-schematic Model List
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(logicalModels)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(logicalModels)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.logicalModels)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.logicalModels)}">
                             </span>
                         </div>
-                        <div th:if="${#lists.size(logicalModels)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${logicalModels}">
+                        <div th:if="${#lists.size(relation.logicalModels)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.logicalModels}">
                                 <a th:href="'/logicalModel/'+${model.id}" th:switch="${model.image}" class="img">
                                     <img th:case="''" src="/static/img/model/logical.png">
                                     <img th:case="null" src="/static/img/model/logical.png">
@@ -426,7 +426,7 @@
 
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(logicalModels)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.logicalModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related logical model. You can link logical models.
                             </h5>
@@ -462,13 +462,13 @@
                 <el-tabs class="block_content" v-model="activeName1" type="border-card" stretch="true">
                     <el-tab-pane name="Model Item">
                         <div slot="label">Model Item
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(modelItems)==0} ? 'background-color: #bbbbbb' : '')}"
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.modelItems)==0} ? 'background-color: #bbbbbb' : '')}"
                                  >
-                                {{relatedModelItems.length}}
+                                {{relation.modelItems.length}}
                             </span>
                             <el-switch
                                     style="margin-left: 10px;"
-                                    v-if="relatedModelItems.length > 0"
+                                    v-if="relation.modelItems.length > 0"
                                     v-model="modelRelationGraphShow"
                                     active-text="Graph View"
                                     active-color="#13ce66"
@@ -476,7 +476,7 @@
                                     >
                             </el-switch>
                         </div>
-                        <div v-if="relatedModelItems!=0">
+                        <div v-if="relation.modelItems!=0">
                             <div v-if="!modelRelationGraphShow">
                                 <div class="list_panel clearfix" v-for="model,key in relatedModelItemsPage">
                                     <!--<div th:text="${model.image}"></div>-->
@@ -502,7 +502,7 @@
                                         layout="prev, pager, next"
                                         :hide-on-single-page="true"
                                         :page-size="relationPageSize"
-                                        :total="relatedModelItems.length"
+                                        :total="relation.modelItems.length"
                                         @current-change="handleRelationCurrentChange($event,'modelItem')">
                                 </el-pagination>
                             </div>
@@ -614,7 +614,7 @@
                             <!--</el-button>-->
 
                         </div>
-                        <div class="text-center" v-if="relatedModelItems==0">
+                        <div class="text-center" v-if="relation.modelItems==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related model item. You can link model items.
                             </h5>
@@ -638,12 +638,12 @@
                     </el-tab-pane>
                     <el-tab-pane name="Data Item">
                         <div slot="label">Data Item
-                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(dataItems)}">
+                            <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.dataItems)}">
                             </span>
                         </div>
-                        <div th:if="${#lists.size(dataItems)}!=0">
-                            <div class="list_panel clearfix" th:each="model:${dataItems}">
+                        <div th:if="${#lists.size(relation.dataItems)}!=0">
+                            <div class="list_panel clearfix" th:each="model:${relation.dataItems}">
                                 <!--<div th:text="${model.image}"></div>-->
                                 <a class="img" th:href="'/dataItem/'+${model.id}">
                                     <img src="/static/img/model/data.png">
@@ -674,7 +674,7 @@
                             </el-tooltip>
 
                         </div>
-                        <div class="text-center" th:if="${#lists.size(dataItems)}==0">
+                        <div class="text-center" th:if="${#lists.size(relation.dataItems)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related data item. You can link data items.
                             </h5>
@@ -696,6 +696,7 @@
                             </el-tooltip>
 
                         </div>
+
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -731,9 +732,9 @@
                                         width="200">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="author"
+                                        prop="authors"
                                         sortable
-                                        label="Author"
+                                        label="Author(s)"
                                         width="200">
                                 </el-table-column>
                                 <el-table-column
@@ -749,19 +750,19 @@
                                         label="Volume">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="pages"
-                                        label="Pages">
+                                        prop="pageRange"
+                                        label="Page Range">
                                 </el-table-column>
                                 <el-table-column
-                                        label="Links">
+                                        label="Link">
                                     <template slot-scope="scope">
-                                        <el-button v-if="scope.row.links!=''"
+                                        <el-button v-if="scope.row.link!=''"
                                                    class="refLink"
                                                    size="mini"
                                                    type="danger"
-                                                   @click="link(scope.row.links)">View
+                                                   @click="link(scope.row.link)">View
                                         </el-button>
-                                        <div v-if="scope.row.links==''">No link</div>
+                                        <div v-if="scope.row.link==''">No link</div>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -812,12 +813,12 @@
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
                             Material
                             <span class="el-badge__content el-badge__content--undefined"
-                                  th:style="@{(${#lists.size(concepts)+#lists.size(spatialReferences)+#lists.size(templates)+#lists.size(units)+#lists.size(dataSpaceFiles)+#lists.size(exLinks)==0} ? 'background-color: #bbbbbb' : '')}"
-                                  th:text="${#lists.size(concepts)+#lists.size(spatialReferences)+#lists.size(templates)+#lists.size(units)+#lists.size(dataSpaceFiles)+#lists.size(exLinks)}">
+                                  th:style="@{(${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)+#lists.size(relation.dataSpaceFiles)+#lists.size(relation.exLinks)==0} ? 'background-color: #bbbbbb' : '')}"
+                                  th:text="${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)+#lists.size(relation.dataSpaceFiles)+#lists.size(relation.exLinks)}">
                             </span>
 
                         </div>
-                        <div th:if="${#lists.size(concepts)}!=0" class="list_panel clearfix" th:each="model:${concepts}">
+                        <div th:if="${#lists.size(relation.concepts)}!=0" class="list_panel clearfix" th:each="model:${relation.concepts}">
                             <a th:href="'/repository/concept/'+${model.id}" class="img">
                                 <img src="/static/img/model/semantics.png">
                             </a>
@@ -833,7 +834,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(spatialReferences)}!=0" class="list_panel clearfix" th:each="model:${spatialReferences}">
+                        <div th:if="${#lists.size(relation.spatialReferences)}!=0" class="list_panel clearfix" th:each="model:${relation.spatialReferences}">
                             <a th:href="'/repository/spatialReference/'+${model.id}" class="img">
                                 <img src="/static/img/model/spatialreference.png">
                             </a>
@@ -849,7 +850,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(templates)}!=0" class="list_panel clearfix" th:each="model:${templates}">
+                        <div th:if="${#lists.size(relation.templates)}!=0" class="list_panel clearfix" th:each="model:${relation.templates}">
                             <a th:href="'/repository/template/'+${model.id}" class="img">
                                 <img src="/static/img/model/template.png">
                             </a>
@@ -864,7 +865,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(units)}!=0" class="list_panel clearfix" th:each="model:${units}">
+                        <div th:if="${#lists.size(relation.units)}!=0" class="list_panel clearfix" th:each="model:${relation.units}">
                             <a th:href="'/repository/unit/'+${model.id}" class="img">
                                 <img src="/static/img/model/unit.png">
                             </a>
@@ -880,7 +881,7 @@
                                     simulations and predictions.</p>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(dataSpaceFiles)}!=0" class="list_panel clearfix" th:each="model:${dataSpaceFiles}">
+                        <div th:if="${#lists.size(relation.dataSpaceFiles)}!=0" class="list_panel clearfix" th:each="model:${relation.dataSpaceFiles}">
                             <a th:href="${model.url}" class="img">
                                 <i class="fa fa-file-o" style="font-size: 60px;margin: 15px 0 0 20px;color: #11c2fd"></i>
                             </a>
@@ -896,7 +897,7 @@
                                 <!--                                    simulations and predictions.</p>-->
                             </div>
                         </div>
-                        <div th:if="${#lists.size(exLinks)}!=0" class="list_panel clearfix" th:each="model:${exLinks}">
+                        <div th:if="${#lists.size(relation.exLinks)}!=0" class="list_panel clearfix" th:each="model:${relation.exLinks}">
                             <a th:href="${model.content}" class="img">
                                 <i class="fa fa-link" style="font-size: 60px;margin: 15px 0 0 20px;color: #11c2fd"></i>
                             </a>
@@ -913,8 +914,8 @@
                             </div>
                         </div>
 
-                        <div class="text-center" th:if="${#lists.size(concepts)==0 && #lists.size(spatialReferences)==0 &&
-                    #lists.size(templates)==0 && #lists.size(units)==0 && #lists.size(dataSpaceFiles)==0&& #lists.size(exLinks)==0}">
+                        <div class="text-center" th:if="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                    #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0&& #lists.size(relation.exLinks)==0}">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
                                 There is no related material. You can link materials to it.
                             </h5>
@@ -937,8 +938,8 @@
 
                         </div>
                         <div th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}">
-                            <el-button th:unless="${#lists.size(concepts)==0 && #lists.size(spatialReferences)==0 &&
-                         #lists.size(templates)==0 && #lists.size(units)==0 && #lists.size(dataSpaceFiles)==0 && #lists.size(exLinks)==0}"
+                            <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                         #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0 && #lists.size(relation.exLinks)==0}"
                                        @click="addRelatedResouece()" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
                                 Edit related material
@@ -949,8 +950,8 @@
                                     popper-class="fontsize-15"
                                     content="There is another version haven't been reviewed, you can edit it later or contact us."
                                     effect="light" placement="top">
-                            <el-button th:unless="${#lists.size(concepts)==0 && #lists.size(spatialReferences)==0 &&
-                        #lists.size(templates)==0 && #lists.size(units)==0 && #lists.size(dataSpaceFiles)==0 && #lists.size(exLinks)==0}"
+                            <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                        #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0 && #lists.size(relation.exLinks)==0}"
                                        plain type="info" icon="el-icon-plus"
                                        style="width: 100%">
                                 Edit related material
@@ -960,7 +961,6 @@
 
                 </el-tabs>
             </div>
-            <input id="ref" th:value="${references}" style="display: none;">
             <!--
             <div v-cloak th:if="${#lists.size(references)}!=0" id="references" class="detail_block">
 
@@ -1602,237 +1602,7 @@
                 @close-father-dialog="dialogTableVisible=false"
                 @receive-msg="receiveModuleMsg"
         ></link-related-item-module>
-<!--        <div style="padding: 8px 16px;-->
-<!--                        background-color: #ecf8ff;-->
-<!--                        border-radius: 4px;-->
-<!--                        border-left: 5px solid #50bfff;-->
-<!--                        margin: 0 0 10px;">-->
-<!--            <p style="font-size: 14px;color: #5e6d82;line-height: 1.5em;margin:0;">-->
-<!--                You can link related <code style="background-color: #f9fafc;color: #5e6d82;">{{typeName}}</code> from-->
-<!--                repository to this model item, or you can <a style="cursor:pointer;text-decoration: underline"-->
-<!--                                                             @click="jump">create</a> a new <span>{{typeName.toLowerCase()}}</span>.-->
-<!--            </p>-->
-<!--        </div>-->
 
-<!--        <el-card shadow="never" class="box-card" style="width:40%;margin-right: 1%;float: left;">-->
-<!--            <div slot="header" class="clearfix">-->
-<!--                <span>Related Items</span>-->
-
-<!--            </div>-->
-<!--            <el-table-->
-<!--                    :data="tableData"-->
-<!--                    ref="leftTable"-->
-<!--                    :max-height="tableMaxHeight">-->
-<!--                &lt;!&ndash;<el-table-column type="expand">&ndash;&gt;-->
-<!--                    &lt;!&ndash;<template slot-scope="props">&ndash;&gt;-->
-<!--                        &lt;!&ndash;<el-form label-position="left" inline class="demo-table-expand">&ndash;&gt;-->
-<!--                            &lt;!&ndash;<el-form-item label="Contributor">&ndash;&gt;-->
-<!--                                &lt;!&ndash;<span>{{ props.row.author }}</span>&ndash;&gt;-->
-<!--                            &lt;!&ndash;</el-form-item>&ndash;&gt;-->
-
-<!--                        &lt;!&ndash;</el-form>&ndash;&gt;-->
-<!--                    &lt;!&ndash;</template>&ndash;&gt;-->
-<!--                &lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-<!--                <el-table-column Label="Relation" v-if="relateType=='modelItem'">-->
-<!--                    <template slot-scope="props">-->
-<!--                        <el-tooltip popper-class="fontsize-15" effect="light"-->
-<!--                                    :content="itemInfo.name +' '+  props.row.relation.toLowerCase() + ' ' + props.row.name"-->
-<!--                                    placement="top">-->
-<!--                            <el-select v-model="props.row.relation" value-key="props.row.relation" placeholder="Select">-->
-<!--                                <el-option-group-->
-<!--                                        v-for="group in options"-->
-<!--                                        :key="group.label"-->
-<!--                                        :label="group.label">-->
-<!--                                    <el-option-->
-<!--                                            v-for="item in group.options"-->
-<!--                                            :key="item.value"-->
-<!--                                            :label="item.value"-->
-<!--                                            :value="item.value">-->
-<!--                                    </el-option>-->
-<!--                                </el-option-group>-->
-<!--                            </el-select>-->
-
-<!--                        </el-tooltip>-->
-<!--                    </template>-->
-
-
-<!--                </el-table-column>-->
-
-<!--                <el-table-column-->
-<!--                        label="Name">-->
-<!--                    <template slot-scope="props">-->
-<!--                        <a :href="'/'+relateType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
-
-<!--                <el-table-column fixed="right" label=" " width="60">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        &lt;!&ndash;<el-button&ndash;&gt;-->
-<!--                        &lt;!&ndash;v-if="relateType=='concept'||relateType=='spatialReference'||relateType=='template'||relateType=='unit'"&ndash;&gt;-->
-<!--                        &lt;!&ndash;size="mini"&ndash;&gt;-->
-<!--                        &lt;!&ndash;type="danger"&ndash;&gt;-->
-<!--                        &lt;!&ndash;@click="handleDelete(scope.$index, scope.row)">Remove&ndash;&gt;-->
-<!--                        &lt;!&ndash;</el-button>&ndash;&gt;-->
-<!--                        &lt;!&ndash;<el-button&ndash;&gt;-->
-<!--                        &lt;!&ndash;v-else&ndash;&gt;-->
-<!--                        &lt;!&ndash;:disabled="scope.row.author_uid!=userUid&&scope.row.author!=userUid&&scope.row.userName!=userUid"&ndash;&gt;-->
-<!--                        &lt;!&ndash;size="mini"&ndash;&gt;-->
-<!--                        &lt;!&ndash;type="danger"&ndash;&gt;-->
-<!--                        &lt;!&ndash;@click="handleDelete(scope.$index, scope.row)">Remove&ndash;&gt;-->
-<!--                        &lt;!&ndash;</el-button>&ndash;&gt;-->
-
-<!--                        <el-button-->
-
-<!--                                size="mini"-->
-<!--                                type="danger"-->
-<!--                                icon="el-icon-close" circle-->
-<!--                                @click="handleDelete(scope.$index, scope.row)">-->
-<!--                        </el-button>-->
-
-
-<!--                    </template>-->
-<!--                </el-table-column>-->
-<!--            </el-table>-->
-<!--        </el-card>-->
-
-
-<!--        <el-tabs type="border-card" :stretch="true" v-model="activeName_dialog" style="width:59%;float: left;">-->
-<!--            <el-tab-pane name="my" label="My Repository" v-if="relateType!='concept'&&relateType!='spatialReference'&&relateType!='template'&&relateType!='unit'">-->
-
-<!--                <el-input placeholder="Please enter name..." v-model="pageOption_my.relateSearch" class="input-with-select"-->
-<!--                          clearable="true" @keyup.enter.native="searchInit()">-->
-<!--                    <el-button slot="append" icon="el-icon-search" @click="searchInit()"></el-button>-->
-<!--                </el-input>-->
-<!--                <el-table-->
-<!--                        :data="pageOption_my.searchResult"-->
-<!--                        style="margin-top:17px;"-->
-<!--                        show-overflow-tooltip-->
-<!--                        :max-height="tableMaxHeight">-->
-<!--                    <el-table-column type="expand">-->
-<!--                        <template slot-scope="props">-->
-<!--                            <el-form label-position="left" inline class="demo-table-expand">-->
-<!--                                <el-form-item label="Overview">-->
-<!--                                    <span>{{ props.row.overview }}</span>-->
-<!--                                </el-form-item>-->
-
-<!--                            </el-form>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                    <el-table-column sortable='custom'-->
-<!--                            label="Name">-->
-<!--                        <template slot-scope="props">-->
-<!--                            <a :href="'/repository/'+relateType+'/'+props.row.id"-->
-<!--                               target="_blank">{{props.row.name}}</a>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                    &lt;!&ndash;<el-table-column&ndash;&gt;-->
-<!--                    &lt;!&ndash;label="Contributor"&ndash;&gt;-->
-<!--                    &lt;!&ndash;prop="author">&ndash;&gt;-->
-<!--                    &lt;!&ndash;</el-table-column>&ndash;&gt;-->
-<!--                    <el-table-column fixed="right" label=" " width="60">-->
-<!--                        <template slot-scope="scope">-->
-<!--                            <el-button-->
-<!--                                    v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"-->
-<!--                                    size="mini"-->
-<!--                                    type="success"-->
-<!--                                    icon="el-icon-plus" circle-->
-<!--                                    @click="handleEdit(scope.$index, scope.row)">-->
-<!--                            </el-button>-->
-<!--                            <el-button-->
-<!--                                    v-if="hasAdded(scope.row)"-->
-<!--                                    size="mini"-->
-<!--                                    type="danger"-->
-<!--                                    icon="el-icon-close" circle-->
-<!--                                    @click="handleDelete(scope.$index, scope.row)">-->
-<!--                            </el-button>-->
-
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                </el-table>-->
-<!--                <el-pagination style="text-align: center;margin-top:20px"-->
-<!--                               @current-change="handlePageChange"-->
-<!--                               :current-page="pageOption_my.currentPage"-->
-<!--                               layout="total, prev, pager, next, jumper"-->
-<!--                               :page-size="pageOption_my.pageSize"-->
-<!--                               :total="pageOption_my.total">-->
-<!--                </el-pagination>-->
-<!--            </el-tab-pane>-->
-<!--            <el-tab-pane name="all" label="All Repository">-->
-
-<!--                <el-input placeholder="Please enter name..." v-model="pageOption_all.relateSearch" class="input-with-select"-->
-<!--                          clearable="true" @keyup.enter.native="searchInit('all')">-->
-<!--                    <el-button slot="append" icon="el-icon-search" @click="searchInit('all')"></el-button>-->
-<!--                </el-input>-->
-<!--                <el-table-->
-<!--                        :data="pageOption_all.searchResult"-->
-<!--                        style="margin-top:17px;"-->
-
-<!--                        show-overflow-tooltip-->
-<!--                        @sort-change="relationSortChange"-->
-<!--                        :max-height="tableMaxHeight">-->
-<!--                    <el-table-column type="expand">-->
-<!--                        <template slot-scope="props">-->
-<!--                            <el-form label-position="left" inline class="demo-table-expand">-->
-<!--                                <el-form-item label="Overview">-->
-<!--                                    <span>{{ props.row.overview }}</span>-->
-<!--                                </el-form-item>-->
-
-<!--                            </el-form>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                    <el-table-column sortable='custom'-->
-<!--                            label="Name">-->
-<!--                        <template slot-scope="props">-->
-<!--                            <a :href="'/repository/'+relateType+'/'+props.row.id"-->
-<!--                               target="_blank">{{props.row.name}}</a>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                    &lt;!&ndash;<el-table-column&ndash;&gt;-->
-<!--                    &lt;!&ndash;label="Contributor"&ndash;&gt;-->
-<!--                    &lt;!&ndash;prop="author">&ndash;&gt;-->
-<!--                    &lt;!&ndash;</el-table-column>&ndash;&gt;-->
-<!--                    <el-table-column fixed="right" label=" " width="60">-->
-<!--                        <template slot-scope="scope">-->
-<!--                            <el-button-->
-<!--                                    v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"-->
-<!--                                    size="mini"-->
-<!--                                    type="success"-->
-<!--                                    icon="el-icon-plus" circle-->
-<!--                                    @click="handleEdit(scope.$index, scope.row)">-->
-<!--                            </el-button>-->
-<!--                            <el-button-->
-<!--                                    v-if="hasAdded(scope.row)"-->
-<!--                                    size="mini"-->
-<!--                                    type="danger"-->
-<!--                                    icon="el-icon-close" circle-->
-<!--                                    @click="handleDelete(scope.$index, scope.row)">-->
-<!--                            </el-button>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                </el-table>-->
-<!--                <el-pagination style="text-align: center;margin-top:20px"-->
-<!--                               @current-change="handlePageChange"-->
-<!--                               :current-page="pageOption_all.currentPage"-->
-<!--                               layout="total, prev, pager, next, jumper"-->
-<!--                               :page-size="pageOption_all.pageSize"-->
-<!--                               :total="pageOption_all.total">-->
-<!--                </el-pagination>-->
-<!--            </el-tab-pane>-->
-<!--        </el-tabs>-->
-
-<!--        <div slot="footer" class="dialog-footer">-->
-<!--            &lt;!&ndash;<span style="float:left;font-size: 16px">Or you can click <a style="cursor:pointer" @click="jump">here</a> to create a new one.</span>&ndash;&gt;-->
-<!--            <el-button @click="dialogTableVisible = false;">Cancel</el-button>-->
-<!--            <el-popconfirm-->
-<!--  confirm-button-text='Yes'-->
-<!--  cancel-button-text='No'-->
-<!--                    title="Are you sure to submit changes?"-->
-<!--                    @confirm="confirm()"-->
-<!--            >-->
-<!--                <el-button type="primary" slot="reference">OK</el-button>-->
-<!--            </el-popconfirm>-->
-<!--        </div>-->
     </el-dialog>
 
     <!--related knowledge 弹出框-->
@@ -2258,11 +2028,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editDescription = false">Cancel</el-button>
-            <el-button type="primary" @click="submitDescription">Submit</el-button>
-            <el-button @click="editClassification = false">Cancel</el-button>
-            <el-popconfirm
-  confirm-button-text='Yes'
-  cancel-button-text='No'
+            <el-popconfirm confirm-button-text='Yes' cancel-button-text='No'
                     title="Are you sure to submit changes?"
                     @confirm="submitDescription"
             >
@@ -2796,8 +2562,9 @@
 
 <script th:inline="javascript">
     var itemInfo = [[${itemInfo}]];
-    var modelItemList=[[${modelItems}]];
+    var relation = [[${relation}]]
     var author=[[${user}]];
+    var modelReferences = [[${references}]];
 </script>
 
 
@@ -2805,7 +2572,7 @@
 <script src="/static/js/common/echarts-graph.min.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
-<!--<script type="text/javascript" src="/static/data-tables/jquery.dataTables.js"></script>-->
+<script type="text/javascript" src="/static/plugins/data-tables/jquery.dataTables.js"></script>
 
 <script src="/static/js/common/vue.min.js"></script>
 <script src="/static/js/common/vue-avatar.min.js"></script>

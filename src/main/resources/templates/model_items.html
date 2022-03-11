@@ -67,9 +67,6 @@
 </head>
 <body>
 <div id="app" class="app" v-cloak>
-
-
-
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div th:replace="fragments/backToTop :: backtop-up"></div>
@@ -285,7 +282,7 @@
                                     <i v-if="modelItem.status=='Discoverable'"
                                        class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
-                                <a :class="modelItem.viewCount>500?'hot':''" :href="'/modelItem/'+ modelItem.id"
+                                <a :class="modelItem.viewCount>5000?'hot':''" :href="'/modelItem/'+ modelItem.id"
                                    target="_blank">{{modelItem.name}}&nbsp&nbsp</a>
                             </div>
                             <div :style="{'display':statistic[key]!='Overview'?'none':'block'}">

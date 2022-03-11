@@ -207,7 +207,6 @@ var userTask = Vue.extend(
                     asc:1,
                     sort: "default",
                     pageSize: 10,
-
                     status:0,
                     dataSearchText:'',
                 },
@@ -798,16 +797,13 @@ var userTask = Vue.extend(
                 this.resourceLoad = true
                 this.isInSearch = 0;
                 this.searchResult = []
-                axios.get("/task/getTasksByUserIdByStatus", {
-                        params: {
+                axios.post("/task/taskInfo", {
                             status: this.taskStatus,
-                            page: this.page - 1,
+                            page: this.page,
+                            pageSize: 10,
                             sortType: this.sortType,
                             asc: -1,
-                        }
-                    }
-
-                    ,).then(
+                    }).then(
                     res => {
 
                         if (res.data.code != 0) {
@@ -838,25 +834,25 @@ var userTask = Vue.extend(
             },
 
             searchTasks(page) {
-                let url = "/task/searchTasksByUserId";
+                let url = "/task/taskByUser";
                 let name = "tasks";
                 this.await = true
                 this.isInSearch = 1;
                 this.resourceLoad = true
                 let targetPage = page==undefined?this.page:page
                 $.ajax({
-                    type: "Get",
+                    type: "POST",
                     url: url,
-                    data: {
+                    data: JSON.stringify({
                         searchText: this.searchText,
-                        page: targetPage - 1,
+                        page: targetPage,
                         pagesize: this.pageSize,
                         sortType: this.sortType,
                         asc: this.sortAsc
-                    },
+                    }),
                     cache: false,
                     async: true,
-                    dataType: "json",
+                    contentType: "application/json",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -1767,7 +1763,7 @@ var userTask = Vue.extend(
                 this.initDataTaskFindDto()
                 let that = this
                 console.log(this.dataTaskFindDto)
-                axios.post('/task/getDataTasks', that.dataTaskFindDto)
+                axios.post('/task/dataTasks', that.dataTaskFindDto)
                     .then(res=>{
                         setTimeout(()=>{
                             that.dataSearchResult = res.data.data.list

@@ -3,12 +3,14 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.dao.FeedbackDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.user.UserResourceCount;
 import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
-import njgis.opengms.portal.entity.dto.user.UserShuttleDTO;
+import njgis.opengms.portal.entity.dto.user.*;
+import njgis.opengms.portal.entity.po.Feedback;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
@@ -17,10 +19,12 @@ import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,10 +34,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -69,6 +70,9 @@ public class UserService {
 
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    FeedbackDao feedbackDao;
 
     /**
      * @Description 用户相关条目计数 加一+++++
@@ -477,14 +481,15 @@ public class UserService {
 
             User user = userDao.findFirstByEmail(email);
 
+            List<String> exLinks = new ArrayList<>();
+            exLinks.add(user.getHomepage());
             j_result.put("id",user.getId());
             j_result.put("userId", user.getAccessId());
             j_result.put("email", user.getEmail());
             j_result.put("phone", user.getPhone());
-            j_result.put("weChat", user.getWeChat());
-            j_result.put("faceBook", user.getFaceBook());
             j_result.put("lab", user.getLab());
-            j_result.put("externalLinks", user.getExternalLinks());
+            j_result.put("homepage", user.getHomepage());
+            j_result.put("externalLinks", exLinks);
             j_result.put("eduExperiences", user.getEducationExperiences());
             j_result.put("awdHonors", user.getAwardsHonors());
             j_result.put("runTask", user.getRunTask());
@@ -733,6 +738,19 @@ public class UserService {
         return author;
     }
 
+    //根据传入的字符串返回用户email
+    public String getUserEmail(String userName){
+        if(userName!=null && userName.length()!=0){
+            User user = userDao.findFirstByAccessId(userName);
+            if(user != null){
+                return user.getEmail();
+            }
+        }
+        return null;
+    }
+
+
+
     /**
      * @Description 通过用户服务器发送验证码
      * @param email
@@ -798,4 +816,292 @@ public class UserService {
 
     }
 
+    public JSONObject getFileByPathFromUserServer(List<String> paths, String email) throws Exception {
+        String token = tokenService.checkToken(email);
+        if(token.equals("out")){
+            return null;
+        }else{
+            JSONObject result = new JSONObject();
+
+            if(paths.get(0).equals("0")){
+                result = getUserResource(email);
+
+            }
+
+            try {
+                String pathStr = StringUtils.join(paths.toArray(),",");
+
+                String url = "http://" + userServer + "/auth/res/" + pathStr;
+
+                RestTemplate restTemplate = new RestTemplate();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authorization","Bearer " + token);
+                headers.set("user-agent","portal_backend");
+                HttpEntity<JSONObject> httpEntity = new HttpEntity<>(headers);
+                ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url,HttpMethod.GET, httpEntity, JSONObject.class);
+                result = responseEntity.getBody();
+
+                if(result.getInteger("code")!=0){
+                    return null;
+                }
+                JSONObject obj = new JSONObject();
+                obj.put("data", result.getJSONArray("data"));
+                return obj;
+            }catch (Exception e){
+                return null;
+            }
+
+        }
+
+
+    }
+
+    public String sendFeedback(String content, String email) {
+        Feedback feedback = new Feedback();
+        feedback.setContent(content);
+        feedback.setEmail(email);
+        Date now = new Date();
+        feedback.setTime(now);
+
+        feedbackDao.save(feedback);
+
+        return "success";
+    }
+
+
+    public String updateIntroduction(String introduction, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setIntroduction(introduction);
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updateOrganizations(List<String> organizations, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setOrganizations(organizations);
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updateExternalLinks(List<String> externalLinks, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setHomepage(externalLinks.get(0));
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    public String updateResearchInterest(List<String> researchInterests, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                user.setDomain(researchInterests);
+//                System.out.println(user.getResearchInterests());
+                userDao.save(user);
+                return "success";
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+    }
+
+    public int updateUsertoServer(UserShuttleDTO userShuttleDTO) throws Exception {
+        String token = tokenService.checkToken(userShuttleDTO.getEmail());
+        if(token.equals("out")){
+            return -1;
+        }
+
+        try {
+            String url = "http://" + userServer + "/auth/update";
+            HttpHeaders httpHeaders = new HttpHeaders();
+            MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
+            httpHeaders.setContentType(mediaType);
+            httpHeaders.set("user-agent","portal_backend");
+            httpHeaders.add("Authorization","Bearer " + token);
+            RestTemplate restTemplate = new RestTemplate();
+
+            HashMap<String,Object> params = new HashMap<>();
+            putValueToMap(params,userShuttleDTO);
+
+            HttpEntity<Object> httpEntity = new HttpEntity<>(params, httpHeaders);
+            ResponseEntity<JSONObject> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
+
+            if(result.getBody().getInteger("code")==-2){
+                return -2;
+            }
+
+            User user = userDao.findFirstByEmail(userShuttleDTO.getEmail());
+            updatePortalUser(result.getBody().getJSONObject("data"),user);
+
+            return 1;
+        }catch (Exception e){
+            return -2;
+        }
+
+    }
+
+    public void putValueToMap(Map<String,Object> map,Object obj) throws IllegalAccessException {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        if(map instanceof LinkedMultiValueMap){
+            map = (LinkedMultiValueMap)map;
+        }
+        for(int i=0;i<fields.length;i++){
+            String name = fields[i].getName();
+            //设置对象的访问权限，保证对private的属性的访问
+            fields[i].setAccessible(true);
+            if(fields[i].get(obj)!=null){
+                Object ele = fields[i].get(obj);
+                map.put(name,ele);
+            }
+
+        }
+    }
+
+    public void updatePortalUser(JSONObject updateUserInfo,User portalUser) throws NoSuchFieldException, IllegalAccessException {
+
+        try {
+            UserShuttleDTO userShuttleDTO = updateUserInfo.toJavaObject(UserShuttleDTO.class);
+
+            if(portalUser==null){
+                portalUser = new User();
+            }
+            for (Field shuttleField : userShuttleDTO.getClass().getDeclaredFields()) {
+                String keyName = shuttleField.getName();
+                if(keyName.equals("userId")){
+                    continue;
+                }
+                Field field = null;
+                try{
+                    field = portalUser.getClass().getDeclaredField(keyName);
+                    shuttleField = userShuttleDTO.getClass().getDeclaredField(keyName);
+                }catch (Exception e){
+
+                }
+                if(field != null){
+                    field.setAccessible(true);
+                    shuttleField.setAccessible(true);
+                    if (field.get(portalUser)!=null&&!field.get(portalUser).equals(shuttleField.get(userShuttleDTO))) {
+                        if(shuttleField.getName().equals("avatar")){//用户头像单独处理
+                            String avatar = (String) shuttleField.get(userShuttleDTO);
+                            avatar = "/userServer" + avatar;
+                            field.set(portalUser, avatar);
+                        }else{
+                            field.set(portalUser, shuttleField.get(userShuttleDTO));
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+            userDao.save(portalUser);
+        }catch (Exception e){
+
+        }
+
+    }
+
+    public User updateArticles(ArticlesDTO articlesDTO, String email){
+
+        User user = userDao.findFirstByEmail(email);
+        user.setArticles(articlesDTO.getIdList());
+        return userDao.save(user);
+    }
+
+
+    public User updateProjects(ProjectDTO projectDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setProjects(projectDTO.getProjects());
+        return userDao.save(user);
+    }
+
+    public User updateConferences(ConferenceDTO conferenceDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setConferences(conferenceDTO.getConferences());
+        return userDao.save(user);
+
+    }
+
+    public User updateAcademicServices(AcademicServiceDTO academicServiceDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setAcademicServices(academicServiceDTO.getAcademicServices());
+        return userDao.save(user);
+    }
+
+    public User updateAwardsHonors(AwardandHonorDTO awardandHonorDTO, String email) {
+
+        User user = userDao.findFirstByEmail(email);
+        user.setAwardsHonors(awardandHonorDTO.getAwardandHonors());
+        return userDao.save(user);
+    }
+
+    public User updateEducationExperiences(EducationExperienceDTO educationExperienceDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setEducationExperiences(educationExperienceDTO.getEducationExperiences());
+        return userDao.save(user);
+    }
+
+    public User updateLab(UserLabDTO userLabDTO, String email) {
+        User user = userDao.findFirstByEmail(email);
+        user.setLab(userLabDTO.getUserLabs());
+        return userDao.save(user);
+    }
+
+    public User updateUserInfo(UserInfoUpdateDTO userInfoUpdateDTO, String email) {
+
+        //获取用户服务器的信息
+        JSONObject commonInfo = getInfoFromUserServer(email);
+        UserShuttleDTO userShuttleDTO = JSONObject.toJavaObject(commonInfo, UserShuttleDTO.class);
+        User user = userDao.findFirstByEmail(email);
+
+        //更新用户服务器的信息
+        userShuttleDTO.setIntroduction(userInfoUpdateDTO.getIntroduction());
+        userShuttleDTO.setOrganizations((ArrayList<String>) userInfoUpdateDTO.getOrganizations());
+        try {
+            updateUsertoServer(userShuttleDTO);
+        }catch (Exception e){
+           return null;
+        }
+
+        user.setHomepage(userInfoUpdateDTO.getExternalLinks().get(0));
+        user.setDomain(userInfoUpdateDTO.getResearchInterests());
+        user.setIntroduction(userInfoUpdateDTO.getIntroduction());
+        user.setOrganizations(userInfoUpdateDTO.getOrganizations());
+        userDao.save(user);
+
+        return user;
+
+
+    }
 }

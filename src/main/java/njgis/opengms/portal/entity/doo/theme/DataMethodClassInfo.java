@@ -1,4 +1,4 @@
-package njgis.opengms.portal.entity.doo.support.theme;
+package njgis.opengms.portal.entity.doo.theme;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

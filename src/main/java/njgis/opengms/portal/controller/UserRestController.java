@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.user.*;
 import njgis.opengms.portal.entity.po.User;
-import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -27,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * @Description 用户控制器
@@ -39,6 +40,7 @@ import java.net.URISyntaxException;
 @RestController
 @RequestMapping({"/user","/profile"})
 public class UserRestController {
+
 
     @Autowired
     UserService userService;
@@ -96,7 +98,7 @@ public class UserRestController {
             User userFromDb = userService.getByAccessId(accessId);
             JSONObject user = userService.getInfoFromUserServer(userFromDb.getEmail());
             JSONObject userInfo = (JSONObject) JSONObject.toJSON(user);
-            Object oid_obj = session.getAttribute("eid");
+            Object oid_obj = session.getAttribute("email");
             if(oid_obj!=null) {
                 String loginId = oid_obj.toString();
                 userInfo.put("loginId", loginId);
@@ -270,10 +272,10 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户基础信息", notes = "@loginRequired")
     @RequestMapping(value = "/getInfoFromUserServer", method = RequestMethod.GET)
-    public JsonResult getInfoFromUserServer(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+    public JsonResult getInfoFromUserServer(@RequestParam(value = "email") String email, HttpServletRequest request) throws Exception {
+//        HttpSession session = request.getSession();
 
-        String email = session.getAttribute("email").toString();
+//        String email = session.getAttribute("email").toString();
         JSONObject j_result = userService.getInfoFromUserServer(email);
 
         if(j_result.getString("msg").equals("out")){
@@ -298,11 +300,14 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户详细信息", notes = "@loginRequired")
     @RequestMapping(value = "/getFullUserInfo", method = RequestMethod.GET)
-    public JsonResult getFullUserInfo(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+    public JsonResult getFullUserInfo(@RequestParam(value = "email",required = false,defaultValue = "loginUser")String email,HttpServletRequest request) throws Exception {
 
-        String email = session.getAttribute("email").toString();
+        if(email.equals("loginUser")){
+            HttpSession session = request.getSession();
+            email = session.getAttribute("email").toString();
+        }
         JSONObject j_result = userService.getFullUserInfo(email);
+
 
         if(j_result.getString("msg").equals("out")){
             ResultUtils.error(-1,"out");
@@ -324,10 +329,10 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户文件资源", notes = "@loginRequired")
     @RequestMapping(value = "/getUserResource", method = RequestMethod.GET)
-    public JsonResult getUserResource(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+    public JsonResult getUserResource(@RequestParam(value = "email") String email, HttpServletRequest request) throws Exception {
+//        HttpSession session = request.getSession();
 
-        String email = session.getAttribute("email").toString();
+//        String email = session.getAttribute("email").toString();
         JSONObject j_result = userService.getUserResource(email);
 
         if(j_result.getString("msg").equals("out")){
@@ -375,149 +380,148 @@ public class UserRestController {
 
     }
 
-    /**
-     * 得到用户上传的dataItem
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
-    @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
-    JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
-    }
+    // /**
+    //  * 得到用户上传的dataItem
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的dataItem [/user(profile)/getDataItems]")
+    // @RequestMapping(value = "/dataItemList", method = RequestMethod.POST)
+    // JsonResult getUserUploadDataItem(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataItem));
+    // }
 
-    /**
-     * 得到用户上传的dataHub
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的dataHub [/user(profile)/getDataHubs]")
-    @RequestMapping(value = "/dataHubList", method = RequestMethod.POST)
-    JsonResult getUserUploadDataHubs(@RequestBody FindDTO findDTO,HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataHub));
-    }
+    // /**
+    //  * 得到用户上传的dataHub
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的dataHub [/user(profile)/getDataHubs]")
+    // @RequestMapping(value = "/dataHubList", method = RequestMethod.POST)
+    // JsonResult getUserUploadDataHubs(@RequestBody FindDTO findDTO,HttpServletRequest request) {
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.DataHub));
+    // }
 
-    /**
-     * 得到用户上传的dataMethod
-     * @param email
-     * @param page
-     * @param pagesize
-     * @param asc
-     * @param type
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
-    @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
-    public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
-                                        @RequestParam(value = "page", required = false) Integer page,
-                                        @RequestParam(value = "pagesize", required = false) Integer pagesize,
-                                        @RequestParam(value = "asc", required = false) Integer asc,
-                                        @ApiParam(name = "type", value = "区分process与visual") @RequestParam(value = "type", required = false) String type
-    ) {
-        return ResultUtils.success(dataMethodService.getUsersUploadData(email, page, pagesize, asc, type));
-    }
-
-
-    /**
-     * 得到用户上传的concept
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的concept [/repository/getConceptsByUserId]")
-    @RequestMapping(value = "/conceptList",method = RequestMethod.POST)
-    public JsonResult getConceptsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Concept));
-    }
-
-    /**
-     * 得到用户上传的spatialReference
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户上传的spatialReference [/repository/getSpatialsByUserId]")
-    @RequestMapping(value = "/spatialReferenceList",method = RequestMethod.POST)
-    public JsonResult getSpatialsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.SpatialReference));
-    }
+    // /**
+    //  * 得到用户上传的dataMethod
+    //  * @param email
+    //  * @param page
+    //  * @param pagesize
+    //  * @param asc
+    //  * @param type
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @ApiOperation(value = "得到用户上传的dataMethod [/dataApplication/getApplication]")
+    // @RequestMapping(value = "/dataMethodList", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
+    // public JsonResult getUserUploadDataMethod(@RequestParam(value = "email", required = false) String email,
+    //                                     @RequestParam(value = "page", required = false) Integer page,
+    //                                     @RequestParam(value = "pagesize", required = false) Integer pagesize,
+    //                                     @RequestParam(value = "asc", required = false) Integer asc,
+    //                                     @ApiParam(name = "type", value = "区分process与visual") @RequestParam(value = "type", required = false) String type
+    // ) {
+    //     return ResultUtils.success(dataMethodService.getUsersUploadData(email, page, pagesize, asc, type));
+    // }
 
 
-    /**
-     * 得到用户template
-     * @param findDTO
-     * @param request
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户template [ /repository/getTemplatesByUserId ]")
-    @RequestMapping(value = "/templateList",method = RequestMethod.POST)
-    public JsonResult getTemplatesByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Template));
-    }
+    // /**
+    //  * 得到用户上传的concept
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的concept [/repository/getConceptsByUserId]")
+    // @RequestMapping(value = "/conceptList",method = RequestMethod.POST)
+    // public JsonResult getConceptsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Concept));
+    // }
+
+    // /**
+    //  * 得到用户上传的spatialReference
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户上传的spatialReference [/repository/getSpatialsByUserId]")
+    // @RequestMapping(value = "/spatialReferenceList",method = RequestMethod.POST)
+    // public JsonResult getSpatialsByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.SpatialReference));
+    // }
 
 
-    /**
-     * 得到用户unit
-     * @param findDTO
-     * @param request 
-     * @return njgis.opengms.portal.entity.doo.JsonResult 
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户unit [ /repository/getUnitsByUserId ]")
-    @RequestMapping(value = "/unitList",method = RequestMethod.POST)
-    public JsonResult getUnitsByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
-    }
+    // /**
+    //  * 得到用户template
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户template [ /repository/getTemplatesByUserId ]")
+    // @RequestMapping(value = "/templateList",method = RequestMethod.POST)
+    // public JsonResult getTemplatesByUserId(@RequestBody FindDTO findDTO,HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Template));
+    // }
 
-    /**
-     * 得到用户上传的theme
-     * @param findDTO
-     * @param request
-     * @return njgis.opengms.portal.entity.doo.JsonResult
-     * @Author bin
-     **/
-    @LoginRequired
-    @ApiOperation(value = "得到用户theme [ /repository/getThemesByUserId ]")
-    @RequestMapping(value = "/themeList",method = RequestMethod.POST)
-    public JsonResult getThemesByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        JSONObject result = genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme);
-        // List<Theme> content = (List<Theme>) result.get("content");
-        return ResultUtils.success(result);
-    }
+
+    // /**
+    //  * 得到用户unit
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户unit [ /repository/getUnitsByUserId ]")
+    // @RequestMapping(value = "/unitList",method = RequestMethod.POST)
+    // public JsonResult getUnitsByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Unit));
+    // }
+
+    // /**
+    //  * 得到用户上传的theme
+    //  * @param findDTO
+    //  * @param request
+    //  * @return njgis.opengms.portal.entity.doo.JsonResult
+    //  * @Author bin
+    //  **/
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户theme [ /repository/getThemesByUserId ]")
+    // @RequestMapping(value = "/themeList",method = RequestMethod.POST)
+    // public JsonResult getThemesByUserId(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     JSONObject result = genericService.getUserUploadItemList(findDTO, email, ItemTypeEnum.Theme);
+    //     // List<Theme> content = (List<Theme>) result.get("content");
+    //     return ResultUtils.success(result);
+    // }
 
 
     @LoginRequired
     @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
     @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
-    public JsonResult getUserEditVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    public JsonResult getUserEditVersion(HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return versionService.getUserEditVersion(email);
@@ -527,7 +531,7 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
     @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
-    public JsonResult getUserReviewVersion(@RequestBody FindDTO findDTO, HttpServletRequest request){
+    public JsonResult getUserReviewVersion(HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return versionService.getUserReviewVersion(email);
@@ -659,6 +663,13 @@ public class UserRestController {
         return ResultUtils.success(userService.getUserName(email));
     }
 
+    @ApiOperation(value = "根据用户名得到email")
+    @RequestMapping (value = "/email", method = RequestMethod.GET)
+    public JsonResult getUserEmail(@PathParam("userName") String userName){
+        return ResultUtils.success(userService.getUserEmail(userName));
+    }
+
+
     @ApiOperation(value = "通过用户服务器发送验证码")
     @RequestMapping(value = "/sendResetByUserserver", method = RequestMethod.POST)
     public JsonResult sendResetByUserserver(@RequestParam String email) throws IOException, URISyntaxException {
@@ -682,6 +693,174 @@ public class UserRestController {
         }else{
             return ResultUtils.error(-2,result);
         }
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "[ /user/getFileByPath ]")
+    @RequestMapping(value = "/fileByPath", method = RequestMethod.GET)
+    JsonResult getFileByPath(@RequestParam(value = "paths[]") List<String> paths, HttpServletRequest request) throws Exception {
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        JSONObject result = userService.getFileByPathFromUserServer(paths, email);
+
+        if(result == null){
+            return ResultUtils.error(-2, "err");
+        }
+
+        return ResultUtils.success(result);
+    }
+
+    @LoginRequired
+    @RequestMapping(value="/userSpace/sendFeedback",method = RequestMethod.POST)
+    JsonResult sendFeedback(@RequestParam("content") String content,  HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        String result = userService.sendFeedback(content,email);
+        return ResultUtils.success(result);
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "更新userInfo")
+    @RequestMapping(value = "/updateUserInfo",method = RequestMethod.POST)
+    JsonResult updateUserInfo(@RequestBody UserInfoUpdateDTO userInfoUpdateDTO, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        String email = session.getAttribute("email").toString();
+
+        // String introduction = userInfoUpdateDTO.getIntroduction();
+        // List<String> organizations = userInfoUpdateDTO.getOrganizations();
+        // List<String> externalLinks = userInfoUpdateDTO.getExternalLinks();
+        // String location = userInfoUpdateDTO.getLocation();
+        // List<String> researchInterests = userInfoUpdateDTO.getResearchInterests();
+        // String result1 = userService.updateIntroduction(introduction, email);
+        // String result2 = userService.updateOrganizations(organizations,email);
+        // String result4 = userService.updateExternalLinks(externalLinks,email);
+        // String result5 = userService.updateResearchInterest(researchInterests,email);
+        // JSONObject result = new JSONObject();
+        // result.put("int", result1);
+        // result.put("org", result2);
+        // result.put("exl", result4);
+        // result.put("res", result5);
+
+        User user = userService.updateUserInfo(userInfoUpdateDTO, email);
+
+        if (user == null)
+            return ResultUtils.error();
+        else
+            return ResultUtils.success(user);
+
+    }
+
+    @ApiOperation(value = "更新用户服务器的信息")
+    @RequestMapping(value = "/updateUsertoServer", method = RequestMethod.POST)
+    public JsonResult updateUserServer(HttpServletRequest req, @RequestBody UserShuttleDTO userShuttleDTO) throws Exception {
+        HttpSession session = req.getSession();
+        JSONObject jsonObject = new JSONObject();
+
+        if (session.getAttribute("email") == null || !session.getAttribute("email").toString().equals(userShuttleDTO.getEmail())) {
+            return ResultUtils.error(-1,"out");
+
+        } else {
+
+            String email = session.getAttribute("email").toString();
+            int result = userService.updateUsertoServer(userShuttleDTO);
+            if(result == -1){
+
+                return ResultUtils.error(-1,"out");
+            }else if(result == -2) {
+                return ResultUtils.error(-2,"error");
+            }
+
+            req.setAttribute("name", userShuttleDTO.getName());
+            return ResultUtils.success("suc");
+        }
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新articles")
+    @RequestMapping(value="/update/articles",method = RequestMethod.POST)
+    public JsonResult updateArticles(@RequestBody ArticlesDTO articlesDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateArticles(articlesDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新projects")
+    @RequestMapping(value="/update/projects",method = RequestMethod.POST)
+    public JsonResult updateProjects(@RequestBody ProjectDTO projectDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateProjects(projectDTO,email);
+        return ResultUtils.success(user);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新conferences")
+    @RequestMapping(value="/update/conferences",method = RequestMethod.POST)
+    public JsonResult updateConferences(@RequestBody ConferenceDTO conferenceDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateConferences(conferenceDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新academicServices")
+    @RequestMapping(value="/update/academicServices",method = RequestMethod.POST)
+    public JsonResult updateAcademicServices(@RequestBody AcademicServiceDTO academicServiceDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateAcademicServices(academicServiceDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新awardsHonors")
+    @RequestMapping(value="/update/awardsHonors",method = RequestMethod.POST)
+    public JsonResult updateAwardsHonors(@RequestBody AwardandHonorDTO awardandHonorDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateAwardsHonors(awardandHonorDTO,email);
+        return ResultUtils.success(user);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新educationExperiences")
+    @RequestMapping(value="/update/educationExperiences",method = RequestMethod.POST)
+    public JsonResult updateEducationExperiences(@RequestBody EducationExperienceDTO educationExperienceDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateEducationExperiences(educationExperienceDTO,email);
+        return ResultUtils.success(user);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新userLab")
+    @RequestMapping(value="/update/userLab",method = RequestMethod.POST)
+    public JsonResult updateLab(@RequestBody UserLabDTO userLabDTO, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        User user = userService.updateLab(userLabDTO,email);
+        return ResultUtils.success(user);
     }
 
 

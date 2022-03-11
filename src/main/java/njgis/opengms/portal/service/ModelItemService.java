@@ -1,6 +1,5 @@
 package njgis.opengms.portal.service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
@@ -11,25 +10,22 @@ import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemFindDTO;
-import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemResultDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.RelationTypeEnum;
 import njgis.opengms.portal.utils.ImageUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -98,6 +94,10 @@ public class ModelItemService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ArticleDao articleDao;
+
 
     public ModelAndView getPage(PortalItem portalItem) {
         ModelAndView modelAndView=new ModelAndView();
@@ -183,7 +183,7 @@ public class ModelItemService {
         JSONArray modelItemArray=new JSONArray();
         if(modelItems!=null) {
             for (int i = 0; i < modelItems.size(); i++) {
-                String idNew = modelItems.get(i).getId();
+                String idNew = modelItems.get(i).getModelId();
                 ModelItem modelItemNew = modelItemDao.findFirstById(idNew);
                 if (modelItemNew.getStatus().equals("Private")) {
                     continue;
@@ -340,6 +340,22 @@ public class ModelItemService {
 
         //TODO dataHubs dataMethod
 
+        JSONObject relationJson = new JSONObject();
+        relationJson.put("modelItems",modelItemArray);
+        relationJson.put("conceptualModels",conceptualArray);
+        relationJson.put("logicalModels",logicalArray);
+        relationJson.put("computableModels",computableArray);
+
+        relationJson.put("dataItems",dataItemArray);
+
+        relationJson.put("concepts",conceptArray);
+        relationJson.put("spatialReferences",spatialReferenceArray);
+        relationJson.put("templates",templateArray);
+        relationJson.put("units",unitArray);
+
+        relationJson.put("exLinks",exLinks);
+        relationJson.put("dataSpaceFiles",dataSpaceFiles);
+
 
         //用户信息
         JSONObject userJson = userService.getItemUserInfoByEmail(modelInfo.getAuthor());
@@ -394,22 +410,12 @@ public class ModelItemService {
         modelAndView.addObject("detail",detailResult);
         modelAndView.addObject("date",dateResult);
         modelAndView.addObject("year",calendar.get(Calendar.YEAR));
-        modelAndView.addObject("modelItems",modelItemArray);
-        modelAndView.addObject("conceptualModels",conceptualArray);
-        modelAndView.addObject("logicalModels",logicalArray);
-        modelAndView.addObject("computableModels",computableArray);
-        modelAndView.addObject("concepts",conceptArray);
-        modelAndView.addObject("spatialReferences",spatialReferenceArray);
-        modelAndView.addObject("templates",templateArray);
-        modelAndView.addObject("units",unitArray);
-        modelAndView.addObject("exLinks",exLinks);
-        modelAndView.addObject("dataSpaceFiles",dataSpaceFiles);
-        modelAndView.addObject("dataItems",dataItemArray);
+        modelAndView.addObject("relation",relationJson);
         modelAndView.addObject("user", userJson);
         modelAndView.addObject("authorship", authorshipString);
         modelAndView.addObject("lastModifier", modifierJson);
         modelAndView.addObject("lastModifyTime", lastModifyTime);
-        modelAndView.addObject("references", JSONArray.parseArray(JSON.toJSONString(modelInfo.getReferences())));
+        modelAndView.addObject("references", getReferences(modelInfo.getId()));
 
         return modelAndView;
     }
@@ -497,10 +503,10 @@ public class ModelItemService {
             //删除与之关联模型中的记录
             List<ModelRelation> relatedModelList=modelItem.getRelate().getModelRelationList();
             for(int i=0;i<relatedModelList.size();i++){
-                ModelItem modelItem1 = modelItemDao.findFirstById(relatedModelList.get(i).getId());
+                ModelItem modelItem1 = modelItemDao.findFirstById(relatedModelList.get(i).getModelId());
                 List<ModelRelation> relatedModelList1 = modelItem1.getRelate().getModelRelationList();
                 for(int j = 0;j<relatedModelList1.size();j++){
-                    if(relatedModelList1.get(j).getId().equals(modelItem.getId())){
+                    if(relatedModelList1.get(j).getModelId().equals(modelItem.getId())){
                         modelItem1.getRelate().getModelRelationList().remove(j);
                         modelItemDao.save(modelItem1);
                     }
@@ -530,17 +536,17 @@ public class ModelItemService {
 
 
     /**
-     * @Description 根据查询条件查询符合条件的模型条目
-     * @param modelItemFindDTO
-     * @Return com.alibaba.fastjson.JSONObject
-     * @Author kx
-     * @Date 2021/7/7
+     // * @Description 根据查询条件查询符合条件的模型条目
+     // * @param modelItemFindDTO
+     // * @Return com.alibaba.fastjson.JSONObject
+     // * @Author kx
+     // * @Date 2021/7/7
      **/
-    public JSONObject query(ModelItemFindDTO modelItemFindDTO, Boolean containPrivate) {
+/*    public JSONObject query(ModelItemFindDTO modelItemFindDTO, Boolean containPrivate) {
         JSONObject queryResult = new JSONObject();
 
         //查询条件梳理
-        int page = modelItemFindDTO.getPage();
+        int page = modelItemFindDTO.getPage()-1;
         int pageSize = modelItemFindDTO.getPageSize();
         String searchText = modelItemFindDTO.getSearchText();
         String sortField = modelItemFindDTO.getSortField();
@@ -598,13 +604,13 @@ public class ModelItemService {
             }else{//查询某一用户所有条目
                 switch (modelItemFindDTO.getQueryField()) {
                     case "Name":
-                        modelItemPage = modelItemDao.findByNameContainsIgnoreCase(searchText, pageable);
+                        modelItemPage = modelItemDao.findByNameContainsIgnoreCaseAndAuthor(searchText, authorEmail, pageable);
                         break;
                     case "Keyword":
-                        modelItemPage = modelItemDao.findByKeywordsIgnoreCaseIn(searchText, pageable);
+                        modelItemPage = modelItemDao.findByKeywordsIgnoreCaseInAndAuthor(searchText, authorEmail, pageable);
                         break;
                     case "Content":
-                        modelItemPage = modelItemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescription(searchText, pageable);
+                        modelItemPage = modelItemDao.findByOverviewContainsIgnoreCaseAndLocalizationDescriptionAndAuthor(searchText, authorEmail, pageable);
                         break;
                 }
             }
@@ -638,7 +644,7 @@ public class ModelItemService {
 
         return queryResult;
 
-    }
+    }*/
 
 
     public JSONObject update(ModelItemUpdateDTO modelItemUpdateDTO, String uid){
@@ -912,5 +918,588 @@ public class ModelItemService {
         return jsonArray;
     }
 
+    /**
+     * @Description 获取模型分类信息
+     * @param id
+     * @Return java.util.List<java.lang.String>
+     * @Author kx
+     * @Date 22/3/1
+     **/
+    public List<String> getClassifications(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        return modelItem.getClassifications();
+    }
 
+    public List<String> getAlias(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        return modelItem.getAlias();
+    }
+
+    public List<Localization> getLocalizationList(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        return modelItem.getLocalizationList();
+    }
+
+    public JSONArray getReferences(String id){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        List<String> reference_ids = modelItem.getReferences();
+        JSONArray references = new JSONArray();
+        for(int i=0;i<reference_ids.size();i++) {
+            Article article = articleDao.findFirstById(reference_ids.get(i));
+            references.add(JSONObject.toJSONString(article));
+//            System.out.println(references.get(i));
+        }
+        return references;
+    }
+
+
+    public String getDetailByLanguage(String id, String language){
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        List<Localization> localizationList = modelItem.getLocalizationList();
+        for(Localization localization : localizationList){
+            if(localization.getLocalName().equals(language)){
+                return localization.getDescription();
+            }
+        }
+        return null;
+    }
+
+    public JSONArray getRelation(String modelId,String type){
+
+        JSONArray result=new JSONArray();
+        ModelItem modelItem=modelItemDao.findFirstById(modelId);
+        ModelItemRelate relation=modelItem.getRelate();
+        List<String> list=new ArrayList<>();
+
+        switch (type){
+            case "dataItem":
+                list=relation.getDataItems();
+                if(list!=null){
+                    for(String id:list){
+                        DataItem dataItem=dataItemDao.findFirstById(id);
+                        if(dataItem.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item=new JSONObject();
+                        item.put("id",dataItem.getId());
+                        item.put("name",dataItem.getName());
+                        User user=userDao.findFirstByEmail(dataItem.getAuthor());
+                        item.put("author_name",user.getName());
+                        item.put("author_email", user.getEmail());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "modelItem":
+                List<ModelRelation> modelRelationList = relation.getModelRelationList();
+                if (modelRelationList != null) {
+                    for (ModelRelation modelRelation : modelRelationList) {
+                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
+                        if (modelItem1.getStatus().equals("Private")) {
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", modelItem1.getId());
+                        item.put("name", modelItem1.getName());
+                        item.put("relation", modelRelation.getRelation().getText());
+                        item.put("author_name", userDao.findFirstByEmail(modelItem1.getAuthor()).getName());
+                        item.put("author_email", modelItem1.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "conceptualModel":
+                list=relation.getConceptualModels();
+                if(list!=null) {
+                    for (String id : list) {
+                        ConceptualModel conceptualModel = conceptualModelDao.findFirstById(id);
+                        if(conceptualModel.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", conceptualModel.getId());
+                        item.put("name", conceptualModel.getName());
+                        item.put("author_name", userDao.findFirstByEmail(conceptualModel.getAuthor()).getName());
+                        item.put("author_email", conceptualModel.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "logicalModel":
+                list=relation.getLogicalModels();
+                if(list!=null) {
+                    for (String id : list) {
+                        LogicalModel logicalModel = logicalModelDao.findFirstById(id);
+                        if(logicalModel.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", logicalModel.getId());
+                        item.put("name", logicalModel.getName());
+                        item.put("author_name", userDao.findFirstByEmail(logicalModel.getAuthor()).getName());
+                        item.put("author_email", logicalModel.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "computableModel":
+                list=relation.getComputableModels();
+                if(list!=null) {
+                    for (String id : list) {
+                        ComputableModel computableModel = computableModelDao.findFirstById(id);
+                        if(computableModel.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", computableModel.getId());
+                        item.put("name", computableModel.getName());
+                        item.put("author_name", userDao.findFirstByEmail(computableModel.getAuthor()).getName());
+                        item.put("author_email", computableModel.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "concept":
+                list=relation.getConcepts();
+                if(list!=null) {
+                    for (String id : list) {
+                        Concept concept = conceptDao.findFirstById(id);
+                        if(concept.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", concept.getId());
+                        item.put("name", concept.getName());
+                        item.put("author_name", userDao.findFirstByEmail(concept.getAuthor()).getName());
+                        item.put("author_email", concept.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "spatialReference":
+                list=relation.getSpatialReferences();
+                if(list!=null) {
+                    for (String id : list) {
+                        SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                        if(spatialReference.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", spatialReference.getId());
+                        item.put("name", spatialReference.getName());
+                        item.put("author_name", userDao.findFirstByEmail(spatialReference.getAuthor()).getName());
+                        item.put("author_email", spatialReference.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "template":
+                list=relation.getTemplates();
+                if(list!=null) {
+                    for (String id : list) {
+                        Template template = templateDao.findFirstById(id);
+                        if(template.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", template.getId());
+                        item.put("name", template.getName());
+                        item.put("author_name", userDao.findFirstByEmail(template.getAuthor()).getName());
+                        item.put("author_email", template.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "unit":
+                list=relation.getUnits();
+                if(list!=null) {
+                    for (String id : list) {
+                        Unit unit = unitDao.findFirstById(id);
+                        if(unit.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item = new JSONObject();
+                        item.put("id", unit.getId());
+                        item.put("name", unit.getName());
+                        item.put("author_name", userDao.findFirstByEmail(unit.getAuthor()).getName());
+                        item.put("author_email", unit.getAuthor());
+                        result.add(item);
+                    }
+                }
+                break;
+
+        }
+
+        return result;
+    }
+
+    public JSONObject getRelationGraph(String oid, Boolean isFull){
+        JSONObject result = new JSONObject();
+
+        JSONArray nodes = new JSONArray();
+        JSONArray links = new JSONArray();
+
+        ModelItem modelItem = modelItemDao.findFirstById(oid);
+        JSONObject node = new JSONObject();
+        String name = modelItem.getName();
+//        int start = name.indexOf("(");
+//        int end = name.indexOf(")");
+//        if(name.length()>0&&start!=-1&&end!=-1) {
+//            name = name.substring(0, start).trim() + " " + name.substring(end + 1, name.length() - 1);
+//        }
+        node.put("name", name);
+        node.put("oid",modelItem.getId());
+        node.put("img", modelItem.getImage().equals("")?"":"/static"+modelItem.getImage());
+        node.put("overview", modelItem.getOverview());
+        node.put("type","model");
+        nodes.add(node);
+        List<ModelRelation> modelRelationList = modelItem.getRelate().getModelRelationList();
+
+        addNodeAndLink(0,modelRelationList,nodes,links,isFull);
+
+        result.put("nodes",nodes);
+        result.put("links",links);
+
+        return result;
+    }
+
+    public JSONObject getFullRelationGraph(){
+        JSONObject result = new JSONObject();
+
+        try {
+
+            JSONArray nodes = new JSONArray();
+            JSONArray links = new JSONArray();
+
+            List<ModelItem> modelItemList = modelItemDao.findAll();
+            for (int i = 0; i < modelItemList.size(); i++) {
+                ModelItem modelItem = modelItemList.get(i);
+                if(modelItem.getRelate().getModelRelationList().size()==0){
+                    continue;
+                }
+
+                Boolean exist = false;
+                for (int j = 0; j < nodes.size(); j++) {
+                    JSONObject node = nodes.getJSONObject(j);
+//                    System.out.println(modelItem.getOid() + " " + j);
+//                    System.out.println(node);
+//                    System.out.println(modelItem.getOid());
+                    if (node.getString("type").equals("model") && node.getString("name").equals(modelItem.getName())) {
+                        exist = true;
+                        break;
+                    }
+                }
+
+                if (!exist) {
+                    JSONObject node = new JSONObject();
+                    node.put("name", modelItem.getName());
+                    node.put("oid", modelItem.getId());
+                    node.put("img", modelItem.getImage().equals("") ? "" : "/static" + modelItem.getImage());
+                    node.put("overview", modelItem.getOverview());
+                    node.put("type", "model");
+                    nodes.add(node);
+                    List<ModelRelation> modelRelationList = modelItem.getRelate().getModelRelationList();
+
+                    addNodeAndLink(nodes.size()-1, modelRelationList, nodes, links, true);
+                }
+            }
+
+            result.put("nodes", nodes);
+            result.put("links", links);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public JSONObject refreshFullRelationGraph(){
+        JSONObject jsonResult = getFullRelationGraph();
+        try {
+            String fileName = resourcePath + "/cacheFile/modelRelationGraph.json";
+            File file = new File(fileName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+            out.write(jsonResult.toString());
+            out.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jsonResult;
+    }
+
+    private void addNodeAndLink(int oriNum, List<ModelRelation> modelRelationList, JSONArray nodes, JSONArray links, Boolean fullLevel) {
+        for (int i = 0; i < modelRelationList.size(); i++) {
+            ModelRelation modelRelation = modelRelationList.get(i);
+            String relateOid = modelRelation.getModelId();
+            ModelItem modelItem_relation = modelItemDao.findFirstById(relateOid);
+
+            Boolean exist = false;
+            int n = 0;
+            for (; n < nodes.size(); n++) {
+                JSONObject node = nodes.getJSONObject(n);
+                try {
+                    if (modelItem_relation.getName().equals(node.getString("name"))) {
+                        exist = true;
+                        break;
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+
+            int modelNodeNum;
+            if (exist) {
+                modelNodeNum = n;
+            } else {
+                JSONObject node = new JSONObject();
+                node.put("name", modelItem_relation.getName());
+                node.put("oid", modelItem_relation.getId());
+                node.put("img", modelItem_relation.getImage().equals("") ? "" : "/static" + modelItem_relation.getImage());
+                node.put("overview", modelItem_relation.getOverview());
+                node.put("type", "model");
+                nodes.add(node);
+                modelNodeNum = nodes.size() - 1;
+            }
+
+
+            JSONObject link = new JSONObject();
+            RelationTypeEnum relationType = modelRelation.getRelation();
+            if (fullLevel) {
+                link.put("ori", oriNum);
+                link.put("tar", modelNodeNum);
+                if (relationType.getNumber() == 5 || relationType.getNumber() == 1 || relationType.getNumber() == 6) {
+                    relationType = RelationTypeEnum.getOpposite(relationType.getNumber());
+                    link.put("ori", modelNodeNum);
+                    link.put("tar", oriNum);
+                }
+            } else {
+                link.put("ori", modelNodeNum);
+                link.put("tar", oriNum);
+            }
+
+            link.put("relation", relationType.getText());
+            link.put("type", "model");
+            links.add(link);
+
+//            List<Reference> referenceList = modelItem_relation.getReferences();
+//            for(int j = 0;j<referenceList.size();j++){
+//                Reference reference = referenceList.get(j);
+//
+//                Boolean refFind = false;
+//                int r = 0;
+//                for(;r<nodes.size();r++){
+//                    JSONObject node = nodes.getJSONObject(r);
+//                    if(node.getString("type").equals("ref") && reference.getTitle().equals(node.getString("name"))){
+//                        refFind = true;
+//                        break;
+//                    }
+//                }
+//                int refNum;
+//                if(refFind){
+//                    refNum=r;
+//                }else{
+//                    JSONObject node = new JSONObject();
+//                    node.put("name",reference.getTitle());
+//                    node.put("author",reference.getAuthor());
+//                    node.put("journal",reference.getJournal());
+//                    node.put("link", reference.getLinks());
+//                    node.put("type","ref");
+//                    nodes.add(node);
+//                    refNum = nodes.size()-1;
+//                }
+//                link = new JSONObject();
+//                link.put("ori", modelNodeNum);
+//                link.put("tar", refNum);
+//                link.put("type", "ref");
+//                links.add(link);
+//            }
+
+            //多层遍历
+            if (fullLevel) {
+                List<ModelRelation> subModelRelationList = modelItem_relation.getRelate().getModelRelationList();
+                for (int k = 0; k < subModelRelationList.size(); k++) {
+                    ModelRelation subModelRelation = subModelRelationList.get(k);
+                    for (int m = 0; m < nodes.size(); m++) {
+                        JSONObject node_exist = nodes.getJSONObject(m);
+                        if (subModelRelation.getModelId().equals(node_exist.getString("oid"))) {
+                            subModelRelationList.remove(k);
+                            k--;
+                            break;
+                        }
+                    }
+                }
+                if (subModelRelationList.size() != 0) {
+                    addNodeAndLink(modelNodeNum, subModelRelationList, nodes, links, true);
+                }
+            }
+        }
+    }
+
+    public JSONArray getRelatedResources(String oid){
+
+        JSONArray result=new JSONArray();
+        ModelItem modelItem=modelItemDao.findFirstById(oid);
+        ModelItemRelate relation=modelItem.getRelate();
+        List<String> list=new ArrayList<>();
+
+        list=relation.getConcepts();
+        if(list!=null) {
+            for (String id : list) {
+                Concept concept = conceptDao.findFirstById(id);
+                if(concept.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", concept.getId());
+                item.put("name", concept.getName());
+                item.put("author", userService.getByEmail(concept.getAuthor()).getName());
+                item.put("author_uid", concept.getAuthor());
+                item.put("type", "concept");
+                result.add(item);
+            }
+        }
+
+        list=relation.getSpatialReferences();
+        if(list!=null) {
+            for (String id : list) {
+                SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                if(spatialReference.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", spatialReference.getId());
+                item.put("name", spatialReference.getName());
+                item.put("author", userService.getByEmail(spatialReference.getAuthor()).getName());
+                item.put("author_uid", spatialReference.getAuthor());
+                item.put("type", "spatialReference");
+                result.add(item);
+            }
+        }
+
+        list=relation.getTemplates();
+        if(list!=null) {
+            for (String id : list) {
+                Template template = templateDao.findFirstById(id);
+                if(template.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", template.getId());
+                item.put("name", template.getName());
+                item.put("author", userService.getByEmail(template.getAuthor()).getName());
+                item.put("author_uid", template.getAuthor());
+                item.put("type", "template");
+                result.add(item);
+            }
+        }
+
+        list=relation.getUnits();
+        if(list!=null) {
+            for (String id : list) {
+                Unit unit = unitDao.findFirstById(id);
+                if(unit.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", unit.getId());
+                item.put("name", unit.getName());
+                item.put("author", userService.getByEmail(unit.getAuthor()).getName());
+                item.put("author_uid", unit.getAuthor());
+                item.put("type", "unit");
+                result.add(item);
+            }
+        }
+
+        List<Map<String,String>> mapList = new ArrayList<>();
+        mapList=relation.getDataSpaceFiles();
+        if(mapList!=null) {
+            for (Map<String,String> ele : mapList) {
+                JSONObject item = new JSONObject();
+                item.put("id", ele.get("id"));
+                item.put("name", ele.get("name"));
+                item.put("url", ele.get("url"));
+                item.put("type", "dataSpaceFile");
+                result.add(item);
+            }
+        }
+
+        mapList=relation.getExLinks();
+        if(mapList!=null) {
+            for (Map<String,String> ele : mapList) {
+                JSONObject item = new JSONObject();
+                item.put("id", ele.get("id"));
+                item.put("name", ele.get("name"));
+                item.put("content", ele.get("content"));
+                item.put("type","exLink");
+                result.add(item);
+            }
+        }
+
+
+        return result;
+    }
+
+
+    public String updateClassifications(String modelId,List<String> classi, String email){
+
+        ModelItem modelItem = modelItemDao.findFirstById(modelId);
+
+        String author = modelItem.getAuthor();
+
+        if(author.equals(email)) {
+            modelItem.setClassifications(classi);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemUpdateDTO.setName(modelItem.getName());
+            modelItemUpdateDTO.setAlias(modelItem.getAlias());
+            modelItemUpdateDTO.setUploadImage(modelItem.getImage());
+            modelItemUpdateDTO.setOverview(modelItem.getOverview());
+            modelItemUpdateDTO.setLocalizationList(modelItem.getLocalizationList());
+            modelItemUpdateDTO.setStatus(modelItem.getStatus());
+            modelItemUpdateDTO.setLocalizationList(modelItem.getLocalizationList());
+            modelItemUpdateDTO.setAuthorships(modelItem.getAuthorships());
+            modelItemUpdateDTO.setClassifications(classi);
+            modelItemUpdateDTO.setKeywords(modelItem.getKeywords());
+            modelItemUpdateDTO.setReferences(modelItem.getReferences());
+            modelItemUpdateDTO.setRelate(modelItem.getRelate());
+            modelItemUpdateDTO.setMetadata(modelItem.getMetadata());
+
+
+            modelItemService.update(modelItemUpdateDTO,email);
+
+            return "version";
+        }
+
+    }
+
+
+    /**
+     * @Description 获取模型浏览和相关计算模型调用次数
+     * @param id
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author kx
+     * @Date 22/2/28
+     **/
+    public JSONObject getDailyViewAndInvokeCount(String id) {
+
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        List<String> computableModelIds = modelItem.getRelate().getComputableModels();
+        List<ComputableModel> computableModelList=new ArrayList<>();
+        for(int i=0;i<computableModelIds.size();i++){
+            ComputableModel computableModel = computableModelDao.findFirstById(computableModelIds.get(i));
+            computableModelList.add(computableModel);
+        }
+
+        StatisticsService statisticsService = new StatisticsService();
+        JSONObject result = statisticsService.getDailyViewAndInvokeTimes(modelItem,computableModelList,30,null);
+
+        return result;
+    }
 }

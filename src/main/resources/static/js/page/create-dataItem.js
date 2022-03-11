@@ -312,7 +312,7 @@ var createDataItem = Vue.extend({
                                 center: true,
                                 showClose: false,
                             }).then(() => {
-                                window.location.href = "/dataItem/" + result.data;
+                                window.location.href = "/dataItem/" + result.data.id;
                             }).catch(() => {
                                 window.location.href = "/user/userSpace#/data/dataitem";
                             });
@@ -465,9 +465,9 @@ var createDataItem = Vue.extend({
         this.classif = [];
         $("#classification").val('');
 
-        axios.get("/dataItem/createTree")
+        axios.get("/dataItem/categoryTree")
             .then(res => {
-                tha.tObj = res.data;
+                tha.tObj = res.data.data;
                 let tree = [];
                 for (let i in Object.values(tha.tObj)){
                     // console.log(grandpa);
@@ -503,7 +503,7 @@ var createDataItem = Vue.extend({
                             label:Object.keys(grandpa)[0],
                             children:gChildren,
                         }
-                        console.log(g);
+                        ;
                         tree.push(g);
                     }
                 }

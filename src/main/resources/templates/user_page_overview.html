@@ -124,7 +124,7 @@
                     <el-button icon="el-icon-setting" style="margin: 0 10px 0 10px" @click="editDisplayIndex==0?editDisplayIndex=1:editDisplayIndex=0">Edit profile</el-button>
                 </div>
 
-                <!--                    可以编辑的用户信息-->
+                <!--                    展示用户信息-->
                 <div class="userInfo infoEdit  flex-colDirect text-center" :class="{editDisplay:editDisplayIndex==1}">
 
                     <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.email!=''&&userPersonalInfo.email!=undefined">
@@ -134,7 +134,7 @@
                         <span>{{userPersonalInfo.email}}</span>
                     </div>
 
-                    <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.organizations.length!=0">
+                    <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.organizations.length!=0 || userPersonalInfo.organizations[0] != ''">
                         <el-tooltip class="item" effect="dark" content="Organization" placement="top-start" >
                             <i class="el-icon-s-custom"></i>
                         </el-tooltip>
@@ -158,10 +158,11 @@
                         </div>
                     </div>
 
-                    <div class="website flex-rowDirect edit_col1" v-if="userPersonalInfo.externalLinks.length!=0" >
+                    <div class="website flex-rowDirect edit_col1" v-if="userPersonalInfo.externalLinks.length!=0 && userPersonalInfo.externalLinks[0]!=''" >
                         <el-tooltip class="item" effect="dark" content="Website" placement="top-start" >
                             <i class="el-icon-link"></i>
                         </el-tooltip>
+
                         <a :href="userPersonalInfo.externalLinks[0]" target="_blank"><span>{{userPersonalInfo.externalLinks[0]}}</span></a>
                     </div>
 
@@ -206,7 +207,7 @@
                         <el-tooltip class="item" effect="dark" content="Research Interests" placement="top-start" >
                             <i class="el-icon-star-on"></i>
                         </el-tooltip>
-                        <el-input id="researchInterestInput" size="mini"   style="margin-left: 5px">
+                        <el-input id="researchInterestInput" size="mini"  placeholder="Research Interests"  style="margin-left: 5px">
                         </el-input>
                     </div>
                     <div class="websiteEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
@@ -232,20 +233,20 @@
                             <!--                            <img class="singleImg" src="/static/img/model/model.png">-->
                             <!--                            <svg t="1625493772673" class="icon singleImg" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1265" width="200" height="200">-->
                             <!--                                <path d="M820.6 344.1l3-1.6c16-10.2 25.6-27.6 25.8-46.7 0.1-19.7-9.7-38.1-26.3-49l-277-135.3c-18-11-40.6-11.3-58.6-0.8L218.3 237l-3 1.6c-16 10.2-25.6 27.6-25.8 46.8-0.1 19.7 9.7 38.1 26.4 49l276.9 135.2c9.3 5.6 19.7 8.5 30.1 8.5 9.9 0 19.7-2.6 28.5-7.7l269.2-126.3z m-296.1 80.4c-1.1 0.7-2.7 0.5-4.1-0.4L244.3 289.3c-1.3-1.2-1.5-2.7-1.5-3.5 0-0.8 0.2-1.4 0.5-1.7l268.1-125.8 3-1.6c1.1-0.7 2.7-0.5 4.1 0.4l276.1 134.8c1.3 1.2 1.5 2.7 1.5 3.5 0 0.8-0.2 1.4-0.5 1.7L527.5 422.8l-3 1.7zM847.8 375.6c-18.4-10.6-40.4-10.4-57.4-0.3L556 496.1c-18.5 10.9-30.1 31.4-30.2 53.5L523.9 856c-0.1 22.7 11.7 43.7 30.9 54.7 9.1 5.2 19.1 7.9 29.1 7.9 9.6 0 19.3-2.4 28.1-7.3l231.8-101.8 2.8-1.5c18.5-10.9 30.1-31.4 30.2-53.5l1.9-324.1c0.1-22.8-11.7-43.8-30.9-54.8z m-24.2 378.5c0 3-1.3 5.9-3.3 7.5L589.3 863l-2.8 1.5c-1.2 0.7-2.9 1.4-5.2 0.1-1-0.6-4.2-2.8-4.2-8.2L579 550c0-3.4 1.6-6.6 2.7-7.3l234.4-120.8c0.7-0.4 1.6-0.8 2.6-0.8 0.8 0 1.6 0.2 2.6 0.8 1 0.6 4.2 2.8 4.2 8.2l-1.9 324zM472.8 495.4L241.1 376c-18.3-10.9-40.3-11-58.8-0.4-19.2 11-31 32-30.9 54.7l1.9 324.1c0.2 22.1 11.7 42.6 30.2 53.5l234.6 103.2c8.9 4.9 18.5 7.3 28.1 7.3 10 0 19.9-2.6 29-7.8 19.2-11 31-32 30.9-54.7l-1.9-306.4c0-21.9-11.6-42.5-31.4-54.1z m-24 369.1c-2.3 1.3-4 0.7-5.2-0.1L209.7 761.6c-2-1.6-3.3-4.4-3.3-7.5L204.6 430c0-5.4 3.2-7.7 4.2-8.2 2.3-1.3 3.9-0.7 6.5 0.8L447 541.9c2.5 1.5 4.1 4.6 4.1 8l1.9 306.3c0 5.5-3.2 7.8-4.2 8.3z" fill="#00C0FF" p-id="1266"></path></svg>-->
-                            <p class="overTotalFont" v-text="modelItems.total+conceptualModels.total+logicalModels.total+computableModels.total"></p>
+                            <p class="overTotalFont" v-text="resourceCount.modelItem+resourceCount.conceptualModel+resourceCount.logicalModel+resourceCount.computableModel"></p>
+<!--                            <p class="overTotalFont" v-text="modelItems.total+conceptualModels.total+logicalModels.total+computableModels.total"></p>-->
                             <p>Model</p>
                         </div>
                         <div class="singleBtn cursor-point text-center" @click="resourceClick('Data')">
                             <!--                            <svg t="1625493923353" class="icon singleImg" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2378" width="200" height="200">-->
                             <!--                                <path d="M891.2 461l-76.5-36.5-53.8 25.7 107.6 51.3c12.1 5.8 12.1 15.2 0 21L534 682.1c-6 2.9-14 4.3-22 4.3s-15.9-1.4-22-4.3L155.6 522.5c-12.1-5.8-12.1-15.2 0-21l107.6-51.3-53.8-25.7-76.6 36.5C110.4 471.7 97 490.8 97 512s13.4 40.3 35.8 51l334.5 159.6c16.3 7.8 33.3 9.4 44.7 9.4 11.4 0 28.4-1.6 44.7-9.4L891.2 563c22.4-10.7 35.8-29.8 35.8-51s-13.4-40.3-35.8-51z" p-id="2379" fill="#00C0FF"></path><path d="M512 142.6c8 0 15.9 1.4 22 4.3l334.5 159.6c12.1 5.8 12.1 15.2 0 21L534 487.1c-6 2.9-14 4.3-22 4.3s-15.9-1.4-22-4.3L155.6 327.5c-12.1-5.8-12.1-15.2 0-21L490 146.9c6.1-2.8 14-4.3 22-4.3m0-45.6c-11.4 0-28.4 1.6-44.7 9.4L132.8 266C110.4 276.7 97 295.8 97 317s13.4 40.3 35.8 51l334.5 159.6c16.3 7.8 33.3 9.4 44.7 9.4 11.4 0 28.4-1.6 44.7-9.4L891.2 368c22.4-10.7 35.8-29.8 35.8-51s-13.4-40.3-35.8-51L556.7 106.4C540.4 98.6 523.4 97 512 97zM891.2 656l-76.5-36.5-53.8 25.7 107.6 51.3c12.1 5.8 12.1 15.2 0 21L534 877.1c-6 2.9-14 4.3-22 4.3s-15.9-1.4-22-4.3L155.6 717.5c-12.1-5.8-12.1-15.2 0-21l107.6-51.3-53.8-25.7-76.6 36.5C110.4 666.7 97 685.8 97 707s13.4 40.3 35.8 51l334.5 159.6c16.3 7.8 33.3 9.4 44.7 9.4 11.4 0 28.4-1.6 44.7-9.4L891.2 758c22.4-10.7 35.8-29.8 35.8-51s-13.4-40.3-35.8-51z" p-id="2380" fill="#00C0FF"></path></svg>-->
-                            <p class="overTotalFont" v-text="dataHubs.total+dataMethods.total+dataItems.total" ></p>
+                            <p class="overTotalFont" v-text="resourceCount.dataHub+resourceCount.dataMethod+resourceCount.dataItem" ></p>
                             <p>Data</p>
                         </div>
                         <div class="singleBtn cursor-point text-center" @click="resourceClick('Community')" >
                             <!--                            <svg t="1625494634374" class="icon singleImg" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5199" width="200" height="200">-->
                             <!--                                <path d="M919.296 104.704c37.845333 37.845333 25.6 118.570667-24.746667 218.154667A425.024 425.024 0 0 1 938.666667 512c0 235.648-191.018667 426.666667-426.666667 426.666667-67.925333 0-132.138667-15.872-189.141333-44.117334-99.584 50.346667-180.309333 62.592-218.154667 24.746667-37.845333-37.845333-25.6-118.570667 24.746667-218.154667A425.024 425.024 0 0 1 85.333333 512C85.333333 276.352 276.352 85.333333 512 85.333333c67.925333 0 132.138667 15.872 189.141333 44.096 99.584-50.346667 180.288-62.570667 218.154667-24.725333zM169.6 766.592l-2.069333 4.906667c-10.026667 24.661333-16.533333 46.634667-19.370667 65.066666l-0.746667 5.397334c-2.346667 19.861333-0.042667 29.482667 2.56 32.085333 2.56 2.581333 12.202667 4.885333 32.064 2.538667 20.629333-2.453333 46.208-9.898667 75.370667-22.144a429.696 429.696 0 0 1-87.808-87.850667z m685.098667-373.546667l-3.477334 5.504c-48.853333 76.928-115.754667 160.533333-196.309333 242.026667l-7.146667 7.189333-7.04 6.997334c-83.498667 82.56-169.216 150.784-247.68 199.936C430.293333 867.648 470.336 874.666667 512 874.666667c200.298667 0 362.666667-162.368 362.666667-362.666667 0-41.664-7.04-81.706667-19.968-118.976zM512 149.333333C311.701333 149.333333 149.333333 311.701333 149.333333 512c0 131.157333 69.632 246.058667 173.952 309.76 87.232-49.088 185.898667-125.930667 279.232-219.242667 93.312-93.333333 170.154667-192 219.264-279.253333C758.058667 218.965333 643.157333 149.333333 512 149.333333z m329.962667-1.92c-20.629333 2.453333-46.208 9.898667-75.349334 22.144a430.442667 430.442667 0 0 1 87.808 87.850667c12.266667-29.162667 19.712-54.741333 22.165334-75.370667 2.346667-19.861333 0.042667-29.482667-2.56-32.085333-2.56-2.581333-12.202667-4.885333-32.064-2.538667z" p-id="5200" fill="#00C0FF"></path></svg>-->
-                            <p class="overTotalFont" v-text="concepts.total+spatials.total+templates.total+units.total">
-                                <!--                                {{concepts.total+spatials.total+templates.total+units.total}}-->
+                            <p class="overTotalFont" v-text="resourceCount.concept+resourceCount.spatialReference+resourceCount.template+resourceCount.unit">
                             </p>
                             <p>Community</p>
                         </div>
@@ -317,7 +318,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="modelItem.name" placement="bottom-end">
-                                                                        <a class="maxW80 " :href="'/modelItem/'+ modelItem.oid" target="_blank">
+                                                                        <a class="maxW80 " :href="'/modelItem/'+ modelItem.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{modelItem.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -329,7 +330,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/modelItem/'+ modelItem.oid" target="_blank">
+                                                                    <a class="img" :href="'/modelItem/'+ modelItem.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="modelItem.image==''" :username="modelItem.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -420,7 +421,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="conceptualModel.name" placement="bottom-end">
-                                                                        <a :href="'/conceptualModel/'+ conceptualModel.oid" target="_blank">
+                                                                        <a :href="'/conceptualModel/'+ conceptualModel.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{conceptualModel.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -433,7 +434,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/conceptualModel/'+ conceptualModel.oid" target="_blank">
+                                                                    <a class="img" :href="'/conceptualModel/'+ conceptualModel.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="conceptualModel.image==''||conceptualModel.image==null" :username="conceptualModel.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -535,7 +536,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="logicalModel.name" placement="bottom-end">
-                                                                        <a :href="'/logicalModel/'+ logicalModel.oid" target="_blank">
+                                                                        <a :href="'/logicalModel/'+ logicalModel.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{logicalModel.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -548,7 +549,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/logicalModel/'+ logicalModel.oid" target="_blank">
+                                                                    <a class="img" :href="'/logicalModel/'+ logicalModel.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="logicalModel.image==''||logicalModel.image==null" :username="logicalModel.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -643,13 +644,13 @@
                                                 </div>
                                             </div>
                                             <div class="contentColContainer modelTable" style="margin-top: 0">
-                                                <div class="list-item" :key="computableModel.oid" v-if="computableModels.result" v-for="(computableModel,key) in computableModels.result">
+                                                <div class="list-item" :key="computableModel.id" v-if="computableModels.result" v-for="(computableModel,key) in computableModels.result">
                                                     <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
                                                         <div class="cardUpper">
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="computableModel.name" placement="bottom-end">
-                                                                        <a :href="'/computableModel/'+ computableModel.oid" target="_blank">
+                                                                        <a :href="'/computableModel/'+ computableModel.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{computableModel.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -662,7 +663,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/computableModel/'+ computableModel.oid" target="_blank">
+                                                                    <a class="img" :href="'/computableModel/'+ computableModel.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="computableModel.image==''||computableModel.image==null" :username="computableModel.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -774,7 +775,7 @@
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="dataHub.name" placement="bottom-end">
-                                                                        <a :href="'/dataItem/hub/'+ dataHub.id" target="_blank">
+                                                                        <a :href="'/dataHub/'+ dataHub.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataHub.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -787,7 +788,8 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataHub/'+ dataHub.oid" target="_blank">
+
+                                                                    <a class="img" :href="'/dataHub/'+ dataHub.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="dataItem.image==''||dataItem.image==null"  :username="dataItem.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
                                                                         <img v-if="dataHub.image!=''&&dataHub.image!=null" :src="'/static'+dataHub.image" onerror=src="../static/img/model/myData.png"
@@ -884,13 +886,13 @@
                                             </div>
                                             <div class="contentColContainer modelTable" style="margin-top: 0">
 
-                                                <div class="list-item" :key="dataMethod.oid" v-if="dataMethods.result" v-for="(dataMethod,key) in dataMethods.result">
+                                                <div class="list-item" :key="dataMethod.id" v-if="dataMethods.result" v-for="(dataMethod,key) in dataMethods.result">
                                                     <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
                                                         <div class="cardUpper">
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="dataMethod.name" placement="bottom-end">
-                                                                        <a :href="'/dataApplication/'+dataMethod.oid" target="_blank">
+                                                                        <a :href="'/dataMethod/'+dataMethod.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataMethod.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -903,7 +905,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataApplication/'+ dataMethod.oid" target="_blank">
+                                                                    <a class="img" :href="'/dataMethod/'+ dataMethod.id" target="_blank">
                                                                         <!--                                                                        <i class="fa fa-database" style="font-size: 66px; color: rgb(0, 192, 255); font-weight: 600; margin-bottom: 5px;"></i>-->
                                                                         <img v-if="dataMethod.image!=''&&dataMethod.image!=null" :src="'/static'+dataMethod.image"
                                                                              style="width:100px;height: 100px;">
@@ -1004,7 +1006,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataItem/'+ dataItem.oid" target="_blank">
+                                                                    <a class="img" :href="'/dataItem/'+ dataItem.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="dataItem.image==''||dataItem.image==null"  :username="dataItem.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
                                                                         <img v-if="dataItem.image!=''&&dataItem.image!=null" :src="'/static'+dataItem.image"
@@ -1072,9 +1074,9 @@
                         </el-tab-pane>
                         <el-tab-pane label="Community" name="Community">
                              <span slot="label">
-<!--                                <i class="el-icon-s-order" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>-->
-                                 <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"
-                                    style="font-size: 18px;color: rgb(5, 196, 255);margin: 4px;font-weight: 400;position: relative;top: 2px;"></i>
+                                 <i class="el-icon-s-opportunity" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
+                                 <!--                                 <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"-->
+<!--                                    style="font-size: 18px;color: rgb(5, 196, 255);margin: 4px;font-weight: 400;position: relative;top: 2px;"></i>-->
                                 <span>Community</span>
                             </span>
                             <div class="defaultTabs Community-tabs deleteBorder">
@@ -1113,13 +1115,13 @@
                                                 </div>
                                             </div>
                                             <div class="contentColContainer modelTable" style="margin-top: 0">
-                                                <div class="list-item" :key="concept.oid" v-if="concepts.total" v-for="(concept,key) in concepts.result">
+                                                <div class="list-item" :key="concept.id" v-if="concepts.total" v-for="(concept,key) in concepts.result">
                                                     <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
                                                         <div class="cardUpper">
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="concept.name" placement="bottom-end">
-                                                                        <a :href="'/repository/concept/'+ concept.oid" target="_blank">
+                                                                        <a :href="'/repository/concept/'+ concept.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{concept.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -1132,7 +1134,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/repository/concept/'+ concept.oid" target="_blank">
+                                                                    <a class="img" :href="'/repository/concept/'+ concept.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="concept.image==''||concept.image==null" :username="concept.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -1231,13 +1233,13 @@
                                                 </div>
                                             </div>
                                             <div class="contentColContainer modelTable" style="margin-top: 0">
-                                                <div class="list-item" :key="spatial.oid" v-if="spatials.result" v-for="(spatial,key) in spatials.result">
+                                                <div class="list-item" :key="spatial.id" v-if="spatials.result" v-for="(spatial,key) in spatials.result">
                                                     <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
                                                         <div class="cardUpper">
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="spatial.name" placement="bottom-end">
-                                                                        <a :href="'/repository/spatial/'+spatial.oid" target="_blank">
+                                                                        <a :href="'/repository/spatialReference/'+spatial.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{spatial.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -1250,7 +1252,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/repository/spatialReference/'+ spatial.oid" target="_blank">
+                                                                    <a class="img" :href="'/repository/spatialReference/'+ spatial.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="spatial.image==''||spatial.img==null" :username="spatial.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -1346,13 +1348,13 @@
                                                 </div>
                                             </div>
                                             <div class="contentColContainer modelTable" style="margin-top: 0">
-                                                <div class="list-item" :key="template.oid" v-if="templates.result" v-for="(template,key) in templates.result">
+                                                <div class="list-item" :key="template.id" v-if="templates.result" v-for="(template,key) in templates.result">
                                                     <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
                                                         <div class="cardUpper">
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="template.name" placement="bottom-end">
-                                                                        <a :href="'/repository/template/'+template.oid" target="_blank">
+                                                                        <a :href="'/repository/template/'+template.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{template.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -1365,7 +1367,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/repository/template/'+ template.oid" target="_blank">
+                                                                    <a class="img" :href="'/repository/template/'+ template.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="template.image==''||template.image==null" :username="template.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -1460,13 +1462,13 @@
                                                 </div>
                                             </div>
                                             <div class="contentColContainer modelTable" style="margin-top: 0">
-                                                <div class="list-item" :key="unit.oid" v-if="units.result" v-for="(unit,key) in units.result">
+                                                <div class="list-item" :key="unit.id" v-if="units.result" v-for="(unit,key) in units.result">
                                                     <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
                                                         <div class="cardUpper">
                                                             <div class="subTitle resourceTitle" >
                                                                 <div style="display: flex">
                                                                     <el-tooltip class="item" effect="dark" :content="unit.name" placement="bottom-end">
-                                                                        <a :href="'/repository/unit/'+unit.oid" target="_blank">
+                                                                        <a :href="'/repository/unit/'+unit.id" target="_blank">
                                                                             <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{unit.name}}</h4>
                                                                         </a>
                                                                     </el-tooltip>
@@ -1479,7 +1481,7 @@
                                                             </div>
                                                             <div style="display: flex;">
                                                                 <div class="imgPallet">
-                                                                    <a class="img" :href="'/repository/unit/'+ unit.oid" target="_blank">
+                                                                    <a class="img" :href="'/repository/unit/'+ unit.id" target="_blank">
                                                                         <!--                                                    <avatar v-if="unit.image==''||unit.image==null" :username="unit.name" :size="120"-->
                                                                         <!--                                                            :rounded="false"></avatar>-->
 
@@ -1587,11 +1589,11 @@
                                                                     <div class="deleteEditContainer">
                                                                         <div title="Get by DOI" v-if="article.doi!=''" class="rsquare" style="margin-right:10px" @click="window.open('https://doi.org/'+article.doi)">
                                                                             <p style="font-size: 10px;font-family: Monlo;font-weight: 600">DOI</p></div>
-                                                                        <button th:if="${userInfo.email==userInfo.loginId}"  v-else class="squareButton safeBack" @click="editArticleClick(key,article.oid)" data-toggle="modal" data-target="#articleInfo" style="margin-right:10px ">
+                                                                        <button th:if="${userInfo.email==userInfo.loginId}"  v-else class="squareButton safeBack" @click="editArticleClick(key,article.id)" data-toggle="modal" data-target="#articleInfo" style="margin-right:10px ">
                                                                             <i class="fa fa-pencil" style="font-size: 20px;"></i>
                                                                         </button>
 
-                                                                        <button th:if="${userInfo.email==userInfo.loginId}"  class="squareButton alertBack" @click="deleteResearchItem(1,article.oid)" >
+                                                                        <button th:if="${userInfo.email==userInfo.loginId}"  class="squareButton alertBack" @click="deleteResearchItem(1,article.id)" >
                                                                             <i class="fa fa-trash-o" style="font-size: 20px;"></i>
                                                                         </button>
                                                                     </div>
@@ -1836,10 +1838,10 @@
                                                                         <div :class="project.viewCount>500?'hotVisit':'noneDisplay'">hot</div>
                                                                     </div>
                                                                     <div class="deleteEditContainer">
-                                                                        <button class="squareButton safeBack" @click="editProjectClick(key,project.oid)" data-toggle="modal" data-target="#projectInfo"  style="margin-right:10px ">
+                                                                        <button class="squareButton safeBack" @click="editProjectClick(key,project.id)" data-toggle="modal" data-target="#projectInfo"  style="margin-right:10px ">
                                                                             <i class="fa fa-pencil" style="font-size: 20px;"></i>
                                                                         </button>
-                                                                        <button class="squareButton alertBack" @click="deleteResearchItemClick(2,project.oid)">
+                                                                        <button class="squareButton alertBack" @click="deleteResearchItemClick(2,project.id)">
                                                                             <i class="fa fa-trash-o" style="font-size: 20px;"></i>
                                                                         </button>
 
@@ -2028,10 +2030,10 @@
                                                                         <div :class="conference.viewCount>500?'hotVisit':'noneDisplay'">hot</div>
                                                                     </div>
                                                                     <div class="deleteEditContainer">
-                                                                        <button class="squareButton safeBack" @click="editConferenceClick(key,conference.oid)" data-toggle="modal" data-target="#conferenceInfo"  style="margin-right:10px ">
+                                                                        <button class="squareButton safeBack" @click="editConferenceClick(key,conference.id)" data-toggle="modal" data-target="#conferenceInfo"  style="margin-right:10px ">
                                                                             <i class="fa fa-pencil" style="font-size: 20px;"></i>
                                                                         </button>
-                                                                        <button class="squareButton alertBack" @click="deleteResearchItemClick(3,conference.oid)">
+                                                                        <button class="squareButton alertBack" @click="deleteResearchItemClick(3,conference.id)">
                                                                             <i class="fa fa-trash-o" style="font-size: 20px;"></i>
                                                                         </button>
                                                                     </div>
@@ -2182,7 +2184,10 @@
 
 <template th:replace="modules/userAvatar :: userAvatar"></template>
 </body>
-
+<script src="/static/js/apidoc/modelApi.js"></script>
+<script src="/static/js/apidoc/dataApi.js"></script>
+<script src="/static/js/apidoc/communityApi.js"></script>
+<script src="/static/js/apidoc/researchApi.js"></script>
 <script src="/static/js/common/generalInfo.js"></script>
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>

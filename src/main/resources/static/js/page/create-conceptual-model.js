@@ -2,6 +2,7 @@ var createConceptualModel = Vue.extend({
     template: "#createConceptualModel",
     data() {
         return {
+            bindLoaing:false,
             defaultActive: '2-2',
             curIndex: '2',
 
@@ -77,7 +78,7 @@ var createConceptualModel = Vue.extend({
         selectModelItem(index,info){
             console.log(info);
             this.itemInfo.relateModelItemName = info.name;
-            this.itemInfo.relateModelItem = info.oid;
+            this.itemInfo.relateModelItem = info.id;
             this.bindModelItemDialogVisible = false;
         },
         handlePageChange(val) {
@@ -92,21 +93,22 @@ var createConceptualModel = Vue.extend({
             this.searchModelItem();
         },
         searchModelItem(){
+            this.bindLoaing = true
             let data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage-1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.pageOption.searchText,
                 sortType: "default",
                 classifications: ["all"],
             };
-            let url = "/modelItem/items";
-            let contentType = "application/x-www-form-urlencoded";
+            let url = getModelItemList()
+            let contentType = "application/json";
 
             $.ajax({
                 type: "POST",
                 url: url,
-                data: data,
+                data: JSON.stringify(data),
                 async: true,
                 contentType: contentType,
                 success: (json) => {
@@ -120,7 +122,7 @@ var createConceptualModel = Vue.extend({
                         this.pageOption.users = data.users;
                         this.pageOption.progressBar = false;
                         this.pageOption.paginationShow = true;
-
+                        this.bindLoaing = false
                     }
                     else {
                         console.log("query error!")
@@ -621,9 +623,9 @@ var createConceptualModel = Vue.extend({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
+                success: (result) => {
 
-                    console.log(data);
+                    let data = result.data
 
                     if (data.oid == "") {
                         this.$alert('Please login first!', 'Error', {
@@ -634,9 +636,8 @@ var createConceptualModel = Vue.extend({
                             }
                         });
                     } else {
-                        this.userId = data.oid;
+                        this.userId = data.email;
                         this.userName = data.name;
-                        console.log(this.userId)
 
                         this.sendUserToParent(this.userId)
                         // this.addAllData()
@@ -888,12 +889,14 @@ var createConceptualModel = Vue.extend({
                 });
                 this.formData.append("conceptualModel",file)
                 $.ajax({
-                    url: '/conceptualModel/add',
-                    type: 'post',
+                    url: '/conceptualModel/',
+                    type: 'POST',
                     data: this.formData,
                     cache: false,
-                    processData: false,
                     contentType: false,
+                    // 告诉jQuery不要去设置Content-Type请求头
+                    processData: false,
+                    // 告诉jQuery不要去处理发送的数据
                     async: true
                 }).done((res)=> {
                     loading.close();

@@ -238,14 +238,13 @@ Vue.component("user-data",
             },
             //data space相关
             getUserTaskInfo() {
-                let {code, data, msg} = fetch("/user/getUserInfo", {
+                let {code, data, msg} = fetch("/user/getFullUserInfo", {
                     method: "GET",
                 }).then((response) => {
                     return response.json();
                 }).then((data) => {
-                    this.userInfo = data.data.userInfo;
+                    this.userInfo = data.data;
                     this.userTaskInfo = this.userInfo.runTask;
-                    console.log(this.userInfo);
                     setTimeout(() => {
                         $('.el-loading-mask').css('display', 'none');
                     }, 120)
@@ -2466,7 +2465,7 @@ Vue.component("user-data",
 
                 var that = this
                 //获取data item分类树
-                // axios.get("/dataItem/createTree")
+                // axios.get("/dataItem/categoryTree")
                 //     .then(res => {
                 //         that.tObj = res.data;
                 //         for (var e in that.tObj) {

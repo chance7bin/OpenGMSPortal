@@ -274,12 +274,12 @@ var userDataSpace = Vue.extend(
 
             //data space相关
             getUserTaskInfo() {
-                let {code, data, msg} = fetch("/user/getUserInfo", {
-                    method: "GET",
+                let {code, data, msg} = fetch("/user/getFullUserInfo", {
+                    method: "GET"
                 }).then((response) => {
                     return response.json();
                 }).then((data) => {
-                    this.userInfo = data.data.userInfo;
+                    this.userInfo = data.data;
                     this.userTaskInfo = this.userInfo.runTask;
                     // console.log(this.userInfo);
                     setTimeout(() => {
@@ -1918,7 +1918,7 @@ var userDataSpace = Vue.extend(
                 };
                 $.ajax({
                     type: "POST",
-                    url: "/repository/searchTemplate",
+                    url: "/template/templateList",
                     data: JSON.stringify(query),
                     async: true,
                     contentType: "application/json",
@@ -2907,15 +2907,15 @@ var userDataSpace = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
 
-                        // console.log(data);
+                        let data = result.data
 
                         if (data.oid == "") {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            this.userId = data.email;
                             this.userName = data.name;
                             // console.log(this.userId)
                             this.sendUserToParent(this.userId)
@@ -2951,7 +2951,7 @@ var userDataSpace = Vue.extend(
 
                 var that = this
                 //获取data item分类树
-                axios.get("/dataItem/createTree")
+                axios.get("/dataItem/categoryTree")
                     .then(res => {
                         that.tObj = res.data;
                         for (var e in that.tObj) {

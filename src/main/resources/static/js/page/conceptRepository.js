@@ -806,8 +806,7 @@ new Vue({
             this.classifications1 = classes;
             this.getChildren(data.children)
 
-            if(typeof(data.children) === "undefined")
-                this.categoryName = data.oid
+            this.categoryName = data.oid
 
             this.pageOption.currentPage=1;
             this.searchText="";
@@ -839,7 +838,7 @@ new Vue({
             this.pageOption.progressBar = true;
             var data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage - 1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText : this.searchText,
                 classifications : this.classifications1.length == 0 ? ["all"] : this.classifications1
@@ -859,19 +858,16 @@ new Vue({
             }
             query.searchText=data.searchText;
 
-            let url="";
-            if(query.searchText.trim()==""){
-                url=getConceptList();
-                query.categoryName = this.categoryName
-            }
-            else{
-                url="/repository/searchConcept";
-
-                this.classifications1=[""];
-                this.currentClass="ALL";
-                this.$refs.tree1.setCurrentKey(null);
-            }
-
+            let url=getConceptList();
+            // if(query.searchText.trim()==""){
+            //     query.categoryName = this.categoryName
+            // }
+            // else{
+            //     this.classifications1=[""];
+            //     this.currentClass="ALL";
+            //     this.$refs.tree1.setCurrentKey(null);
+            // }
+            query.categoryName = this.categoryName
             let sendDate = (new Date()).getTime();
             $.ajax({
                 type: "POST",

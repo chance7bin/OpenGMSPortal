@@ -891,7 +891,7 @@ var createDataVisualApplication = Vue.extend({
 
         var mid = window.sessionStorage.getItem("editConceptualModel_id");
 
-        axios.get("/dataItem/createTree")
+        axios.get("/dataItem/categoryTree")
             .then(res => {
                 that.tObj = res.data;
                 let tree = [];
@@ -929,13 +929,13 @@ var createDataVisualApplication = Vue.extend({
                             label:Object.keys(grandpa)[0],
                             children:gChildren,
                         }
-                        console.log(g);
+                        ;
                         tree.push(g);
                     }
                 }
                 that.treeData = tree;
             })
-        // axios.get("/dataItem/createTree")
+        // axios.get("/dataItem/categoryTree")
         //     .then(res => {
         //         that.tObj = res.data;
         //         let i=0

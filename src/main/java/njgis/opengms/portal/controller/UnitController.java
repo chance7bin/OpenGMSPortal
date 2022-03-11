@@ -8,8 +8,10 @@ import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.community.unit.UnitDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.RepositoryService;
 import njgis.opengms.portal.service.UnitService;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -37,6 +39,9 @@ public class UnitController {
     @Autowired
     RepositoryService repositoryService;
 
+    @Autowired
+    GenericService genericService;
+
     /**
      * unit列表信息
      * @param repositoryQueryDTO 
@@ -44,7 +49,7 @@ public class UnitController {
      * @Author bin
      **/
     @ApiOperation(value = "unit列表信息 [ /repository/getUnitList ] 删除[/repository/searchUnit]接口")
-    @RequestMapping(value="/unitList",method = RequestMethod.POST)
+    @RequestMapping(value={"/unitList", "/list"},method = RequestMethod.POST)
     public JsonResult getUnitList(@RequestBody SpecificFindDTO repositoryQueryDTO){
         return unitService.getUnitList(repositoryQueryDTO);
     }
@@ -134,7 +139,7 @@ public class UnitController {
      **/
     @LoginRequired
     @ApiOperation(value = "根据用户得到unit [ /unit/listUnitsByOid ]")
-    @RequestMapping (value = "/listByUser",method = RequestMethod.GET)
+    @RequestMapping (value = "/listByUser",method = RequestMethod.POST)
     public JsonResult listByUserOid(FindDTO findDTO, HttpServletRequest request){
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
@@ -156,6 +161,33 @@ public class UnitController {
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
         return ResultUtils.success(repositoryService.getRepositoryByNameAndUser(findDTO, email, ItemTypeEnum.Unit));
+    }
+
+    /**
+     * @Description 某用户查询他人的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
+    @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
+    public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Unit,findDTO, false));
+
+    }
+
+    /**
+     * @Description 某用户查询自己的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @LoginRequired
+    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Unit,findDTO, true));
+
     }
 
 }

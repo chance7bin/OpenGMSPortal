@@ -9,6 +9,7 @@ import njgis.opengms.portal.dao.DataMethodDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.community.template.TemplateDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.Template;
@@ -90,7 +91,7 @@ public class TemplateController {
      * @Author bin
      **/
     @ApiOperation(value = "template列表信息 [ /repository/getTemplateList ] 删除[/repository/searchTemplate]接口")
-    @RequestMapping(value="/templateList",method = RequestMethod.POST)
+    @RequestMapping(value={"/templateList","/list"},method = RequestMethod.POST)
     public JsonResult getTemplateList(@RequestBody SpecificFindDTO repositoryQueryDTO){
         return templateService.getTemplateList(repositoryQueryDTO);
     }
@@ -287,5 +288,32 @@ public class TemplateController {
         return ResultUtils.success(dataMethods);
     }
 
+
+    /**
+     * @Description 某用户查询他人的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
+    @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
+    public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Template,findDTO, false));
+
+    }
+
+    /**
+     * @Description 某用户查询自己的模型条目
+     * @param findDTO
+     * @Return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @LoginRequired
+    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
+
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Template,findDTO, true));
+
+    }
 
 }
