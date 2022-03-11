@@ -31,22 +31,22 @@ export var UserTemplate = Vue.extend({
                         :data="userTableData"
                         stripe
                         style="width: 100%"
-                        height="65vh"
+                        height="75vh"
                         :default-sort="{ prop: 'viewCount', order: 'descending' }"
                 >
 
-                    <el-table-column sortable label="姓名">
+                    <el-table-column sortable label="姓名"show-overflow-tooltip min-width="200px">
                         <template slot-scope="scope" >
                             <el-link :href="userPageUrl+scope.row.accessId" target="_blank">{{scope.row.name}}</el-link>
                         </template>
                     </el-table-column>
 
-                    <el-table-column sortable prop="email" label="邮箱" >
+                    <el-table-column sortable prop="email" label="邮箱" show-overflow-tooltip min-width="200px">
                     </el-table-column>
-                    <el-table-column prop="userRole" label="权限" >
+                    <el-table-column prop="userRole" label="权限"  min-width="100px">
                     </el-table-column>
 
-                    <el-table-column  label="操作">
+                    <el-table-column  label="操作" show-overflow-tooltip min-width="200px">
                         <template slot-scope="scope">
                             <el-dropdown >
                                 <el-button type="primary"  size="mini">
@@ -83,7 +83,7 @@ export var UserTemplate = Vue.extend({
         return {
             userTableData:[], //用户列表数据
             currentPageUser:1, //用户列表表格页
-            PageSizeUser:10, //用户列表每页数目
+            PageSizeUser:20, //用户列表每页数目
             totalUser:0, //用户总数
             searchInputUser:"", //用户表搜索内容
             userPageUrl:"https://geomodeling.njnu.edu.cn/profile/" // 门户个人主页

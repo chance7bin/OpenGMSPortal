@@ -15,55 +15,50 @@ export var TaskTemplate = Vue.extend({
                         border
                         stripe
                         style="width: 100%"
-                        height="65vh">
-                        <el-table-column
-                                width="230px"
-                                prop="msrid"
-                                label="Msrid">
+                        height="70vh">
+                        <el-table-column width="230px" prop="msrid" label="Msrid" show-overflow-tooltip min-width="250px"> </el-table-column>
+                        <el-table-column label="模型名称" show-overflow-tooltip min-width="150px" >
+                              <template slot-scope="scope" >
+                                  <el-popover
+                                    placement="bottom"
+                                    title=""
+                                    width="270"
+                                    trigger="hover"
+                                    >
+                                    <h4 style="margin: 0">名称:</h4>
+                                    <p style="margin: 0">{{scope.row.computableModelName}}</p>
+                                    <h4 style="margin: 0">md5:</h4>
+                                    <p style="margin: 0">{{scope.row.md5}}</p>
+                                    <h4 style="margin: 0">部署的模型容器:</h4>
+                                    <el-link v-for="(item,index) in scope.row.deployedServer" 
+                                            type="primary" 
+                                            :href="'http://'+item+'/modelser/all'" 
+                                            target="_blank"
+                                            style="display: flex; flex-direction: column;align-items: flex-start;"
+                                            >{{item}}</el-link>
+                                    
+                                    <div slot="reference" style="width=100%;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;color: #1077e1; ">
+                                        {{scope.row.computableModelName}}
+                                    <div/>
+                                  </el-popover>
+                              </template>
                         </el-table-column>
-                        <el-table-column
-                                prop="user"
-                                label="用户">
-                        </el-table-column>
-                        <el-table-column
-                                prop="status"
-                                label="状态">
-                        </el-table-column>
-                        <el-table-column prop="date" label="时间">
-<!--                            <template slot-scope="scope">-->
-<!--                                {{formatDate(scope.row.t_datetime)}}-->
-<!--                            </template>-->
-                        </el-table-column>
-                        <el-table-column label="运行的模型容器">
+                        <el-table-column prop="user" label="用户" show-overflow-tooltip min-width="200px"> </el-table-column>
+                        <el-table-column prop="status" label="状态" show-overflow-tooltip min-width="100px"> </el-table-column>
+                        <el-table-column prop="date" label="时间" show-overflow-tooltip min-width="190px"> </el-table-column>
+                        <el-table-column label="运行的模型容器" show-overflow-tooltip min-width="190px">
                             <template slot-scope="scope">
                                 <el-link type="primary" :href="'http://'+scope.row.runServer+'/modelserrun/'+scope.row.msrid" target="_blank">{{scope.row.runServer}}</el-link>
                             </template>
                         </el-table-column>
-                        <el-table-column label="模型名称" >
-                              <template slot-scope="scope">
-                                  <el-popover
-                                    placement="bottom"
-                                    title=""
-                                    width="255"
-                                    trigger="hover">
-                                    <h5 style="margin: 0">名称:</h5>
-                                    <p style="margin: 0">{{scope.row.computableModelName}}</p>
-                                    <h5 style="margin: 0">md5:</h5>
-                                    <p style="margin: 0">{{scope.row.md5}}</p>
-                                    <h5 style="margin: 0">部署的模型容器:</h5>
-                                    <el-link v-for="(item,index) in scope.row.deployedServer" type="primary" :href="'http://'+item+'/modelser/all'" target="_blank">{{item}}</el-link>
-                                    
-                                    <div slot="reference" style="width=100%;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;color: darkorange; ">
-                                        {{scope.row.computableModelName}}
-                                    <div/>
-                                  </el-popover>
-                                  </template>
-                        </el-table-column>
+                        
                     </el-table>
-                    <el-pagination style="text-align: center;margin-top:20px"
+                    <el-pagination 
+                                   background
+                                   style="text-align: center;margin-top:20px"
                                    @current-change="handleTaskPageChange"
                                    :current-page="taskCurrentPage"
-                                   layout="total, prev, pager, next"
+                                   layout="total, sizes, prev, pager, next, jumper"
                                    page-size=20
                                    :total="taskTotal">
                     </el-pagination>
@@ -96,21 +91,21 @@ export var TaskTemplate = Vue.extend({
         `,
     data() {
         return {
-            servierIP:"172.21.213.105", //服务器地址
-            taskData:[],//task的数据
-            taskTotal:0,//task总数
-            taskCurrentPage:1, //task当前页面
+            servierIP: "172.21.213.105", //服务器地址
+            taskData: [],//task的数据
+            taskTotal: 0,//task总数
+            taskCurrentPage: 1, //task当前页面
 
-            containerData:[], //容器列表数据
+            containerData: [], //容器列表数据
 
         }
     },
-    mounted(){
+    mounted() {
         this.getTaskList()
         this.getContainerList()
     },
     methods: {
-        getTaskList(){
+        getTaskList() {
             axios.post('/managementSystem/taskList', {
                 "asc": false,
                 "page": this.taskCurrentPage,
@@ -118,31 +113,26 @@ export var TaskTemplate = Vue.extend({
                 "searchText": "",
                 "sortField": "createTime"
             })
-                .then(response=> {
-                    console.log("1111")
-                    let data=response.data.data
-                    this.taskTotal=data.total
-                    this.taskData=data.list
+                .then(response => {
+                    let data = response.data.data
+                    this.taskTotal = data.total
+                    this.taskData = data.list
                     console.log(data)
-                    console.log("1111")
-
                 })
                 .catch(function (error) {
-                    console.log("1111")
-
                     console.log(error);
                 });
         },
 
-        handleTaskPageChange(val){
+        handleTaskPageChange(val) {
             this.taskCurrentPage = val;
             this.getTaskList();
         },
 
-        getContainerList(){
+        getContainerList() {
             axios.get('/managementSystem/mscList')
-                .then(response=> {
-                    this.containerData=response.data.data
+                .then(response => {
+                    this.containerData = response.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
