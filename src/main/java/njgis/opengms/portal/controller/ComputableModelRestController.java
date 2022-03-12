@@ -201,12 +201,12 @@ public class ComputableModelRestController {
     }
 
     /**
-     * @Description 某用户查询自己的模型条目
+     * @Description 某用户查询自己的条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 

@@ -11,4 +11,6 @@ public interface ArticleDao extends MongoRepository<Article,String> {
 
      Article findFirstById(String id);
 
+     List<Article> findAllByTitle(String title);
+
 }

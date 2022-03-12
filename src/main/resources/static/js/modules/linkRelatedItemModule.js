@@ -432,7 +432,7 @@ Vue.component("linkRelatedItemModule",
                 let contentType;
 
                 if(this.relateItemType == "modelItem-D" || this.relateItemType_trim !== "modelItem") {
-                    url = "/"+this.targetItemType+"/setRelation";
+                    url = "/"+this.targetItemType+"/relation";
                     this.tableData_model.forEach(function (item, index) {
                         relateArr.push(item.id);
                     })
@@ -441,9 +441,8 @@ Vue.component("linkRelatedItemModule",
                         type: this.relateItemType,
                         relations: relateArr
                     };
-                    contentType = "application/x-www-form-urlencoded;charset=UTF-8";
                 }else{
-                    url = "/"+this.targetItemType+"/setModelRelation/"+id;
+                    url = "/"+this.targetItemType+"/modelRelation/"+id;
                     this.tableData_model.forEach(function (item, index) {
                         let obj = {
                             id : item.id,
@@ -452,17 +451,16 @@ Vue.component("linkRelatedItemModule",
                         relateArr.push(obj);
                     });
                     data = {
-                        relations: relateArr,
+                        relations: JSON.stringify(relateArr),
                     };
-                    data = JSON.stringify(data);
-                    contentType = "application/json;charset=UTF-8";
+                    // data = JSON.stringify(data);
                 }
 
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     url: url,
                     data: data,
-                    contentType:contentType,
+                    // contentType:contentType,
                     async: true,
                     success: (result) => {
                         if(result.code == -1){

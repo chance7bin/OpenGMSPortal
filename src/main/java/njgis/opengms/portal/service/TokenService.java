@@ -231,7 +231,7 @@ public class TokenService {
             String refreshToken = tokenInfo.getRefreshToken();
             JSONObject newTokenInfo = refreshToken(refreshToken,userEmail);
             // TODO newTokenInfo可能为null，要判断一下
-            if(newTokenInfo.getString("error")!=null){
+            if(newTokenInfo == null || newTokenInfo.getString("error")!=null){
 
                 return "out";
             }else{

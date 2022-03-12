@@ -1351,7 +1351,7 @@ var info=new Vue({
         openClassEditDialog(){
             axios.get("/user/load")
                 .then((res) => {
-                    if (res.data.email == '') {
+                    if (res.data.code == -3) {
                         this.confirmLogin()
                     }else{
                         this.editClassification = true;
@@ -1717,13 +1717,13 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelId,
-                localization:JSON.stringify(this.localizationList)
+                id:this.modelId,
+                localizations:JSON.stringify(this.localizationList)
             }
 
             $.ajax({
-                type:'post',
-                url:'/modelItem/updateDesctription',
+                type:'PUT',
+                url:'/modelItem/localizations',
                 data: data,
                 // dataType: "json",
                 // accept: 'application/json',
@@ -1762,13 +1762,14 @@ var info=new Vue({
         },
 
         getReference(){
-            this.editReference = true
 
             axios.get('/modelItem/references/'+this.modelId).then(
                 res =>{
                     if (res.data.code == -1) {
                         this.confirmLogin()
                     }else{
+                        this.editReference = true
+
                         let refs = res.data.data
 
                         if (refs != null) {
@@ -1810,15 +1811,9 @@ var info=new Vue({
                                     "<center><a href='javascript:;' class='fa fa-times refClose' style='color:red'></a></center>"]).draw();
                             }
                         })
-
                     }
-
-
-
                 }
             )
-
-
         },
 
         searchDoi(){
@@ -1858,7 +1853,7 @@ var info=new Vue({
                                 }
                             });
                         }
-                        data=res.data;
+                        let data=res.data;
                         this.doiLoading = false;
                         if (data.find == -1) {
                             this.$alert('Failed to connect, please try again!', 'Tip', {
@@ -1946,8 +1941,8 @@ var info=new Vue({
                     $('#refAuthor').tagEditor('removeTag', tags[i]);
                 }
                 $("#refDate").val("")
-                $("#volumeIssue").val(""),
-                    $("#refJournal").val("")
+                $("#volumeIssue").val("")
+                $("#refJournal").val("")
                 $("#refPages").val("")
                 $("#doiTitle").val("")
                 $("#refLink").val("")
@@ -2046,13 +2041,13 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelId,
-                reference:JSON.stringify(references)
+                id:this.modelId,
+                references:JSON.stringify(references)
             }
 
             $.ajax({
-                type:'post',
-                url:'/modelItem/updateReference',
+                type:'PUT',
+                url:'/modelItem/references',
                 data: data,
                 // dataType: "json",
                 // accept: 'application/json',
@@ -2095,7 +2090,7 @@ var info=new Vue({
         claim(){
             $.get("/user/load",{},(result)=>{
                 let json = result;
-                if (json.oid == "") {
+                if (json.code == -3) {
                     this.confirmLogin();
                 }
                 else {
@@ -2106,7 +2101,7 @@ var info=new Vue({
         feedBack(){
             $.get("/user/load",{},(result)=>{
                 let json = result;
-                if (json.oid == "") {
+                if (json.code == -3) {
                     this.confirmLogin();
                 }
                 else {
@@ -2196,7 +2191,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.oid == "") {
+                    if (data.code == -3) {
                         this.confirmLogin()
 
                     }
@@ -2269,7 +2264,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.oid == "") {
+                    if (data.code == -3) {
                         this.confirmLogin()
                     }
                     else {
@@ -2977,7 +2972,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.email == "") {
+                    if (data.code == -3) {
                         this.confirmLogin()
                     }
                     else {
@@ -3233,8 +3228,9 @@ var info=new Vue({
 
         axios.get("/user/load")
             .then((res) => {
+                console.log(res);
                 if (res.status == 200) {
-                    if (res.data.email != '') {
+                    if (res.data.code != -3) {
                         this.user.email = res.data.email;
                         this.user.accessId = res.data.accessId;
                         this.user.name = res.data.name;

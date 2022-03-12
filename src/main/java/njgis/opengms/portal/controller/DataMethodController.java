@@ -140,7 +140,7 @@ public class DataMethodController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @ApiOperation(value = "获取Method Repository下的数据 [ /dataItem/Items/getMethods 、/dataApplication/methods/getApplication 、 /dataApplication/searchByName]")
-    @RequestMapping(value = "/items",method = RequestMethod.POST)
+    @RequestMapping(value = {"/items", "/list"},method = RequestMethod.POST)
     public JsonResult getMethods(@RequestBody SpecificFindDTO dataMethodsFindDTO){
         return dataMethodService.getMethods(dataMethodsFindDTO);
     }
@@ -388,12 +388,12 @@ public class DataMethodController {
     }
 
     /**
-     * @Description 某用户查询自己的模型条目
+     * @Description 某用户查询自己的条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 

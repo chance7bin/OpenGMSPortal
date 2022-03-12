@@ -173,7 +173,7 @@ public class NoticeService {
         notice.setRecipient(recipient);
 
         //设置附加的信息
-        if (additionList != null){
+        if (additionList != null && additionList.size() != 0){
             //列表的第0个是remark
             notice.setRemark(additionList.get(0));
         }
@@ -224,6 +224,25 @@ public class NoticeService {
         return noticeList;
     }
 
+    /**
+     * @Description 发送通知给所有管理者，包括条目管理者及门户管理者
+     * @param modifierEmail
+     * @param authorEmail
+     * @param itemAdmins
+     * @param versionId
+     * @param operation
+     * @Return void
+     * @Author kx
+     * @Date 22/3/8
+     **/
+    public void sendNoticeContainsAllAdmin(String modifierEmail, String authorEmail, List<String> itemAdmins, String versionId, OperationEnum operation){
+        List<String> recipientList = new ArrayList<>();
+        recipientList.add(authorEmail);
+        recipientList = addItemAdmins(recipientList,itemAdmins);
+        recipientList = addPortalAdmins(recipientList);
+        recipientList = addPortalRoot(recipientList);
+        sendNoticeContains(modifierEmail, operation, versionId, recipientList);
+    }
 
     /**
      * 发送通知, 在调用这个方法前先构造一下通知要发送的用户列表
