@@ -829,16 +829,7 @@ public class GenericService {
         return list;
     }
 
-    /**
-     * 格式化日期
-     * @param date
-     * @return java.lang.String
-     * @Author bin
-     **/
-    public String dateFormat(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(date);
-    }
+
 
     // 根据查询条件查询符合条件的模型条目(主要用于根据user查询)
     public JSONObject queryByUser(ItemTypeEnum itemType,UserFindDTO userFindDTO, Boolean containPrivate) {

@@ -169,16 +169,21 @@ public class LogicalModelRestController {
     }
 
     /**
-     * @Description 某用户查询自己的模型条目
+     * @Description 某用户查询自己的条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO, HttpServletRequest request) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.LogicalModel,findDTO, true));
-
+        String email = Utils.checkLoginStatus(request);
+        if(email == null){
+            return ResultUtils.unauthorized();
+        }else {
+            findDTO.setAuthorEmail(email);
+            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.LogicalModel, findDTO, true));
+        }
     }
 }

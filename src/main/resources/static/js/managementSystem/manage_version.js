@@ -308,7 +308,7 @@ export var VersionTemplate = Vue.extend({
                 .then(response=> {
                     console.log(response)
                     this.waitVersionTableData=response.data.data.content
-                    this.totalWaitVersion=response.data.data.totalElements
+                    this.totalWaitVersion=response.data.data.count
                 })
                 .catch(function (error) {
                     console.log(error);

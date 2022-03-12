@@ -22,6 +22,7 @@ import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import njgis.opengms.portal.utils.XmlTool;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,7 +317,7 @@ public class DataItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "得到用户上传的data item [ /dataItem/searchByNameAndAuthor[searchByNameByOid/searchDataByUserId] ]")
-    @RequestMapping(value={"/itemsByNameAndAuthor","/listByAuthor"},method = RequestMethod.POST)
+    @RequestMapping(value={"/itemsByNameAndAuthor"},method = RequestMethod.POST)
     public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
         HttpSession session=request.getSession();
         String email=session.getAttribute("email").toString();
@@ -475,16 +476,21 @@ public class DataItemRestController {
     }
 
     /**
-     * @Description 某用户查询自己的模型条目
+     * @Description 某用户查询自己的条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO, HttpServletRequest request) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem,findDTO, true));
-
+        String email = Utils.checkLoginStatus(request);
+        if(email == null){
+            return ResultUtils.unauthorized();
+        }else {
+            findDTO.setAuthorEmail(email);
+            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem, findDTO, true));
+        }
     }
 }

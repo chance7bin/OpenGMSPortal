@@ -27,6 +27,7 @@ import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -114,7 +115,7 @@ public class ManagementSystemService {
             o.put("accessId",computableModel.getAccessId());
             o.put("name",computableModel.getName());
             o.put("author", userService.getUserName(computableModel.getAuthor()));
-            o.put("createTime",genericService.dateFormat(computableModel.getCreateTime()));
+            o.put("createTime",Utils.dateFormat(computableModel.getCreateTime()));
             o.put("viewCount",computableModel.getViewCount());
             o.put("lastModifyTime",computableModel.getLastModifyTime());
             o.put("status",computableModel.getStatus());
@@ -463,7 +464,7 @@ public class ManagementSystemService {
         try {
             CheckModelList checkModelList = new CheckModelList();
             checkModelList.setOperator(email);
-            checkModelList.setDraftName(genericService.dateFormat(new Date()));
+            checkModelList.setDraftName(Utils.dateFormat(new Date()));
 
             checkModelList.setHistoryList(checkedHistoryList);
 
@@ -877,7 +878,7 @@ public class ManagementSystemService {
             else
                 object.put("user",document.getString("t_user"));
             object.put("status",document.getString("t_status"));
-            object.put("date",genericService.dateFormat(document.getDate("t_datetime")));
+            object.put("date",Utils.dateFormat(document.getDate("t_datetime")));
             object.put("server",document.getString("t_server"));
             object.put("md5",document.getString("t_pid"));
             object.put("computableModelName",getComputableModelNameByMd5(document.getString("t_pid")));

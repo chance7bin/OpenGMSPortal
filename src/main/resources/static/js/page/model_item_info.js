@@ -1762,13 +1762,14 @@ var info=new Vue({
         },
 
         getReference(){
-            this.editReference = true
 
             axios.get('/modelItem/references/'+this.modelId).then(
                 res =>{
                     if (res.data.code == -1) {
                         this.confirmLogin()
                     }else{
+                        this.editReference = true
+
                         let refs = res.data.data
 
                         if (refs != null) {
@@ -1810,15 +1811,9 @@ var info=new Vue({
                                     "<center><a href='javascript:;' class='fa fa-times refClose' style='color:red'></a></center>"]).draw();
                             }
                         })
-
                     }
-
-
-
                 }
             )
-
-
         },
 
         searchDoi(){
@@ -1858,7 +1853,7 @@ var info=new Vue({
                                 }
                             });
                         }
-                        data=res.data;
+                        let data=res.data;
                         this.doiLoading = false;
                         if (data.find == -1) {
                             this.$alert('Failed to connect, please try again!', 'Tip', {
@@ -1946,8 +1941,8 @@ var info=new Vue({
                     $('#refAuthor').tagEditor('removeTag', tags[i]);
                 }
                 $("#refDate").val("")
-                $("#volumeIssue").val(""),
-                    $("#refJournal").val("")
+                $("#volumeIssue").val("")
+                $("#refJournal").val("")
                 $("#refPages").val("")
                 $("#doiTitle").val("")
                 $("#refLink").val("")
@@ -2046,13 +2041,13 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelId,
-                reference:JSON.stringify(references)
+                id:this.modelId,
+                references:JSON.stringify(references)
             }
 
             $.ajax({
-                type:'post',
-                url:'/modelItem/updateReference',
+                type:'PUT',
+                url:'/modelItem/references',
                 data: data,
                 // dataType: "json",
                 // accept: 'application/json',

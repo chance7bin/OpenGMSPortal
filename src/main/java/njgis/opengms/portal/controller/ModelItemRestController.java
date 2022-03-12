@@ -14,6 +14,7 @@ import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
+import njgis.opengms.portal.entity.po.Article;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.RelationTypeEnum;
@@ -24,6 +25,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.DocumentException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -171,7 +174,7 @@ public class ModelItemRestController {
      **/
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
     @RequestMapping(value = {"/items","/list"}, method = RequestMethod.POST)
-    public JsonResult queryList(SpecificFindDTO modelItemFindDTO) {
+    public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
     }
@@ -197,9 +200,15 @@ public class ModelItemRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO, HttpServletRequest request) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem,findDTO, true));
+        String email = Utils.checkLoginStatus(request);
+        if(email == null){
+            return ResultUtils.unauthorized();
+        }else {
+            findDTO.setAuthorEmail(email);
+            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem, findDTO, true));
+        }
 
     }
 
@@ -388,7 +397,7 @@ public class ModelItemRestController {
     @ApiOperation(value = "更新模型条目related ModelItem", notes = "@LoginRequired\n")
     @RequestMapping(value = "/modelRelation/{id}", method = RequestMethod.PUT)
     JsonResult setModelRelation(@PathVariable("id") String id,
-                                @RequestParam(value = "relations[]") JSONArray relations ,
+                                @RequestParam(value = "relations[]") JSONArray relations,
                                 HttpServletRequest request) {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
@@ -411,6 +420,22 @@ public class ModelItemRestController {
 
     }
 
+    @ApiOperation(value = "更新模型条目参考文献", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/references", method = RequestMethod.PUT)
+    public JsonResult updateReference(@RequestParam("id") String id,
+                                      @RequestParam(value = "references") String references_str,
+                                      HttpServletRequest request){
+
+        String email = Utils.checkLoginStatus(request);
+        if(StringUtils.isEmpty(email)){
+            return ResultUtils.error(-1, "no login");
+        }
+
+        List<Article> references = JSONObject.parseArray(references_str, Article.class);
+
+        return ResultUtils.success(modelItemService.updateReferences(id, references, email));
+    }
+
 
     @ApiOperation(value = "根据id得到模型条目信息")
     @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)
@@ -428,5 +453,16 @@ public class ModelItemRestController {
     @RequestMapping (value="/dailyViewAndInvokeCount",method = RequestMethod.GET)
     public JsonResult getDailyViewCount(@RequestParam(value="id") String id) {
         return ResultUtils.success(modelItemService.getDailyViewAndInvokeCount(id));
+    }
+
+    @RequestMapping(value="/searchByDOI",method=RequestMethod.POST)
+    public JsonResult searchReferenceByDOI(@RequestParam(value="doi") String DOI,
+                                           @RequestParam(value="modelOid") String modelOid,
+                                           HttpServletRequest httpServletRequest) throws IOException, DocumentException {
+
+        if(StringUtils.isEmpty(Utils.checkLoginStatus(httpServletRequest))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(modelItemService.getArticleByDOI(DOI,modelOid));
     }
 }

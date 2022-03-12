@@ -19,6 +19,9 @@ import njgis.opengms.portal.enums.RelationTypeEnum;
 import njgis.opengms.portal.utils.ImageUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.management.relation.Relation;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1376,6 +1379,49 @@ public class ModelItemService {
 
     }
 
+    public String updateReferences(String modelId, List<Article> references, String email){
+
+        ModelItem modelItem = modelItemDao.findFirstById(modelId);
+
+        String author = modelItem.getAuthor();
+
+        List<String> reference_ids = new ArrayList<>();
+        //参考文献插入数据库
+        for(int i = 0; i < references.size(); i++){
+            Article reference = references.get(i);
+            List<Article> articles = articleDao.findAllByTitle(reference.getTitle());
+            Boolean find = false;
+            for(Article art : articles){
+                if(reference.isSame(art)){
+                    find = true;
+                    reference_ids.add(art.getId());
+                    break;
+                }
+            }
+            if(!find){
+                reference_ids.add(reference.getId());
+                articleDao.insert(reference);
+            }
+        }
+
+        if(author.equals(email)) {
+            modelItem.setReferences(reference_ids);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+
+            modelItemUpdateDTO.setReferences(reference_ids);
+
+            modelItemService.update(modelItemUpdateDTO,email);
+
+            return "version";
+        }
+
+    }
+
     public JSONObject setRelation(String modelId,String type,List<String> relations,String user){
 
         ModelItem modelItem=modelItemDao.findFirstById(modelId);
@@ -1632,4 +1678,115 @@ public class ModelItemService {
 
         return result;
     }
+
+    //通过DOI从网络上查询文章
+    public JSONObject getArticleByDOI(String Doi,String modelOid) throws IOException, DocumentException {
+        String[] eles= Doi.split("/");
+
+        String doi = eles[eles.length-2]+"/"+eles[eles.length-1];
+
+        String xml =  searchByElsevierDOI(doi);
+
+        JSONObject result = new JSONObject();
+
+        if(xml == null){
+            result.put("find",0);
+            return result;
+        }
+        else  if (xml.equals("Connection timed out: connect") ) {
+            result.put("find",-1);
+            return result;
+        }  else{
+            //dom4j解析xml
+            org.dom4j.Document doc = null;
+            doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            System.out.println("根节点：" + root.getName());
+            Element coredata = root.element("coredata");
+            String title = coredata.elementTextTrim("title");
+            String journal = coredata.elementTextTrim("publicationName");
+
+            String pageRange = coredata.elementTextTrim("pageRange");
+            String coverDate = coredata.elementTextTrim("coverDate");
+            String volume = coredata.elementTextTrim("volume");
+            List links = coredata.elements("link");
+            String link = ((Element)links.get(1)).attribute("href").getValue();
+
+            Iterator authorIte = coredata.elementIterator("creator");
+            List<String> authors = new ArrayList<>();
+            while (authorIte.hasNext()) {
+                Element record = (Element) authorIte.next();
+                String author = record.getText();
+                authors.add(author);
+            }
+
+            Article article = new Article();
+            article.setTitle(title);
+            article.setJournal(journal);
+            article.setVolume(volume);
+            article.setPageRange(pageRange);
+            article.setDate(coverDate);
+            article.setAuthors(authors);
+            article.setLink(link);
+            article.setDoi(doi);
+            if(findReferExisted(modelOid,doi)) {//同一模型条目下有重复上传
+                result.put("find",2);
+                result.put("article",article);
+            }else{
+                result.put("find",1);
+                result.put("article",article);
+            }
+            doc = null;
+            System.gc();
+//            user中加入这个字段
+//            User user = userDao.findFirstByUserName(contributor);
+//            List<String>articles = user.getArticles();
+//            articles.add(article.getOid());
+//            user.setArticles(articles);
+
+//            userDao.save(user);
+            return result;
+        }
+    }
+
+    public boolean findReferExisted(String modelOid,String doi){
+        if(!modelOid.equals("")&&modelOid!=null){
+            ModelItem modelItem = modelItemDao.findFirstById(modelOid);
+            List<String> references = modelItem.getReferences();
+            for(String reference:references){
+                if(reference.equals(doi))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public String searchByElsevierDOI(String doi) throws IOException {
+        String str = "https://api.elsevier.com/content/article/doi/"+doi+"?apiKey=e59f63ca86ba019181c8d3a53f495532";
+        URL url = new URL(str);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(9000);
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        String articleXml = new String();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            int length = connection.getContentLength();
+            while ((line = reader.readLine()) != null) {
+                if (!line.equals("")) {
+                    articleXml+=line+"\n";
+                }
+            }
+            reader.close();
+            connection.disconnect();
+            return articleXml;
+        } else {
+            //DOIdata.add(String.valueOf(responseCode));
+            return null;
+        }
+    }
+
 }

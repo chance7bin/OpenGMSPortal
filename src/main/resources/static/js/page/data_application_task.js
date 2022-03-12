@@ -332,7 +332,7 @@ let vue = new Vue({
                 this.selectedFile.push(file);
             }
 
-            let name = this.selectedFile[0].label + '.' + this.selectedFile[0].suffix;
+            let name = this.selectedFile[0].name + '.' + this.selectedFile[0].suffix;
             this.metaDetail.input[this.fileOrder].loadName = name;
             this.metaDetail.input[this.fileOrder].url = this.selectedFile[0].url;
             // for (let i=0;i<this.metaDetail.input.length;i++){

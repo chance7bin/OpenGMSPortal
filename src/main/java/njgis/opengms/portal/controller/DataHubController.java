@@ -18,6 +18,7 @@ import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -133,7 +134,7 @@ public class DataHubController
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @ApiOperation(value = "获取Hub Repository下的数据 [ /dataItem/Items/getHubs ]")
-    @RequestMapping(value = "/items",method = RequestMethod.POST)
+    @RequestMapping(value = {"/items", "/list"},method = RequestMethod.POST)
     public JsonResult getHubs(@RequestBody SpecificFindDTO dataHubsFindDTO){
         return  dataHubService.getHubs(dataHubsFindDTO);
     }
@@ -209,16 +210,21 @@ public class DataHubController
     }
 
     /**
-     * @Description 某用户查询自己的模型条目
+     * @Description 某用户查询自己的条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO) {
+    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO, HttpServletRequest request) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataHub,findDTO, true));
-
+        String email = Utils.checkLoginStatus(request);
+        if(email == null){
+            return ResultUtils.unauthorized();
+        }else {
+            findDTO.setAuthorEmail(email);
+            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataHub, findDTO, true));
+        }
     }
 }
