@@ -620,7 +620,11 @@ public class RepositoryService {
         //详情页面
         //String detailResult;
         // String theme_detailDesc=theme.getDetail();
-        String theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
+        String theme_detailDesc = "";
+        if(theme.getLocalizationList()!=null){
+            theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
+        }
+
 
         JSONArray array = new JSONArray();
 

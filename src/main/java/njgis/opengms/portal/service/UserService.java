@@ -739,6 +739,19 @@ public class UserService {
         return author;
     }
 
+    //根据传入的字符串返回用户email
+    public String getUserEmail(String userName){
+        if(userName!=null && userName.length()!=0){
+            User user = userDao.findFirstByAccessId(userName);
+            if(user != null){
+                return user.getEmail();
+            }
+        }
+        return null;
+    }
+
+
+
     /**
      * @Description 通过用户服务器发送验证码
      * @param email

@@ -7,14 +7,11 @@ import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Description
@@ -42,22 +39,17 @@ public class ArticleRestController {
     }
 
     /**
-     * @Description 某用户查询自己的条目
+     * @Description 某用户查询自己的模型条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO, HttpServletRequest request) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
-        String email = Utils.checkLoginStatus(request);
-        if(email == null){
-            return ResultUtils.unauthorized();
-        }else {
-            findDTO.setAuthorEmail(email);
-            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Article, findDTO, true));
-        }
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Article,findDTO, true));
+
     }
 
 }

@@ -943,7 +943,7 @@ public class GenericService {
         for (int i = 0; i < items.size(); i++) {
             ResultDTO item = items.get(i);
             String image = item.getImage();
-            if (!image.equals("")) {
+            if (image!=null && !image.equals("")) {
                 item.setImage(htmlLoadPath + image);
             }
 

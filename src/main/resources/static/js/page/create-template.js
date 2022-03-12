@@ -881,7 +881,7 @@ var createTemplate = Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/addTemplate",
+                    url: "/template/",
                     type: "POST",
                     cache: false,
                     processData: false,

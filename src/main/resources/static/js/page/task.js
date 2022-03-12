@@ -3254,7 +3254,7 @@ var vue = new Vue({
             };
         })
 
-        axios.get("/dataItem/createTree")
+        axios.get("/dataItem/categoryTree")
             .then(res => {
                 tha.tObj = res.data;
                 for (var e in tha.tObj) {

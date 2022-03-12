@@ -22,7 +22,6 @@ import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
 import njgis.opengms.portal.utils.XmlTool;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -483,14 +482,9 @@ public class DataItemRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(UserFindDTO findDTO, HttpServletRequest request) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
-        String email = Utils.checkLoginStatus(request);
-        if(email == null){
-            return ResultUtils.unauthorized();
-        }else {
-            findDTO.setAuthorEmail(email);
-            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem, findDTO, true));
-        }
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem,findDTO, true));
+
     }
 }

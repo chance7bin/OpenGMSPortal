@@ -200,15 +200,9 @@ public class ModelItemRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO, HttpServletRequest request) {
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
-        String email = Utils.checkLoginStatus(request);
-        if(email == null){
-            return ResultUtils.unauthorized();
-        }else {
-            findDTO.setAuthorEmail(email);
-            return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem, findDTO, true));
-        }
+        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem,findDTO, true));
 
     }
 

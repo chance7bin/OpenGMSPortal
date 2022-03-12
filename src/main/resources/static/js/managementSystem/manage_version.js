@@ -1,7 +1,7 @@
 export var VersionTemplate = Vue.extend({
-    template: ` 
+    template:` 
         <div>
-                <el-tabs tab-position="left" stretch="true" type="border-card" @tab-click="changeTabs" >
+                <el-tabs tab-position="left"  type="border-card" @tab-click="changeTabs" >
 <!--                            未审核页面-->
                     <el-tab-pane label="未审核版本">
                         <div class=" flexColumnStart">
@@ -21,22 +21,21 @@ export var VersionTemplate = Vue.extend({
                                         ref="waitVersionTable"
                                         :data="waitVersionTableData"
                                         stripe
-                                        style="width: 100%"
-                                        height="58vh"
-
+                                        style="width: 100% "
+                                        height="70vh"
                                         :default-sort="{ prop: 'viewCount', order: 'descending' }"
                                 >
-                                    <el-table-column sortable prop="submitTime" label="日期" >
+                                    <el-table-column sortable prop="submitTime" label="日期"  show-overflow-tooltip min-width="240px">
                                     </el-table-column>
-                                    <el-table-column sortable prop="itemName" label="名称">
-                                    </el-table-column>
-
-                                    <el-table-column sortable prop="type" label="类型" >
-                                    </el-table-column>
-                                    <el-table-column sortable prop="editor" label="修改者" >
+                                    <el-table-column sortable prop="itemName" label="名称"  show-overflow-tooltip min-width="240px">
                                     </el-table-column>
 
-                                    <el-table-column  label="操作" width="240">
+                                    <el-table-column sortable prop="type" label="类型" show-overflow-tooltip min-width="100px" >
+                                    </el-table-column>
+                                    <el-table-column sortable prop="editor" label="修改者"  show-overflow-tooltip min-width="180px">
+                                    </el-table-column>
+
+                                    <el-table-column  label="操作" show-overflow-tooltip min-width="250px">
                                         <template slot-scope="scope">
                                             <el-button
                                                     size="mini"
@@ -75,7 +74,13 @@ export var VersionTemplate = Vue.extend({
 
                     </el-tab-pane>
 <!--                                版本对比对话框-->
-                    <el-dialog title="版本对比" :visible.sync="dialogVersionComp" width="80%" center="true">
+                    <el-dialog id="versionComp"  :visible.sync="dialogVersionComp" width="80%" center="true" showClose="false">
+                        <div slot="title" >
+                            <h1>版本审核</h1>
+                            <div >
+                              <span  @click="versionCompareShow"></span>
+                            </div>
+                          </div>
 
                         <div class="flexRowEvenly">
                             <h1>原始版本</h1>
@@ -118,9 +123,14 @@ export var VersionTemplate = Vue.extend({
                             <el-divider></el-divider>
 
                         </div>
+                        
+                        <div class="flexRowBetween" style=" width: fit-content; position: fixed;  bottom: 5vh; right: 15vw;">
+                            <el-button class="" type="success">接受</el-button>
+                            <el-button class="" type="danger">拒绝</el-button>
+                            <el-button class="" type="info" @click="versionCompareShow">取消</el-button>
+                        </div>
 
-                        <el-button class="acceptBtn" type="success">接受</el-button>
-                        <el-button class="rejectBtn" type="danger">拒绝</el-button>
+
 
                     </el-dialog>
 
@@ -144,20 +154,20 @@ export var VersionTemplate = Vue.extend({
                                         :data="acceptVersionTableData"
                                         stripe
                                         style="width: 100%"
-                                        height="58vh"
+                                        height="70vh"
                                         :default-sort="{ prop: 'viewCount', order: 'descending' }"
                                 >
-                                    <el-table-column sortable prop="submitTime" label="日期" >
+                                    <el-table-column sortable prop="submitTime" label="日期" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
-                                    <el-table-column sortable prop="itemName" label="名称">
-                                    </el-table-column>
-
-                                    <el-table-column sortable prop="type" label="类型" >
-                                    </el-table-column>
-                                    <el-table-column sortable prop="editor" label="修改者" >
+                                    <el-table-column sortable prop="itemName" label="名称" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
 
-                                    <el-table-column  label="操作" width="240">
+                                    <el-table-column sortable prop="type" label="类型" show-overflow-tooltip min-width="100px">
+                                    </el-table-column>
+                                    <el-table-column sortable prop="editor" label="修改者" show-overflow-tooltip min-width="180px">
+                                    </el-table-column>
+
+                                    <el-table-column  label="操作" show-overflow-tooltip min-width="80px">
                                         <template slot-scope="scope">
                                             <el-button
                                                     size="mini"
@@ -207,20 +217,20 @@ export var VersionTemplate = Vue.extend({
                                         :data="rejectVersionTableData"
                                         stripe
                                         style="width: 100%"
-                                        height="58vh"
+                                        height="70vh"
                                         :default-sort="{ prop: 'viewCount', order: 'descending' }"
                                 >
-                                    <el-table-column sortable prop="submitTime" label="日期" >
+                                    <el-table-column sortable prop="submitTime" label="日期" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
-                                    <el-table-column sortable prop="itemName" label="名称">
-                                    </el-table-column>
-
-                                    <el-table-column sortable prop="type" label="类型" >
-                                    </el-table-column>
-                                    <el-table-column sortable prop="editor" label="修改者" >
+                                    <el-table-column sortable prop="itemName" label="名称" show-overflow-tooltip min-width="240px>
                                     </el-table-column>
 
-                                    <el-table-column  label="操作" >
+                                    <el-table-column sortable prop="type" label="类型" show-overflow-tooltip min-width="100px">
+                                    </el-table-column>
+                                    <el-table-column sortable prop="editor" label="修改者" show-overflow-tooltip min-width="180px">
+                                    </el-table-column>
+
+                                    <el-table-column  label="操作" show-overflow-tooltip min-width="80px">
                                         <template slot-scope="scope">
                                             <el-button
                                                     size="mini"
@@ -257,7 +267,7 @@ export var VersionTemplate = Vue.extend({
             searchInputWaitVersion:"", //版本搜索
             waitVersionTableData:[],// 表格数据
             currentPageWaitVersion:1, //当前页
-            PageSizeWaitVersion:10, //当前页大小
+            PageSizeWaitVersion:20, //当前页大小
             totalWaitVersion:0, //总数
             dialogVersionComp:false, //版本对比对话框显示控制
             versionCompData:{}, //版本对比数据
@@ -268,14 +278,14 @@ export var VersionTemplate = Vue.extend({
             searchInputAcceptVersion:"", //版本搜索
             acceptVersionTableData:[],// 表格数据
             currentPageAcceptVersion:1, //当前页
-            PageSizeAcceptVersion:10, //当前页大小
+            PageSizeAcceptVersion:20, //当前页大小
             totalAcceptVersion:0, //总数
 
             //拒绝版本审核
             searchInputRejectVersion:"", //版本搜索
             rejectVersionTableData:[],// 表格数据
             currentPageRejectVersion:1, //当前页
-            PageSizeRejectVersion:10, //当前页大小
+            PageSizeRejectVersion:20, //当前页大小
             totalRejectVersion:0, //总数
         }
     },
@@ -315,6 +325,7 @@ export var VersionTemplate = Vue.extend({
                 });
         },
 
+
         //查看某次审核，对比
         viewWaitVersion(versionId){
             this.dialogVersionComp=true
@@ -336,12 +347,18 @@ export var VersionTemplate = Vue.extend({
         rejectVersion(){
 
         },
-
-        handleSizeChangeWaitVersion(){
-
+        versionCompareShow(){
+            this.dialogVersionComp = false
         },
-        handleCurrentChangeWaitVersion(){
 
+        handleSizeChangeWaitVersion(val){
+            this.PageSizeWaitVersion=val;
+            this.getWaitVersionList();
+        },
+        handleCurrentChangeWaitVersion(val){
+            console.log(val);
+            this.currentPageWaitVersion=val;
+            this.getWaitVersionList();
         },
 
         //接受部分
@@ -366,10 +383,13 @@ export var VersionTemplate = Vue.extend({
 
         },
 
-        handleSizeChangeAcceptVersion(){
-
+        handleSizeChangeAcceptVersion(val){
+            this.currentPageAcceptVersion=val;
+            this.getAcceptVersionList();
         },
-        handleCurrentChangeAcceptVersion(){
+        handleCurrentChangeAcceptVersion(val){
+            this.currentPageAcceptVersion=val;
+            this.getAcceptVersionList();
 
         },
 
@@ -399,11 +419,13 @@ export var VersionTemplate = Vue.extend({
 
         },
 
-        handleSizeChangeRejectVersion(){
-
+        handleSizeChangeRejectVersion(val){
+            this.PageSizeRejectVersion=val;
+            this.getRejectVersionList();
         },
-        handleCurrentChangeRejectVersion(){
-
+        handleCurrentChangeRejectVersion(val){
+            this.currentPageRejectVersion=val;
+            this.getRejectVersionList();
         },
     }
 })

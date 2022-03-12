@@ -97,7 +97,10 @@ public class ThemeService {
 
             //详情页面
             String detailResult;
-            String theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
+            String theme_detailDesc = "";
+            if(theme.getLocalizationList()!=null){
+                theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
+            }
             int num=theme_detailDesc.indexOf("/upload/document/");
             if(num==-1||num>20){
                 detailResult=theme_detailDesc;
@@ -188,7 +191,7 @@ public class ThemeService {
         Theme theme = new Theme();
         theme = (Theme) repositoryService.commonInsertPart(theme,themeAddDTO, email, ItemTypeEnum.Theme);
 
-        if (themeAddDTO.getDetail() != null && !themeAddDTO.getDetail().equals(""))
+        if (themeAddDTO.getDetail() != null)
             theme.setLocalizationList(genericService.detail2localization(theme.getThemename(),themeAddDTO.getDetail()));
 
 

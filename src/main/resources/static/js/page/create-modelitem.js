@@ -613,7 +613,7 @@ var createModelItem = Vue.extend({
             for(i=0;i<this.treeData_select.length;i++){
                 this.cls.push(this.treeData_select[i].oid);
             }
-            modelItemObj.classifications2 = this.cls;//[$("#parentNode").attr("pid")];
+            modelItemObj.classifications = this.cls;//[$("#parentNode").attr("pid")];
             modelItemObj.name = $("#nameInput").val();
             modelItemObj.alias = $("#aliasInput").val().split(",");
             if (modelItemObj.alias.length === 1 && modelItemObj.alias[0] === "") {

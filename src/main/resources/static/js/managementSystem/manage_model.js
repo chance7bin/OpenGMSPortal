@@ -42,8 +42,11 @@ export var ModelTemplate = Vue.extend({
                                         </el-table-column>
                                     </el-table>
                                     <el-button  slot="reference"   type="success" >待检测模型</el-button>
-                                    <div class="flexRowEnd">
-                                        <el-button  size="medium" type="success" @click="checkSelectedModels()" >检测</el-button>
+                                    <div class="flexRowBetween">
+                                        <div class="flexColCenter">
+                                            <span>（此处批量检测模型将计入检测历史）</span>
+                                        </div>
+                                        <el-button  size="medium" type="success" @click="checkSelectedModels()" >批量检测</el-button>
                                     </div>
                                 </el-popover>
                             </div>
@@ -72,7 +75,7 @@ export var ModelTemplate = Vue.extend({
                                                 @click.stop="deleteHistoryItem(item.id)">Delete</el-button>
                                     </template>
                                     <el-table :data="item.historyList" :show-header="false">
-                                        <el-table-column  property="modelName" ></el-table-column>          
+                                        <el-table-column  property="modelName" width="400px" show-overflow-tooltip></el-table-column>          
                                         <el-table-column  >
                                             <template slot-scope="scope">
                                                 <el-tag
@@ -108,20 +111,20 @@ export var ModelTemplate = Vue.extend({
                                     </el-table>
                                 </el-collapse-item>
                             </el-collapse>
-
+                            
                             <el-pagination
                                     layout="total,prev, pager, next"
                                     :total="historyTotal"
                                     @current-change="handleHistoryCurrentChange"
                                     :current-page="historyNowPage"
-                                    :page-size="5"
+                                    :page-size="10"
                                     class="flexRowCenter"
                                 >
                             </el-pagination>
-
                         </el-dialog>
 
 <!--                        模型列表-->
+                        <span>tips：点击检测进行单个模型检测，或勾选多个模型进行批量检测</span>
                         <el-table
                                 ref="modelTable"
                                 @select="handelCheckbox"
@@ -129,22 +132,22 @@ export var ModelTemplate = Vue.extend({
                                 :data="tableData"
                                 stripe
                                 style="width: 100%"
-                                height="65vh"
+                                height="75vh"
                                 :default-sort="{ prop: 'viewCount', order: 'descending' }"
                         >
                             <el-table-column type="selection">
                             </el-table-column>
-                            <el-table-column sortable label="名称">
+                            <el-table-column sortable label="名称" show-overflow-tooltip min-width="250px">
                                 <template slot-scope="scope" >
-                                    <el-link :href="computableModelUrl+scope.row.id" target="_blank">{{scope.row.accessId}}</el-link>
+                                    <el-link :href="computableModelUrl+scope.row.id" target="_blank" >{{scope.row.name}}</el-link>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column sortable prop="author" label="作者" >
+                            <el-table-column sortable prop="author" label="作者" show-overflow-tooltip min-width="100px">
                             </el-table-column>
 
-                            <el-table-column sortable prop="viewCount" label="访问量"></el-table-column>
-                            <el-table-column sortable label="模型容器IP">
+                            <el-table-column sortable prop="viewCount" label="访问量" min-width="100px"></el-table-column>
+                            <el-table-column sortable label="模型容器IP" min-width="120px">
                                 <template slot-scope="scope" >
                                   <el-popover
                                     placement="bottom"
@@ -152,7 +155,7 @@ export var ModelTemplate = Vue.extend({
                                     width="200"
                                     trigger="hover">
                                         <el-link type="primary" v-for="(item,index) in scope.row.deployedMSR" :href="'http://'+item+'/modelser/all'" target="_blank">{{item}}</el-link>
-                                        <el-button size="mini" slot="reference">查看服务器IP</el-button>
+                                        <el-button size="mini" slot="reference" >查看服务器IP</el-button>
                                   </el-popover>
                                 </template>
                             </el-table-column>
@@ -162,11 +165,12 @@ export var ModelTemplate = Vue.extend({
                                     <el-button
                                             size="mini"
                                             type="primary"
-                                            @click="checkModel(scope.row.id)">Check</el-button>
+                                            @click="checkModel(scope.row.id)"
+                                            title="单个模型检测不计入检测历史">检测</el-button>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column  prop="status" label="状态">
+                            <el-table-column  prop="status" label="状态" min-width="150px">
                                 <template slot-scope="scope">
                                     <el-tag
                                             v-if="scope.row.checkedModel ===null"
@@ -218,7 +222,7 @@ export var ModelTemplate = Vue.extend({
             tableData: [], //表格中展示的数据
             totalModel: 0, //数据库中模型总数
             currentPage: 1,  //模型列表当前页
-            PageSize: 10,  //模型列表每页数量
+            PageSize: 20,  //模型列表每页数量
             searchInput:"", //模型列表搜索框内容
             sortField:"createTime", //模型列表排序字段 默认时间
             ifAsc:false, //模型请求列表升降序
@@ -446,7 +450,7 @@ export var ModelTemplate = Vue.extend({
             axios.post('/managementSystem/checkList/search', {
                 "asc": false,
                 "page": this.historyNowPage,
-                "pageSize": 5,
+                "pageSize": 10,
                 "searchText": "",
                 "sortField": "createTime"
             })
@@ -454,7 +458,7 @@ export var ModelTemplate = Vue.extend({
                     console.log(response)
                     let returnData=response.data.data
                     this.historyList=returnData.content
-                    this.historyTotal=returnData.totalElements
+                    this.historyTotal=returnData.total
 
                 })
                 .catch(function (error) {

@@ -888,7 +888,7 @@ var createSpatialReference = Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/addSpatialReference",
+                    url: "/spatialReference/",
                     type: "POST",
                     cache: false,
                     processData: false,

@@ -235,7 +235,7 @@ var createDataApplication = Vue.extend({
             //获取所有的template
             let pageData = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage-1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.pageOption.searchText,
                 sortElement: "default",
@@ -244,7 +244,7 @@ var createDataApplication = Vue.extend({
             let contentType = "application/x-www-form-urlencoded";
             $.ajax({
                 type:'POST',
-                url:'/dataApplication/getTemplate',
+                url:'/template/templateInfo',
                 data:pageData,
                 async: true,
                 contentType: contentType,
@@ -276,12 +276,9 @@ var createDataApplication = Vue.extend({
             this.searchTemplate();
         },
         selectTemplate(index, info){
-            console.log(info);
-            // this.dataApplication.bindTemplate = info.name;
-            // this.dataApplication.bindOid = info.oid;
             let obj = {
                 templateName : info.name,
-                templateOid : info.oid
+                templateOid : info.id
             }
             this.dataApplication.bindDataTemplates.push(obj);
             this.bindTemplateDialogVisible = false;
@@ -1077,7 +1074,7 @@ var createDataApplication = Vue.extend({
 
         var mid = window.sessionStorage.getItem("editConceptualModel_id");
 
-        axios.get("/dataItem/createTree")
+        axios.get("/dataItem/categoryTree")
             .then(res => {
                 that.tObj = res.data;
                 let tree = [];
@@ -1115,14 +1112,13 @@ var createDataApplication = Vue.extend({
                             label:Object.keys(grandpa)[0],
                             children:gChildren,
                         }
-                        console.log(g);
                         tree.push(g);
                     }
                 }
                 that.treeData = tree;
             })
 
-        // axios.get("/dataItem/createTree")
+        // axios.get("/dataItem/categoryTree")
         //     .then(res => {
         //         that.tObj = res.data;
         //         let i=0
