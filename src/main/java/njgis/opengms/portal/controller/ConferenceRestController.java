@@ -4,8 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
-import njgis.opengms.portal.enums.ItemTypeEnum;
-import njgis.opengms.portal.service.GenericService;
+import njgis.opengms.portal.service.ConferenceService;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConferenceRestController {
 
     @Autowired
-    GenericService genericService;
+    ConferenceService conferenceService;
 
     /**
      * @Description 某用户查询他人的模型条目
@@ -34,7 +33,7 @@ public class ConferenceRestController {
     @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
     public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Conference,findDTO, false));
+        return ResultUtils.success(conferenceService.queryByUser(findDTO));
 
     }
 
@@ -48,7 +47,7 @@ public class ConferenceRestController {
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Conference,findDTO, true));
+        return ResultUtils.success(conferenceService.queryByUser(findDTO));
 
     }
 
