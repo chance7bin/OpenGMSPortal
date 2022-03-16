@@ -3,13 +3,14 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.dao.ComputableModelDao;
 import njgis.opengms.portal.dao.FeedbackDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.entity.doo.user.UserResourceCount;
-import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
+import njgis.opengms.portal.entity.doo.user.*;
 import njgis.opengms.portal.entity.dto.user.*;
+import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.Feedback;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -20,6 +21,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -30,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
@@ -73,6 +76,9 @@ public class UserService {
 
     @Autowired
     FeedbackDao feedbackDao;
+
+    @Autowired
+    ComputableModelDao computableModelDao;
 
 
     /**
@@ -1043,13 +1049,27 @@ public class UserService {
 
     public User updateProjects(ProjectDTO projectDTO, String email) {
         User user = userDao.findFirstByEmail(email);
-        user.setProjects(projectDTO.getProjects());
+        List<Project> projects = projectDTO.getProjects();
+        List<njgis.opengms.portal.entity.po.Project> projects1 = new ArrayList<>();
+        for (Project project : projects) {
+            njgis.opengms.portal.entity.po.Project project1 = new njgis.opengms.portal.entity.po.Project();
+            BeanUtils.copyProperties(project,project1);
+            projects1.add(project1);
+        }
+        user.setProjects(projects1);
         return userDao.save(user);
     }
 
     public User updateConferences(ConferenceDTO conferenceDTO, String email) {
         User user = userDao.findFirstByEmail(email);
-        user.setConferences(conferenceDTO.getConferences());
+        List<Conference> conferences = conferenceDTO.getConferences();
+        List<njgis.opengms.portal.entity.po.Conference> conferences1 = new ArrayList<>();
+        for (Conference conference : conferences) {
+            njgis.opengms.portal.entity.po.Conference conference1 = new njgis.opengms.portal.entity.po.Conference();
+            BeanUtils.copyProperties(conference,conference1);
+            conferences1.add(conference1);
+        }
+        user.setConferences(conferences1);
         return userDao.save(user);
 
     }
@@ -1103,6 +1123,56 @@ public class UserService {
 
         return user;
 
+
+    }
+
+
+    public String saveUserIcon(String img, String email) {
+        try {
+            User user = userDao.findFirstByEmail(email);
+            if (user != null) {
+                String uploadImage = img;
+                String path = "/user/";
+                if (!uploadImage.contains("/user/")) {
+                    //删除旧图片
+                    File file = new File(resourcePath + user.getAvatar());
+                    if (file.exists() && file.isFile())
+                        file.delete();
+                    //添加新图片
+                    path = "/user/" + UUID.randomUUID().toString() + ".jpg";
+                    String imgStr = uploadImage.split(",")[1];
+                    Utils.base64StrToImage(imgStr, resourcePath + path);
+                    user.setAvatar(path);
+
+                }
+                userDao.save(user);
+                return path;
+
+            } else
+                return "no user";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+    }
+
+
+    public JSONArray getSubscribedList(String email) {
+        User user = userDao.findFirstByEmail(email);
+        List<UserSubscribeItem> subscribeItemList = user.getSubscribeItemList();
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < subscribeItemList.size(); i++) {
+            ComputableModel computableModel = computableModelDao.findFirstById(subscribeItemList.get(i).getOid());
+
+            JSONObject subscribe = new JSONObject();
+            subscribe.put("name", computableModel.getName());
+            subscribe.put("type", computableModel.getContentType());
+            subscribe.put("oid", computableModel.getId());
+
+            array.add(subscribe);
+        }
+
+        return array;
 
     }
 }
