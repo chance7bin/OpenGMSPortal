@@ -818,7 +818,7 @@ new Vue({
                 asc: this.pageOption.sortAsc,
                 page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
-                queryField: this.curQueryField,
+                curQueryField: this.curQueryField,
                 categoryName:this.categoryId,
             };
             switch (this.queryType) {

@@ -9,23 +9,29 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
+import njgis.opengms.portal.entity.doo.model.modelItemVersion;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.enums.RelationTypeEnum;
 import njgis.opengms.portal.utils.ImageUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import javax.management.relation.Relation;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -58,6 +64,9 @@ public class ModelItemService {
 
     @Autowired
     ModelItemService modelItemService;
+
+    @Autowired
+    VersionService versionService;
 
     @Autowired
     ModelClassificationService modelClassificationService;
@@ -97,6 +106,9 @@ public class ModelItemService {
 
     @Autowired
     ArticleDao articleDao;
+
+    @Autowired
+    NoticeService noticeService;
 
 
     public ModelAndView getPage(PortalItem portalItem) {
@@ -647,17 +659,14 @@ public class ModelItemService {
     }*/
 
 
-    public JSONObject update(ModelItemUpdateDTO modelItemUpdateDTO, String uid){
+    public JSONObject update(ModelItemUpdateDTO modelItemUpdateDTO, String email){
         ModelItem modelItem=modelItemDao.findFirstById(modelItemUpdateDTO.getOriginId());
-
+        List<String> versions = modelItem.getVersions();
         String author=modelItem.getAuthor();
         String authorUserName = author;
         if(!modelItem.isLock()) {
-            if (author.equals(uid)) {
-
-
-//                List<String> versions = modelItem.getVersions();
-//                if (versions == null || versions.size() == 0) {
+            if (author.equals(email)) {
+                if (versions == null || versions.size() == 0) {
 //                    ModelItemVersion modelItemVersionOri = new ModelItemVersion();
 //                    BeanUtils.copyProperties(modelItem, modelItemVersionOri, "id");
 //                    modelItemVersionOri.setId(UUID.randomUUID().toString());
@@ -667,52 +676,49 @@ public class ModelItemService {
 //                    modelItemVersionOri.setModifier(modelItem.getAuthor());
 //                    modelItemVersionOri.setModifyTime(modelItem.getCreateTime());
 //                    modelItemVersionDao.insert(modelItemVersionOri);
-//
-//                    versions = new ArrayList<>();
-//                    versions.add(modelItemVersionOri.getId());
-//                    modelItem.setVersions(versions);
-//                }
 
-                BeanUtils.copyProperties(modelItemUpdateDTO, modelItem);
-                //判断是否为新图片
-                String uploadImage = modelItemUpdateDTO.getUploadImage();
-                if (uploadImage != null && !uploadImage.contains("/modelItem/") && !uploadImage.equals("")) {
-                    //删除旧图片
-                    File file = new File(resourcePath + modelItem.getImage());
-                    if (file.exists() && file.isFile())
-                        file.delete();
-                    //添加新图片
-                    String path = "/modelItem/" + UUID.randomUUID().toString() + ".jpg";
-                    String imgStr = uploadImage.split(",")[1];
-                    Utils.base64StrToImage(imgStr, resourcePath + path);
-                    modelItem.setImage(path);
+                    Version version = versionService.addVersion(modelItem, email, modelItem.getName());
+
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    modelItem.setVersions(versions);
                 }
-                Date curDate = new Date();
-                modelItem.setLastModifyTime(curDate);
-                modelItem.setLastModifier(author);
+            }else{
+                modelItem.setLock(true);
+                modelItemDao.save(modelItem);
+            }
 
-                List<Localization> localizationList = modelItem.getLocalizationList();
-                for(int l = 0;l<localizationList.size();l++){
-                    Localization localization = localizationList.get(l);
-                    localization.setDescription(ImageUtils.saveBase64Image(localization.getDescription(),modelItem.getId(),resourcePath,htmlLoadPath));
-                    localizationList.set(l,localization);
-                }
-                modelItem.setLocalizationList(localizationList);
+            BeanUtils.copyProperties(modelItemUpdateDTO, modelItem, Utils.getNullPropertyNames(modelItemUpdateDTO));
+            //判断是否为新图片
+            String uploadImage = modelItemUpdateDTO.getUploadImage();
+            if (uploadImage != null && !uploadImage.contains("/modelItem/") && !uploadImage.equals("")) {
+                //删除旧图片
+                File file = new File(resourcePath + modelItem.getImage());
+                if (file.exists() && file.isFile())
+                    file.delete();
+                //添加新图片
+                String path = "/modelItem/" + UUID.randomUUID().toString() + ".jpg";
+                String imgStr = uploadImage.split(",")[1];
+                Utils.base64StrToImage(imgStr, resourcePath + path);
+                modelItem.setImage(path);
+            }
+            Date curDate = new Date();
+            modelItem.setLastModifyTime(curDate);
+            modelItem.setLastModifier(author);
 
-//                ModelItemVersion modelItemVersion = new ModelItemVersion();
-//                BeanUtils.copyProperties(modelItem,modelItemVersion,"id");
-//                modelItemVersion.setOriginOid(modelItem.getId());
-//                modelItemVersion.setId(UUID.randomUUID().toString());
-//                modelItemVersion.setModifier(author);
-//                modelItemVersion.setModifyTime(curDate);
-//                modelItemVersion.setVerNumber(curDate.getTime());
-//                modelItemVersion.setVerStatus(2);
-//                modelItemVersion.setCreator(author);
-//                modelItemVersionDao.insert(modelItemVersion);
+            List<Localization> localizationList = modelItem.getLocalizationList();
+            for(int l = 0;l<localizationList.size();l++){
+                Localization localization = localizationList.get(l);
+                localization.setDescription(ImageUtils.saveBase64Image(localization.getDescription(),modelItem.getId(),resourcePath,htmlLoadPath));
+                localizationList.set(l,localization);
+            }
+            modelItem.setLocalizationList(localizationList);
 
-
-//                versions.add(modelItemVersion.getId());
-//                modelItem.setVersions(versions);
+            Version version_new = versionService.addVersion(modelItem, email, modelItem.getName());
+            if (author.equals(email)) {
+                versions.add(version_new.getId());
+                modelItem.setVersions(versions);
 
                 modelItemDao.save(modelItem);
 
@@ -723,161 +729,21 @@ public class ModelItemService {
                 return result;
             } else {
 
-//                ModelItemVersion modelItemVersion = new ModelItemVersion();
-//                BeanUtils.copyProperties(modelItemUpdateDTO, modelItemVersion, "id");
-//
-//                String uploadImage = modelItemUpdateDTO.getUploadImage()==null?"":modelItemUpdateDTO.getUploadImage();
-//                if(uploadImage.equals("")){
-//                    modelItemVersion.setImage("");
-//                }
-//                else if (!uploadImage.contains("/modelItem/") && !uploadImage.equals("")) {
-//                    String path = "/modelItem/" + UUID.randomUUID().toString() + ".jpg";
-//                    String imgStr = uploadImage.split(",")[1];
-//                    Utils.base64StrToImage(imgStr, resourcePath + path);
-//                    modelItemVersion.setImage(path);
-//                }
-//                else{
-//                    String[] names=uploadImage.split("modelItem");
-//                    modelItemVersion.setImage("/modelItem/"+names[1]);
-//                }
-//
-//                modelItemVersion.setOriginid(modelItem.getId());
-//                modelItemVersion.setId(UUID.randomUUID().toString());
-//                modelItemVersion.setModifier(uid);
-//                Date curDate = new Date();
-//                modelItemVersion.setModifyTime(curDate);
-//                modelItemVersion.setVerNumber(curDate.getTime());
-//                modelItemVersion.setVerStatus(0);
-//                userService.noticeNumPlusPlus(authorUserName);
-//
-//                List<Localization> localizationList = modelItemVersion.getLocalizationList();
-//                for(int l = 0;l<localizationList.size();l++){
-//                    Localization localization = localizationList.get(l);
-//                    localization.setDescription(Utils.saveBase64Image(localization.getDescription(),modelItemVersion.getId(),resourcePath,htmlLoadPath));
-//                    localizationList.set(l,localization);
-//                }
-//                modelItemVersion.setLocalizationList(localizationList);
-//
-//                modelItemVersion.setCreator(author);
-//                modelItemVersionDao.insert(modelItemVersion);
-//
-//                modelItem.setLock(true);
-//                modelItemDao.save(modelItem);
-//
+                // 发送通知
+                noticeService.sendNoticeContainsAllAdmin(email, modelItem.getAuthor(), modelItem.getAdmins(), version_new.getId(), OperationEnum.Edit);
+
                 JSONObject result = new JSONObject();
                 result.put("method", "version");
-//                result.put("id", modelItemVersion.getId());
-//
+                result.put("id", version_new.getId());
+
                 return result;
             }
         }
         else{
-
             return null;
         }
     }
 
-
-
-    public JsonResult addRelatedData(String id, List<String> relatedData) {
-        ModelItem modelItem = modelItemDao.findFirstById(id);
-
-        modelItem.getRelate().setDataItems(relatedData);
-
-        modelItemDao.save(modelItem);
-
-        return ResultUtils.success();
-    }
-
-
-    public List<Map<String, String>> getRelatedData(String id) {
-
-        ModelItem modelItem = modelItemDao.findFirstById(id);
-
-        List<String> relatedData = modelItem.getRelate().getDataItems();
-
-        if (relatedData == null) {
-            List<Map<String, String>> list = new ArrayList<>();
-            return list;
-
-        }
-
-        List<Map<String, String>> data = new ArrayList<>();
-        Map<String, String> dataInfo;
-        DataItem dataItem;
-
-
-        for (int i = 0; i < relatedData.size(); i++) {
-            //只取三个
-            if (i == 3) {
-                break;
-            }
-
-            modelItem = new ModelItem();
-
-            dataItem = dataItemDao.findFirstById(relatedData.get(i));
-
-            dataInfo = new HashMap<>();
-            dataInfo.put("name", dataItem.getName());
-            dataInfo.put("id", dataItem.getId());
-            dataInfo.put("overview", dataItem.getOverview());
-
-            data.add(dataInfo);
-
-        }
-        return data;
-
-    }
-
-    //getAllRelatedData
-    public List<Map<String, String>> getAllRelatedData(String id, Integer more) {
-
-
-        ModelItem modelItem = modelItemDao.findFirstById(id);
-
-        List<String> relatedData = modelItem.getRelate().getDataItems();
-
-
-        List<Map<String, String>> data = new ArrayList<>();
-
-        DataItem dataItem;
-
-        Map<String, String> dataInfo;
-        if (relatedData == null) {
-            dataInfo = new HashMap<>();
-            dataInfo.put("all", "all");
-            data.add(dataInfo);
-            return data;
-        }
-
-
-        if (more - 5 > relatedData.size() || more - 5 == relatedData.size()) {
-
-            dataInfo = new HashMap<>();
-            dataInfo.put("all", "all");
-            data.add(dataInfo);
-
-            return data;
-        }
-
-        for (int i = more - 5; i < more && i < relatedData.size(); i++) {
-            //只取三个
-
-            dataItem = new DataItem();
-
-            dataItem = dataItemDao.findFirstById(relatedData.get(i));
-
-            dataInfo = new HashMap<>();
-            dataInfo.put("name", dataItem.getName());
-            dataInfo.put("oid", dataItem.getId());
-            dataInfo.put("overview", dataItem.getOverview());
-
-            data.add(dataInfo);
-
-        }
-        return data;
-
-    }
 
     /**
      * @Description 获取模型贡献者信息
@@ -1442,8 +1308,7 @@ public class ModelItemService {
         return result;
     }
 
-
-    public String updateClassifications(String modelId,List<String> classi, String email){
+    public String updateClassifications(String modelId, List<String> classi, String email){
 
         ModelItem modelItem = modelItemDao.findFirstById(modelId);
 
@@ -1457,20 +1322,8 @@ public class ModelItemService {
         }else{
             ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
             modelItemUpdateDTO.setOriginId(modelItem.getId());
-            modelItemUpdateDTO.setName(modelItem.getName());
-            modelItemUpdateDTO.setAlias(modelItem.getAlias());
-            modelItemUpdateDTO.setUploadImage(modelItem.getImage());
-            modelItemUpdateDTO.setOverview(modelItem.getOverview());
-            modelItemUpdateDTO.setLocalizationList(modelItem.getLocalizationList());
-            modelItemUpdateDTO.setStatus(modelItem.getStatus());
-            modelItemUpdateDTO.setLocalizationList(modelItem.getLocalizationList());
-            modelItemUpdateDTO.setAuthorships(modelItem.getAuthorships());
-            modelItemUpdateDTO.setClassifications(classi);
-            modelItemUpdateDTO.setKeywords(modelItem.getKeywords());
-            modelItemUpdateDTO.setReferences(modelItem.getReferences());
-            modelItemUpdateDTO.setRelate(modelItem.getRelate());
-            modelItemUpdateDTO.setMetadata(modelItem.getMetadata());
 
+            modelItemUpdateDTO.setClassifications(classi);
 
             modelItemService.update(modelItemUpdateDTO,email);
 
@@ -1479,6 +1332,329 @@ public class ModelItemService {
 
     }
 
+    public String updateAlias(String modelId, List<String> aliasList, String email){
+
+        ModelItem modelItem = modelItemDao.findFirstById(modelId);
+
+        String author = modelItem.getAuthor();
+
+        if(author.equals(email)) {
+            modelItem.setAlias(aliasList);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemUpdateDTO.setAlias(aliasList);
+
+            modelItemService.update(modelItemUpdateDTO,email);
+
+            return "version";
+        }
+
+    }
+
+    public String updateLocalizations(String modelId, List<Localization> localizations, String email){
+
+        ModelItem modelItem = modelItemDao.findFirstById(modelId);
+
+        String author = modelItem.getAuthor();
+
+        if(author.equals(email)) {
+            modelItem.setLocalizationList(localizations);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+
+            modelItemUpdateDTO.setLocalizationList(localizations);
+
+            modelItemService.update(modelItemUpdateDTO,email);
+
+            return "version";
+        }
+
+    }
+
+    public String updateReferences(String modelId, List<Article> references, String email){
+
+        ModelItem modelItem = modelItemDao.findFirstById(modelId);
+
+        String author = modelItem.getAuthor();
+
+        List<String> reference_ids = new ArrayList<>();
+        //参考文献插入数据库
+        for(int i = 0; i < references.size(); i++){
+            Article reference = references.get(i);
+            List<Article> articles = articleDao.findAllByTitle(reference.getTitle());
+            Boolean find = false;
+            for(Article art : articles){
+                if(reference.isSame(art)){
+                    find = true;
+                    reference_ids.add(art.getId());
+                    break;
+                }
+            }
+            if(!find){
+                reference_ids.add(reference.getId());
+                articleDao.insert(reference);
+            }
+        }
+
+        if(author.equals(email)) {
+            modelItem.setReferences(reference_ids);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+
+            modelItemUpdateDTO.setReferences(reference_ids);
+
+            modelItemService.update(modelItemUpdateDTO,email);
+
+            return "version";
+        }
+
+    }
+
+    public JSONObject setRelation(String modelId,String type,List<String> relations,String user){
+
+        ModelItem modelItem=modelItemDao.findFirstById(modelId);
+        ModelItemRelate relate=modelItem.getRelate();
+
+        List<String> relationDelete=new ArrayList<>();//要被删除的关系
+        List<String> relationAdd=new ArrayList<>();//要添加的关系
+
+        switch (type){
+            case "dataItem":
+
+                for(int i=0;i<relate.getDataItems().size();i++){
+                    relationDelete.add(relate.getDataItems().get(i));
+                }
+
+                for(int i=0;i<relations.size();i++){
+                    relationAdd.add(relations.get(i));
+                }
+
+                //筛选出要删除和要添加的条目
+                for(int i=0;i<relationDelete.size();i++){
+                    for(int j=0;j<relationAdd.size();j++){
+                        if(relationDelete.get(i).equals(relationAdd.get(j))){
+                            relationDelete.set(i,"");
+                            relationAdd.set(j,"");
+                            break;
+                        }
+                    }
+                }
+                //找到对应条目，删除关联
+                for(int i=0;i<relationDelete.size();i++){
+                    String id=relationDelete.get(i);
+                    if(!id.equals("")) {
+                        DataItem dataItem = dataItemDao.findFirstById(id);
+                        if(dataItem.getStatus().equals("Private")){
+                            relations.add(dataItem.getId());
+                            continue;
+                        }
+                        if(dataItem.getRelatedModels()!=null) {
+                            dataItem.getRelatedModels().remove(modelId);
+                            dataItemDao.save(dataItem);
+                        }
+                    }
+                }
+                //找到对应条目，添加关联
+                for(int i=0;i<relationAdd.size();i++){
+                    String id=relationAdd.get(i);
+                    if(!id.equals("")) {
+                        DataItem dataItem = dataItemDao.findFirstById(id);
+                        if(dataItem.getRelatedModels()!=null) {
+                            dataItem.getRelatedModels().add(modelId);
+                        }
+                        else{
+                            List<String> relatedModels=new ArrayList<>();
+                            relatedModels.add(modelId);
+                            dataItem.setRelatedModels(relatedModels);
+                        }
+                        dataItemDao.save(dataItem);
+                    }
+                }
+
+                relate.setDataItems(relations);
+
+                break;
+            case "conceptualModel":
+                relate.setConceptualModels(relations);
+                break;
+            case "logicalModel":
+                relate.setLogicalModels(relations);
+                break;
+            case "computableModel":
+                relate.setComputableModels(relations);
+                break;
+            case "concept":
+                relate.setConcepts(relations);
+                break;
+            case "spatialReference":
+                relate.setSpatialReferences(relations);
+                break;
+            case "template":
+                relate.setTemplates(relations);
+                break;
+            case "unit":
+                relate.setUnits(relations);
+                break;
+        }
+
+        if(!user.equals(modelItem.getAuthor())){
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemUpdateDTO.setRelate(relate);
+
+            update(modelItemUpdateDTO,user);
+
+            JSONObject result = new JSONObject();
+            result.put("type","version");
+            return result;
+        }else{
+
+            modelItem.setRelate(relate);
+
+            modelItemDao.save(modelItem);
+
+            JSONObject result = new JSONObject();
+            result.put("type","suc");
+            return result;
+        }
+    }
+
+    public JSONObject setModelRelation(String id, List<ModelRelation> modelRelationListNew,String user) {
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        ModelItemRelate modelItemRelate = modelItem.getRelate();
+        List<ModelRelation> modelRelationListOld = modelItemRelate.getModelRelationList();
+
+        List<ModelRelation> relationIntersection = new ArrayList<>();
+
+        if(!user.equals(modelItem.getAuthor())){
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemRelate.setModelRelationList(modelRelationListNew);
+            modelItemUpdateDTO.setRelate(modelItemRelate);//
+
+            update(modelItemUpdateDTO,user);
+
+            JSONObject result = new JSONObject();
+            result.put("type","version");
+
+            return result;
+        }else {
+            for (int i = 0; i < modelRelationListNew.size(); i++) {
+                ModelRelation modelRelationNew = modelRelationListNew.get(i);
+                for (int j = 0; j < modelRelationListOld.size(); j++) {
+                    ModelRelation modelRelationOld = modelRelationListOld.get(j);
+                    if (modelRelationNew.getModelId().equals(modelRelationOld.getModelId())) {
+                        relationIntersection.add(modelRelationListNew.get(i));
+                        if(modelRelationNew.getRelation()!=modelRelationOld.getRelation()){
+
+                            ModelItem modelItem1 = modelItemDao.findFirstById(modelRelationNew.getModelId());
+                            for(int k = 0;k< modelItem1.getRelate().getModelRelationList().size();k++){
+                                if(modelItem1.getRelate().getModelRelationList().get(k).getModelId().equals(id)){
+                                    modelItem1.getRelate().getModelRelationList().get(k).setRelation(RelationTypeEnum.getOpposite(modelRelationNew.getRelation().getNumber()));
+                                }
+                            }
+                            modelItemDao.save(modelItem1);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < modelRelationListNew.size(); i++) {
+                ModelRelation modelRelation = modelRelationListNew.get(i);
+                boolean exist = false;
+                for (int j = 0; j < relationIntersection.size(); j++) {
+                    if (modelRelation.getModelId().equals(relationIntersection.get(j).getModelId())) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+
+                    ModelRelation modelRelation1 = new ModelRelation();
+                    modelRelation1.setModelId(id);
+                    modelRelation1.setRelation(RelationTypeEnum.getOpposite(modelRelation.getRelation().getNumber()));
+                    ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
+                    modelItem1.getRelate().getModelRelationList().add(modelRelation1);
+                    modelItemDao.save(modelItem1);
+                }
+            }
+
+            for (int i = 0; i < modelRelationListOld.size(); i++) {
+                ModelRelation modelRelation = modelRelationListOld.get(i);
+                boolean exist = false;
+                for (int j = 0; j < relationIntersection.size(); j++) {
+                    if (modelRelation.getModelId().equals(relationIntersection.get(j).getModelId())) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+
+                    ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
+                    if(modelItem1.getStatus().equals("Private")){
+                        modelRelationListNew.add(modelRelation);
+                        continue;
+                    }
+                    List<ModelRelation> modelRelationList = modelItem1.getRelate().getModelRelationList();
+                    for (ModelRelation modelRelation1 : modelRelationList) {
+                        if (modelRelation1.getModelId().equals(id)) {
+                            modelItem1.getRelate().getModelRelationList().remove(modelRelation1);
+                            break;
+                        }
+                    }
+                    modelItemDao.save(modelItem1);
+
+                }
+            }
+
+            modelItem.getRelate().setModelRelationList(modelRelationListNew);
+
+            modelItemDao.save(modelItem);
+
+            JSONArray modelItemArray = new JSONArray();
+
+            for (int i = 0; i < modelItem.getRelate().getModelRelationList().size(); i++) {
+                String oidNew = modelItem.getRelate().getModelRelationList().get(i).getModelId();
+                ModelItem modelItemNew = modelItemDao.findFirstById(oidNew);
+                JSONObject modelItemJson = new JSONObject();
+                modelItemJson.put("name", modelItemNew.getName());
+                modelItemJson.put("oid", modelItemNew.getId());
+                modelItemJson.put("description", modelItemNew.getOverview());
+                modelItemJson.put("image", modelItemNew.getImage().equals("") ? null : htmlLoadPath + modelItemNew.getImage());
+                modelItemJson.put("relation", modelItem.getRelate().getModelRelationList().get(i).getRelation().getText());
+                modelItemArray.add(modelItemJson);
+            }
+
+            JSONObject result = new JSONObject();
+            result.put("type","suc");
+            result.put("data",modelItemArray);
+
+            return result;
+        }
+
+//        List<ModelRelation> relationDelete = new ArrayList<>();
+//        List<ModelRelation> relationAdd = new ArrayList<>();
+//
+//        for(int i=0;i<modelRelationList1.size();i++){
+//            relationDelete.add(modelRelationList1.get(i));
+//        }
+//        for(int i=0;i<modelRelationList.size();i++){
+//            relationAdd.add(modelRelationList.get(i));
+//        }
+    }
 
     /**
      * @Description 获取模型浏览和相关计算模型调用次数
@@ -1502,4 +1678,115 @@ public class ModelItemService {
 
         return result;
     }
+
+    //通过DOI从网络上查询文章
+    public JSONObject getArticleByDOI(String Doi,String modelOid) throws IOException, DocumentException {
+        String[] eles= Doi.split("/");
+
+        String doi = eles[eles.length-2]+"/"+eles[eles.length-1];
+
+        String xml =  searchByElsevierDOI(doi);
+
+        JSONObject result = new JSONObject();
+
+        if(xml == null){
+            result.put("find",0);
+            return result;
+        }
+        else  if (xml.equals("Connection timed out: connect") ) {
+            result.put("find",-1);
+            return result;
+        }  else{
+            //dom4j解析xml
+            org.dom4j.Document doc = null;
+            doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            System.out.println("根节点：" + root.getName());
+            Element coredata = root.element("coredata");
+            String title = coredata.elementTextTrim("title");
+            String journal = coredata.elementTextTrim("publicationName");
+
+            String pageRange = coredata.elementTextTrim("pageRange");
+            String coverDate = coredata.elementTextTrim("coverDate");
+            String volume = coredata.elementTextTrim("volume");
+            List links = coredata.elements("link");
+            String link = ((Element)links.get(1)).attribute("href").getValue();
+
+            Iterator authorIte = coredata.elementIterator("creator");
+            List<String> authors = new ArrayList<>();
+            while (authorIte.hasNext()) {
+                Element record = (Element) authorIte.next();
+                String author = record.getText();
+                authors.add(author);
+            }
+
+            Article article = new Article();
+            article.setTitle(title);
+            article.setJournal(journal);
+            article.setVolume(volume);
+            article.setPageRange(pageRange);
+            article.setDate(coverDate);
+            article.setAuthors(authors);
+            article.setLink(link);
+            article.setDoi(doi);
+            if(findReferExisted(modelOid,doi)) {//同一模型条目下有重复上传
+                result.put("find",2);
+                result.put("article",article);
+            }else{
+                result.put("find",1);
+                result.put("article",article);
+            }
+            doc = null;
+            System.gc();
+//            user中加入这个字段
+//            User user = userDao.findFirstByUserName(contributor);
+//            List<String>articles = user.getArticles();
+//            articles.add(article.getOid());
+//            user.setArticles(articles);
+
+//            userDao.save(user);
+            return result;
+        }
+    }
+
+    public boolean findReferExisted(String modelOid,String doi){
+        if(!modelOid.equals("")&&modelOid!=null){
+            ModelItem modelItem = modelItemDao.findFirstById(modelOid);
+            List<String> references = modelItem.getReferences();
+            for(String reference:references){
+                if(reference.equals(doi))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public String searchByElsevierDOI(String doi) throws IOException {
+        String str = "https://api.elsevier.com/content/article/doi/"+doi+"?apiKey=e59f63ca86ba019181c8d3a53f495532";
+        URL url = new URL(str);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(9000);
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        String articleXml = new String();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            int length = connection.getContentLength();
+            while ((line = reader.readLine()) != null) {
+                if (!line.equals("")) {
+                    articleXml+=line+"\n";
+                }
+            }
+            reader.close();
+            connection.disconnect();
+            return articleXml;
+        } else {
+            //DOIdata.add(String.valueOf(responseCode));
+            return null;
+        }
+    }
+
 }

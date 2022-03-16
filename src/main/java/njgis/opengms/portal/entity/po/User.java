@@ -30,7 +30,7 @@ public class User extends PortalIdPlus {
     String email; //用户服务器
     String password; //md5+sha256加密 //用户服务器
     String name; //用户昵称，对应userserver的name //用户服务器
-    UserTitleEnum title;
+    UserTitleEnum title = UserTitleEnum.Unfilled;
 //    String gender;
     //用户位置 County / State / Province
     String country; //用户服务器

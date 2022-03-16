@@ -316,7 +316,7 @@ public class DataItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "得到用户上传的data item [ /dataItem/searchByNameAndAuthor[searchByNameByOid/searchDataByUserId] ]")
-    @RequestMapping(value={"/itemsByNameAndAuthor","/listByAuthor"},method = RequestMethod.POST)
+    @RequestMapping(value={"/itemsByNameAndAuthor"},method = RequestMethod.POST)
     public JsonResult searchByNameAndAuthor(@RequestBody SpecificFindDTO findDTO,HttpServletRequest request){
         HttpSession session=request.getSession();
         String email=session.getAttribute("email").toString();
@@ -475,12 +475,12 @@ public class DataItemRestController {
     }
 
     /**
-     * @Description 某用户查询自己的模型条目
+     * @Description 某用户查询自己的条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 

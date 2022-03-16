@@ -1,5 +1,6 @@
 package njgis.opengms.portal.entity.po;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,22 @@ public class Article {
     String date;
     String doi="";
     Date createDate;
+
+    public Boolean isSame(Article article){
+
+        if(this.title.equals(article.authors) &&
+                this.authors == article.authors &&
+                this.journal.equals(article.journal) &&
+                this.volume.equals(article.volume) &&
+                this.pageRange.equals(article.pageRange) &&
+                this.link.equals(article.link) &&
+                this.date.equals(article.date) &&
+                this.doi.equals(article.doi)){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
 
 }

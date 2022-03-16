@@ -24,7 +24,7 @@ public class ModelItemUpdateDTO extends ModelItemAddDTO {
     String originId;
 
     // model 和 data 都放到relate中
-    ModelItemRelate relate = new ModelItemRelate();
-    ModelMetadata metadata = new ModelMetadata();
+    ModelItemRelate relate;
+    ModelMetadata metadata;
 
 }
