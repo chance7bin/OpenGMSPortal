@@ -313,83 +313,84 @@ new Vue({
             }]}
 
             ],
-            treeData2:[
-                {"children": [{
-                        "children": [{
-                            "id": 2,
-                            "label": "Land regions",
-                            "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e"
-                        }, {"id": 3, "label": "Ocean regions", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457"}, {
-                            "id": 4,
-                            "label": "Frozen regions",
-                            "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9"
-                        }, {"id": 5, "label": "Atmospheric regions", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5"}, {
-                            "id": 6,
-                            "label": "Space-earth regions",
-                            "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee"
-                        }, {"id": 7, "label": "Solid-earth regions", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e"}
-                        ], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0"
-                    }, {
-                        "children": [{
-                            "id": 10,
-                            "label": "Development activities",
-                            "oid": "808e74a4-41c6-4558-a850-4daec1f199df"
-                        }, {"id": 11, "label": "Social activities", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190"}, {
-                            "id": 12,
-                            "label": "Economic activities",
-                            "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769"
-                        }],
-                        "id": 9,
-                        "label": "Human-perspective",
-                        "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da"
-                    },{"id":30,
-                        "label":"Integrated-perspective",
-                        "oid":"396cc739-ef33-4332-8d5d-9a67c89567c7",
-                        "children":[{
-                            "id": 31,
-                            "label": "Global scale",
-                            "oid": "14130969-fda6-41ea-aa32-0af43104840b"
-                        }, {
-                            "id": 32,
-                            "label": "Regional scale",
-                            "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e"
-                        }]}], "id": 24, "label": "Application-focused categories", "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19"},
+            // treeData2:[
+            //     {"children": [{
+            //             "children": [{
+            //                 "id": 2,
+            //                 "label": "Land regions",
+            //                 "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e"
+            //             }, {"id": 3, "label": "Ocean regions", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457"}, {
+            //                 "id": 4,
+            //                 "label": "Frozen regions",
+            //                 "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9"
+            //             }, {"id": 5, "label": "Atmospheric regions", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5"}, {
+            //                 "id": 6,
+            //                 "label": "Space-earth regions",
+            //                 "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee"
+            //             }, {"id": 7, "label": "Solid-earth regions", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e"}
+            //             ], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0"
+            //         }, {
+            //             "children": [{
+            //                 "id": 10,
+            //                 "label": "Development activities",
+            //                 "oid": "808e74a4-41c6-4558-a850-4daec1f199df"
+            //             }, {"id": 11, "label": "Social activities", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190"}, {
+            //                 "id": 12,
+            //                 "label": "Economic activities",
+            //                 "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769"
+            //             }],
+            //             "id": 9,
+            //             "label": "Human-perspective",
+            //             "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da"
+            //         },{"id":30,
+            //             "label":"Integrated-perspective",
+            //             "oid":"396cc739-ef33-4332-8d5d-9a67c89567c7",
+            //             "children":[{
+            //                 "id": 31,
+            //                 "label": "Global scale",
+            //                 "oid": "14130969-fda6-41ea-aa32-0af43104840b"
+            //             }, {
+            //                 "id": 32,
+            //                 "label": "Regional scale",
+            //                 "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e"
+            //             }]}], "id": 24, "label": "Application-focused categories", "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19"},
+            //
+            //     {"children": [{
+            //             "children": [{
+            //                 "id": 15,
+            //                 "label": "Geoinformation analysis",
+            //                 "oid": "afa99af9-4224-4fac-a81f-47a7fb663dba"
+            //             }, {
+            //                 "id": 16,
+            //                 "label": "Remote sensing analysis",
+            //                 "oid": "f20411a5-2f55-4ee9-9590-c2ec826b8bd5"
+            //             }, {
+            //                 "id": 17,
+            //                 "label": "Geostatistical analysis",
+            //                 "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8"
+            //             }, {"id": 18, "label": "Intelligent computation analysis", "oid": "c6fcc899-8ca4-4269-a21e-a39d38c034a6"}],
+            //             "id": 14,
+            //             "label": "Data-perspective",
+            //             "oid": "4785308f-b2ef-4193-a74b-b9fe025cbc5e"
+            //         }, {
+            //             "children": [{
+            //                 "id": 20,
+            //                 "label": "Physical process calculation",
+            //                 "oid": "1d564d0f-51c6-40ca-bd75-3f9489ccf1d6"
+            //             }, {
+            //                 "id": 21,
+            //                 "label": "Chemical process calculation",
+            //                 "oid": "63266a14-d7f9-44cb-8204-c877eaddcaa1"
+            //             }, {
+            //                 "id": 22,
+            //                 "label": "Biological process calculation",
+            //                 "oid": "6d1efa2c-830d-4546-b759-c66806c4facc"
+            //             }, {"id": 23, "label": "Human-activity calculation", "oid": "6952d5b2-cb0f-4ba7-96fd-5761dd566344"}],
+            //             "id": 19,
+            //             "label": "Process-perspective",
+            //             "oid": "746887cf-d490-4080-9754-1dc389986cf2"
+            //         }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718"}],
 
-                {"children": [{
-                        "children": [{
-                            "id": 15,
-                            "label": "Geoinformation analysis",
-                            "oid": "afa99af9-4224-4fac-a81f-47a7fb663dba"
-                        }, {
-                            "id": 16,
-                            "label": "Remote sensing analysis",
-                            "oid": "f20411a5-2f55-4ee9-9590-c2ec826b8bd5"
-                        }, {
-                            "id": 17,
-                            "label": "Geostatistical analysis",
-                            "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8"
-                        }, {"id": 18, "label": "Intelligent computation analysis", "oid": "c6fcc899-8ca4-4269-a21e-a39d38c034a6"}],
-                        "id": 14,
-                        "label": "Data-perspective",
-                        "oid": "4785308f-b2ef-4193-a74b-b9fe025cbc5e"
-                    }, {
-                        "children": [{
-                            "id": 20,
-                            "label": "Physical process calculation",
-                            "oid": "1d564d0f-51c6-40ca-bd75-3f9489ccf1d6"
-                        }, {
-                            "id": 21,
-                            "label": "Chemical process calculation",
-                            "oid": "63266a14-d7f9-44cb-8204-c877eaddcaa1"
-                        }, {
-                            "id": 22,
-                            "label": "Biological process calculation",
-                            "oid": "6d1efa2c-830d-4546-b759-c66806c4facc"
-                        }, {"id": 23, "label": "Human-activity calculation", "oid": "6952d5b2-cb0f-4ba7-96fd-5761dd566344"}],
-                        "id": 19,
-                        "label": "Process-perspective",
-                        "oid": "746887cf-d490-4080-9754-1dc389986cf2"
-                    }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718"}],
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -432,6 +433,7 @@ new Vue({
     methods: {
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
+            console.log(this.htmlJSON)
         },
 
         //高级搜索
@@ -548,12 +550,12 @@ new Vue({
                 if(this.cls2 != null) {
                     for (i = 0; i < this.cls2.length; i++) {
                         for (j = 0; j < 2; j++) {
-                            for (k = 0; k < this.treeData2[j].children.length; k++) {
-                                let children = this.treeData2[j].children[k].children;
+                            for (k = 0; k < this.htmlJSON.treeData2[j].children.length; k++) {
+                                let children = this.htmlJSON.treeData2[j].children[k].children;
                                 if (children == null) {
-                                    if (this.cls2[i] == this.treeData2[j].children[k].oid) {
-                                        ids2.push(this.treeData2[j].children[k].id);
-                                        this.clsStr2 += this.treeData2[j].children[k].label;
+                                    if (this.cls2[i] == this.htmlJSON.treeData2[j].children[k].oid) {
+                                        ids2.push(this.htmlJSON.treeData2[j].children[k].id);
+                                        this.clsStr2 += this.htmlJSON.treeData2[j].children[k].label;
                                         if (i != this.cls2.length - 1) {
                                             this.clsStr2 += ", ";
                                         }
@@ -991,14 +993,14 @@ new Vue({
             if(category!=null) {
                 this.searchText = "";
                 this.categoryId = category;
-                for(i=0;i<this.treeData2.length;i++){
-                    if(category==this.treeData2[i].oid){
-                        this.$refs.treeNew.setCurrentKey(this.treeData2[i].id);
-                        this.currentClass=this.treeData2[i].label;
+                for(i=0;i<this.htmlJSON.treeData2.length;i++){
+                    if(category==this.htmlJSON.treeData2[i].oid){
+                        this.$refs.treeNew.setCurrentKey(this.htmlJSON.treeData2[i].id);
+                        this.currentClass=this.htmlJSON.treeData2[i].label;
                         break;
                     }
                     else{
-                        let children = this.treeData2[i].children;
+                        let children = this.htmlJSON.treeData2[i].children;
                         let find=false;
                         for(j=0;j<children.length;j++){
                             if(category==children[j].oid){
@@ -1057,6 +1059,7 @@ new Vue({
                 this.currentClass="Application-focused categories";
             }
 
+
             //设置页数
             if(page!=null){
                 this.pageOption.currentPage=page;
@@ -1113,6 +1116,7 @@ new Vue({
         },
     },
     mounted() {
+
 
         this.urlSearch(decodeURIComponent(window.location.search));
 
