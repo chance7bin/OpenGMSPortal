@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
-import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.service.ArticleService;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,19 @@ public class ArticleRestController {
     @Autowired
     GenericService genericService;
 
+    @Autowired
+    ArticleService articleService;
+
     /**
      * @Description 某用户查询他人的模型条目
      * @param findDTO
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
-    @ApiOperation(value = "某用户查询他人的模型条目", notes = "主要用于个人主页")
+    @ApiOperation(value = "某用户查询他人的模型条目,传page,pageSize,searchText就行了", notes = "主要用于个人主页")
     @RequestMapping(value = "/queryListOfAuthor", method = RequestMethod.POST)
     public JsonResult queryListOfAuthor(@RequestBody UserFindDTO findDTO) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Article,findDTO, false));
+        return ResultUtils.success(articleService.queryByUser(findDTO));
 
     }
 
@@ -44,11 +47,12 @@ public class ArticleRestController {
      * @Return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
+    @ApiOperation(value = "某用户查询自己的模型条目,传page,pageSize,searchText就行了", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
-        return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.Article,findDTO, true));
+        return ResultUtils.success(articleService.queryByUser(findDTO));
+
 
     }
 

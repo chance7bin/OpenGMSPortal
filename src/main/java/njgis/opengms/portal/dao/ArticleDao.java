@@ -13,4 +13,9 @@ public interface ArticleDao extends MongoRepository<Article,String> {
 
      List<Article> findAllByTitle(String title);
 
+     Page<Article> findByTitleContainsIgnoreCase(String name,  Pageable pageable);
+
+     Page<Article> findByTitleContainsIgnoreCaseAndAuthors(String name, String email, Pageable pageable);
+
+
 }
