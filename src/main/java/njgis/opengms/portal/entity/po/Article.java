@@ -1,13 +1,11 @@
 package njgis.opengms.portal.entity.po;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import njgis.opengms.portal.entity.doo.base.PortalId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class Article {
-    @Id
-    String id;
+public class Article extends PortalId {
+    // @Id
+    // String id;
 //    String oid;
     String title;
     List<String> authors;
