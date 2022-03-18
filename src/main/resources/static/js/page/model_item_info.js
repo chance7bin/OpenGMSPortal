@@ -2717,7 +2717,7 @@ var info=new Vue({
             let flag = false;
             for (i = 0; i < this.tableData.length; i++) {
                 let tableRow = this.tableData[i];
-                if (tableRow.oid == row.oid) {
+                if (tableRow.id == row.id) {
                     flag = true;
                     break;
                 }

@@ -546,6 +546,27 @@ public class UserService {
         return userJson;
     }
 
+    //从用户服务器获取用户已用数据容量和总容量
+    public JSONObject getCapacity(String email){
+        String token = tokenService.checkToken(email);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer "+ token);
+        headers.set("user-agent","portal_backend");
+        //httpEntity = httpHeader + httpBody,当然也可以只有其中一部分
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        String capacityUri = "http://" + userServer + "/auth/res/capacity";
+
+        try{
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<JSONObject> userJson = restTemplate.exchange(capacityUri, HttpMethod.GET, httpEntity, JSONObject.class);
+            return userJson.getBody().getJSONObject("data");
+        }catch (Exception e){
+            System.out.println("Exception: " + e.toString());
+            return null;
+        }
+    }
+
+
     public User getByEmail(String email) {
         try {
             return userDao.findFirstByEmail(email);
@@ -1102,7 +1123,7 @@ public class UserService {
         userDao.save(user);
 
         return user;
-
-
     }
+
+
 }
