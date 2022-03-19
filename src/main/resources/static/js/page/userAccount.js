@@ -199,7 +199,8 @@ var userAccount = Vue.extend(
             },
 
             getSubscribedList(){
-                $.get("/user/getSubscribedList",{},(result)=>{
+
+                $.get("/user/subscribedList",{},(result)=>{
                     this.subscribeList = result.data;
                 })
             },

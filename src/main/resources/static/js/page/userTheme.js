@@ -224,7 +224,9 @@ var userTheme = Vue.extend(
             getTheme() {
                 this.pageSize = 10;
                 this.isInSearch = 0;
-                var url = getThemesByUserId();
+                // var url = getThemesByUserId();
+                var url = QueryThemeListOfAuthorSelf();
+
                 let data = {
                     page: this.page,
                     asc: false
@@ -248,10 +250,14 @@ var userTheme = Vue.extend(
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
+                            console.log(data)
                             this.resourceLoad = false;
-                            this.totalNum = data.count;
-                            this.searchCount = Number.parseInt(data["count"]);
-                            this.$set(this,"searchResult",data.content);
+                            // this.totalNum = data.count;
+                            // this.searchCount = Number.parseInt(data["count"]);
+                            // this.$set(this,"searchResult",data.content);
+                            this.totalNum = data.total;
+                            this.searchCount = Number.parseInt(data["total"]);
+                            this.$set(this,"searchResult",data.list);
                             console.log(this.searchResult)
                             if (this.page == 1) {
                                 this.pageInit();

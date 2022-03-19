@@ -181,7 +181,8 @@ var userDataSpace = Vue.extend(
                     {color: '#e6a23c', percentage: 90},
                     {color: '#f56c6c', percentage: 100},
 
-                ]
+                ],
+                userEmail:""
             }
         },
         computed:{
@@ -287,7 +288,6 @@ var userDataSpace = Vue.extend(
                     }, 120)
 
                 });
-
             },
 
             selectPathClick(){
@@ -393,41 +393,55 @@ var userDataSpace = Vue.extend(
 
             getFilePackage(){
                 this.managerloading = true
-                axios.get("/user/getUserResource",{})
-                    .then(res=> {
-                        let json=res.data;
-                        if(json.code==-1){
-                            this.$alert('Please login first!', 'Tip', {
-                                    type:"warning",
-                                    confirmButtonText: 'OK',
-                                    callback: ()=>{
-                                        window.sessionStorage.setItem("history", window.location.href);
-                                        window.location.href = "/user/login"
+
+                let {code, data, msg} = fetch("/user/getFullUserInfo", {
+                    method: "GET"
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    this.userEmail=data.data.email
+                    axios.get("/user/getUserResource",{
+                        params: {
+                            email:this.userEmail
+                        }})
+                        .then(res=> {
+                            let json=res.data;
+                            if(json.code==-1){
+                                this.$alert('Please login first!', 'Tip', {
+                                        type:"warning",
+                                        confirmButtonText: 'OK',
+                                        callback: ()=>{
+                                            window.sessionStorage.setItem("history", window.location.href);
+                                            window.location.href = "/user/login"
+                                        }
                                     }
-                                }
-                            );
-                        }else if(json.code == -2){
-                            this.myFileShown=[];
-                            this.$alert('Failed to get file, please try again later.', 'Tip', {
-                                    type:"warning",
-                                    confirmButtonText: 'OK',
-                                    callback: ()=>{
-                                        return
+                                );
+                            }else if(json.code == -2){
+                                this.myFileShown=[];
+                                this.$alert('Failed to get file, please try again later.', 'Tip', {
+                                        type:"warning",
+                                        confirmButtonText: 'OK',
+                                        callback: ()=>{
+                                            return
+                                        }
                                     }
-                                }
-                            );
-                        }
-                        else {
-                            this.myFile=json.data.resource.children;
-                            // console.log(this.myFile)
-                            this.myFileShown=this.myFile;
-                            setTimeout(()=>{
-                                this.managerloading = false
-                            },55)
-                        }
+                                );
+                            }
+                            else {
+                                this.myFile=json.data.resource.children;
+                                // console.log(this.myFile)
+                                this.myFileShown=this.myFile;
+                                setTimeout(()=>{
+                                    this.managerloading = false
+                                },55)
+                            }
 
 
-                    });
+                        });
+
+                });
+
+
             },
 
             //回到上一层目录
@@ -595,6 +609,7 @@ var userDataSpace = Vue.extend(
 
             addFolderInPath(){
                 this.addFolderIndex=true;
+                console.log("aaaa")
                 $('body').css('padding-right','0')
                 // console.log($('body').css('padding-right'))
             },
@@ -3081,7 +3096,6 @@ var userDataSpace = Vue.extend(
                     }
                 )
             })
-
             this.getFilePackage();
             this.getUserTaskInfo();
 
