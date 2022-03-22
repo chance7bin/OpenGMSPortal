@@ -129,9 +129,10 @@ export var ItemTemplate = Vue.extend({
                                 :current-page="userNowPage"
                                 :page-size="10"
                                 class="flexRowCenter"
-                            >                                    
+                            >   
+                            </el-pagination>                                 
                             </div>
-                            </el-pagination>
+                            
                             <div style="width: 25%; ">
                                 <h1>当前管理员：</h1>
                                 <div style="overflow: auto;height: 245px;">

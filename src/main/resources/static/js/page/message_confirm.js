@@ -317,36 +317,49 @@ var notice = Vue.extend({
                     //model：modelItem、conceptualModel、logicalModel、computableModel
                     // community：concept、spatialReference	、unit、template
                     console.log(json)
-                    for (let i=0;i<json.data.accept.length;i++){
-                        if (json.data.accept[i].type == "modelItem" || json.data.accept[i].type == "conceptualModel"||json.data.accept[i].type == "logicalModel"||json.data.accept[i].type == "computableModel"){
-                            this.model_tableData2.push(json.data.accept[i]);
-                            this.sum_tableData.push(json.data.accept[i]);
-                        }else if (json.data.accept[i].type == "concept" || json.data.accept[i].type == "spatialReference"||json.data.accept[i].type == "unit"||json.data.accept[i].type == "template") {
-                            this.community_tableData2.push(json.data.accept[i]);
-                            this.sum_tableData.push(json.data.accept[i]);
-                        }else if (json.data.accept[i].type == "theme") {
-                            this.theme_tableData2.push(json.data.accept[i]);
-                            this.sum_tableData.push(json.data.accept[i]);
-                        } else if (json.data.accept[i].type == "dataItem"||json.data.accept[i].type == "dataApplication"||json.data.accept[i].type=="dataHubs"){
-                            this.dataItem_tableData2.push(json.data.accept[i]);
-                            this.sum_tableData.push(json.data.accept[i]);
-                        }
+
+                    //临时用来判断data为空的情况，data应该是个对象，但现在是个数组
+                    if(json.data.length==0){
+                        console.log("/user/versionList/edit response no data ")
+                        return
                     }
-                    for (let i=0;i<json.data.reject.length;i++){
-                        if (json.data.reject[i].type == "modelItem" || json.data.reject[i].type == "conceptualModel"||json.data.reject[i].type == "logicalModel"||json.data.reject[i].type == "computableModel"){
-                            this.model_tableData3.push(json.data.reject[i]);
-                            this.sum_tableData.push(json.data.reject[i]);
-                        }else if (json.data.reject[i].type == "concept" || json.data.reject[i].type == "spatialReference"||json.data.reject[i].type == "unit"||json.data.reject[i].type == "template"){
-                            this.community_tableData3.push(json.data.reject[i]);
-                            this.sum_tableData.push(json.data.reject[i]);
-                        }else if (json.data.reject[i].type == "theme") {
-                            this.theme_tableData3.push(json.data.reject[i]);
-                            this.sum_tableData.push(json.data.reject[i]);
-                        }else if (json.data.reject[i].type == "dataItem"||json.data.reject[i].type == "dataApplication"||json.data.reject[i].type=="dataHubs"){
-                            this.dataItem_tableData3.push(json.data.reject[i]);
-                            this.sum_tableData.push(json.data.reject[i]);
+
+                        for (let i=0;i<json.data.accept.length;i++){
+                            if (json.data.accept[i].type == "modelItem" || json.data.accept[i].type == "conceptualModel"||json.data.accept[i].type == "logicalModel"||json.data.accept[i].type == "computableModel"){
+                                this.model_tableData2.push(json.data.accept[i]);
+                                this.sum_tableData.push(json.data.accept[i]);
+                            }else if (json.data.accept[i].type == "concept" || json.data.accept[i].type == "spatialReference"||json.data.accept[i].type == "unit"||json.data.accept[i].type == "template") {
+                                this.community_tableData2.push(json.data.accept[i]);
+                                this.sum_tableData.push(json.data.accept[i]);
+                            }else if (json.data.accept[i].type == "theme") {
+                                this.theme_tableData2.push(json.data.accept[i]);
+                                this.sum_tableData.push(json.data.accept[i]);
+                            } else if (json.data.accept[i].type == "dataItem"||json.data.accept[i].type == "dataApplication"||json.data.accept[i].type=="dataHubs"){
+                                this.dataItem_tableData2.push(json.data.accept[i]);
+                                this.sum_tableData.push(json.data.accept[i]);
+                            }
                         }
-                    }
+
+
+
+                        for (let i = 0; i < json.data.reject.length; i++) {
+                            if (json.data.reject[i].type == "modelItem" || json.data.reject[i].type == "conceptualModel" || json.data.reject[i].type == "logicalModel" || json.data.reject[i].type == "computableModel") {
+                                this.model_tableData3.push(json.data.reject[i]);
+                                this.sum_tableData.push(json.data.reject[i]);
+                            } else if (json.data.reject[i].type == "concept" || json.data.reject[i].type == "spatialReference" || json.data.reject[i].type == "unit" || json.data.reject[i].type == "template") {
+                                this.community_tableData3.push(json.data.reject[i]);
+                                this.sum_tableData.push(json.data.reject[i]);
+                            } else if (json.data.reject[i].type == "theme") {
+                                this.theme_tableData3.push(json.data.reject[i]);
+                                this.sum_tableData.push(json.data.reject[i]);
+                            } else if (json.data.reject[i].type == "dataItem" || json.data.reject[i].type == "dataApplication" || json.data.reject[i].type == "dataHubs") {
+                                this.dataItem_tableData3.push(json.data.reject[i]);
+                                this.sum_tableData.push(json.data.reject[i]);
+                            }
+                        }
+
+
+
                     for (let i=0;i<json.data.uncheck.length;i++){
                         if (json.data.uncheck[i].type == "modelItem" || json.data.uncheck[i].type == "conceptualModel"||json.data.uncheck[i].type == "logicalModel"||json.data.uncheck[i].type == "computableModel"){
                             this.model_tableData1.push(json.data.uncheck[i]);

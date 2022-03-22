@@ -121,7 +121,6 @@ export var VersionTemplate = Vue.extend({
                                 <div class="versionCompImgBox" v-html="versionCompChangedField.localizationList.original[0].description"></div>
                             </div>
                             <el-divider></el-divider>
-
                         </div>
                         
                         <div class="flexRowBetween" style=" width: fit-content; position: fixed;  bottom: 5vh; right: 15vw;">
