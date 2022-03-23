@@ -634,7 +634,7 @@ public class ManagementSystemService {
         // notice的附加信息 通知类型为Information时构造msg时使用
         String remark = "edited " + item.getName() + "'s status to " + item.getStatus();
 
-        noticeService.sendNoticeContains(email, OperationEnum.Inform,item.getId(),recipientList, remark);
+        noticeService.sendNoticeContains(email, OperationEnum.Inform,ItemTypeEnum.Information,item.getId(),recipientList, remark);
         return ResultUtils.success();
     }
 

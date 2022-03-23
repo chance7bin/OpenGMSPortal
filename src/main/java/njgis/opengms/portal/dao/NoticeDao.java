@@ -23,5 +23,7 @@ public interface NoticeDao extends MongoRepository<Notice,String> {
 
     Notice findFirstByRecipient(String email);
 
+    Notice findFirstById(String noticeId);
+
 
 }

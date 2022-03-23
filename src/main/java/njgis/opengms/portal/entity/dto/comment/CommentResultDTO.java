@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CommentResultDTO {
 
-    String oid;
+    String id;
     String parentId;
     String content;
     String authorId;

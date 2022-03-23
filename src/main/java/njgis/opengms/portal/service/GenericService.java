@@ -104,6 +104,9 @@ public class GenericService {
     @Autowired
     VersionDao versionDao;
 
+    @Autowired
+    CommentDao commentDao;
+
 
 
     @Value("${htmlLoadPath}")
@@ -345,6 +348,10 @@ public class GenericService {
             }
             case Version:{
                 daoUtils.put("itemDao",versionDao);
+                break;
+            }
+            case Comment:{
+                daoUtils.put("itemDao",commentDao);
                 break;
             }
             default:

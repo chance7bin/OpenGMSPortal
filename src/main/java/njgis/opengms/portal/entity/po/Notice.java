@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import njgis.opengms.portal.entity.doo.base.PortalId;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,7 +24,7 @@ public class Notice extends PortalId {
 
     String dispatcher; //发送者email
     OperationEnum action; //对资源的操作 ["comment","edit","rejected","accepted"]
-    // ItemTypeEnum objectType; //对象所属类型 ["ModelItem","DataItem","Template"...]
+    ItemTypeEnum objectType; //作用的对象所属类型 ["version","comment",...]
     String objectId; //被作用的对象 如：versionId , commentId等
     // String objectAuthor; //资源作者，用于消息内容生成，区别超级用户和普通用户
     // String objectName; //资源名

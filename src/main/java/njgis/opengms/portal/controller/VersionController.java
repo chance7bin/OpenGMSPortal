@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.VersionService;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,7 @@ public class VersionController {
         String email = session.getAttribute("email").toString();
         return versionService.reject(id, email);
     }
+
 
 
     @ApiOperation(value = "得到所有审核信息 [ /version/getVersions ]")
@@ -137,6 +137,100 @@ public class VersionController {
     @RequestMapping(value = "/originalItemInfo/{id}", method = RequestMethod.GET)
     public JsonResult getOriginalItemInfo(@PathVariable String id){
         return versionService.getOriginalItemInfo(id);
+    }
+
+
+
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/user/versionList/edit",method = RequestMethod.POST)
+    public JsonResult getUserEditVersion(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserEditVersion(email);
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    @RequestMapping(value = "/user/versionList/review",method = RequestMethod.POST)
+    public JsonResult getUserReviewVersion(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserReviewVersion(email);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/user/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/user/versionList/edit/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/user/versionList/edit/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"edit");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/user/versionList/review/uncheck/{type}",method = RequestMethod.POST)
+    public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/user/versionList/review/accepted/{type}",method = RequestMethod.POST)
+    public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"review");
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    })
+    @RequestMapping(value = "/user/versionList/review/rejected/{type}",method = RequestMethod.POST)
+    public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
     }
 
 }
