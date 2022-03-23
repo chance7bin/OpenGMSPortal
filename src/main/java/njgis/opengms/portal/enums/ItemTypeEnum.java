@@ -7,12 +7,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public enum ItemTypeEnum {
 
-    DataItem(0,"dataItem"),
+    //条目类型
 
     ModelItem(1,"modelItem"),
     ConceptualModel(2,"conceptualModel"),
     LogicalModel(3,"logicalModel"),
     ComputableModel(4,"computableModel"),
+
+    DataItem(0,"dataItem"),
+    DataHub(10,"dataHub"),
+    DataMethod(11,"dataMethod"),
 
     Concept(5,"concept"),
     SpatialReference(6,"spatialReference"),
@@ -21,17 +25,15 @@ public enum ItemTypeEnum {
 
     Theme(9,"theme"),
 
-    DataHub(10,"dataHub"),
-    DataMethod(11,"dataMethod"),
-
+    //个人信息
     Article(12,"article"),
     Project(13,"project"),
     Conference(14,"conference"),
 
     //通知类型
     Version(15,"version"),
-
-    Information(16,"information");
+    Information(16,"information"),
+    Comment(17,"comment");
 
     private int number;
     private String text;

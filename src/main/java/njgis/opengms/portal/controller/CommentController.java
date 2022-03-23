@@ -2,12 +2,12 @@ package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.CommentDao;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.doo.base.PortalId;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.comment.CommentDTO;
 import njgis.opengms.portal.entity.dto.comment.CommentResultDTO;
@@ -19,21 +19,17 @@ import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @Description
@@ -75,14 +71,14 @@ public class CommentController {
 
     @LoginRequired
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public JsonResult delete(@RequestParam("oid") String oid, HttpServletRequest request){
+    public JsonResult delete(@RequestParam("id") String id, HttpServletRequest request){
 
-        Comment comment = commentDao.findFirstById(oid);
+        Comment comment = commentDao.findFirstById(id);
 
         //删除与父评论关联
         if (comment.getParentId() != null) {
             Comment parentComment = commentDao.findFirstById(comment.getParentId());
-            parentComment.getSubComments().remove(oid);
+            parentComment.getSubComments().remove(id);
             commentDao.save(parentComment);
         }
 
@@ -101,14 +97,15 @@ public class CommentController {
 
     }
 
-    @RequestMapping(value="/getCommentsByTypeAndOid", method = RequestMethod.GET)
+    @ApiOperation(value = "根据类型和id得到评论信息 [getCommentsByTypeAndOid]")
+    @RequestMapping(value="/commentsByTypeAndId", method = RequestMethod.GET)
     public JsonResult getCommentsByTypeAndOid(@RequestParam("type") String type,
-                                              @RequestParam("oid") String oid,
+                                              @RequestParam("id") String id,
                                               @RequestParam("sort") int asc){
         ItemTypeEnum itemTypeEnum=ItemTypeEnum.getItemTypeByName(type);
-        Sort sort=Sort.by(asc==1?Sort.Direction.ASC:Sort.Direction.DESC,"date");
+        Sort sort=Sort.by(asc==1?Sort.Direction.ASC:Sort.Direction.DESC,"createTime");
         Pageable pageable=PageRequest.of(0,999,sort);
-        Page<CommentResultDTO> comments=commentDao.findAllByRelateItemTypeAndRelateItemId(itemTypeEnum,oid,pageable);
+        Page<CommentResultDTO> comments=commentDao.findAllByRelateItemTypeAndRelateItemId(itemTypeEnum,id,pageable);
 
         List<CommentResultDTO> commentResultDTOList=comments.getContent();
         JSONArray commentList=new JSONArray();
@@ -120,23 +117,23 @@ public class CommentController {
             count++;
             JSONObject commentObj=new JSONObject();
 
-            commentObj.put("oid",commentResultDTO.getOid());
+            commentObj.put("id",commentResultDTO.getId());
             commentObj.put("content",commentResultDTO.getContent());
             commentObj.put("date",simpleDateFormat.format(commentResultDTO.getDate()));
             commentObj.put("likeNum",commentResultDTO.getThumbsUpNumber());
-            commentObj.put("author",getUser(commentResultDTO.getAuthorId()));
+            commentObj.put("author",getUserByEmail(commentResultDTO.getAuthorId()));
 
             JSONArray subComments=new JSONArray();
             for(String subCommentOid:commentResultDTO.getSubComments()){
                 count++;
                 Comment subComment=commentDao.findFirstById(subCommentOid);
                 JSONObject subCommentObj=new JSONObject();
-                subCommentObj.put("oid",subComment.getId());
+                subCommentObj.put("id",subComment.getId());
                 subCommentObj.put("content",subComment.getContent());
-                subCommentObj.put("date",simpleDateFormat.format(subComment.getDate()));
+                subCommentObj.put("date",simpleDateFormat.format(subComment.getCreateTime()));
                 subCommentObj.put("likeNum",subComment.getThumbsUpNumber());
-                subCommentObj.put("author",getUser(subComment.getAuthorId()));
-                subCommentObj.put("replyTo",getUser(subComment.getReplyToUserId()));
+                subCommentObj.put("author",getUserByEmail(subComment.getCommentEmail()));
+                subCommentObj.put("replyTo",getUserByEmail(subComment.getReplyToUserEmail()));
                 subComments.add(subCommentObj);
             }
             commentObj.put("subCommentList",subComments);
@@ -177,6 +174,17 @@ public class CommentController {
         return author;
     }
 
+    private JSONObject getUserByEmail(String email){
+
+        JSONObject jsonObject = userService.getInfoFromUserServer(email);
+        JSONObject author=new JSONObject();
+        author.put("userId",email);
+        author.put("name",jsonObject.getString("name"));
+        author.put("img",jsonObject.getString("avatar"));
+
+        return author;
+    }
+
     @RequestMapping(value="/getCommentsByUser", method = RequestMethod.GET)
     public JsonResult getCommentsByUser(HttpServletRequest request){
 
@@ -185,18 +193,18 @@ public class CommentController {
         if(Utils.checkLoginStatus(request)==null){
             return ResultUtils.error(-1,"no login");
         }else {
-            String eid = session.getAttribute("eid").toString();
-            List<Comment> commentList = commentDao.findAllByAuthorIdOrReplyToUserId(eid,eid);
+            String email = session.getAttribute("email").toString();
+            List<Comment> commentList = commentDao.findAllByCommentEmailOrReplyToUserEmail(email,email);
             JSONArray jsonArray = new JSONArray();
             for(int i=0;i<commentList.size();i++){
                 Comment comment = commentList.get(i);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("content",comment.getContent());
-                jsonObject.put("author",getUser(comment.getAuthorId()));
-                jsonObject.put("replier",getUser(comment.getReplyToUserId()));
-                jsonObject.put("date",simpleDateFormat.format(comment.getDate()));
+                jsonObject.put("author",getUserByEmail(comment.getCommentEmail()));
+                jsonObject.put("replier",getUserByEmail(comment.getReplyToUserEmail()));
+                jsonObject.put("date",simpleDateFormat.format(comment.getCreateTime()));
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                jsonObject.put("modifyTimeDay", sdf.format(comment.getDate()));//与message的其他时间名称统一
+                jsonObject.put("modifyTimeDay", sdf.format(comment.getCreateTime()));//与message的其他时间名称统一
                 jsonObject.put("status","comment");
                 jsonObject.put("readStatus",comment.getReadStatus());
                 String id = comment.getRelateItemId();
@@ -206,7 +214,7 @@ public class CommentController {
                 jsonArray.add(jsonObject);
 
             }
-            jsonArray.add(eid);
+            jsonArray.add(email);
 
             return ResultUtils.success(jsonArray);
         }
@@ -220,11 +228,34 @@ public class CommentController {
 
         String itemTypeStr = itemType.name();
 
-        itemInfo.put("oid",item.getId());
+        itemInfo.put("id",item.getId());
         itemInfo.put("name",item.getName());
         itemInfo.put("type",itemTypeStr.substring(0,1).toLowerCase()+itemTypeStr.substring(1));
 
         return itemInfo;
     }
+
+
+    // @LoginRequired
+    // @RequestMapping(value="/commentReaded",method = RequestMethod.POST)
+    // public String commentReaded(HttpServletRequest request,@RequestParam(value="comment_num") int comment_num){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     // String userEmail = session.getAttribute("oid").toString();
+    //     //调用函数，减去该用户的comment_num数目
+    //     userService.commentNumMinus(email,comment_num);
+    //     List<Comment>comments=commentDao.findAll();
+    //     for (int i=0;i<comments.size();i++){
+    //         if (comments.get(i).getReplyToUserId()!=""){
+    //             if (comments.get(i).getReadStatus() == 0 && comments.get(i).getReplyToUserId().equals(email)){
+    //                 Comment comment = new Comment();
+    //                 comment = comments.get(i);
+    //                 comment.setReadStatus(1);
+    //                 commentDao.save(comment);
+    //             }
+    //         }
+    //     }
+    //     return "ok";
+    // }
 
 }

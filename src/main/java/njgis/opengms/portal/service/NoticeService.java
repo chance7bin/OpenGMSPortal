@@ -1,14 +1,14 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
-import njgis.opengms.portal.dao.NoticeDao;
-import njgis.opengms.portal.dao.UserDao;
-import njgis.opengms.portal.dao.VersionDao;
+import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.po.Comment;
 import njgis.opengms.portal.entity.po.Notice;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.entity.po.Version;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +53,9 @@ public class NoticeService {
     @Autowired
     SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    CommentDao commentDao;
+
 
     /**
      * 将通知发送给客户端
@@ -77,7 +80,7 @@ public class NoticeService {
      * @return njgis.opengms.portal.entity.po.Notice
      * @Author bin
      **/
-    public Notice getMessageByTemplate(Notice notice, String currentUser){
+    private Notice getMessageByTemplate(Notice notice, String currentUser){
 
 
         String message;
@@ -101,7 +104,8 @@ public class NoticeService {
                             p2 = "your ";
                         else
                             p2 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
-                        message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName + " (" + notice.getRemark() + ")";
+                        // message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName + " (" + notice.getRemark() + ")";
+                        message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName;
                         break;
                     }
                     case Accept:
@@ -118,7 +122,8 @@ public class NoticeService {
                             p3 = "your ";
                         else
                             p3 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
-                        message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName + " (" + notice.getRemark() + ")";
+                        // message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName + " (" + notice.getRemark() + ")";
+                        message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName;
                         break;
                     }
                     default:{
@@ -137,6 +142,16 @@ public class NoticeService {
                     p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
                 message = p1 + " " + notice.getRemark();
 
+                break;
+            }
+            case Comment:{
+                Comment comment = commentDao.findFirstById(notice.getObjectId());
+                String p1;
+                if (notice.getDispatcher().equals(currentUser))
+                    p1 = "you";
+                else
+                    p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                message = p1 + ": " + comment.getContent();
                 break;
             }
             default:{
@@ -162,10 +177,11 @@ public class NoticeService {
      * @return njgis.opengms.portal.entity.po.Notice
      * @Author bin
      **/
-    public Notice initNotice(String dispatcher, OperationEnum action,String objectId, String recipient, @Nullable List<String> additionList){
+    private Notice initNotice(String dispatcher, OperationEnum action, ItemTypeEnum itemType,String objectId, String recipient, @Nullable List<String> additionList){
         Notice notice = new Notice();
         notice.setDispatcher(dispatcher);
         notice.setAction(action);
+        notice.setObjectType(itemType);
         notice.setObjectId(objectId);
         // notice.setObjectAuthor(objectAuthor);
         // notice.setObjectName(objectName);
@@ -174,8 +190,14 @@ public class NoticeService {
 
         //设置附加的信息
         if (additionList != null && additionList.size() != 0){
-            //列表的第0个是remark
-            notice.setRemark(additionList.get(0));
+            //列表的第0个是remark(备注)
+            if (additionList.size() == 1){
+                notice.setRemark(additionList.get(0));
+            }
+            if (additionList.size() == 2){
+                notice.setNotifyChannel(additionList.get(1));
+            }
+
         }
 
         notice = noticeDao.insert(notice);
@@ -191,15 +213,16 @@ public class NoticeService {
      * 发送通知到指定的用户, 根据recipientList统一发送
      * @param dispatcher 消息发送者
      * @param action 动作 edit/accept/reject等
+     * @param itemType 作用的条目类型
      * @param objectId 消息类型对应的id version的id/comment的id
      * @param recipientList 消息接收者列表
      * @return java.util.List<njgis.opengms.portal.entity.po.Notice>
      * @Author bin
      **/
-    public List<Notice> sendNotice(String dispatcher, OperationEnum action,String objectId,List<String> recipientList, @Nullable List<String> additionList){
+    private List<Notice> sendNotice(String dispatcher, OperationEnum action,ItemTypeEnum itemType,String objectId,List<String> recipientList, @Nullable List<String> additionList){
         List<Notice> noticeList = new ArrayList<>();
         for (String recipient : recipientList) {
-            noticeList.add(initNotice(dispatcher, action, objectId, recipient,additionList));
+            noticeList.add(initNotice(dispatcher, action, itemType, objectId, recipient,additionList));
         }
         return noticeList;
 
@@ -214,47 +237,49 @@ public class NoticeService {
      * @return java.util.List<njgis.opengms.portal.entity.po.Notice>
      * @Author bin
      **/
-    public List<Notice> sendNoticeContainRoot(String dispatcher, OperationEnum action, String objectId, List<String> recipientList){
-
-        List<Notice> noticeList = sendNotice(dispatcher, action, objectId, recipientList, null);
-        //如果消息接收列表里不包含超级用户的话那也要把通知发给超级用户
-        if (!recipientList.contains("opengms@njnu.edu.cn")){
-            noticeList.add(initNotice(dispatcher, action, objectId, rootUser,null));
-        }
-        return noticeList;
-    }
+    // public List<Notice> sendNoticeContainRoot(String dispatcher, OperationEnum action, ItemTypeEnum itemType, String objectId, List<String> recipientList){
+    //
+    //     List<Notice> noticeList = sendNotice(dispatcher, action, itemType, objectId, recipientList, null);
+    //     //如果消息接收列表里不包含超级用户的话那也要把通知发给超级用户
+    //     if (!recipientList.contains("opengms@njnu.edu.cn")){
+    //         noticeList.add(initNotice(dispatcher, action, itemType, objectId, rootUser,null));
+    //     }
+    //     return noticeList;
+    // }
 
     /**
      * @Description 发送通知给所有管理者，包括条目管理者及门户管理者
-     * @param modifierEmail
-     * @param authorEmail
-     * @param itemAdmins
-     * @param versionId
-     * @param operation
+     * @param dispatcher 消息发送者
+     * @param authorEmail 条目作者email
+     * @param itemAdmins 条目管理者email列表
+     * @param itemType 消息对应的类型
+     * @param objectId 消息类型对应的id version的id/comment的id
+     * @param action 动作 edit/accept/reject等
      * @Return void
      * @Author kx
      * @Date 22/3/8
      **/
-    public void sendNoticeContainsAllAdmin(String modifierEmail, String authorEmail, List<String> itemAdmins, String versionId, OperationEnum operation){
+    public void sendNoticeContainsAllAdmin(String dispatcher, String authorEmail, List<String> itemAdmins, ItemTypeEnum itemType, String objectId, OperationEnum action){
         List<String> recipientList = new ArrayList<>();
         recipientList.add(authorEmail);
         recipientList = addItemAdmins(recipientList,itemAdmins);
         recipientList = addPortalAdmins(recipientList);
         recipientList = addPortalRoot(recipientList);
-        sendNoticeContains(modifierEmail, operation, versionId, recipientList);
+        sendNoticeContains(dispatcher, action, itemType,objectId, recipientList);
     }
 
     /**
      * 发送通知, 在调用这个方法前先构造一下通知要发送的用户列表
      * @param dispatcher 消息发送者
      * @param action 动作 edit/accept/reject等
+     * @param itemType 作用的条目类型
      * @param objectId 消息类型对应的id version的id/comment的id
      * @param recipientList 消息接收者列表
-     * @param additionProperties 附加的notice属性, 目前附加的属性只有一个remark, 之后有多的按顺序加在后面
+     * @param additionProperties 附加的notice属性, 目前附加的属性只有一个remark(备注), 之后有多的按顺序加在后面
      * @return java.util.List<njgis.opengms.portal.entity.po.Notice>
      * @Author bin
      **/
-    public List<Notice> sendNoticeContains(String dispatcher, OperationEnum action, String objectId, List<String> recipientList, @Nullable String... additionProperties){
+    public List<Notice> sendNoticeContains(String dispatcher, OperationEnum action, ItemTypeEnum itemType, String objectId, List<String> recipientList, @Nullable String... additionProperties){
 
         List<String> additionList = additionProperties != null ? Arrays.asList(additionProperties) : null;
 
@@ -276,7 +301,7 @@ public class NoticeService {
         // recipientList = addPortalRoot(recipientList, rootEmail);
 
 
-        List<Notice> noticeList = sendNotice(dispatcher, action, objectId, recipientList, additionList);
+        List<Notice> noticeList = sendNotice(dispatcher, action, itemType,objectId, recipientList, additionList);
 
         return noticeList;
     }
@@ -399,11 +424,18 @@ public class NoticeService {
         List<Notice> notices = noticeDao.findAllByRecipientAndHasRead(email, false);
         for (Notice notice : notices) {
             notice.setHasRead(true);
-            noticeDao.save(notice);
         }
+        noticeDao.saveAll(notices);
         return ResultUtils.success();
     }
 
 
+    public JsonResult notice2readById(String noticeId) {
 
+        Notice notice = noticeDao.findFirstById(noticeId);
+        notice.setHasRead(true);
+        noticeDao.save(notice);
+
+        return ResultUtils.success();
+    }
 }

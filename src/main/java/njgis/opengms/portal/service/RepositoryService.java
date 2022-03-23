@@ -236,7 +236,7 @@ public class RepositoryService {
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,version.getId(),recipientList);
 
                 result.put("method", "version");
                 result.put("versionId", version.getId());

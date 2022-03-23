@@ -16,7 +16,10 @@ public enum OperationEnum {
     Reject(2,"reject",ItemTypeEnum.Version),
 
     //对条目操作的通知
-    Inform(3,"inform",ItemTypeEnum.Information);
+    Inform(3,"inform",ItemTypeEnum.Information),
+
+    //评论
+    Comment(4,"comment",ItemTypeEnum.Comment);
 
     private int number;
     private String text;

@@ -20,6 +20,8 @@ public interface TaskDao extends MongoRepository<Task, String> {
 
     Page<Task> findAllByEmailAndStatus(String email, int status, Pageable pageable);
 
+    List<Task> findAllByEmailAndStatus(String email, int status);
+
     Page<Task> findAllByEmail(String email,Pageable pageable);
 
     Task findFirstByTaskIdAndId(String taskId, String id);
