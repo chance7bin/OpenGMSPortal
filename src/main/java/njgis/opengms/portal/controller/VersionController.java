@@ -164,7 +164,7 @@ public class VersionController {
     @LoginRequired
     @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
     @RequestMapping(value = "/user/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
     public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
@@ -176,7 +176,7 @@ public class VersionController {
     @LoginRequired
     @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
     @RequestMapping(value = "/user/versionList/edit/accepted/{type}",method = RequestMethod.POST)
     public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
@@ -188,7 +188,7 @@ public class VersionController {
     @LoginRequired
     @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
     @RequestMapping(value = "/user/versionList/edit/rejected/{type}",method = RequestMethod.POST)
     public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
@@ -200,7 +200,7 @@ public class VersionController {
     @LoginRequired
     @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
     @RequestMapping(value = "/user/versionList/review/uncheck/{type}",method = RequestMethod.POST)
     public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
@@ -212,7 +212,7 @@ public class VersionController {
     @LoginRequired
     @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
     @RequestMapping(value = "/user/versionList/review/accepted/{type}",method = RequestMethod.POST)
     public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
@@ -224,7 +224,7 @@ public class VersionController {
     @LoginRequired
     @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
     @RequestMapping(value = "/user/versionList/review/rejected/{type}",method = RequestMethod.POST)
     public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
