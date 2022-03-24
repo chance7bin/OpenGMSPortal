@@ -345,7 +345,22 @@ public class VersionService {
                 break;
             }
             default:{
-                return ResultUtils.error("invalid item type");
+                findType.add(ItemTypeEnum.ModelItem);
+                findType.add(ItemTypeEnum.ConceptualModel);
+                findType.add(ItemTypeEnum.LogicalModel);
+                findType.add(ItemTypeEnum.ComputableModel);
+
+                findType.add(ItemTypeEnum.DataItem);
+                findType.add(ItemTypeEnum.DataHub);
+                findType.add(ItemTypeEnum.DataMethod);
+
+                findType.add(ItemTypeEnum.Concept);
+                findType.add(ItemTypeEnum.SpatialReference);
+                findType.add(ItemTypeEnum.Template);
+                findType.add(ItemTypeEnum.Unit);
+
+                findType.add(ItemTypeEnum.Theme);
+                // return ResultUtils.error("invalid item type");
             }
         }
 
