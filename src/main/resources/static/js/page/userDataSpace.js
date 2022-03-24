@@ -428,12 +428,18 @@ var userDataSpace = Vue.extend(
                                 );
                             }
                             else {
-                                this.myFile=json.data.resource.children;
-                                // console.log(this.myFile)
-                                this.myFileShown=this.myFile;
-                                setTimeout(()=>{
-                                    this.managerloading = false
-                                },55)
+                                if(json.data.resource.children===null){
+                                    console.log("no file data,data.resource.children is null ")
+                                }else{
+                                    this.myFile=json.data.resource.children;
+                                    // console.log(this.myFile)
+                                    this.myFileShown=this.myFile;
+                                    setTimeout(()=>{
+                                        this.managerloading = false
+                                    },55)
+                                }
+
+
                             }
 
 

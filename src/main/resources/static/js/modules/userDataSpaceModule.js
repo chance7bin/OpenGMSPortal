@@ -185,7 +185,8 @@ Vue.component("user-data",
                     {color: '#e6a23c', percentage: 90},
                     {color: '#f56c6c', percentage: 100},
 
-                ]
+                ],
+
             }
         },
         computed:{
@@ -200,7 +201,6 @@ Vue.component("user-data",
             }
         },
         methods: {
-
             formatDate(value, callback) {
                 const date = new Date(value);
                 y = date.getFullYear();
@@ -347,45 +347,56 @@ Vue.component("user-data",
 
             getFilePackage() {
                 this.managerloading = true
-
-                axios.get("/user/getUserResource",{})
-                    .then(res=> {
-                        let json=res.data;
-                        if(json.code==-1){
-                            this.$alert('Please login first!', 'Tip', {
-                                    type:"warning",
-                                    confirmButtonText: 'OK',
-                                    callback: ()=>{
-                                        window.sessionStorage.setItem("history", window.location.href);
-                                        window.location.href = "/user/login"
-                                    }
-                                }
-                            );
-                        }else if(json.code == -2){
-                            this.myFileShown=[];
-                            this.$alert('Failed to get file, please try again later.', 'Tip', {
-                                    type:"warning",
-                                    confirmButtonText: 'OK',
-                                    callback: ()=>{
-                                        return
-                                    }
-                                }
-                            );
+                let {code, data, msg} = fetch("/user/getFullUserInfo", {
+                    method: "GET"
+                }).then((response) => {
+                    return response.json();
+                }).then((data) =>{
+                    let userEmail=data.data.email
+                    axios.get("/user/getUserResource",{
+                        params: {
+                            email:userEmail
                         }
-                        else {
-                            this.myFile=json.data.resource.children;
-                            // console.log(this.myFile)
-                            this.pathShown = []
-                            this.myFileShown=this.myFile;
-                            setTimeout(()=>{
-                                this.managerloading = false
-                            },55)
-                        }
+                    })
+                        .then(res=> {
+                            let json=res.data;
+                            if(json.code==-1){
+                                this.$alert('Please login first!', 'Tip', {
+                                        type:"warning",
+                                        confirmButtonText: 'OK',
+                                        callback: ()=>{
+                                            window.sessionStorage.setItem("history", window.location.href);
+                                            window.location.href = "/user/login"
+                                        }
+                                    }
+                                );
+                            }else if(json.code == -2){
+                                this.myFileShown=[];
+                                this.$alert('Failed to get file, please try again later.', 'Tip', {
+                                        type:"warning",
+                                        confirmButtonText: 'OK',
+                                        callback: ()=>{
+                                            return
+                                        }
+                                    }
+                                );
+                            }
+                            else {
+                                this.myFile=json.data.resource.children;
+                                // console.log(this.myFile)
+                                this.pathShown = []
+                                this.myFileShown=this.myFile;
+                                setTimeout(()=>{
+                                    this.managerloading = false
+                                },55)
+                            }
 
 
-                    }).catch(()=>{
+                        }).catch(()=>{
+                    });
+                })
 
-                });
+
             },
 
             //回到上一层目录
@@ -1732,9 +1743,11 @@ Vue.component("user-data",
                     asc: 1,
                     searchText: searchText
                 };
+                // url: "/repository/searchTemplate"
+                let url="/template/templateList"
                 $.ajax({
                     type: "POST",
-                    url: "/repository/searchTemplate",
+                    url: url,
                     data: JSON.stringify(query),
                     async: true,
                     contentType: "application/json",
