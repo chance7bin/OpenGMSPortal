@@ -42,6 +42,42 @@ public class TokenService {
     UserDao userDao;
 
     /**
+     * @Description 检查Token是否有效
+     * @param userEmail
+     * @Return java.lang.String
+     * @Author kx
+     * @Date 22/3/12
+     **/
+    public String checkToken(String userEmail) {
+        User user = userDao.findFirstByEmail(userEmail);
+        TokenInfo tokenInfo = user.getTokenInfo();
+        Date expireDate = tokenInfo.getExpiryTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date afterNow = new Date(new Date().getTime() + 100*1000);//当前时间加上100s的信息处理时间
+
+        if(expireDate!=null&&expireDate.before(afterNow)){
+            String refreshToken = tokenInfo.getRefreshToken();
+            JSONObject newTokenInfo = refreshToken(refreshToken,userEmail);
+            if(newTokenInfo==null||newTokenInfo.getString("error")!=null){
+
+                return "out";
+            }else{
+                try {
+                    return refreshUserTokenInfo(newTokenInfo, user);
+                }catch (Exception e){
+                    return "out";
+                }
+            }
+
+        }else if(expireDate==null){
+            return "out";
+        }else{
+            return tokenInfo.getToken();
+        }
+    }
+
+    /**
      * oauth2 密码模式获取token
      * @param email
      * @param pwd
@@ -211,36 +247,6 @@ public class TokenService {
         userDao.save(user);
 
         return tokenInfo.getToken();
-    }
-
-    /**
-     * @param userEmail
-     * @Return java.lang.String
-     * @Author wzh
-     * @Date 2021/7/6
-     **/
-    public String checkToken(String userEmail) throws Exception {
-        User user = userDao.findFirstByEmail(userEmail);
-        TokenInfo tokenInfo = user.getTokenInfo();
-        Date expireDate = tokenInfo.getExpiryTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        Date afterNow = new Date(new Date().getTime() + 100*1000);//加上100s的信息处理时间
-
-        if(expireDate.before(afterNow)){
-            String refreshToken = tokenInfo.getRefreshToken();
-            JSONObject newTokenInfo = refreshToken(refreshToken,userEmail);
-            // TODO newTokenInfo可能为null，要判断一下
-            if(newTokenInfo == null || newTokenInfo.getString("error")!=null){
-
-                return "out";
-            }else{
-                return refreshUserTokenInfo(newTokenInfo,user);
-            }
-
-        }else{
-            return tokenInfo.getToken();
-        }
     }
 
 

@@ -341,10 +341,10 @@ public class UserRestController {
     @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户文件资源", notes = "@loginRequired")
     @RequestMapping(value = "/getUserResource", method = RequestMethod.GET)
-    public JsonResult getUserResource(@RequestParam(value = "email") String email, HttpServletRequest request) throws Exception {
-//        HttpSession session = request.getSession();
+    public JsonResult getUserResource(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
 
-//        String email = session.getAttribute("email").toString();
+        String email = session.getAttribute("email").toString();
         JSONObject j_result = userService.getUserResource(email);
 
         if(j_result.getString("msg").equals("out")){
@@ -354,6 +354,20 @@ public class UserRestController {
         }
 
         return ResultUtils.success(j_result);
+
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "从用户服务器获取用户数据空间容量", notes = "@loginRequired")
+    @RequestMapping(value = "/getCapacity", method = RequestMethod.GET)
+    public JsonResult getCapacity(HttpServletRequest request){
+
+        String email = Utils.checkLoginStatus(request);
+        if(email!=null){
+            return ResultUtils.success(userService.getCapacity(email));
+        }else{
+            return ResultUtils.error(-1,"no login");
+        }
 
     }
 
@@ -1026,17 +1040,6 @@ public class UserRestController {
         String result = userService.forkData(paths, dataIds, dataItemId, email);
 
         return ResultUtils.success();
-
-    }
-
-
-    @LoginRequired
-    @ApiOperation(value = "从用户服务器获取用户已用数据容量和总容量")
-    @RequestMapping(value = "/getCapacity", method = RequestMethod.GET)
-    public JsonResult getCapacity(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(userService.getCapacity(email));
 
     }
 
