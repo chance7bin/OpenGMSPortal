@@ -1160,6 +1160,7 @@ public class UserService {
         return user;
 
 
+
     }
 
 
@@ -1776,7 +1777,7 @@ public class UserService {
 
 
     //从用户服务器获取用户已用数据容量和总容量
-    public JSONObject getCapacity(String email) throws Exception {
+    public JSONObject getCapacity(String email) {
         String token = tokenService.checkToken(email);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer "+ token);
