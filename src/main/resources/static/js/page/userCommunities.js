@@ -392,32 +392,38 @@ var userCommunities = Vue.extend(
                 var name = "";
                 console.log(this.searchResult);
                 if (a === 'concept&semantic') {
-                    url = "/repository/getConceptsByUserId";
+                    // url = "/repository/getConceptsByUserId";
+                    url = QueryConceptListOfAuthorSelf();
                     name = "concepts";
                 } else if (a === 'spatialReference') {
-                    url = "/repository/getSpatialsByUserId";
+                    // url = "/repository/getSpatialsByUserId";
+                    url = QuerySpatialListOfAuthorSelf();
                     name = "spatials";
                 } else if (a === 'dataTemplate') {
-                   url = "/repository/getTemplatesByUserId";
+                    // url = "/repository/getTemplatesByUserId";
+                    url = QueryTemplateListOfAuthorSelf();
                    name = "templates";
                 } else if (a === 'unit&metric') {
-                   url = "/repository/getUnitsByUserId";
+                    // url = "/repository/getUnitsByUserId";
+                    url = QueryUnitListOfAuthorSelf();
                    name = "units";
                 }
 
+
                 this.$forceUpdate();
 
+                let data = {
+                    page: this.page,
+                    asc: false
+                };
+
                 $.ajax({
-                    type: "Get",
+                    type: "POST",
                     url: url,
-                    data: {
-                        page: this.page - 1,
-                        sortType: this.sortType,
-                        asc: this.sortAsc
-                    },
+                    data: JSON.stringify(data),
                     cache: false,
                     async: true,
-
+                    contentType:"application/json",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -429,7 +435,7 @@ var userCommunities = Vue.extend(
                         } else {
                             data = json.data;
                             this.resourceLoad = false;
-                            this.totalNum = data.count;
+                            this.totalNum = data.total;
                             // this.searchCount = Number.parseInt(data["count"]);
                             //this.searchResult = data[name];
                             // for (var i = 0; i < data[name].length; i++) {
@@ -437,7 +443,7 @@ var userCommunities = Vue.extend(
                             //     this.searchResult.splice(i, 0, data[name][i]);
                             //     console.log(data[name][i]);
                             // }
-                            this.$set(this,"searchResult",data[name]);
+                            this.$set(this,"searchResult",data.list);
                             console.log(this.searchResult);
                             //this.modelItemResult = data[name];
                             if (this.page == 1) {
