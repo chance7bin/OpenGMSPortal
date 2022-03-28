@@ -124,7 +124,7 @@
                     <el-tree v-if="queryType=='normal'"
                              id="treeNew"
                              ref="treeNew"
-                             :data="treeData2"
+                             :data="htmlJSON.treeData2"
                              :highlight-current="true"
                              node-key="id"
                              :default-expanded-keys="[1,9,30,14,19,24]"
@@ -136,7 +136,7 @@
                     <el-tree v-if="queryType=='advanced'"
                              id="treeAdvance"
                              ref="treeAdvance"
-                             :data="treeData2"
+                             :data="treeData"
                              :highlight-current="true"
                              node-key="id"
                              :default-expanded-keys="[1,9,30,14,19,24]"
@@ -231,7 +231,7 @@
                 </div>
 
                 <div id="curClassBar" role="alert" class="alert alert-info" style="margin-bottom: 2px;">
-                    <strong class="minScreen_curClass">{{htmlJSON.CurrentClass}}{{currentClass}} </strong>
+                    <strong class="minScreen_curClass">{{htmlJSON.CurrentClass}}{{htmlJSON.currentClass}} </strong>
                     <strong v-if="pageOption.progressBar" style="float: right;">{{htmlJSON.Loading}} </strong>
                     <strong v-if="!pageOption.progressBar" style="float: right;">{{pageOption.total}} {{htmlJSON.items}}</strong>
 
@@ -259,8 +259,8 @@
                                 {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">Asc.</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">Desc.</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -423,7 +423,7 @@
                      class="wzhScrollbar"
                      id="tree14"
                      ref="tree14"
-                     :data="treeData2"
+                     :data="htmlJSON.treeData2"
                      show-checkbox
                      node-key="id"
                      :default-expanded-keys="[1,14,19,24]"

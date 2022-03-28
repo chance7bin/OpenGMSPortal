@@ -41,3 +41,16 @@ function joinByUser(url, joinStr) {
         let url = ''
         return joinByTheme(url, joinStr)
     }
+
+// function joinByTheme(url, joinStr){
+//     if (typeof(joinStr) != 'undefined'){
+//         return '/theme' + url + '/' + joinStr
+//     }
+//     return '/theme' + url
+// }
+
+function QueryThemeListOfAuthorSelf(joinStr){
+    let url = '/queryListOfAuthorSelf'
+    return joinByTheme(url, joinStr)
+}
+

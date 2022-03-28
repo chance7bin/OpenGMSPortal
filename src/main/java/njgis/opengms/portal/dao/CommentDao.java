@@ -15,6 +15,6 @@ public interface CommentDao extends MongoRepository<Comment,String> {
 
      Page<CommentResultDTO> findAllByRelateItemTypeAndRelateItemId(ItemTypeEnum type, String oid, Pageable pageable);
 
-     List<Comment> findAllByAuthorIdOrReplyToUserId(String oid1, String oid2);
+     List<Comment> findAllByCommentEmailOrReplyToUserEmail(String oid1, String oid2);
 
 }

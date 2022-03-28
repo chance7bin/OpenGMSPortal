@@ -39,6 +39,8 @@ public class VersionService {
     @Autowired
     NoticeService noticeService;
 
+    @Autowired
+    UserService userService;
 
     /**
      * 添加审核版本
@@ -109,6 +111,10 @@ public class VersionService {
         try {
             versionDao.save(version);
             itemDao.save(content);
+
+            //给编辑者发邮件
+            userService.sendAcceptMail(version.getEditor(),content);
+
             List<String> recipientList;
             if (version.getEditor().equals(version.getReviewer()))
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
@@ -117,7 +123,7 @@ public class VersionService {
             recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
             recipientList = noticeService.addPortalAdmins(recipientList);
             recipientList = noticeService.addPortalRoot(recipientList);
-            noticeService.sendNoticeContains(reviewer, OperationEnum.Accept,version.getId(),recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Accept,ItemTypeEnum.Version,version.getId(),recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
@@ -146,6 +152,10 @@ public class VersionService {
         try {
             versionDao.save(version);
             itemDao.save(content);
+
+            //给编辑者发邮件
+            userService.sendRejectMail(version.getEditor(),content);
+
             List<String> recipientList;
             if (version.getEditor().equals(version.getReviewer()))
                 recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
@@ -154,7 +164,7 @@ public class VersionService {
             recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
             recipientList = noticeService.addPortalAdmins(recipientList);
             recipientList = noticeService.addPortalRoot(recipientList);
-            noticeService.sendNoticeContains(reviewer, OperationEnum.Reject,version.getId(),recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Reject,ItemTypeEnum.Version,version.getId(),recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
@@ -335,7 +345,22 @@ public class VersionService {
                 break;
             }
             default:{
-                return ResultUtils.error("invalid item type");
+                findType.add(ItemTypeEnum.ModelItem);
+                findType.add(ItemTypeEnum.ConceptualModel);
+                findType.add(ItemTypeEnum.LogicalModel);
+                findType.add(ItemTypeEnum.ComputableModel);
+
+                findType.add(ItemTypeEnum.DataItem);
+                findType.add(ItemTypeEnum.DataHub);
+                findType.add(ItemTypeEnum.DataMethod);
+
+                findType.add(ItemTypeEnum.Concept);
+                findType.add(ItemTypeEnum.SpatialReference);
+                findType.add(ItemTypeEnum.Template);
+                findType.add(ItemTypeEnum.Unit);
+
+                findType.add(ItemTypeEnum.Theme);
+                // return ResultUtils.error("invalid item type");
             }
         }
 

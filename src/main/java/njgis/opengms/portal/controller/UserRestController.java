@@ -1,24 +1,28 @@
 package njgis.opengms.portal.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.doo.user.UserServerResource;
+import njgis.opengms.portal.entity.doo.user.UserSubscribeItem;
 import njgis.opengms.portal.entity.dto.user.*;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
+import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -28,6 +32,7 @@ import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 用户控制器
@@ -65,6 +70,10 @@ public class UserRestController {
 
     @Autowired
     ManagementSystemService managementSystemService;
+
+    //远程数据容器地址
+    @Value("${dataContainerIpAndPort}")
+    String dataContainerIpAndPort;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
@@ -273,7 +282,6 @@ public class UserRestController {
      * @Author kx
      * @Date 2021/7/6
      **/
-    @LoginRequired
     @ApiOperation(value = "从用户服务器获取用户基础信息", notes = "@loginRequired")
     @RequestMapping(value = "/getInfoFromUserServer", method = RequestMethod.GET)
     public JsonResult getInfoFromUserServer(@RequestParam(value = "email") String email, HttpServletRequest request) throws Exception {
@@ -536,123 +544,97 @@ public class UserRestController {
     // }
 
 
-    @LoginRequired
-    @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
-    @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
-    public JsonResult getUserEditVersion(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserEditVersion(email);
-    }
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    // @RequestMapping(value = "/versionList/edit",method = RequestMethod.POST)
+    // public JsonResult getUserEditVersion(HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserEditVersion(email);
+    // }
+    //
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
+    // @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
+    // public JsonResult getUserReviewVersion(HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserReviewVersion(email);
+    // }
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
+    // @ApiImplicitParams({
+    //     @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    // })
+    // @RequestMapping(value = "/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
+    // public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"edit");
+    // }
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
+    // @ApiImplicitParams({
+    //     @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    // })
+    // @RequestMapping(value = "/versionList/edit/accepted/{type}",method = RequestMethod.POST)
+    // public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"edit");
+    // }
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
+    // @ApiImplicitParams({
+    //     @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    // })
+    // @RequestMapping(value = "/versionList/edit/rejected/{type}",method = RequestMethod.POST)
+    // public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"edit");
+    // }
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    // @ApiImplicitParams({
+    //     @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    // })
+    // @RequestMapping(value = "/versionList/review/uncheck/{type}",method = RequestMethod.POST)
+    // public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"review");
+    // }
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
+    // @ApiImplicitParams({
+    //     @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    // })
+    // @RequestMapping(value = "/versionList/review/accepted/{type}",method = RequestMethod.POST)
+    // public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"review");
+    // }
+    //
+    // @LoginRequired
+    // @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
+    // @ApiImplicitParams({
+    //     @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
+    // })
+    // @RequestMapping(value = "/versionList/review/rejected/{type}",method = RequestMethod.POST)
+    // public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
+    // }
 
-
-    @LoginRequired
-    @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
-    @RequestMapping(value = "/versionList/review",method = RequestMethod.POST)
-    public JsonResult getUserReviewVersion(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserReviewVersion(email);
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户提交（你是条目的修改者）的未审核的version [ /theme/getMessageData ]")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
-    })
-    @RequestMapping(value = "/versionList/edit/uncheck/{type}",method = RequestMethod.POST)
-    public JsonResult getUserUncheckEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"edit");
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户提交的已通过的version [ /theme/getMessageData ]")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
-    })
-    @RequestMapping(value = "/versionList/edit/accepted/{type}",method = RequestMethod.POST)
-    public JsonResult getUserAcceptedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"edit");
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户提交的已拒绝的version [ /theme/getMessageData ]")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
-    })
-    @RequestMapping(value = "/versionList/edit/rejected/{type}",method = RequestMethod.POST)
-    public JsonResult getUserRejectedEditVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"edit");
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
-    })
-    @RequestMapping(value = "/versionList/review/uncheck/{type}",method = RequestMethod.POST)
-    public JsonResult getUserUncheckReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserVersionByStatusAndByTypeAndByOperation(0,type,findDTO,email,"review");
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户审核的已通过的version [ /theme/getMessageData ]")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
-    })
-    @RequestMapping(value = "/versionList/review/accepted/{type}",method = RequestMethod.POST)
-    public JsonResult getUserAcceptedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserVersionByStatusAndByTypeAndByOperation(1,type,findDTO,email,"review");
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户审核的已拒绝的version [ /theme/getMessageData ]")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme",required=true)
-    })
-    @RequestMapping(value = "/versionList/review/rejected/{type}",method = RequestMethod.POST)
-    public JsonResult getUserRejectedReviewVersionByType(@PathVariable String type, @RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "得到用户的通知列表")
-    @RequestMapping (value = "/noticeList", method = RequestMethod.POST)
-    public JsonResult getUserNoticeList(@RequestBody FindDTO findDTO, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(noticeService.getUserNoticeList(findDTO,email));
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "得到用户的通知数量")
-    @RequestMapping (value = "/noticeCount", method = RequestMethod.GET)
-    public JsonResult getNoticeCount(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(noticeService.countUserNoticeNum(email));
-    }
-
-    @LoginRequired
-    @ApiOperation(value = "得到用户未读的通知数量")
-    @RequestMapping (value = "/unreadNoticeCount", method = RequestMethod.GET)
-    public JsonResult getUnreadNoticeCount(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(noticeService.countUserUnreadNoticeNum(email));
-    }
 
     @LoginRequired
     @ApiOperation(value = "得到用户贡献的资源数量")
@@ -846,7 +828,7 @@ public class UserRestController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "更新awardsHonors")
+    @ApiOperation(value = "更新awardsHonors [ /updateAwdHonor ]")
     @RequestMapping(value="/update/awardsHonors",method = RequestMethod.POST)
     public JsonResult updateAwardsHonors(@RequestBody AwardandHonorDTO awardandHonorDTO, HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -858,7 +840,7 @@ public class UserRestController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "更新educationExperiences")
+    @ApiOperation(value = "更新educationExperiences [ /updateEduExperience ]")
     @RequestMapping(value="/update/educationExperiences",method = RequestMethod.POST)
     public JsonResult updateEducationExperiences(@RequestBody EducationExperienceDTO educationExperienceDTO, HttpServletRequest request){
 
@@ -870,7 +852,7 @@ public class UserRestController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "更新userLab")
+    @ApiOperation(value = "更新userLab [ /updateLab ]")
     @RequestMapping(value="/update/userLab",method = RequestMethod.POST)
     public JsonResult updateLab(@RequestBody UserLabDTO userLabDTO, HttpServletRequest request){
 
@@ -898,6 +880,378 @@ public class UserRestController {
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return ResultUtils.success(userService.getSubscribedList(email));
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/addFile", method = RequestMethod.POST)
+    JsonResult addFile(
+        @RequestBody UploadUserFileDTO uploadUserFileDTO
+        , HttpServletRequest httpServletRequest) throws Exception {
+
+        List<Map> fileArray = uploadUserFileDTO.getFiles();
+        List<String> paths = uploadUserFileDTO.getPaths();
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        JSONObject result = userService.addFileToUserServer(paths, fileArray, email,"POST");
+        if(result == null){
+            return ResultUtils.error(-2,"error");
+        }
+//        System.out.println(result);
+        return ResultUtils.success(result);
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/addFolder", method = RequestMethod.POST)
+    JsonResult addFolder(@RequestParam("paths[]") List<String> paths,
+                         @RequestParam("name") String name,
+                         HttpServletRequest httpServletRequest) throws Exception {
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        String result = userService.addFolderToUserServer(paths, name, email);
+
+        if(result == null){
+            return ResultUtils.error(-2,"error");
+        }
+
+        return ResultUtils.success(result);
+    }
+
+
+    @ApiOperation(value = "添加账户")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public JsonResult addUser(@RequestBody UserShuttleDTO user) throws Exception {
+        return userService.addUserToUserServer(user);
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "修改密码")
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    public JsonResult changePassword(@RequestParam String oldPass,
+                                     @RequestParam String newPass,
+                                     HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        String result = userService.changePass(email, oldPass, newPass,session);
+        if(result.equals("suc")) {
+            userService.removeUserSession(request);
+            return ResultUtils.success(result);
+        }else if(result.equals("out")) {
+            return ResultUtils.error(-1,"out");
+        }else{
+            return ResultUtils.error(-2,result);
+        }
+
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/changeSubscribedModelList", method = RequestMethod.GET)
+    public ModelAndView changeSubscribedModelList(@RequestParam("id") String id, HttpServletRequest request){
+
+        User user = userService.getById(id);
+        HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(60*60);//设置session过期时间 为60分钟
+        userService.setUserSession(request,user.getEmail(),user.getName());
+
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("redirect:/user/userSpace#/account");
+        return modelAndView;
+    }
+
+
+
+    @LoginRequired
+    @RequestMapping(value = "/checkDataRestSpace", method = RequestMethod.GET)
+    public JsonResult checkDataRestSpace(@RequestParam("fileSize") long fileSize, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        JSONObject result = userService.checkDataRestSpace(email,fileSize);
+        if(result!=null) {
+            return ResultUtils.success(result);
+        }else{
+            return ResultUtils.error(-2,"error");
+        }
+
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/deleteFile", method = RequestMethod.POST)
+    JsonResult deleteFile(@RequestParam("dataId") String dataId,
+                          HttpServletRequest httpServletRequest) throws Exception {
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        JSONObject result = userService.deleteFileInUserServer(dataId, email);
+
+        if(result == null){
+            return ResultUtils.error(-1,"error");
+        }else if(result.getString("data")!=null&&result.getString("data").equals("out")){
+            return ResultUtils.error(-1,"no login");
+        }
+
+        return ResultUtils.success(result);
+    }
+
+    @RequestMapping(value = "/deleteSomeFiles", method = RequestMethod.POST)
+    JsonResult deleteFiles(@RequestBody JSONObject deleteFiles,
+                           HttpServletRequest httpServletRequest) throws Exception {
+
+        JSONArray jsonArray = deleteFiles.getJSONArray("deleteTarget");
+        List<UserServerResource> deleteFileList = jsonArray.toJavaList(UserServerResource.class);
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        JSONObject result = userService.deleteFiles(deleteFileList, email);
+
+        if(result == null){
+            return ResultUtils.error(-1,"error");
+        }else if(result.getString("data")!=null&&result.getString("data").equals("out")){
+            return ResultUtils.error(-1,"no login");
+        }
+        return ResultUtils.success(result.getJSONArray("resource"));
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "上传失败时，删除预先占用的空间")
+    @RequestMapping(value = "/deleteUploadFlag", method = RequestMethod.GET)
+    public JsonResult deleteUploadFlag(@RequestParam("uploadFlag") String uploadFlag, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(userService.deleteUploadFlag(email,uploadFlag));
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/forkData", method = RequestMethod.POST)
+    JsonResult forkData(@RequestParam("paths[]") List<String> paths,
+                        @RequestParam("dataIds[]") List<String> dataIds,
+                        @RequestParam("itemId") String dataItemId,
+                        HttpServletRequest httpServletRequest) {
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        if (paths.get(0).equals("root")) {
+            paths.remove(0);
+        }
+        String result = userService.forkData(paths, dataIds, dataItemId, email);
+
+        return ResultUtils.success();
+
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "从用户服务器获取用户已用数据容量和总容量")
+    @RequestMapping(value = "/getCapacity", method = RequestMethod.GET)
+    public JsonResult getCapacity(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(userService.getCapacity(email));
+
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/getFolder", method = RequestMethod.GET)
+    JsonResult getFolder(HttpServletRequest httpServletRequest) throws Exception {
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        JSONArray result = userService.getFolderFromUserServer(email);
+        return ResultUtils.success(result);
+    }
+
+    @RequestMapping(value = "/getFolderAndFile", method = RequestMethod.GET)
+    JsonResult getFolder7File(HttpServletRequest httpServletRequest) {
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        JSONArray result = userService.getFolder7File(email);
+
+        return ResultUtils.success(result);
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/getModelCounts", method = RequestMethod.GET)
+    public JsonResult getModelCounts(HttpServletRequest request){
+        JSONObject result = new JSONObject();
+        HttpSession httpSession = request.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        User user = userService.getByEmail(email);
+        result.put("modelItem",user.getResourceCount().getModelItem());
+        result.put("conceptualModel",user.getResourceCount().getConceptualModel());
+        result.put("logicalModel",user.getResourceCount().getLogicalModel());
+        result.put("computableModel",user.getResourceCount().getComputableModel());
+        return ResultUtils.success(result);
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/getLoginUser", method = RequestMethod.GET)
+    public JsonResult getLoginUser(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(userService.getByEmail(email));
+    }
+
+    @RequestMapping(value = "/getUserInfoInUserPage", method = RequestMethod.GET)
+    public JsonResult getUserInfoInUserPage(@RequestParam(value = "email") String email) {
+        JSONObject j_result = userService.getInfoFromUserServer(email);
+
+        if(j_result.getString("msg").equals("out")){
+            return ResultUtils.error(-1,"out");
+        }else if (j_result.getString("msg").equals("no user")){
+            return ResultUtils.error(-2,"no user");
+        }else if (j_result.getString("msg").equals("err")){
+            return ResultUtils.error(-2,"err");
+        }
+
+        return ResultUtils.success(j_result);
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/getUserSimpleInfo", method = RequestMethod.GET)
+    public JsonResult getUserSimpleInfo(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(userService.getUserSimpleInfo(email));
+    }
+
+
+    @RequestMapping(value = "/listArticle",method = RequestMethod.GET)
+    JsonResult listArticle(@RequestParam(value="page")int page, @RequestParam(value="email") String email){
+        return ResultUtils.success(userService.listUserArticle(page,email));
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/keywordsSearch", method = RequestMethod.GET)
+    JsonResult searchFile(@RequestParam(value = "keyword") String keyword, HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        JSONObject result = userService.searchFileFromUserServer(keyword, email);
+        if (result==null){
+            return ResultUtils.error(-1, "err");
+        }else{
+            return ResultUtils.success(result);
+        }
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/setSubscribe", method = RequestMethod.POST)
+    public JsonResult setSubscribe(@RequestParam("subscribe") Boolean subs, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        userService.setSubscribe(email, subs);
+        return ResultUtils.success();
+    }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/setSubscribedList", method = RequestMethod.POST)
+    public JsonResult setSubscribedList(@RequestBody List<UserSubscribeItem> list, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        userService.setSubscribedList(email,list);
+        return ResultUtils.success();
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
+    public JsonResult getUserInfo(HttpServletRequest req) throws Exception {
+        HttpSession session = req.getSession();
+        String email = session.getAttribute("email").toString();
+        JSONObject result = userService.getUserInfo(email);
+        return ResultUtils.success(result);
+    }
+
+
+    @RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
+    public ModelAndView unsubscribe(@RequestParam("id") String id) {
+        User user = userService.getById(id);
+        userService.setSubscribe(user.getEmail(), false);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("notice/unsubscribe");
+        return modelAndView;
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新introduction [ /updateIntroduction ]")
+    @RequestMapping(value = "/update/introduction", method = RequestMethod.POST)
+    JsonResult updateDescription(@RequestParam(value = "introduction")String introduction, HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        String result = userService.updateIntroduction(introduction, email);
+        return ResultUtils.success(result);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新researchInterest [ /updateResearchInterest ]")
+    @RequestMapping(value = "/update/researchInterest", method = RequestMethod.POST)
+    JsonResult updateResearchInterest(@RequestBody ResearchInterestDTO researchInterestDTO, HttpServletRequest httpServletRequest) {
+        List<String> researchInterests = researchInterestDTO.getResearchInterests();
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        String result = userService.updateResearchInterest(researchInterests, email);
+
+        return ResultUtils.success(result);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新exLinks [ /updateExLinks ]")
+    @RequestMapping(value = "/update/exLinks", method = RequestMethod.POST)
+    JsonResult updateExLinks(@RequestBody List<String> exLinks, HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        String result = userService.updateExternalLinks(exLinks, email);
+
+        return ResultUtils.success(result);
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/updateFile", method = RequestMethod.POST)
+    JsonResult updateFile(@RequestParam("dataName") String name,
+                          @RequestParam("dataId") String dataId,
+
+                          HttpServletRequest httpServletRequest) throws Exception {
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        String email = httpSession.getAttribute("email").toString();
+        String result = userService.updateFileToUserServer(dataId, name, email);
+
+        if(result==null){
+            return ResultUtils.error(-2,"err");
+        }else if(result.equals("out")){
+            return ResultUtils.error(-1,"no login");
+        }
+
+        return ResultUtils.success(result);
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)//判断登录状态上传文件到数据容器
+    JSONObject uploadFile(@RequestParam("ogmsdata") MultipartFile[] files,
+                          @RequestParam("name")String uploadName,
+                          @RequestParam("userId")String userName,
+                          @RequestParam("serverNode")String serverNode,
+                          @RequestParam("origination")String origination,
+                          HttpServletRequest request){
+
+        MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+
+        for(int i=0;i<files.length;i++)
+            part.add("datafile", files[i].getResource());
+        part.add("name", uploadName);
+        part.add("userId", userName);
+        part.add("serverNode", serverNode);
+        part.add("origination", origination);
+        return MyHttpUtils.uploadDataToDataServer(dataContainerIpAndPort,part);
+
     }
 
 

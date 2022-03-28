@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.ArticleDao;
 import njgis.opengms.portal.dao.UserDao;
+import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.po.Article;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,19 @@ public class ArticleService {
 
         return queryResult;
 
+    }
+
+    public Page<Article> getArticleList(FindDTO findDTO){
+
+        Pageable pageable = genericService.getPageable(findDTO);
+
+        return articleDao.findAll(pageable);
+
+    }
+
+    public Article listById(String articleId){
+
+        return articleDao.findFirstById(articleId);
     }
 
 }

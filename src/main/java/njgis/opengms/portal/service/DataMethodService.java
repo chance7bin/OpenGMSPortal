@@ -966,7 +966,7 @@ public class DataMethodService {
             } else {
                 Version version = versionService.addVersion(dataMethod, email,originalItemName);
                 //发送通知
-                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), version.getId(), OperationEnum.Edit);
+                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), ItemTypeEnum.Version,version.getId(), OperationEnum.Edit);
 //                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
 //                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
 //                recipientList = noticeService.addPortalAdmins(recipientList);

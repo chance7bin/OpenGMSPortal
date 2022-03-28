@@ -730,7 +730,7 @@ public class ModelItemService {
             } else {
 
                 // 发送通知
-                noticeService.sendNoticeContainsAllAdmin(email, modelItem.getAuthor(), modelItem.getAdmins(), version_new.getId(), OperationEnum.Edit);
+                noticeService.sendNoticeContainsAllAdmin(email, modelItem.getAuthor(), modelItem.getAdmins() ,ItemTypeEnum.Version,version_new.getId(), OperationEnum.Edit);
 
                 JSONObject result = new JSONObject();
                 result.put("method", "version");

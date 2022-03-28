@@ -1,12 +1,15 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.CommentDao;
+import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.comment.CommentDTO;
 import njgis.opengms.portal.entity.po.Comment;
-import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +32,24 @@ public class CommentService {
     @Autowired
     UserDao userDao;
 
-    public JsonResult addComment(CommentDTO commentDTO, String authorEmail){
+    @Autowired
+    NoticeService noticeService;
+
+    @Autowired
+    GenericService genericService;
+
+    public JsonResult addComment(CommentDTO commentDTO, String commentEmail){
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
 
-        User user = userDao.findFirstByEmail(authorEmail);
+        JSONObject jsonObject = genericService.daoFactory(comment.getRelateItemType());
+        GenericItemDao dao = (GenericItemDao)jsonObject.get("itemDao");
 
-        comment.setDate(new Date());
-        comment.setAuthorId(user.getId());
-        comment.setRelateItemType(ItemTypeEnum.getItemTypeByName(commentDTO.getRelateItemTypeName()));
+        PortalItem item = (PortalItem) dao.findFirstById(comment.getRelateItemId());
+
+        comment.setCreateTime(new Date());
+        comment.setCommentEmail(commentEmail);
+        comment.setRelateItemType(commentDTO.getRelateItemTypeName());
         comment.setReadStatus(0);
 
         commentDao.insert(comment);
@@ -48,6 +60,11 @@ public class CommentService {
             parentComment.getSubComments().add(comment.getId());
             commentDao.save(parentComment);
         }
+
+        // 给条目条目创建者、管理员发送通知
+        noticeService.sendNoticeContainsAllAdmin(commentEmail,item.getAuthor(),item.getAdmins(), ItemTypeEnum.Comment,comment.getId(), OperationEnum.Comment);
+
+
 
         return ResultUtils.success();
     }

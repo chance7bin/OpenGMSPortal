@@ -19,8 +19,7 @@
     "CreateTime": "CreateTime",
     "Asc": "Asc.",
     "Desc": "Desc."
-
-},
+  },
   "zh-cn": {
     "PageName": "数据条目仓库",
     "PageIntro":"数据仓库（公开共享数据资源的一站式枢纽）",
