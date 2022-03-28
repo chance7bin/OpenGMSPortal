@@ -1043,17 +1043,6 @@ public class UserRestController {
 
     }
 
-
-    @LoginRequired
-    @ApiOperation(value = "从用户服务器获取用户已用数据容量和总容量")
-    @RequestMapping(value = "/getCapacity", method = RequestMethod.GET)
-    public JsonResult getCapacity(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(userService.getCapacity(email));
-
-    }
-
     @LoginRequired
     @RequestMapping(value = "/getFolder", method = RequestMethod.GET)
     JsonResult getFolder(HttpServletRequest httpServletRequest) throws Exception {
