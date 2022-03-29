@@ -214,4 +214,9 @@ public class ComputableModelRestController {
 
     }
 
+    @RequestMapping(value = "/relatedDataByPage",method = RequestMethod.GET)
+    public JsonResult getRelatedDataByPage(FindDTO computableModelFindDTO, @RequestParam(value = "id") String id){
+        return ResultUtils.success(computableModelService.getRelatedDataByPage(computableModelFindDTO,id));
+    }
+
 }

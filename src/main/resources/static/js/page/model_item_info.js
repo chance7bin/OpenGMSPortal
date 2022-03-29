@@ -3209,22 +3209,22 @@ var info=new Vue({
         let dataitemid = currenturl.split("/");
 
         let that = this
-        axios.get("/modelItem/briefRelatedData", {
-            params: {
-                id: this.itemInfo.id,
-            }
-        })
-            .then((res) => {
-                that.related3Models = res.data.data
-
-                if (that.related3Models.length === 0) {
-                    that.relatedModelIsNull = true;
-                    that.relatedModelNotNull = false
-                } else {
-                    that.relatedModelNotNull = true
-                    that.relatedModelIsNull = false;
-                }
-            })
+        // axios.get("/modelItem/briefRelatedData", {
+        //     params: {
+        //         id: this.itemInfo.id,
+        //     }
+        // })
+        //     .then((res) => {
+        //         that.related3Models = res.data.data
+        //
+        //         if (that.related3Models.length === 0) {
+        //             that.relatedModelIsNull = true;
+        //             that.relatedModelNotNull = false
+        //         } else {
+        //             that.relatedModelNotNull = true
+        //             that.relatedModelIsNull = false;
+        //         }
+        //     })
 
         axios.get("/user/load")
             .then((res) => {

@@ -156,10 +156,10 @@ var data_application_info = new Vue({
             let oid=hrefs[hrefs.length-1].substring(0,36);
             let data={
                 type:type,
-                oid:oid,
+                id:oid,
                 sort:-1,
             };
-            $.get("/comment/getCommentsByTypeAndOid",data,(result)=>{
+            $.get("/comment/commentsByTypeAndId",data,(result)=>{
                 this.commentList=result.data.commentList;
             })
         },
@@ -418,7 +418,7 @@ var data_application_info = new Vue({
             let str = window.location.href.split('/')
             let oid = str[str.length-1];
             let that = this
-            axios.get('/dataApplication/getApplication/' + oid).then((res) => {
+            axios.get('/dataMethod/method/' + oid).then((res) => {
                 if(res.status === 200) {
                     that.methodsData = res.data.data.invokeServices;
                     that.viewCount = res.data.data.viewCount
@@ -437,7 +437,7 @@ var data_application_info = new Vue({
                             type: 'error',
                         })
                     }else {
-                        window.location.href = "/dataApplication/task/" + this.dataApplicationId + '/'
+                        window.location.href = "/dataMethod/task/" + this.dataApplicationId + '/'
                             + this.methodsData[i].serviceId + '/' + encodeURIComponent(encodeURIComponent(this.methodsData[i].token));
                     }
                 }

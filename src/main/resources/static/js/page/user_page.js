@@ -1317,7 +1317,7 @@ new Vue({
                 }
             })
         },
-        //dataApplication
+        //dataMethod
         dataMethodHandleCurrentChange: function(val){
             this.pageOption.currentPage = val;
             $('html,body').animate({scrollTop: '0px'}, 220);

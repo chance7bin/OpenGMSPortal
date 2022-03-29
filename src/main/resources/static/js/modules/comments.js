@@ -148,10 +148,10 @@ Vue.component("comments",
                 let oid=hrefs[hrefs.length-1].substring(0,36);
                 let data={
                     type:type,
-                    oid:oid,
+                    id:oid,
                     sort:-1,
                 };
-                $.get("/comment/getCommentsByTypeAndOid",data,(result)=>{
+                $.get("/comment/commentsByTypeAndId",data,(result)=>{
                     this.commentList=result.data.commentList;
                 })
             },

@@ -124,7 +124,7 @@ var vue = new Vue({
 
         inEvent: [],
         outEvent: [],
-        oid: null,
+        modelId: null,
 
         fileList: [],
 
@@ -621,18 +621,19 @@ var vue = new Vue({
 
         },
 
+        //获取数据模板列表用于在上传数据时选择
         remoteMethod(searchText) {
 
             this.selectLoading = true;
             let query = {
-                page: 0,
+                page: 1,
                 pageSize: 999,
                 asc: 1,
                 searchText: searchText
             };
             $.ajax({
                 type: "POST",
-                url: "/repository/searchTemplate",
+                url: "/template/list",
                 data: JSON.stringify(query),
                 async: true,
                 contentType: "application/json",
@@ -1229,8 +1230,8 @@ var vue = new Vue({
 
         relatedDataItem() {
             let paths = window.location.href.split("/");
-            this.relatePageOption.oid = paths[paths.length - 1];
-            axios.get("/computableModel/getRelatedDataByPage", {
+            this.relatePageOption.id = paths[paths.length - 1];
+            axios.get("/computableModel/relatedDataByPage", {
                 params: this.relatePageOption
             }).then((res) => {
                 console.log(res)
@@ -1449,9 +1450,9 @@ var vue = new Vue({
 
         loadUserTask(val) {
             let href = window.location.href.split('/')
-            let modelId = this.oid
+            let modelId = this.modelId
 
-            axios.get("/task/getTasksByModelByUser", {
+            axios.get("/task/tasksByModelByUser", {
                     params:
                         {
                             modelId: modelId,
@@ -1473,7 +1474,7 @@ var vue = new Vue({
             let href = window.location.href.split('/')
             let modelId = href[href.length - 1]
 
-            axios.get("/task/getPublishedTasksByModel", {
+            axios.get("/task/publishedTasksByModel", {
                     params:
                         {
                             modelId: modelId,
@@ -1631,19 +1632,11 @@ var vue = new Vue({
                 background: "rgba(0, 0, 0, 0.7)"
             });
             try{
-                let body = {
-                    oid: this.oid,
-                    host: this.info.dxInfo.dxIP,
-                    port: this.info.dxInfo.dxPort,
-                    type: this.info.dxInfo.dxType,
-                    userName: this.info.userInfo.userName
-                };
-                let {data, code, msg} = await (await fetch("/task/loadTestData/", {
+                let {data, code, msg} = await (await fetch("/task/loadTestData/"+this.modelId, {
                     method: "post",
                     headers: {
                         "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(body)
+                    }
                 })).json();
 
                 if (code != 0 || code == null || code == undefined) {
@@ -1727,7 +1720,7 @@ var vue = new Vue({
             let dataItemId = event.currentTarget.id;
             let body = {
                 dataItemId :dataItemId,
-                oid: this.oid,
+                oid: this.modelId,
                 host: this.info.dxInfo.dxIP,
                 port: this.info.dxInfo.dxPort,
                 type: this.info.dxInfo.dxType,
@@ -2200,7 +2193,7 @@ var vue = new Vue({
                     this.taskRunning = true
 
                     let json = {
-                        oid: this.oid,
+                        oid: this.modelId,
                         ip: this.info.taskInfo.ip,
                         port: this.info.taskInfo.port,
                         pid: this.info.taskInfo.pid,
@@ -2265,7 +2258,7 @@ var vue = new Vue({
                         contentType: "application/json",
                         data: JSON.stringify(json),
                         success: ({data, code, msg}) => {
-                            tid = data;
+                            let task_info = data;
 
                             // $(".el-loading-text").text("Model is running, you can check running state and get results in \"User Space\" -> \"Task\"")
                             this.$confirm('This task will start running soon, you can check running state and get results in "User Space" -> "Task"', 'Tip', {
@@ -2279,7 +2272,7 @@ var vue = new Vue({
                                 window.location.href = '/user/userSpace#/task';
                             } ).catch(()=>{
                                 // window.open('/user/userSpace#/task');
-                                window.location.href = '/user/userSpace#/task';
+                                // window.location.href = '/user/userSpace#/task';
                                 // return
                             });
 
@@ -2310,16 +2303,12 @@ var vue = new Vue({
                             }
 
                             let interval = setInterval(async () => {
-                                let {code, data, msg} = await (await fetch("/task/getResult", {
+                                let {code, data, msg} = await (await fetch("/task/result", {
                                     method: "post",
                                     headers: {
                                         "Content-Type": "application/json"
                                     },
-                                    body: JSON.stringify({
-                                        ip: this.info.taskInfo.ip,
-                                        port: this.info.taskInfo.port,
-                                        tid: tid
-                                    })
+                                    body: JSON.stringify(task_info)
                                 })).json();
                                 if (code === -1) {
                                     clearInterval(interval);
@@ -2807,7 +2796,7 @@ var vue = new Vue({
         getOneOfUserTasks(taskId) {
             $.ajax({
                 type: 'GET',
-                url: "/task/getTaskByTaskId",
+                url: "/task/taskByTaskId",
                 // contentType:'application/json',
 
                 data:
@@ -3088,7 +3077,7 @@ var vue = new Vue({
                 window.location.href = '/task/' + oid
             }
 
-            this.oid = oid
+            this.modelId = oid
 
             this.loadTask();
             this.loadDeployedModelDialog = false
@@ -3099,7 +3088,7 @@ var vue = new Vue({
         },
 
         async loadTask(){
-            let id = this.oid
+            let id = this.modelId
 
             this.initModelInfo()
             this.taskLoading = true
@@ -3278,7 +3267,7 @@ var vue = new Vue({
         console.log(this.introHeight)
         let ids = window.location.href.split("/");
         let id = ids[ids.length - 1];
-        this.oid = id;
+        this.modelId = id;
 
         if(id==='selecttask'){
             this.selectModelPage=true

@@ -183,7 +183,7 @@ var userDataVisualApplication = Vue.extend(
                 this.loading = true
                 var that = this;
                 //todo 从后台拿到用户创建的data—item
-                axios.get("/dataApplication/getApplication", {
+                axios.get("/dataMethod/method/", {
                     params: da
                 }).then(res => {
                     this.searchResult = res.data.data.content
@@ -212,7 +212,7 @@ var userDataVisualApplication = Vue.extend(
 
                     $.ajax({
                         type: "POST",
-                        url: "/dataApplication/delete",
+                        url: "/dataMethod/delete",
                         data: {
                             oid: oid
                         },
@@ -255,7 +255,7 @@ var userDataVisualApplication = Vue.extend(
                     searchText: this.searchText,
                     type:this.type
                 }
-                axios.get("/dataApplication/searchDataByUserId/", {
+                axios.get("/dataMethod/searchDataByUserId/", {
                     params: da
                 })
                     .then((res) => {

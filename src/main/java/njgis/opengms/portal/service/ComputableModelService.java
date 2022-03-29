@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.ComputableModelDao;
+import njgis.opengms.portal.dao.DataItemDao;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
@@ -15,7 +16,9 @@ import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.model.ComputableModelResultDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.entity.po.DataItem;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.*;
 import org.slf4j.Logger;
@@ -61,6 +64,9 @@ public class ComputableModelService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    DataItemDao dataItemDao;
 
     @Autowired
     UserDao userDao;
@@ -714,6 +720,67 @@ public class ComputableModelService {
         jsonObject.put("total",computableModelPage.getTotalElements());
         jsonObject.put("content",ComputableModelList);
 
+        return jsonObject;
+    }
+
+    public JSONObject getRelatedDataByPage(FindDTO computableModelFindDTO,String oid){
+        ComputableModel computableModel = computableModelDao.findFirstById(oid);
+        JSONObject jsonObject = new JSONObject();
+        if(computableModel.getRelatedModelItems()!=null) {
+            List<String> modelItemList = computableModel.getRelatedModelItems();
+            int dataItem_total = 0;
+            JSONArray jsonArray = new JSONArray();
+            for(int m = 0; m<modelItemList.size(); m++) {
+                ModelItem modelItem = modelItemDao.findFirstById(modelItemList.get(m));
+                try {
+                    List<String> relatedDataItem = modelItem.getRelate().getDataItems();
+                    if (relatedDataItem != null) {
+                        int page = computableModelFindDTO.getPage();
+                        int pageSize = computableModelFindDTO.getPageSize();
+
+                        for (int i = page * pageSize; i < relatedDataItem.size(); i++) {
+                            DataItem dataItem = dataItemDao.findFirstById(relatedDataItem.get(i));
+
+                            Boolean exist = false;
+                            for(int j = 0;j<jsonArray.size();j++){
+                                JSONObject object = jsonArray.getJSONObject(j);
+                                if(object.getString("id").equals(dataItem.getId())){
+                                    exist = true;
+                                    break;
+                                }
+                            }
+                            if(!exist) {
+                                JSONObject obj = new JSONObject();
+                                obj.put("name", dataItem.getName());
+                                obj.put("id", dataItem.getId());
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                obj.put("createTime", simpleDateFormat.format(dataItem.getCreateTime()));
+                                obj.put("description", dataItem.getOverview());
+                                obj.put("contentType", dataItem.getDataType());
+                                obj.put("url", dataItem.getUrl());
+                                obj.put("dataList", dataItem.getDataList());
+                                JSONObject author = new JSONObject();
+                                User user = userDao.findFirstByEmail(dataItem.getAuthor());
+                                author.put("name", user.getName());
+                                author.put("userId", user.getAccessId());
+                                obj.put("author", author);
+
+                                jsonArray.add(obj);
+                                if (jsonArray.size() == pageSize)
+                                    break;
+                            }
+                        }
+
+                        dataItem_total += relatedDataItem.size();
+
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+            jsonObject.put("list", jsonArray);
+            jsonObject.put("total", dataItem_total);
+        }
         return jsonObject;
     }
 

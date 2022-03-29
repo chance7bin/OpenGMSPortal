@@ -399,7 +399,7 @@ public class DataMethodService {
         JsonResult jsonResult;
         try {
 //            token = URLEncoder.encode(token, "UTF-8");
-            String url = "http://" + dataServerManager + "files?id=" + sid + "&token=" + token;
+            String url = "http://" + dataServerManager + "/files?id=" + sid + "&token=" + token;
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Type","application/json");
             RestTemplate restTemplate = new RestTemplate();

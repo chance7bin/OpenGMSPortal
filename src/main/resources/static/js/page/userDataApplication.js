@@ -279,7 +279,7 @@ var userDataApplication = Vue.extend(
                 //
                 //     $.ajax({
                 //         type: "POST",
-                //         url: "/dataApplication/delete",
+                //         url: "/dataMethod/delete",
                 //         data: {
                 //             oid: oid
                 //         },
@@ -322,7 +322,7 @@ var userDataApplication = Vue.extend(
                     searchText: this.searchText,
                     type:this.type
                 }
-                axios.get("/dataApplication/searchDataByUserId/", {
+                axios.get("/dataMethod/searchDataByUserId/", {
                     params: da
                 })
                     .then((res) => {

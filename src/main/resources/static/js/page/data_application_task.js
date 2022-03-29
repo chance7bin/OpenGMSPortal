@@ -136,7 +136,7 @@ let vue = new Vue({
             for(let i=0;i<this.metaDetail.parameter.length;i++){
                 parameters.push(this.metaDetail.parameter[i].value);
             }
-            formData.append("dataApplicationId", this.applicationOid);
+            formData.append("dataMethodId", this.applicationOid);
             formData.append("serviceId",this.serviceId);
             formData.append("serviceName",this.invokeService.name);
             formData.append("params",parameters);
@@ -146,7 +146,7 @@ let vue = new Vue({
                 formData.append("selectData", JSON.stringify(this.metaDetail.input));//此项为可选，可有可无
             // }
             $.ajax({
-                url:"/dataApplication/invokeMethod",
+                url:"/dataMethod/invokeMethod",
                 type:"POST",
                 data:formData,
                 processData: false,
@@ -286,7 +286,7 @@ let vue = new Vue({
             formData.append("serverNode","china");
             formData.append("origination","developer");
             $.ajax({
-                url: "/dataApplication/uploadData",
+                url: "/dataMethod/uploadData",
                 type:"POST",
                 cache: false,
                 processData: false,
@@ -388,9 +388,9 @@ let vue = new Vue({
             //     }
             // }else {
                 //绑定节点的load数据则需要用接口获取服务测试数据信息
-                axios.get("/dataApplication/getRemoteDataInfo/" + this.serviceId + "/" + encodeURIComponent(encodeURIComponent(this.invokeService.token)))
+                axios.get("/dataMethod/remoteDataInfo/" + this.serviceId + "/" + encodeURIComponent(encodeURIComponent(this.invokeService.token)))
                     .then((res)=>{
-                        if(res.status === 200){
+                        if(res.status ===200){
                             if (res.data.code === -1){
                                 this.$message({
                                     message: 'node offline',
@@ -438,7 +438,7 @@ let vue = new Vue({
             // formData.append("dataUrl",this.dataServerTask.output.output);
             // formData.append("taskId",this.dataServerTask.oid);
             //
-            // axios.post("/dataApplication/initPicture",formData).then((res)=>{
+            // axios.post("/dataMethod/initPicture",formData).then((res)=>{
             //     if(res.status === 200){
             //         console.log(res.data.data);
             //         that.visualPath = res.data.data.visualPath;
@@ -674,7 +674,7 @@ let vue = new Vue({
 
             })
 
-        axios.get("/dataApplication/getServiceInfo/" + this.applicationOid + '/' + this.serviceId).then((res) => {
+        axios.get("/dataMethod/serviceInfo/" + this.applicationOid + '/' + this.serviceId).then((res) => {
             if (res.status === 200) {
                 that.applicationInfo = res.data.data.application;
                 that.method = that.applicationInfo.method;
@@ -684,7 +684,7 @@ let vue = new Vue({
                 window.document.token = that.invokeService.token;
                 that.isPortal = that.invokeService.isPortal;
                 $.ajax({
-                    url:"/dataApplication/getContributorInfo/" + that.invokeService.contributor,
+                    url:"/dataMethod/contributorInfo/" + that.invokeService.contributor,
                     type:"GET",
                     success:(json) =>{
                         if (json.code == 0){
@@ -703,7 +703,7 @@ let vue = new Vue({
                 // }
             }
         })
-        axios.get("/dataApplication/getParemeter/" + this.applicationOid +'/' + this.serviceId).then((res) => {
+        axios.get("/dataMethod/parameter/" + this.applicationOid +'/' + this.serviceId).then((res) => {
             if (res.status === 200) {
                 console.log(res.data);
                 that.metaDetail = res.data.data.capability.data.metaDetail;
