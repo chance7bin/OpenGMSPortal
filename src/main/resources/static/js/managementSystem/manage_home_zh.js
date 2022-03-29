@@ -69,6 +69,11 @@ new Vue({
         getServerNodes(){
             axios.get("/managementSystem/serverNodes")
                 .then(response=> {
+                    if(response.data.data==null){
+                        this.serverNodeCoords=[{name:"Nanjing",count:1,value:[118.7778, 32.0617]}]
+                        this.loadEarth()
+                        return
+                    }
                     this.serverNodes=response.data.data
                     let nodes=[]
                     for(let i=0,len=this.serverNodes.length;i<len;i++){

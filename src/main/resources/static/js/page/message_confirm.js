@@ -309,7 +309,7 @@ var notice = Vue.extend({
             this.loading = true;
             $.ajax({
                 type: "POST",
-                url: "/user/versionList/edit",
+                url: "/version/user/versionList/edit",
                 data: null,
                 // async: true,
                 success: (json) => {

@@ -156,7 +156,7 @@
                           </div>
                           <div class="wzhScrollbar" style="height: calc(100% - 50px);">
                             <el-row  style="width: 100%" :gutter="10"
-                                    v-if="myFileShown.length!=0">
+                                     v-if="myFileShown.length!=0">
                               <el-col :span="fileCard" v-for="(item,key) in myFileShown">
                                 <div :title="showtitle(item)"
                                      class="el-card dataitemisol" shadow="never"
@@ -219,7 +219,8 @@
                             </el-row>
 
                           </div>
-                          <el-row style="padding-top:10px;">
+
+                          <el-row style="padding-top:10px;" >
                             <el-progress :text-inside="true" :stroke-width="20" :percentage="capacityPercent" :format="processBarFormat" :color="customColors" style="width: calc(100% - 100px);display: inline-block;"></el-progress>
                             Max: {{toDecimal1(capacity/1073741824)}} GB
                           </el-row>

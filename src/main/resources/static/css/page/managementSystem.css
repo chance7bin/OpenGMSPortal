@@ -104,6 +104,10 @@ body,
     height: auto;
 }
 
+.versionHandle .el-tabs__header {
+    height: 200px!important;
+}
+
 
 .flexRowStart {
     display: flex;

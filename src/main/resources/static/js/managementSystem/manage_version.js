@@ -1,6 +1,6 @@
 export var VersionTemplate = Vue.extend({
     template:` 
-        <div>
+        <div class="versionHandle">
                 <el-tabs tab-position="left"  type="border-card" @tab-click="changeTabs" >
 <!--                            未审核页面-->
                     <el-tab-pane label="未审核版本">
@@ -16,6 +16,15 @@ export var VersionTemplate = Vue.extend({
                                     &nbsp;&nbsp;
                                     <el-button  type="success" icon="el-icon-search" @click="getWaitVersionList()" >搜索</el-button>
                                 </div>
+                                  <div style="    margin: 3px auto 3px 0px;">
+                                    <el-radio-group v-model="typeShown">
+                                      <el-radio-button label="All"></el-radio-button>                                    
+                                      <el-radio-button label="Model"></el-radio-button>
+                                      <el-radio-button label="Data"></el-radio-button>
+                                      <el-radio-button label="Community"></el-radio-button>
+                                      <el-radio-button label="Theme"></el-radio-button>
+                                    </el-radio-group>
+                                  </div>
                             <div>
                                 <el-table
                                         ref="waitVersionTable"
@@ -262,6 +271,9 @@ export var VersionTemplate = Vue.extend({
         `,
     data() {
         return {
+
+            typeShown:"All", //默认展示的项目 Model/Data/Community/Theme
+
             //未处理版本审核
             searchInputWaitVersion:"", //版本搜索
             waitVersionTableData:[],// 表格数据
