@@ -173,7 +173,7 @@ var data_items = new Vue({
             return getMethodById(id);
         },
         view(id){
-            axios.get("/dataApplication/methods/viewplus",{
+            axios.get("/dataMethod/methods/viewplus",{
                 params:{
                     id:id
                 }

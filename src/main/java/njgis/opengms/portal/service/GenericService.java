@@ -22,6 +22,7 @@ import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -138,6 +139,9 @@ public class GenericService {
         }
         //页码前端从1开始，后端需要减一
         findDTO.setPage(findDTO.getPage()-1);
+
+        //curQueryField 需要转换成小写
+        findDTO.setCurQueryField(findDTO.getCurQueryField().toLowerCase());
 
         JSONObject jsonObject = searchDBItems(findDTO, type, itemStatusVisible);
 
@@ -447,7 +451,7 @@ public class GenericService {
                             break;
                         }
                         default:{
-                            log.error("curQueryField" + curQueryField + " is wrong.");
+                            log.error("curQueryField " + curQueryField + " is wrong.");
                             return null;
                         }
                     }

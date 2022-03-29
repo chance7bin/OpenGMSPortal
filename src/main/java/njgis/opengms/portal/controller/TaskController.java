@@ -60,9 +60,9 @@ public class TaskController {
     @ApiOperation(value = "Task初始化API，获取模型描述信息，State信息，task以及Dx相关信息 [ /TaskInit/{id} ]")
     @RequestMapping(value = "/init/{id}", method = RequestMethod.GET)
     public JsonResult initTask(@PathVariable("id") String id, HttpServletRequest request){
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+//        String email = "opengms@126.com";
         return taskService.initTask(id, email);
     }
 
@@ -75,7 +75,7 @@ public class TaskController {
         // HttpSession session = request.getSession();
         // String email = session.getAttribute("email").toString();
 
-        String email = "782807969@qq.com";
+        String email = "opengms@126.com";
         return taskService.loadTestData(modelId, email);
 
     }
@@ -85,9 +85,9 @@ public class TaskController {
     @RequestMapping(value = "/invoke", method = RequestMethod.POST)
     public JsonResult invoke(@RequestBody JSONObject lists, HttpServletRequest request) {
 
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+         HttpSession session = request.getSession();
+         String email = session.getAttribute("email").toString();
+//        String email = "opengms@126.com";
         return taskService.handleInvoke(lists, email);
 
     }

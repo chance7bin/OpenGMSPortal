@@ -805,10 +805,10 @@ new Vue({
             let oid = hrefs[hrefs.length - 1].substring(0, 36);
             let data = {
                 type: type,
-                oid: oid,
+                id: oid,
                 sort: -1,
             };
-            $.get("/comment/getCommentsByTypeAndOid", data, (result) => {
+            $.get("/comment/commentsByTypeAndId", data, (result) => {
                 this.commentList = result.data.commentList;
             })
         },
@@ -1850,7 +1850,7 @@ new Vue({
             let refLink=$(".viewMethod");
             for(let i=0;i<refLink.length;i++){
                 if(event.currentTarget===refLink[i]){
-                    window.location.href = '/dataApplication/' + this.relatedDataMethods[i].oid;
+                    window.location.href = '/dataMethod/' + this.relatedDataMethods[i].oid;
                     break;
                 }
             }

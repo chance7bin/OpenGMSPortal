@@ -180,14 +180,14 @@ public class TaskService {
                     eventsSort.add(event);
                 }
             }
-            // for (int j = 0; j < events.size(); j++) {
-            //     JSONObject event = events.getJSONObject(j);
-            //     if (!event.getString("eventType").equals("response")) {
-            //         //判断是否能够可视化
-            //
-            //         eventsSort.add(event);
-            //     }
-            // }
+            for (int j = 0; j < events.size(); j++) {
+                JSONObject event = events.getJSONObject(j);
+                if (event.getString("eventType").equals("noresponse")) {
+                    //判断是否能够可视化
+
+                    eventsSort.add(event);
+                }
+            }
             state.put("event", eventsSort);
             states.set(i, state);
         }

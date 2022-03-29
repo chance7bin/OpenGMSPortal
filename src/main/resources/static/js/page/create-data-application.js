@@ -500,7 +500,7 @@ var createDataApplication = Vue.extend({
             // document.title="Modify Data Application | OpenGMS";
             let that = this
             $.ajax({
-                url: "/dataApplication/getInfo/" + oid,
+                url: "/dataMethod/getInfo/" + oid,
                 type: "get",
                 data: {},
 
@@ -789,7 +789,7 @@ var createDataApplication = Vue.extend({
                 // $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/dataApplication/add',
+                    url: '/dataMethod/add',
                     type: 'post',
                     data: this.formData,
                     cache: false,
@@ -812,10 +812,10 @@ var createDataApplication = Vue.extend({
                                 center: true,
                                 showClose: false,
                             }).then(() => {
-                                window.location.href = "/dataApplication/" + res.data;
+                                window.location.href = "/dataMethod/" + res.data;
                             }).catch(() => {
                                 window.location.reload(true)
-                                window.location.href = "/user/userSpace#/models/dataApplication";
+                                window.location.href = "/user/userSpace#/models/dataMethod";
                             });
 
                             break;
@@ -863,7 +863,7 @@ var createDataApplication = Vue.extend({
                 $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/dataApplication/update',
+                    url: '/dataMethod/update',
                     type: 'post',
                     data: this.formData,
                     cache: false,
@@ -904,7 +904,7 @@ var createDataApplication = Vue.extend({
                                     showClose: false,
                                 }).then(() => {
                                     $("#editModal", parent.document).remove();
-                                    window.location.href = "/dataApplication/" + res.data.id;
+                                    window.location.href = "/dataMethod/" + res.data.id;
                                 }).catch(() => {
                                     window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
                                     window.location.reload(true)
