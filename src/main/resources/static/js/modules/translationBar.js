@@ -84,6 +84,7 @@ Vue.component("translation-bar",
                 if(lang==this.currentLang){
                     return
                 }else{
+                    window.sessionStorage.setItem("language", lang);
                     this.currentLang = lang
                     this.transLateTargetPage()
                     this.loadNavBar()
@@ -152,10 +153,17 @@ Vue.component("translation-bar",
 
         },
         created() {
+
+            let language = window.sessionStorage.getItem("language");
+            if(language != undefined && language != null){
+                this.currentLang = language;
+            }else {
+                this.currentLang = this.initialLang
+            }
+
             this.transLateTargetPage()
-            // this.loadNavBar()
+            this.loadNavBar()
             this.loadFooter()
-            this.currentLang = this.initialLang
         },
         mounted() {
 
