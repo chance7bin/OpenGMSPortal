@@ -133,18 +133,6 @@
                              :props="defaultProps">
                     </el-tree>
 
-                    <el-tree v-if="queryType=='advanced'"
-                             id="treeAdvance"
-                             ref="treeAdvance"
-                             :data="treeData"
-                             :highlight-current="true"
-                             node-key="id"
-                             :default-expanded-keys="[1,9,30,14,19,24]"
-                             @check-change="handleCheckChange"
-                             :show-checkbox="true"
-                             :props="defaultProps">
-                    </el-tree>
-
                 </el-card>
             </div>
             <div class="el-col el-col-18 minScreen_maxWidth">
@@ -153,10 +141,10 @@
                         <el-input v-model="searchText" :placeholder=htmlJSON.SearchHolding style="border-radius: 0;">
                             <el-select v-model="curQueryField" slot="prepend" style="color:#606266;width:120px;border-radius: 0;">
                                 <el-option
-                                        v-for="qf in queryFields"
-                                        :key="qf"
-                                        :label="qf"
-                                        :value="qf">
+                                        v-for="qf in htmlJSON.queryFields"
+                                        :key="qf[0]"
+                                        :label="qf[1]"
+                                        :value="qf[2]">
                                 </el-option>
                             </el-select>
                             <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">
@@ -166,59 +154,6 @@
                         <!--<button @click="search()"><i class="glyphicon glyphicon-search"></i> Search</button>-->
                         <!--<a id="expend" href="javascript:void(0)" class="fa fa-angle-double-down fa-3x"-->
                         <!--aria-hidden="true" ></a>-->
-                    </div>
-                </div>
-
-                <div class="advancedSearch" style="margin-top:30px;position:relative;min-height:1px;display: none;">
-                    <div class="criteriaPanel">
-                        <div class="lines">
-                            <section v-for="(condition, index) in queryConditions"
-                                     style="margin-bottom:10px;padding-left:80px;padding-right:36px;">
-                                <div style="width:80px;margin-left:-80px;float:left;">
-                                    <el-select v-if="index > 0" v-model="condition.connector" placeholder="Connector">
-                                        <el-option
-                                                v-for="con in connectors"
-                                                :key="con"
-                                                :label="con"
-                                                :value="con">
-                                        </el-option>
-                                    </el-select>
-                                    <el-button v-if="index === 0" type="success" @click="conditionAppend">+ Add
-                                    </el-button>
-                                </div>
-                                <div style="width:100%;display:inline-block;padding:0 10px;">
-                                    <el-input v-model="condition.content">
-                                        <el-select v-model="condition.queryField" slot="prepend" style="width:120px;">
-                                            <el-option
-                                                    v-for="qf in queryFields"
-                                                    :key="qf"
-                                                    :label="qf"
-                                                    :value="qf">
-                                            </el-option>
-                                        </el-select>
-                                    </el-input>
-                                </div>
-                                <div style="width:36px;margin-right:-36px;margin-top:2px;display:inline-block;float:right;">
-                                    <el-button v-if="index > 0" style="padding:10px;" type="danger" icon="el-icon-close"
-                                               plain></el-button>
-                                </div>
-
-                            </section>
-
-                        </div>
-                        <span style="vertical-align: -webkit-baseline-middle;font-weight: bold;">{{htmlJSON.AdvancedSearch}}</span>
-                        <div class="line pull-right">
-
-                            <a id="drawback" href="javascript:void(0)" class="fa fa-angle-double-up fa-3x"
-                               style="display:inline-block"></a>
-                            <button id="query" class=""
-                                    style="display: inline-block;margin-top:-18px;margin-right:4px;height:34px;"
-                                    type="button" @click="search()">
-                                <i class="glyphicon glyphicon-search"></i>
-                                {{htmlJSON.Search}}
-                            </button>
-
-                        </div>
                     </div>
                 </div>
 
@@ -248,9 +183,9 @@
                                 {{sortTypeName}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
-                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}}</el-dropdown-item>
+                                    <el-dropdown-item command="viewCount">{{htmlJSON.ViewCount[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="name">{{htmlJSON.Name[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="createTime">{{htmlJSON.CreateTime[0]}}</el-dropdown-item>
 
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -259,8 +194,8 @@
                                 {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc[0]}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -285,7 +220,7 @@
                                 <a :class="modelItem.viewCount>5000?'hot':''" :href="'/modelItem/'+ modelItem.id"
                                    target="_blank">{{modelItem.name}}&nbsp&nbsp</a>
                             </div>
-                            <div :style="{'display':statistic[key]!='Overview'?'none':'block'}">
+                            <div :style="{'display':statistic[key]!=htmlJSON.overview?'none':'block'}">
 
                                 <div class="detail_overview">
                                     <a class="img" :href="'/modelItem/'+ modelItem.id" target="_blank">
@@ -306,7 +241,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div :style="{'height':statistic[key]!='Overview'?'200px':'0','visibility':statistic[key]!='Overview'?'visible':'hidden'}">
+                            <div :style="{'height':statistic[key]!=htmlJSON.overview?'200px':'0','visibility':statistic[key]!=htmlJSON.overview?'visible':'hidden'}">
                                 <div :id="'chart'+key" style="height: 200px"></div>
                             </div>
                             <hr>
@@ -326,7 +261,8 @@
                                         {{pageOption.users[key].name}}</h4></a>
 
                                     <h4 class="screen_view">
-                                        contributed at {{modelItem.createTime.substring(0,10)}} </h4>
+                                        {{htmlJSON.contributeStr}}
+                                        {{modelItem.createTime.substring(0,10)}} </h4>
                                     <h4 class="mobile_view">
                                         {{modelItem.createTime.substring(0,10)}} </h4>
                                 </div>
@@ -334,8 +270,8 @@
                                     <div class="minScreen_hide">
                                         <el-radio-group v-model="statistic[key]" size="small"
                                                         @change="switchChange(key)">
-                                            <el-radio-button label="Overview"></el-radio-button>
-                                            <el-radio-button label="Statistics"></el-radio-button>
+                                            <el-radio-button :label="htmlJSON.overview"></el-radio-button>
+                                            <el-radio-button :label="htmlJSON.statistics"></el-radio-button>
                                         </el-radio-group>
                                     </div>
                                     <a class="fa fa-eye" aria-hidden="true"></a>&nbsp&nbsp{{modelItem.viewCount}}
@@ -371,73 +307,6 @@
 
         </div>
     </div>
-
-    <el-dialog title="Edit Classification" :visible.sync="editClassification" width="65%">
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="parentNode2"
-                       class="col-sm-2 control-label"><span class="xing">* </span>Classifications</label>
-                <div class="col-sm-10">
-                                                                            <textarea class="form-control"
-                                                                                      id="parentNode2"
-                                                                                      v-model="clsStr"
-                                                                                      readonly></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="parentNode"
-                       class="col-sm-2 control-label"><span class="xing">* </span>Classifications2</label>
-                <div class="col-sm-10">
-                                                                            <textarea class="form-control"
-                                                                                      id="parentNode"
-                                                                                      v-model="clsStr2"
-                                                                                      readonly></textarea>
-                </div>
-            </div>
-        </div>
-        <el-card style="width:50%;float:left;">
-            <div slot="header" class="clearfix text-center">
-                <span style="font-size: 20px;color:#444">Model Classifications 1</span>
-            </div>
-            <el-tree style="height: 260px;overflow: auto"
-                     class="wzhScrollbar"
-                     id="tree12"
-                     ref="tree12"
-                     :data="treeData"
-                     show-checkbox
-                     node-key="id"
-                     :default-expanded-keys="[1,64]"
-
-                     @check-change="handleCheckChange12"
-                     :props="defaultProps">
-            </el-tree>
-        </el-card>
-        <el-card style="width:50%;">
-            <div slot="header" class="clearfix text-center">
-                <span style="font-size: 20px;color:#444">Model Classifications 2</span>
-            </div>
-            <el-tree style="height: 260px;overflow: auto"
-                     class="wzhScrollbar"
-                     id="tree14"
-                     ref="tree14"
-                     :data="htmlJSON.treeData2"
-                     show-checkbox
-                     node-key="id"
-                     :default-expanded-keys="[1,14,19,24]"
-
-                     @check-change="handleCheckChange14"
-                     :props="defaultProps">
-            </el-tree>
-        </el-card>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="editClassification = false">Cancel</el-button>
-            <el-button type="primary" @click="submitClassifications">Submit</el-button>
-        </span>
-    </el-dialog>
-
     <div th:replace="fragments/footer :: footer"></div>
 
 </div>

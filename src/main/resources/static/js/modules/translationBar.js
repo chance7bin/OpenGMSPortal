@@ -29,6 +29,7 @@ Vue.component("translation-bar",
             return {
                 themeStyle:'lightness',
                 currentLang:'en-us',
+                langList:['en-us','zh-cn'],
             }
         },
         computed: {},
@@ -86,6 +87,7 @@ Vue.component("translation-bar",
                 }else{
                     window.localStorage.setItem("language", lang);
                     this.currentLang = lang
+                    this.changeUrl();
                     this.transLateTargetPage()
                     this.loadNavBar()
                     this.loadFooter()
@@ -93,16 +95,37 @@ Vue.component("translation-bar",
                 }
             },
 
+            changeUrl(){
+                let url = decodeURIComponent(window.location.search);
+                let urlLanguage = this.GetQueryString(url, "language");
+                if(this.currentLang == urlLanguage){
+                    return;
+                }else if(urlLanguage != undefined && urlLanguage != null) { //url中存在language
+                    let startIndex = url.indexOf("language=");
+                    url = url.substring(0,startIndex) + "language=" + this.currentLang + url.substring(startIndex+9+urlLanguage.length);
+                }else{ //url中不存在language
+                    if (url.indexOf("?") == -1) {
+                        url += "?language=" + this.currentLang;
+                    } else {
+                        url += "&language=" + this.currentLang;
+                    }
+                }
+                history.pushState({}, document.title, url);
+            },
+
             async loadNavBar(){//需要加载navbar的网页触发翻译
-                let content = await this.getLangJson('navbar')
-                let scopeDom = document.getElementById("navBar")
+                let content = await this.getLangJson('navbar');
+                let scopeDom = document.getElementById("navBar");
 
                 //导航栏community英汉间距改变 --- add by wyjq
-                let communityDom=document.getElementById("drop1")
+                let communityDom=document.getElementById("drop1");
+                let helpSubMenu = document.getElementById("subHelp");
                 if(this.currentLang==="zh-cn"){
-                    communityDom.style.width="77px"
+                    communityDom.style.width="77px";
+                    helpSubMenu.style.left="611px";
                 }else{
-                    communityDom.style.width="127px"
+                    communityDom.style.width="127px";
+                    helpSubMenu.style.left="661px";
                 }
 
                 this.defautTrans(content,scopeDom)
@@ -151,14 +174,44 @@ Vue.component("translation-bar",
 
             },
 
+            GetQueryString(originStr,paramName) {
+
+                var reg = new RegExp("(^|&)"+ paramName +"=([^&]*)(&|$)");
+
+                var r = originStr.substr(1).match(reg);
+
+                if(r!=null)return  unescape(r[2]); return null;
+
+            },
+
+            LanguageIsValid(lang){
+                for(i = 0;i<this.langList.length;i++){
+                    if(lang === this.langList[i]){
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         },
         created() {
 
-            let language = window.localStorage.getItem("language");
-            if(language != undefined && language != null){
-                this.currentLang = language;
+            let url = decodeURIComponent(window.location.search);
+            let urlLanguage = this.GetQueryString(url, "language");
+            if(!this.LanguageIsValid(urlLanguage)){
+                this.currentLang = "en-us";
+            }
+            if(urlLanguage != undefined && urlLanguage != null && urlLanguage.trim() !== ""){
+                this.currentLang = urlLanguage;
             }else {
-                this.currentLang = this.initialLang
+                urlLanguage = window.localStorage.getItem("language");
+                if (urlLanguage != undefined && urlLanguage != null && urlLanguage.trim() !== "") {
+                    this.currentLang = urlLanguage;
+                } else {
+                    this.currentLang = this.initialLang
+                }
+
+                this.changeUrl();
             }
 
             this.transLateTargetPage()

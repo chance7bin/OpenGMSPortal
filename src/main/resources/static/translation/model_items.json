@@ -9,24 +9,28 @@
     "AdvancedSearch": "Advanced Search with Multiple Query Conditions",
     "SearchHolding": "Query String...",
     "Search": "Search",
-    "CurrentClass":"Current Classification:",
+    "CurrentClass":"Current Classification: ",
     "Loading": "Loading...",
     "items": "items",
     "SortBy":"Sorted By:",
-    "ViewCount": "View Count",
-    "Name": "Name",
-    "CreateTime": "CreateTime",
-    "Asc": "Asc.",
-    "Desc": "Desc.",
+    "ViewCount": ["View Count", "viewCount"],
+    "Name": ["Name","name"],
+    "CreateTime": ["Create Time","createTime"],
+    "Asc": ["Asc.","Asc."],
+    "Desc": ["Desc.","Desc."],
+    "queryFields":[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
 
-    "currentClass":"Land regions",
+    "currentClass":"",
 
+    "contributeStr":"contributed at ",
+    "overview":"Overview",
+    "statistics":"Statistics",
 
     "treeData2":[
       {"children": [{
         "children": [{
           "id": 2,
-          "label": "Land region",
+          "label": "Land regions",
           "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e"
         }, {"id": 3, "label": "Ocean regions", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457"}, {
           "id": 4,
@@ -114,13 +118,18 @@
     "Loading": "加载中...",
     "items": "个条目",
     "SortBy":"排序:",
-    "ViewCount": "查看次数",
-    "Name": "名字",
-    "CreateTime": "创建时间",
-    "Asc": "升序",
-    "Desc": "降序",
+    "ViewCount": ["点击量", "viewCount"],
+    "Name": ["名称","name"],
+    "CreateTime": ["创建时间","createTime"],
+    "Asc": ["升序","Asc."],
+    "Desc": ["降序","Desc."],
+    "queryFields":[[1,"名称","Name"],[2,"关键词","Keyword"],[3,"内容","Content"],[4,"贡献者","Contributor"]],
 
-    "currentClass":"陆地领域",
+    "currentClass":"",
+
+    "contributeStr":"贡献于 ",
+    "overview":"概览",
+    "statistics":"统计信息",
 
     "treeData2":[
       {"children": [{
