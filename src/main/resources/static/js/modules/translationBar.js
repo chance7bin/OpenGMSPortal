@@ -198,15 +198,13 @@ Vue.component("translation-bar",
 
             let url = decodeURIComponent(window.location.search);
             let urlLanguage = this.GetQueryString(url, "language");
-            if(!this.LanguageIsValid(urlLanguage)){
-                this.currentLang = "en-us";
-            }
-            if(urlLanguage != undefined && urlLanguage != null && urlLanguage.trim() !== ""){
+
+            if(this.LanguageIsValid(urlLanguage)){
                 this.currentLang = urlLanguage;
             }else {
-                urlLanguage = window.localStorage.getItem("language");
-                if (urlLanguage != undefined && urlLanguage != null && urlLanguage.trim() !== "") {
-                    this.currentLang = urlLanguage;
+                let language = window.localStorage.getItem("language");
+                if (this.LanguageIsValid(language)) {
+                    this.currentLang = language;
                 } else {
                     this.currentLang = this.initialLang
                 }
