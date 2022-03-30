@@ -35,8 +35,8 @@
     "items": "个条目",
     "NoData": "没有数据",
     "SortBy":"排序:",
-    "ViewCount": "查看次数",
-    "Name": "名字",
+    "ViewCount": "点击量",
+    "Name": "名称",
     "CreateTime": "创建时间",
     "Asc": "升序",
     "Desc": "降序"
