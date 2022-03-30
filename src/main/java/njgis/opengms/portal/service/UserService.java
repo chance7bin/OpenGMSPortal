@@ -554,7 +554,8 @@ public class UserService {
      * @Date 2021/7/6
      **/
     public JSONObject getUserResource(String email) throws Exception {
-        JSONObject j_userInfo = getInfoFromUserServer(email);
+        // JSONObject j_userInfo = getInfoFromUserServer(email);
+        JSONObject j_userInfo = getOwnInfoFromUserServer(email);
 
         JSONObject j_result = new JSONObject();
         if (j_userInfo.getString("msg").equals("suc")){
@@ -572,6 +573,41 @@ public class UserService {
         }
 
         return j_result;
+    }
+
+    public JSONObject getOwnInfoFromUserServer(String email){
+        User user = userDao.findFirstByEmail(email);
+        JSONObject jsonObject = new JSONObject();
+        if(user!=null){
+            String token = tokenService.checkToken(email);
+            if(token.equals("out")){
+                jsonObject.put("msg","out");
+                return jsonObject;
+            }
+            jsonObject = tokenService.getUserFromResServer(token);
+            JSONObject j_userInfo = new JSONObject();
+            if(jsonObject!=null){
+
+                j_userInfo = jsonObject.getJSONObject("data");
+                String avatar = j_userInfo.getString("avatar");
+                if(avatar!=null){
+                    avatar = "/userServer" + avatar;
+                }
+                j_userInfo.put("avatar",avatar);
+                jsonObject = null;
+                j_userInfo.put("msg","suc");
+            }else{
+                j_userInfo.put("msg","err");
+            }
+
+
+            return j_userInfo;
+
+        }else{
+            jsonObject.put("msg","no user");
+        }
+
+        return jsonObject;
     }
 
 
