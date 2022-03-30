@@ -347,10 +347,13 @@ public class UserRestController {
         String email = session.getAttribute("email").toString();
         JSONObject j_result = userService.getUserResource(email);
 
-        if(j_result.getString("msg").equals("out")){
-            ResultUtils.error(-1,"out");
-        }else if (j_result.getString("msg").equals("no user")){
-            ResultUtils.error(-2,"no user");
+        // if(j_result.getString("msg").equals("out")){
+        //     ResultUtils.error(-1,"out");
+        // }else if (j_result.getString("msg").equals("no user")){
+        //     ResultUtils.error(-2,"no user");
+        // }
+        if(!j_result.getString("msg").equals("suc")){
+            ResultUtils.error();
         }
 
         return ResultUtils.success(j_result);

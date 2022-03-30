@@ -3,10 +3,12 @@ package njgis.opengms.portal.controller;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.VersionService;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +65,10 @@ public class VersionController {
     // }
 
     @ApiOperation(value = "得到接收的审核信息 [ /version/getAccepted ]")
-    @PostMapping(value = "/versionList/accepted")
-    public JsonResult getAccepted(@RequestBody FindDTO findDTO) {
-        return versionService.getVersionByConcreteStatus(findDTO,1);
+    @PostMapping(value = "/versionList/accepted/{type}")
+    public JsonResult getAccepted(@RequestBody FindDTO findDTO,
+                                  @ApiParam(name = "type", value = "type传入All为不分类")  @PathVariable ItemTypeEnum type) {
+        return versionService.getVersionByConcreteStatus(findDTO,1,type);
     }
 
     // @ApiOperation(value = "分页得到接收的审核信息")
@@ -75,9 +78,10 @@ public class VersionController {
     // }
 
     @ApiOperation(value = "得到未审核的审核信息")
-    @PostMapping(value = "/versionList/uncheck")
-    public JsonResult getUncheck(@RequestBody FindDTO findDTO) {
-        return versionService.getVersionByConcreteStatus(findDTO,0);
+    @PostMapping(value = "/versionList/uncheck/{type}")
+    public JsonResult getUncheck(@RequestBody FindDTO findDTO,
+                                 @ApiParam(name = "type", value = "type传入All为不分类")  @PathVariable ItemTypeEnum type) {
+        return versionService.getVersionByConcreteStatus(findDTO,0,type);
     }
 
     // @ApiOperation(value = "分页得到未审核的审核信息")
@@ -87,9 +91,10 @@ public class VersionController {
     // }
 
     @ApiOperation(value = "得到拒绝的审核信息")
-    @PostMapping(value = "/versionList/rejected")
-    public JsonResult getRejected(@RequestBody FindDTO findDTO) {
-        return versionService.getVersionByConcreteStatus(findDTO,-1);
+    @PostMapping(value = "/versionList/rejected/{type}")
+    public JsonResult getRejected(@RequestBody FindDTO findDTO,
+                                  @ApiParam(name = "type", value = "type传入All为不分类")  @PathVariable ItemTypeEnum type) {
+        return versionService.getVersionByConcreteStatus(findDTO,-1,type);
     }
 
     // @ApiOperation(value = "分页得到拒绝的审核信息")

@@ -154,7 +154,7 @@ public class TokenService {
         headers.add("Authorization", "Bearer "+ access_token);
         //httpEntity = httpHeader + httpBody,当然也可以只有其中一部分
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        String resUserUri = "http://" + userServer + "/userServer/auth/userInfo";
+        String resUserUri = "http://" + userServer + "/auth/userInfo";
         //Url, RequestType, RequestContent, ResponseDataType
 
         try{

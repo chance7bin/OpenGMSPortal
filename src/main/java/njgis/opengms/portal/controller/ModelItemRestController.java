@@ -26,7 +26,6 @@ import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -459,4 +458,8 @@ public class ModelItemRestController {
         }
         return ResultUtils.success(modelItemService.getArticleByDOI(DOI,modelOid));
     }
+
+
+
+
 }
