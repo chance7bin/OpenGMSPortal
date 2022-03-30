@@ -271,6 +271,47 @@ public class VersionService {
         }
     }
 
+    public JsonResult getVersionByConcreteStatus(FindDTO findDTO, int status,ItemTypeEnum type) {
+        try {
+            int count;
+            List<Version> versionList;
+            if (findDTO == null){
+                versionList = versionDao.findAllByStatusAndType(status,type);
+                count = versionList.size();
+
+                // return ResultUtils.success(versionDao.findAllByStatus(status));
+            }
+            else if (type == ItemTypeEnum.All){
+                Pageable pageable = genericService.getPageable(findDTO);
+                Page<Version> allByStatus = versionDao.findAllByStatus(status, pageable);
+                versionList = allByStatus.getContent();
+                count = (int) allByStatus.getTotalElements();
+            }
+            else {
+                Pageable pageable = genericService.getPageable(findDTO);
+                Page<Version> allByStatus = versionDao.findAllByStatusAndType(status, type, pageable);
+                versionList = allByStatus.getContent();
+                count = (int) allByStatus.getTotalElements();
+                // return ResultUtils.success(versionDao.findAllByStatus(status,pageable));
+            }
+
+            List<Version> versions = new ArrayList<>();
+            for (Version version : versionList) {
+                Version newV = new Version();
+                BeanUtils.copyProperties(version, newV, "content","changedField");
+                versions.add(newV);
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("content",versions);
+            jsonObject.put("count",count);
+            return ResultUtils.success(jsonObject);
+
+        }catch (Exception e){
+            return ResultUtils.error(e.getMessage());
+        }
+    }
+
 
     /**
      * 得到用户已提交审核版本的数据

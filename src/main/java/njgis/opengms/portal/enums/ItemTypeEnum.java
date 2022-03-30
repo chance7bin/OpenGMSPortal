@@ -9,6 +9,9 @@ public enum ItemTypeEnum {
 
     //条目类型
 
+    //所有类型的条目，用于区别按分类查找的情况
+    All(18,"all"),
+
     ModelItem(1,"modelItem"),
     ConceptualModel(2,"conceptualModel"),
     LogicalModel(3,"logicalModel"),
