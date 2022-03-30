@@ -278,7 +278,7 @@ new Vue({
             let label = "";
             switch (ele){
                 case this.htmlJSON.ViewCount[1]:
-                    label = this.htmlJSON.viewCount[0];
+                    label = this.htmlJSON.ViewCount[0];
                     break;
                 case this.htmlJSON.Name[1]:
                     label = this.htmlJSON.Name[0];
