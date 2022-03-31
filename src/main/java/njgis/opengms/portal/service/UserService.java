@@ -77,6 +77,9 @@ public class UserService {
     private String from;
 
     @Autowired
+    GenericService genericService;
+
+    @Autowired
     //用于发送文件
     private JavaMailSender mailSender;
 
@@ -675,7 +678,7 @@ public class UserService {
     }
 
     /**
-     * 更新用户数据条目的数量
+     * 更新用户数据条目的数量，在插入成功条目之后调用
      * @param email
      * @param itemType UserResourceCount对应的属性
      * @param op 增加还是减少 add delete 
@@ -685,15 +688,24 @@ public class UserService {
     public void updateUserResourceCount(String email, ItemTypeEnum itemType, String op) throws NoSuchFieldException, IllegalAccessException {
         User user = userDao.findFirstByEmail(email);
         UserResourceCount userResourceCount = user.getResourceCount();
+        if (userResourceCount == null){
+            userResourceCount = new UserResourceCount();
+        }
         Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
         Field field = aClass.getDeclaredField(itemType.getText());
         field.setAccessible(true);
-        int count = (int)field.get(userResourceCount);
-        if (op.equals("add")) {
-            ++count;
-        } else {
-            --count;
-        }
+        // 直接加减偶尔会出现问题，直接查数据库的表
+        // int count = (int)field.get(userResourceCount);
+        // if (op.equals("add")) {
+        //     ++count;
+        // } else {
+        //     --count;
+        // }
+
+        JSONObject daoFactory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
+        int count = itemDao.countByAuthor(email);
+
         field.set(userResourceCount,count);
         user.setResourceCount(userResourceCount);
         userDao.save(user);
