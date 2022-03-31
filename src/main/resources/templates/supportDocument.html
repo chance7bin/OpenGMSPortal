@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title th:if="${type=='sup'}" >Support Document | OpenGMS</title>
-    <title th:if="${type=='demo'}" >Demo Document | OpenGMS</title>
+    <title th:if="${type=='sup'}" >{{htmlJSON.pageTitle_support}} | OpenGMS</title>
+    <title th:if="${type=='demo'}" >{{htmlJSON.pageTitle_demo}} | OpenGMS</title>
 
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static//css/base/fluent/fluent.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/fluent/fluent.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
@@ -41,12 +41,12 @@
          :style="{'min-height':ScreenMinHeight}">
         <div class="clearfix" style="height: 100%;">
             <div th:if="${type=='sup'}" class="clearfix titleImg_small fontWhite" style="background-image: url('/static/img/bled_clip.jpg');background-position-y: 600px;">
-                <h3 style="text-align: center;margin-top: 30px">OpenGMS<span class="h_lite"> Learn And Support</span></h3>
-                <h5 style="text-align: center;margin-top: 20px">Let's learn what is provided by OpenGMS!</h5>
+                <h3 style="text-align: center;margin-top: 30px">OpenGMS<span class="h_lite">{{htmlJSON.learnAndSupport}}</span></h3>
+                <h5 style="text-align: center;margin-top: 20px">{{htmlJSON.provide}}</h5>
             </div>
             <div th:if="${type=='demo'}" class="clearfix titleImg_small fontWhite" style="background-image: url('/static/img/bled_clip.jpg');background-position-y: 600px;">
-                <h3 style="text-align: center;margin-top: 30px">Demo<span class="h_lite"> Document</span></h3>
-                <h5 style="text-align: center;margin-top: 20px">Let's learn what can we do in OpenGMS!</h5>
+                <h3 style="text-align: center;margin-top: 30px">{{htmlJSON.demo}}<span class="h_lite">{{htmlJSON.document}}</span></h3>
+                <h5 style="text-align: center;margin-top: 20px">{{htmlJSON.do}}</h5>
             </div>
 
             <div class="col-lg-10 col-lg-offset-1 col-md-12 clearfix" style="padding: 5px 0">
@@ -56,7 +56,7 @@
                         <div class="treeContainer" id="sidebarMenu">
                             <div class="flexJustBetween">
                                 <div class=" lineButton" style="margin: 15px 15px 15px 13px;width: 63px" >
-                                    <a type="info" @click="backClick">&larr;&nbsp;Back</a>
+                                    <a type="info" @click="backClick">&larr;&nbsp;{{htmlJSON.back}}</a>
                                     <div class="hoverLine"></div>
                                 </div>
                                 <div class="cursorPointer" style="margin: 15px 15px 15px 13px;" @click="foldTree()">
@@ -94,26 +94,26 @@
                  ref="commentCard" @mouseenter="unfoldSide" @mouseleave="foldSide"
                  style="background-color: rgba(4,162,255,0.88);width: 213.8px;">
                 <div v-if="commentSended"  class="floatBlockContent" style="height: 20px;">
-                    <p class="noMargin"  >Thank you for your comment.</p>
+                    <p class="noMargin"  >{{htmlJSON.thx}}</p>
                 </div>
                 <div v-else class=" flexCol flexAlignCenter floatBlockContent" style="height: 46px;" >
-                    <p>Was this document helpful?</p>
+                    <p>{{htmlJSON.helpful}}</p>
                     <el-radio-group   v-model="isHelpful"  size="mini" @change="sendComment()">
-                        <el-radio label="1">Yes</el-radio>
-                        <el-radio label="2">No</el-radio>
+                        <el-radio label="1">{{htmlJSON.yes}}</el-radio>
+                        <el-radio label="2">{{htmlJSON.no}}</el-radio>
                     </el-radio-group>
                 </div>
 
             </div>
             <div class="fullScreenComment" ref="fullCommentCard" style="width: 100%">
                 <div v-if="commentSended"  class="flexCenter" style="height: 46px;">
-                    <p class="noMargin"  >Thank you for your comment.</p>
+                    <p class="noMargin"  >{{htmlJSON.thx}}</p>
                 </div>
                 <div v-else class=" flexAlignCenter flexJustAround floatBlockContent" style="height: 46px;background-color: #04a2ff" >
-                    <p class="noMargin">Was this document helpful?</p>
+                    <p class="noMargin">{{htmlJSON.helpful}}</p>
                     <el-radio-group   v-model="isHelpful"  size="mini" @change="sendComment()" >
-                        <el-radio label="1">Yes</el-radio>
-                        <el-radio label="2">No</el-radio>
+                        <el-radio label="1">{{htmlJSON.yes}}</el-radio>
+                        <el-radio label="2">{{htmlJSON.no}}</el-radio>
                     </el-radio-group>
                 </div>
             </div>
@@ -133,7 +133,7 @@
 <script src="/static/js/index/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
-<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 
 <!--数据以json变量形式存储在js文件中，按需添加到页面对应位置-->
 <script th:if="${name=='How to use a model online'}" src="/static/js/help/demo/demo1.js"></script>

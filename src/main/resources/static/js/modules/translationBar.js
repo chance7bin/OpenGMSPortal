@@ -35,6 +35,16 @@ Vue.component("translation-bar",
         computed: {},
         methods: {
             async transLateTargetPage(){//获取页面内容对应翻译文件，不包含navbar和footer
+                if(this.currentLang !== "zh-cn"){
+                    //element-ui 切换英文，勿删！
+                    if(ELEMENT!=undefined) {
+                        ELEMENT.locale(ELEMENT.lang.en)
+                    }
+                }else{
+                    if(ELEMENT!=undefined) {
+                        ELEMENT.locale(ELEMENT.lang.zhCN)
+                    }
+                }
                 let content = await this.getLangJson(this.jsonFile)
                 this.loadLangContent(content)
             },
@@ -96,21 +106,24 @@ Vue.component("translation-bar",
             },
 
             changeUrl(){
-                let url = decodeURIComponent(window.location.search);
-                let urlLanguage = this.GetQueryString(url, "language");
-                if(this.currentLang == urlLanguage){
-                    return;
-                }else if(urlLanguage != undefined && urlLanguage != null) { //url中存在language
-                    let startIndex = url.indexOf("language=");
-                    url = url.substring(0,startIndex) + "language=" + this.currentLang + url.substring(startIndex+9+urlLanguage.length);
-                }else{ //url中不存在language
-                    if (url.indexOf("?") == -1) {
-                        url += "?language=" + this.currentLang;
-                    } else {
-                        url += "&language=" + this.currentLang;
+                let pathname = window.location.pathname;
+                if(pathname.indexOf("userSpace")==-1) {
+                    let url = decodeURIComponent(window.location.search);
+                    let urlLanguage = this.GetQueryString(url, "language");
+                    if (this.currentLang == urlLanguage) {
+                        return;
+                    } else if (urlLanguage != undefined && urlLanguage != null) { //url中存在language
+                        let startIndex = url.indexOf("language=");
+                        url = url.substring(0, startIndex) + "language=" + this.currentLang + url.substring(startIndex + 9 + urlLanguage.length);
+                    } else { //url中不存在language
+                        if (url.indexOf("?") == -1) {
+                            url += "?language=" + this.currentLang;
+                        } else {
+                            url += "&language=" + this.currentLang;
+                        }
                     }
+                    history.pushState({}, document.title, url);
                 }
-                history.pushState({}, document.title, url);
             },
 
             async loadNavBar(){//需要加载navbar的网页触发翻译
@@ -200,11 +213,11 @@ Vue.component("translation-bar",
 
             let url = decodeURIComponent(window.location.search);
             let urlLanguage = this.GetQueryString(url, "language");
+            let language = window.localStorage.getItem("language");
 
             if(this.LanguageIsValid(urlLanguage)){
                 this.currentLang = urlLanguage;
             }else {
-                let language = window.localStorage.getItem("language");
                 if (this.LanguageIsValid(language)) {
                     this.currentLang = language;
                 } else {
@@ -212,6 +225,13 @@ Vue.component("translation-bar",
                 }
 
                 this.changeUrl();
+            }
+
+            if(this.currentLang !== "zh-cn"){
+                //element-ui 切换英文，勿删！
+                if(ELEMENT!=undefined) {
+                    ELEMENT.locale(ELEMENT.lang.en)
+                }
             }
 
             this.transLateTargetPage()

@@ -1,0 +1,26 @@
+{
+  "en-us": {
+
+    "login": "Log In",
+    "email": "Email",
+    "password": "Password",
+    "forgetPass": "Forget your password?",
+    "reset": "Reset",
+    "loginBtn": "Log In",
+    "signupBtn": "Sign Up",
+    "notice": "After login, more functions will be unlocked."
+
+
+  },
+  "zh-cn": {
+    "login": "登 录",
+    "email": "邮箱",
+    "password": "密码",
+    "forgetPass": "忘记密码？",
+    "reset": "重置",
+    "loginBtn": "登录",
+    "signupBtn": "注册账号",
+    "notice": "登录后可以解锁更多功能"
+  }
+
+}

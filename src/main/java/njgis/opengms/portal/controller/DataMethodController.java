@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -128,7 +129,7 @@ public class DataMethodController {
     @LoginRequired
     @ApiOperation(value = "删除dataMethod [ /dataApplication/delete ]")
     @DeleteMapping(value = "/{id}")
-    public JsonResult deleteDataApplication(@PathVariable(value = "id") String id, HttpServletRequest request) {
+    public JsonResult deleteDataApplication(@PathVariable(value = "id") String id) {
         return dataMethodService.delete(id);
     }
 
@@ -400,4 +401,16 @@ public class DataMethodController {
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataMethod,findDTO, true));
 
     }
+
+    @ApiOperation(value = "下载资源")
+    @RequestMapping(value = "/resource/download/{id}/{index}", method = RequestMethod.GET)
+    public void downloadResource(
+        @ApiParam(name = "id", value = "条目id") @PathVariable String id,
+        @ApiParam(name = "index", value = "resources数组index")  @PathVariable int index,
+        HttpServletResponse response) {
+
+        dataMethodService.downloadResource(id,index,response);
+
+    }
+
 }

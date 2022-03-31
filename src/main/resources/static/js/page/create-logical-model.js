@@ -806,7 +806,7 @@ var createLogicalModel = Vue.extend({
                 });
                 this.formData.append("logicalModel", file)
                 $.ajax({
-                    url: '/logicalModel',
+                    url: '/logicalModel/',
                     type: 'POST',
                     data: this.formData,
                     cache: false,

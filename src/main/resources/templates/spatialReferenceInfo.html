@@ -8,7 +8,7 @@
     <link href="/static/css/base/bootstrap.min.css" rel="stylesheet">
     <!--<link rel="stylesheet" th:href="@{/static/ol/ol.css}">-->
     <link rel="stylesheet" th:href="@{/static/leaflet/leaflet.css}">
-    <link rel="stylesheet" th:href="@{/static//css/base/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/base/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" th:href="@{/static/css/base/style.css}">
     <link rel="stylesheet" th:href="@{/static/css/base/universal.css}">
@@ -882,13 +882,13 @@
 
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
 
 <script type="text/javascript" src="/static/js/page/repositoryInfo.js"></script>
 
 
-
-<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/js/common/navbar.js"></script>
+<script src="/static/js/common/navbar.js"></script>
 <script>
     function submitFrom() {
         var arry = $("#addConceptLocalizationForm").serializeArray();

@@ -1,8 +1,8 @@
 package njgis.opengms.portal.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -114,4 +114,53 @@ public class FileUtil {
             return false;
         }
     }
+
+    /**
+     * 下载文件
+     * @param path 文件存储的物理地址
+     * @param response
+     * @return void
+     * @Author bin
+     **/
+    public static void downloadFile(String path,  HttpServletResponse response){
+
+        try {
+            // path是指欲下载的文件的路径。
+            File file = new File(path);
+            // 取得文件名。
+            String filename = file.getName();
+            // 取得文件的后缀名。
+            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // JSONP 解决跨域问题
+            response.addHeader("Access-Control-Allow-Origin", "*");
+            response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            response.addHeader("Access-Control-Allow-Headers", "Content-Type");
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(),"utf-8"));
+            response.addHeader("Content-Length", "" + file.length());
+            // response.addHeader("Access-Contro1-A11ow-0rigin", "*"); //解决跨域问题
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        // 再返回response会出错
+        // 承载客户端和服务器进行Http交互的Socket连接在 `toClient.close()` 已经关闭了，还试图发送数据给客户端就会出错
+        // return response;
+
+    }
+
+
 }

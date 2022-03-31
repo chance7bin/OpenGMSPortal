@@ -2,6 +2,7 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.ComputableModelDao;
 import njgis.opengms.portal.dao.DataItemDao;
 import njgis.opengms.portal.dao.ModelItemDao;
@@ -34,12 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import sun.misc.IOUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static njgis.opengms.portal.utils.ModelServiceUtils.checkMdlJson;
-import static njgis.opengms.portal.utils.Utils.saveFiles;
 import static njgis.opengms.portal.utils.Utils.saveResource;
 
 /**
@@ -49,6 +50,7 @@ import static njgis.opengms.portal.utils.Utils.saveResource;
  * @Version 1.0.0
  */
 @Service
+@Slf4j
 public class ComputableModelService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -784,4 +786,35 @@ public class ComputableModelService {
         return jsonObject;
     }
 
+    public void downloadResource(String id, int index, HttpServletResponse response) {
+
+        ComputableModel computableModel = computableModelDao.findFirstById(id);
+
+        if (computableModel == null){
+            log.warn("download a resource that does not exist");
+            return;
+        }
+
+
+        List<Resource> resources = computableModel.getResources();
+
+        Resource resource = resources.get(index);
+
+        String path = resourcePath + "/computableModel/" + computableModel.getContentType() + resource.getPath();
+
+        File file = new File(path);
+        if (!file.exists()){
+            log.warn("download a resource that does not exist");
+            return;
+        }
+
+        int downloadCount = resource.getDownloadCount();
+        downloadCount++;
+        resource.setDownloadCount(downloadCount);
+        computableModel.setResources(resources);
+        computableModelDao.save(computableModel);
+
+        FileUtil.downloadFile(path, response);
+
+    }
 }

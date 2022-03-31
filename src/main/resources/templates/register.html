@@ -8,13 +8,13 @@
 
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/static//css/base/base.css" />
-    
+
     <style>
         /*org*/
         .el-tag {
@@ -51,32 +51,39 @@
     <!--<h1 th:text="${name}">Hello World</h1>-->
     <div id="app">
         <div th:replace="fragments/navbar :: unlog"></div>
+
         <el-row style="margin-top:30px;margin-bottom: 30px;">
+            <translation-bar
+                    json-file="register"
+                    @translate-page="translatePage"
+                    initial-lang="en-us"
+                    theme="dark"
+                    style="position: absolute;top: 10px;right:15px"></translation-bar>
             <el-col class="" style="width: 100%">
                 <div class="registerCard el-card is-always-shadow">
                     <div slot="header" class="clearfix el-card__header" style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 20px">Sign Up</span>
+                        <span style="font-weight: bold;font-size: 20px">{{htmlJSON.signUp}}</span>
                     </div>
                     <div style="margin-top: 30px">
                         <el-col :span="20" :offset="1">
                             <el-form label-position="right" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="150px" class="demo-ruleForm" size="medium">
-                                <el-form-item label="Email" prop="email">
-                                    <el-input type="text" v-model="ruleForm2.email" autocomplete="off" placeholder="Please enter your email address"></el-input>
+                                <el-form-item :label="htmlJSON.email" prop="email">
+                                    <el-input type="text" v-model="ruleForm2.email" autocomplete="off" :placeholder="htmlJSON.emailStr"></el-input>
                                 </el-form-item>
                                 <!--<el-form-item label="Code" prop="code">-->
                                     <!--<el-input type="text" v-model="ruleForm2.code" autocomplete="off"></el-input>-->
                                 <!--</el-form-item>-->
-                                <el-form-item label="Password" prop="pwd">
-                                    <el-input type="password" v-model="ruleForm2.pwd" autocomplete="off" placeholder="Please enter your password"></el-input>
+                                <el-form-item :label="htmlJSON.password" prop="pwd">
+                                    <el-input type="password" v-model="ruleForm2.pwd" autocomplete="off" :placeholder="htmlJSON.passwordStr"></el-input>
                                 </el-form-item>
-                                <el-form-item label="Confirm Password" prop="checkPass">
-                                    <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off" placeholder="Please enter your password again"></el-input>
+                                <el-form-item :label="htmlJSON.confirmPW" prop="checkPass">
+                                    <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off" :placeholder="htmlJSON.checkPassStr"></el-input>
                                 </el-form-item>
-                                <el-form-item label="Name" prop="name">
-                                    <el-input type="text" v-model="ruleForm2.name" autocomplete="off" placeholder="Please enter your name"></el-input>
+                                <el-form-item :label="htmlJSON.name" prop="name">
+                                    <el-input type="text" v-model="ruleForm2.name" autocomplete="off" :placeholder="htmlJSON.nameStr"></el-input>
                                 </el-form-item>
-                                <el-form-item label="Title" prop="title">
-                                    <el-select class="w100" v-model="ruleForm2.title" placeholder="Please select your title">
+                                <el-form-item :label="htmlJSON.title" prop="title">
+                                    <el-select class="w100" v-model="ruleForm2.title" :placeholder="htmlJSON.title">
                                         <el-option label="Prof" value="Professor"></el-option>
                                         <el-option label="Dr" value="Dr"></el-option>
                                         <el-option label="Mr" value="Mr"></el-option>
@@ -86,7 +93,7 @@
                                         <el-option label="Mx" value="Mx"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="Organization" prop="org">
+                                <el-form-item :label="htmlJSON.org" prop="org">
                                     <el-tag
                                             :key="organization"
                                             v-for="organization in ruleForm2.org"
@@ -105,12 +112,12 @@
                                             @blur="handleInputConfirm"
                                     >
                                     </el-input>
-                                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New</el-button>
+                                    <el-button v-else class="button-new-tag" size="small" @click="showInput">{{htmlJSON.new}}</el-button>
                                 </el-form-item>
                                 <div class="flexRowCenter" style="margin: 10px;width: 100%">
-                                    <el-button type="primary" plain style="margin-right: 10px;" @click="window.location.href='/user/login'"><i class="fa fa-arrow-left"></i> Log In</el-button>
-                                    <el-button class="pull-left" style="margin-right: 2px;"  @click="resetForm('ruleForm2')">Reset</el-button>
-                                    <el-button type="primary" @click="submitForm('ruleForm2')">Join OpenGMS</el-button>
+                                    <el-button type="primary" plain style="margin-right: 10px;" @click="window.location.href='/user/login'"><i class="fa fa-arrow-left"></i>{{htmlJSON.login}}</el-button>
+                                    <el-button class="pull-left" style="margin-right: 2px;"  @click="resetForm('ruleForm2')">{{htmlJSON.reset}}</el-button>
+                                    <el-button type="primary" @click="submitForm('ruleForm2')">{{htmlJSON.join}}</el-button>
 
 
                                 </div>
@@ -123,13 +130,19 @@
         <div th:replace="fragments/footer :: footer"></div>
     </div>
 </body>
+
     <script src="/static/js/common/md5.js"></script>
     <script src="/static/js/common/sha256.js"></script>
     <script src="/static/js/common/jquery-3.3.1.min.js"></script>
     <script src="/static/js/common/vue.min.js"></script>
     <script src="/static/js/common/axios.min.js"></script>
     <script src="/static/element-ui/index.js"></script>
+
+    <template th:replace="modules/translationBar :: translationBar"></template>
+    <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+    <script src="/static/js/modules/translationBar.js"></script>
+
     <script src="/static/js/page/register.js"></script>
-    <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/js/common/navbar.js"></script>
+    <script src="/static/js/common/navbar.js"></script>
 
 </html>

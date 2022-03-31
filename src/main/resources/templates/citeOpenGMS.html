@@ -8,7 +8,7 @@
     <meta name="description" content="In this page you will find references to cite when referring to or making use of OpenGMS tools.">
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/fluent/fluent.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
@@ -33,12 +33,18 @@
 <div v-cloak id="app">
     <div th:replace="fragments/navbar :: unlog"></div>
     <div th:replace="fragments/backToTop :: backtop-down"></div>
-    <div class="clearfix" style="position: relative;"
-         :style="{'min-height':ScreenMinHeight}">
+    <div class="clearfix" style="position: relative;" :style="{'min-height':ScreenMinHeight}">
+        <translation-bar
+                json-file="citeOpenGMS"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="clearfix" style="height: 100%;">
             <div class="clearfix titleImg_small fontWhite" style="background-image: url('/static/img/italy_clip.jpg');background-position-y: 510px;">
-                <h3 style="text-align: center;margin-top: 30px"><span class="h_lite">Cite </span>OpenGMS</h3>
-                <h5 style="text-align: center;margin-top: 20px">Below you will find references to cite when referring to or making use of OpenGMS tools.</h5>
+                <h3 style="text-align: center;margin-top: 30px"><span class="h_lite">{{htmlJSON.cite}} </span>{{htmlJSON.OpenGMS}}</h3>
+                <h5 style="text-align: center;margin-top: 20px">{{htmlJSON.intro}}</h5>
             </div>
 
             <div class="col-lg-10 col-lg-offset-1 col-md-12 clearfix" style="padding: 5px 0">
@@ -47,7 +53,7 @@
                     <el-col id="leftPanel" :span="sectionTitleSpan" style="position: sticky;top:0px">
                         <div class="treeContainer" id="sidebarMenu">
                             <div class=" lineButton" style="margin: 15px 15px 25px 13px;width: 63px;cursor: default;" >
-                                <div type="info">Catalogue</div>
+                                <div type="info">{{htmlJSON.catalog}}</div>
                                 <div class="hoverLine"></div>
                             </div>
                             <el-tree
@@ -62,16 +68,16 @@
                         </div>
                     </el-col>
                     <el-col :span="sectionSpan" style="margin-bottom: 30px;">
-                        <div th:each="block,index:${cites}" style="margin-bottom: 20px;">
-                            <h3 style="padding: 0 20px 0 20px; color: #0a6999" th:id="${block.id}" th:text="${block.block}"> </h3>
+                        <div v-for="block,index in htmlJSON.cites" style="margin-bottom: 20px;">
+                            <h3 style="padding: 0 20px 0 20px; color: #0a6999" :id="block.id" >{{block.block}} </h3>
                             <hr style="margin:0;">
                             <div class="clearfix docSection " style="background-color: white;padding: 0 20px 0px" >
-                                <section class="wordSpace" th:each="section,index2:${block.children}" th:if="${section.head != ''}" th:id="${section.id}" >
-                                    <h3 class="h_lite" th:text="${section.head}"></h3>
+                                <section class="wordSpace" v-for="section,index2 in block.children" v-if="section.head != ''" :id="section.id" >
+                                    <h3 class="h_lite">{{section.head}}</h3>
                                     <ul>
-                                        <li th:each="cite,index3:${section.content}" th:if="${cite.refer != ''}" style="list-style: disc; margin-bottom:8px;">
-                                            <span th:text="${cite.refer}"></span>
-                                            <a th:href="${cite.link}" th:text="${cite.link}" target="_blank"></a><span th:if="${cite.link != ''}">.</span>
+                                        <li v-for="cite,index3 in section.content" v-if="cite.refer != ''" style="list-style: disc; margin-bottom:8px;">
+                                            <span>{{cite.refer}}</span>
+                                            <a :href="cite.link" target="_blank">{{cite.link}}</a><span v-if="cite.link != ''">.</span>
                                         </li>
                                     </ul>
                                 </section>
@@ -79,7 +85,7 @@
                         </div>
                         <li>
                             <a href="http://opengmsteam.com/publications" target="_blank">
-                                View all papers contributed by OpenGMS members.
+                                {{htmlJSON.allPubs}}
                             </a>
                         </li>
                     </el-col>
@@ -100,17 +106,15 @@
 </div>
 </body>
 
-<script th:inline="javascript">
-    var cites = [[${cites}]]
-
-</script>
-
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script src="/static/js/common/vue.min.js"></script>
 <script src="/static/js/index/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
-<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/page/citeOpenGMS.js"></script>
 <script src="/static/js/common/navbar.js"></script>

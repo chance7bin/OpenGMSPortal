@@ -1,0 +1,414 @@
+{
+  "en-us": {
+    "cite":"Cite",
+    "OpenGMS":"OpenGMS",
+    "intro":"Below you will find references to cite when referring to or making use of OpenGMS tools.",
+    "catalog":"Catalogue",
+    "allPubs":"View all papers contributed by OpenGMS members.",
+    "cites":[
+      {
+        "block":"Conceptual framework",
+        "children":
+        [
+          {
+            "head": " ",
+            "content": [
+              {
+                "refer": "Min Chen, Alexey Voinov, Daniel P. Ames, Albert J. Kettner, Jonathan L. Goodall, Anthony J. Jakeman, Michael Barton, Quillon Harpham, Susan M. Cuddy, Cecelia DeLuca, Songshan Yue, Jin Wang, Fengyuan Zhang, Yongning Wen, Guonian Lu. 2020. Position Paper: Open Web-Distributed Integrated Geographic Modelling to Enable Wider Participation and Model Application. Earth-Science Reviews, 207: 103223.",
+                "link": "https://doi.org/10.1016/j.earscirev.2020.103223"
+              },
+              {
+                "refer": "Min Chen, Songshan Yue, Guonian Lu, Hui Lin, Chaowei Yang, Yongning Wen, Tao Hou, Dawei Xiao, Hao Jiang. 2019. Teamwork-oriented integrated modeling method for geo-problem solving. Environmental modelling & software, 119: 111-123.",
+                "link": "https://doi.org/10.1016/j.envsoft.2019.05.015"
+              },
+              {
+                "refer": "Yongning Wen, Min Chen, Guonian Lu, Hui Lin. 2013. Prototyping an open environment for sharing geographical analysis models on cloud computing platform. International Journal of Digital Earth, 6(4): 356-382.",
+                "link": "https://doi.org/10.1080/17538947.2012.716861"
+              },
+              {
+                "refer": "Min Chen, Guonian Lu, Chenghu Zhou, Hui Lin, Zaiyang Ma, Songshan Yue, Yongning Wen, Fengyuan Zhang, Jin Wang, Zhiyi Zhu, Kai Xu, Yuanqing He. 2021. Geographic modeling and simulation systems for geographic research in the new era: Some thoughts on their development and construction. SCIENCE CHINA Earth Sciences.",
+                "link": "https://doi.org/10.1007/s11430-020-9759-0"
+              }
+            ]
+          }
+
+        ]
+      },
+      {
+        "block":"Platform",
+        "children":
+        [
+
+          {
+            "head": "Participatory Platform",
+            "content": [
+              {
+                "refer": "Zaiyang Ma, Min Chen, Songshan Yue, Beichen Zhang, Zhiyi Zhu, Yongning Wen, Guonian Lu, Mingyue Lu. 2021. Activity-based process construction for participatory geo-analysis. GIScience & Remote Sensing, 58: 180-198.",
+                "link": "https://doi.org/10.1080/15481603.2020.1868211"
+              },
+              {
+                "refer": "Songshan Yue, Min Chen, Jie Song, Wenping Yuan, Tiexi Chen, Guonian Lu, Chaoran Shen, Zaiyang Ma, Kai Xu, Yongning Wen, Hongquan Song. 2020. Participatory intercomparison strategy for terrestrial carbon cycle models based on a service-oriented architecture. Future Generation Computer Systems, 112: 449-466.",
+                "link": "https://doi.org/10.1016/j.future.2020.05.044"
+              },
+              {
+                "refer": "Min Chen, Songshan Yue, Guonian Lu, Hui Lin, Chaowei Yang, Yongning Wen, Tao Hou, Dawei Xiao, Hao Jiang. 2019. Teamwork-oriented integrated modeling method for geo-problem solving. Environmental modelling & software, 119: 111-123.",
+                "link": "https://doi.org/10.1016/j.envsoft.2019.05.015"
+              },
+              {
+                "refer": "Songshan Yue, Min Chen, Chaowei Yang, Chaoran Shen, Bowen Zhang, Yongning Wen, Guonian Lu. 2018. A Loosely Integrated Data Configuration Strategy for Web-Based Participatory Modeling. GIScience & Remote Sensing, 56(5): 670-698.",
+                "link": "https://doi.org/10.1080/15481603.2018.1549820"
+              }
+            ]
+          },
+          {
+            "head": "Model Comparison Platform",
+            "content": [
+              {
+                "refer": "Songshan Yue, Min Chen, Jie Song, Wenping Yuan, Tiexi Chen, Guonian Lu, Chaoran Shen, Zaiyang Ma, Kai Xu, Yongning Wen, Hongquan Song. 2020. Participatory intercomparison strategy for terrestrial carbon cycle models based on a service-oriented architecture. Future Generation Computer Systems, 112: 449-466.",
+                "link": "https://doi.org/10.1016/j.future.2020.05.044"
+              },
+              {
+                "refer": "",
+                "link": ""
+              }
+            ]
+          },
+
+          {
+            "head": "",
+            "content": [
+              {
+                "refer": "",
+                "link": ""
+              },
+              {
+                "refer": "",
+                "link": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "block":"Techniques and Tools",
+        "children":
+        [
+
+          {
+            "head": "Model Encapsulation and Deployment",
+            "content": [
+              {
+                "refer": "Yongning Wen, Min Chen, Songshan Yue, Peibei Zheng, Guoqiang Peng, Guonian Lu. 2017. A Model-Service Deployment Strategy for Collaboratively Sharing Geo-Analysis Models in an Open Web Environment. International Journal of Digital Earth, 10(4): 405-425.",
+                "link": "https://doi.org/10.1080/17538947.2015.1131340"
+              },
+              {
+                "refer": "Songshan Yue, Min Chen, Yongning Wen, Guonian Lu. 2016. Service-oriented model-encapsulation strategy for sharing and integrating heterogeneous geo-analysis models in an open web environment. ISPRS Journal of Photogrammetry and Remote Sensing, 114: 258-273.",
+                "link": "https://doi.org/10.1016/j.isprsjprs.2015.11.002"
+              }
+            ]
+          },
+          {
+            "head": "Model Service Container",
+            "content": [
+              {
+                "refer": "Fengyuan Zhang, Min Chen, Songshan Yue, Yongning Wen, Guonian Lü, Fei Li. 2020. Service-oriented Interface Design for Open Distributed Environmental Simulations. Environmental Research, 191: 110225.",
+                "link": "https://doi.org/10.1016/j.envres.2020.110225"
+              },
+              {
+                "refer": "Fengyuan Zhang, Min Chen, Daniel P Ames, Chaoran Shen, Songshan Yue, Yongning Wen, Guonian Lu. 2019. Design and Development of a Service-oriented Wrapper System for Sharing and Reusing Distributed Geoanalysis Models on the Web. Environmental Modelling and Software, 111: 498-509.",
+                "link": "https://doi.org/10.1016/j.envsoft.2018.11.002"
+              }
+
+            ]
+          },
+          {
+            "head": "Model System",
+            "content": [
+              {
+                "refer": "Zaiyang Ma, Min Chen, Beichen Zhang, Ming Wang, Chaoran Shen, Songshan Yue, Yongning Wen, Guonian Lu. 2019. A Web-Based Integrated Modeling and Simulation Method for Forest Growth Research. Earth and Space Science, 6(11): 2142-2159.",
+                "link": "https://doi.org/10.1029/2019EA000748"
+              },
+              {
+                "refer": "Dawei Xiao, Min Chen, Yuchen Lu, Songshan Yue, Tao Hou. 2019. Research on the Construction Method of the Service-Oriented Web-SWMM System. ISPRS-International Journal of Geo-Information, 8: 268.",
+                "link": "https://doi.org/10.3390/ijgi8060268"
+              }
+            ]
+          },
+          {
+            "head": "Model Knowledge Graph",
+            "content": [
+              {
+                "refer": "Min Chen, Chen Yang, Tao Hou, Guonian Lu, Yongning Wen, Songshan Yue. 2018. Developing a data model for understanding geographical analysis models with consideration of their evolution and application processes. Transactions in GIS, 22: 1498-1521.",
+                "link": "http://doi.org/10.1111/tgis.12484"
+              }
+            ]
+          },
+          {
+            "head": "Universal Data eXchange model (UDX)",
+            "content": [
+              {
+                "refer": "Songshan Yue, Yongning Wen, Min Chen, Guonian Lu, Di Hu, Fu Zhang. 2015. A data description model for reusing, sharing and integrating geo-analysis models. Environmental Earth Sciences, 74(1): 7081-7099.",
+                "link": "https://doi.org/10.1007/s12665-015-4270-5"
+              },
+              {
+                "refer": "",
+                "link": ""
+              }
+            ]
+          },
+          {
+            "head": "Data Service Container",
+            "content": [
+              {
+                "refer": "Jin Wang, Min Chen, Guonian Lü, Songshan Yue, Yongning Wen, Zhenxu Lan, Shuo Zhang, 2020. A data sharing method in the open web environment: Data sharing in hydrology. Journal of Hydrology, 587: 124973.",
+                "link": "https://doi.org/10.1016/j.jhydrol.2020.124973"
+              },
+              {
+                "refer": "Jin Wang, Min Chen, Guonian Lu, Songshan Yue, Kun Chen, Yongning Wen. 2018. A Study on Data Processing Services for the Operation of Geo-Analysis Models in the Open Web Environment. Earth and Space Science, 5(12): 844-862.",
+                "link": "https://doi.org/10.1029/2018EA000459"
+              }
+            ]
+          },
+          {
+            "head": "Sensitivity Analysis",
+            "content": [
+              {
+                "refer": "Hyeongmo Koo, Takuya Iwanaga, Barry F.W. Croke, Anthony J. Jakeman, Jing Yang, Hsiao-Hsuan Wang, Xifu Sun, Guonian Lü, Xin Li, Tianxiang Yue, Wenping Yuan, Xintao Liu, Min Chen. 2020. Position Paper: Sensitivity Analysis of Spatially Distributed Environmental Models- A pragmatic framework for the exploration of uncertainty sources. Environmental Modelling and Software, 134: 104857.",
+                "link": "https://doi.org/10.1016/j.envsoft.2020.104857"
+              },
+              {
+                "refer": "Hyeongmo Koo, Min Chen, Anthony Jakeman, Fengyuan Zhang. 2020. A global sensitivity analysis approach for identifying critical sources of uncertainty in non-identifiable, spatially distributed environmental models: A holistic analysis applied to SWAT for input datasets and model parameters. Environmental Modelling & Software, 127: 104676.",
+                "link": "https://doi.org/10.1016/j.envsoft.2020.104676"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "block":"All OpenGMS Papers",
+        "children":
+        [
+
+          {
+            "head": "",
+            "content": [
+              {
+                "refer": " ",
+                "link": "http://opengmsteam.com/publications"
+              }
+            ]
+          }
+        ]
+      }
+
+    ]
+
+  },
+  "zh-cn": {
+    "cite":"引用",
+    "OpenGMS":"OpenGMS",
+    "intro":"在使用OpenGMS工具时，您可以在下面找到参考文献",
+    "catalog":"目录",
+    "allPubs":"查看由OpenGMS成员发表的所有文章",
+    "cites":[
+      {
+        "block":"概念框架",
+        "children":
+        [
+          {
+            "head": " ",
+            "content": [
+              {
+                "refer": "Min Chen, Alexey Voinov, Daniel P. Ames, Albert J. Kettner, Jonathan L. Goodall, Anthony J. Jakeman, Michael Barton, Quillon Harpham, Susan M. Cuddy, Cecelia DeLuca, Songshan Yue, Jin Wang, Fengyuan Zhang, Yongning Wen, Guonian Lu. 2020. Position Paper: Open Web-Distributed Integrated Geographic Modelling to Enable Wider Participation and Model Application. Earth-Science Reviews, 207: 103223.",
+                "link": "https://doi.org/10.1016/j.earscirev.2020.103223"
+              },
+              {
+                "refer": "Min Chen, Songshan Yue, Guonian Lu, Hui Lin, Chaowei Yang, Yongning Wen, Tao Hou, Dawei Xiao, Hao Jiang. 2019. Teamwork-oriented integrated modeling method for geo-problem solving. Environmental modelling & software, 119: 111-123.",
+                "link": "https://doi.org/10.1016/j.envsoft.2019.05.015"
+              },
+              {
+                "refer": "Yongning Wen, Min Chen, Guonian Lu, Hui Lin. 2013. Prototyping an open environment for sharing geographical analysis models on cloud computing platform. International Journal of Digital Earth, 6(4): 356-382.",
+                "link": "https://doi.org/10.1080/17538947.2012.716861"
+              },
+              {
+                "refer": "Min Chen, Guonian Lu, Chenghu Zhou, Hui Lin, Zaiyang Ma, Songshan Yue, Yongning Wen, Fengyuan Zhang, Jin Wang, Zhiyi Zhu, Kai Xu, Yuanqing He. 2021. Geographic modeling and simulation systems for geographic research in the new era: Some thoughts on their development and construction. SCIENCE CHINA Earth Sciences.",
+                "link": "https://doi.org/10.1007/s11430-020-9759-0"
+              }
+            ]
+          }
+
+        ]
+      },
+      {
+        "block":"平台",
+        "children":
+        [
+
+          {
+            "head": "参与式平台",
+            "content": [
+              {
+                "refer": "Zaiyang Ma, Min Chen, Songshan Yue, Beichen Zhang, Zhiyi Zhu, Yongning Wen, Guonian Lu, Mingyue Lu. 2021. Activity-based process construction for participatory geo-analysis. GIScience & Remote Sensing, 58: 180-198.",
+                "link": "https://doi.org/10.1080/15481603.2020.1868211"
+              },
+              {
+                "refer": "Songshan Yue, Min Chen, Jie Song, Wenping Yuan, Tiexi Chen, Guonian Lu, Chaoran Shen, Zaiyang Ma, Kai Xu, Yongning Wen, Hongquan Song. 2020. Participatory intercomparison strategy for terrestrial carbon cycle models based on a service-oriented architecture. Future Generation Computer Systems, 112: 449-466.",
+                "link": "https://doi.org/10.1016/j.future.2020.05.044"
+              },
+              {
+                "refer": "Min Chen, Songshan Yue, Guonian Lu, Hui Lin, Chaowei Yang, Yongning Wen, Tao Hou, Dawei Xiao, Hao Jiang. 2019. Teamwork-oriented integrated modeling method for geo-problem solving. Environmental modelling & software, 119: 111-123.",
+                "link": "https://doi.org/10.1016/j.envsoft.2019.05.015"
+              },
+              {
+                "refer": "Songshan Yue, Min Chen, Chaowei Yang, Chaoran Shen, Bowen Zhang, Yongning Wen, Guonian Lu. 2018. A Loosely Integrated Data Configuration Strategy for Web-Based Participatory Modeling. GIScience & Remote Sensing, 56(5): 670-698.",
+                "link": "https://doi.org/10.1080/15481603.2018.1549820"
+              }
+            ]
+          },
+          {
+            "head": "模型比较平台",
+            "content": [
+              {
+                "refer": "Songshan Yue, Min Chen, Jie Song, Wenping Yuan, Tiexi Chen, Guonian Lu, Chaoran Shen, Zaiyang Ma, Kai Xu, Yongning Wen, Hongquan Song. 2020. Participatory intercomparison strategy for terrestrial carbon cycle models based on a service-oriented architecture. Future Generation Computer Systems, 112: 449-466.",
+                "link": "https://doi.org/10.1016/j.future.2020.05.044"
+              },
+              {
+                "refer": "",
+                "link": ""
+              }
+            ]
+          },
+
+          {
+            "head": "",
+            "content": [
+              {
+                "refer": "",
+                "link": ""
+              },
+              {
+                "refer": "",
+                "link": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "block":"技术和工具",
+        "children":
+        [
+
+          {
+            "head": "模型封装部署",
+            "content": [
+              {
+                "refer": "Yongning Wen, Min Chen, Songshan Yue, Peibei Zheng, Guoqiang Peng, Guonian Lu. 2017. A Model-Service Deployment Strategy for Collaboratively Sharing Geo-Analysis Models in an Open Web Environment. International Journal of Digital Earth, 10(4): 405-425.",
+                "link": "https://doi.org/10.1080/17538947.2015.1131340"
+              },
+              {
+                "refer": "Songshan Yue, Min Chen, Yongning Wen, Guonian Lu. 2016. Service-oriented model-encapsulation strategy for sharing and integrating heterogeneous geo-analysis models in an open web environment. ISPRS Journal of Photogrammetry and Remote Sensing, 114: 258-273.",
+                "link": "https://doi.org/10.1016/j.isprsjprs.2015.11.002"
+              }
+            ]
+          },
+          {
+            "head": "模型服务容器",
+            "content": [
+              {
+                "refer": "Fengyuan Zhang, Min Chen, Songshan Yue, Yongning Wen, Guonian Lü, Fei Li. 2020. Service-oriented Interface Design for Open Distributed Environmental Simulations. Environmental Research, 191: 110225.",
+                "link": "https://doi.org/10.1016/j.envres.2020.110225"
+              },
+              {
+                "refer": "Fengyuan Zhang, Min Chen, Daniel P Ames, Chaoran Shen, Songshan Yue, Yongning Wen, Guonian Lu. 2019. Design and Development of a Service-oriented Wrapper System for Sharing and Reusing Distributed Geoanalysis Models on the Web. Environmental Modelling and Software, 111: 498-509.",
+                "link": "https://doi.org/10.1016/j.envsoft.2018.11.002"
+              }
+
+            ]
+          },
+          {
+            "head": "模型系统",
+            "content": [
+              {
+                "refer": "Zaiyang Ma, Min Chen, Beichen Zhang, Ming Wang, Chaoran Shen, Songshan Yue, Yongning Wen, Guonian Lu. 2019. A Web-Based Integrated Modeling and Simulation Method for Forest Growth Research. Earth and Space Science, 6(11): 2142-2159.",
+                "link": "https://doi.org/10.1029/2019EA000748"
+              },
+              {
+                "refer": "Dawei Xiao, Min Chen, Yuchen Lu, Songshan Yue, Tao Hou. 2019. Research on the Construction Method of the Service-Oriented Web-SWMM System. ISPRS-International Journal of Geo-Information, 8: 268.",
+                "link": "https://doi.org/10.3390/ijgi8060268"
+              }
+            ]
+          },
+          {
+            "head": "模型知识图谱",
+            "content": [
+              {
+                "refer": "Min Chen, Chen Yang, Tao Hou, Guonian Lu, Yongning Wen, Songshan Yue. 2018. Developing a data model for understanding geographical analysis models with consideration of their evolution and application processes. Transactions in GIS, 22: 1498-1521.",
+                "link": "http://doi.org/10.1111/tgis.12484"
+              }
+            ]
+          },
+          {
+            "head": "通用数据交换模型 (UDX)",
+            "content": [
+              {
+                "refer": "Songshan Yue, Yongning Wen, Min Chen, Guonian Lu, Di Hu, Fu Zhang. 2015. A data description model for reusing, sharing and integrating geo-analysis models. Environmental Earth Sciences, 74(1): 7081-7099.",
+                "link": "https://doi.org/10.1007/s12665-015-4270-5"
+              },
+              {
+                "refer": "",
+                "link": ""
+              }
+            ]
+          },
+          {
+            "head": "数据服务容器",
+            "content": [
+              {
+                "refer": "Jin Wang, Min Chen, Guonian Lü, Songshan Yue, Yongning Wen, Zhenxu Lan, Shuo Zhang, 2020. A data sharing method in the open web environment: Data sharing in hydrology. Journal of Hydrology, 587: 124973.",
+                "link": "https://doi.org/10.1016/j.jhydrol.2020.124973"
+              },
+              {
+                "refer": "Jin Wang, Min Chen, Guonian Lu, Songshan Yue, Kun Chen, Yongning Wen. 2018. A Study on Data Processing Services for the Operation of Geo-Analysis Models in the Open Web Environment. Earth and Space Science, 5(12): 844-862.",
+                "link": "https://doi.org/10.1029/2018EA000459"
+              }
+            ]
+          },
+          {
+            "head": "敏感性分析",
+            "content": [
+              {
+                "refer": "Hyeongmo Koo, Takuya Iwanaga, Barry F.W. Croke, Anthony J. Jakeman, Jing Yang, Hsiao-Hsuan Wang, Xifu Sun, Guonian Lü, Xin Li, Tianxiang Yue, Wenping Yuan, Xintao Liu, Min Chen. 2020. Position Paper: Sensitivity Analysis of Spatially Distributed Environmental Models- A pragmatic framework for the exploration of uncertainty sources. Environmental Modelling and Software, 134: 104857.",
+                "link": "https://doi.org/10.1016/j.envsoft.2020.104857"
+              },
+              {
+                "refer": "Hyeongmo Koo, Min Chen, Anthony Jakeman, Fengyuan Zhang. 2020. A global sensitivity analysis approach for identifying critical sources of uncertainty in non-identifiable, spatially distributed environmental models: A holistic analysis applied to SWAT for input datasets and model parameters. Environmental Modelling & Software, 127: 104676.",
+                "link": "https://doi.org/10.1016/j.envsoft.2020.104676"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "block":"OpenGMS全部论文",
+        "children":
+        [
+
+          {
+            "head": "",
+            "content": [
+              {
+                "refer": " ",
+                "link": "http://opengmsteam.com/publications"
+              }
+            ]
+          }
+        ]
+      }
+
+    ]
+  }
+
+}
