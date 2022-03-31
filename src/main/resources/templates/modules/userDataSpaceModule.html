@@ -116,12 +116,16 @@
                       </div>
 
                     </div>
+
+
+
                     <el-row style="height: calc(100% - 100px);">
-                      {{myFileShown}}
                       <el-col :span="24" id="filePlate" class="fileTemplate" style="height: 100%">
-                        <el-card class="fileContainer" style="height:100%;width:100%" id="browsercont1"
-                                 v-loading="managerloading"
-                                 :style="{display:fileSpaceIndex==1?'flex':'none'}">
+                        <el-card class="fileContainer" style="height:100%;width:100%;display: block" id="browsercont1"
+                                 v-loading="managerloading">
+<!--                                 :style="{display:fileSpaceIndex==1?'flex':'none'}"-->
+
+<!--                        >-->
                           <div style="width: 100%;height: 27px;margin-left: -5px;display: flex;justify-content: space-between;align-items: center">
                             <div class="showPathContainer">
                               <div class="squareButton" id="backFatherBtn" @click="backToFather">
@@ -154,7 +158,7 @@
                           <div>
 
                           </div>
-                          <div class="wzhScrollbar" style="height: calc(100% - 50px);">
+                          <div class="wzhScrollbar" style="height: 320px; margin-left: -5px;  margin-right: -5px;">
                             <el-row  style="width: 100%" :gutter="10"
                                      v-if="myFileShown.length!=0">
                               <el-col :span="fileCard" v-for="(item,key) in myFileShown">
@@ -228,6 +232,9 @@
 
                       </el-col>
                     </el-row>
+
+
+
                     <el-card v-show="rightMenuShow" class="browsermenu" ref="browsermenu">
                       <el-button id="dbtn" @click="right_download()" v-if="!rightTargetItem.package"
                                  type="text">Download

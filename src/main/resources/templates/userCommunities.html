@@ -175,7 +175,7 @@
             <div class="content_h32 flexRow noPadding">
                 <div class="content_w68 flexJustStart">
                     <div class="flexColCenter w100">
-                        <a class="w100" @click="seeDetailPage(community.oid)">
+                        <a class="w100" @click="seeDetailPage(community.id)">
                             <h4 class="itemTitle">{{community.name}}</h4></a>
                     </div>
 
@@ -186,7 +186,7 @@
                         <i v-if="community.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-20 pull-right"></i>
                         <i v-if="community.status=='Private'" class="el-icon-lock private fontsize-20 pull-right"></i>
                     </el-tooltip>
-                    <div class="lineButton flexJustStart flexColCenter" @click="comEditItem(1,community.oid)">
+                    <div class="lineButton flexJustStart flexColCenter" @click="comEditItem(1,community.id)">
                         <i class="fa fa-edit" style="margin-right: 5px"></i>
                         <div class="lineButton flexCol">
                             <p style="margin-block-end: 0">Edit</p>
@@ -194,7 +194,7 @@
                         </div>
                     </div>
                     <div class="btn btn-danger btn-round btn-noShadow waves-effect waves-light flexCenter"
-                         @click="comDeleteItem(1,community.oid)">
+                         @click="comDeleteItem(1,community.id)">
                         <i class="fa fa-trash-o"></i>
                         <p>Delete</p>
                     </div>
@@ -209,7 +209,7 @@
                     <div class="flexRow " style="width: 100%;">
                         <div class="content_w100" style="padding-top: 20px">
                             <p class="threeLine" style="word-break: break-all;">
-                                <b style="margin-right: 25px">Overview:</b>{{community.description}}</p>
+                                <b style="margin-right: 25px">Overview:</b>{{community.overview}}</p>
                             <p>
                                 <b style="margin-right: 3px">Create Time:</b> {{formatDateChild(community.createTime)}}</p>
                         </div>

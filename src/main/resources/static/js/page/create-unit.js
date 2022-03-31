@@ -404,7 +404,7 @@ var createUnit =Vue.extend({
                 itemObj.alias = $("#aliasInput").val().split(",");
             }
             itemObj.uploadImage = this.itemInfoImage
-            itemObj.description = $("#descInput").val();
+            itemObj.overview = $("#descInput").val();
             itemObj.status = this.status;
             itemObj.localizationList = this.localizationList;
             if(this.editType == 'modify') {
@@ -488,9 +488,11 @@ var createUnit =Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
-            let urls=window.location.href.split('/')
-            let item=urls[6]
-            item=item.substring(6,item.length)
+            // let urls=window.location.href.split('/')
+            // let item=urls[6]
+            // item=item.substring(6,item.length)
+            item="SpatialReference"
+
             let obj={
                 content:content,
                 editType:this.editType,
@@ -731,7 +733,7 @@ var createUnit =Vue.extend({
 
             if(window.localStorage.getItem('draft')==null) {
                 $.ajax({
-                    url: "/repository/getUnitInfo/" + oid,
+                    url: "/unit/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
@@ -864,6 +866,8 @@ var createUnit =Vue.extend({
             unitObj = this.getItemContent('finish');
 
             let formData=new FormData();
+            console.log("bbbb")
+            console.log(unitObj)
             if ((oid === "0") || (oid === "") || (oid == null)) {
                 let file = new File([JSON.stringify(unitObj)],'ant.txt',{
                     type: 'text/plain',
@@ -923,8 +927,8 @@ var createUnit =Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/updateUnit",
-                    type: "POST",
+                    url: "/unit/"+oid,
+                    type: "PUT",
                     cache: false,
                     processData: false,
                     contentType: false,
@@ -946,7 +950,7 @@ var createUnit =Vue.extend({
                                     center: true,
                                     showClose: false,
                                 }).then(() => {
-                                    window.location.href = "/repository/unit/" + result.data.oid;
+                                    window.location.href = "/repository/unit/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/communities/unit&metric";
                                 });

@@ -382,10 +382,14 @@ var createLogicalModel = Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
+
+            //wyj url现在不是：https://geomodeling.njnu.edu.cn/user/userSpace#/model/createLogicalModel，获取不到urls[6]
+
             // let urls=window.location.href.split('/')
             // let item=urls[6]
             // item=item.substring(6,item.length)
-            item = "LogicalModel";
+
+            item="LogicalModel"
             let obj={
                 content:content,
                 editType:this.editType,

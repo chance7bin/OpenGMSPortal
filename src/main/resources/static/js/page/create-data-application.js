@@ -201,6 +201,7 @@ var createDataApplication = Vue.extend({
             })
         },
         handleCloseSelectedFile(tag){
+            console.log(this.selectedFile)
             this.selectedFile.splice(this.selectedFile.indexOf(tag), 1)
         },
         handleClose(done) {
@@ -789,7 +790,7 @@ var createDataApplication = Vue.extend({
                 // $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/dataMethod/add',
+                    url: '/dataMethod',
                     type: 'post',
                     data: this.formData,
                     cache: false,

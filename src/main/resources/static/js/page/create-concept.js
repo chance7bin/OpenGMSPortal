@@ -1325,7 +1325,7 @@ var createConcept = Vue.extend({
                 itemObj.alias = $("#aliasInput").val().split(",");
             }
             itemObj.uploadImage = this.itemInfoImage
-            itemObj.description = $("#descInput").val();
+            itemObj.overview = $("#descInput").val();
             itemObj.related = this.relatedOid;
             itemObj.status = this.status;
             itemObj.localizationList = this.localizationList;
@@ -1384,9 +1384,12 @@ var createConcept = Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
-            let urls=window.location.href.split('/')
-            let item=urls[6]
-            item=item.substring(6,item.length)
+            // let urls=window.location.href.split('/')
+            // let item=urls[6]
+            // item=item.substring(6,item.length)
+            item="Concept";
+
+
             let obj={
                 content:content,
                 editType:this.editType,
@@ -1657,7 +1660,7 @@ var createConcept = Vue.extend({
 
             if(window.localStorage.getItem('draft')==null) {
                 $.ajax({
-                    url: "/repository/getConceptInfo/" + oid,
+                    url: "/concept/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
@@ -1853,8 +1856,8 @@ var createConcept = Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/updateConcept",
-                    type: "POST",
+                    url: "/concept/"+oid,
+                    type: "PUT",
                     cache: false,
                     processData: false,
                     contentType: false,

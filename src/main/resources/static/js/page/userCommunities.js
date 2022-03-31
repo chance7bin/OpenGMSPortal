@@ -17,6 +17,7 @@ var communityItem = Vue.extend({
     data() {
         return {
             itemIndex:1,
+
         }
 
     },
@@ -110,6 +111,7 @@ var userCommunities = Vue.extend(
                 searchText: "",
 
                 isInSearch:0,
+                userEmail:""
             }
         },
 
@@ -414,7 +416,9 @@ var userCommunities = Vue.extend(
 
                 let data = {
                     page: this.page,
-                    asc: false
+                    asc: false,
+                    authorEmail:this.userEmail
+
                 };
 
                 $.ajax({
@@ -450,7 +454,6 @@ var userCommunities = Vue.extend(
                                 this.pageInit();
                             }
                             this.await = false
-
                         }
                     }
                 })
@@ -550,19 +553,19 @@ var userCommunities = Vue.extend(
                             instance.confirmButtonText = 'deleting...';
                             setTimeout(() => {
                                 var urls = {
-                                    'concept&semantic':"/repository/deleteConcept",
-                                    'spatialReference':"/repository/deleteSpatialReference",
-                                    'dataTemplate':    "/repository/deleteTemplate",
-                                    'unit&metric':     "/repository/deleteUnit",
+                                    'concept&semantic':"/concept/",
+                                    'spatialReference':"/spatialReference/",
+                                    'dataTemplate':    "/template/",
+                                    'unit&metric':     "/unit/",
                                 };
 
 
                                 $.ajax({
-                                    type: "POST",
-                                    url: urls[a],
-                                    data: {
-                                        oid: oid
-                                    },
+                                    type: "DELETE",
+                                    url: urls[a]+oid,
+                                    // data: {
+                                    //     oid: oid
+                                    // },
                                     cache: false,
                                     async: true,
                                     dataType: "json",
@@ -654,8 +657,9 @@ var userCommunities = Vue.extend(
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
-                            this.userName = data.name;
+                            this.userId = data.data.accessId;
+                            this.userEmail=data.data.email
+                            this.userName = data.data.name;
                             console.log(this.userId)
 
                             this.sendUserToParent(this.userId)

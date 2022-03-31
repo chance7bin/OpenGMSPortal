@@ -421,7 +421,7 @@ var createSpatialReference = Vue.extend({
             itemObj.status = this.status;
             itemObj.wkname = $("#wknameInput").val();
             itemObj.wkt = $("#wktInput").val();
-            itemObj.description = $("#descInput").val();
+            itemObj.overview = $("#descInput").val();
             itemObj.uploadImage = this.itemInfoImage
             itemObj.localizationList = this.localizationList;
 
@@ -509,9 +509,10 @@ var createSpatialReference = Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
-            let urls=window.location.href.split('/')
-            let item=urls[6]
-            item=item.substring(6,item.length)
+            // let urls=window.location.href.split('/')
+            // let item=urls[6]
+            // item=item.substring(6,item.length)
+            item="SpatialReference"
             let obj={
                 content:content,
                 editType:this.editType,
@@ -746,7 +747,7 @@ var createSpatialReference = Vue.extend({
             // document.title = "Modify Spatial Reference | OpenGMS"
             if(window.localStorage.getItem('draft')==null) {
                 $.ajax({
-                    url: "/repository/getSpatialInfo/" + oid,
+                    url: "/spatialReference/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
@@ -942,8 +943,8 @@ var createSpatialReference = Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/updateSpatialReference",
-                    type: "POST",
+                    url: "/spatialReference/"+oid,
+                    type: "PUT",
                     cache: false,
                     processData: false,
                     contentType: false,
@@ -965,7 +966,7 @@ var createSpatialReference = Vue.extend({
                                     center: true,
                                     showClose: false,
                                 }).then(() => {
-                                    window.location.href = "/repository/spatialReference/" + result.data.oid;
+                                    window.location.href = "/repository/spatialReference/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/communities/spatialReference";
                                 });

@@ -400,10 +400,8 @@ var userDataSpace = Vue.extend(
                     return response.json();
                 }).then((data) => {
                     this.userEmail=data.data.email
-                    axios.get("/user/getUserResource",{
-                        params: {
-                            email:this.userEmail
-                        }})
+                    axios.get("/user/getUserResource",
+                    )
                         .then(res=> {
                             let json=res.data;
                             if(json.code==-1){
@@ -531,8 +529,10 @@ var userDataSpace = Vue.extend(
                 this.managerloading = true
                 $.ajax({
                     type: "GET",
-                    url: "/user/getFileByPath",
+                    // url: "/user/getFileByPath",
+                    url:"/user/fileByPath",
                     data: {
+
                         paths: paths,
                     },
                     async: true,

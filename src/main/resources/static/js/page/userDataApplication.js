@@ -178,12 +178,13 @@ var userDataApplication = Vue.extend(
                     page: this.page,
                     pagesize: this.pageSize,
                     asc: -1,
+                    searchText:this.searchText
                 }
 
                 this.loading = true
                 var _this = this;
                 //todo 从后台拿到用户创建的data—item
-                axios.post(QueryHubListOfAuthorSelf(),data).then(res => {
+                axios.post(QueryMethodListOfAuthorSelf(),data).then(res => {
 
                     const data = res.data.data;
                     _this.searchResult = data.list

@@ -410,7 +410,7 @@ var createTemplate = Vue.extend({
                 itemObj.alias = $("#aliasInput").val().split(",");
             }
             itemObj.uploadImage = this.itemInfoImage
-            itemObj.description = $("#descInput").val();
+            itemObj.overview = $("#descInput").val();
             itemObj.xml = $("#xml").val();
             itemObj.status = this.status;
             itemObj.localizationList = this.localizationList;
@@ -497,9 +497,12 @@ var createTemplate = Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
-            let urls=window.location.href.split('/')
-            let item=urls[6]
-            item=item.substring(6,item.length)
+            // let urls=window.location.href.split('/')
+            // let item=urls[6]
+            // item=item.substring(6,item.length)
+
+            item="Template"
+
             let obj={
                 content:content,
                 editType:this.editType,
@@ -740,7 +743,7 @@ var createTemplate = Vue.extend({
 
             if(window.localStorage.getItem('draft')==null) {
                 $.ajax({
-                    url: "/repository/getTemplateInfo/" + oid,
+                    url: "/template/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
@@ -925,7 +928,6 @@ var createTemplate = Vue.extend({
                                 }
                             });
                         }
-
                     }
                 })
             }else {
@@ -935,8 +937,8 @@ var createTemplate = Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/updateTemplate",
-                    type: "POST",
+                    url: "/template/"+oid,
+                    type: "PUT",
                     cache: false,
                     processData: false,
                     contentType: false,
@@ -957,7 +959,7 @@ var createTemplate = Vue.extend({
                                     center: true,
                                     showClose: false,
                                 }).then(() => {
-                                    window.location.href = "/repository/template/" + result.data.oid;
+                                    window.location.href = "/repository/template/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/communities/dataTemplate";
                                 });

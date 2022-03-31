@@ -47,6 +47,7 @@ var userTheme = Vue.extend(
                 searchText: "",
 
                 isInSearch:0,
+                userEmail:""
             }
         },
 
@@ -229,7 +230,8 @@ var userTheme = Vue.extend(
 
                 let data = {
                     page: this.page,
-                    asc: false
+                    asc: false,
+                    authorEmail:this.userEmail
                 };
                 var name = "themes";
                 this.await = true
@@ -374,8 +376,10 @@ var userTheme = Vue.extend(
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            this.userId = data.accessId;
                             this.userName = data.name;
+                            this.userEmail=data.email;
+
                             console.log(this.userId)
                             this.sendUserToParent(this.userId)
                             // this.addAllData()
