@@ -51,7 +51,8 @@ var userDataItems = Vue.extend(
 
                 htmlJSON:{
                     joinUs:'Join us'
-                }
+                },
+                userEmail:""
             }
         },
 
@@ -182,31 +183,30 @@ var userDataItems = Vue.extend(
                 this.isInSearch = 0;
                 this.await = true
                 var da = {
-                    userOid: this.userId,
+                    authorEmail: this.userEmail,
                     page: this.page,
                     pagesize: this.pageSize,
+                    searchText: this.searchText,
                     asc: -1
                 }
-
+                console.log("aaaaa")
+                console.log(this.userId)
                 this.loading = true
                 var that = this;
                 //todo 从后台拿到用户创建的data—item
-                axios.get("/user/getDataItems", {
-                    params: da
-                }).then(res => {
+                // axios.get("/user/getDataItems", {
+               axios.post(QueryItemListOfAuthorSelf(), da).then(res => {
 
-                    this.searchResult = res.data.data.content
+                    this.searchResult = res.data.data.list
                     this.resourceLoad = false;
-                    this.totalNum = res.data.data.totalElements;
+                    this.totalNum = res.data.data.total;
                     if (this.page == 1) {
                         this.pageInit();
                     }
                     this.data_show = true
                     this.loading = false
                     this.await = false
-
                 })
-
 
             },
 
@@ -374,14 +374,15 @@ var userDataItems = Vue.extend(
 
                         console.log(data);
 
-                        if (data.oid == "") {
+                        if (data.accessId == "") {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.countInfo = data.countInfo
-                            this.userId = data.oid;
-                            this.userName = data.name;
-                            console.log(this.userId)
+                            this.countInfo = data.data
+                            this.userId = data.data.accessId;
+                            this.userName = data.data.name;
+                            this.userEmail = data.data.email
+
                             this.sendUserToParent(this.userId)
                             // this.addAllData()
 

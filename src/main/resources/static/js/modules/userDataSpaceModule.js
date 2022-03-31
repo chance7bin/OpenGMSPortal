@@ -353,11 +353,7 @@ Vue.component("user-data",
                     return response.json();
                 }).then((data) =>{
                     let userEmail=data.data.email
-                    axios.get("/user/getUserResource",{
-                        params: {
-                            email:userEmail
-                        }
-                    })
+                    axios.get("/user/getUserResource")
                         .then(res=> {
                             let json=res.data;
                             if(json.code==-1){
@@ -467,7 +463,9 @@ Vue.component("user-data",
                 this.managerloading = true
                 $.ajax({
                     type: "GET",
-                    url: "/user/getFileByPath",
+
+                    // url: "/user/getFileByPath",
+                    url: "/user/fileByPath",
                     data: {
                         paths: paths,
                     },
@@ -1644,7 +1642,9 @@ Vue.component("user-data",
                             this.progressFlag=true
                             this.uploadProgress = 0
                             axios({
-                                url: '/dispatchRequest/uploadMutiFiles',
+
+                                // url: '/dispatchRequest/uploadMutiFiles',
+                                url: '/user/uploadFile',
                                 method: 'post',
                                 data: formData,
                                 cache: false,

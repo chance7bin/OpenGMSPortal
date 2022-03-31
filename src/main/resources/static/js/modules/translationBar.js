@@ -120,12 +120,14 @@ Vue.component("translation-bar",
                 //导航栏community英汉间距改变 --- add by wyjq
                 let communityDom=document.getElementById("drop1");
                 let helpSubMenu = document.getElementById("subHelp");
-                if(this.currentLang==="zh-cn"){
-                    communityDom.style.width="77px";
-                    helpSubMenu.style.left="611px";
-                }else{
-                    communityDom.style.width="127px";
-                    helpSubMenu.style.left="661px";
+                if(communityDom!==null){
+                    if(this.currentLang==="zh-cn"){
+                        communityDom.style.width="77px";
+                        helpSubMenu.style.left="611px";
+                    }else{
+                        communityDom.style.width="127px";
+                        helpSubMenu.style.left="661px";
+                    }
                 }
 
                 this.defautTrans(content,scopeDom)

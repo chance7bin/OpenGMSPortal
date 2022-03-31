@@ -284,7 +284,7 @@ export var ModelTemplate = Vue.extend({
         //响应模型列表选择(单选)
         handelCheckbox(selection, row){
             let tempModelItem={
-                modelName:row.accessId,
+                modelName:row.name,
                 modelId:row.id
             }
 

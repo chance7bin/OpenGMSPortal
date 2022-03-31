@@ -2708,9 +2708,10 @@ ul.flexLi {
 
 .content_w32 {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    /*flex-direction: column;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
     width: 32%;
     height: 100%;
 }

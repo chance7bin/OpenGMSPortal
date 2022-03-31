@@ -382,9 +382,14 @@ var createLogicalModel = Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
-            let urls=window.location.href.split('/')
-            let item=urls[6]
-            item=item.substring(6,item.length)
+
+            //wyj url现在不是：https://geomodeling.njnu.edu.cn/user/userSpace#/model/createLogicalModel，获取不到urls[6]
+
+            // let urls=window.location.href.split('/')
+            // let item=urls[6]
+            // item=item.substring(6,item.length)
+
+            item="LogicalModel"
             let obj={
                 content:content,
                 editType:this.editType,
@@ -801,7 +806,7 @@ var createLogicalModel = Vue.extend({
                 });
                 this.formData.append("logicalModel", file)
                 $.ajax({
-                    url: '/logicalModel/',
+                    url: '/logicalModel',
                     type: 'POST',
                     data: this.formData,
                     cache: false,

@@ -134,6 +134,7 @@ var createDataItem = Vue.extend({
                     str+=", ";
                 }
             }
+
             this.cls=classes;
             this.clsStr=str;
 
