@@ -52,6 +52,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -1084,4 +1085,37 @@ public class DataMethodService {
     }
 
 
+    public void downloadResource(String id, int index, HttpServletResponse response) {
+
+        DataMethod dataMethod = dataMethodDao.findFirstById(id);
+
+        if (dataMethod == null){
+            log.warn("download a resource that does not exist");
+            return;
+        }
+
+
+        List<Resource> resources = dataMethod.getResources();
+
+        Resource resource = resources.get(index);
+
+        String path = resourcePath + "/DataApplication/" + dataMethod.getContentType() + resource.getPath();
+
+        File file = new File(path);
+        if (!file.exists()){
+            log.warn("download a resource that does not exist");
+            return;
+        }
+
+        int downloadCount = resource.getDownloadCount();
+        downloadCount++;
+        resource.setDownloadCount(downloadCount);
+        dataMethod.setResources(resources);
+        dataMethodDao.save(dataMethod);
+
+        FileUtil.downloadFile(path, response);
+
+
+
+    }
 }

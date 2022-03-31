@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
@@ -217,6 +218,18 @@ public class ComputableModelRestController {
     @RequestMapping(value = "/relatedDataByPage",method = RequestMethod.GET)
     public JsonResult getRelatedDataByPage(FindDTO computableModelFindDTO, @RequestParam(value = "id") String id){
         return ResultUtils.success(computableModelService.getRelatedDataByPage(computableModelFindDTO,id));
+    }
+
+
+    @ApiOperation(value = "下载资源")
+    @RequestMapping(value = "/resource/download/{id}/{index}", method = RequestMethod.GET)
+    public void downloadResource(
+        @ApiParam(name = "id", value = "条目id") @PathVariable String id,
+        @ApiParam(name = "index", value = "resources数组index")  @PathVariable int index,
+        HttpServletResponse response) {
+
+        computableModelService.downloadResource(id,index,response);
+
     }
 
 }
