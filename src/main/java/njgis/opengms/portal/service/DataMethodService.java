@@ -1067,7 +1067,7 @@ public class DataMethodService {
 
             return ResultUtils.success();
         } else {
-            return ResultUtils.error("delete error");
+            return ResultUtils.error("未找到该条目");
         }
     }
 
