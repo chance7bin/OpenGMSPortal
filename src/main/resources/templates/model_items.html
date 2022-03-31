@@ -312,6 +312,8 @@
 </div>
 
 <template th:replace="modules/userAvatar :: userAvatar"></template>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
 </body>
 
 
@@ -327,13 +329,13 @@
 
 
 
-<!--翻译组件，本页面组件js引入位置不能靠后-->
-<template th:replace="modules/translationBar :: translationBar"></template>
-<script src="/static/js/modules/translationBar.js"></script>
+
+
 <script src="/static/js/apidoc/modelApi.js"></script>
 <script src="/static/js/page/model_items.js"></script>
 
-<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
 <script src="/static/js/common/navbar.js"></script>
 
 

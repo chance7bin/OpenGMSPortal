@@ -1,0 +1,17 @@
+{
+  "en-us": {
+    "title": "Model Relation Graph",
+    "nodeLabel": "Node Label",
+    "fullName": "Full Name",
+    "lineLabel": "Line Label",
+    "lineColor": "Line Color"
+  },
+  "zh-cn": {
+    "title": "模型关系图谱",
+    "nodeLabel": "节点名称",
+    "fullName": "模型全称",
+    "lineLabel": "关系名称",
+    "lineColor": "连线颜色"
+  }
+
+}

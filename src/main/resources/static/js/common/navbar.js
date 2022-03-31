@@ -1,8 +1,3 @@
-//element-ui 切换英文，勿删！
-if(ELEMENT!=undefined) {
-    ELEMENT.locale(ELEMENT.lang.en)
-}
-
 $("#wx").mouseover(function(){
     $("#wxqrcode").fadeIn();
 });

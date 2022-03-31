@@ -19,6 +19,8 @@ var vue = new Vue({
                 commentSended: false,
 
                 timeout1: '',
+
+                htmlJSON:{}
             }
         },
 
@@ -41,6 +43,10 @@ var vue = new Vue({
             }
         },
         methods: {
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent;
+                this.changeSectionData();
+            },
             generateId(str) {
                 // let reg = new RegExp(".*? ", "");
                 // return str.replace(reg, "");
@@ -146,7 +152,38 @@ var vue = new Vue({
                     ;
                 }
 
-            }
+            },
+
+            changeSectionData(){
+                this.sectionData = [];
+
+                for(let i = 0;i<this.htmlJSON.cites.length;i++){
+                    let block = this.htmlJSON.cites[i];
+                    let id = block["block"].replace(/ /g,"_");
+                    this.htmlJSON.cites[i].id = id;
+                    let obj = {
+                        "id":id,
+                        "label":block['block'],
+                        "children":[]
+                    };
+                    let children = block["children"];
+                    for(let j = 0;j<children.length;j++){
+                        let child = children[j];
+                        id = child["head"].replace(/ /g,"_");
+                        this.htmlJSON.cites[i].children[j].id = id;
+                        if(child["head"].trim()!="") {
+                            obj["children"].push({
+                                "id":child["head"].replace(/ /g,"_"),
+                                "label": child['head']
+                            });
+                        }
+                    }
+
+                    this.sectionData.push(obj);
+                }
+
+                console.log(this.sectionData)
+            },
 
         },
         created() {
@@ -157,27 +194,7 @@ var vue = new Vue({
             // console.log(result)
             // let blocks = JSON.parse(result.responseText);
 
-            this.cites = cites;
-            this.sectionData = [];
-
-            for(let i = 0;i<this.cites.length;i++){
-                let block = this.cites[i];
-                let obj = {
-                    "label":block['block'],
-                    "children":[]
-                };
-                let children = block["children"];
-                for(let j = 0;j<children.length;j++){
-                    let child = children[j];
-                    if(child["head"].trim()!="") {
-                        obj["children"].push({"label": child['head']});
-                    }
-                }
-
-                this.sectionData.push(obj);
-            }
-
-            console.log(this.sectionData)
+            // this.changeSectionData();
 
             // this.sectionData = sectionData;
             // this.supportDoc = supportDoc;
