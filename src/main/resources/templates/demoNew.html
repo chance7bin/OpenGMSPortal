@@ -41,17 +41,18 @@
     <!--<h1 th:text="${name}">Hello World</h1>-->
     <div id="app">
         <div th:replace="fragments/navbar :: unlog"></div>
-        <div class="titleSection" style="background-image: url('../static/img/support6.jpeg');background-position-y:  -400px">
-            <div class="fullMask text-center fontWhite" ><br><br>
-                <h2>{{htmlJSON.PageName}}</h2>
-                <h3>
-                    {{htmlJSON.PageIntro}}
-                </h3>
-            </div>
-        </div>
+
 
 <!--        <img class="imgAsTitle" src="../static/img/support2.png" style="">-->
         <div class="clearfix" style="position: relative;" :style="{'min-height':ScreenMinHeight}">
+            <div class="titleSection" style="background-image: url('../static/img/support6.jpeg');background-position-y:  -400px">
+                <div class="fullMask text-center fontWhite" ><br><br>
+                    <h2>{{htmlJSON.PageName}}</h2>
+                    <h3>
+                        {{htmlJSON.PageIntro}}
+                    </h3>
+                </div>
+            </div>
             <translation-bar
                     json-file="demo"
                     @translate-page="translatePage"
@@ -112,7 +113,7 @@
 <script src="/static/js/modules/translationBar.js"></script>
 
 
-<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/page/demoNew.js"></script>
 <script src="/static/js/common/navbar.js"></script>
 
