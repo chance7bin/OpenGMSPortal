@@ -382,9 +382,10 @@ var createLogicalModel = Vue.extend({
             var step = this.getStep()
             let content=this.getItemContent(step)
 
-            let urls=window.location.href.split('/')
-            let item=urls[6]
-            item=item.substring(6,item.length)
+            // let urls=window.location.href.split('/')
+            // let item=urls[6]
+            // item=item.substring(6,item.length)
+            item = "LogicalModel";
             let obj={
                 content:content,
                 editType:this.editType,

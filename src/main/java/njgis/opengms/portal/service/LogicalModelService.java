@@ -10,7 +10,6 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.dto.model.LogicalModelResultDTO;
-import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.po.LogicalModel;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -224,9 +223,22 @@ public class LogicalModelService {
                 logicalModel.setImageList(images);
                 logicalModel.setStatus(jsonObject.getString("status"));
                 logicalModel.setName(jsonObject.getString("name"));
-                logicalModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+                // if (jsonObject.getJSONArray("localizationList") != null){
+                //     logicalModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+                // }
+                // 调整的字段
+                Localization localization = new Localization();
+                localization.setLocalCode("en");
+                localization.setLocalName("English");
+                localization.setName(jsonObject.getString("name"));
+                localization.setDescription(jsonObject.getString("detail"));
+                List<Localization> list = new ArrayList<>();
+                list.add(localization);
+                logicalModel.setLocalizationList(list);
                 logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-                logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                if (jsonObject.getJSONArray("relatedModelItems") != null){
+                    logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                }
                 logicalModel.setOverview(jsonObject.getString("description"));
                 logicalModel.setContentType(jsonObject.getString("contentType"));
                 logicalModel.setCXml(jsonObject.getString("cXml"));
