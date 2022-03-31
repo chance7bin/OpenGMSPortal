@@ -966,7 +966,7 @@ var createSpatialReference = Vue.extend({
                                     center: true,
                                     showClose: false,
                                 }).then(() => {
-                                    window.location.href = "/repository/spatialReference/" + result.data.oid;
+                                    window.location.href = "/repository/spatialReference/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/communities/spatialReference";
                                 });

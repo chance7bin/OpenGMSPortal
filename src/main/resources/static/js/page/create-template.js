@@ -928,7 +928,6 @@ var createTemplate = Vue.extend({
                                 }
                             });
                         }
-
                     }
                 })
             }else {
@@ -938,8 +937,8 @@ var createTemplate = Vue.extend({
                 });
                 formData.append("info", file)
                 $.ajax({
-                    url: "/repository/updateTemplate",
-                    type: "POST",
+                    url: "/template/"+oid,
+                    type: "PUT",
                     cache: false,
                     processData: false,
                     contentType: false,
@@ -960,7 +959,7 @@ var createTemplate = Vue.extend({
                                     center: true,
                                     showClose: false,
                                 }).then(() => {
-                                    window.location.href = "/repository/template/" + result.data.oid;
+                                    window.location.href = "/repository/template/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/communities/dataTemplate";
                                 });
