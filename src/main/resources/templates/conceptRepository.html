@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
 
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/list.css">
@@ -230,13 +230,14 @@
 
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/page/conceptRepository.js"></script>
 
 <script src="/static/js/modules/userAvatar.js"></script>
 
-<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+
 <script src="/static/js/common/navbar.js"></script>
 
 </html>

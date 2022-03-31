@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
-    <link rel="stylesheet" href="/static//css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/base/style.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
@@ -39,36 +39,39 @@
     <!--<h1 th:text="${name}">Hello World</h1>-->
     <div id="app" v-cloak>
         <div th:replace="fragments/navbar :: unlog"></div>
-        <div class="alert alert-warning fade in text-center" th:if="${notice}">
-            <button type="button" class="close close-sm" data-dismiss="alert">
-                <i class="fa fa-times"></i>
-            </button>
-            <strong style="font-size: 16px;font-weight: normal" th:text="${notice}">Warning!</strong>
+        <div class="alert alert-warning fade in text-center">
+            <strong style="font-size: 16px;font-weight: normal" >{{htmlJSON.notice}}</strong>
         </div>
         <div class="el-row" style="margin-top:30px;margin-bottom: 30px;">
+            <translation-bar
+                    json-file="login"
+                    @translate-page="translatePage"
+                    initial-lang="en-us"
+                    theme="dark"
+                    style="position: absolute;top: 10px;right:15px"></translation-bar>
             <el-col class="" style="width: 100%">
                 <div class="loginCard el-card is-always-shadow">
                     <div slot="header" class="clearfix el-card__header" style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 20px">Log In</span>
+                        <span style="font-weight: bold;font-size: 20px">{{htmlJSON.login}}</span>
                     </div>
                     <div  style="margin-top: 30px">
                         <el-col :span="20" :offset="1">
                             <el-form label-position="right" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm" size="medium">
-                                <el-form-item label="Email">
+                                <el-form-item :label="htmlJSON.email">
                                     <el-input type="text" v-model="ruleForm.account" autocomplete="off" placeholder="email address" :disabled="loadActiveIndex"></el-input>
                                 </el-form-item>
-                                <el-form-item label="Password">
+                                <el-form-item :label="htmlJSON.password">
                                     <el-input type="password" v-model="ruleForm.password" autocomplete="off" placeholder="password" :disabled="loadActiveIndex"></el-input>
                                 </el-form-item>
                                 <el-form-item :class="{notAllowed:loadActiveIndex}">
                                     <!--<el-checkbox label="Remember email and password" name="type" v-model="ruleForm.remember" :disabled="loadActiveIndex"></el-checkbox>-->
                                     <!--<br/>-->
-                                    Forget your password ? <a href="javascript:void(0)" id="resetPW" @click="resetPWDclick" :class="{notAllowed:loadActiveIndex}">Reset</a>
+                                    {{htmlJSON.forgetPass}} <a href="javascript:void(0)" id="resetPW" @click="resetPWDclick" :class="{notAllowed:loadActiveIndex}">{{htmlJSON.reset}}</a>
                                 </el-form-item>
 
                                 <el-form-item>
-                                    <el-button type="primary" @click="submitForm('ruleForm')" :loading="loadActiveIndex" style="width: 90px">Log In</el-button>
-                                    <el-button @click="window.location.href='/user/register'" :disabled="loadActiveIndex" style="width: 90px">Sign Up</el-button>
+                                    <el-button type="primary" @click="submitForm('ruleForm')" :loading="loadActiveIndex" style="width: 90px">{{htmlJSON.loginBtn}}</el-button>
+                                    <el-button @click="window.location.href='/user/register'" :disabled="loadActiveIndex" style="width: 90px">{{htmlJSON.signupBtn}}</el-button>
                                 </el-form-item>
                             </el-form>
                         </el-col>
@@ -118,12 +121,17 @@
 <script th:inline="javascript">
     var preUrl=[[${preUrl}]];
 </script>
-    <script src="/static/js/common/md5.js"></script>
-    <script src="/static/js/common/sha256.js"></script>
-    <script src="/static/js/common/jquery-3.3.1.min.js"></script>
-    <script src="/static/js/common/vue.min.js"></script>
-    <script src="/static/js/common/axios.min.js"></script>
-    <script src="/static/element-ui/index.js"></script>
-    <script src="/static/js/page/login.js"></script>
-    <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script> <script src="/static/js/common/navbar.js"></script>
+<script src="/static/js/common/md5.js"></script>
+<script src="/static/js/common/sha256.js"></script>
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
+
+<script src="/static/js/page/login.js"></script>
+<script src="/static/js/common/navbar.js"></script>
 </html>

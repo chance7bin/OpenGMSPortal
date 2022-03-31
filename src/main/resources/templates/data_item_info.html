@@ -11,8 +11,8 @@
 
     <link rel="stylesheet" href="../static/css/base/bootstrap.min.css"
           th:href="@{/../static/css/base/bootstrap.min.css}">
-    <link rel="stylesheet" href="../static//css/base/font-awesome/css/font-awesome.min.css"
-          th:href="@{/../static//css/base/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="../static/css/base/font-awesome/css/font-awesome.min.css"
+          th:href="@{/../static/css/base/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" href="../static/css/font-awesome/fonts/fontawesome-webfont.woff"
           th:href="@{/../static/css/font-awesome/fonts/fontawesome-webfont.woff}">
 
@@ -976,9 +976,12 @@
     <div th:replace="fragments/footer :: footer"></div>
 
 </div>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
 <template th:replace="modules/linkRelatedItemModule :: linkRelatedItemModule"></template>
 <template th:replace="fragments/comments :: comments"></template>
 <template th:replace="modules/userAvatar :: userAvatar"></template>
+
 </body>
 <script th:inline="javascript">
     var author=[[${user}]];
@@ -995,17 +998,17 @@
 
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/js/modules/linkRelatedItemModule.js"></script>
-
-<!--翻译组件，本页面组件js引入位置不能靠后-->
-<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
+
 
 <script src="/static/js/common/qrcode.min.js"></script>
 <script src="/static/js/apidoc/dataApi.js"></script>
 <script src="/static/js/page/data_item_info.js"></script>
 
 <script src="/static/js/common/copy.js"></script>
-<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+
+
 <script src="/static/js/common/navbar.js"></script>
 
 </html>

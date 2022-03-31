@@ -51,9 +51,15 @@ new Vue({
             },
 
             guideActive:0,
+
+            htmlJSON:{},
         }
     },
     methods: {
+
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent;
+        },
 
         //reset cancel
         resetCancel(){

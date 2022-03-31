@@ -106,21 +106,24 @@ Vue.component("translation-bar",
             },
 
             changeUrl(){
-                let url = decodeURIComponent(window.location.search);
-                let urlLanguage = this.GetQueryString(url, "language");
-                if(this.currentLang == urlLanguage){
-                    return;
-                }else if(urlLanguage != undefined && urlLanguage != null) { //url中存在language
-                    let startIndex = url.indexOf("language=");
-                    url = url.substring(0,startIndex) + "language=" + this.currentLang + url.substring(startIndex+9+urlLanguage.length);
-                }else{ //url中不存在language
-                    if (url.indexOf("?") == -1) {
-                        url += "?language=" + this.currentLang;
-                    } else {
-                        url += "&language=" + this.currentLang;
+                let pathname = window.location.pathname;
+                if(pathname.indexOf("userSpace")==-1) {
+                    let url = decodeURIComponent(window.location.search);
+                    let urlLanguage = this.GetQueryString(url, "language");
+                    if (this.currentLang == urlLanguage) {
+                        return;
+                    } else if (urlLanguage != undefined && urlLanguage != null) { //url中存在language
+                        let startIndex = url.indexOf("language=");
+                        url = url.substring(0, startIndex) + "language=" + this.currentLang + url.substring(startIndex + 9 + urlLanguage.length);
+                    } else { //url中不存在language
+                        if (url.indexOf("?") == -1) {
+                            url += "?language=" + this.currentLang;
+                        } else {
+                            url += "&language=" + this.currentLang;
+                        }
                     }
+                    history.pushState({}, document.title, url);
                 }
-                history.pushState({}, document.title, url);
             },
 
             async loadNavBar(){//需要加载navbar的网页触发翻译

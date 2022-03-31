@@ -1,0 +1,44 @@
+{
+  "en-us": {
+
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPW": "Confirm Password",
+    "name": "Name",
+    "title": "Title",
+    "org": "Organization",
+    "new": "+ New",
+    "login": "Log In",
+    "reset": "Reset",
+    "join": "Join OpenGMS",
+
+    "emailStr": "Please enter your email address",
+    "emailCorrectStr": "Please enter the correct email address",
+    "passwordStr": "Please enter your password",
+    "checkPassStr": "Please enter your password again",
+    "passwordCorrectStr": "Password and Confirm Password are inconsistent!",
+    "nameStr": "Please enter your name",
+    "titleStr": "Please select your title"
+  },
+  "zh-cn": {
+    "signUp": "注 册",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPW": "确认密码",
+    "name": "名字",
+    "title": "称谓",
+    "org": "隶属机构",
+    "new": "+ 添加",
+    "login": "返回登录",
+    "reset": "重置",
+    "join": "注册账号",
+
+    "emailStr": "请输入您的邮箱地址",
+    "passwordStr": "请设置账号密码",
+    "checkPassStr": "请确认您的密码",
+    "nameStr": "请输入您的名字",
+    "titleStr": "请选择您的称谓"
+  }
+
+}
