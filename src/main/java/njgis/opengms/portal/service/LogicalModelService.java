@@ -10,7 +10,6 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.dto.model.LogicalModelResultDTO;
-import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.po.LogicalModel;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -204,34 +203,68 @@ public class LogicalModelService {
         JSONObject result = new JSONObject();
         LogicalModel logicalModel = new LogicalModel();
 
-        String path = resourcePath + "/logicalModel";
         List<String> images = new ArrayList<>();
-        saveFiles(files, path, email, "/logicalModel",images);
-        if (images.size() == 0) {
-            result.put("code", -1);
-        } else {
-            try {
-                //初始化逻辑模型，填入基本信息
-                if(jsonObject.getString("contentType").equals("MxGraph")) {
-                    String name = new Date().getTime() + "_MxGraph.png";
-                    MxGraphUtils mxGraphUtils = new MxGraphUtils();
-                    String filename = mxGraphUtils.exportImage(jsonObject.getInteger("w"), jsonObject.getInteger("h"), jsonObject.getString("xml"), path + "/" + email + "/", name);
+        String path = resourcePath + "/logicalModel";
+        String contentType = jsonObject.getString("contentType");
+        switch (contentType){
+            case "Image":{
+                saveFiles(files, path, email, "/logicalModel",images);
+                if (images.size() == 0){
+                    result.put("code", -1);
+                    return result;
+                }
+                break;
+            }
+            case "MxGraph":{
+                String name = new Date().getTime() + "_MxGraph.png";
+                MxGraphUtils mxGraphUtils = new MxGraphUtils();
+                try {
+                    String filename = null;
+                    filename = mxGraphUtils.exportImage(jsonObject.getInteger("w"), jsonObject.getInteger("h"), jsonObject.getString("xml"), path + "/" + email + "/", name);
                     File image = new File(filename);
                     if(image.exists()) {
                         images.add("/logicalModel" + "/" + email + "/" + name);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result.put("code", -2);
                 }
-                logicalModel.setImageList(images);
-                logicalModel.setStatus(jsonObject.getString("status"));
-                logicalModel.setName(jsonObject.getString("name"));
-                logicalModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
-                logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-                logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
-                logicalModel.setOverview(jsonObject.getString("description"));
-                logicalModel.setContentType(jsonObject.getString("contentType"));
-                logicalModel.setCXml(jsonObject.getString("cXml"));
-                logicalModel.setSvg(jsonObject.getString("svg"));
-                logicalModel.setAuthor(email);
+
+                break;
+            }
+            default:{
+                result.put("code", -1);
+                return result;
+            }
+        }
+
+        try {
+            //初始化逻辑模型，填入基本信息
+            logicalModel.setImageList(images);
+            logicalModel.setStatus(jsonObject.getString("status"));
+            logicalModel.setName(jsonObject.getString("name"));
+            // if (jsonObject.getJSONArray("localizationList") != null){
+            //     logicalModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+            // }
+
+            // 初始化localization
+            Localization localization = new Localization();
+            localization.setLocalCode("en");
+            localization.setLocalName("English");
+            localization.setName(jsonObject.getString("name"));
+            localization.setDescription(jsonObject.getString("detail"));
+            List<Localization> list = new ArrayList<>();
+            list.add(localization);
+            logicalModel.setLocalizationList(list);
+
+            logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+            // logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
+            logicalModel.setOverview(jsonObject.getString("description"));
+            logicalModel.setContentType(jsonObject.getString("contentType"));
+            logicalModel.setCXml(jsonObject.getString("cXml"));
+            logicalModel.setSvg(jsonObject.getString("svg"));
+            logicalModel.setAuthor(email);
 
 //                if (isAuthor) {
 //                    logicalModel.setRealAuthor(null);
@@ -242,30 +275,36 @@ public class LogicalModelService {
 //                    authorInfo.setEmail(jsonObject.getJSONObject("author").getString("email"));
 //                    logicalModel.setRealAuthor(authorInfo);
 //                }
-                Date now = new Date();
-                logicalModel.setCreateTime(now);
-                logicalModel.setLastModifyTime(now);
-                logicalModelDao.insert(logicalModel);
+            Date now = new Date();
+            logicalModel.setCreateTime(now);
+            logicalModel.setLastModifyTime(now);
 
-                userService.ItemCountPlusOne(email, ItemTypeEnum.LogicalModel);
-
-                //联动与逻辑模型相关的模型关联信息
-                List<String> relatedModelItems = logicalModel.getRelatedModelItems();
-                for(int i=0;i<relatedModelItems.size();i++) {
-                    String id = relatedModelItems.get(i);
-                    ModelItem modelItem = modelItemDao.findFirstById(id);
-                    ModelItemRelate modelItemRelate = modelItem.getRelate();
-                    modelItemRelate.getLogicalModels().add(logicalModel.getId());
-                    modelItem.setRelate(modelItemRelate);
-                    modelItemDao.save(modelItem);
+            //联动与逻辑模型相关的模型关联信息
+            List<String> relatedModelItems = logicalModel.getRelatedModelItems();
+            for(int i=0;i<relatedModelItems.size();i++) {
+                String id = relatedModelItems.get(i);
+                ModelItem modelItem = modelItemDao.findFirstById(id);
+                ModelItemRelate modelItemRelate = modelItem.getRelate();
+                if (modelItemRelate == null){
+                    modelItemRelate = new ModelItemRelate();
                 }
-
-                result.put("code", 1);
-                result.put("id", logicalModel.getId());
-            } catch (Exception e) {
-                e.printStackTrace();
-                result.put("code", -2);
+                modelItemRelate.getLogicalModels().add(logicalModel.getId());
+                modelItem.setRelate(modelItemRelate);
+                modelItemDao.save(modelItem);
             }
+
+
+            logicalModelDao.insert(logicalModel);
+
+            // userService.ItemCountPlusOne(email, ItemTypeEnum.LogicalModel);
+            userService.updateUserResourceCount(email,ItemTypeEnum.LogicalModel,"add");
+
+
+            result.put("code", 1);
+            result.put("id", logicalModel.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("code", -2);
         }
         return result;
     }

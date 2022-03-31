@@ -9,7 +9,6 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
-import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.model.ConceptualModelResultDTO;
 import njgis.opengms.portal.entity.po.ConceptualModel;
 import njgis.opengms.portal.entity.po.ModelItem;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -206,33 +204,66 @@ public class ConceptualModelService {
 
         String path = resourcePath + "/conceptualModel";
         List<String> images = new ArrayList<>();
-        saveFiles(files, path, email, "/conceptualModel",images);
-        if (images.size() == 0) {
-            result.put("code", -1);
-        } else {
-            try {
-                //初始化概念模型，填入基本信息
-                if(jsonObject.getString("contentType").equals("MxGraph")) {
-                    String name = new Date().getTime() + "_MxGraph.png";
-                    MxGraphUtils mxGraphUtils = new MxGraphUtils();
-                    String filename = mxGraphUtils.exportImage(jsonObject.getInteger("w"), jsonObject.getInteger("h"), jsonObject.getString("xml"), path + "/" + email + "/", name);
+        String contentType = jsonObject.getString("contentType");
+
+
+        switch (contentType){
+            case "Image":{
+                saveFiles(files, path, email, "/conceptualModel",images);
+                if (images.size() == 0){
+                    result.put("code", -1);
+                    return result;
+                }
+                break;
+            }
+            case "MxGraph":{
+                String name = new Date().getTime() + "_MxGraph.png";
+                MxGraphUtils mxGraphUtils = new MxGraphUtils();
+                try {
+                    String filename = null;
+                    filename = mxGraphUtils.exportImage(jsonObject.getInteger("w"), jsonObject.getInteger("h"), jsonObject.getString("xml"), path + "/" + email + "/", name);
                     File image = new File(filename);
                     if(image.exists()) {
                         images.add("/conceptualModel" + "/" + email + "/" + name);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result.put("code", -2);
                 }
-                conceptualModel.setImageList(images);
-                conceptualModel.setStatus(jsonObject.getString("status"));
-                conceptualModel.setName(jsonObject.getString("name"));
-                conceptualModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
-                conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-                conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
-                conceptualModel.setOverview(jsonObject.getString("description"));
-                conceptualModel.setContentType(jsonObject.getString("contentType"));
-                conceptualModel.setCXml(jsonObject.getString("cXml"));
-                conceptualModel.setSvg(jsonObject.getString("svg"));
-                conceptualModel.setAuthor(email);
 
+                break;
+            }
+            default:{
+                result.put("code", -1);
+                return result;
+            }
+        }
+
+        try {
+
+            conceptualModel.setImageList(images);
+            conceptualModel.setStatus(jsonObject.getString("status"));
+            conceptualModel.setName(jsonObject.getString("name"));
+
+            // conceptualModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+            // 初始化localization
+            Localization localization = new Localization();
+            localization.setLocalCode("en");
+            localization.setLocalName("English");
+            localization.setName(jsonObject.getString("name"));
+            localization.setDescription(jsonObject.getString("detail"));
+            List<Localization> list = new ArrayList<>();
+            list.add(localization);
+            conceptualModel.setLocalizationList(list);
+
+            conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+            // conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
+            conceptualModel.setOverview(jsonObject.getString("description"));
+            conceptualModel.setContentType(jsonObject.getString("contentType"));
+            conceptualModel.setCXml(jsonObject.getString("cXml"));
+            conceptualModel.setSvg(jsonObject.getString("svg"));
+            conceptualModel.setAuthor(email);
 //                if (isAuthor) {
 //                    conceptualModel.setRealAuthor(null);
 //                } else {
@@ -242,31 +273,38 @@ public class ConceptualModelService {
 //                    authorInfo.setEmail(jsonObject.getJSONObject("author").getString("email"));
 //                    conceptualModel.setRealAuthor(authorInfo);
 //                }
-                Date now = new Date();
-                conceptualModel.setCreateTime(now);
-                conceptualModel.setLastModifyTime(now);
-                conceptualModelDao.insert(conceptualModel);
+            Date now = new Date();
+            conceptualModel.setCreateTime(now);
+            conceptualModel.setLastModifyTime(now);
 
-                userService.ItemCountPlusOne(email, ItemTypeEnum.ConceptualModel);
-
-                //联动与概念模型相关的模型关联信息
-                List<String> relatedModelItems = conceptualModel.getRelatedModelItems();
-                for(int i=0;i<relatedModelItems.size();i++) {
-                    String id = relatedModelItems.get(i);
-                    ModelItem modelItem = modelItemDao.findFirstById(id);
-                    ModelItemRelate modelItemRelate = modelItem.getRelate();
-                    modelItemRelate.getConceptualModels().add(conceptualModel.getId());
-                    modelItem.setRelate(modelItemRelate);
-                    modelItemDao.save(modelItem);
+            //联动与逻辑模型相关的模型关联信息
+            List<String> relatedModelItems = conceptualModel.getRelatedModelItems();
+            for(int i=0;i<relatedModelItems.size();i++) {
+                String id = relatedModelItems.get(i);
+                ModelItem modelItem = modelItemDao.findFirstById(id);
+                ModelItemRelate modelItemRelate = modelItem.getRelate();
+                if (modelItemRelate == null){
+                    modelItemRelate = new ModelItemRelate();
                 }
-
-                result.put("code", 1);
-                result.put("id", conceptualModel.getId());
-            } catch (Exception e) {
-                e.printStackTrace();
-                result.put("code", -2);
+                modelItemRelate.getLogicalModels().add(conceptualModel.getId());
+                modelItem.setRelate(modelItemRelate);
+                modelItemDao.save(modelItem);
             }
+
+            conceptualModelDao.insert(conceptualModel);
+
+            // userService.ItemCountPlusOne(email, ItemTypeEnum.ConceptualModel);
+            userService.updateUserResourceCount(email,ItemTypeEnum.ConceptualModel,"add");
+
+
+            result.put("code", 1);
+            result.put("id", conceptualModel.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("code", -2);
         }
+
+
         return result;
     }
 

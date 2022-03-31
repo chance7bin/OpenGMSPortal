@@ -1,6 +1,5 @@
 package njgis.opengms.portal.dao;
 
-import njgis.opengms.portal.entity.po.ConceptualModel;
 import njgis.opengms.portal.entity.po.LogicalModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -11,4 +10,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @Version 1.0.0
  */
 public interface LogicalModelDao extends MongoRepository<LogicalModel,String>, GenericItemDao<LogicalModel> {
+
+
+
 }

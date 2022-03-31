@@ -129,7 +129,7 @@ public class DataMethodController {
     @LoginRequired
     @ApiOperation(value = "删除dataMethod [ /dataApplication/delete ]")
     @DeleteMapping(value = "/{id}")
-    public JsonResult deleteDataApplication(@PathVariable(value = "id") String id, HttpServletRequest request) {
+    public JsonResult deleteDataApplication(@PathVariable(value = "id") String id) {
         return dataMethodService.delete(id);
     }
 

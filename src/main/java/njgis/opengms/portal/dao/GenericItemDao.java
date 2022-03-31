@@ -101,6 +101,6 @@ public interface GenericItemDao<T>{
     @Query("{$or:[{ 'overview':{'$regex': '?0','$options':'i'}}, {'localizationList.description': {'$regex': '?0','$options':'i'}}]}")
     Page<ResultDTO> findByOverviewContainsIgnoreCaseAndLocalizationDescription(String overview, Pageable pageable);
 
-
+    int countByAuthor(String email);
 
 }
