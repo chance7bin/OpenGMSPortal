@@ -255,7 +255,6 @@ public class UserRestController {
         //若用户没有登录，则进入登录页面
         if (session.getAttribute("email") == null) {
             modelAndView.setViewName("login");
-            modelAndView.addObject("notice", "After login, more functions will be unlocked.");
 
             Object preUrl_obj = session.getAttribute("preUrl"); //preUrl是跳转到这个接口之前打开的页面链接
             String preUrl = null;

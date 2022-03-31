@@ -9,23 +9,17 @@ new Vue({
             //     flag = value.match(reg1);
             // }
             if (value === '') {
-                callback(new Error('Please enter email address'));
+                callback(new Error(this.htmlJSON.emailStr));
             } else if (flag==null){
-                callback(new Error('Please enter the correct email address'));
+                callback(new Error(this.htmlJSON.emailCorrectStr));
             }else {
                 callback();
             }
         };
-        var validateCode = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('Please enter verification code'));
-            } else {
-                callback();
-            }
-        };
+
         var validatePass = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('Please enter password'));
+                callback(new Error(this.htmlJSON.passwordStr));
             } else {
                 if (this.ruleForm2.checkPass !== '') {
                     this.$refs.ruleForm2.validateField('checkPass');
@@ -35,30 +29,30 @@ new Vue({
         };
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('Please enter password again'));
+                callback(new Error(this.htmlJSON.checkPassStr));
             } else if (value !== this.ruleForm2.pwd) {
-                callback(new Error('Password and Confirm Password are inconsistent!'));
+                callback(new Error(this.htmlJSON.passwordCorrectStr));
             } else {
                 callback();
             }
         };
         var validateName = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('Please enter your name'));
+                callback(new Error(this.htmlJSON.nameStr));
             } else {
                 callback();
             }
         };
         var validateTitle = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('Please select your title'));
+                callback(new Error(this.htmlJSON.titleStr));
             } else {
                 callback();
             }
         };
         var validateOrg = (rule, value, callback) => {
             if (value.length === 0) {
-                callback(new Error('Please enter your organization'));
+                callback(new Error(this.htmlJSON.orgStr));
             } else {
                 callback();
             }
@@ -107,10 +101,14 @@ new Vue({
             inputValue: '',
 
             organizations:[],
+
+            htmlJSON:{}
         }
     },
     methods: {
-
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent;
+        },
 
         //register form
         submitForm(formName) {
