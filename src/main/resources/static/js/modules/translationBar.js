@@ -35,6 +35,16 @@ Vue.component("translation-bar",
         computed: {},
         methods: {
             async transLateTargetPage(){//获取页面内容对应翻译文件，不包含navbar和footer
+                if(this.currentLang !== "zh-cn"){
+                    //element-ui 切换英文，勿删！
+                    if(ELEMENT!=undefined) {
+                        ELEMENT.locale(ELEMENT.lang.en)
+                    }
+                }else{
+                    if(ELEMENT!=undefined) {
+                        ELEMENT.locale(ELEMENT.lang.zhCN)
+                    }
+                }
                 let content = await this.getLangJson(this.jsonFile)
                 this.loadLangContent(content)
             },
@@ -198,11 +208,11 @@ Vue.component("translation-bar",
 
             let url = decodeURIComponent(window.location.search);
             let urlLanguage = this.GetQueryString(url, "language");
+            let language = window.localStorage.getItem("language");
 
             if(this.LanguageIsValid(urlLanguage)){
                 this.currentLang = urlLanguage;
             }else {
-                let language = window.localStorage.getItem("language");
                 if (this.LanguageIsValid(language)) {
                     this.currentLang = language;
                 } else {
@@ -210,6 +220,13 @@ Vue.component("translation-bar",
                 }
 
                 this.changeUrl();
+            }
+
+            if(this.currentLang !== "zh-cn"){
+                //element-ui 切换英文，勿删！
+                if(ELEMENT!=undefined) {
+                    ELEMENT.locale(ELEMENT.lang.en)
+                }
             }
 
             this.transLateTargetPage()

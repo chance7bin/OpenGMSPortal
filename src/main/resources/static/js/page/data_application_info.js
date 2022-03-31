@@ -467,7 +467,7 @@ var data_application_info = new Vue({
 
 
         let str = window.location.href.split('/');
-        this.dataApplicationId = str[str.length-1];
+        this.dataApplicationId = str[str.length-1].split("?")[0];
 
         // this.setSession("history", window.location.href);
         axios.get("/user/load")

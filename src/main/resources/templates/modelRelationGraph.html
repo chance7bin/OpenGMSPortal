@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" href="/static/css/page/model_items.css">
     <link rel="stylesheet" href="/static/css/base/list.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
 
@@ -57,6 +59,13 @@
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div id="graph" v-cloak style="position: relative;">
+        <translation-bar
+                json-file="modelRelationGraph"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px;z-index:999">
+        </translation-bar>
         <div class="modelRelationGraphSideBar" v-if="modelRelationGraphSideBarShow" style="height:100%;width:200px;padding:15px;position: absolute;z-index: 999;background-color: #f6f6f6eb;overflow:auto;">
             <div class="mr_header" style="height:10px;">
                 <a href="javascript:void(0);" @click="closeGraphSideBar" style="font-size: 20px;">×</a>
@@ -102,7 +111,7 @@
             <el-button style="padding:8px;" type="primary" icon="el-icon-download" circle @click="exportGraph"></el-button>
             <el-button style="padding:8px;" type="primary" icon="el-icon-refresh" circle @click="refreshGraph"></el-button>
             <hr style="border-color: #00b9ff;"/>
-            <label>Node Label</label><br/>
+            <label>{{htmlJSON.nodeLabel}}</label><br/>
             <el-switch
                     v-model="nodeLabelShow"
                     active-text="On"
@@ -110,7 +119,7 @@
                     @change="nodeLabelShowChange">
             </el-switch>
             <hr style="border-color: #00b9ff;"/>
-            <label>Full Name</label><br/>
+            <label>{{htmlJSON.fullName}}</label><br/>
             <el-switch
                     v-model="fullNameShow"
                     active-text="On"
@@ -118,7 +127,7 @@
                     @change="fullNameShowChange">
             </el-switch>
             <hr style="border-color: #00b9ff;"/>
-            <label>Line Label</label><br/>
+            <label>{{htmlJSON.lineLabel}}</label><br/>
             <el-switch
                     v-model="lineLabelShow"
                     active-text="On"
@@ -126,7 +135,7 @@
                     @change="lineLabelShowChange">
             </el-switch>
             <hr style="border-color: #00b9ff;"/>
-            <label>Line Color</label><br/>
+            <label>{{htmlJSON.lineColor}}</label><br/>
             <el-switch
                     v-model="lineColorShow"
                     active-text="On"
@@ -145,7 +154,10 @@
 <script src="/static/js/common/echarts-graph.min.js"></script>
 <script src="/static/js/common/vue.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
-<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script>
     var info = new Vue({
@@ -167,10 +179,14 @@
 
                 modelRelationGraph: null,
 
+                htmlJSON:{},
+
             }
         },
         methods: {
-
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent
+            },
             exportGraph(){
                 let dataUrl = this.modelRelationGraph.getDataURL({
                     // type: "png",
@@ -505,7 +521,7 @@
 
                 let option = {
                     title: {
-                        text: 'Model Relation Graph',
+                        text: this.htmlJSON.title,
                         left: "center",
                         top: 10,
                         textStyle: {
@@ -610,7 +626,6 @@
                         }
                     ]
                 };
-
                 option.series[0].data = graph_nodes;
                 option.series[0].links = graph_links;
                 console.log(option);
