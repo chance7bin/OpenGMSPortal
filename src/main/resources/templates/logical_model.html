@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title th:text="${modelInfo.name}+' | Logical Model | OpenGMS'">Logical Model | OpenGMS</title>
+    <title th:text="${itemInfo.name}+' | Logical Model | OpenGMS'">Logical Model | OpenGMS</title>
 
 
     <link rel="stylesheet" th:href="@{/static/lib/element-ui/theme-chalk/index.css}">
@@ -20,6 +20,8 @@
     <link rel="stylesheet" type="text/css" href="/static/js/graphEditor/styles/grapheditor.css">
     <link rel="stylesheet" href="/static/css/base/userModule.css">
     <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
     <style>
@@ -54,41 +56,47 @@
     <div th:replace="fragments/backToTop :: backtop-down"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
-
+        <translation-bar
+                json-file="all_model_info"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col">
 
             <div class="detail">
                 <div class="detail_title">
                     <!--<a th:if="${history!=true}"-->
-                       <!--th:href="${modelInfo.relateModelItem}==null?'/modelItem/repository':'/modelItem/'+${modelInfo.relateModelItem}"-->
+                       <!--th:href="${itemInfo.relateModelItem}==null?'/modelItem/repository':'/modelItem/'+${itemInfo.relateModelItem}"-->
                        <!--class="el-icon-arrow-left" style="font-size: 20px"></a>-->
 
-                    <h2 th:utext="${modelInfo.name}"
+                    <h2 th:utext="${itemInfo.name}"
                         style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>
                     <div class="pull-right">
                         <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <a href="javascript:void(0);" th:if="${modelInfo.status=='Public'&&history!=true&&modelInfo.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
+                            <a href="javascript:void(0);" th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
                         </el-tooltip>
                         <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
-                            <li th:if="${modelInfo.status=='Public'&&history!=true&&modelInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
+                            <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
                         </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" th:content="${modelInfo.status}" effect="light" placement="top">
-                            <i th:if="${modelInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
-                            <i th:if="${modelInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
-                            <i th:if="${modelInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
+                        <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light" placement="top">
+                            <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
+                            <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
+                            <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
                         </el-tooltip>
                         <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
                     </div>
                 </div>
                 <div class="detail_overview">
 
-                    <div th:switch="${#lists.size(modelInfo.image)}" class="img">
+                    <div th:switch="${#lists.size(itemInfo.imageList)}" class="img">
                         <img th:case="0" src="/static/img/model/logical.png">
-                        <img th:case="*" th:src="${loadPath}+${modelInfo.image[0]}">
+                        <img th:case="*" th:src="${loadPath}+${itemInfo.imageList[0]}">
                     </div>
 
                     <div class="info" style="padding-top:0px">
-                        <p th:text="${modelInfo.description}"></p>
+                        <p th:text="${itemInfo.overview}"></p>
                         <div class="tags">
                             <span class="label label-info">
                                     Logical Model
@@ -99,9 +107,9 @@
 
                     <div th:if="${history!=true}" class="detail_option">
                         <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
-                        <!--<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>-->
+                        <!--<div th:utext="'&nbsp&nbsp'+${itemInfo.shareCount}">&nbsp&nbsp37</div>-->
                         <a class="fa fa-eye" aria-hidden="true"></a>
-                        <div th:utext="'&nbsp&nbsp'+${modelInfo.viewCount}">&nbsp&nbsp341</div>
+                        <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}">&nbsp&nbsp341</div>
 
                     </div>
 
@@ -112,9 +120,9 @@
             <div id="Contributor0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
                         </el-tooltip>
                     </div>
@@ -142,13 +150,13 @@
 
             </div>
 
-            <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+            <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${modelInfo.authorship}">
+                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"
@@ -169,13 +177,13 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div th:if="${modelInfo.authorship==null||#lists.size(modelInfo.authorship)==0}">-->
+                    <!--<div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">-->
                         <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
                                                                               <!--style="text-decoration: underline">claim</a>-->
                             <!--the item.-->
                         <!--</el-tag>-->
                     <!--</div>-->
-                    <div th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
                                                                           style="text-decoration: underline">Feedback</a></el-tag>
                     </div>
@@ -185,74 +193,51 @@
             <div id="graph" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Graph</h4>
+                        <h4>{{htmlJSON.graph}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-top:20px;">
 
-                    <el-button th:if="${modelInfo.contentType}=='MxGraph'" typ="text"
+                    <el-button th:if="${itemInfo.contentType}=='MxGraph'" typ="text"
                                style="float: right; position: relative" @click="showMxGraph()"> MxGraph
                     </el-button>
 
                     <el-tabs class="right-content" v-model="activeNameGraph" type="border-card" stretch="true">
 
-                        <el-tab-pane label="Image" name="Image" th:if="${modelInfo.contentType}!='MxGraph'">
-                            <center th:each="image:${modelInfo.image}"><img th:src="${loadPath}+${image}">
+                        <el-tab-pane label="Image" name="Image" th:if="${itemInfo.contentType}!='MxGraph'">
+                            <center th:each="image:${itemInfo.image}"><img th:src="${loadPath}+${image}">
                             </center>
                         </el-tab-pane>
                         <el-tab-pane label="Image" name="Image" style="position: unset"
-                                     th:if="${modelInfo.contentType}=='MxGraph'">
+                                     th:if="${itemInfo.contentType}=='MxGraph'">
                             <center>
                                 <div>
-                                    <img th:if="${#lists.size(modelInfo.image)}>0"
-                                         th:src="${loadPath}+${modelInfo.image[0]}">
-                                    <div th:if="${#lists.size(modelInfo.image)}==0" th:utext="${modelInfo.svg}"/>
+                                    <img th:if="${#lists.size(itemInfo.image)}>0"
+                                         th:src="${loadPath}+${itemInfo.image[0]}">
+                                    <div th:if="${#lists.size(itemInfo.image)}==0" th:utext="${itemInfo.svg}"/>
 
                                 </div>
                             </center>
                         </el-tab-pane>
-                        <!--<el-tab-pane label="MxGraph" name="MxGraph" style="display: none" th:if="${modelInfo.contentType}=='MxGraph'">-->
-                        <!--<div id="container_top" style="min-height:639px;position:relative;border: 2px solid rgb(223, 223, 223);border-width: 0 1px" >-->
-                        <!--<div id="container" class="geEditor" style="left: 0; top:0;right: 0;bottom: 0;position: absolute;" th:content="${modelInfo.cXml}"></div>-->
-                        <!--</div>-->
-                        <!--</el-tab-pane>-->
+
                     </el-tabs>
 
-                    <!--<div id="container_top" style="min-height:639px;position:relative;border: 2px solid rgb(223, 223, 223);border-width: 0 1px" th:if="${modelInfo.contentType}=='MxGraph'">-->
-                    <!--<div id="container" class="geEditor" style="left: 0; top:0;right: 0;bottom: 0;min-width: 800px;min-height: 400px;position: absolute;" th:content="${modelInfo.cXml}"></div>-->
-                    <!--</div>-->
                 </div>
             </div>
 
             <div th:replace="fragments/itemInfoModules :: description"></div>
-            <!--<div id="description" class="detail_block" th:if="${modelInfo.detail!=null&&modelInfo.detail!=''}">-->
-                <!--<div class="block_head">-->
-                    <!--<div class="head_text">-->
-                        <!--<h4>Detailed Description</h4>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="block_content">-->
-                    <!--<div th:utext="${modelInfo.detail}" id="detail" class="detailIntroducePanel">-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="fullPaper text-center hide">-->
-                    <!--<a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i-->
-                            <!--class="fa fa-angle-down"-->
-                            <!--style="margin-left: 10px;color:red;font-weight: bold"-->
-                            <!--aria-hidden="true"></i></a>-->
-                <!--</div>-->
-            <!--</div>-->
+
 
             <div id="related_models" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Relate Model Item</h4>
+                        <h4>{{htmlJSON.RelateModelItem}}</h4>
                     </div>
                 </div>
                 <div class="block_content flex">
 
-                    <div class="list_panel clearfix">
-                        <a th:href="'/modelItem/'+${relateModelItem.oid}" class="img">
+                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">
+                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">
                             <div th:switch="${relateModelItem.img}">
                                 <img th:case="null" src="/static/img/model/model.png">
                                 <img th:case="*" th:src="${relateModelItem.img}">
@@ -261,7 +246,7 @@
                         </a>
 
                         <div class="info" style="margin-top:0px;">
-                            <a th:href="'/modelItem/'+${relateModelItem.oid}"
+                            <a th:href="'/modelItem/'+${relateModelItem.id}"
                                th:text="${relateModelItem.name}">Ground Water Flow System</a>
 
                             <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial
@@ -277,25 +262,25 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div id="cite-text" class="width:100%-50px">
                         <span th:if="${authorship!=''}"
-                              th:text="${authorship}+' ('+${year}+'). '+${modelInfo.name}+', Logical Model, OpenGMS, '"></span>
+                              th:text="${authorship}+' ('+${year}+'). '+${itemInfo.name}+', Logical Model, OpenGMS, '"></span>
                         <span th:if="${authorship==''}"
-                              th:text="${user.name}+' ('+${year}+'). '+${modelInfo.name}+', Logical Model, OpenGMS, '">
+                              th:text="${user.name}+' ('+${year}+'). '+${itemInfo.name}+', Logical Model, OpenGMS, '">
                             Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                             </span>
                         <a style="word-break:break-all;"
-                           th:href="'https://geomodeling.njnu.edu.cn/logicalModel/'+${modelInfo.oid}"
-                           th:text="'https://geomodeling.njnu.edu.cn/logicalModel/'+${modelInfo.oid}">
+                           th:href="'https://geomodeling.njnu.edu.cn/logicalModel/'+${itemInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/logicalModel/'+${itemInfo.id}">
                             https://geomodeling.njnu.edu.cn/logicalModel/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        Copy
+                        {{htmlJSON.Copy}}
                     </div>
                 </div>
             </div>
@@ -303,18 +288,18 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
                     </div>
                 </div>
             </div>
 
             <div id="Modifier0 minScreen" class="detail_block minScreen"
-                 th:if="${history!=true&&modelInfo.contributors!=null&&#lists.size(modelInfo.contributors)!=0}">
+                 th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
                         <h4>History</h4>
@@ -332,8 +317,8 @@
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(modelInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/logicalModel/'+${modelInfo.oid}" target="_blank">View
+                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/logicalModel/'+${itemInfo.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -365,7 +350,7 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
@@ -395,13 +380,13 @@
 
             </div>
 
-            <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+            <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${modelInfo.authorship}">
+                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
@@ -421,13 +406,13 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div th:if="${modelInfo.authorship==null||#lists.size(modelInfo.authorship)==0}">-->
+                    <!--<div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">-->
                         <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
                                                                               <!--style="text-decoration: underline">claim</a>-->
                             <!--the item.-->
                         <!--</el-tag>-->
                     <!--</div>-->
-                    <div th:if="${history!=true && #lists.size(modelInfo.authorship)>0}">
+                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
                                                                           style="text-decoration: underline">Feedback</a></el-tag>
                     </div>
@@ -435,7 +420,7 @@
             </div>
 
             <div id="Modifier" class="detail_block"
-                 th:if="${history!=true&&modelInfo.contributors!=null&&#lists.size(modelInfo.contributors)!=0}">
+                 th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
                         <h4>History</h4>
@@ -453,8 +438,8 @@
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(modelInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/logicalModel/'+${modelInfo.oid}" target="_blank">View
+                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/logicalModel/'+${itemInfo.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -466,7 +451,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -487,11 +472,11 @@
          style="width: 100%;height:100%;z-index: 999; position:absolute; top:0px">
         <el-button style="z-index: 999; position: absolute;left: 20px;top: 10px;" @click="hideMxGraph()"> Close
         </el-button>
-        <div id="container_top" th:if="${modelInfo.contentType}=='MxGraph'"
+        <div id="container_top" th:if="${itemInfo.contentType}=='MxGraph'"
              style="position:initial;border: 2px solid rgb(223, 223, 223);border-width: 0 1px">
             <div id="container" class="geEditor"
                  style="left: 0; top:0;right: 0;bottom: 0;position: absolute;"
-                 th:content="${modelInfo.cXml}"></div>
+                 th:content="${itemInfo.cXml}"></div>
         </div>
     </div>
     <el-dialog title="Edit Logical Model" class="responseDialog" :visible.sync="editLogicalModelDialog" width="65%">
@@ -629,6 +614,11 @@
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
 <script src="/static/js/common/qrcode.min.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/modules/userAvatar.js"></script>
 <script src="/static/js/page/logical_model.js"></script>
 <script src="/static/js/modules/comments.js"></script>

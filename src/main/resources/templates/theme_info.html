@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/data-tables/DT_bootstrap.css"/>
     <!--<link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/style.css"/>-->
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/themeEditor.css"/>
+    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/fabric/fabric.min.css"/>
@@ -121,14 +123,13 @@
                                 :collapse="isCollapse"
                                 :collapse-transition = "false"
                                 style="overflow: auto;"
-
                         >
 
 <!--                            theme info-->
                             <el-menu-item index="1" @click="show('detailinfo','BasicInfoPanel','detailIntroducePanel')">
                                 <i class="el-icon-info"></i>
                                 <span slot="title">
-                                    <span>Theme Info</span>
+                                    <span>{{htmlJSON.themeinfo}}</span>
                                     <i class="el-icon-edit editMenuIcon"  @click="edit_themeDetail()" v-if="editActiveIndex==1"></i>
                                 </span>
                             </el-menu-item>
@@ -137,7 +138,7 @@
                             <el-submenu  v-if="(themeModelData[0]!=undefined&&themeModelData[0].children.length>0)||editActiveIndex==1"  index="2" class="model">
                                 <div slot="title" class="menuTitleFlex">
                                     <i class="el-icon-menu"></i>
-                                    <span  slot="title">Models</span>
+                                    <span  slot="title">{{htmlJSON.models}}</span>
 <!--                                    <i class="el-icon-edit editMenuIcon"  @click="dialogVisibleModel=true" v-if="editActiveIndex==1"></i>-->
 
                                     <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
@@ -222,7 +223,7 @@
                             <el-submenu v-if="(themeData[0]!=undefined&&themeData[0].children.length>0)||editActiveIndex==1"  index="3" class="data">
                                 <div slot="title" class="menuTitleFlex">
                                     <i class="el-icon-coin"></i>
-                                    <span slot="title">Data</span>
+                                    <span slot="title">{{htmlJSON.data}}</span>
 <!--                                    <i class="el-icon-edit editMenuIcon" style="margin-left: 120px" @click="dialogVisibleData=true" v-if="editActiveIndex==1"></i>-->
                                     <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
                                         <i class="el-icon-plus menuIcon" @click="appendData(themeData[0])"></i>
@@ -304,7 +305,7 @@
                             <el-submenu v-if="(themeDataMethod[0]!=undefined&&themeDataMethod[0].children.length>0)||editActiveIndex==1" index="5-4" class="dataMethod">
                                 <div slot="title" class="menuTitleFlex">
                                     <i class="el-icon-finished"></i>
-                                    <span slot="title">Data Method</span>
+                                    <span slot="title">{{htmlJSON.dataMethod}}</span>
 <!--                                    <i class="el-icon-edit editMenuIcon" style="margin-left: 70px"  @click="dialogVisibleDataMethod=true" v-if="editActiveIndex==1"></i>-->
                                     <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
                                         <i class="el-icon-plus menuIcon" @click="appendDataMethod(themeDataMethod[0])"></i>
@@ -386,7 +387,7 @@
 
                                 <div slot="title"  id="applications1">
                                     <i class="el-icon-bangzhu"></i>
-                                    <span>Applications</span>
+                                    <span>{{htmlJSON.applications}}</span>
                                 <i class="el-icon-edit editMenuIcon"  @click="dialogVisibleApplication=true" v-if="editActiveIndex==1"></i>
                                 </div>
                             </el-menu-item>
@@ -394,7 +395,7 @@
 <!--                            maintainers-->
                             <el-menu-item index="5" @click="showData('maintainers1','maintainerPanel')" >
                                 <i class="el-icon-s-custom"></i>
-                                <span slot="title" id="maintainer">Maintainers</span>
+                                <span slot="title" id="maintainer">{{htmlJSON.maintainers}}</span>
                             </el-menu-item>
                         </el-menu>
                     </div>
@@ -402,11 +403,11 @@
 <!--                    是否保存修改按钮组-->
                     <div class="cardEdit" th:if="${info.author==loginId}" style="padding:20px;">
                         <div class="editEnableButton" v-if="editActiveIndex==0">
-                            <el-button id="controlEditButton" type="primary" @click="controlEdit">Enable editing</el-button>
+                            <el-button id="controlEditButton" type="primary" @click="controlEdit">{{htmlJSON.enableEditing}}</el-button>
                         </div>
                         <div class="editingBtnGroups flex-rowDirect flex-center" v-if="editActiveIndex==1">
-                            <el-button type="success" @click="editSave_Finish()">Save</el-button>
-                            <el-button @click="editCancel()">Cancel</el-button>
+                            <el-button type="success" @click="editSave_Finish()">{{htmlJSON.save}}</el-button>
+                            <el-button @click="editCancel()">{{htmlJSON.cancel}}</el-button>
                         </div>
                     </div>
                 </div>
@@ -415,12 +416,18 @@
 <!--        rightContainer-->
         <div id="rightContainer"  class="rightContainer">
             <div  style="overflow: auto;padding:10px 10px;" id="right_content">
+                <translation-bar
+                        json-file="theme_info"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 120px;right:50px"></translation-bar>
 <!--                theme Info-->
                 <div class="infoPanel container-fluid" id="BasicInfoPanel">
 
                     <div class="title text-center" style="margin-bottom:40px;">
                         <h3>
-                            <span>Theme Info</span>
+                            <span>{{htmlJSON.themeinfo}}</span>
                         </h3>
                     </div>
                     <div v-html="edit_themeObj.detail" v-show="DetailEditActiveIndex===0" id="detailinfo" class="detailIntroducePanel"></div>
@@ -428,12 +435,12 @@
                     <div class="editThemeDetail flex-colDirect" v-show="editActiveIndex==1 && DetailEditActiveIndex===1" v-cloak>
                             <h4 class="col-sm-2 control-label"
                                    style="font-weight: bold">
-                                Description:
+                                {{htmlJSON.description}}
                             </h4>
                         <textarea id="themeText"></textarea>
                         <div class="editDetailBtnGroups">
-                            <el-button type="success" @click="editDetailSave()">Save</el-button>
-                            <el-button @click="DetailEditActiveIndex=0">Cancel</el-button>
+                            <el-button type="success" @click="editDetailSave()">{{htmlJSON.save}}</el-button>
+                            <el-button @click="DetailEditActiveIndex=0">{{htmlJSON.cancel}}</el-button>
                         </div>
                     </div>
 
@@ -443,7 +450,7 @@
                 <div id="model" class="infoPanel container-fluid dataPanel">
                     <div class="title text-center">
                         <h3>
-                            <span>Models</span>
+                            <span>{{htmlJSON.models}}</span>
 <!--                            <el-button class="editIcon" type="primary" @click="edit_theme('1')" icon="el-icon-edit" style="display: none"></el-button>-->
                         </h3>
                     </div>
@@ -578,7 +585,7 @@
                 <div id="data" class="infoPanel container-fluid dataPanel">
                     <div class="title text-center">
                         <h3>
-                            <span>Data</span>
+                            <span>{{htmlJSON.data}}</span>
 <!--                            <el-button class="editIcon" type="primary" @click="edit_theme('2')" icon="el-icon-edit" style="display: none"></el-button>-->
                         </h3>
                     </div>
@@ -711,7 +718,7 @@
                 <div id="dataMethod" class="infoPanel container-fluid dataPanel">
                     <div class="title text-center">
                         <h3>
-                            <span>Data Method</span>
+                            <span>{{htmlJSON.dataMethod}}</span>
 <!--                            <el-button class="editIcon" type="primary" @click="edit_theme('3')" icon="el-icon-edit" style="display: none"></el-button>-->
                         </h3>
                     </div>
@@ -845,7 +852,7 @@
                 <div class="infoPanel container-fluid applicationPanel" id="applicationPanel">
                     <div class="title text-center">
                         <h3>
-                            <span>Applications</span>
+                            <span>{{htmlJSON.applications}}</span>
 <!--                            <el-button class="editIcon" type="primary" @click="edit_theme('4')" icon="el-icon-edit" style="display: none"></el-button>-->
                         </h3>
                     </div>
@@ -901,7 +908,7 @@
                 <div class="infoPanel container-fluid maintainerPanel" id="maintainerPanel">
                     <div class="title text-center">
                         <h3>
-                            <span>Maintainers</span>
+                            <span>{{htmlJSON.maintainers}}</span>
                         </h3>
                     </div>
                     <div id="maintainers">
@@ -918,28 +925,7 @@
                                     </div>
 
                                 </el-col>
-
-<!--                                                                        <el-col th:each="item:${maintainer}" style="margin:20px 20px 0 0;float: left">-->
-<!--                                                                            <el-card>-->
-<!--                                                                            <a th:href="'/profile/'+${item.name}" target = "_blank">-->
-<!--                                                                                    <div  style="margin: 5px;height: 40px;display: flex;justify-content: center;-->
-<!--                                                                                    align-items: center;padding: 10px;">-->
-<!--                                                                                        <div class="el-col ">-->
-<!--                                                                                            <img th:src="${item.image}"-->
-<!--                                                                                                 class="round_icon" style="width:40px;height: 40px;float:left;">-->
-<!--                                                                                        </div>-->
-<!--                                                                                        <div class="el-col">-->
-<!--                                                                                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
-<!--                                                                                                <h4  th:text="${item.name}" style="padding: 0;"></h4>-->
-<!--                                                                                            </div>-->
-<!--                                                                                        </div>-->
-<!--                                                                                    </div>-->
-<!--                                                                                </a>-->
-<!--                                                                            </el-card>-->
-<!--                                                                        </el-col>-->
-
                             </div>
-                            <!--</el-row>-->
                         </div>
                     </div>
                 </div>
@@ -950,9 +936,9 @@
         </div>
 
 <!--        model-->
-        <el-dialog
+        <el-dialog/>
                 v-cloak
-                :title="'Edit Model : '+currentModelName"
+                :title="htmlJSON.editModel+currentModelName"
                 :visible.sync="dialogVisibleModel"
                 width="70%"
                 :before-close="handleClose">
@@ -960,7 +946,7 @@
                 <div class="panel-body" style="height: 570px">
                     <el-card>
                         <div style="width: 100%;float: right">
-                            <div v-if="parentModelNode" style="text-align: center">Please Select Children Model Class</div>
+                            <div v-if="parentModelNode" style="text-align: center">{{htmlJSON.pleaseModel}}</div>
                             <div class='model-attr' v-if="childModelNode">
 
                                 <el-card class="box-card"
@@ -968,7 +954,7 @@
                                          id="step2_left">
                                     <div slot="header"
                                          class="clearfix">
-                                        <span>Selected Items</span>
+                                        <span>{{htmlJSON.selectedItems}}</span>
                                     </div>
                                     <el-table
                                             :data="selectedModelTableData"
@@ -1086,8 +1072,8 @@
 
                     </el-card>
                     <div class="dialogBtnGroups" >
-                        <el-button @click="dialogCancel('Model')">Cancel</el-button>
-                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Model')">Save</el-button>
+                        <el-button @click="dialogCancel('Model')">{{htmlJSON.cancel}}</el-button>
+                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Model')">{{htmlJSON.save}}</el-button>
 
                     </div>
                 </div>
@@ -1105,14 +1091,14 @@
                 <div class="panel-body" style="height: 570px">
                     <el-card>
                             <div style="width: 100%;float: right">
-                                <div v-if="parentNode" style="text-align: center">Please Select Children Model Class</div>
+                                <div v-if="parentNode" style="text-align: center">{{htmlJSON.pleaseData}}</div>
                                 <div class='model-attr' v-if="childNode">
                                     <el-card class="box-card"
                                              style="width:40%;margin-right: 1%;float: left;"
                                              id="step3_left">
                                         <div slot="header"
                                              class="clearfix">
-                                            <span>Selected Items</span>
+                                            <span>{{htmlJSON.selectedItems}}</span>
                                         </div>
                                         <el-table
                                                 :data="selectedTableData"
@@ -1230,8 +1216,8 @@
                             </div>
                         </el-card>
                     <div class="dialogBtnGroups" >
-                        <el-button @click="dialogCancel('Data')">Cancel</el-button>
-                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Data')">Save</el-button>
+                        <el-button @click="dialogCancel('Data')">{{htmlJSON.cancel}}</el-button>
+                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Data')">{{htmlJSON.save}}</el-button>
 
                     </div>
                 </div>
@@ -1250,37 +1236,15 @@
                 <el-card shadow="never">
 
                     <el-card>
-<!--                        <div style="width: 20%;float: left">-->
-<!--                            <el-card class="box-card">-->
-
-<!--                                <el-tree :data="themeDataMethod"-->
-<!--                                         :props="defaultProps"-->
-<!--                                         :current-node-key="currentdataMethodNode"-->
-<!--                                         highlight-current-->
-<!--                                         node-key="id"-->
-<!--                                         default-expand-all-->
-<!--                                         :expand-on-click-node="false"-->
-<!--                                         @node-click="changedataMethodClassNode">-->
-<!--                                                                                      <span class="custom-tree-node" slot-scope="{ node, data }">-->
-<!--                                                                                            <span>{{node.label}}</span>-->
-<!--                                                                                            <span>-->
-<!--                                                                                                  <el-button type="text"  @click="() => appendMethod(node,data)" icon="el-icon-plus"></el-button>-->
-<!--                                                                                                  <el-button type="text"  @click="() => modifyMethod(data)" icon="el-icon-edit" v-if="data.id!=1"></el-button>-->
-<!--                                                                                                  <el-button type="text"  @click="() => removeMethod(node, data)" icon="el-icon-delete" v-if="data.id!=1"></el-button>-->
-<!--                                                                                            </span>-->
-<!--                                                                                      </span>-->
-<!--                                </el-tree>-->
-<!--                            </el-card>-->
-<!--                        </div>-->
                         <div style="width: 100%;float: right">
-                            <div v-if="parentdataMethodNode" style="text-align: center">Please Select Children Data Method Class</div>
+                            <div v-if="parentdataMethodNode" style="text-align: center">{{htmlJSON.pleaseDataMethod}}</div>
                             <div class='model-attr' v-if="childdataMethodNode">
                                 <el-card class="box-card"
                                          style="width:40%;margin-right: 1%;float: left;"
                                          id="step3_left">
                                     <div slot="header"
                                          class="clearfix">
-                                        <span>Selected Items</span>
+                                        <span>{{htmlJSON.selectedItems}}</span>
                                     </div>
                                     <el-table
                                             :data="selecteddataMethodTableData"
@@ -1400,8 +1364,8 @@
 
             </el-card>
                 <div class="dialogBtnGroups" >
-                    <el-button @click="dialogCancel('DataMethod')">Cancel</el-button>
-                    <el-button type="success" style="margin-right: 20px" @click="dialogSave('DataMethod')">Save</el-button>
+                    <el-button @click="dialogCancel('DataMethod')">{{htmlJSON.cancel}}</el-button>
+                    <el-button type="success" style="margin-right: 20px" @click="dialogSave('DataMethod')">{{htmlJSON.save}}</el-button>
 
                 </div>
             </div>
@@ -1420,7 +1384,7 @@
                             <el-card style="height: 400px">
                                 <el-button type="success"
                                            style="position: absolute;right: 25px;z-index: 999"
-                                           @click="addTab()">Add New Application
+                                           @click="addTab()">{{htmlJSON.addNewApplication}}
                                 </el-button>
                                 <el-tabs
                                         v-model="editableTabsValue_applications"
@@ -1441,7 +1405,7 @@
                                                 <lable class='control-label col-sm-2 text-center'
                                                        categorynameApplication
                                                        style='font-weight: bold;'>
-                                                    Name:
+                                                    {{htmlJSON.name}}
                                                 </lable>
                                                 <div class='input-group'>
                                                     <el-input type='text'
@@ -1472,24 +1436,9 @@
                                             <div style="margin-top:10px">
                                                 <lable class='control-label col-sm-2 text-center'
                                                        style='font-weight: bold;'>
-                                                    Image:
+                                                    {{htmlJSON.image}}
                                                 </lable>
-
                                                 <div>
-
-<!--                                                    <img :id="'imgShowApplication'+index"-->
-<!--                                                         src=""-->
-<!--                                                         class="img_Show1"-->
-<!--                                                         style="-->
-<!--                                                                    display: none;-->
-<!--                                                                    border: 1px solid #ccc;-->
-<!--                                                                    width: 100px;-->
-<!--                                                                    height: 100px;-->
-<!--                                                                    text-align: center;-->
-<!--                                                                    float: left;-->
-<!--                                                                    margin-right: 10px;"-->
-<!--                                                         />-->
-
                                                     <img :id="'imgShowApplication'+index"
                                                          v-if="item.imageTag==1"
                                                          :src="'/static'+item.upload_application_image"
@@ -1541,8 +1490,8 @@
 
 
                     <div class="dialogBtnGroups" >
-                        <el-button @click="dialogCancel('Application')">Cancel</el-button>
-                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Application')">Save</el-button>
+                        <el-button @click="dialogCancel('Application')">{{htmlJSON.cancel}}</el-button>
+                        <el-button type="success" style="margin-right: 20px" @click="dialogSave('Application')">{{htmlJSON.save}}</el-button>
 
                     </div>
                 </div>
@@ -1562,10 +1511,16 @@
 <script src="/static/js/common/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/js/common/vue.min.js"></script>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/apidoc/dataApi.js"></script>
 <script src="/static/js/apidoc/modelApi.js"></script>
 <script type="text/javascript" src="/static/js/common/bootstrap-treeview.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+
+
 <script src="/static/js/common/vue-avatar.min.js"></script>
 <!--<script src="/static/js/tinymce/tinymce.min.js"></script>-->
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>

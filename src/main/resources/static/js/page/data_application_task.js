@@ -2,6 +2,68 @@ let vue = new Vue({
     el:'#app',
     data: function (){
         return {
+            htmlJSON:{
+                selectModel:"Select Computable Model",
+                contributedBy:"Contributed by:",
+                loadData:"Load data",
+                invoke:"invoke",
+                introduction:"Introduction",
+                contributedAt:"Contributed at ",
+                isRunning:"A new task of this model is running.",
+                checkinSpace:"Check in my space",
+                datasetForModel:"There is a dataset for you to test this model.",
+                loadTestData:"Load Test Data",
+                ok:"OK",
+                configureExecution:"Configure Execution",
+                showStyle:"Show style:",
+                classic:"Classic",
+                semantics:"Semantics",
+                workFlow:"Work flow",
+                input:"Input",
+                dataType:"Data Type:",
+                publicExample:"Public Example",
+                myTaskData:"My Task Data",
+                user:"User",
+                runTime:"Run Time",
+                description:"Description",
+                operation:"Operation",
+                load:"Load",
+                Parameter:"Parameter",
+                Value:"Value",
+                Type:"Type",
+                EventName:"Event Name",
+                UserDataSpace:"User Data Space",
+                PublicDataCenter:"Public Data Center",
+                Name:"Name :",
+                Datatemplate :"Data template :",
+                Storagepath:"Storage path :",
+                Uploadfiles :"Upload files :",
+                SelectFile:"Select File",
+                file:"file",
+                url:"url",
+                SearchDataItem:"Search Data Item",
+                nameNone:"Name",
+                Contributor:"Contributor",
+                CreateTime:"Create Time",
+                RelatedDataItem:"Related Data Item",
+                Link:"Link",
+                Option:"Option",
+                Cancel:"Cancel",
+                Confirm:"Confirm",
+                SelectFolder:"Select Folder",
+                Addnewfolder:"Add new folder",
+                Output:"Output",
+
+
+                OutputData:"Output Data",
+                Origin:"Origin:",
+                Methodcategory:"Method category:",
+                InputReminder:"Input data, can be used to run data processing services",
+                InputParameterReminder:"Input parameter, can be used to run data processing services",
+                OutputReminder:"Output data, data processing service running result file",
+                Updatedat:"Updated at "
+
+            },
             windowHeight: window.innerHeight,
             applicationInfo:'',
             invokeService:'',
@@ -73,6 +135,10 @@ let vue = new Vue({
         }
     },
     methods:{
+        //翻译
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         initSize() {
             this.windowHeight = document.body.clientHeight - 129;
             console.log(this.windowHeight);
