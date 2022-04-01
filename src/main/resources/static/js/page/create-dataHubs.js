@@ -379,7 +379,7 @@ var createDataHubs = Vue.extend({
         createDataHubs() {
             this.dataItemAddDTO.name = $("#dataname").val();
 
-            this.dataItemAddDTO.description = $("#description").val();
+            this.dataItemAddDTO.overview = $("#description").val();
             // this.dataItemAddDTO.detail=$("#detail").val();
             var detail = tinyMCE.activeEditor.getContent();
             //正则表达匹配<img src="../
@@ -910,9 +910,7 @@ var createDataHubs = Vue.extend({
             $("#subRteTitle").text("/Modify Data Hubs")
 
             // document.title="Modify Data Hubs | OpenGMS"
-            axios.get('/dataItem/getDataHubsByDataId',{params:{
-                    dataId:oid,
-                }}).then(res=>{
+            axios.get('/dataHub/itemInfo/'+oid).then(res=>{
                     const resData = res.data
                     if(resData.code==-1){
                         alert("Please login");

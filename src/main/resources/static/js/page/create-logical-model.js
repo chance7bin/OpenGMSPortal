@@ -305,7 +305,7 @@ var createLogicalModel = Vue.extend({
             }
 
             this.itemInfo.name=basicInfo.name;
-            this.itemInfo.description=basicInfo.description
+            this.itemInfo.description=basicInfo.overview
 
             // $("#nameInput").val(basicInfo.name);
             // $("#descInput").val(basicInfo.description)
@@ -316,7 +316,7 @@ var createLogicalModel = Vue.extend({
 
             itemObj.name=this.itemInfo.name
             itemObj.status=this.itemInfo.status
-            itemObj.description=this.itemInfo.description
+            itemObj.description=this.itemInfo.overview
             itemObj.relateModelItem=this.itemInfo.relateModelItem
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
@@ -716,7 +716,7 @@ var createLogicalModel = Vue.extend({
 
             if(window.localStorage.getItem('draft')==null){
                 $.ajax({
-                    url: "/logicalModel/getInfo/" + oid,
+                    url: "/logicalModel/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
@@ -864,7 +864,7 @@ var createLogicalModel = Vue.extend({
                 });
             }
             else{
-                this.itemInfo.oid=oid;
+                this.itemInfo.id=oid;
                 this.itemInfo.resources=this.resources;
 
                 let file = new File([JSON.stringify(this.itemInfo)],'ant.txt',{
@@ -873,8 +873,8 @@ var createLogicalModel = Vue.extend({
 
                 this.formData.append("logicalModel", file)
                 $.ajax({
-                    url: '/logicalModel/update',
-                    type: 'post',
+                    url: '/logicalModel/'+oid,
+                    type: 'put',
                     data: this.formData,
                     cache: false,
                     processData: false,

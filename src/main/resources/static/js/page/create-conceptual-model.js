@@ -290,7 +290,7 @@ var createConceptualModel = Vue.extend({
             }
 
             this.itemInfo.name=basicInfo.name;
-            this.itemInfo.description=basicInfo.description
+            this.itemInfo.description=basicInfo.overview
 
             // $("#nameInput").val(basicInfo.name);
             // $("#descInput").val(basicInfo.description)
@@ -805,7 +805,7 @@ var createConceptualModel = Vue.extend({
 
             if(window.localStorage.getItem('draft')==null){
                 $.ajax({
-                    url: "/conceptualModel/getInfo/" + oid,
+                    url: "/conceptualModel/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
@@ -956,8 +956,8 @@ var createConceptualModel = Vue.extend({
                 });
                 this.formData.append("conceptualModel",file)
                 $.ajax({
-                    url: '/conceptualModel/update',
-                    type: 'post',
+                    url: '/conceptualModel/'+oid,
+                    type: 'PUT',
                     data: this.formData,
                     cache: false,
                     processData: false,

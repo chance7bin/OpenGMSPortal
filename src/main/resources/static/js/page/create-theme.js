@@ -2044,7 +2044,7 @@ var createTheme = Vue.extend({
 
             var detail = tinyMCE.activeEditor.getContent();
             that.themeObj.detail = detail.trim();
-
+            that.themeObj.status = "Public";
             that.themeObj.uploadImage = $('#imgShow').get(0).currentSrc;
             that.themeObj.tabledata = that.editableTabs_model;
             that.themeObj.themeData = that.themeData;
