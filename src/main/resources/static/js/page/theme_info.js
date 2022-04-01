@@ -45,7 +45,26 @@ var vue = new Vue({
             currentModelName:'',
             currentDataName:'',
             currentDataMethodName:'',
-
+            htmlJSON:{
+                themeinfo:"Theme Info",
+                description:"Description:",
+                save:"Save",
+                cancel:"Cancel",
+                models:"Models",
+                data:"Data",
+                dataMethod:"Data Method",
+                applications:"Applications",
+                maintainers:"Maintainers",
+                enableEditing:"Enable editing",
+                pleaseModel:"Please Select Children Model Class",
+                pleaseData:"Please Select Children Data Class",
+                pleaseDataMethod:"Please Select Children Data Method Class",
+                selectedItems:"Selected Items",
+                addNewApplication:"Add New Application",
+                name:"Name:",
+                image:"Image:",
+                editModel:"Edit Model : "
+            },
             parentNode:false,
             parentdataMethodNode:false,
             parentModelNode:false,
@@ -297,6 +316,10 @@ var vue = new Vue({
         }
     },
     methods: {
+        //翻译
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         // 2021暑期
         // 2021暑期
         // 2021暑期

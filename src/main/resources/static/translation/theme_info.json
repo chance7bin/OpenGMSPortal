@@ -1,0 +1,42 @@
+{
+    "en-us": {
+        "themeinfo":"Theme Info",
+        "description":"Description:",
+        "save":"Save",
+        "cancel":"Cancel",
+        "models":"Models",
+        "data":"Data",
+        "dataMethod":"Data Method",
+        "applications":"Applications",
+        "maintainers":"Maintainers",
+        "enableEditing":"Enable editing",
+        "pleaseModel":"Please Select Children Model Class",
+        "pleaseData":"Please Select Children Data Class",
+        "pleaseDataMethod":"Please Select Children Data Method Class",
+        "selectedItems":"Selected Items",
+        "addNewApplication":"Add New Application",
+        "name":"Name:",
+        "image":"Image:",
+        "editModel":"Edit Model : "
+    },
+    "zh-cn":{
+            "themeinfo":"专题信息",
+            "description":"介绍:",
+            "save":"保存",
+            "cancel":"取消",
+            "models":"模型",
+            "data":"数据",
+            "dataMethod":"数据方法",
+            "applications":"数据应用",
+            "maintainers":"维护者",
+            "enableEditing":"编辑",
+            "pleaseModel":"请选择子模型类别",
+            "pleaseData":"请选择子数据类别",
+            "pleaseDataMethod":"请选择子数据方法类别",
+            "selectedItems":"选择条目",
+            "addNewApplication":"添加新应用",
+            "name":"名称:",
+            "image":"图片:",
+            "editModel":"编辑模型 : "
+    }
+}
