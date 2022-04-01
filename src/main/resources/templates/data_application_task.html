@@ -96,27 +96,27 @@
                         </div>
                         <div>
                             <h3 class="model_title"> {{invokeService.name}}</h3>
-                            <span>Contributed by <span style="cursor: pointer; font-size: 2rem;"
+                            <span>{{htmlJSON.contributedBy}}<span style="cursor: pointer; font-size: 2rem;"
                                                        @click="goPersonCenter(contributorInfo.userId)">{{contributorInfo.name}}</span></span>
                             <br>
                         </div>
                     </div>
                     <div class="btn-list">
                         <el-button plain type="primary" style="min-width: 120px" @click="loadTestData()">
-                            Load Test Data
+                            {{htmlJSON.loadTestData}}
                         </el-button>
 
                         <el-button plain type="primary" style="min-width: 121px" @click="invokeNow()">
-                            <i class="fa fa-hand-spock-o"></i>&nbsp;Invoke
+                            <i class="fa fa-hand-spock-o"></i>&nbsp;{{htmlJSON.invoke}}
                         </el-button>
                     </div>
                     <div class="introContent">
-                        <h4 class="desc-title">Introduction</h4>
+                        <h4 class="desc-title">{{htmlJSON.introduction}}</h4>
                         <div>
                             <p class="desc">{{metaDetail.description}}</p>
                         </div>
                         <br>
-                        <span class="model_date">Updated at <span
+                        <span class="model_date">{{htmlJSON.Updatedat}}<span
                                 style="font-weight: 600">{{dateFormat(applicationInfo.lastModifyTime)}}</span></span>
                     </div>
                 </div>
@@ -128,25 +128,31 @@
                         <el-row class="_title">
                             <el-row type="flex" align="middle">
                                 <i class="fa fa-database"></i>
-                                <p style="font-size: 18px;margin-bottom: 0;margin-left:10px">Configure Execution</p>
+                                <p style="font-size: 18px;margin-bottom: 0;margin-left:10px">{{htmlJSON.configureExecution}}</p>
 
-                                <div style="position:absolute;right:0">
-                                    <span>Origin: </span>
+                                <div style="position:absolute;right:160px">
+                                    <span>{{htmlJSON.Origin}} </span>
                                     <!--                            <el-radio-group v-model="radioStyle">-->
                                     <el-tag v-if="invokeService.isPortal === true" class="classic" label="Portal" style="margin-right:20px">Portal</el-tag>
                                     <el-tag v-if="invokeService.isPortal != true" class="classic" label="Others" style="margin-right:20px">Others</el-tag>
 
-                                    <span>Method category: </span>
+                                    <span>{{htmlJSON.Methodcategory}} </span>
                                     <el-tag class="classic" label="Others" style="margin-right:20px">{{method}}</el-tag>
                                     <!--                            </el-radio-group>-->
                                 </div>
+
+                                <translation-bar
+                                        json-file="task"
+                                        @translate-page="translatePage"
+                                        initial-lang="en-us"
+                                        theme="dark"
+                                        style="position: absolute;right:15px"></translation-bar>
                             </el-row>
                         </el-row>
                         <div class="dataContainer" style="width: 100%">
                             <div class="_params-group"  v-loading="loadingData">
-                                <el-row class="_title">Input</el-row>
+                                <el-row class="_title">{{htmlJSON.input}}</el-row>
                                 <div class="_items">
-<!--                                    <p>{{metaDetail.Input}}</p>-->
                                     <el-row v-for="(item,index) in metaDetail.input">
                                         <el-col :span="11" class="_event-desc">
                                                         <span class="event-name">
@@ -176,13 +182,13 @@
                                     </el-row>
                                     <el-row>
                                         <p title="Input data can be used to run data processing services" class="event-desc">
-                                            Input data, can be used to run data processing services
+                                            {{htmlJSON.InputReminder}}
                                         </p>
                                     </el-row>
                                 </div>
                             </div>
                             <div class="_params-group">
-                                <el-row class="_title">Parameter</el-row>
+                                <el-row class="_title">{{htmlJSON.Parameter}}</el-row>
                                 <div class="_items">
                                     <el-row v-for="(item,index) in metaDetail.parameter">
                                         <el-col :span="11" class="_event-desc">
@@ -193,41 +199,29 @@
                                         </el-col>
                                         <div>
                                             <el-input :placeholder="item.description" v-model="item.value" :disabled="false"></el-input>
-<!--                                            <p>{{item}}</p>-->
-<!--                                            <p>{{metaDetail.Parameter}}</p>-->
-<!--                                            <el-input class="parameter-input" v-model="parameter">-->
-<!--                                            </el-input>-->
                                         </div>
-<!--                                        <div>-->
-<!--                                            <p title="Input parameter can be used to run data processing services" class="event-desc">-->
-<!--                                                {{item.description}}-->
-<!--                                            </p>-->
-<!--                                        </div>-->
                                     </el-row>
                                     <el-row>
                                         <p title="Input parameter can be used to run data processing services" class="event-desc">
-                                            Input parameter, can be used to run data processing services
+                                            {{htmlJSON.InputParameterReminder}}
                                         </p>
                                     </el-row>
                                 </div>
                             </div>
                             <div class="_params-group">
-                                <el-row class="_title">Output</el-row>
+                                <el-row class="_title">{{htmlJSON.Output}}</el-row>
                                 <div class="_items">
                                     <el-row>
                                         <el-col :span="6" class="_event-desc">
                                                         <span class="event-name">
                                                             <span style="color:red">*</span>
-                                                            Output Data
+                                                            {{htmlJSON.OutputData}}
                                                         </span>
                                         </el-col>
 
                                         <div>
-<!--                                            <el-col :span="6" :offset="1">-->
-<!--                                                <el-input class="data-input"  placeholder="Output Data" v-model="outPutData" :disabled="true">-->
-<!--                                                </el-input>-->
-<!--                                            </el-col>-->
-                                            <span style="margin-right: 20px;">{{outPutData.length}} Output Datas</span>
+
+                                            <span style="margin-right: 20px;">{{outPutData.length}} {{htmlJSON.OutputData}}</span>
                                             <el-select v-model="value" placeholder="Output Data" no-data-text="No Output Data" @change="selectChanged">
                                                 <el-option
                                                         v-for="item in outPutData"
@@ -260,13 +254,13 @@
                                     </el-row>
                                     <el-row>
                                         <p title="Output data, data processing service running result file" class="event-desc">
-                                            Output data, data processing service running result file
+                                            {{htmlJSON.OutputReminder}}
                                         </p>
                                     </el-row>
                                 </div>
                             </div>
                             <el-button plain type="primary" style="min-width: 121px;float: right;margin-right: 20px" @click="invokeNow()">
-                                <i class="fa fa-hand-spock-o"></i>&nbsp;Invoke
+                                <i class="fa fa-hand-spock-o"></i>&nbsp;{{htmlJSON.invoke}}
                             </el-button>
                         </div>
                         <!--                    </el-row>-->
@@ -279,32 +273,8 @@
 <!--    <div th:replace="fragments/footer :: footer"></div>-->
     <div th:replace="fragments/footer :: footer-mini"></div>
 
-    <!--    <el-dialog-->
-<!--            v-loading="loading"-->
-<!--        title="Invoke"-->
-<!--        :visible.sync="invokeDialog"-->
-<!--        width="80%">-->
-<!--    <el-card>-->
-<!--        <div class="" style="display: inline-block;width: 60%;">-->
-<!--            <p style="font-weight: 600">XML description of visualization:</p><br>-->
-<!--            <pre v-if="xml" lang="xml">{{xml}}</pre>-->
-<!--        </div>-->
-<!--        <div class="" style="display: inline-block;float: right;width: 35%">-->
-<!--            <p style="font-weight: 600">Parameters to be filled in:</p><br>-->
-<!--            <div class="" v-for = "(para,i) in parameters" v-if="parameters.length != 0">-->
-<!--                <p>{{para}}</p>-->
-<!--                <input type="text" autocomplete="off" v-model="parameter" placeholder="Please enter the content" :id ="para" class="el-input__inner">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </el-card>-->
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--        <el-button @click="invokeDialog = false">Cancel</el-button>-->
-<!--        <el-button type="primary" @click = "invokeNow()">Invoke Now</el-button>-->
-<!--    </span>-->
-<!--    </el-dialog>-->
-
     <el-dialog
-            title="Load Data"
+            :title="htmlJSON.loadData"
             :visible.sync="loadDataVisible"
             width="80%">
                 <user-data
@@ -314,8 +284,8 @@
                         ref="userDataSpace" style="height: 505px;">
                 </user-data>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="loadDataVisible = false">Cancel</el-button>
-            <el-button @click="confirmData(),loadDataVisible = false" type="success">Confirm</el-button>
+            <el-button @click="loadDataVisible = false">{{htmlJSON.Cancel}}</el-button>
+            <el-button @click="confirmData(),loadDataVisible = false" type="success">{{htmlJSON.Confirm}}</el-button>
         </span>
     </el-dialog>
 
@@ -330,7 +300,7 @@
             <iframe :src="visualPath" width="100%" height="100%"></iframe>
         </span>
         <span slot="footer" class="dialog-footer">
-    <el-button @click="visualization = false">Cancel</el-button>
+    <el-button @click="visualization = false">{{htmlJSON.Cancel}}</el-button>
 <!--    <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>-->
         </span>
     </el-dialog>
@@ -355,9 +325,9 @@
                     <span slot="footer" class="dialog-footer">
                                         <el-button class="pull-left" type="primary" icon="el-icon-folder-add"
                                                    @click="addFolderinTree(2)">Add new folder</el-button>
-                                        <el-button @click="addOutputToMyDataVisible = false">Cancel</el-button>
+                                        <el-button @click="addOutputToMyDataVisible = false">{{htmlJSON.Cancel}}</el-button>
                                         <el-button type="primary"
-                                                   @click="addOutputToMyDataConfirm()">OK</el-button>
+                                                   @click="addOutputToMyDataConfirm()">{{htmlJSON.ok}}</el-button>
                     </span>
     </el-dialog>
 </div>
@@ -374,6 +344,10 @@
 <script src="/static/js/mxGraph/js/mxClient.js"></script>
 <script src="/static/js/mxGraph/js/ogmsDiagram.js"></script>
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/common/clipboard.min.js"></script>
 <script src="/static/js/common/bootstrap.js"></script>

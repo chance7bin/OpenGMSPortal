@@ -22,6 +22,8 @@
     <link rel="stylesheet" type="text/css" href="/static/js/graphEditor/styles/grapheditor.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
     <style>
         .img img {
             width: 90px;
@@ -50,7 +52,13 @@
     <div th:replace="fragments/backToTop :: backtop-down"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
-
+        <translation-bar
+                json-file="all_model_info"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title">
@@ -108,9 +116,9 @@
             <div id="Contributor0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
                         </el-tooltip>
                     </div>
@@ -178,7 +186,7 @@
                  th:if="${#lists.size(itemInfo.imageList)!=0 || itemInfo.contentType=='MxGraph'}">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Graph</h4>
+                        <h4>{{htmlJSON.graph}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-top:20px;">
@@ -227,7 +235,7 @@
             <div id="related_models" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Relate Model Item</h4>
+                        <h4>{{htmlJSON.RelateModelItem}}</h4>
                     </div>
                 </div>
                 <div class="block_content flex">
@@ -258,7 +266,7 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -274,7 +282,7 @@
                         </a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        Copy
+                        {htmlJSON.Copy}
                     </div>
                 </div>
             </div>
@@ -282,12 +290,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
                     </div>
                 </div>
             </div>
@@ -345,7 +353,7 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
@@ -444,7 +452,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -606,14 +614,22 @@
 <script th:inline="javascript">
     var author=[[${user}]];
 </script>
+
 <script src="/static/js/common/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
 <script type="text/javascript" src="/static/iCheck/jquery.icheck.min.js"></script>
 <script src="/static/js/common/md5.js"></script>
+
+
 <script src="/static/js/common/vue.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/common/qrcode.min.js"></script>
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/js/modules/userAvatar.js"></script>

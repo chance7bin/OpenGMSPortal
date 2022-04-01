@@ -48,7 +48,13 @@
     <div th:replace="fragments/backToTop :: backtop-down"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
-
+        <translation-bar
+                json-file="all_model_info"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col">
             <div class="detail">
                 <div class="detail_title">
@@ -124,7 +130,7 @@
 
 
                             <button th:if="${itemInfo.deploy==true||itemInfo.contentType=='MD5'}" class="btn btn-lg btn-success" type="button" style="font-size: 18px;vertical-align: initial;margin-right:10px;"
-                                    @click="invoke()">Invoke
+                                    @click="invoke()">{{htmlJSON.Invoke}}
                             </button>
 
 
@@ -155,9 +161,9 @@
             <div id="Contributor0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
                         </el-tooltip>
                     </div>
@@ -236,7 +242,7 @@
                  th:if="${(itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Resource</h4>
+                        <h4>{{htmlJSON.Resource}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="margin-right: 0;">
@@ -320,14 +326,14 @@
             <div id="MDL" class="detail_block" th:if="${mdlJson}!=null">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px; padding-right: 15px; display: inline-flex">
-                        <h4>MDL Description</h4>
+                        <h4>{{htmlJSON.MDLDescription}}</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light" content="Supported by Model Description Language (MDL)" placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
                         </el-tooltip>
                     </div>
                 </div>
                 <el-tabs class="block_content" v-model="activeName" type="border-card" stretch="true">
-                    <el-tab-pane label="AttributeSet" name="AttributeSet">
+                    <el-tab-pane :label="htmlJSON.AttributeSet" name="AttributeSet">
                         <table class="table table-bordered text-center">
                             <colgroup>
                                 <col class="col1" style="width: 30%">
@@ -335,13 +341,13 @@
                             </colgroup>
                             <tbody>
                             <tr>
-                                <td style="font-weight: bold;">Style</td>
+                                <td style="font-weight: bold;">{{htmlJSON.Style}}</td>
                                 <td th:text="${itemInfo.mdlJson.ModelClass[0].style}"></td>
                             </tr>
                             <tr th:each="category,key:${itemInfo.mdlJson.ModelClass[0].AttributeSet[0].Categories[0].Category}">
                                 <td style="font-weight: bold;" th:if="${key.index}==0"
                                     th:attr="rowspan=${#lists.size(itemInfo.mdlJson.ModelClass[0].AttributeSet[0].Categories[0].Category)}">
-                                    Categories
+                                    {{htmlJSON.Categories}}
                                 </td>
                                 <td th:text="${category.principle}+' / '+${category.path}"></td>
                             </tr>
@@ -357,74 +363,68 @@
                             </colgroup>
                             <tbody>
                             <tr th:if="${local.local!=''}">
-                                <td style="font-weight: bold;">Language</td>
+                                <td style="font-weight: bold;">{{htmlJSON.Language}}</td>
                                 <td colspan="2" th:text="${local.local}"></td>
                             </tr>
                             <tr th:if="${local.localName!=''}">
-                                <td style="font-weight: bold;">Name</td>
+                                <td style="font-weight: bold;">{{htmlJSON.Name}}</td>
                                 <td colspan="2" th:text="${local.localName}"></td>
                             </tr>
                             <tr th:if="${local.Keywords!=''}">
-                                <td style="font-weight: bold;">Keywords</td>
+                                <td style="font-weight: bold;">{{htmlJSON.Keywords}}</td>
                                 <td colspan="2" th:text="${local.Keywords}"></td>
                             </tr>
                             <tr th:if="${local.Abstract!=''}">
-                                <td style="font-weight: bold;">Abstract</td>
+                                <td style="font-weight: bold;">{{htmlJSON.Abstract}}</td>
                                 <td colspan="2" th:text="${local.Abstract}"></td>
                             </tr>
                             <tr th:if="${local.wiki!=''}">
-                                <td style="font-weight: bold;">Wiki</td>
+                                <td style="font-weight: bold;">{{htmlJSON.Wiki}}</td>
                                 <td colspan="2" th:text="${local.wiki}"></td>
                             </tr>
-                            <!--<div th:if="${itemInfo.mdlJson.ModelClass[0].AttributeSet[0].LocalAttributes[0].LocalAttribute[key.index].Mechanism}!=null">-->
-                            <!--<tr th:each="mechanism,key:${local.Mechanism}">-->
-                            <!--<td th:if="${key.index}==0" th:attr="rowspan=${#lists.size(local.Mechanism)}">Mechanism</td>-->
-                            <!--<td th:text="${mechanism.name}"></td>-->
-                            <!--<td th:text="${mechanism.value}"></td>-->
-                            <!--</tr>-->
-                            <!--</div>-->
                             </tbody>
                         </table>
                     </el-tab-pane>
-                    <el-tab-pane label="Behavior" name="Behavior">
-                        <el-button style="position: absolute; z-index: 900" @click="showMxGraph()"> Show Detail
+                    <el-tab-pane :label="htmlJSON.Behavior" name="Behavior">
+                        <el-button style="position: absolute; z-index: 900" @click="showMxGraph()"> {{htmlJSON.ShowDetail}}
                         </el-button>
                         <div id="mxGraphContainer"></div>
                     </el-tab-pane>
-                    <el-tab-pane label="Runtime" name="Runtime">
+                    <el-tab-pane :label="htmlJSON.Runtime" name="Runtime">
                         <table id="runtime_table" class="table table-bordered text-center">
                             <thead>
                             <tr>
-                                <th class="text-center">Type</th>
-                                <th class="text-center">Property</th>
-                                <th class="text-center">Value</th>
+                                <th class="text-center">{{htmlJSON.Type}}</th>
+                                <th class="text-center">{{htmlJSON.Property}}</th>
+                                <th class="text-center">{{htmlJSON.Value}}</th>
                             </tr>
                             </thead>
                             <tbody>
                             <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].HardwareConfigures}!=''">
                                 <tr th:each="hardware,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].HardwareConfigures[0].Add}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">HardwareConfigures</td>
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.HardwareConfigures}}</td>
+
                                     <td th:text="${hardware.key}"></td>
                                     <td th:text="${hardware.value}"></td>
                                 </tr>
                             </div>
                             <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].SoftwareConfigures}!=''">
                                 <tr th:each="software,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].SoftwareConfigures[0].Add}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">SoftwareConfigures</td>
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.SoftwareConfigures}}</td>
                                     <td th:text="${software.key}"></td>
                                     <td th:text="${software.value}"></td>
                                 </tr>
                             </div>
                             <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].Assemblies}!=''">
                                 <tr th:each="assembly,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].Assemblies[0].Assembly}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">Assemblies</td>
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.Assemblies}}</td>
                                     <td th:text="${assembly.name}"></td>
                                     <td th:text="${assembly.path}"></td>
                                 </tr>
                             </div>
                             <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].SupportiveResources}!=''">
                                 <tr th:each="support,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].SupportiveResources[0].Add}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">SupportiveResources</td>
+                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.SupportiveResources}}</td>
                                     <td th:text="${support.type}"></td>
                                     <td th:text="${support.name}"></td>
                                 </tr>
@@ -439,28 +439,10 @@
 
             <div th:replace="fragments/itemInfoModules :: description"></div>
 
-            <!--<div id="description" class="detail_block" th:if="${itemInfo.detail!=null&&itemInfo.detail!=''}">-->
-                <!--<div class="block_head">-->
-                    <!--<div class="head_text">-->
-                        <!--<h4>Detailed Description</h4>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="block_content">-->
-                    <!--<div th:utext="${itemInfo.detail}" id="detail" class="detailIntroducePanel">-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="fullPaper text-center hide">-->
-                    <!--<a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i-->
-                            <!--class="fa fa-angle-down"-->
-                            <!--style="margin-left: 10px;color:red;font-weight: bold"-->
-                            <!--aria-hidden="true"></i></a>-->
-                <!--</div>-->
-            <!--</div>-->
-
             <div id="related_models" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Related Model Item</h4>
+                        <h4>{{htmlJSON.RelatedModelItem}}</h4>
                     </div>
                 </div>
                 <div class="block_content flex">
@@ -476,7 +458,7 @@
 
                         <div class="info" style="margin-top:0px;">
                             <a th:href="'/modelItem/'+${relateModelItem.id}"
-                               th:text="${relateModelItem.name}">Ground Water Flow System</a>
+                               th:text="${relateModelItem.name}">{{htmlJSON.GroundWaterFlowSystem}}</a>
 
                             <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial
                                 neural network method to extract
@@ -491,7 +473,7 @@
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -509,7 +491,7 @@
                         </a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        Copy
+                        {{htmlJSON.Copy}}
                     </div>
                 </div>
             </div>
@@ -517,12 +499,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
                     </div>
                 </div>
             </div>
@@ -560,7 +542,7 @@
             <div id="QR0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -578,9 +560,9 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
                         <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
+                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
                         </el-tooltip>
                     </div>
@@ -683,7 +665,7 @@
             <div id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -817,13 +799,19 @@
     console.log([[${mdlJson}]])
 </script>
 
+
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
 <script type="text/javascript" src="/static/iCheck/jquery.icheck.min.js"></script>
 <script src="/static/js/common/md5.js"></script>
+
+
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/js/common/vue.min.js"></script>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
 <script src="/static/js/common/qrcode.min.js"></script>

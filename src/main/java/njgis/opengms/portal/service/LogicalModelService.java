@@ -173,7 +173,7 @@ public class LogicalModelService {
 
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("conceptual_model");
+        modelAndView.setViewName("logical_model");
         modelAndView.addObject("itemInfo", logicalModelInfo);
         modelAndView.addObject("detailLanguage",detailLanguage);
         modelAndView.addObject("languageList", languageList);

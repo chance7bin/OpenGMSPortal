@@ -2,6 +2,7 @@ new Vue({
     el: '#app',
     data: function () {
         return {
+            htmlJSON:{},
             useroid:"",
             userId:"",
             userImg:"",
@@ -23,6 +24,9 @@ new Vue({
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         changeDetailLanguage(command){
             this.currentDetailLanguage = command;
             let data = {

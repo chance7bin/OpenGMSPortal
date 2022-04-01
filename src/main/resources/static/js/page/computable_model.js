@@ -2,6 +2,7 @@ new Vue({
     el: '#app',
     data: function () {
         return {
+            htmlJSON:{},
             lightenContributor:{},
             activeIndex:'3-3',
             activeName: 'AttributeSet',
@@ -139,6 +140,9 @@ new Vue({
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         changeDetailLanguage(command){
             this.currentDetailLanguage = command;
             let data = {
