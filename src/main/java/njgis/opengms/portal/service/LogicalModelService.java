@@ -361,9 +361,21 @@ public class LogicalModelService {
                 logicalModel.setImageList(images);
                 logicalModel.setStatus(jsonObject.getString("status"));
                 logicalModel.setName(jsonObject.getString("name"));
-                logicalModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+//                logicalModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+//                logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+//                logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                Localization localization = new Localization();
+                localization.setLocalCode("en");
+                localization.setLocalName("English");
+                localization.setName(jsonObject.getString("name"));
+                localization.setDescription(jsonObject.getString("detail"));
+                List<Localization> list = new ArrayList<>();
+                list.add(localization);
+                logicalModel.setLocalizationList(list);
                 logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-                logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                // logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
+
                 logicalModel.setOverview(jsonObject.getString("description"));
                 logicalModel.setContentType(jsonObject.getString("contentType"));
                 logicalModel.setCXml(jsonObject.getString("cXml"));

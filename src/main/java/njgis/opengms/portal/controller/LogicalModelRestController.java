@@ -106,7 +106,7 @@ public class LogicalModelRestController {
     public JsonResult updateConcept(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         List<MultipartFile> files=multipartRequest.getFiles("imgFiles");
-        MultipartFile file=multipartRequest.getFile("conceptualModel");
+        MultipartFile file=multipartRequest.getFile("logicalModel");
         String model=IOUtils.toString(file.getInputStream(),"utf-8");
         JSONObject jsonObject=JSONObject.parseObject(model);
         HttpSession session=request.getSession();

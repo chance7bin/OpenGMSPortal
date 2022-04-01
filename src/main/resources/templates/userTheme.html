@@ -97,7 +97,7 @@
                                         <div class="flexColCenter w100">
                                             <a class="w100" :href="'/repository/theme/'+theme.id"
                                                @click="setSession('themeInfo_id',theme.model_oid)">
-                                                <h4 class="itemTitle">{{theme.themename}}</h4></a>
+                                                <h4 class="itemTitle">{{theme.name}}</h4></a>
                                         </div>
 
                                     </div>
@@ -131,13 +131,13 @@
                                         <div class="flexRow " style="width: 100%;">
                                             <div class="content_w100" style="padding-top: 20px">
                                                 <div class="flexJustStart flexAlignStrench overviewContainer" style="">
-                                                    <div>
-                                                        <b style="margin-right: 25px;">Overview:</b>
-                                                    </div>
-                                                    <div>
-                                                        <p class="threeLine" style="">{{theme.description}}</p>
-                                                    </div>
-                                                </div>
+<!--                                                    <div>-->
+<!--                                                        <b style="margin-right: 25px;">Overview:</b>-->
+<!--                                                    </div>-->
+<!--                                                    <div>-->
+<!--                                                        <p class="threeLine" style="">{{theme.overview}}</p>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
                                                 <p><b style="margin-right: 3px">Create Time:</b> {{formatDate(theme.createTime)}}</p>
                                             </div>
 

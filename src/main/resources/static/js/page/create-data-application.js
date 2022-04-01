@@ -650,6 +650,9 @@ var createDataApplication = Vue.extend({
                     //         offset: 70,
                     //     });
                     //     return false;
+
+
+                        //wyj data application 不显示overview 这里和上边，我把description改成overview字段，但是报错null
                     } else if (this.dataApplication.description.trim() == "") {
                         new Vue().$message({
                             message: 'Please enter overview!',

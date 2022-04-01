@@ -198,7 +198,7 @@ var createDataItem = Vue.extend({
 
             this.dataItemAddDTO.name = $("#dataname").val();
 
-            this.dataItemAddDTO.description = $("#description").val();
+            this.dataItemAddDTO.overview = $("#description").val();
             // this.dataItemAddDTO.detail=$("#detail").val();
             var detail = tinyMCE.activeEditor.getContent();
             this.dataItemAddDTO.detail = detail;
@@ -706,9 +706,7 @@ var createDataItem = Vue.extend({
             $("#subRteTitle").text("/Modify Data Item")
 
             document.title="Modify Data Item | OpenGMS"
-            axios.get('/dataItem/getDataItemByDataId',{params:{
-                dataId:oid,
-            }}).then(res=>{
+            axios.get('/dataItem/itemInfo/'+oid).then(res=>{
                 const resData = res.data
                 if(resData.code==-1){
                     alert("Please login");
@@ -730,7 +728,7 @@ var createDataItem = Vue.extend({
                     //清空
                     // $("#classification").val('')
                     $("#dataname").val(data.name);
-                    $("#description").val(data.description);
+                    $("#description").val(data.overview);
                     $("#keywords").tagEditor('destory');
                     $("#keywords").tagEditor({
                         initialTags: data.keywords,

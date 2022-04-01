@@ -620,7 +620,7 @@ var createModelItem = Vue.extend({
                 modelItemObj.alias = [];
             }
             modelItemObj.keywords = $("#tagInput").val().split(",");
-            modelItemObj.description = $("#descInput").val();
+            modelItemObj.overview = $("#descInput").val();
             // modelItemObj.uploadImage = $('#imgShow').get(0).currentSrc;
             modelItemObj.uploadImage = this.itemInfo.image;
             modelItemObj.relate = this.itemInfo.relate;
@@ -837,7 +837,7 @@ var createModelItem = Vue.extend({
         },
 
         insertInfo(basicInfo){
-            this.cls = basicInfo.classifications2;
+            this.cls = basicInfo.classifications;
             this.cls = this.cls == null?[]:this.cls;
             this.status = basicInfo.status;
 
@@ -919,7 +919,7 @@ var createModelItem = Vue.extend({
             this.insertMetaData(metadata)
 
             $("#nameInput").val(basicInfo.name);
-            $("#descInput").val(basicInfo.description);
+            $("#descInput").val(basicInfo.overview);
             this.itemName=basicInfo.name
             //image
             // if (basicInfo.uploadImage != "") {
@@ -1631,7 +1631,7 @@ var createModelItem = Vue.extend({
             // document.title="Modify Model Item | OpenGMS"
             if(window.localStorage.getItem('draft')==null){
                 $.ajax({
-                    url: "/modelItem/getInfo/" + oid,
+                    url: "/modelItem/info/" + oid,
                     type: "get",
                     data: {},
 
@@ -1943,7 +1943,7 @@ var createModelItem = Vue.extend({
             } else {
 
                 modelItemObj["oid"] = oid;
-
+                modelItemObj["originId"] = oid;
                 let file = new File([JSON.stringify(modelItemObj)],'ant.txt',{
                     type: 'text/plain',
                 });

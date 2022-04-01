@@ -175,6 +175,8 @@ public class ThemeService {
 
     public Theme insertTheme(ThemeDTO themeAddDTO, String email){
 
+
+
         List<Maintainer> maintainers = new ArrayList<>();
         Maintainer maintainer = new Maintainer();
         maintainer.setName(themeAddDTO.getCreator_name());
@@ -189,8 +191,9 @@ public class ThemeService {
         themeAddDTO.setMaintainer(maintainers);
 
         Theme theme = new Theme();
-        theme = (Theme) repositoryService.commonInsertPart(theme,themeAddDTO, email, ItemTypeEnum.Theme);
 
+        theme = (Theme) repositoryService.commonInsertPart(theme,themeAddDTO, email, ItemTypeEnum.Theme);
+        theme.setName(themeAddDTO.getThemename());
         if (themeAddDTO.getDetail() != null)
             theme.setLocalizationList(genericService.detail2localization(theme.getThemename(),themeAddDTO.getDetail()));
 
