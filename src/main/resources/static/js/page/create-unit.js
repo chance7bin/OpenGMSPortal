@@ -370,7 +370,7 @@ var createUnit =Vue.extend({
 
             $("#nameInput").val(basicInfo.name);
 
-            $("#descInput").val(basicInfo.description);
+            $("#descInput").val(basicInfo.overview);
 
 
 

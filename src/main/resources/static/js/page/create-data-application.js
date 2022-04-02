@@ -501,7 +501,7 @@ var createDataApplication = Vue.extend({
             // document.title="Modify Data Application | OpenGMS";
             let that = this
             $.ajax({
-                url: "/dataMethod/getInfo/" + oid,
+                url: "/dataMethod/method/" + oid,
                 type: "get",
                 data: {},
 
@@ -611,7 +611,7 @@ var createDataApplication = Vue.extend({
                     }
 
                     that.dataApplication.name=basicInfo.name;
-                    that.dataApplication.description=basicInfo.description
+                    that.dataApplication.description=basicInfo.overview
 
                     // $("#nameInput").val(basicInfo.name);
                     // $("#descInput").val(basicInfo.description)
@@ -779,7 +779,7 @@ var createDataApplication = Vue.extend({
                 console.log(res.data);
             })
             this.dataApplication.packagePathContainer = this.packagePathContainer;
-
+            this.dataApplication.overview = this.dataApplication.description
             //暂时注释一下，过会解开
             if ((oid === "0") || (oid === "") || (oid == null)) {
 

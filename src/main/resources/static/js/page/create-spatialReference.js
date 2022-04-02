@@ -385,7 +385,7 @@ var createSpatialReference = Vue.extend({
             $("#wknameInput").val(basicInfo.wkname);
             $("#wktInput").val(basicInfo.wkt);
             $("#nameInput").val(basicInfo.name);
-            $("#descInput").val(basicInfo.description);
+            $("#descInput").val(basicInfo.overview);
 
             //image
             if (basicInfo.image != "") {
