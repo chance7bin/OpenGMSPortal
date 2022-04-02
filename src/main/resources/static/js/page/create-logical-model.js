@@ -211,10 +211,16 @@ var createLogicalModel = Vue.extend({
                 modelItem = await this.getBindModelInfo(basicInfo.relateModelItem)
             }
 
-            this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
-            this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
 
-            $("#search-box").val(basicInfo.relateModelItemName)
+            // this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
+            // this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
+            //
+            // $("#search-box").val(basicInfo.relateModelItemName)
+            //wyj 更新logical model时 选中原来选择的模型
+            this.itemInfo.relateModelItemName = basicInfo.relatedModelItemInfoList[0].name
+            this.itemInfo.relateModelItem = basicInfo.relatedModelItemInfoList[0].id
+
+            $("#search-box").val(basicInfo.relatedModelItemInfoList[0].name)
 
             this.itemInfo.status=basicInfo.status;
 
@@ -233,7 +239,9 @@ var createLogicalModel = Vue.extend({
 
             //detail
 
-            $("#logicalModelText").html(basicInfo.detail);
+            // $("#logicalModelText").html(basicInfo.detail);
+            $("#logicalModelText").html(basicInfo.localizationList[0].description);
+
 
             initTinymce('textarea#logicalModelText')
 
@@ -316,7 +324,7 @@ var createLogicalModel = Vue.extend({
 
             itemObj.name=this.itemInfo.name
             itemObj.status=this.itemInfo.status
-            itemObj.description=this.itemInfo.overview
+            itemObj.description=this.itemInfo.description
             itemObj.relateModelItem=this.itemInfo.relateModelItem
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
@@ -815,7 +823,9 @@ var createLogicalModel = Vue.extend({
                     async: true
                 }).done((res)=> {
                     loading.close();
+
                     switch (res.data.code) {
+
                         case 1:
                             this.deleteDraft()
                             this.$confirm('<div style=\'font-size: 18px\'>Create logical model successfully!</div>', 'Tip', {

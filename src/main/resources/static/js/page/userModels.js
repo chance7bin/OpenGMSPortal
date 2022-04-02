@@ -613,10 +613,7 @@ var userModels = Vue.extend(
 
                                 $.ajax({
                                     type: "DELETE",
-                                    url: urls[a],
-                                    data: {
-                                        id: oid
-                                    },
+                                    url: urls[a]+oid,
                                     cache: false,
                                     async: true,
                                     dataType: "json",
