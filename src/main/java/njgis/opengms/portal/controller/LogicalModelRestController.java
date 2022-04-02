@@ -103,7 +103,7 @@ public class LogicalModelRestController {
             @ApiImplicitParam(name="info",value="更新item的json文件",required=true,paramType="form",dataType="__file")
     })
     @PutMapping(value = "/{id}",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
-    public JsonResult updateConcept(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
+    public JsonResult updateLogicalModel(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         List<MultipartFile> files=multipartRequest.getFiles("imgFiles");
         MultipartFile file=multipartRequest.getFile("logicalModel");

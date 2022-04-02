@@ -125,7 +125,7 @@ public class ModelItemRestController {
     @LoginRequired
     @ApiOperation(value = "创建模型条目", notes = "@LoginRequired\n之前因为玄武盾封锁，需要以文件的形式将条目信息传入")
     @RequestMapping(value="/",method = RequestMethod.POST)
-    public JsonResult addModelItem(HttpServletRequest request) throws IOException {
+    public JsonResult addModelItem(HttpServletRequest request) throws IOException, NoSuchFieldException, IllegalAccessException {
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file=multipartRequest.getFile("info");

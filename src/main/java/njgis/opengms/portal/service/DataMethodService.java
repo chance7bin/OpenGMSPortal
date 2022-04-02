@@ -894,7 +894,7 @@ public class DataMethodService {
         JSONObject result = new JSONObject();
         DataMethod dataMethod = dataMethodDao.findFirstById(id);
         String originalItemName = dataMethod.getName();
-
+        List<String> versions = dataMethod.getVersions();
         if (!dataMethod.isLock()) {
 
             //如果修改者不是作者的话把该条目锁住送去审核
@@ -902,6 +902,15 @@ public class DataMethodService {
             if (!dataMethod.getAuthor().equals(email)){
                 dataMethod.setLock(true);
                 dataMethodDao.save(dataMethod);
+            } else {
+                if (versions == null || versions.size() == 0) {
+
+                    Version version = versionService.addVersion(dataMethod, email, dataMethod.getName());
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    dataMethod.setVersions(versions);
+                }
             }
 
 
@@ -960,21 +969,24 @@ public class DataMethodService {
             dataMethod.setLastModifyTime(now);
             dataMethod.setLastModifier(email);
 
+            Version new_version = versionService.addVersion(dataMethod, email,originalItemName);
             if (dataMethod.getAuthor().equals(email)) {
+                versions.add(new_version.getId());
+                dataMethod.setVersions(versions);
                 dataMethodDao.save(dataMethod);
                 result.put("method", "update");
                 result.put("id", dataMethod.getId());
             } else {
-                Version version = versionService.addVersion(dataMethod, email,originalItemName);
+
                 //发送通知
-                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), ItemTypeEnum.Version,version.getId(), OperationEnum.Edit);
+                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), ItemTypeEnum.Version,new_version.getId(), OperationEnum.Edit);
 //                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
 //                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
 //                recipientList = noticeService.addPortalAdmins(recipientList);
 //                recipientList = noticeService.addPortalRoot(recipientList);
 //                noticeService.sendNoticeContains(email, OperationEnum.Edit,version.getId(),recipientList);
                 result.put("method", "version");
-                result.put("versionId", version.getId());
+                result.put("versionId", new_version.getId());
                 return result;
             }
 

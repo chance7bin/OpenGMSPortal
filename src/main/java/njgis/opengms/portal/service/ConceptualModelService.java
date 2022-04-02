@@ -12,7 +12,9 @@ import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.dto.model.ConceptualModelResultDTO;
 import njgis.opengms.portal.entity.po.ConceptualModel;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ArrayUtils;
 import njgis.opengms.portal.utils.MxGraphUtils;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -50,6 +52,12 @@ public class ConceptualModelService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
 
     @Value("${htmlLoadPath}")
     String htmlLoadPath;
@@ -257,8 +265,8 @@ public class ConceptualModelService {
             conceptualModel.setLocalizationList(list);
 
             conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-            // conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
-            conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
+            conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            // conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
             conceptualModel.setOverview(jsonObject.getString("description"));
             conceptualModel.setContentType(jsonObject.getString("contentType"));
             conceptualModel.setCXml(jsonObject.getString("cXml"));
@@ -318,13 +326,26 @@ public class ConceptualModelService {
      * @Date 21/10/14
      **/
     public JSONObject update(List<MultipartFile> files, JSONObject jsonObject, String email) {
-        ConceptualModel conceptualModel_ori = conceptualModelDao.findFirstById(jsonObject.getString("id"));
-        String author0 = conceptualModel_ori.getAuthor();
-        ConceptualModel conceptualModel = new ConceptualModel();
-        BeanUtils.copyProperties(conceptualModel_ori, conceptualModel);
-
+        ConceptualModel conceptualModel = conceptualModelDao.findFirstById(jsonObject.getString("id"));
+        String author0 = conceptualModel.getAuthor();
+        List<String> versions = conceptualModel.getVersions();
+        String originalItemName = conceptualModel.getName();
         JSONObject result = new JSONObject();
-        if (!conceptualModel_ori.isLock()) {
+        if (!conceptualModel.isLock()) {
+
+            if (author0.equals(email)) {
+                if (versions == null || versions.size() == 0) {
+
+                    Version version = versionService.addVersion(conceptualModel, email, originalItemName);
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    conceptualModel.setVersions(versions);
+                }
+            }else{
+                conceptualModel.setLock(true);
+                conceptualModelDao.save(conceptualModel);
+            }
 
             String path = resourcePath + "/conceptualModel";
             List<String> images = new ArrayList<>();
@@ -360,60 +381,44 @@ public class ConceptualModelService {
                 conceptualModel.setImageList(images);
                 conceptualModel.setStatus(jsonObject.getString("status"));
                 conceptualModel.setName(jsonObject.getString("name"));
-                conceptualModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+                // conceptualModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+                // conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                // conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                Localization localization = new Localization();
+                localization.setLocalCode("en");
+                localization.setLocalName("English");
+                localization.setName(jsonObject.getString("name"));
+                localization.setDescription(jsonObject.getString("detail"));
+                List<Localization> list = new ArrayList<>();
+                list.add(localization);
+                conceptualModel.setLocalizationList(list);
                 conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                // conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
                 conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+
                 conceptualModel.setOverview(jsonObject.getString("description"));
                 conceptualModel.setContentType(jsonObject.getString("contentType"));
                 conceptualModel.setCXml(jsonObject.getString("cXml"));
                 conceptualModel.setSvg(jsonObject.getString("svg"));
-                conceptualModel.setAuthor(email);
+                Date curDate = new Date();
+                conceptualModel.setLastModifyTime(curDate);
+                conceptualModel.setLastModifier(author0);
 
-//                if (isAuthor) {
-//                    conceptualModel.setRealAuthor(null);
-//                } else {
-//                    AuthorInfo authorInfo = new AuthorInfo();
-//                    authorInfo.setName(jsonObject.getJSONObject("author").getString("name"));
-//                    authorInfo.setIns(jsonObject.getJSONObject("author").getString("ins"));
-//                    authorInfo.setEmail(jsonObject.getJSONObject("author").getString("email"));
-//                    conceptualModel.setRealAuthor(authorInfo);
-//                }
-
-
-                Date now = new Date();
-
-                String authorUserName = author0;
+                Version version_new = versionService.addVersion(conceptualModel, email, originalItemName);
                 if (author0.equals(email)) {
-                    conceptualModel.setLastModifyTime(now);
+                    versions.add(version_new.getId());
+                    conceptualModel.setVersions(versions);
                     conceptualModelDao.save(conceptualModel);
 
                     result.put("method", "update");
-                    result.put("code", 1);
                     result.put("id", conceptualModel.getId());
 
                 } else {
-                    //TODO 概念模型版本
-//                    ConceptualModelVersion conceptualModelVersion = new ConceptualModelVersion();
-//                    BeanUtils.copyProperties(conceptualModel, conceptualModelVersion, "id");
-//                    conceptualModelVersion.setId(UUID.randomUUID().toString());
-//                    conceptualModelVersion.setOriginOid(conceptualModel_ori.getId());
-//                    conceptualModelVersion.setModifier(uid);
-//                    conceptualModelVersion.setVerNumber(now.getTime());
-//                    conceptualModelVersion.setVerStatus(0);
-//                    userService.noticeNumPlusPlus(authorUserName);
-//                    conceptualModelVersion.setModifyTime(now);
-//                    conceptualModelVersion.setCreator(author0);
-//
-//                    conceptualModelVersionDao.save(conceptualModelVersion);
-//
-//                    conceptualModel_ori.setLock(true);
-//                    logicalModelDao.save(conceptualModel_ori);
-//
-//                    result.put("method", "version");
-//                    result.put("code", 0);
-//                    result.put("id", conceptualModelVersion.getId());
+                    // 发送通知
+                    noticeService.sendNoticeContainsAllAdmin(email, conceptualModel.getAuthor(), conceptualModel.getAdmins() ,ItemTypeEnum.Version,version_new.getId(), OperationEnum.Edit);
 
-
+                    result.put("method", "version");
+                    result.put("versionId", version_new.getId());
                     return result;
 
                 }

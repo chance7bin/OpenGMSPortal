@@ -9,7 +9,6 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
-import njgis.opengms.portal.entity.doo.model.modelItemVersion;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.*;
@@ -28,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.management.relation.Relation;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -440,7 +438,7 @@ public class ModelItemService {
      * @Author kx
      * @Date 2021/7/7
      **/
-    public ModelItem insert(ModelItemAddDTO modelItemAddDTO, String email) {
+    public ModelItem insert(ModelItemAddDTO modelItemAddDTO, String email) throws NoSuchFieldException, IllegalAccessException {
 
         ModelItem modelItem = new ModelItem();
         BeanUtils.copyProperties(modelItemAddDTO, modelItem);
@@ -483,8 +481,8 @@ public class ModelItemService {
         modelItem.setRelate(new ModelItemRelate());
         modelItemDao.insert(modelItem);
         //用户条目计数加一
-        userService.ItemCountPlusOne(email,ItemTypeEnum.ModelItem);
-
+        // userService.ItemCountPlusOne(email,ItemTypeEnum.ModelItem);
+        userService.updateUserResourceCount(email, ItemTypeEnum.ModelItem, "add");
         return modelItem;
 
     }
@@ -662,8 +660,8 @@ public class ModelItemService {
     public JSONObject update(ModelItemUpdateDTO modelItemUpdateDTO, String email){
         ModelItem modelItem=modelItemDao.findFirstById(modelItemUpdateDTO.getOriginId());
         List<String> versions = modelItem.getVersions();
+        String originalItemName = modelItem.getName();
         String author=modelItem.getAuthor();
-        String authorUserName = author;
         if(!modelItem.isLock()) {
             if (author.equals(email)) {
                 if (versions == null || versions.size() == 0) {
@@ -677,7 +675,7 @@ public class ModelItemService {
 //                    modelItemVersionOri.setModifyTime(modelItem.getCreateTime());
 //                    modelItemVersionDao.insert(modelItemVersionOri);
 
-                    Version version = versionService.addVersion(modelItem, email, modelItem.getName());
+                    Version version = versionService.addVersion(modelItem, email, originalItemName);
 
 
                     versions = new ArrayList<>();
@@ -715,7 +713,7 @@ public class ModelItemService {
             }
             modelItem.setLocalizationList(localizationList);
 
-            Version version_new = versionService.addVersion(modelItem, email, modelItem.getName());
+            Version version_new = versionService.addVersion(modelItem, email, originalItemName);
             if (author.equals(email)) {
                 versions.add(version_new.getId());
                 modelItem.setVersions(versions);
@@ -734,7 +732,7 @@ public class ModelItemService {
 
                 JSONObject result = new JSONObject();
                 result.put("method", "version");
-                result.put("id", version_new.getId());
+                result.put("versionId", version_new.getId());
 
                 return result;
             }
