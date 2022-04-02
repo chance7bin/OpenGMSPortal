@@ -5,6 +5,86 @@ var info=new Vue({
     },
     data: function () {
         return {
+            htmlJSON:{
+                "HowtoCite": "How to Cite",
+
+                "CopyrightAndDisclaimer":"Copyright and Disclaimer",
+                "CopyrightAndDisclaimerInfo": "All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.",
+                "Contributor":"Contributor",
+                "ContributorInfo": "Contributor is the person who contributes the item to OpenGMS, may not be the author of the item.",
+
+                "Authorship": "Authorship",
+                "AuthorshipInfo": "We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below.",
+                "QRCode": "QR Code",
+                "graph":"graph",
+                "RelateModelItem":"Relate Model Item",
+                "Copy":"Copy",
+                "Invoke":"Invoke",
+                "Resource":"Resource",
+                "MDLDescription":"MDL Description",
+
+                "AttributeSet":"AttributeSet",
+                "Behavior":"Behavior",
+                "Runtime":"Runtime",
+                "Style":"Style",
+                "Categories":"Categories",
+                "Language":"Language",
+                "Name":"Name",
+                "Keywords":"Keywords",
+                "Abstract":"Abstract",
+                "Wiki":"Wiki",
+                "HardwareConfigures":"HardwareConfigures",
+                "SoftwareConfigures":"SoftwareConfigures",
+                "Assemblies":"Assemblies",
+                "SupportiveResources":"SupportiveResources",
+                "RelatedModelItem":"Related Model Item",
+                "GroundWaterFlowSystem":"Ground Water Flow System",
+                "Type":"Type",
+                "Property":"Property",
+                "Value":"Value",
+                "ShowDetail":"Show Detail",
+
+                "ModelDescription":"Model Description",
+                "ModelContentService":"Model Content & Service",
+                "RelatedModelsData":"Related Models & Data",
+                "RelatedKnowledge":"Related Knowledge",
+                "KnowledgeGraph":"Knowledge Graph",
+                "CoContributor":"Co-contributor(s)",
+                "History":"History",
+                "Lastmodifier":"Last modifier : ",
+                "Lastmodifytime":"Last modify time :",
+                "Modifytimes":"Modify times :",
+                "ComputableModelList":"Computable Model List",
+                "ConceptualschematicModelList":"Conceptual-schematic Model List",
+                "LogicalschematicModelList":"Logical-schematic Model List",
+                "RelatedLogicalModel":" Edit Related Logical Model",
+                "anotherVersion":"There is another version haven't been reviewed, you can edit it later or contact us.",
+                "RelatedModelItem":"Edit Related Model Item",
+                "Reference":"Reference",
+                "Material":"Material",
+                "relatedMaterial":"Edit related material",
+                "relatedReference":"Edit related reference",
+                "authorshipSubmitted":"These authorship information will be submitted to the contributor to review.",
+                "RelatedComputableModel":"Edit Related Computable Model",
+                "noComputableModel":"There is no related computable model. You can link computable models.",
+                "GraphView":"Graph View",
+                "ModelItem":"Model Item",
+                "DataItem":"Data Item",
+                "RelatedDataItem":"Edit Related Data Item",
+                "noRelatedReference.":"There is no related reference. You can link references to it.",
+                "noRelatedData":"There is no related data item. You can link data items.",
+                "NoRelatedMmaterial":"There is no related material. You can link materials to it.",
+                "NoRelatedConceptual":"There is no related conceptual model. You can link conceptual models.",
+                "NoRelatedLogical":"There is no related logical model. You can link logical models.",
+                "NoRelatedModel":"There is no related model item. You can link model items.",
+
+                "RelatedConceptual":"Edit Related Conceptual Model",
+                "viewHistory":"viewHistory",
+
+                "Affiliation":"Affiliation",
+                "Email":"Email",
+                "Homepage":"Homepage"
+            },
             authorshipFormVisible: false,
             authorshipForm:{
                 name:'',
@@ -730,6 +810,9 @@ var info=new Vue({
         }
     },
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         generateGUID() {
             var s = [];
             var hexDigits = "0123456789abcdef";

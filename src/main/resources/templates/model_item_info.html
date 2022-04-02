@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="/static/css/base/relate_item.css">
     <link rel="stylesheet" href="/static/css/page/model_item_info.css">
     <link rel="stylesheet" href="/static/css/base/userModule.css">
-    <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
-    <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
 
@@ -189,6 +189,13 @@
     <div th:replace="fragments/backToTop :: backtop-down"></div>
 
     <div class="pageMainContent clearfix" style="padding:40px 0px;height: auto;position: relative;">
+        <translation-bar
+                json-file="all_model_info"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 10px;right:15px">
+        </translation-bar>
         <div class="left-panel el-col" >
             <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
             <div th:replace="fragments/itemInfoModules :: alias"></div>
@@ -227,6 +234,7 @@
             <!--</div>-->
 
 <!--            Classification(s)  -->
+
             <div th:replace="fragments/itemInfoModules :: classifications"></div>
 
             <div th:replace="fragments/itemInfoModules :: description"></div>
@@ -234,15 +242,16 @@
             <div v-cloak th:if="${history!=true}" id="related_models" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Model Content & Service</h4>
+                        <h4>{{htmlJSON.ModelContentService}}</h4>
                     </div>
                 </div>
+
                 <el-tabs class="block_content" v-model="activeName" type="border-card" stretch="true">
 
                     <el-tab-pane name="Computable Model">
                         <div slot="label">
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
-                            Computable Model List
+                            {{htmlJSON.ComputableModelList}}
                             <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.computableModels)==0} ? 'background-color: #bbbbbb' : '')}"
                                   th:text="${#lists.size(relation.computableModels)}">
                             </span>
@@ -284,15 +293,15 @@
                             </div>
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" @click="addRelation(4)" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit Related Computable Model
+                                {{htmlJSON.RelatedComputableModel}}
                             </el-button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                        :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button plain type="info" icon="el-icon-plus"
                                            style="width: 100%">
-                                    Edit Related Computable Model
+                                    {{htmlJSON.RelatedComputableModel}}
                                 </el-button>
                             </el-tooltip>
 
@@ -300,7 +309,7 @@
                         </div>
                         <div class="text-center" th:if="${#lists.size(relation.computableModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related computable model. You can link computable models.
+                                {{htmlJSON.noComputableModel}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" class="btn btn-default" type="button"
                                     style="display: inline-block;" @click="addRelation(4)">
@@ -309,7 +318,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button"
                                         style="display: inline-block;">
@@ -323,7 +332,7 @@
 
                     </el-tab-pane>
                     <el-tab-pane name="Conceptual Model">
-                        <div slot="label">Conceptual-schematic Model List
+                        <div slot="label">{{htmlJSON.ConceptualschematicModelList}}
                             <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.conceptualModels)==0} ? 'background-color: #bbbbbb' : '')}"
                                   th:text="${#lists.size(relation.conceptualModels)}">
                             </span>
@@ -349,15 +358,15 @@
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                        @click="addRelation(2)" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit Related Conceptual Model
+                                {{htmlJSON.RelatedConceptual}}
                             </el-button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button plain type="info" icon="el-icon-plus"
                                            style="width: 100%">
-                                    Edit Related Conceptual Model
+                                    {{htmlJSON.RelatedConceptual}}
                                 </el-button>
                             </el-tooltip>
 
@@ -365,7 +374,7 @@
                         </div>
                         <div class="text-center" th:if="${#lists.size(relation.conceptualModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related conceptual model. You can link conceptual models.
+                                {{htmlJSON.NoRelatedConceptual}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                     class="btn btn-default" type="button"
@@ -375,7 +384,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button"
                                         style="display: inline-block;" >
@@ -387,7 +396,7 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane name="Logical Model">
-                        <div slot="label">Logical-schematic Model List
+                        <div slot="label">{{htmlJSON.LogicalschematicModelList}}
                             <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.logicalModels)==0} ? 'background-color: #bbbbbb' : '')}"
                                   th:text="${#lists.size(relation.logicalModels)}">
                             </span>
@@ -412,15 +421,15 @@
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                        @click="addRelation(3)" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit Related Logical Model
+                                {{htmlJSON.RelatedLogicalModel}}
                             </el-button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button plain type="info" icon="el-icon-plus"
                                            style="width: 100%">
-                                    Edit Related Logical Model
+                                    {{htmlJSON.RelatedLogicalModel}}
                                 </el-button>
                             </el-tooltip>
 
@@ -428,7 +437,7 @@
                         </div>
                         <div class="text-center" th:if="${#lists.size(relation.logicalModels)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related logical model. You can link logical models.
+                                {{htmlJSON.NoRelatedLogical}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                     class="btn btn-default" type="button" style="display: inline-block;"
@@ -438,7 +447,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button" style="display: inline-block;">
 
@@ -456,12 +465,12 @@
             <div v-cloak th:if="${history!=true}" id="related_data" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Related Models & Data</h4>
+                        <h4>{{htmlJSON.RelatedModelsData}}</h4>
                     </div>
                 </div>
                 <el-tabs class="block_content" v-model="activeName1" type="border-card" stretch="true">
                     <el-tab-pane name="Model Item">
-                        <div slot="label">Model Item
+                        <div slot="label">{{htmlJSON.ModelItem}}
                             <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.modelItems)==0} ? 'background-color: #bbbbbb' : '')}"
                                  >
                                 {{relation.modelItems.length}}
@@ -470,7 +479,7 @@
                                     style="margin-left: 10px;"
                                     v-if="relation.modelItems.length > 0"
                                     v-model="modelRelationGraphShow"
-                                    active-text="Graph View"
+                                    :active-text="htmlJSON.GraphView"
                                     active-color="#13ce66"
                                     @change="relateModelItemListShowChange"
                                     >
@@ -594,15 +603,15 @@
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                        @click="addRelation(1)" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit Related Model Item
+                                {{htmlJSON.RelatedModelItem}}
                             </el-button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button plain type="info" icon="el-icon-plus"
                                            style="width: 100%">
-                                    Edit Related Model Item
+                                    {{htmlJSON.RelatedModelItem}}
                                 </el-button>
                             </el-tooltip>
 
@@ -616,7 +625,7 @@
                         </div>
                         <div class="text-center" v-if="relation.modelItems==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related model item. You can link model items.
+                                {{htmlJSON.NoRelatedModel}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                     class="btn btn-default" type="button"
@@ -626,7 +635,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button"
                                         style="display: inline-block;" >
@@ -637,7 +646,7 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane name="Data Item">
-                        <div slot="label">Data Item
+                        <div slot="label">{{htmlJSON.DataItem}}
                             <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
                                   th:text="${#lists.size(relation.dataItems)}">
                             </span>
@@ -661,22 +670,22 @@
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                        @click="addRelation(9)" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit Related Data Item
+                                {{htmlJSON.RelatedDataItem}}
                             </el-button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button plain type="info" icon="el-icon-plus"
                                            style="width: 100%">
-                                    Edit Related Data Item
+                                    {{htmlJSON.RelatedDataItem}}
                                 </el-button>
                             </el-tooltip>
 
                         </div>
                         <div class="text-center" th:if="${#lists.size(relation.dataItems)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related data item. You can link data items.
+                                {{htmlJSON.noRelatedData}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                     class="btn btn-default" type="button"
@@ -686,7 +695,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button"
                                         style="display: inline-block;">
@@ -704,14 +713,14 @@
             <div v-cloak th:if="${history!=true}" id="related_resource" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Related Knowledge</h4>
+                        <h4>{{htmlJSON.RelatedKnowledge}}</h4>
                     </div>
                 </div>
                 <el-tabs class="block_content" v-model="activeName2" type="border-card" stretch="true">
                     <el-tab-pane name="Reference">
                         <div slot="label">
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
-                            Reference
+                            {{htmlJSON.Reference}}
                             <span class="el-badge__content el-badge__content--undefined"
                                   th:style="@{(${#lists.size(references)==0} ? 'background-color: #bbbbbb' : '')}"
                                   th:text="${#lists.size(references)}">
@@ -769,7 +778,7 @@
                         </div>
                         <div class="text-center" th:if="${#lists.size(references)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related reference. You can link references to it.
+                                {{htmlJSON.noRelatedReference}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                     class="btn btn-default" type="button"
@@ -779,7 +788,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button"
                                         style="display: inline-block;">
@@ -793,25 +802,25 @@
                             <el-button th:unless="${#lists.size(references)}==0"
                                        @click="getReference" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit related reference
+                                {{htmlJSON.relatedReference}}
                             </el-button>
                         </div>
 
                         <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                     popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                   :content="htmlJSON.anotherVersion"
                                     effect="light" placement="top">
                             <el-button th:unless="${#lists.size(references)}==0"
                                        plain type="info" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit related reference
+                                {{htmlJSON.relatedReference}}
                             </el-button>
                         </el-tooltip>
                     </el-tab-pane>
                     <el-tab-pane name="Resource">
                         <div slot="label">
                             <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
-                            Material
+                            {{htmlJSON.Material}}
                             <span class="el-badge__content el-badge__content--undefined"
                                   th:style="@{(${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)+#lists.size(relation.dataSpaceFiles)+#lists.size(relation.exLinks)==0} ? 'background-color: #bbbbbb' : '')}"
                                   th:text="${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)+#lists.size(relation.dataSpaceFiles)+#lists.size(relation.exLinks)}">
@@ -917,7 +926,7 @@
                         <div class="text-center" th:if="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
                     #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0&& #lists.size(relation.exLinks)==0}">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related material. You can link materials to it.
+                                {{htmlJSON.NoRelatedMmaterial}}
                             </h5>
                             <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                     class="btn btn-default" type="button"
@@ -927,7 +936,7 @@
                             </button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                       :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <button class="btn btn-default" type="button"
                                         style="display: inline-block;">
@@ -942,19 +951,19 @@
                          #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0 && #lists.size(relation.exLinks)==0}"
                                        @click="addRelatedResouece()" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit related material
+                                {{htmlJSON.relatedMaterial}}
                             </el-button>
                         </div>
 
                         <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                     popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                   :content="htmlJSON.anotherVersion"
                                     effect="light" placement="top">
                             <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
                         #lists.size(relation.templates)==0 && #lists.size(relation.units)==0 && #lists.size(relation.dataSpaceFiles)==0 && #lists.size(relation.exLinks)==0}"
                                        plain type="info" icon="el-icon-plus"
                                        style="width: 100%">
-                                Edit related material
+                                {{htmlJSON.relatedMaterial}}
                             </el-button>
                         </el-tooltip>
                     </el-tab-pane>
@@ -974,7 +983,7 @@
                                        type="primary" icon="el-icon-edit" @click="getReference" circle></el-button>
                         </el-tooltip>
                         <el-tooltip popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                   :content="htmlJSON.anotherVersion"
                                     effect="light" placement="top">
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                        icon="el-icon-edit" plain circle></el-button>
@@ -1042,7 +1051,7 @@
                                        <!--type="primary" icon="el-icon-edit" @click="getMetadata" circle></el-button>-->
                         <!--</el-tooltip>-->
                         <!--<el-tooltip popper-class="fontsize-15"-->
-                                    <!--content="There is another version haven't been reviewed, you can edit it later or contact us."-->
+                                    <!--:content="{{htmlJSON.anotherVersion}}"-->
                                     <!--effect="light" placement="top">-->
                             <!--<el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"-->
                                        <!--icon="el-icon-edit" plain circle></el-button>-->
@@ -1205,7 +1214,7 @@
             <div th:if="${history!=true}" id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>How to Cite</h4>
+                        <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -1223,7 +1232,7 @@
                         </a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        Copy
+                        {{htmlJSON.Copy}}
                     </div>
                 </div>
             </div>
@@ -1233,15 +1242,12 @@
             <div id="copyright" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Copyright and Disclaimer</h4>
+                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
                     <div class="copyright_text">
-                        All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its
-                        author/developer/designer (or any other wording about the owner). The OpenGMS takes every care
-                        to avoid copyright infringement, contributor(s) should carefully employ materials from other
-                        sources and give proper citations.
+                       {{htmlJSON.CopyrightAndDisclaimerInfo}}
                     </div>
                 </div>
             </div>
@@ -1249,7 +1255,7 @@
             <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>Knowledge Graph</h4>
+                        <h4>{{htmlJSON.KnowledgeGraph}}</h4>
                     </div>
                 </div>
                 <div class="block_content text-center">
@@ -1264,7 +1270,7 @@
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
+                        <h4>{{htmlJSON.History}}</h4>
                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
@@ -1281,7 +1287,7 @@
                                 <dt>Modify times :&nbsp</dt>
                                 <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
                                         th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank">View
-                                    History</a></dd>
+                                    {{htmlJSON.History}}</a></dd>
                             </dl>
                         </div>
 
@@ -1292,7 +1298,7 @@
             <div th:if="${history!=true}" id="QR0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -1366,7 +1372,7 @@
             <div v-if="contributors!=null&&contributors.length>0" id="Modifier" class="detail_block">
                 <div class="block_head" style="border-left-color: #00d083;">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 >Co-contributor(s)</h4>
+                        <h4 >{{htmlJSON.CoContributor}}</h4>
                     </div>
                 </div>
                 <div class="block_content" style="padding-left:10px;">
@@ -1396,7 +1402,7 @@
                  >
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>Authorship</h4>
+                        <h4>{{htmlJSON.Authorship}}</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light"
                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
                                     placement="top">
@@ -1419,11 +1425,11 @@
                              style="">
                             <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
                                 <dl>
-                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
+                                    <dt th:if="${author.ins!=''}">{{htmlJSON.Affiliation}} : </dt>
                                     <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
+                                    <dt th:if="${author.email!=''}">{{htmlJSON.Email}}: &nbsp</dt>
                                     <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
+                                    <dt th:if="${author.homepage!=''}">{{htmlJSON.Homepage}}: &nbsp</dt>
                                     <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
                                     </dd>
                                 </dl>
@@ -1437,8 +1443,8 @@
                         </el-tag>
                     </div>
                     <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
-                                                                          style="text-decoration: underline">Feedback</a></el-tag>
+                        <el-tag type="info">{{htmlJSON.authorshipCorrect}} <a href="javascript:void(0)" @click="feedBack"
+                                                                          style="text-decoration: underline">{{htmlJSON.Feedback}}</a></el-tag>
                     </div>
                 </div>
             </div>
@@ -1446,7 +1452,7 @@
             <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>Knowledge Graph</h4>
+                        <h4>{{htmlJSON.KnowledgeGraph}}</h4>
                     </div>
                 </div>
                 <div class="block_content text-center">
@@ -1460,7 +1466,7 @@
                  th:if="${history!=true&&itemInfo.versions!=null&&#lists.size(itemInfo.versions)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
+                        <h4>{{htmlJSON.History}}</h4>
                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
@@ -1469,15 +1475,15 @@
 
                         <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                             <dl>
-                                <dt>Last modifier :&nbsp</dt>
+                                <dt>{{htmlJSON.Lastmodifier}}</dt>
                                 <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
                                        target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
+                                <dt>{{htmlJSON.Lastmodifytime}}</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
+                                <dt>{{htmlJSON.Modifytimes}}</dt>
                                 <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank">View
-                                    History</a></dd>
+                                        th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank">
+                                    {{htmlJSON.viewHistory}}</a></dd>
                             </dl>
                         </div>
 
@@ -1488,7 +1494,7 @@
             <div th:if="${history!=true}" id="QR" class="detail_block">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -1902,20 +1908,20 @@
                         border-left: 5px solid #50bfff;
                         margin: 0 0 10px;">
             <p style="font-size: 14px;color: #5e6d82;line-height: 1.5em;margin:0;">
-                These authorship information will be submitted to the contributor to review.
+                {{htmlJSON.authorshipSubmitted}}
             </p>
         </div>
         <el-form :model="authorshipForm">
-            <el-form-item label="Name" :label-width="formLabelWidth">
+            <el-form-item :label="htmlJSON.Name" :label-width="formLabelWidth">
                 <el-input v-model="authorshipForm.name" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Affiliation" :label-width="formLabelWidth">
+            <el-form-item :label="htmlJSON.Affiliation" :label-width="formLabelWidth">
                 <el-input v-model="authorshipForm.ins" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Email" :label-width="formLabelWidth">
+            <el-form-item :label="htmlJSON.Email" :label-width="formLabelWidth">
                 <el-input v-model="authorshipForm.email" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Homepage" :label-width="formLabelWidth">
+            <el-form-item :label="htmlJSON.Homepage" :label-width="formLabelWidth">
                 <el-input v-model="authorshipForm.homepage" autocomplete="off"></el-input>
             </el-form-item>
 
@@ -2551,6 +2557,8 @@
     <div th:replace="fragments/footer :: footer"></div>
 
 </div>
+
+
 <template th:replace="modules/editModelItemModule :: editModelItemModule"></template>
 <template th:replace="modules/userDataSpaceModule :: userDataSpaceModule"></template>
 <template th:replace="modules/editClassificationModule :: editClassificationModule"></template>
@@ -2574,13 +2582,18 @@
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
 <script type="text/javascript" src="/static/plugins/data-tables/jquery.dataTables.js"></script>
 
+
 <script src="/static/js/common/vue.min.js"></script>
 <script src="/static/js/common/vue-avatar.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
 <script src="/static/js/common/qrcode.min.js"></script>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/js/common/commonValue.js"></script>
+
 
 <script src="/static/js/modules/userAvatar.js"></script>
 
