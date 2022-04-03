@@ -375,7 +375,7 @@ var createTemplate = Vue.extend({
 
             $(".providers").children(".panel").remove();
             $("#nameInput").val(basicInfo.name);
-            $("#descInput").val(basicInfo.description);
+            $("#descInput").val(basicInfo.overview);
 
             //image
             if (basicInfo.image != "") {

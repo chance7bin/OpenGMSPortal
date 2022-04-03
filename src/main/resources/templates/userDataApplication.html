@@ -85,19 +85,19 @@
                                 <div class="content_h32 flexRow noPadding">
                                     <div class="content_w68 flexJustStart">
                                         <div class="flexColCenter w100">
-                                            <a class="w100" :href="'/dataMethod/'+dataPro.oid"
+                                            <a class="w100" :href="'/dataMethod/'+dataPro.id"
                                                @click="setSession('dataItemInfo_id',dataPro.id)" target="_blank">
                                                 <h4 class="itemTitle">{{dataPro.name}}</h4></a>
                                         </div>
 
                                     </div>
-                                    <div class="content_w32 flexJustAround flexColCenter buttonZone">
+                                    <div class="content_w32 flexJustAround  flexColCenter buttonZone">
                                         <el-tooltip popper-class="fontsize-15" effect="light" :content="dataPro.status" placement="left">
                                             <i v-if="dataPro.status=='Public'" class="el-icon-unlock public fontsize-20 pull-right"></i>
                                             <i v-if="dataPro.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-20 pull-right"></i>
                                             <i v-if="dataPro.status=='Private'" class="el-icon-lock private fontsize-20 pull-right"></i>
                                         </el-tooltip>
-                                        <div class="lineButton flexJustStart flexColCenter" @click="editItem(1,dataPro.oid)">
+                                        <div class="lineButton flexJustStart flexColCenter" @click="editItem(1,dataPro.id)">
                                             <i class="fa fa-edit" style="margin-right: 5px"></i>
                                             <div class="lineButton flexCol">
                                                 <p style="margin-block-end: 0">Edit</p>
@@ -124,7 +124,7 @@
                                                         <b style="margin-right: 25px;">Overview:</b>
                                                     </div>
                                                     <div>
-                                                        <p class="threeLine" style="">{{dataPro.description}}</p>
+                                                        <p class="threeLine" style="">{{dataPro.overview}}</p>
                                                     </div>
                                                 </div>
                                                 <p><b style="margin-right: 3px">Create Time:</b> {{formatDate(dataPro.createTime)}}</p>

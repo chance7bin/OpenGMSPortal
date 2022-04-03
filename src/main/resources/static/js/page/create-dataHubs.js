@@ -519,7 +519,7 @@ var createDataHubs = Vue.extend({
             }else {
                 this.dataItemAddDTO.dataItemId = this.id;
                 var thedata1 = this.dataItemAddDTO;
-                axios.post("/dataItem/updateHubs/",thedata1)
+                axios.post("/dataHub/",thedata1)
                     .then(result=>{
                         if (result.status ===200){
                             if (result.data.code === 0) {
@@ -924,7 +924,43 @@ var createDataHubs = Vue.extend({
 
                         this.selectedFile = data.dataList;
 
-                        this.$refs.tree2.setCheckedKeys(data.classifications);
+                        //wyj 遍历树得到id
+                        let cls = data.classifications;
+                        let ids = [];
+
+
+                        for(let i =0;i<cls.length;i++){
+                            for(let j=0;j<3;j++){
+                                for (let k = 0; k < this.treeData_part1[0].children[j].children.length; k++) {
+                                    if (cls[i] == this.treeData_part1[0].children[j].children[k].oid) {
+                                        ids.push(this.treeData_part1[0].children[j].children[k].id);
+                                        this.parid = this.treeData_part1[0].children[j].children[k].id;
+                                        this.clsStr += this.treeData_part1[0].children[j].children[k].label;
+                                        this.clsStr += ", ";
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        for(let i =0;i<cls.length;i++){
+                            for(let j=0;j<2;j++){
+                                for (let k = 0; k < this.treeData_part2[0].children[j].children.length; k++) {
+                                    if (cls[i] == this.treeData_part2[0].children[j].children[k].oid) {
+                                        ids.push(this.treeData_part2[0].children[j].children[k].id);
+                                        this.parid = this.treeData_part2[0].children[j].children[k].id;
+                                        this.clsStr += this.treeData_part2[0].children[j].children[k].label;
+                                        this.clsStr += ", ";
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        this.$refs.tree2.setCheckedKeys(ids);
+                        this.$refs.tree3.setCheckedKeys(ids);
+
                         this.treeData_select = data.categories;
                         this.treeData_select = data.classifications;
                         this.dataItemAddDTO.viewCount = data.viewCount;
@@ -932,7 +968,7 @@ var createDataHubs = Vue.extend({
                         //清空
                         // $("#classification").val('')
                         $("#dataname").val(data.name);
-                        $("#description").val(data.description);
+                        $("#description").val(data.overview);
                         $("#keywords").tagEditor('destory');
                         $("#keywords").tagEditor({
                             initialTags: data.keywords,
