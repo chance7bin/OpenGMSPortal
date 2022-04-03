@@ -453,9 +453,7 @@ public class ConceptualModelService {
                 String path = resourcePath + images.get(i);
                 Utils.deleteFile(path);
             }
-            //条目删除
-            conceptualModelDao.delete(conceptualModel);
-            userService.ItemCountMinusOne(email, ItemTypeEnum.ConceptualModel);
+
 
             //模型条目关联删除
             List<String> relatedModelItems = conceptualModel.getRelatedModelItems();
@@ -473,6 +471,11 @@ public class ConceptualModelService {
                 modelItem.getRelate().setConceptualModels(conceptualModelIds);
                 modelItemDao.save(modelItem);
             }
+
+            //条目删除
+            conceptualModelDao.delete(conceptualModel);
+            userService.updateUserResourceCount(email, ItemTypeEnum.ConceptualModel);
+
 
             return ResultUtils.success();
         } else {

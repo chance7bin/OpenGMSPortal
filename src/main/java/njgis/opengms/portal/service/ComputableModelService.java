@@ -702,10 +702,6 @@ public class ComputableModelService {
                 Utils.delete(path + resources.get(i).getPath());
             }
 
-            //计算模型删除
-            computableModelDao.delete(computableModel);
-            userService.ItemCountMinusOne(email, ItemTypeEnum.ComputableModel);
-
             //模型条目关联删除
             List<String> relatedModelItems = computableModel.getRelatedModelItems();
             for (int i = 0;i<relatedModelItems.size();i++) {
@@ -713,7 +709,7 @@ public class ComputableModelService {
                 ModelItem modelItem = modelItemDao.findFirstById(modelItemId);
                 List<String> computableModelIds = modelItem.getRelate().getComputableModels();
                 for (String id : computableModelIds
-                        ) {
+                ) {
                     if (id.equals(computableModel.getId())) {
                         computableModelIds.remove(id);
                         break;
@@ -722,6 +718,10 @@ public class ComputableModelService {
                 modelItem.getRelate().setComputableModels(computableModelIds);
                 modelItemDao.save(modelItem);
             }
+
+            //计算模型删除
+            computableModelDao.delete(computableModel);
+            userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel,"delete");
 
             return ResultUtils.success();
         } else {

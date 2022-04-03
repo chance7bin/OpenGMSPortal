@@ -905,7 +905,7 @@ public class DataMethodService {
             } else {
                 if (versions == null || versions.size() == 0) {
 
-                    Version version = versionService.addVersion(dataMethod, email, dataMethod.getName());
+                    Version version = versionService.addVersion(dataMethod, email, originalItemName);
 
                     versions = new ArrayList<>();
                     versions.add(version.getId());

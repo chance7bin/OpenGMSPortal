@@ -536,7 +536,7 @@ public class ModelItemService {
             //TODO 同时删除datahub dataApplication中的关联记录
 
             modelItemDao.delete(modelItem);
-            userService.ItemCountMinusOne(email, ItemTypeEnum.ModelItem);
+            userService.updateUserResourceCount(email, ItemTypeEnum.ModelItem);
             return ResultUtils.success();
         }
         else{

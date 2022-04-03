@@ -102,8 +102,8 @@ public class LogicalModelRestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="info",value="更新item的json文件",required=true,paramType="form",dataType="__file")
     })
-    @PutMapping(value = "/{id}",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
-    public JsonResult updateLogicalModel(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
+    @PutMapping(value = "/",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
+    public JsonResult updateLogicalModel( MultipartFile info, HttpServletRequest request) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         List<MultipartFile> files=multipartRequest.getFiles("imgFiles");
         MultipartFile file=multipartRequest.getFile("logicalModel");
@@ -123,7 +123,7 @@ public class LogicalModelRestController {
     @LoginRequired
     @ApiOperation(value = "删除logicalModel [ /delete ]")
     @DeleteMapping(value = "/{id}")
-    public JsonResult deleteConcept(@PathVariable(value="id") String id,  HttpServletRequest request){
+    public JsonResult deleteLogicalModel(@PathVariable(value="id") String id,  HttpServletRequest request){
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
         return logicalModelService.delete(id,email);

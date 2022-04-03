@@ -93,7 +93,7 @@ public class ComputableModelRestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="info",value="创建item的json文件",required=true,paramType="form",dataType="__file")
     })
-    @PostMapping (value="/{id}",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
+    @PostMapping (value="",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
     JsonResult add(HttpServletRequest request) throws IOException {
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -118,8 +118,8 @@ public class ComputableModelRestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="info",value="更新item的json文件",required=true,paramType="form",dataType="__file")
     })
-    @PutMapping(value = "/{id}",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
-    public JsonResult update(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
+    @PutMapping(value = "/",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
+    public JsonResult update(MultipartFile info, HttpServletRequest request) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         List<MultipartFile> files=multipartRequest.getFiles("resources");
         MultipartFile file=multipartRequest.getFile("computableModel");
@@ -141,9 +141,8 @@ public class ComputableModelRestController {
 
     @LoginRequired
     @ApiOperation(value = "删除computableModel [ /delete ]")
-    @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public JsonResult delete(@ApiParam(name = "Id", value = "模型条目Id", required = true)
-                             @RequestParam(value="id") String id,
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public JsonResult delete(@PathVariable(value="id") String id,
                              HttpServletRequest request){
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();

@@ -3,7 +3,6 @@ package njgis.opengms.portal.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -152,9 +151,8 @@ public class ModelItemRestController {
      **/
     @LoginRequired
     @ApiOperation(value = "删除模型条目", notes = "@LoginRequired 条目作者或管理员可以删除")
-    @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public JsonResult deleteModelItem(@ApiParam(name = "Id", value = "模型条目Id", required = true)
-                                      @RequestParam(value="id") String id,
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public JsonResult deleteModelItem(@PathVariable(value="id") String id,
                                       HttpServletRequest request){
         HttpSession session=request.getSession();
 

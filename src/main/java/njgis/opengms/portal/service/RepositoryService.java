@@ -224,7 +224,7 @@ public class RepositoryService {
             } else {
                 if (versions == null || versions.size() == 0) {
 
-                    Version version = versionService.addVersion(item, email, item.getName());
+                    Version version = versionService.addVersion(item, email, originalItemName);
 
                     versions = new ArrayList<>();
                     versions.add(version.getId());

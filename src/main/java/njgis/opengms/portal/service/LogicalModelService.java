@@ -454,9 +454,6 @@ public class LogicalModelService {
                 String path = resourcePath + images.get(i);
                 Utils.deleteFile(path);
             }
-            //条目删除
-            logicalModelDao.delete(logicalModel);
-            userService.ItemCountMinusOne(email, ItemTypeEnum.LogicalModel);
 
             //模型条目关联删除
             List<String> relatedModelItems = logicalModel.getRelatedModelItems();
@@ -474,6 +471,10 @@ public class LogicalModelService {
                 modelItem.getRelate().setLogicalModels(logicalModelIds);
                 modelItemDao.save(modelItem);
             }
+
+            //条目删除
+            logicalModelDao.delete(logicalModel);
+            userService.updateUserResourceCount(email, ItemTypeEnum.LogicalModel);
 
             return ResultUtils.success();
         } else {
