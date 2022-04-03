@@ -265,7 +265,7 @@ public class LogicalModelService {
             list.add(localization);
             logicalModel.setLocalizationList(list);
 
-            logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+            logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
             logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
             // logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
             logicalModel.setOverview(jsonObject.getString("description"));
