@@ -195,10 +195,16 @@ var createConceptualModel = Vue.extend({
             if(basicInfo.relateModelItem!=null&&basicInfo.relateModelItem!=undefined){
                 modelItem = await this.getBindModelInfo(basicInfo.relateModelItem)
             }
-            this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
-            this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
+            // this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
+            // this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
+            //
+            // $("#search-box").val(basicInfo.relateModelItemName)
+            //wyj 更新logical model时 选中原来选择的模型
+            this.itemInfo.relateModelItemName = basicInfo.relatedModelItemInfoList[0].name
+            this.itemInfo.relateModelItem = basicInfo.relatedModelItemInfoList[0].id
 
-            $("#search-box").val(basicInfo.relateModelItemName)
+            $("#search-box").val(basicInfo.relatedModelItemInfoList[0].name)
+
             this.itemInfo.status=basicInfo.status;
 
 
@@ -217,14 +223,14 @@ var createConceptualModel = Vue.extend({
 
             //detail
 
-            $("#conceptualModelText").html(basicInfo.detail);
+            $("#conceptualModelText").html(basicInfo.localizationList[0].description);
 
             initTinymce('textarea#conceptualModelText')
 
             let user_num = 0;
-            let authorship = basicInfo.authorship;
-            if(authorship!=null) {
-                for (i = 0; i < authorship.length; i++) {
+            let authorships = basicInfo.authorships;
+            if(authorships!=null) {
+                for (i = 0; i < authorships.length; i++) {
                     user_num++;
                     var content_box = $(".providers");
                     var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -241,7 +247,7 @@ var createConceptualModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"name\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].name +
+                        authorships[i].name +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -254,7 +260,7 @@ var createConceptualModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"ins\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].ins +
+                        authorships[i].ins +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -267,7 +273,7 @@ var createConceptualModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"email\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].email +
+                        authorships[i].email +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -280,7 +286,7 @@ var createConceptualModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"homepage\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].homepage +
+                        authorships[i].homepage +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -310,8 +316,8 @@ var createConceptualModel = Vue.extend({
             var detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
-            itemObj.authorship=[];
-            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorship);
+            itemObj.authorships=[];
+            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorships);
 
             /**
              * 张硕

@@ -50,7 +50,7 @@ var createDataItem = Vue.extend({
                 classifications: [],
                 displays: [],
                 uploadImage:"",
-                authorship: [],
+                authorships: [],
                 meta: {
                     coordinateSystem: '',
                     geographicProjection: '',
@@ -236,7 +236,7 @@ var createDataItem = Vue.extend({
             // this.dataItemAddDTO.dataType = this.dataType;
 
 
-            var authorship = [];
+            var authorships = [];
             var author_lenth = $(".user-attr").length;
             for (var i = 0; i < author_lenth; i++) {
 
@@ -250,10 +250,10 @@ var createDataItem = Vue.extend({
                 authorInfo.name = $(".user-attr input")[t].value
                 authorInfo.email = $(".user-attr input")[1 + t].value
                 authorInfo.homepage = $(".user-attr input")[2 + t].value
-                authorship.push(authorInfo)
+                authorships.push(authorInfo)
 
             }
-            this.dataItemAddDTO.authorship = authorship;
+            this.dataItemAddDTO.authorships = authorships;
             this.dataItemAddDTO.dataList = this.userDataList;
 
 
@@ -742,7 +742,7 @@ var createDataItem = Vue.extend({
                         placeholder: 'Enter keywords ...'
                     });
 
-                    $("#detail").html(data.detail);
+                    $("#detail").html(data.localizationList[0].description);
                     this.authorDataList = data.userDataList;
 
                     // $('#imgShow').get(0).src = data.image;
@@ -767,9 +767,9 @@ var createDataItem = Vue.extend({
                     //tinymce.remove('textarea#detail');//先销毁已有tinyMCE实例
                     initTinymce("textarea#detail");
 
-                    let authorship = data.authorship;
-                    if(authorship!=null) {
-                        for (i = 0; i < authorship.length; i++) {
+                    let authorships = data.authorships;
+                    if(authorships!=null) {
+                        for (i = 0; i < authorships.length; i++) {
                             user_num++;
                             var content_box = $(".providers");
                             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -786,7 +786,7 @@ var createDataItem = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"name\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].name +
+                                authorships[i].name +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +
@@ -799,7 +799,7 @@ var createDataItem = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"email\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].email +
+                                authorships[i].email +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +
@@ -812,7 +812,7 @@ var createDataItem = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"homepage\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].homepage +
+                                authorships[i].homepage +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +

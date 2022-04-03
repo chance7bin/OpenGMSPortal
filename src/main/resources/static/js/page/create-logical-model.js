@@ -245,9 +245,9 @@ var createLogicalModel = Vue.extend({
 
             initTinymce('textarea#logicalModelText')
 
-            let authorship = basicInfo.authorship;
-            if(authorship!=null) {
-                for (i = 0; i < authorship.length; i++) {
+            let authorships = basicInfo.authorships;
+            if(authorships!=null) {
+                for (i = 0; i < authorships.length; i++) {
                     user_num++;
                     var content_box = $(".providers");
                     var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -264,7 +264,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"name\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].name +
+                        authorships[i].name +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -277,7 +277,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"ins\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].ins +
+                        authorships[i].ins +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -290,7 +290,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"email\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].email +
+                        authorships[i].email +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -303,7 +303,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"homepage\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].homepage +
+                        authorships[i].homepage +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -331,8 +331,8 @@ var createLogicalModel = Vue.extend({
             var detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
-            itemObj.authorship=[];
-            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorship);
+            itemObj.authorships=[];
+            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorships);
 
             /**
              * 张硕
