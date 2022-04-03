@@ -685,30 +685,40 @@ public class UserService {
      * @return void 
      * @Author bin
      **/
-    public void updateUserResourceCount(String email, ItemTypeEnum itemType, String op) throws NoSuchFieldException, IllegalAccessException {
+    public void updateUserResourceCount(String email, ItemTypeEnum itemType, String op){
         User user = userDao.findFirstByEmail(email);
         UserResourceCount userResourceCount = user.getResourceCount();
         if (userResourceCount == null){
             userResourceCount = new UserResourceCount();
         }
-        Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
-        Field field = aClass.getDeclaredField(itemType.getText());
-        field.setAccessible(true);
-        // 直接加减偶尔会出现问题，直接查数据库的表
-        // int count = (int)field.get(userResourceCount);
-        // if (op.equals("add")) {
-        //     ++count;
-        // } else {
-        //     --count;
-        // }
+        try {
+            Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
+            Field field = aClass.getDeclaredField(itemType.getText());
+            field.setAccessible(true);
+            // 直接加减偶尔会出现问题，直接查数据库的表
+            // int count = (int)field.get(userResourceCount);
+            // if (op.equals("add")) {
+            //     ++count;
+            // } else {
+            //     --count;
+            // }
 
-        JSONObject daoFactory = genericService.daoFactory(itemType);
-        GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
-        int count = itemDao.countByAuthor(email);
+            JSONObject daoFactory = genericService.daoFactory(itemType);
+            GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
+            int count = itemDao.countByAuthor(email);
 
-        field.set(userResourceCount,count);
-        user.setResourceCount(userResourceCount);
-        userDao.save(user);
+            field.set(userResourceCount,count);
+            user.setResourceCount(userResourceCount);
+            userDao.save(user);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserResourceCount(String email, ItemTypeEnum itemType){
+
+        updateUserResourceCount(email,itemType,null);
+
     }
 
     public void updateUserNoticeNum(String email){

@@ -219,6 +219,7 @@ public class ThemeService {
 
         Theme item = themeDao.findFirstById(id);
         String author = item.getAuthor();
+        List<String> versions = item.getVersions();
         String originalItemName = item.getThemename();
         if (!item.isLock()) {
 
@@ -227,6 +228,15 @@ public class ThemeService {
             if (!author.equals(email)){
                 item.setLock(true);
                 themeDao.save(item);
+            } else {
+                if (versions == null || versions.size() == 0) {
+
+                    Version version = versionService.addVersion(item, email, originalItemName);
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    item.setVersions(versions);
+                }
             }
 
             String detail = Utils.saveBase64Image(themeDTO.getDetail(),id,resourcePath,htmlLoadPath);
@@ -253,23 +263,25 @@ public class ThemeService {
                 }
             }
             item.setApplication(applications);
-
+            Version new_version = versionService.addVersion(item, email,originalItemName);
             if (author.equals(email)) {
+                versions.add(new_version.getId());
+                item.setVersions(versions);
                 themeDao.save(item);
                 result.put("method", "update");
                 result.put("id", item.getId());
             } else {
 
-                Version version = versionService.addVersion(item, email,originalItemName);
+
                 //发送通知
                 List<String> recipientList = Arrays.asList(author);
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,version.getId(),recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version.getId(),recipientList);
 
                 result.put("method", "version");
-                result.put("versionId", version.getId());
+                result.put("versionId", new_version.getId());
 
             }
             // return result;

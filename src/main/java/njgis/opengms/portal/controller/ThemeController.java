@@ -99,7 +99,7 @@ public class ThemeController {
         @ApiImplicitParam(name="info",value="更新item的json文件",required=true,paramType="form",dataType="__file")
     })
     @PutMapping(value = "/{id}",headers="content-type=multipart/form-data", consumes = "multipart/form-data")
-    public JsonResult updateUnit(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
+    public JsonResult updateTheme(@PathVariable String id, MultipartFile info, HttpServletRequest request) throws IOException {
         String model= IOUtils.toString(info.getInputStream(),"utf-8");
         JSONObject jsonObject=JSONObject.parseObject(model);
         ThemeDTO updateDTO=JSONObject.toJavaObject(jsonObject, ThemeDTO.class);
