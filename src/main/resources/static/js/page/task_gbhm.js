@@ -1,6 +1,53 @@
 var vue = new Vue({
     el: "#app",
     data: {
+        htmlJSON:{
+            "selectModel": "Select Computable Model",
+            "contributedBy": "Contributed by:",
+            "loadData": "Load data",
+            "invoke": "invoke",
+            "introduction": "Introduction",
+            "contributedAt": "Contributed at ",
+            "isRunning": "A new task of this model is running.",
+            "checkinSpace": "Check in my space",
+            "datasetForModel": "There is a dataset for you to test this model.",
+            "loadTestData": "Load Test Dataset",
+            "ok": "OK",
+            "configureExecution": "Configure Execution",
+            "showStyle": "Show style:",
+            "classic": "Classic",
+            "semantics": "Semantics",
+            "workFlow": "Work flow",
+            "input": "Input",
+            "dataType": "Data Type:",
+            "publicExample": "Public Example",
+            "myTaskData": "My Task Data",
+            "user": "User",
+            "runTime": "Run Time",
+            "description": "Description",
+            "operation": "Operation",
+            "load": "Load",
+            "Parameter": "Parameter",
+            "Value": "Value",
+            "Type": "Type",
+            "EventName": "Event Name",
+            "UserDataSpace": "User Data Space",
+            "PublicDataCenter": "Public Data Center",
+            "Name": "Name :",
+            "Datatemplate": "Data template :",
+            "Storagepath": "Storage path :",
+            "Uploadfiles": "Upload files :",
+            "SelectFile": "Select File",
+            "file": "file",
+            "url": "url",
+            "SearchDataItem": "Search Data Item",
+            "nameNone": "Name",
+            "Contributor": "Contributor",
+            "CreateTime": "Create Time",
+            "RelatedDataItem": "Related Data Item",
+            "Link": "Link",
+            "Option": "Option"
+        },
         LoadDataActiveName: "public",
         //2021假期
         tableShow:{},
@@ -443,6 +490,10 @@ var vue = new Vue({
         }
     },
     methods: {
+        //翻译
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         LoadDataTabClick(newTab){
             console.log(newTab);
             if(newTab.name==="public"){

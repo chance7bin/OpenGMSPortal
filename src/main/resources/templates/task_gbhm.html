@@ -153,7 +153,7 @@
                         </div>
                         <div>
                             <h3 class="model_title"> {{info.modelInfo.name}}</h3>
-                            <span>Contributed by <span style="cursor: pointer; font-size: 2rem;"
+                            <span>{{htmlJSON.contributedBy}}  <span style="cursor: pointer; font-size: 2rem;"
                                                        @click="goPersonCenter(info.userInfo.compute_model_userId)">{{info.userInfo.compute_model_user_name}}</span></span>
                             <br>
                         </div>
@@ -179,10 +179,10 @@
 
                     </div>
                     <div class="introContent">
-                        <h4 class="desc-title">Introduction</h4>
+                        <h4 class="desc-title">{{htmlJSON.introduction}}</h4>
                         <p class="desc wzhScrollbar" style="max-height: 220px;padding: 5px 10px">{{info.modelInfo.des}}</p>
                         <br>
-                        <span class="model_date">Contributed at <span>{{dateFormat(info.modelInfo.date,'yyyy-MM-dd')}}</span></span>
+                        <span class="model_date">{{htmlJSON.contributedAt}}<span>{{dateFormat(info.modelInfo.date,'yyyy-MM-dd')}}</span></span>
                     </div>
                     <div class="flexCol" v-if="taskRunning">
                         <div class="flexRow" style="padding: 10px 5px;border-top: #b3b3b3 1px solid;">
@@ -236,7 +236,7 @@
                                     </el-table-column>
                                     </el-table-column>
                                     <el-table-column
-                                            label="Description"
+                                            :label="htmlJSON.description"
                                             prop="description"
                                             width="245">
                                         <template slot-scope="scope">
@@ -298,7 +298,7 @@
                                             width="205">
                                     </el-table-column>
                                     <el-table-column
-                                            label="Description"
+                                            :label="htmlJSON.description"
                                             width="315">
                                         <template slot-scope="scope">
                                             <div @click="showDescription(scope.row)" style="max-height: 50px;overflow-y: auto">
@@ -352,8 +352,15 @@
                         <el-row class="_title">
                             <el-row type="flex" align="middle">
                                 <i class="fa fa-database"></i>
-                                <p style="font-size: 18px;margin-bottom: 0;margin-left:10px">Configure Execution</p>
+                                <p style="font-size: 18px;margin-bottom: 0;margin-left:10px">{{htmlJSON.configureExecution}}</p>
+                                <translation-bar
+                                        json-file="task"
+                                        @translate-page="translatePage"
+                                        initial-lang="en-us"
+                                        theme="dark"
+                                        style="position: absolute;right:15px"></translation-bar>
                             </el-row>
+
 
                         </el-row>
 
@@ -373,7 +380,7 @@
 
 <!--                                        type input?output-->
                                         <el-table-column
-                                                label="Type"
+                                                :label="htmlJSON.Type"
                                                 width="130"
                                         >
                                             <template slot-scope="scope">
@@ -390,7 +397,7 @@
 <!--                                        name-->
                                         <el-table-column
                                                 width="180"
-                                                label="Event Name"
+                                                :label="htmlJSON.EventName"
                                         >
                                             <template slot-scope="scope">
 
@@ -406,12 +413,12 @@
                                         <el-table-column
                                                 prop="eventDesc"
 
-                                                label="Description">
+                                                :label="htmlJSON.description">
                                         </el-table-column>
 
 <!--                                        data type-->
                                         <el-table-column
-                                                label="Data Type"
+                                                :label="htmlJSON.dataType"
                                                 width="130"
                                         >
                                             <template slot-scope="scope">
@@ -432,7 +439,7 @@
 
 <!--                                        value-->
                                         <el-table-column
-                                                label="Value"
+                                                :label="htmlJSON.Value"
                                                 width="300"
                                                 >
                                             <template slot-scope="scope">
@@ -514,7 +521,7 @@
 
 <!--                                        opration-->
                                         <el-table-column
-                                                label="Operation"
+                                                :label="htmlJSON.operation"
                                                 width="200"
                                                 >
                                             <template slot-scope="scope">
@@ -1341,7 +1348,9 @@
 <script src="/static/js/common/bootstrap.js"></script>
 <script src="/static/js/common/bootstrap-treeview.js"></script>
 <!--<script src="/static/js/common/bootstrap-treeview.js"></script>-->
-
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/js/modules/translationBar.js"></script>
 <!--<script type="text/javascript">-->
 <!--mxBasePath = '/static/MxGraph/'-->
 <!--</script>-->
