@@ -283,7 +283,7 @@ public class ComputableModelService {
 
 
                 // computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
-                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
                 Localization localization = new Localization();
                 localization.setLocalCode("en");
@@ -312,7 +312,7 @@ public class ComputableModelService {
                     computableModel.setImage(null);
                 }
 
-                ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getString("relateModelItem"));
+                ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getJSONArray("relatedModelItems").getString(0));
                 computableModel.setClassifications(relateModelItem.getClassifications());
 
                 String md5 = null;
@@ -456,7 +456,7 @@ public class ComputableModelService {
 
                 computableModel.setMd5(md5);
 
-                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
 
                 computableModel.setAuthor(uid);
 
@@ -658,13 +658,13 @@ public class ComputableModelService {
             List<Localization> localizations = new ArrayList<>();
             localizations.add(localization);
             computableModel.setLocalizationList(localizations);
-            computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+            computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
             computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
             computableModel.setOverview(jsonObject.getString("description"));
             computableModel.setContentType(jsonObject.getString("contentType"));
             computableModel.setUrl(jsonObject.getString("url"));
 
-            ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getString("relateModelItem"));
+            ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getJSONArray("relatedModelItems").getString(0));
             computableModel.setClassifications(relateModelItem.getClassifications());
 
             Date curDate = new Date();

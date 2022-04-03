@@ -871,8 +871,8 @@ var createDataApplication = Vue.extend({
                 $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/dataMethod/update',
-                    type: 'post',
+                    url: '/dataMethod/' + oid,
+                    type: 'put',
                     data: this.formData,
                     cache: false,
                     processData: false,

@@ -309,7 +309,7 @@ var createConceptualModel = Vue.extend({
             itemObj.resourceJson = this.resources
             itemObj.name = this.itemInfo.name
             itemObj.description = this.itemInfo.description
-            itemObj.relateModelItem = this.itemInfo.relateModelItem
+            itemObj.relateModelItems = [this.itemInfo.relateModelItem]
             itemObj.status = this.itemInfo.status
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();

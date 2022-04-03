@@ -330,14 +330,14 @@ var createDataItem = Vue.extend({
                 }else {
                     this.dataItemAddDTO.dataItemId = this.id;
                     var thedata1 = this.dataItemAddDTO;
-                    axios.post("/dataItem/update/",thedata1)
+                    axios.put("/dataItem/" + this.id,thedata1)
                         .then(result=>{
                             if (result.status ===200){
                                 if (result.data.code === 0) {
                                     if(result.data.data.method==="update") {
                                         alert("Update Success");
                                         $("#editModal", parent.document).remove();
-                                        window.location.href = "/dataItem/" + result.data.data.oid;
+                                        window.location.href = "/dataItem/" + result.data.data.id;
                                     }
                                     else{
 

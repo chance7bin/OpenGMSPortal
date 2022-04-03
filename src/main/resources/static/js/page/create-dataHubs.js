@@ -449,6 +449,7 @@ var createDataHubs = Vue.extend({
             var thedata = this.dataItemAddDTO;
 
             var that = this;
+            console.log("this.id:",this.id)
             if ((this.id === "0") || (this.id === "") || (this.id == null)) {
                 axios.post("/dataHub/", thedata)
                     .then(res => {
@@ -519,14 +520,14 @@ var createDataHubs = Vue.extend({
             }else {
                 this.dataItemAddDTO.dataItemId = this.id;
                 var thedata1 = this.dataItemAddDTO;
-                axios.post("/dataHub/",thedata1)
+                axios.put("/dataHub/" + this.id,thedata1)
                     .then(result=>{
                         if (result.status ===200){
                             if (result.data.code === 0) {
                                 if(result.data.data.method==="update") {
                                     alert("Update Success");
                                     $("#editModal", parent.document).remove();
-                                    window.location.href = "/dataItem/hub/" + result.data.data.oid;
+                                    window.location.href = "/dataHub/" + result.data.data.id;
                                 }
                                 else{
                                     this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
@@ -644,7 +645,7 @@ var createDataHubs = Vue.extend({
 
         var tha = this;
         tha.id = this.$route.params.editId;
-
+        console.log("tha.id:",tha.id)
         this.classif = [];
         $("#classification").val('');
 
