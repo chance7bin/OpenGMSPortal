@@ -317,7 +317,7 @@ public class ComputableModelService {
 
                 String md5 = null;
                 if (jsonObject.getString("contentType").equals("Package")) {
-                    String filePath = path + resources.get(0);
+                    String filePath = path + resources.get(0).getPath();
                     File file = new File(filePath);
 
                     md5 = Utils.getMd5ByFile(file);
@@ -525,7 +525,7 @@ public class ComputableModelService {
                 try {
                     String md5 = null;
                     if (jsonObject.getString("contentType").equals("Package")) {
-                        String filePath = path + resources.get(0);
+                        String filePath = path + resources.get(0).getPath();
                         FileInputStream file = new FileInputStream(filePath);
                         md5 = DigestUtils.md5DigestAsHex(IOUtils.readFully(file, -1, true));
 

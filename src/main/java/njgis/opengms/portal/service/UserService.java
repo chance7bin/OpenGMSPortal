@@ -715,6 +715,8 @@ public class UserService {
         }
     }
 
+
+
     public void updateUserResourceCount(String email, ItemTypeEnum itemType){
 
         updateUserResourceCount(email,itemType,null);
@@ -725,6 +727,19 @@ public class UserService {
         User user = userDao.findFirstByEmail(email);
         user.setNoticeNum(noticeService.countUserNoticeNum(email));
         userDao.save(user);
+    }
+
+    public void updateAllResourceCount(String email){
+        User user = userDao.findFirstByEmail(email);
+        UserResourceCount resourceCount = user.getResourceCount();
+        Class cls = resourceCount.getClass();
+        Field[] fields = cls.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            // System.out.println(field.getName() + ":" + field.get(resourceCount) );
+            ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(field.getName());
+            updateUserResourceCount(email,itemType);
+        }
     }
 
 
@@ -783,6 +798,8 @@ public class UserService {
      * @Author kai
      **/
     public UserResourceCount countResource(String email){
+        //先更新，再查
+        updateAllResourceCount(email);
         User user = userDao.findFirstByEmail(email);
         return user.getResourceCount();
     }
