@@ -107,7 +107,7 @@ new Vue({
             let taskServer = {
                 ip:this.currentTaskServer.ip,
                 port:this.currentTaskServer.port,
-                page:this.pageOption.currentPage - 1,
+                page:this.pageOption.currentPage,
             }
             axios.post('/taskmonitor/tasks',
                 taskServer

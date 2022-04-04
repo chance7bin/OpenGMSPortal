@@ -1745,7 +1745,7 @@ var vue = new Vue({
             }
             var data = {
                 asc: this.pageOption1.sortAsc,
-                page: this.pageOption1.currentPage - 1,
+                page: this.pageOption1.currentPage,
                 pageSize: this.pageOption1.pageSize,
                 searchText: this.relateSearch,
                 sortType: "default",
@@ -1806,7 +1806,7 @@ var vue = new Vue({
             }
             var data = {
                 asc: this.pageOption2.sortAsc,
-                page: this.pageOption2.currentPage - 1,
+                page: this.pageOption2.currentPage,
                 pageSize: this.pageOption2.pageSize,
                 searchText: this.relateSearch,
                 sortType: "default",
@@ -1851,7 +1851,7 @@ var vue = new Vue({
             }
             var data = {
                 asc: this.pageOption3.sortAsc,
-                page: this.pageOption3.currentPage - 1,
+                page: this.pageOption3.currentPage,
                 pageSize: this.pageOption3.pageSize,
                 searchText: this.relateSearch,
                 sortType: "default",

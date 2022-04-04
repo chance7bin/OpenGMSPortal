@@ -820,7 +820,7 @@ var vue = new Vue({
             axios.get("/computableModel/pageByClassi", {
                     params: {
                         asc: 0,
-                        page: this.pageOption2.currentPage - 1,
+                        page: this.pageOption2.currentPage,
                         size: this.pageOption2.pageSize,
                         sortEle:'createTime',
                         searchText:this.searchModelText,

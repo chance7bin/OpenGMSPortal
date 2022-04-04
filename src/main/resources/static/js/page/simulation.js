@@ -92,7 +92,7 @@ var vue = new Vue({
             axios.get('/computableModel/loadDeployedModel', {
                 params: {
                     asc: 0,
-                    page: this.pageOption.currentPage - 1,
+                    page: this.pageOption.currentPage,
                     size: 6,
                 }
             }).then(
