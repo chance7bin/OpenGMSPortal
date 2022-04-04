@@ -780,7 +780,7 @@ new Vue({
             this.pageOption.progressBar = true;
             var data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage - 1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
 
             };
