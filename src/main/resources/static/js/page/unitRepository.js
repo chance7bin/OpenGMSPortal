@@ -58,50 +58,62 @@ new Vue({
             treeData: [
                 {
                     id: 1,
+                    nameCn: "单位和量纲",
                     label: 'Unit & Metric',
                     oid: '9a8680fe-ffd6-4e5a-959b-d0f157506cd3',
                     children: [{
                         id: 2,
+                        nameCn: "声音",
                         label: 'Acoustics',
                         oid: '58d45317-6dfa-4615-94a7-b0549125e2b0'
                     }, {
                         id: 3,
+                        nameCn: "原子与核物理",
                         label: 'Atomic and Nuclear physics',
                         oid: '143787c5-d011-468b-b319-66e9c941707b'
                     }, {
                         id: 4,
+                        nameCn: "电和磁",
                         label: 'Electricity and Magnetism',
                         oid: 'eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2'
                     }, {
                         id: 5,
+                        nameCn: "热量",
                         label: 'Heat',
                         oid: 'f82fcaa2-abde-4e85-8dd5-4e23270f8c60'
                     }, {
                         id: 6,
+                        nameCn: "光照",
                         label: 'Light',
                         oid: '4c8f27b7-7f14-451b-907f-a7cf2eebd6f0'
                     }, {
                         id: 7,
+                        nameCn: "机械",
                         label: 'Mechanics',
                         oid: '5fbe2a8f-64ac-4dd9-806b-b2a8166e1522'
                     }, {
                         id: 8,
+                        nameCn: "核能",
                         label: 'Nuclear',
                         oid: 'f6710cbd-3158-49c0-994a-ef64c909c10e'
                     }, {
                         id: 9,
+                        nameCn: "周期",
                         label: 'Periodic',
                         oid: '783bc5ce-55c5-48b0-ba5c-2313afac675a'
                     }, {
                         id: 10,
+                        nameCn: "物理",
                         label: 'Physical',
                         oid: '6dad7da1-6b16-4851-994f-54a5a1153dfa'
                     }, {
                         id: 11,
+                        nameCn: "固体",
                         label: 'Solid',
                         oid: 'e5c598d0-5a89-4ee5-9c91-3c78fc26d084'
                     }, {
                         id: 12,
+                        nameCn: "时间和空间",
                         label: 'Time and Space',
                         oid: '3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f'
                     }]
@@ -116,12 +128,51 @@ new Vue({
             sortFieldName:"viewCount",
             sortOrder:"Desc.",
 
-            htmlJSON:{}
+            htmlJSON:{
+                queryFields:[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+                ViewCount: ["View Count", "viewCount"],
+                Name: ["Name","name"],
+                CreateTime: ["Create Time","createTime"],
+                Asc: ["Asc.","Asc."],
+                Desc: ["Desc.","Desc."],
+            }
         }
     },
     methods: {
 
         translatePage(jsonContent){
+            //切换列表中标签选择情况
+            if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
+                let treeData = this.treeData;
+
+                for (i = 0; i < treeData.length; i++) {
+                    let treeData1 = treeData[i];
+                    let temp = treeData1.label;
+                    treeData1.label = treeData1.nameCn;
+                    treeData1.nameCn = temp;
+                    for (j = 0; j < treeData1.children.length; j++) {
+                        let treeData2 = treeData1.children[j];
+                        temp = treeData2.label;
+                        treeData2.label = treeData2.nameCn;
+                        treeData2.nameCn = temp;
+                    }
+                }
+                this.treeData = treeData;
+
+                if (this.sortOrder == this.htmlJSON.Asc[0]) {
+                    this.sortOrder = jsonContent.Asc[0];
+                } else if (this.sortOrder == this.htmlJSON.Desc[0]) {
+                    this.sortOrder = jsonContent.Desc[0];
+                }
+
+                if (this.sortTypeName == this.htmlJSON.ViewCount[0]) {
+                    this.sortTypeName = jsonContent.ViewCount[0];
+                } else if (this.sortTypeName == this.htmlJSON.Name[0]) {
+                    this.sortTypeName = jsonContent.Name[0];
+                } else if (this.sortTypeName == this.htmlJSON.CreateTime[0]) {
+                    this.sortTypeName = jsonContent.CreateTime[0];
+                }
+            }
             this.htmlJSON = jsonContent
         },
 
@@ -179,18 +230,36 @@ new Vue({
         },
 
         changeSortField(ele){
-            this.sortTypeName = ele;
-            let field = ele.replace(" ","").replace(ele[0],ele[0].toLowerCase());
-            this.sortFieldName = field;
-            this.getModels();
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.ViewCount[1]:
+                    label = this.htmlJSON.ViewCount[0];
+                    break;
+                case this.htmlJSON.Name[1]:
+                    label = this.htmlJSON.Name[0];
+                    break;
+                case this.htmlJSON.CreateTime[1]:
+                    label = this.htmlJSON.CreateTime[0];
+                    break;
+            }
+            this.sortTypeName = label;
+            this.sortFieldName = ele;
+            this.getModels(this.classType);
         },
 
         changeSortOrder(ele){
-            this.sortOrder=ele;
-
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.Asc[1]:
+                    label = this.htmlJSON.Asc[0];
+                    break;
+                case this.htmlJSON.Desc[1]:
+                    label = this.htmlJSON.Desc[0];
+                    break;
+            }
+            this.sortOrder=label;
             this.pageOption.sortAsc = ele==="Asc.";
-
-            this.getModels();
+            this.getModels(this.classType);
         },
         contribute(){
             $.ajax({

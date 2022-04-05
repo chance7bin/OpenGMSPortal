@@ -24,6 +24,11 @@ Vue.component("translation-bar",
                 type: String,
                 default: 'en-us',
             },
+
+            withComments:{
+                type: Boolean,
+                default: false,
+            }
         },
         data() {
             return {
@@ -46,6 +51,13 @@ Vue.component("translation-bar",
                     }
                 }
                 let content = await this.getLangJson(this.jsonFile)
+                if(this.withComments){
+                    let commentJson = await this.getCommentJson();
+                    for(let item in commentJson["en-us"]){
+                        content["en-us"][item] = commentJson["en-us"][item];
+                        content["zh-cn"][item] = commentJson["zh-cn"][item];
+                    }
+                }
                 this.loadLangContent(content)
             },
 
@@ -61,8 +73,29 @@ Vue.component("translation-bar",
                         'Accept':'application/json'
                     },
                     success:((res)=>{
-                        result = res
-                    })
+                            result = res
+                        })
+                    }
+
+                )
+
+                return result
+            },
+
+            async getCommentJson(){
+                let path = "/static/translation/comment.json"
+                let result
+                $.ajax({
+                        url:path,
+                        type:"GET",
+                        async:false,
+                        dataType:'json',
+                        headers:{
+                            'Accept':'application/json'
+                        },
+                        success:((res)=>{
+                            result = res
+                        })
                     }
 
                 )

@@ -47,15 +47,40 @@ var data_items = new Vue({
             sortOrder:"Desc.",
             asc:false,
 
-            queryFields:["Name","Keyword","Content","Contributor"],
             curQueryField:"Name",
             showCategoryName:'Land regions',
 
-            htmlJSON:{}
+            htmlJSON:{
+                "ViewCount": ["View Count", "viewCount"],
+                "Name": ["Name","name"],
+                "CreateTime": ["Create Time","createTime"],
+                "Asc": ["Asc.","Asc."],
+                "Desc": ["Desc.","Desc."],
+                "queryFields":[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+            }
         }
     },
     methods: {
         translatePage(jsonContent){
+
+            //切换列表中标签选择情况
+            if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
+
+                if(this.sortOrder == this.htmlJSON.Asc[0]){
+                    this.sortOrder = jsonContent.Asc[0];
+                }else if(this.sortOrder == this.htmlJSON.Desc[0]){
+                    this.sortOrder = jsonContent.Desc[0];
+                }
+
+                if(this.sortField == this.htmlJSON.ViewCount[0]){
+                    this.sortField = jsonContent.ViewCount[0];
+                }else if(this.sortField == this.htmlJSON.Name[0]){
+                    this.sortField = jsonContent.Name[0];
+                }else if(this.sortField == this.htmlJSON.CreateTime[0]){
+                    this.sortField = jsonContent.CreateTime[0];
+                }
+            }
+
             this.htmlJSON = jsonContent
         },
 
@@ -210,12 +235,33 @@ var data_items = new Vue({
             }
         },
         changeSortField(ele){
-            this.sortField = ele;
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.ViewCount[1]:
+                    label = this.htmlJSON.ViewCount[0];
+                    break;
+                case this.htmlJSON.Name[1]:
+                    label = this.htmlJSON.Name[0];
+                    break;
+                case this.htmlJSON.CreateTime[1]:
+                    label = this.htmlJSON.CreateTime[0];
+                    break;
+            }
+            this.sortField = label;
             this.getData();
         },
         changeSortOrder(ele){
-            this.sortOrder=ele;
-            this.asc = (this.sortOrder === 'Asc.');
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.Asc[1]:
+                    label = this.htmlJSON.Asc[0];
+                    break;
+                case this.htmlJSON.Desc[1]:
+                    label = this.htmlJSON.Desc[0];
+                    break;
+            }
+            this.sortOrder=label;
+            this.asc = (ele === 'Asc.');
             this.getData();
         },
         setFindDto(){
@@ -233,9 +279,9 @@ var data_items = new Vue({
             this.findDto.page=this.currentPage;
             this.findDto.asc = this.asc;
             this.findDto.categoryName = this.categoryName==='all'?'':this.categoryName.toLowerCase()      // all 赋值为空来进行查询
-            if(this.sortField === "Create Time"){
+            if(this.sortField === this.htmlJSON.CreateTime[0]){
                 this.findDto.sortField = "createTime"
-            } else if(this.sortField === "Name"){
+            } else if(this.sortField === this.htmlJSON.Name[0]){
                 this.findDto.sortField = "name"
             }else{
                 this.findDto.sortField = 'viewCount'
@@ -267,7 +313,7 @@ var data_items = new Vue({
         let u=window.location.href
         let f=u.split("/");
         this.getData()
-        this.initButton();
+        //this.initButton();
         axios.get("/user/load")
             .then((res)=>{
                 that.userName=res.data.name;

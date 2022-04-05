@@ -1,8 +1,6 @@
 {
   "en-us": {
 
-    "pageTitle_support": "Support Document",
-    "pageTitle_demo": "Demo Document",
     "back": "Back",
     "yes": "Yes",
     "no": "No",
@@ -16,18 +14,17 @@
 
   },
   "zh-cn": {
-    "pageTitle_support": "帮助文档",
-    "pageTitle_demo": "案例文档",
+
     "back": "返回",
     "yes": "是",
     "no": "否",
     "helpful": "该文档是否对您有帮助？",
-    "thx": "感谢您的反馈",
+    "thx": "感谢您的反馈！",
     "learnAndSupport": "帮助与支持",
     "provide": "了解并学习使用OpenGMS",
-    "demo": "案例",
+    "demo": "示例",
     "document": "文档",
-    "do": "Let's learn what can we do in OpenGMS!"
+    "do": "学习OpenGMS能做什么"
   }
 
 }

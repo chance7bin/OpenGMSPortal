@@ -19,6 +19,8 @@ var vue = new Vue({
                 timeout1: '',
 
                 treeHeight_former:'0',
+
+                htmlJSON:{},
             }
         },
 
@@ -41,6 +43,11 @@ var vue = new Vue({
             }
         },
         methods: {
+
+            translatePage(jsonContent){
+                this.htmlJSON = jsonContent;
+            },
+
             generateId(str) {
                 // let reg = new RegExp(".*? ", "");
                 // return str.replace(reg, "");
