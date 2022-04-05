@@ -265,7 +265,7 @@ public class NoticeService {
         recipientList = addItemAdmins(recipientList,itemAdmins);
         recipientList = addPortalAdmins(recipientList);
         recipientList = addPortalRoot(recipientList);
-        sendNoticeContains(dispatcher, action, itemType,objectId, recipientList);
+        sendNoticeContains(dispatcher, action, itemType, objectId, recipientList);
     }
 
     /**

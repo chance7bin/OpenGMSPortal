@@ -1220,7 +1220,7 @@ var createTheme = Vue.extend({
             }
             var data = {
                 asc: this.pageOption3.sortAsc,
-                page: this.pageOption3.currentPage - 1,
+                page: this.pageOption3.currentPage,
                 pageSize: this.pageOption3.pageSize,
                 searchText: this.relateSearch,
                 sortType: "default",

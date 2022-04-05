@@ -12,7 +12,9 @@ import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.dto.model.LogicalModelResultDTO;
 import njgis.opengms.portal.entity.po.LogicalModel;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ArrayUtils;
 import njgis.opengms.portal.utils.MxGraphUtils;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -50,6 +52,12 @@ public class LogicalModelService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
 
     @Value("${htmlLoadPath}")
     String htmlLoadPath;
@@ -257,9 +265,9 @@ public class LogicalModelService {
             list.add(localization);
             logicalModel.setLocalizationList(list);
 
-            logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-            // logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
-            logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
+            logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
+            logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            // logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
             logicalModel.setOverview(jsonObject.getString("description"));
             logicalModel.setContentType(jsonObject.getString("contentType"));
             logicalModel.setCXml(jsonObject.getString("cXml"));
@@ -319,13 +327,26 @@ public class LogicalModelService {
      * @Date 21/10/14
      **/
     public JSONObject update(List<MultipartFile> files, JSONObject jsonObject, String email) {
-        LogicalModel logicalModel_ori = logicalModelDao.findFirstById(jsonObject.getString("id"));
-        String author0 = logicalModel_ori.getAuthor();
-        LogicalModel logicalModel = new LogicalModel();
-        BeanUtils.copyProperties(logicalModel_ori, logicalModel);
-
+        LogicalModel logicalModel = logicalModelDao.findFirstById(jsonObject.getString("id"));
+        String author0 = logicalModel.getAuthor();
+        List<String> versions = logicalModel.getVersions();
+        String originalItemName = logicalModel.getName();
         JSONObject result = new JSONObject();
-        if (!logicalModel_ori.isLock()) {
+        if (!logicalModel.isLock()) {
+
+            if (author0.equals(email)) {
+                if (versions == null || versions.size() == 0) {
+
+                    Version version = versionService.addVersion(logicalModel, email, originalItemName);
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    logicalModel.setVersions(versions);
+                }
+            }else{
+                logicalModel.setLock(true);
+                logicalModelDao.save(logicalModel);
+            }
 
             String path = resourcePath + "/logicalModel";
             List<String> images = new ArrayList<>();
@@ -373,48 +394,31 @@ public class LogicalModelService {
                 list.add(localization);
                 logicalModel.setLocalizationList(list);
                 logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
-                // logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
-                logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
-
+                // logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
+                logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
                 logicalModel.setOverview(jsonObject.getString("description"));
                 logicalModel.setContentType(jsonObject.getString("contentType"));
                 logicalModel.setCXml(jsonObject.getString("cXml"));
                 logicalModel.setSvg(jsonObject.getString("svg"));
-                logicalModel.setAuthor(email);
+                logicalModel.setLastModifyTime(new Date());
+                logicalModel.setLastModifier(author0);
 
-                Date now = new Date();
-
-                String authorUserName = author0;
+                Version version_new = versionService.addVersion(logicalModel, email, originalItemName);
                 if (author0.equals(email)) {
-                    logicalModel.setLastModifyTime(now);
+                    versions.add(version_new.getId());
+                    logicalModel.setVersions(versions);
                     logicalModelDao.save(logicalModel);
 
                     result.put("method", "update");
-                    result.put("code", 1);
                     result.put("id", logicalModel.getId());
 
                 } else {
-                    //TODO 逻辑模型版本
-//                    LogicalModelVersion logicalModelVersion = new LogicalModelVersion();
-//                    BeanUtils.copyProperties(logicalModel, logicalModelVersion, "id");
-//                    logicalModelVersion.setId(UUID.randomUUID().toString());
-//                    logicalModelVersion.setOriginOid(logicalModel_ori.getId());
-//                    logicalModelVersion.setModifier(uid);
-//                    logicalModelVersion.setVerNumber(now.getTime());
-//                    logicalModelVersion.setVerStatus(0);
-//                    userService.noticeNumPlusPlus(authorUserName);
-//                    logicalModelVersion.setModifyTime(now);
-//                    logicalModelVersion.setCreator(author0);
-//
-//                    logicalModelVersionDao.save(logicalModelVersion);
-//
-//                    logicalModel_ori.setLock(true);
-//                    logicalModelDao.save(logicalModel_ori);
-//
-//                    result.put("method", "version");
-//                    result.put("code", 0);
-//                    result.put("id", logicalModelVersion.getId());
 
+                    // 发送通知
+                    noticeService.sendNoticeContainsAllAdmin(email, logicalModel.getAuthor(), logicalModel.getAdmins() ,ItemTypeEnum.Version,version_new.getId(), OperationEnum.Edit);
+
+                    result.put("method", "version");
+                    result.put("versionId", version_new.getId());
 
                     return result;
 
@@ -450,9 +454,6 @@ public class LogicalModelService {
                 String path = resourcePath + images.get(i);
                 Utils.deleteFile(path);
             }
-            //条目删除
-            logicalModelDao.delete(logicalModel);
-            userService.ItemCountMinusOne(email, ItemTypeEnum.LogicalModel);
 
             //模型条目关联删除
             List<String> relatedModelItems = logicalModel.getRelatedModelItems();
@@ -470,6 +471,10 @@ public class LogicalModelService {
                 modelItem.getRelate().setLogicalModels(logicalModelIds);
                 modelItemDao.save(modelItem);
             }
+
+            //条目删除
+            logicalModelDao.delete(logicalModel);
+            userService.updateUserResourceCount(email, ItemTypeEnum.LogicalModel);
 
             return ResultUtils.success();
         } else {

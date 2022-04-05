@@ -49,7 +49,7 @@ var createDataHubs = Vue.extend({
                 classifications: [],
                 displays: [],
                 uploadImage:"",
-                authorship: [],
+                authorships: [],
                 meta: {
                     coordinateSystem: '',
                     geographicProjection: '',
@@ -425,7 +425,7 @@ var createDataHubs = Vue.extend({
             // this.dataItemAddDTO.dataType = this.dataType;
 
 
-            var authorship = [];
+            var authorships = [];
             var author_lenth = $(".user-attr").length;
             for (var i = 0; i < author_lenth; i++) {
 
@@ -439,16 +439,17 @@ var createDataHubs = Vue.extend({
                 authorInfo.name = $(".user-attr input")[t].value
                 authorInfo.email = $(".user-attr input")[1 + t].value
                 authorInfo.homepage = $(".user-attr input")[2 + t].value
-                authorship.push(authorInfo)
+                authorships.push(authorInfo)
 
             }
-            this.dataItemAddDTO.authorship = authorship;
+            this.dataItemAddDTO.authorships = authorships;
             this.dataItemAddDTO.dataList = this.userDataList;
 
 
             var thedata = this.dataItemAddDTO;
 
             var that = this;
+            console.log("this.id:",this.id)
             if ((this.id === "0") || (this.id === "") || (this.id == null)) {
                 axios.post("/dataHub/", thedata)
                     .then(res => {
@@ -519,14 +520,14 @@ var createDataHubs = Vue.extend({
             }else {
                 this.dataItemAddDTO.dataItemId = this.id;
                 var thedata1 = this.dataItemAddDTO;
-                axios.post("/dataItem/updateHubs/",thedata1)
+                axios.put("/dataHub/" + this.id,thedata1)
                     .then(result=>{
                         if (result.status ===200){
                             if (result.data.code === 0) {
                                 if(result.data.data.method==="update") {
                                     alert("Update Success");
                                     $("#editModal", parent.document).remove();
-                                    window.location.href = "/dataItem/hub/" + result.data.data.oid;
+                                    window.location.href = "/dataHub/" + result.data.data.id;
                                 }
                                 else{
                                     this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
@@ -644,7 +645,7 @@ var createDataHubs = Vue.extend({
 
         var tha = this;
         tha.id = this.$route.params.editId;
-
+        console.log("tha.id:",tha.id)
         this.classif = [];
         $("#classification").val('');
 
@@ -924,7 +925,43 @@ var createDataHubs = Vue.extend({
 
                         this.selectedFile = data.dataList;
 
-                        this.$refs.tree2.setCheckedKeys(data.classifications);
+                        //wyj 遍历树得到id
+                        let cls = data.classifications;
+                        let ids = [];
+
+
+                        for(let i =0;i<cls.length;i++){
+                            for(let j=0;j<3;j++){
+                                for (let k = 0; k < this.treeData_part1[0].children[j].children.length; k++) {
+                                    if (cls[i] == this.treeData_part1[0].children[j].children[k].oid) {
+                                        ids.push(this.treeData_part1[0].children[j].children[k].id);
+                                        this.parid = this.treeData_part1[0].children[j].children[k].id;
+                                        this.clsStr += this.treeData_part1[0].children[j].children[k].label;
+                                        this.clsStr += ", ";
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        for(let i =0;i<cls.length;i++){
+                            for(let j=0;j<2;j++){
+                                for (let k = 0; k < this.treeData_part2[0].children[j].children.length; k++) {
+                                    if (cls[i] == this.treeData_part2[0].children[j].children[k].oid) {
+                                        ids.push(this.treeData_part2[0].children[j].children[k].id);
+                                        this.parid = this.treeData_part2[0].children[j].children[k].id;
+                                        this.clsStr += this.treeData_part2[0].children[j].children[k].label;
+                                        this.clsStr += ", ";
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        this.$refs.tree2.setCheckedKeys(ids);
+                        this.$refs.tree3.setCheckedKeys(ids);
+
                         this.treeData_select = data.categories;
                         this.treeData_select = data.classifications;
                         this.dataItemAddDTO.viewCount = data.viewCount;
@@ -932,7 +969,7 @@ var createDataHubs = Vue.extend({
                         //清空
                         // $("#classification").val('')
                         $("#dataname").val(data.name);
-                        $("#description").val(data.description);
+                        $("#description").val(data.overview);
                         $("#keywords").tagEditor('destory');
                         $("#keywords").tagEditor({
                             initialTags: data.keywords,
@@ -946,7 +983,7 @@ var createDataHubs = Vue.extend({
                             placeholder: 'Enter keywords ...'
                         });
 
-                        $("#detail").html(data.detail);
+                        $("#detail").html(data.localizationList[0].description);
                         this.authorDataList = data.userDataList;
 
                         // $('#imgShow').get(0).src = data.image;
@@ -972,9 +1009,9 @@ var createDataHubs = Vue.extend({
                         //tinymce.remove('textarea#detail');//先销毁已有tinyMCE实例
                         initTinymce("textarea#detail");
 
-                        let authorship = data.authorship;
-                        if(authorship!=null) {
-                            for (i = 0; i < authorship.length; i++) {
+                        let authorships = data.authorships;
+                        if(authorships!=null) {
+                            for (i = 0; i < authorships.length; i++) {
                                 user_num++;
                                 var content_box = $(".providers");
                                 var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -991,7 +1028,7 @@ var createDataHubs = Vue.extend({
                                     "                                                                                                            <input type='text'\n" +
                                     "                                                                                                                   name=\"name\"\n" +
                                     "                                                                                                                   class='form-control' value='" +
-                                    authorship[i].name +
+                                    authorships[i].name +
                                     "'>\n" +
                                     "                                                                                                        </div>\n" +
                                     "                                                                                                    </div>\n" +
@@ -1004,7 +1041,7 @@ var createDataHubs = Vue.extend({
                                     "                                                                                                            <input type='text'\n" +
                                     "                                                                                                                   name=\"email\"\n" +
                                     "                                                                                                                   class='form-control' value='" +
-                                    authorship[i].email +
+                                    authorships[i].email +
                                     "'>\n" +
                                     "                                                                                                        </div>\n" +
                                     "                                                                                                    </div>\n" +
@@ -1017,7 +1054,7 @@ var createDataHubs = Vue.extend({
                                     "                                                                                                            <input type='text'\n" +
                                     "                                                                                                                   name=\"homepage\"\n" +
                                     "                                                                                                                   class='form-control' value='" +
-                                    authorship[i].homepage +
+                                    authorships[i].homepage +
                                     "'>\n" +
                                     "                                                                                                        </div>\n" +
                                     "                                                                                                    </div>\n" +

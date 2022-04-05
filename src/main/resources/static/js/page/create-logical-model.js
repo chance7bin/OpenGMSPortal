@@ -211,10 +211,16 @@ var createLogicalModel = Vue.extend({
                 modelItem = await this.getBindModelInfo(basicInfo.relateModelItem)
             }
 
-            this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
-            this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
 
-            $("#search-box").val(basicInfo.relateModelItemName)
+            // this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
+            // this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
+            //
+            // $("#search-box").val(basicInfo.relateModelItemName)
+            //wyj 更新logical model时 选中原来选择的模型
+            this.itemInfo.relateModelItemName = basicInfo.relatedModelItemInfoList[0].name
+            this.itemInfo.relateModelItem = basicInfo.relatedModelItemInfoList[0].id
+
+            $("#search-box").val(basicInfo.relatedModelItemInfoList[0].name)
 
             this.itemInfo.status=basicInfo.status;
 
@@ -233,13 +239,15 @@ var createLogicalModel = Vue.extend({
 
             //detail
 
-            $("#logicalModelText").html(basicInfo.detail);
+            // $("#logicalModelText").html(basicInfo.detail);
+            $("#logicalModelText").html(basicInfo.localizationList[0].description);
+
 
             initTinymce('textarea#logicalModelText')
 
-            let authorship = basicInfo.authorship;
-            if(authorship!=null) {
-                for (i = 0; i < authorship.length; i++) {
+            let authorships = basicInfo.authorships;
+            if(authorships!=null) {
+                for (i = 0; i < authorships.length; i++) {
                     user_num++;
                     var content_box = $(".providers");
                     var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -256,7 +264,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"name\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].name +
+                        authorships[i].name +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -269,7 +277,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"ins\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].ins +
+                        authorships[i].ins +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -282,7 +290,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"email\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].email +
+                        authorships[i].email +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -295,7 +303,7 @@ var createLogicalModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"homepage\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].homepage +
+                        authorships[i].homepage +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -316,15 +324,15 @@ var createLogicalModel = Vue.extend({
 
             itemObj.name=this.itemInfo.name
             itemObj.status=this.itemInfo.status
-            itemObj.description=this.itemInfo.overview
+            itemObj.description=this.itemInfo.description
             itemObj.relateModelItem=this.itemInfo.relateModelItem
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
             var detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
-            itemObj.authorship=[];
-            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorship);
+            itemObj.authorships=[];
+            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorships);
 
             /**
              * 张硕
@@ -815,7 +823,9 @@ var createLogicalModel = Vue.extend({
                     async: true
                 }).done((res)=> {
                     loading.close();
+
                     switch (res.data.code) {
+
                         case 1:
                             this.deleteDraft()
                             this.$confirm('<div style=\'font-size: 18px\'>Create logical model successfully!</div>', 'Tip', {

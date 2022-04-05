@@ -16,11 +16,9 @@ import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.model.ComputableModelResultDTO;
-import njgis.opengms.portal.entity.po.ComputableModel;
-import njgis.opengms.portal.entity.po.DataItem;
-import njgis.opengms.portal.entity.po.ModelItem;
-import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +70,12 @@ public class ComputableModelService {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    VersionService versionService;
+
+    @Autowired
+    NoticeService noticeService;
 
     @Value("${htmlLoadPath}")
     String htmlLoadPath;
@@ -275,9 +279,21 @@ public class ComputableModelService {
                 computableModel.setResources(resources);
                 computableModel.setStatus(jsonObject.getString("status"));
                 computableModel.setName(jsonObject.getString("name"));
-                computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
-                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+
+
+
+                // computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                Localization localization = new Localization();
+                localization.setLocalCode("en");
+                localization.setLocalName("English");
+                localization.setName(jsonObject.getString("name"));
+                localization.setDescription(jsonObject.getString("detail"));
+                List<Localization> localizations = new ArrayList<>();
+                localizations.add(localization);
+                computableModel.setLocalizationList(localizations);
+
                 computableModel.setContentType(jsonObject.getString("contentType"));
                 computableModel.setUrl(jsonObject.getString("url"));
 
@@ -296,12 +312,12 @@ public class ComputableModelService {
                     computableModel.setImage(null);
                 }
 
-                ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getString("relateModelItem"));
+                ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getJSONArray("relatedModelItems").getString(0));
                 computableModel.setClassifications(relateModelItem.getClassifications());
 
                 String md5 = null;
                 if (jsonObject.getString("contentType").equals("Package")) {
-                    String filePath = path + resources.get(0);
+                    String filePath = path + resources.get(0).getPath();
                     File file = new File(filePath);
 
                     md5 = Utils.getMd5ByFile(file);
@@ -440,14 +456,13 @@ public class ComputableModelService {
 
                 computableModel.setMd5(md5);
 
-                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
 
                 computableModel.setAuthor(uid);
 
                 Date now = new Date();
                 computableModel.setCreateTime(now);
                 computableModel.setLastModifyTime(now);
-                computableModelDao.insert(computableModel);
 
                 //联动与计算模型相关的模型关联信息
                 List<String> relatedModelItems = computableModel.getRelatedModelItems();
@@ -459,6 +474,9 @@ public class ComputableModelService {
                     modelItem.setRelate(modelItemRelate);
                     modelItemDao.save(modelItem);
                 }
+
+                computableModelDao.insert(computableModel);
+                userService.updateUserResourceCount(uid , ItemTypeEnum.ModelItem, "add");
 
                 result.put("code", 1);
                 result.put("id", computableModel.getId());
@@ -472,13 +490,27 @@ public class ComputableModelService {
 
     public JSONObject update(List<MultipartFile> files, JSONObject jsonObject, String email) {
         JSONObject result = new JSONObject();
-        ComputableModel computableModel_ori = computableModelDao.findFirstById(jsonObject.getString("id"));
-        String author0 = computableModel_ori.getAuthor();
-        ComputableModel computableModel = new ComputableModel();
-        BeanUtils.copyProperties(computableModel_ori, computableModel);
+        ComputableModel computableModel = computableModelDao.findFirstById(jsonObject.getString("id"));
+        String author0 = computableModel.getAuthor();
         String contentType = jsonObject.getString("contentType");
+        String originalItemName = computableModel.getName();
+        List<String> versions = computableModel.getVersions();
+        if (!computableModel.isLock()) {
 
-        if (!computableModel_ori.isLock()) {
+            if (author0.equals(email)) {
+                if (versions == null || versions.size() == 0) {
+
+                    Version version = versionService.addVersion(computableModel, email, originalItemName);
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    computableModel.setVersions(versions);
+                }
+            }else{
+                computableModel.setLock(true);
+                computableModelDao.save(computableModel);
+            }
+
             String path = resourcePath + "/computableModel/" + jsonObject.getString("contentType");
             //如果上传新文件
             if (files.size() > 0) {
@@ -493,7 +525,7 @@ public class ComputableModelService {
                 try {
                     String md5 = null;
                     if (jsonObject.getString("contentType").equals("Package")) {
-                        String filePath = path + resources.get(0);
+                        String filePath = path + resources.get(0).getPath();
                         FileInputStream file = new FileInputStream(filePath);
                         md5 = DigestUtils.md5DigestAsHex(IOUtils.readFully(file, -1, true));
 
@@ -617,50 +649,42 @@ public class ComputableModelService {
 
             computableModel.setName(jsonObject.getString("name"));
             computableModel.setStatus(jsonObject.getString("status"));
-            computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
-            computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+            // computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
+            Localization localization = new Localization();
+            localization.setLocalCode("en");
+            localization.setLocalName("English");
+            localization.setName(jsonObject.getString("name"));
+            localization.setDescription(jsonObject.getString("detail"));
+            List<Localization> localizations = new ArrayList<>();
+            localizations.add(localization);
+            computableModel.setLocalizationList(localizations);
+            computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
             computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
             computableModel.setOverview(jsonObject.getString("description"));
             computableModel.setContentType(jsonObject.getString("contentType"));
             computableModel.setUrl(jsonObject.getString("url"));
 
-            ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getString("relateModelItem"));
+            ModelItem relateModelItem = modelItemDao.findFirstById(jsonObject.getJSONArray("relatedModelItems").getString(0));
             computableModel.setClassifications(relateModelItem.getClassifications());
 
-            computableModel.setAuthor(email);
+            Date curDate = new Date();
+            computableModel.setLastModifyTime(curDate);
+            computableModel.setLastModifier(author0);
 
-            Date now = new Date();
-            String authorUserName = computableModel_ori.getAuthor();
-
-            if (computableModel_ori.getAuthor().equals(email)) {
-                computableModel.setLastModifyTime(now);
+            Version version_new = versionService.addVersion(computableModel, email, originalItemName);
+            if (computableModel.getAuthor().equals(email)) {
                 computableModelDao.save(computableModel);
-
+                versions.add(version_new.getId());
+                computableModel.setVersions(versions);
                 result.put("method", "update");
-                result.put("code", 1);
                 result.put("id", computableModel.getId());
             } else {
-                //TODO 计算模型版本
-//                ComputableModelVersion computableModelVersion = new ComputableModelVersion();
-//                BeanUtils.copyProperties(computableModel, computableModelVersion, "id");
-//                computableModelVersion.setId(UUID.randomUUID().toString());
-//                computableModelVersion.setOriginOid(computableModel_ori.getId());
-//                computableModelVersion.setModifier(email);
-//                computableModelVersion.setVerNumber(now.getTime());
-//                computableModelVersion.setVerStatus(0);
-//                userService.noticeNumPlusPlus(authorUserName);
-//
-//                computableModelVersion.setModifyTime(now);
-//                computableModelVersion.setCreator(author0);
-//
-//                computableModelVersionDao.save(computableModelVersion);
-//
-//                computableModel_ori.setLock(true);
-//                computableModelDao.save(computableModel_ori);
-//
-//                result.put("method", "version");
-//                result.put("code", 0);
-//                result.put("id", computableModelVersion.getId());
+                // 发送通知
+                noticeService.sendNoticeContainsAllAdmin(email, computableModel.getAuthor(), computableModel.getAdmins() ,ItemTypeEnum.Version,version_new.getId(), OperationEnum.Edit);
+
+                result.put("method", "version");
+                result.put("versionId", version_new.getId());
+                return result;
             }
             return result;
         } else {
@@ -678,10 +702,6 @@ public class ComputableModelService {
                 Utils.delete(path + resources.get(i).getPath());
             }
 
-            //计算模型删除
-            computableModelDao.delete(computableModel);
-            userService.ItemCountMinusOne(email, ItemTypeEnum.ComputableModel);
-
             //模型条目关联删除
             List<String> relatedModelItems = computableModel.getRelatedModelItems();
             for (int i = 0;i<relatedModelItems.size();i++) {
@@ -689,7 +709,7 @@ public class ComputableModelService {
                 ModelItem modelItem = modelItemDao.findFirstById(modelItemId);
                 List<String> computableModelIds = modelItem.getRelate().getComputableModels();
                 for (String id : computableModelIds
-                        ) {
+                ) {
                     if (id.equals(computableModel.getId())) {
                         computableModelIds.remove(id);
                         break;
@@ -698,6 +718,10 @@ public class ComputableModelService {
                 modelItem.getRelate().setComputableModels(computableModelIds);
                 modelItemDao.save(modelItem);
             }
+
+            //计算模型删除
+            computableModelDao.delete(computableModel);
+            userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel,"delete");
 
             return ResultUtils.success();
         } else {

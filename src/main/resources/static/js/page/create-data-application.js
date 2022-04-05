@@ -501,7 +501,7 @@ var createDataApplication = Vue.extend({
             // document.title="Modify Data Application | OpenGMS";
             let that = this
             $.ajax({
-                url: "/dataMethod/getInfo/" + oid,
+                url: "/dataMethod/method/" + oid,
                 type: "get",
                 data: {},
 
@@ -509,8 +509,10 @@ var createDataApplication = Vue.extend({
                     window.sessionStorage.setItem("editdataApplication_id", "");
                     console.log(result)
                     var basicInfo = result.data;
-                    if(basicInfo.resourceJson!=null)
-                        that.resources=basicInfo.resourceJson;
+                    // if(basicInfo.resourceJson!=null)
+                    //     that.resources=basicInfo.resources;
+
+                    that.resources=basicInfo.resources;
 
                     // that.dataApplication.bindModelItem=basicInfo.relateModelItemName;
                     // that.dataApplication.bindOid=basicInfo.relateModelItem;
@@ -538,14 +540,14 @@ var createDataApplication = Vue.extend({
                     $(".providers").children(".panel").remove();
 
                     //detail
-                    $("#dataApplicationText").html(basicInfo.detail);
+                    $("#dataApplicationText").html(basicInfo.localizationList[0].description);
 
                     initTinymce('textarea#dataApplicationText')
 
 
-                    let authorship = basicInfo.authorship;
-                    if(authorship!=null) {
-                        for (i = 0; i < authorship.length; i++) {
+                    let authorships = basicInfo.authorships;
+                    if(authorships!=null) {
+                        for (i = 0; i < authorships.length; i++) {
                             user_num++;
                             var content_box = $(".providers");
                             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -562,7 +564,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"name\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].name +
+                                authorships[i].name +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +
@@ -575,7 +577,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"ins\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].ins +
+                                authorships[i].ins +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +
@@ -588,7 +590,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"email\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].email +
+                                authorships[i].email +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +
@@ -601,7 +603,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                            <input type='text'\n" +
                                 "                                                                                                                   name=\"homepage\"\n" +
                                 "                                                                                                                   class='form-control' value='" +
-                                authorship[i].homepage +
+                                authorships[i].homepage +
                                 "'>\n" +
                                 "                                                                                                        </div>\n" +
                                 "                                                                                                    </div>\n" +
@@ -610,8 +612,10 @@ var createDataApplication = Vue.extend({
                         }
                     }
 
+                    console.log(basicInfo)
+
                     that.dataApplication.name=basicInfo.name;
-                    that.dataApplication.description=basicInfo.description
+                    that.dataApplication.description=basicInfo.overview
 
                     // $("#nameInput").val(basicInfo.name);
                     // $("#descInput").val(basicInfo.description)
@@ -716,7 +720,7 @@ var createDataApplication = Vue.extend({
             var detail = tinyMCE.activeEditor.getContent();
             this.dataApplication.detail = detail.trim();
             this.dataApplication.keywords = $('#keyWords').tagEditor('getTags')[0].tags
-            this.dataApplication.authorship=[];
+            this.dataApplication.authorships=[];
             this.dataApplication.classifications = this.cls;
             this.dataApplication.type = "process";
             // this.dataApplication.method = this.method;
@@ -750,7 +754,7 @@ var createDataApplication = Vue.extend({
             })
 
             this.dataApplication.testDataPath = this.testDataPath;
-            userspace.getUserData($("#providersPanel .user-contents .form-control"), this.dataApplication.authorship);
+            userspace.getUserData($("#providersPanel .user-contents .form-control"), this.dataApplication.authorships);
 
             // //重点在这里 如果使用 var data = {}; data.inputfile=... 这样的方式不能正常上传
 
@@ -779,7 +783,7 @@ var createDataApplication = Vue.extend({
                 console.log(res.data);
             })
             this.dataApplication.packagePathContainer = this.packagePathContainer;
-
+            this.dataApplication.overview = this.dataApplication.description
             //暂时注释一下，过会解开
             if ((oid === "0") || (oid === "") || (oid == null)) {
 
@@ -867,8 +871,8 @@ var createDataApplication = Vue.extend({
                 $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/dataMethod/update',
-                    type: 'post',
+                    url: '/dataMethod/' + oid,
+                    type: 'put',
                     data: this.formData,
                     cache: false,
                     processData: false,

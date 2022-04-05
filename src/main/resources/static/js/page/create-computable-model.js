@@ -769,7 +769,8 @@ var createComputableModel = Vue.extend({
         getItemContent(trigger,callBack){
             let itemObj = {}
 
-            itemObj.relateModelItem = this.itemInfo.relateModelItem
+            itemObj.relatedModelItems = [this.itemInfo.relateModelItem]
+            console.log("aaaaaaaaaaaaaaaa",this.itemInfo)
             itemObj.status = this.itemInfo.status
             itemObj.name = this.itemInfo.name
             itemObj.image = this.itemInfo.image
@@ -786,8 +787,8 @@ var createComputableModel = Vue.extend({
             var detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
-            itemObj.authorship=[];
-            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorship);
+            itemObj.authorships=[];
+            userspace.getUserData($("#providersPanel .user-contents .form-control"), itemObj.authorships);
 
 
             if(callBack){
@@ -1240,6 +1241,7 @@ var createComputableModel = Vue.extend({
             }
 
             this.itemInfo = this.getItemContent();
+            console.log("bbbbbbbbbbb",this.itemInfo)
 
             if ((oid === "0") || (oid === "") || (oid == null)) {
 

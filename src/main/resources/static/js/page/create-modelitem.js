@@ -626,11 +626,16 @@ var createModelItem = Vue.extend({
             modelItemObj.relate = this.itemInfo.relate;
             modelItemObj.modelRelationList = this.itemInfo.modelRelationList;
             modelItemObj.relatedData = this.itemInfo.relatedData;
-            modelItemObj.authorship=[];
-            userspace.getUserData($("#providersPanel .user-contents .form-control"), modelItemObj.authorship);
+            modelItemObj.authorships=[];
+            userspace.getUserData($("#providersPanel .user-contents .form-control"), modelItemObj.authorships);
 
 
             if(this.editType == 'modify') {
+
+                // console.log("create modelitem localozation:")
+                // console.log("current: ",this.currentLocalization)
+                // console.log("old: ",this.localizationList)
+                console.log("getItemContent tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
 
                 for (i = 0; i < this.localizationList.length; i++) {
                     if (this.currentLocalization.localName == this.localizationList[i].localName) {
@@ -847,10 +852,10 @@ var createModelItem = Vue.extend({
 
             $(".providers").children(".panel").remove();
 
-            let authorship = basicInfo.authorship;
+            let authorships = basicInfo.authorships;
             let user_num = 0
-            if(authorship!=null) {
-                for (i = 0; i < authorship.length; i++) {
+            if(authorships!=null) {
+                for (i = 0; i < authorships.length; i++) {
                     user_num++;
                     var content_box = $(".providers");
                     var str = "<div class='panel panel-primary'> <div class='panel-heading'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -867,7 +872,7 @@ var createModelItem = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"name\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].name +
+                        authorships[i].name +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -880,7 +885,7 @@ var createModelItem = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"ins\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].ins +
+                        authorships[i].ins +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -893,7 +898,7 @@ var createModelItem = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"email\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].email +
+                        authorships[i].email +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -906,7 +911,7 @@ var createModelItem = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"homepage\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].homepage +
+                        authorships[i].homepage +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -1656,6 +1661,7 @@ var createModelItem = Vue.extend({
 
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
+                console.log("step  tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.treeData_select.length === 0) {
                         new Vue().$message({
@@ -1808,7 +1814,7 @@ var createModelItem = Vue.extend({
         //     modelItemObj.keywords = $("#tagInput").val().split(",");
         //     modelItemObj.description = $("#descInput").val();
         //     modelItemObj.image = $('#imgShow').get(0).src;
-        //     modelItemObj.authorship=[];
+        //     modelItemObj.authorships=[];
         //
         //     if (this.cls.length == 0) {
         //         alert("Please select parent node");
@@ -1976,7 +1982,7 @@ var createModelItem = Vue.extend({
                                     showClose: false,
                                 }).then(() => {
                                     $("#editModal", parent.document).remove();
-                                    window.location.href = "/modelItem/" + result.data.oid;
+                                    window.location.href = "/modelItem/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/models/modelitem";
                                 });

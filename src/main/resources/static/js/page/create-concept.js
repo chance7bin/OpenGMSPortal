@@ -1029,6 +1029,7 @@ var createConcept = Vue.extend({
 
         },
         changeLocalization(row){
+            console.log("changeLocalization````row:",row)
             if(row==null){
                 this.currentLocalization={
                     localCode:"",
@@ -1054,6 +1055,7 @@ var createConcept = Vue.extend({
         },
 
         initLocalization(row){
+            console.log("initLocalization```````row:",row)
             this.$set(row, "selected", true);
             this.currentLocalization.localName = row.localName
             this.currentLocalization.name = row.name
@@ -1113,7 +1115,7 @@ var createConcept = Vue.extend({
             this.pageOption.progressBar = true;
             var data = {
                 asc: this.pageOption.sortAsc,
-                page: this.pageOption.currentPage - 1,
+                page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.searchText,
                 classifications: this.classifications1
@@ -1277,7 +1279,7 @@ var createConcept = Vue.extend({
             $(".providers").children(".panel").remove();
 
             $("#nameInput").val(basicInfo.name);
-            $("#descInput").val(basicInfo.description);
+            $("#descInput").val(basicInfo.overview);
 
             //image
             if (basicInfo.image != "") {
@@ -1316,6 +1318,8 @@ var createConcept = Vue.extend({
         },
 
         getItemContent(trigger,callBack){
+
+            // console.log("getItemContent:",tinymce.activeEditor.getContent())
             let itemObj = {}
 
             itemObj.classifications = this.cls;
@@ -1331,11 +1335,15 @@ var createConcept = Vue.extend({
             itemObj.localizationList = this.localizationList;
 
             if(this.editType == 'modify') {
+                // console.log("create concept localozation:",tinymce.activeEditor.getContent())
+                // console.log("current: ",this.currentLocalization)
+                // console.log("old: ",this.localizationList)
 
                 for (i = 0; i < this.localizationList.length; i++) {
                     if (this.currentLocalization.localName == this.localizationList[i].localName) {
                         this.localizationList[i].name = this.currentLocalization.name;
                         this.localizationList[i].description = tinymce.activeEditor.getContent();
+                        // this.localizationList[i].description = activeEditorContent;
                         break;
                     }
                 }
@@ -1686,6 +1694,7 @@ var createConcept = Vue.extend({
                 alert('Wizard Completed');
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
+                // console.log("step tinymce.activeEditor.getContent():",tinymce.activeEditor.getContent());
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.cls.length == 0) {
                         new Vue().$message({
@@ -1710,6 +1719,8 @@ var createConcept = Vue.extend({
                         });
                         return false;
                     }
+
+
 
                     if(this.currentLocalization.name === ""){
                         this.currentLocalization.name = $("#nameInput").val();
@@ -1771,15 +1782,18 @@ var createConcept = Vue.extend({
         var conceptObj = {};
 
         $(".finish").click(() => {
+            // console.log("finish tinymce.activeEditor.getContent():",tinymce.activeEditor.getContent())
+
             let loading = this.$loading({
                 lock: true,
                 text: "Uploading...",
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
-            if(this.editType=='modify') {
-                this.changeLocalization(this.currentLocalization);
-            }
+            // TODO 这是个严重的问题
+            // if(this.editType=='modify') {
+            //     this.changeLocalization(this.currentLocalization);
+            // }
             for(i=0;i<this.localizationList.length;i++){
                 let local = this.localizationList[i];
                 if(local.localName.trim()==""||local.localCode.trim()==""){
@@ -1794,8 +1808,10 @@ var createConcept = Vue.extend({
                     return;
                 }
             }
-
+            // console.log("finish2 tinymce.activeEditor.getContent():",tinymce.activeEditor.getContent())
             conceptObj = this.getItemContent('finish')
+
+            // return;
 
             let formData = new FormData();
             if ((oid === "0") || (oid === "") || (oid == null)) {
@@ -1878,7 +1894,7 @@ var createConcept = Vue.extend({
                                     center: true,
                                     showClose: false,
                                 }).then(() => {
-                                    window.location.href = "/repository/concept/" + result.data.oid;
+                                    window.location.href = "/repository/concept/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/communities/concept&semantic";
                                 });

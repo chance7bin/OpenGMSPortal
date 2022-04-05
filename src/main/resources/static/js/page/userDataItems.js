@@ -240,11 +240,8 @@ var userDataItems = Vue.extend(
                             setTimeout(() => {
 
                                 $.ajax({
-                                    type: "GET",
-                                    url: "/dataItem/del/",
-                                    data: {
-                                        id: id
-                                    },
+                                    type: "DELETE",
+                                    url: "/dataItem/"+id,
                                     cache: false,
                                     async: true,
                                     dataType: "json",
