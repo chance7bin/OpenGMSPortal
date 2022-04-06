@@ -68,9 +68,9 @@
         <translation-bar
                 json-file="conceptInfo"
                 @translate-page="translatePage"
+                with-comments="true"
                 initial-lang="en-us"
                 theme="dark"
-                withComments="true"
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
@@ -142,8 +142,8 @@
             <div id="Contributor0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4 th:if="${history!=true}">Contributor</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
+                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -187,7 +187,7 @@
             <div id="Related_Concepts0" class="detail_block minScreen" th:if="${#lists.size(related)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>Related Concept(s)</h4>
+                        <h4>{{htmlJSON.RelatedConcept}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -302,7 +302,7 @@
             <div id="QR0" class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
+                        <h4>{{htmlJSON.QRCode}}</h4>
                     </div>
                 </div>
                 <div class="block_content">

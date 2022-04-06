@@ -8,7 +8,7 @@
 <div th:fragment="description" id="description" th:if="${detailLanguage!=''}" class="detail_block">
     <div class="block_head">
         <div class="head_text">
-            <h4><span th:text="${itemType}">Model</span> Description</h4>
+            <h4 translateId="detailedDescription">Detailed Description</h4>
         </div>
         <el-dropdown v-cloak style="float:right;padding:0 10px;background-color: white;cursor:pointer;" trigger="click" @command="changeDetailLanguage" >
 
@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="fullPaper text-center hide">
-        <a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Text<i class="fa fa-angle-down"
+        <a id="fullPaper" style="cursor:pointer;font-size:16px;" ><span translateId="viewFullText">View Full Text</span><i class="fa fa-angle-down"
                                                                                   style="margin-left: 10px;color:red;font-weight: bold"
                                                                                   aria-hidden="true"></i></a>
     </div>
@@ -56,8 +56,8 @@
 <div th:fragment="contributor">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-            <h4 th:if="${history!=true}">Contributor(s)</h4>
-            <h4 th:if="${history==true}">Modifier(s)</h4>
+            <h4 th:if="${history!=true}" translateId="Contributor">Contributor(s)</h4>
+            <h4 th:if="${history==true}" translateId="Modifier">Modifier(s)</h4>
             <el-tooltip popper-class="fontsize-15" effect="light"
                         content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item."
                         placement="top">
@@ -83,8 +83,8 @@
         </div>
         <div class="el-row">
             <div class="text-center">
-                <h5 th:if="${history!=true}" th:text="'Initial contribute: '+${date}">contributed at 2018-7-13 14:32:18 </h5>
-                <h5 th:if="${history==true}" th:text="'Modify: '+${date}">modified at 2018-7-13 14:32:18 </h5>
+                <h5 th:if="${history!=true}" ><span translateId="InitialContribute">Initial contribute: </span><span th:text="${date}"></span></h5>
+                <h5 th:if="${history==true}" ><span translateId="ModifyTime">Modify Time: </span><span th:text="${date}"></span></h5>
             </div>
         </div>
         <div class="flexAlignEnd flexJustCenter">
@@ -108,7 +108,7 @@
 <div th:fragment="author">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-            <h4>Authorship</h4>
+            <h4 translateId="Authorship">Authorship</h4>
             <el-tooltip popper-class="fontsize-15" effect="light"
                         content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
                         placement="top">
@@ -130,11 +130,11 @@
                  style="">
                 <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
                     <dl>
-                        <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
+                        <dt th:if="${author.ins!=''}"><span translateId="Affiliation">Affiliation</span>: &nbsp</dt>
                         <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                        <dt th:if="${author.email!=''}">Email: &nbsp</dt>
+                        <dt th:if="${author.email!=''}"><span translateId="Email">Email</span>: &nbsp</dt>
                         <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                        <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
+                        <dt th:if="${author.homepage!=''}"><span translateId="Homepage">Homepage</span>: &nbsp</dt>
                         <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
                         </dd>
                     </dl>
@@ -142,15 +142,16 @@
             </div>
         </div>
         <div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">
-            <el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"
-                                                                  style="text-decoration: underline">claim</a>
-                the item.
+            <el-tag type="info">
+                <span translateId="authorshipUnclear1">Authorship is unclear, you can</span>
+                <a href="javascript:void(0)" translateId="claim" @click="claim" style="text-decoration: underline">claim</a>
+                <span translateId="authorshipUnclear2">the item.</span>
             </el-tag>
         </div>
         <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-            <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
-                                                              style="text-decoration: underline">Feed
-                back</a></el-tag>
+            <el-tag type="info"><span translateId="authorshipCorrect">Is authorship not correct? </span>
+                <a href="javascript:void(0)" @click="feedBack" translateId="authorshipCorrect" style="text-decoration: underline">Feed back</a>
+            </el-tag>
         </div>
     </div>
 </div>
@@ -210,12 +211,11 @@
 
 </div>
 
-
 <div th:fragment="classifications">
     <div th:if="${#lists.size(classifications)>0}" id="classification" class="detail_block">
         <div class="block_head">
             <div class="head_text">
-                <h4>Classification(s)</h4>
+                <h4 translateId="Classification">Classification(s)</h4>
             </div>
             <span class="blockEdit">
                         <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
@@ -245,12 +245,11 @@
     </div>
 </div>
 
-
 <div th:fragment="alias" id="alias" class="detail_block"
      th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">
     <div class="block_head">
         <div class="head_text">
-            <h4>Alias</h4>
+            <h4 translateId="Alias">Alias</h4>
         </div>
         <span class="blockEdit">
                          <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">

@@ -52,9 +52,9 @@ public class ServerService {
         //数据容器节点
         try {
             HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-            httpRequestFactory.setConnectionRequestTimeout(6000);
-            httpRequestFactory.setConnectTimeout(6000);
-            httpRequestFactory.setReadTimeout(6000);
+            httpRequestFactory.setConnectionRequestTimeout(60000);
+            httpRequestFactory.setConnectTimeout(60000);
+            httpRequestFactory.setReadTimeout(60000);
 
             String url = "http://" + dataServerManager + "/onlineNodes";
 
@@ -63,7 +63,7 @@ public class ServerService {
             try {
                 xml = restTemplate.getForObject(url, String.class);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
 
             if (xml.equals("err")) {

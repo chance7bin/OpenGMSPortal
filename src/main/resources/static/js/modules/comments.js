@@ -20,6 +20,7 @@ Vue.component("comments",
                 replyToUserId:"",
                 commentTextAreaPlaceHolder:"Write your comment...",
                 replyTo:"",
+                htmlJSON:{},
             }
         },
         watch:{
