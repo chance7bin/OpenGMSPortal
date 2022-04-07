@@ -10,7 +10,18 @@
     "provide": "Let's learn what is provided by OpenGMS!",
     "demo": "Demo",
     "document": " Document",
-    "do": "Let's learn what can we do in OpenGMS!"
+    "do": "Let's learn what can we do in OpenGMS!",
+
+    "Introduce to OpenGMS": "Introduce to OpenGMS",
+    "Model Resource": "Model Resource",
+    "Data Resource": "Data Resource",
+    "Service and Reuse": "Service and Reuse",
+    "Server Nodes": "Server Nodes",
+    "Community": "Community",
+    "Thematic Center": "Thematic Center",
+    "User Center": "User Center",
+    "How to use a model online": "How to use a model online?",
+    "How to run a integrated model online": "How to run a integrated model online?"
 
   },
   "zh-cn": {
@@ -24,7 +35,18 @@
     "provide": "了解并学习使用OpenGMS",
     "demo": "示例",
     "document": "文档",
-    "do": "学习OpenGMS能做什么"
+    "do": "学习OpenGMS能做什么",
+    "Introduce to OpenGMS": "OpenGMS介绍",
+    "Model Resource": "模型资源",
+    "Data Resource": "数据资源",
+    "Service and Reuse": "服务和重用",
+    "Server Nodes": "服务节点",
+    "Community": "社区",
+    "Thematic Center": "专题中心",
+    "User Center": "用户中心",
+    "How to use a model online": "如何在线运行一个模型？",
+    "How to run a integrated model online": "如何在线运行集成模型？"
+
   }
 
 }

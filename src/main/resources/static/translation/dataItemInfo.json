@@ -46,9 +46,9 @@
 
     "Authorship": "作者",
     "AuthorshipInfo": "我们深刻明白一个模型可能来自于一个团队所有成员的贡献，如果有作者的信息没有列在此处，请向我们反馈。",
-    "AuthorshipInfo2": "作者信息未知，您可以认领该资源。 ",
+    "AuthorshipInfo2": "版权信息未知，您可以认领该资源。 ",
     "AuthorshipInfo3": "认领",
-    "AuthorshipInfo4": "作者信息不正确？",
+    "AuthorshipInfo4": "版权信息不正确？",
     "AuthorshipInfo5": "反馈",
 
     "QRCode": "二维码"

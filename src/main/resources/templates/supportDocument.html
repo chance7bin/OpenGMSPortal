@@ -30,6 +30,9 @@
         .treeContainer{
             overflow: hidden;
         }
+        img{
+            max-width: 100%;
+        }
     </style>
 
 </head>
@@ -81,7 +84,7 @@
                         </div>
                     </el-col>
                     <el-col :span="sectionSpan" style="margin-bottom: 30px;">
-                        <h3 style="padding: 0 20px 0 20px; color: #0a6999" th:text="${name}">Introduction to OpenGMS</h3>
+                        <h3 style="padding: 0 20px 0 20px; color: #0a6999">{{docDisplayName}}</h3>
                         <hr>
                         <div class="clearfix docSection " style="background-color: white;padding: 0 20px 0px" >
                             <section class="wordSpace" v-for="section in supportDoc" :id="generateId(section.title)" >
@@ -134,6 +137,7 @@
 </body>
 <script th:inline="javascript">
     var type = [[${type}]]
+    var docName = [[${name}]]
 </script>
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script src="/static/js/common/vue.min.js"></script>
@@ -157,6 +161,15 @@
 <script th:if="${name=='Community'}" src="/static/js/help/support/community.js"></script>
 <script th:if="${name=='Thematic Center'}" src="/static/js/help/support/thematicCenter.js"></script>
 <script th:if="${name=='User Center'}" src="/static/js/help/support/userCenter.js"></script>
+
+<script th:if="${name=='Introduce to OpenGMS'}" src="/static/js/help/support/introductiontoOpenGMS_zh.js"></script>
+<script th:if="${name=='Model Resource'}" src="/static/js/help/support/modelResource_zh.js"></script>
+<script th:if="${name=='Data Resource'}" src="/static/js/help/support/dataResource_zh.js"></script>
+<script th:if="${name=='Service and Reuse'}" src="/static/js/help/support/serviceandReuse_zh.js"></script>
+<script th:if="${name=='Server Nodes'}" src="/static/js/help/support/serverNodes_zh.js"></script>
+<script th:if="${name=='Community'}" src="/static/js/help/support/community_zh.js"></script>
+<script th:if="${name=='Thematic Center'}" src="/static/js/help/support/thematicCenter_zh.js"></script>
+<script th:if="${name=='User Center'}" src="/static/js/help/support/userCenter_zh.js"></script>
 
 <script src="/static/js/page/supportDoc.js"></script>
 <script src="/static/js/common/navbar.js"></script>
