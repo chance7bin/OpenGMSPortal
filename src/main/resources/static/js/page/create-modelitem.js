@@ -632,6 +632,11 @@ var createModelItem = Vue.extend({
 
             if(this.editType == 'modify') {
 
+                // console.log("create modelitem localozation:")
+                // console.log("current: ",this.currentLocalization)
+                // console.log("old: ",this.localizationList)
+                console.log("getItemContent tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
+
                 for (i = 0; i < this.localizationList.length; i++) {
                     if (this.currentLocalization.localName == this.localizationList[i].localName) {
                         this.localizationList[i].name = this.currentLocalization.name;
@@ -1656,6 +1661,7 @@ var createModelItem = Vue.extend({
 
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
+                console.log("step  tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.treeData_select.length === 0) {
                         new Vue().$message({
@@ -1976,7 +1982,7 @@ var createModelItem = Vue.extend({
                                     showClose: false,
                                 }).then(() => {
                                     $("#editModal", parent.document).remove();
-                                    window.location.href = "/modelItem/" + result.data.oid;
+                                    window.location.href = "/modelItem/" + result.data.id;
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/models/modelitem";
                                 });

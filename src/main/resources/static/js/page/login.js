@@ -124,8 +124,8 @@ new Vue({
                     }
                     if (result.code == "0") {
                         this.$notify.success({
-                            title: 'Success',
-                            message: 'Login successful ! Redirecting...',
+                            title: this.htmlJSON.success,
+                            message: this.htmlJSON.sucInfo,
                             offset: 70
                         });
                         setTimeout(() => {
@@ -140,8 +140,8 @@ new Vue({
                     } else {
 
                         this.$notify.error({
-                            title: 'Error',
-                            message: 'Login failed, email or password is wrong!',
+                            title: this.htmlJSON.error,
+                            message: this.htmlJSON.errInfo,
                             offset: 70
                         });
                         this.loadActiveIndex =false
@@ -150,7 +150,7 @@ new Vue({
                 },
                 error: function (e) {
                     this.$message({
-                        message: 'Submit Error!',
+                        message: this.htmlJSON.submitErr,
                         type: 'error',
                         offset: 40,
                         showClose: true,
@@ -163,7 +163,7 @@ new Vue({
             if(this.loadActiveIndex==false) {
                 if (this.resetPassForm.email === "") {
                     this.$message({
-                        message: 'Please enter email.',
+                        message: this.htmlJSON.emailInfo,
                         type: 'warning',
                         offset: 40,
                         showClose: true,
@@ -183,8 +183,8 @@ new Vue({
                             if (result.data == "suc") {
                                 this.reset = false;
                                 this.$notify.success({
-                                    title: 'Success',
-                                    message: 'Verification code has been sent to your email. If you can not find the email, please check the spam box.',
+                                    title: this.htmlJSON.success,
+                                    message: this.htmlJSON.codeSendSucInfo,
                                     offset: 70,
                                     duration: 0
                                 });
@@ -192,25 +192,25 @@ new Vue({
                                 this.guideActive++
                             } else if (result.data == "no user") {
                                 this.$notify({
-                                    title: 'Failed',
-                                    message: 'Email does not exist, please check again or register a new account.',
+                                    title: this.htmlJSON.failed,
+                                    message: this.htmlJSON.codeSendFailInfo,
                                     offset: 70,
                                     type: 'warning',
                                     duration: 0
                                 });
                             } else {
                                 this.$notify.error({
-                                    title: 'Failed',
-                                    message: 'Reset password failed, Please try again or contact opengms@njnu.edu.cn',
+                                    title: this.htmlJSON.failed,
+                                    message: this.htmlJSON.resetPassFailInfo,
                                     offset: 70,
                                     duration: 0
                                 });
                             }
                             this.sendingCode = false
                         }, error: (e)=> {
-                            this.$alert('Send verification code error', 'Tip', {
+                            this.$alert(this.htmlJSON.sendCodeErrInfo, this.htmlJSON.tip, {
                                     type: "warning",
-                                    confirmButtonText: 'OK',
+                                    confirmButtonText: this.htmlJSON.ok,
                                     callback: () => {
                                         return
                                     }
@@ -247,8 +247,8 @@ new Vue({
                     success: (result) => {
                         if (result.code == 0) {
                             this.$notify.success({
-                                title: 'Success',
-                                message: 'Reset password successfully!',
+                                title: this.htmlJSON.success,
+                                message: this.htmlJSON.resetPassSuc,
                                 offset: 70,
                                 duration: 0
                             });
@@ -260,15 +260,15 @@ new Vue({
                             }
                         } else if (result.code == -1) {
                             this.$notify.error({
-                                title: 'Error',
-                                message: 'User with this email does not exists',
+                                title: this.htmlJSON.error,
+                                message: this.htmlJSON.userNotExist,
                                 offset: 70,
                                 duration: 0
                             });
                         } else {
                             this.$notify.error({
-                                title: 'Failed',
-                                message: 'Failed to reset password, please try again later',
+                                title: this.htmlJSON.failed,
+                                message: this.htmlJSON.resetPassFail,
                                 offset: 70,
                                 duration: 0
                             });

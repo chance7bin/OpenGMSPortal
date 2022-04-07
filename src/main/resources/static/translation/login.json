@@ -8,7 +8,23 @@
     "reset": "Reset",
     "loginBtn": "Log In",
     "signupBtn": "Sign Up",
-    "notice": "After login, more functions will be unlocked."
+    "notice": "After login, more functions will be unlocked.",
+    "success": "Success",
+    "sucInfo": "Login successful ! Redirecting...",
+    "error": "Error",
+    "errInfo": "Login failed, email or password is wrong!",
+    "submitErr": "Submit Error!",
+    "emailInfo": "Please enter email.",
+    "failed": "Failed",
+    "codeSendSucInfo": "Verification code has been sent to your email. If you can not find the email, please check the spam box.",
+    "codeSendFailInfo": "Email does not exist, please check again or register a new account.",
+    "resetPassFailInfo": "Reset password failed, Please try again or contact opengms@njnu.edu.cn",
+    "tip": "Tip",
+    "sendCodeErrInfo": "Send verification code error",
+    "ok": "OK",
+    "resetPassSuc": "Reset password successfully!",
+    "userNotExist": "User with this email does not exists",
+    "resetPassFail": "Failed to reset password, please try again later"
 
 
   },
@@ -20,7 +36,23 @@
     "reset": "重置",
     "loginBtn": "登录",
     "signupBtn": "注册账号",
-    "notice": "登录后可以解锁更多功能"
+    "notice": "登录后即可解锁更多功能",
+    "success": "成功",
+    "sucInfo": "登录成功！正在跳转中……",
+    "error": "错误",
+    "errInfo": "登录失败，邮箱或密码错误！",
+    "submitErr": "提交错误！",
+    "emailInfo": "请输入邮箱",
+    "failed": "失败",
+    "codeSendSucInfo": "验证码已发送至您的邮箱。若您未收到邮件，请检查邮箱回收站。",
+    "codeSendFailInfo": "邮箱不存在，请重新检查或注册一个新帐户。",
+    "resetPassFailInfo": "密码重置失败，请重试或发送邮件至opengms@njnu.edu.cn",
+    "tip": "提示",
+    "sendCodeErrInfo": "发送验证码错误",
+    "ok": "知道了",
+    "resetPassSuc": "密码重置成功！",
+    "userNotExist": "未找到使用此邮箱的用户",
+    "resetPassFail": "密码重置失败，请稍后重试"
   }
 
 }

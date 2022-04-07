@@ -45,6 +45,7 @@
             padding-bottom: 0px;
         }
         .el-collapse-item__header{
+            line-height: normal;
             font-size: 14px;
         }
 
@@ -84,42 +85,42 @@
                         <span style="font-size: 20px;color:#444">{{htmlJSON.DataClass}}</span>
                     </div>
                     <el-collapse v-model="activeNames" @change="handleChange">
-                        <el-collapse-item title="Application-focused categories" name="1">
+                        <el-collapse-item :title="htmlJSON.applicationFocusedCategories" name="1">
                             <el-collapse v-model="activeNames1" @change="handleChange1">
-                                <el-collapse-item title="Natural-perspective" style="margin-left: 10%;" name="11">
-                                    <el-button class="cateButton" type="text" id="a24cba2b-9ce1-44de-ac68-8ec36a535d0e" @click="chooseCate('a24cba2b-9ce1-44de-ac68-8ec36a535d0e', $event)">Land regions</el-button>
-                                    <el-button  class="cateButton" type="text" id="75aee2b7-b39a-4cd0-9223-3b7ce755e457" @click="chooseCate('75aee2b7-b39a-4cd0-9223-3b7ce755e457', $event)">Ocean regions</el-button>
-                                    <el-button  class="cateButton" type="text" id="1bf4f381-6bd8-4716-91ab-5a56e51bd2f9" @click="chooseCate('1bf4f381-6bd8-4716-91ab-5a56e51bd2f9', $event)">Frozen regions</el-button>
-                                    <el-button  class="cateButton" type="text" id="8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5" @click="chooseCate('8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5', $event)">Atmospheric regions</el-button>
-                                    <el-button  class="cateButton" type="text" id="d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee" @click="chooseCate('d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee', $event)">Space-earth regions</el-button>
-                                    <el-button  class="cateButton" type="text" id="d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e" @click="chooseCate('d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e', $event)">Solid-earth regions</el-button>
+                                <el-collapse-item :title="htmlJSON.naturalPerspective" style="margin-left: 10%;" name="11">
+                                    <el-button class="cateButton" type="text" id="a24cba2b-9ce1-44de-ac68-8ec36a535d0e" @click="chooseCate('a24cba2b-9ce1-44de-ac68-8ec36a535d0e', $event)">{{htmlJSON.landRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="75aee2b7-b39a-4cd0-9223-3b7ce755e457" @click="chooseCate('75aee2b7-b39a-4cd0-9223-3b7ce755e457', $event)">{{htmlJSON.oceanRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="1bf4f381-6bd8-4716-91ab-5a56e51bd2f9" @click="chooseCate('1bf4f381-6bd8-4716-91ab-5a56e51bd2f9', $event)">{{htmlJSON.frozenRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5" @click="chooseCate('8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5', $event)">{{htmlJSON.atmosphericRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee" @click="chooseCate('d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee', $event)">{{htmlJSON.spaceEarthRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e" @click="chooseCate('d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e', $event)">{{htmlJSON.solidEarthRegions}}</el-button>
                                     <!--                                    <el-button type="text" id="5f3e42610e989714e8364ea6" @click="chooseCate('5f3e42610e989714e8364ea6')" style="font-size: x-small">Integrated Perspective</el-button>-->
                                 </el-collapse-item>
-                                <el-collapse-item title="Human-perspective" style="margin-left: 10%;" name="12">
-                                    <el-button  class="cateButton" type="text" id="808e74a4-41c6-4558-a850-4daec1f199df" @click="chooseCate('808e74a4-41c6-4558-a850-4daec1f199df', $event)">Development activities</el-button>
-                                    <el-button  class="cateButton" type="text" id="40534cf8-039a-4a0a-8db9-7c9bff484190" @click="chooseCate('40534cf8-039a-4a0a-8db9-7c9bff484190', $event)">Social activities</el-button>
-                                    <el-button  class="cateButton" type="text" id="cf9cd106-b873-4a8a-9336-dd72398fc769" @click="chooseCate('cf9cd106-b873-4a8a-9336-dd72398fc769', $event)">Economic activities</el-button>
+                                <el-collapse-item :title="htmlJSON.humanPerspective" style="margin-left: 10%;" name="12">
+                                    <el-button  class="cateButton" type="text" id="808e74a4-41c6-4558-a850-4daec1f199df" @click="chooseCate('808e74a4-41c6-4558-a850-4daec1f199df', $event)">{{htmlJSON.developmentActivities}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="40534cf8-039a-4a0a-8db9-7c9bff484190" @click="chooseCate('40534cf8-039a-4a0a-8db9-7c9bff484190', $event)">{{htmlJSON.socialActivities}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="cf9cd106-b873-4a8a-9336-dd72398fc769" @click="chooseCate('cf9cd106-b873-4a8a-9336-dd72398fc769', $event)">{{htmlJSON.economicActivities}}</el-button>
                                     <!--                                    <el-button type="text" id="5f3e42940e989714e8364eae" @click="chooseCate('5f3e42940e989714e8364eae')" style="font-size: x-small">Integrated Perspective</el-button>-->
                                 </el-collapse-item>
-                                <el-collapse-item title="Integrated-perspective" style="margin-left: 10%;" name="13">
-                                    <el-button  class="cateButton" type="text" id="14130969-fda6-41ea-aa32-0af43104840b" @click="chooseCate('14130969-fda6-41ea-aa32-0af43104840b', $event)">Global scale</el-button>
-                                    <el-button  class="cateButton" type="text" id="e56c1254-70b8-4ff4-b461-b8fa3039944e" @click="chooseCate('e56c1254-70b8-4ff4-b461-b8fa3039944e', $event)">Regional scale</el-button>
+                                <el-collapse-item :title="htmlJSON.integratedPerspective" style="margin-left: 10%;" name="13">
+                                    <el-button  class="cateButton" type="text" id="14130969-fda6-41ea-aa32-0af43104840b" @click="chooseCate('14130969-fda6-41ea-aa32-0af43104840b', $event)">{{htmlJSON.globalScale}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="e56c1254-70b8-4ff4-b461-b8fa3039944e" @click="chooseCate('e56c1254-70b8-4ff4-b461-b8fa3039944e', $event)">{{htmlJSON.regionalScale}}</el-button>
                                 </el-collapse-item>
                             </el-collapse>
                         </el-collapse-item>
-                        <el-collapse-item title="Method-focused categories" style="font-size: 14px;" name="2">
+                        <el-collapse-item :title="htmlJSON.methodFocusedCategories" style="font-size: 14px;" name="2">
                             <el-collapse v-model="activeNames2" @change="handleChange1">
-                                <el-collapse-item title="Data-perspective" style="margin-left: 10%;font-size: 14px;" name="21">
-                                    <el-button class="cateButton"  type="text" id="5f3e42ac0e989714e8364eb0" @click="chooseCate('5f3e42ac0e989714e8364eb0', $event)">Geoinformation analysis</el-button>
-                                    <el-button  class="cateButton" type="text" id="5f3e42b40e989714e8364eb2" @click="chooseCate('5f3e42b40e989714e8364eb2', $event)">Remote sensing analysis</el-button>
-                                    <el-button  class="cateButton" type="text" id="5f3e42bc0e989714e8364eb4" @click="chooseCate('5f3e42bc0e989714e8364eb4', $event)">Geostatistical analysis</el-button>
-                                    <el-button  class="cateButton" type="text" id="5f3e42c30e989714e8364eb6" @click="chooseCate('5f3e42c30e989714e8364eb6', $event)">Intelligent computation analysis</el-button>
+                                <el-collapse-item :title="htmlJSON.dataPerspective" style="margin-left: 10%;font-size: 14px;" name="21">
+                                    <el-button class="cateButton"  type="text" id="5f3e42ac0e989714e8364eb0" @click="chooseCate('5f3e42ac0e989714e8364eb0', $event)">{{htmlJSON.geoinformationAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42b40e989714e8364eb2" @click="chooseCate('5f3e42b40e989714e8364eb2', $event)">{{htmlJSON.remoteSensingAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42bc0e989714e8364eb4" @click="chooseCate('5f3e42bc0e989714e8364eb4', $event)">{{htmlJSON.geostatisticalAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42c30e989714e8364eb6" @click="chooseCate('5f3e42c30e989714e8364eb6', $event)">{{htmlJSON.intelligentComputationAnalysis}}</el-button>
                                 </el-collapse-item>
-                                <el-collapse-item title="Process-perspective" style="margin-left: 10%;font-size: 14px;" name="22">
-                                    <el-button  class="cateButton" type="text" id="5f3e42d40e989714e8364eb8" @click="chooseCate('5f3e42d40e989714e8364eb8', $event)">Physical process calculation</el-button>
-                                    <el-button  class="cateButton" type="text" id="5f3e42dc0e989714e8364eba" @click="chooseCate('5f3e42dc0e989714e8364eba', $event)">Chemical process calculation</el-button>
-                                    <el-button  class="cateButton" type="text" id="5f3e42e30e989714e8364ebc" @click="chooseCate('5f3e42e30e989714e8364ebc', $event)">Biological process calculation</el-button>
-                                    <el-button  class="cateButton" type="text" id="5f3e42ec0e989714e8364ebe" @click="chooseCate('5f3e42ec0e989714e8364ebe', $event)">Human-activity calculation</el-button>
+                                <el-collapse-item :title="htmlJSON.processPerspective" style="margin-left: 10%;font-size: 14px;" name="22">
+                                    <el-button  class="cateButton" type="text" id="5f3e42d40e989714e8364eb8" @click="chooseCate('5f3e42d40e989714e8364eb8', $event)">{{htmlJSON.physicalProcessCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42dc0e989714e8364eba" @click="chooseCate('5f3e42dc0e989714e8364eba', $event)">{{htmlJSON.chemicalProcessCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42e30e989714e8364ebc" @click="chooseCate('5f3e42e30e989714e8364ebc', $event)">{{htmlJSON.biologicalProcessCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="5f3e42ec0e989714e8364ebe" @click="chooseCate('5f3e42ec0e989714e8364ebe', $event)">{{htmlJSON.humanActivityCalculation}}</el-button>
                                 </el-collapse-item>
                             </el-collapse>
                         </el-collapse-item>
@@ -132,10 +133,10 @@
                         <el-input v-model="searchText" :placeholder="htmlJSON.SearchHolding" style="border-radius: 0;">
                             <el-select v-model="curQueryField" slot="prepend" style="color:#606266;width:120px;border-radius: 0;">
                                 <el-option
-                                        v-for="qf in queryFields"
-                                        :key="qf"
-                                        :label="qf"
-                                        :value="qf">
+                                        v-for="qf in htmlJSON.queryFields"
+                                        :key="qf[0]"
+                                        :label="qf[1]"
+                                        :value="qf[2]">
                                 </el-option>
                             </el-select>
                             <el-button slot="append" icon="el-icon-search" @click="search" style="border-radius: 0;padding: 0;">
@@ -173,9 +174,9 @@
                                     {{sortField}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
-                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}}</el-dropdown-item>
+                                    <el-dropdown-item command="viewCount">{{htmlJSON.ViewCount[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="name">{{htmlJSON.Name[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="createTime">{{htmlJSON.CreateTime[0]}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             <el-dropdown trigger="click" @command="changeSortOrder" style="cursor:pointer;">
@@ -183,8 +184,8 @@
                                     {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc[0]}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </span>
@@ -229,7 +230,7 @@
                                             </user-avatar>
                                         </a>
                                         <a :href="'/profile/'+users[index].userId" style="display: inline-block;margin-left: 5px;"><h4>{{users[index].name}}</h4></a>
-                                        <h4 class="screen_view">contributed at {{formatDate(item.createTime).substring(0,10)}}</h4>
+                                        <h4 class="screen_view">{{htmlJSON.contributeStr}}{{formatDate(item.createTime).substring(0,10)}}</h4>
                                         <h4 class="mobile_view">{{formatDate(item.createTime).substring(0,10)}}</h4>
                                     </div>
                                     <div class="detail_option">

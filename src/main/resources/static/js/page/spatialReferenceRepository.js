@@ -27,44 +27,54 @@ new Vue({
 
             treeData: [{
                 id: 1,
+                nameCn: "空间参考",
                 label: "Spatial Reference Repository",
                 oid: '58340c92-d74f-4d81-8a80-e4fcff286008',
-                children: [{
+                children: [
+                    {
                         id: 100,
+                        nameCn: "基础",
                         "oid": "da70ad83-de57-4fc3-a85d-c1dcf4961433",
                         "label": "Basic"
                     },
                     {
                         id: 101,
+                        nameCn: "EPSG",
                         "oid": "c4642926-e797-4f61-92d6-7933df2413d2",
                         "label": "EPSG"
                     },
                     {
                         id: 102,
+                        nameCn: "ESRI",
                         "oid": "e8562394-b55f-46d7-870e-ef5ad3aaf110",
                         "label": "ESRI"
                     },
                     {
                         id: 103,
+                        nameCn: "IAU",
                         "oid": "ee830613-1603-4f38-a196-5028e4e10d39",
                         "label": "IAU"
                     },
                     {
                         id: 104,
+                        nameCn: "自定义",
                         "oid": "b2f2fbfd-f21a-47ac-9e1f-a96ac0218bf1",
                         "label": "Customized"
                     }]
             }, {
                 id: 2,
+                nameCn: "时间参考",
                 label: "Temporal Reference Repository",
                 oid: 'ce37e343-bf2c-4e7b-902e-46616604e184',
                 children: [{
                         id: 3,
+                        nameCn: "日期",
                         label: "Date",
                         oid: '295d2120-402b-4ee6-a0b5-308b67fe2c40',
                     },
                     {
                         id: 4,
+                        nameCn: "时间",
                         label: "Time",
                         oid: '6883d3fb-8485-4771-9a3e-3276c759364e',
                     }]
@@ -77,11 +87,51 @@ new Vue({
             sortFieldName:"viewCount",
             sortOrder:"Desc.",
 
-            htmlJSON:{}
+            htmlJSON:{
+                queryFields:[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+                ViewCount: ["View Count", "viewCount"],
+                Name: ["Name","name"],
+                CreateTime: ["Create Time","createTime"],
+                Asc: ["Asc.","Asc."],
+                Desc: ["Desc.","Desc."],
+            }
         }
     },
     methods: {
         translatePage(jsonContent){
+            //切换列表中标签选择情况
+            if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
+
+                let treeData = this.treeData;
+
+                for(i = 0;i<treeData.length;i++){
+                    let treeData1 = treeData[i];
+                    let temp = treeData1.label;
+                    treeData1.label = treeData1.nameCn;
+                    treeData1.nameCn = temp;
+                    for(j = 0;j<treeData1.children.length;j++){
+                        let treeData2 = treeData1.children[j];
+                        temp = treeData2.label;
+                        treeData2.label = treeData2.nameCn;
+                        treeData2.nameCn = temp;
+                    }
+                }
+                this.treeData = treeData;
+
+                if(this.sortOrder == this.htmlJSON.Asc[0]){
+                    this.sortOrder = jsonContent.Asc[0];
+                }else if(this.sortOrder == this.htmlJSON.Desc[0]){
+                    this.sortOrder = jsonContent.Desc[0];
+                }
+
+                if(this.sortTypeName == this.htmlJSON.ViewCount[0]){
+                    this.sortTypeName = jsonContent.ViewCount[0];
+                }else if(this.sortTypeName == this.htmlJSON.Name[0]){
+                    this.sortTypeName = jsonContent.Name[0];
+                }else if(this.sortTypeName == this.htmlJSON.CreateTime[0]){
+                    this.sortTypeName = jsonContent.CreateTime[0];
+                }
+            }
             this.htmlJSON = jsonContent
         },
         //显示功能引导框
@@ -138,18 +188,36 @@ new Vue({
         },
 
         changeSortField(ele){
-            this.sortTypeName = ele;
-            let field = ele.replace(" ","").replace(ele[0],ele[0].toLowerCase());
-            this.sortFieldName = field;
-            this.getModels();
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.ViewCount[1]:
+                    label = this.htmlJSON.ViewCount[0];
+                    break;
+                case this.htmlJSON.Name[1]:
+                    label = this.htmlJSON.Name[0];
+                    break;
+                case this.htmlJSON.CreateTime[1]:
+                    label = this.htmlJSON.CreateTime[0];
+                    break;
+            }
+            this.sortTypeName = label;
+            this.sortFieldName = ele;
+            this.getModels(this.classType);
         },
 
         changeSortOrder(ele){
-            this.sortOrder=ele;
-
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.Asc[1]:
+                    label = this.htmlJSON.Asc[0];
+                    break;
+                case this.htmlJSON.Desc[1]:
+                    label = this.htmlJSON.Desc[0];
+                    break;
+            }
+            this.sortOrder=label;
             this.pageOption.sortAsc = ele==="Asc.";
-
-            this.getModels();
+            this.getModels(this.classType);
         },
         contribute(){
             $.ajax({

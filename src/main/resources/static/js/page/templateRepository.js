@@ -27,48 +27,58 @@ new Vue({
 
             treeData: [{
                 id: 1,
+                nameCn: "描述模板",
                 label: 'Description Templates',
                 oid: 'TRJJMYDAUJTDDU5J9GPRUWAG7QJ6PHUU',
                 children: [
                     {
                         id: 100,
+                        nameCn: "矢量数据",
                         "oid": "f7fbecf6-9d28-405e-b7d2-07ef9d924ca6",
                         "label": "Vector Data Format"
                     },
                     {
+                        nameCn: "栅格数据",
                         "oid": "9b104fd6-7949-4c3b-b277-138cd979d053",
                         "label": "Raster Data Format",
                     },
                     {
+                        nameCn: "格网数据",
                         "oid": "316d4df0-436e-4600-a183-80abf7472a72",
                         "label": "Mesh Data Format",
                     },
                     {
+                        nameCn: "图片数据",
                         "oid": "bc437c65-2cfe-4bde-ac31-04830f18885a",
                         "label": "Image Data Format",
                     },
                     {
+                        nameCn: "视频数据",
                         "oid": "39c0824e-8b1a-44e5-8716-c7893afe05e8",
                         "label": "Video Data Format",
                     },
                     {
+                        nameCn: "声音数据",
                         "oid": "82b1c2b4-4c12-441d-9d9c-09365c3c8a24",
                         "label": "Audio Data Format",
                     },
                     {
-                        "nameCn": "",
+                        nameCn: "非结构化数据",
                         "oid": "df6d36e3-8f16-4b96-8d3f-cff24f7c0fd9",
                         "label": "Unstructural Data Format",
                     },
                     {
+                        nameCn: "模型相关数据",
                         "oid": "26bb993b-453c-481a-a1ea-674db3e888e2",
                         "label": "Model Related Data Format",
                     },
                     {
+                        nameCn: "三维模型数据",
                         "oid": "1d573467-f1f3-440a-a827-110ac1e820bd",
                         "label": "3D Model Data Format",
                     },
                     {
+                        nameCn: "表格数据",
                         "oid": "8a189836-d563-440c-b5ea-c04778ac05f9",
                         "label": "Tabular Data Format",
                     }]
@@ -82,11 +92,51 @@ new Vue({
             sortFieldName:"viewCount",
             sortOrder:"Desc.",
 
-            htmlJSON:{}
+            htmlJSON:{
+                queryFields:[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+                ViewCount: ["View Count", "viewCount"],
+                Name: ["Name","name"],
+                CreateTime: ["Create Time","createTime"],
+                Asc: ["Asc.","Asc."],
+                Desc: ["Desc.","Desc."],
+            }
         }
     },
     methods: {
         translatePage(jsonContent){
+            //切换列表中标签选择情况
+            if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
+
+                let treeData = this.treeData;
+
+                for(i = 0;i<treeData.length;i++){
+                    let treeData1 = treeData[i];
+                    let temp = treeData1.label;
+                    treeData1.label = treeData1.nameCn;
+                    treeData1.nameCn = temp;
+                    for(j = 0;j<treeData1.children.length;j++){
+                        let treeData2 = treeData1.children[j];
+                        temp = treeData2.label;
+                        treeData2.label = treeData2.nameCn;
+                        treeData2.nameCn = temp;
+                    }
+                }
+                this.treeData = treeData;
+
+                if(this.sortOrder == this.htmlJSON.Asc[0]){
+                    this.sortOrder = jsonContent.Asc[0];
+                }else if(this.sortOrder == this.htmlJSON.Desc[0]){
+                    this.sortOrder = jsonContent.Desc[0];
+                }
+
+                if(this.sortTypeName == this.htmlJSON.ViewCount[0]){
+                    this.sortTypeName = jsonContent.ViewCount[0];
+                }else if(this.sortTypeName == this.htmlJSON.Name[0]){
+                    this.sortTypeName = jsonContent.Name[0];
+                }else if(this.sortTypeName == this.htmlJSON.CreateTime[0]){
+                    this.sortTypeName = jsonContent.CreateTime[0];
+                }
+            }
             this.htmlJSON = jsonContent
         },
 
@@ -144,18 +194,36 @@ new Vue({
         },
 
         changeSortField(ele){
-            this.sortTypeName = ele;
-            let field = ele.replace(" ","").replace(ele[0],ele[0].toLowerCase());
-            this.sortFieldName = field;
-            this.getModels();
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.ViewCount[1]:
+                    label = this.htmlJSON.ViewCount[0];
+                    break;
+                case this.htmlJSON.Name[1]:
+                    label = this.htmlJSON.Name[0];
+                    break;
+                case this.htmlJSON.CreateTime[1]:
+                    label = this.htmlJSON.CreateTime[0];
+                    break;
+            }
+            this.sortTypeName = label;
+            this.sortFieldName = ele;
+            this.getModels(this.classType);
         },
 
         changeSortOrder(ele){
-            this.sortOrder=ele;
-
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.Asc[1]:
+                    label = this.htmlJSON.Asc[0];
+                    break;
+                case this.htmlJSON.Desc[1]:
+                    label = this.htmlJSON.Desc[0];
+                    break;
+            }
+            this.sortOrder=label;
             this.pageOption.sortAsc = ele==="Asc.";
-
-            this.getModels();
+            this.getModels(this.classType);
         },
         contribute(){
             $.ajax({

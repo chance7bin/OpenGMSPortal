@@ -323,7 +323,7 @@ var userAccount = Vue.extend(
                 if(this.subscribeComputableOwner == "my") {
                     let data = {
                         asc: this.pageOption.sortAsc,
-                        page: this.pageOption.currentPage - 1,
+                        page: this.pageOption.currentPage,
                         pageSize: this.pageOption.pageSize,
                         searchText: this.searchText,
                         sortType: "default",

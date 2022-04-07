@@ -983,7 +983,7 @@ var info=new Vue({
                 nodes = result.data.nodes;
                 links = result.data.links;
 
-                setTimeout(()=>{
+                Vue.nextTick(()=>{
                     if(this.modelRelationGraph == null) {
                         let object = document.getElementById("modelRelationGraph");
                         let modelRelationGraph = echarts.init(object, 'light');
@@ -1177,7 +1177,7 @@ var info=new Vue({
                                         // opts.toolbox[0].feature.myFullExit.show=true;
                                         this.graphFullScreen = true;
 
-                                        setTimeout(()=>{
+                                        Vue.nextTick(()=>{
                                             let object = document.getElementById('fullScreenGraph');
                                             let graph = echarts.init(object,'light');
                                             this.modelRelationGraph = graph;
@@ -1203,7 +1203,7 @@ var info=new Vue({
                                             //         fullchart.setOption(opts)
                                             //     }
                                             // })
-                                        },300);
+                                        });
 
                                     }
                                 },
@@ -1315,7 +1315,7 @@ var info=new Vue({
                     console.log(option);
                     this.modelRelationGraph.setOption(option);
                     this.modelRelationGraph.hideLoading();
-                },300)
+                })
 
             });
 
@@ -1326,6 +1326,7 @@ var info=new Vue({
         closeModelRelationGraph(){
             this.modelRelationGraphShow = false;
             this.modelRelationGraphSideBarShow = false;
+            this.modelRelationGraph = null;
         },
 
         relationSortChange(sort){

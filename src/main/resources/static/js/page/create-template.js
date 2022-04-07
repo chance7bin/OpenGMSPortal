@@ -857,9 +857,9 @@ var createTemplate = Vue.extend({
                 background: "rgba(0, 0, 0, 0.7)"
             });
 
-            if(this.editType=='modify') {
-                this.changeLocalization(this.currentLocalization);
-            }
+            // if(this.editType=='modify') {
+            //     this.changeLocalization(this.currentLocalization);
+            // }
             for(i=0;i<this.localizationList.length;i++){
                 let local = this.localizationList[i];
                 if(local.localName.trim()==""||local.localCode.trim()==""){
