@@ -19,6 +19,11 @@ var vue = new Vue({
                 timeout1: '',
 
                 treeHeight_former:'0',
+
+                docName: "",
+                docDisplayName: "",
+
+                htmlJSON:{},
             }
         },
 
@@ -41,6 +46,19 @@ var vue = new Vue({
             }
         },
         methods: {
+
+            translatePage(jsonContent){
+                this.docDisplayName = jsonContent[this.docName];
+                if(jsonContent.back === "Back"){
+                    this.sectionData = sectionData;
+                    this.supportDoc = supportDoc;
+                }else {
+                    this.sectionData = sectionData_zh;
+                    this.supportDoc = supportDoc_zh;
+                }
+                this.htmlJSON = jsonContent;
+            },
+
             generateId(str) {
                 // let reg = new RegExp(".*? ", "");
                 // return str.replace(reg, "");
@@ -229,8 +247,7 @@ var vue = new Vue({
 
         },
         mounted() {
-            this.sectionData = sectionData;
-            this.supportDoc = supportDoc;
+            this.docName = docName;
 
             var vthis = this
             let height = document.documentElement.clientHeight;

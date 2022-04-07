@@ -55,6 +55,7 @@
         <translation-bar
                 json-file="all_model_info"
                 @translate-page="translatePage"
+                with-comments="true"
                 initial-lang="en-us"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
@@ -93,7 +94,7 @@
                         <p th:text="${itemInfo.overview}"></p>
                         <div class="tags">
                                     <span class="label label-success">
-                                        Conceptual Model
+                                        {{htmlJSON.logicalModel}}
                                     </span>
 
                         </div>
@@ -501,6 +502,15 @@
 <template th:replace="modules/userAvatar :: userAvatar"></template>
 </body>
 
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
+
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
@@ -622,13 +632,7 @@
 <script src="/static/js/common/md5.js"></script>
 
 
-<script src="/static/js/common/vue.min.js"></script>
-<script src="/static/js/common/axios.min.js"></script>
-<script src="/static/element-ui/index.js"></script>
 
-<!--翻译组件，本页面组件js引入位置不能靠后-->
-<template th:replace="modules/translationBar :: translationBar"></template>
-<script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/common/qrcode.min.js"></script>
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>

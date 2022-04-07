@@ -1,0 +1,42 @@
+{
+  "en-us": {
+
+    "detailedDescription": "Detailed Description",
+    "viewFullText": "View Full Text",
+    "Contributor":"Contributor(s)",
+    "Modifier":"Modifier(s)",
+    "InitialContribute":"Initial contribute: ",
+    "ModifyTime":"Modify Time: ",
+    "Authorship":"Authorship",
+    "Affiliation":"Affiliation",
+    "Email":"Email",
+    "Homepage":"Homepage",
+    "authorshipCorrect":"Is authorship not correct?",
+    "Feedback":"Feedback",
+    "authorshipUnclear1":"Authorship is unclear, you can ",
+    "claim":"claim",
+    "authorshipUnclear2":"the item.",
+    "Classification":"Classification(s)",
+    "Alias":"Alias"
+  },
+  "zh-cn": {
+    "detailedDescription": "详情描述",
+    "viewFullText": "展开全文",
+    "Contributor":"贡献者",
+    "Modifier":"修改者",
+    "InitialContribute":"创建时间：",
+    "ModifyTime":"修改时间：",
+    "Authorship":"版权信息",
+    "Affiliation":"组织",
+    "Email":"邮箱",
+    "Homepage":"主页",
+    "authorshipCorrect":"作者身份不正确?",
+    "Feedback":"反馈",
+    "authorshipUnclear1":"版权信息不确定，您可以",
+    "claim":"认领",
+    "authorshipUnclear2":"该条目",
+    "Classification":"分类",
+    "Alias":"别名"
+  }
+
+}

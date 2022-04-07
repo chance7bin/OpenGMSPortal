@@ -26,12 +26,13 @@ new Vue({
 
             treeData: [
                 {
-                    id: 1,
+                    "id": 1,
+                    "nameCn":"关键词",
                     "oid": "34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP",
                     "label": "Sedris",
-                    children: [
+                    "children": [
                     {
-                        id: 100,
+                        "id": 100,
                         "nameCn": "照明和能见度",
                         "oid": "13b822a2-fecd-4af7-aeb8-0503244abe8f",
                         "label": "Lighting and visibility",
@@ -363,9 +364,10 @@ new Vue({
                     }]
                 },
                 {
+                    "nameCn": "地球系统",
                     "oid": "8EJMTXTYB0QQ3RX02BV34BGBQXT0ILOL",
                     "label": "Earth System(in Chinese)",
-                    children:[
+                    "children":[
                         {
                             "nameCn": "冰川地质学",
                             "oid": "1d7a0c62-3012-4399-b886-06db3672033b",
@@ -689,11 +691,51 @@ new Vue({
             sortTypeName:"View Count",
             sortFieldName:"viewCount",
             sortOrder:"Desc.",
-            htmlJSON:{}
+            htmlJSON:{
+                queryFields:[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+                ViewCount: ["View Count", "viewCount"],
+                Name: ["Name","name"],
+                CreateTime: ["Create Time","createTime"],
+                Asc: ["Asc.","Asc."],
+                Desc: ["Desc.","Desc."],
+            }
         }
     },
     methods: {
         translatePage(jsonContent){
+            //切换列表中标签选择情况
+            if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
+
+                let treeData = this.treeData;
+
+                for(i = 0;i<treeData.length;i++){
+                    let treeData1 = treeData[i];
+                    let temp = treeData1.label;
+                    treeData1.label = treeData1.nameCn;
+                    treeData1.nameCn = temp;
+                    for(j = 0;j<treeData1.children.length;j++){
+                        let treeData2 = treeData1.children[j];
+                        temp = treeData2.label;
+                        treeData2.label = treeData2.nameCn;
+                        treeData2.nameCn = temp;
+                    }
+                }
+                this.treeData = treeData;
+
+                if(this.sortOrder == this.htmlJSON.Asc[0]){
+                    this.sortOrder = jsonContent.Asc[0];
+                }else if(this.sortOrder == this.htmlJSON.Desc[0]){
+                    this.sortOrder = jsonContent.Desc[0];
+                }
+
+                if(this.sortTypeName == this.htmlJSON.ViewCount[0]){
+                    this.sortTypeName = jsonContent.ViewCount[0];
+                }else if(this.sortTypeName == this.htmlJSON.Name[0]){
+                    this.sortTypeName = jsonContent.Name[0];
+                }else if(this.sortTypeName == this.htmlJSON.CreateTime[0]){
+                    this.sortTypeName = jsonContent.CreateTime[0];
+                }
+            }
             this.htmlJSON = jsonContent
         },
 
@@ -751,18 +793,36 @@ new Vue({
         },
 
         changeSortField(ele){
-            this.sortTypeName = ele;
-            let field = ele.replace(" ","").replace(ele[0],ele[0].toLowerCase());
-            this.sortFieldName = field;
-            this.getModels();
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.ViewCount[1]:
+                    label = this.htmlJSON.ViewCount[0];
+                    break;
+                case this.htmlJSON.Name[1]:
+                    label = this.htmlJSON.Name[0];
+                    break;
+                case this.htmlJSON.CreateTime[1]:
+                    label = this.htmlJSON.CreateTime[0];
+                    break;
+            }
+            this.sortTypeName = label;
+            this.sortFieldName = ele;
+            this.getModels(this.classType);
         },
 
         changeSortOrder(ele){
-            this.sortOrder=ele;
-
+            let label = "";
+            switch (ele){
+                case this.htmlJSON.Asc[1]:
+                    label = this.htmlJSON.Asc[0];
+                    break;
+                case this.htmlJSON.Desc[1]:
+                    label = this.htmlJSON.Desc[0];
+                    break;
+            }
+            this.sortOrder=label;
             this.pageOption.sortAsc = ele==="Asc.";
-
-            this.getModels();
+            this.getModels(this.classType);
         },
         contribute(){
             $.ajax({

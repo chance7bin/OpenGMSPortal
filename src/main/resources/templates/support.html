@@ -53,15 +53,16 @@
                     </h3>
                 </div>
             </div>
-            <translation-bar
-                    json-file="support"
-                    @translate-page="translatePage"
-                    initial-lang="en-us"
-                    theme="dark"
-                    style="position: absolute;top: 10px;right:15px">
-            </translation-bar>
+
             <div class="grey95" >
                 <div class="col-lg-10 col-lg-offset-1 col-md-12">
+                    <translation-bar
+                            json-file="support"
+                            @translate-page="translatePage"
+                            initial-lang="en-us"
+                            theme="dark"
+                            style="position: absolute;top: 10px;right:15px;z-index: 999;">
+                    </translation-bar>
                     <div class="flexJustAround" style="width: 100%;">
 <!--                        <div class="innerBorder"></div>-->
 <!--                        <h4 style="font-size: 22px">Common Functions</h4>-->

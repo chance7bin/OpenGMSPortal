@@ -71,9 +71,15 @@
 <body class="scrollbar">
 <div id="app" class="flex-colDirect" style="height: 100%">
     <div th:replace="fragments/navbar :: unlog"></div>
-
+    <translation-bar
+            json-file="theme_info"
+            @translate-page="translatePage"
+            initial-lang="en-us"
+            theme="dark"
+            style="position: absolute;top: 120px;right:50px;z-index: 999;"></translation-bar>
 
     <div id="mainContainer" class="mainContainer" v-cloak >
+
 
 
         <div id="leftContainer" class="leftContainer" >
@@ -416,12 +422,6 @@
 <!--        rightContainer-->
         <div id="rightContainer"  class="rightContainer">
             <div  style="overflow: auto;padding:10px 10px;" id="right_content">
-                <translation-bar
-                        json-file="theme_info"
-                        @translate-page="translatePage"
-                        initial-lang="en-us"
-                        theme="dark"
-                        style="position: absolute;top: 120px;right:50px"></translation-bar>
 <!--                theme Info-->
                 <div class="infoPanel container-fluid" id="BasicInfoPanel">
 

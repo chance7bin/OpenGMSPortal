@@ -35,7 +35,7 @@
     "HowtoCite": "如何引用",
 
     "CopyrightAndDisclaimer":"版权及免责声明",
-    "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计师(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，投稿人应谨慎使用其他来源的材料，并给予适当的引用。",
+    "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计者(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，贡献者应谨慎使用其他来源的材料，并给予适当的引用。",
 
 
 
@@ -46,9 +46,9 @@
 
     "Authorship": "作者",
     "AuthorshipInfo": "我们深刻明白一个模型可能来自于一个团队所有成员的贡献，如果有作者的信息没有列在此处，请向我们反馈。",
-    "AuthorshipInfo2": "作者信息未知，您可以认领该资源。 ",
+    "AuthorshipInfo2": "版权信息未知，您可以认领该资源。 ",
     "AuthorshipInfo3": "认领",
-    "AuthorshipInfo4": "作者信息不正确？",
+    "AuthorshipInfo4": "版权信息不正确？",
     "AuthorshipInfo5": "反馈",
 
     "QRCode": "二维码"
