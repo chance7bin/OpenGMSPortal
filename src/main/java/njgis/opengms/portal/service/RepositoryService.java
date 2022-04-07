@@ -270,7 +270,7 @@ public class RepositoryService {
 
 
     public PortalItem updatePart(PortalItem item, AddDTO updateDTO, ItemTypeEnum itemType, String email){
-        BeanUtils.copyProperties(updateDTO, item);
+        BeanUtils.copyProperties(updateDTO, item, Utils.getNullPropertyNames(updateDTO));
         //判断是否为新图片
         String uploadImage = updateDTO.getUploadImage();
         if (uploadImage!=null&&!uploadImage.contains("/" + itemType.getText() + "/") && !uploadImage.equals("")) {
