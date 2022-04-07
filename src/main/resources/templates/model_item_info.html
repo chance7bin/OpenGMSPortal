@@ -203,7 +203,7 @@
             <div th:replace="fragments/itemInfoModules :: alias"></div>
 
             <div id="Contributor0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: contributor" ></div>
+                <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
             </div>
 
             <div id="Authorship0" class="detail_block minScreen">
@@ -1322,56 +1322,7 @@
         </div>
         <div class="right-panel el-col">
             <div id="Contributor" class="detail_block">
-                <div class="block_head" style="border-left-color: #00d083;">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light"
-                                    content="Contributor is the person who contributed the item to OpenGMS, may not be the author of the item."
-                                    placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content" style="padding-left:10px;">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px;display: flex;align-items: center;">
-                        <div class="el-col ">
-                            <a :href="'/profile/'+lightenContributor.accessId" target="_blank">
-<!--                            <img :src="lightenContributor.avatar==''?'/static/img/icon/default.png':lightenContributor.avatar"-->
-<!--                                 class="round_icon" style="width:35px;height: 35px;">-->
-                                <user-avatar ref="mainContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
-                            </a>
-                        </div>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a :href="'/profile/'+lightenContributor.accessId" target="_blank"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div>
-                            <h5 th:if="${history!=true}"><span>{{htmlJSON.InitialContribute}}</span><span th:text="${date}"></span></h5>
-                            <h5 th:if="${history==true}"><span>{{htmlJSON.ModifyTime}}</span><span th:text="${date}"></span></h5>
-                        </div>
-                    </div>
-                    <!--<div class="flexCenter" style=" white-space: nowrap; justify-content: normal;">-->
-                        <!--<div class="wzhScrollbar ">-->
-                            <!--<div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.accessId"-->
-                                 <!--class="inlineBlock cursorPointer" style="margin: 10px 5px;">-->
-                                <!--<el-tooltip effect="dark"-->
-                                            <!--:content="contributor.name"-->
-                                            <!--placement="bottom">-->
-                                    <!--<img :src="contributor.image==''?'/static/img/icon/default.png':contributor.image"-->
-                                         <!--@click="riseUser(contributor,index)"-->
-                                         <!--class="round_icon iconImg">-->
-                                <!--</el-tooltip>-->
-                            <!--</div>-->
-
-                        <!--</div>-->
-
-                    <!--</div>-->
-                </div>
+                <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
             </div>
 
             <div v-if="contributors!=null&&contributors.length>0" id="Modifier" class="detail_block">
