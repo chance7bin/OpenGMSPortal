@@ -883,7 +883,7 @@ var createLogicalModel = Vue.extend({
 
                 this.formData.append("logicalModel", file)
                 $.ajax({
-                    url: '/logicalModel/'+oid,
+                    url: '/logicalModel/',
                     type: 'put',
                     data: this.formData,
                     cache: false,

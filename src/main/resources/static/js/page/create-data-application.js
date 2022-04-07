@@ -954,6 +954,7 @@ var createDataApplication = Vue.extend({
 
                     }
                 }).fail((res) => {
+                    console.log("dataMethod put err",res)
                     this.$alert('Please login first', 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
