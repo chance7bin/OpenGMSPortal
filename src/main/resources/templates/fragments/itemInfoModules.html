@@ -53,7 +53,7 @@
     </div>
 </div>
 
-<div th:fragment="contributor">
+<div th:fragment="contributor_sm">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
             <h4 th:if="${history!=true}" translateId="Contributor">Contributor(s)</h4>
@@ -77,7 +77,7 @@
             </div>
             <div class="el-col">
                 <div class="pull-left" style="display: block;margin-left: 15px;">
-                    <a :href="'/profile/'+lightenContributor.userId"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
+                    <a :href="'/profile/'+lightenContributor.accessId"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
         </div>
         <div class="flexAlignEnd flexJustCenter">
             <div class="wzhScrollbar " style="max-height: 135px">
-                <div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.userId"
+                <div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.accessId"
                      class="inlineBlock cursorPointer" style="margin: 10px 5px;">
                     <el-tooltip effect="dark"
                                 :content="contributor.name"
@@ -102,6 +102,44 @@
 
             </div>
         </div>
+    </div>
+</div>
+
+<div th:fragment="contributor_lg">
+    <div class="block_head" style="border-left-color: #00d083;">
+        <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+            <h4 th:if="${history!=true}" translateId="Contributor">Contributor(s)</h4>
+            <h4 th:if="${history==true}" translateId="Modifier">Contributor(s)</h4>
+            <el-tooltip popper-class="fontsize-15" effect="light"
+                        content="Contributor is the person who contributed the item to OpenGMS, may not be the author of the item."
+                        placement="top">
+                <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
+            </el-tooltip>
+        </div>
+    </div>
+    <div class="block_content" style="padding-left:10px;">
+        <div class="el-row"
+             style="margin-bottom: 3px;height: 40px;display: flex;align-items: center;">
+            <div class="el-col ">
+                <a :href="'/profile/'+lightenContributor.accessId" target="_blank">
+                    <!--                            <img :src="lightenContributor.avatar==''?'/static/img/icon/default.png':lightenContributor.avatar"-->
+                    <!--                                 class="round_icon" style="width:35px;height: 35px;">-->
+                    <user-avatar ref="mainContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
+                </a>
+            </div>
+            <div class="el-col">
+                <div class="pull-left" style="display: block;margin-left: 15px;">
+                    <a :href="'/profile/'+lightenContributor.accessId" target="_blank"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
+                </div>
+            </div>
+        </div>
+        <div class="el-row">
+            <div>
+                <h5 th:if="${history!=true}"><span translateId="InitialContribute">Initial contribute: </span><span th:text="${date}"></span></h5>
+                <h5 th:if="${history==true}"><span translateId="ModifyTime">Modify Time: </span><span th:text="${date}"></span></h5>
+            </div>
+        </div>
+
     </div>
 </div>
 
