@@ -78,9 +78,9 @@
                         <span style="font-size: 20px;color:#444">{{htmlJSON.MethodClass}}</span>
                     </div>
                     <div id="classification" style="padding-top: 0px">
-                        <div id="conversion" style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a276',$event)">Conversion</div>
-                        <div style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a277',$event)">Processing</div>
-                        <div style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a278',$event)">Visualization</div>
+                        <div id="conversion" style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a276',$event)">{{htmlJSON.Conversion}}</div>
+                        <div style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a277',$event)">{{htmlJSON.Processing}}</div>
+                        <div style="padding-left:10px; font-size:16px;margin-right: 12px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('6117767e61ce444130b1a278',$event)">{{htmlJSON.Visualization}}</div>
 <!--                        <div style="height: 27px;margin-right: 10px" role="button"  tabindex="0" class="el-collapse-item__header" @click="chooseCate('all',$event)">All</div>-->
                     </div>
                 </el-card>
@@ -93,10 +93,10 @@
                             <el-input v-model="searchText" :placeholder="htmlJSON.SearchHolding" style="border-radius: 0;">
                                 <el-select v-model="curQueryField" slot="prepend" style="color:#606266;width:120px;border-radius: 0;">
                                     <el-option
-                                            v-for="qf in queryFields"
-                                            :key="qf"
-                                            :label="qf"
-                                            :value="qf">
+                                            v-for="qf in htmlJSON.queryFields"
+                                            :key="qf[0]"
+                                            :label="qf[1]"
+                                            :value="qf[2]">
                                     </el-option>
                                 </el-select>
                                 <el-button slot="append" icon="el-icon-search" @click="search()" style="border-radius: 0;padding: 0;">{{htmlJSON.Search}}</el-button>
@@ -137,9 +137,9 @@
                                     {{sortField}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
-                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}}</el-dropdown-item>
+                                    <el-dropdown-item command="viewCount">{{htmlJSON.ViewCount[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="name">{{htmlJSON.Name[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="createTime">{{htmlJSON.CreateTime[0]}}</el-dropdown-item>
 
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -148,8 +148,8 @@
                                     {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc[0]}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </span>

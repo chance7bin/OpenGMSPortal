@@ -11,13 +11,13 @@
 
   },
   "zh-cn": {
-    "PageName": "案例",
+    "PageName": "示例",
     "PageIntro": "关于如何使用OpenGMS",
 
     "info1":"如何在线运行一个模型？",
-    "info2": "如何在线运行一个集成模型？",
+    "info2": "如何在线运行集成模型？",
 
-    "info3": "了解更多关于 OpenGMS →"
+    "info3": "了解更多 OpenGMS 的功能 →"
   }
 
 }

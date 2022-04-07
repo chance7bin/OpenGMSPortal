@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title th:if="${type=='sup'}" >{{htmlJSON.pageTitle_support}} | OpenGMS</title>
-    <title th:if="${type=='demo'}" >{{htmlJSON.pageTitle_demo}} | OpenGMS</title>
+    <title th:if="${type=='sup'}" >Support Document | OpenGMS</title>
+    <title th:if="${type=='demo'}" >Demo Document | OpenGMS</title>
 
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
@@ -30,6 +30,9 @@
         .treeContainer{
             overflow: hidden;
         }
+        img{
+            max-width: 100%;
+        }
     </style>
 
 </head>
@@ -40,6 +43,7 @@
     <div class="clearfix" style="position: relative;"
          :style="{'min-height':ScreenMinHeight}">
         <div class="clearfix" style="height: 100%;">
+
             <div th:if="${type=='sup'}" class="clearfix titleImg_small fontWhite" style="background-image: url('/static/img/bled_clip.jpg');background-position-y: 600px;">
                 <h3 style="text-align: center;margin-top: 30px">OpenGMS<span class="h_lite">{{htmlJSON.learnAndSupport}}</span></h3>
                 <h5 style="text-align: center;margin-top: 20px">{{htmlJSON.provide}}</h5>
@@ -50,6 +54,12 @@
             </div>
 
             <div class="col-lg-10 col-lg-offset-1 col-md-12 clearfix" style="padding: 5px 0">
+                <translation-bar
+                        json-file="supportDocument"
+                        @translate-page="translatePage"
+                        initial-lang="en-us"
+                        theme="dark"
+                        style="position: absolute;top: 10px;right:15px;z-index: 999;"></translation-bar>
                 <el-row :gutter="40" >
 
                     <el-col id="leftPanel" :span="sectionTitleSpan" style="position: sticky;top:0px">
@@ -74,7 +84,7 @@
                         </div>
                     </el-col>
                     <el-col :span="sectionSpan" style="margin-bottom: 30px;">
-                        <h3 style="padding: 0 20px 0 20px; color: #0a6999" th:text="${name}">Introduction to OpenGMS</h3>
+                        <h3 style="padding: 0 20px 0 20px; color: #0a6999">{{docDisplayName}}</h3>
                         <hr>
                         <div class="clearfix docSection " style="background-color: white;padding: 0 20px 0px" >
                             <section class="wordSpace" v-for="section in supportDoc" :id="generateId(section.title)" >
@@ -127,13 +137,17 @@
 </body>
 <script th:inline="javascript">
     var type = [[${type}]]
+    var docName = [[${name}]]
 </script>
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 <script src="/static/js/common/vue.min.js"></script>
 <script src="/static/js/index/bootstrap.min.js"></script>
 <script src="/static/js/common/axios.min.js"></script>
 <script src="/static/element-ui/index.js"></script>
+
+<template th:replace="modules/translationBar :: translationBar"></template>
 <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <!--数据以json变量形式存储在js文件中，按需添加到页面对应位置-->
 <script th:if="${name=='How to use a model online'}" src="/static/js/help/demo/demo1.js"></script>
@@ -147,6 +161,15 @@
 <script th:if="${name=='Community'}" src="/static/js/help/support/community.js"></script>
 <script th:if="${name=='Thematic Center'}" src="/static/js/help/support/thematicCenter.js"></script>
 <script th:if="${name=='User Center'}" src="/static/js/help/support/userCenter.js"></script>
+
+<script th:if="${name=='Introduce to OpenGMS'}" src="/static/js/help/support/introductiontoOpenGMS_zh.js"></script>
+<script th:if="${name=='Model Resource'}" src="/static/js/help/support/modelResource_zh.js"></script>
+<script th:if="${name=='Data Resource'}" src="/static/js/help/support/dataResource_zh.js"></script>
+<script th:if="${name=='Service and Reuse'}" src="/static/js/help/support/serviceandReuse_zh.js"></script>
+<script th:if="${name=='Server Nodes'}" src="/static/js/help/support/serverNodes_zh.js"></script>
+<script th:if="${name=='Community'}" src="/static/js/help/support/community_zh.js"></script>
+<script th:if="${name=='Thematic Center'}" src="/static/js/help/support/thematicCenter_zh.js"></script>
+<script th:if="${name=='User Center'}" src="/static/js/help/support/userCenter_zh.js"></script>
 
 <script src="/static/js/page/supportDoc.js"></script>
 <script src="/static/js/common/navbar.js"></script>

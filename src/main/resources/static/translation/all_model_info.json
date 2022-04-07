@@ -1,11 +1,33 @@
 {
   "en-us": {
+    "conceptualModel": "Conceptual Model",
+    "logicalModel": "Logical Model",
+    "computableModel": "Computable Model",
+
+    "package": "OpenGMS Model-Service Package",
+    "sourceCode": "Source Code",
+    "library": "Executable Library",
+    "webLink": "Third-party Web-Service Link",
+    "downloadLink": "Downloadable Link",
+
+    "ModelRelationGraph": "Model Relation Graph",
+    "nodeLabel": "Node Label",
+    "fullName": "Full Name",
+    "lineLabel": "Line Label",
+    "lineColor": "Line Color",
+    "fullRelation": "Full relation",
+
+    "On": "On",
+    "Off": "Off",
 
     "HowtoCite": "How to Cite",
 
     "CopyrightAndDisclaimer":"Copyright and Disclaimer",
     "CopyrightAndDisclaimerInfo": "All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.",
-    "Contributor":"Contributor",
+    "Contributor":"Contributor(s)",
+    "Modifier":"Modifier(s)",
+    "InitialContribute":"Initial contribute: ",
+    "ModifyTime":"Modify Time: ",
     "ContributorInfo": "Contributor is the person who contributes the item to OpenGMS, may not be the author of the item.",
 
     "Authorship": "Authorship",
@@ -54,7 +76,7 @@
     "LogicalschematicModelList":"Logical-schematic Model List",
     "RelatedLogicalModel":" Edit Related Logical Model",
     "anotherVersion":"There is another version haven't been reviewed, you can edit it later or contact us.",
-    "RelatedModelItem":"Edit Related Model Item",
+    "EditRelatedModelItem":"Edit Related Model Item",
     "Reference":"Reference",
     "Material":"Material",
     "relatedMaterial":"Edit related material",
@@ -74,7 +96,7 @@
     "NoRelatedModel":"There is no related model item. You can link model items.",
 
     "RelatedConceptual":"Edit Related Conceptual Model",
-    "viewHistory":"viewHistory",
+    "viewHistory":"View History",
 
     "Affiliation":"Affiliation",
     "Email":"Email",
@@ -84,15 +106,36 @@
     "Feedback":"Feedback"
   },
   "zh-cn": {
+    "conceptualModel": "概念模型",
+    "logicalModel": "逻辑模型",
+    "computableModel": "计算模型",
 
-    "HowtoCite": "如何引用",
+    "package": "OpenGMS模型服务封装包",
+    "sourceCode": "源代码",
+    "library": "可执行链接库",
+    "webLink": "第三方服务链接",
+    "downloadLink": "可下载链接",
+
+    "ModelRelationGraph": "模型关系图谱",
+    "nodeLabel": "节点名称",
+    "fullName": "模型全称",
+    "lineLabel": "关系名称",
+    "lineColor": "连线颜色",
+    "fullRelation": "完整关系图",
+
+    "On": "开",
+    "Off": "关",
+
+    "HowtoCite": "引用格式",
 
     "CopyrightAndDisclaimer":"版权及免责声明",
-    "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计师(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，投稿人应谨慎使用其他来源的材料，并给予适当的引用。",
+    "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计者(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，贡献者应谨慎使用其他来源的材料，并给予适当的引用。",
     "Contributor":"贡献者",
+    "Modifier":"修改者",
     "ContributorInfo": "贡献者是将资源提交给OpenGMS的人，可能并不是该资源的所有者。",
-
-    "Authorship": "作者",
+    "InitialContribute":"创建时间：",
+    "ModifyTime":"修改时间：",
+    "Authorship": "版权信息",
     "AuthorshipInfo": "我们深刻明白一个模型可能来自于一个团队所有成员的贡献，如果有作者的信息没有列在此处，请向我们反馈。",
 
 
@@ -100,7 +143,7 @@
     "graph":"图表",
     "RelateModelItem":"相关模型条目",
     "Copy":"复制",
-    "Invoke":"运行",
+    "Invoke":"在线运行",
     "Resource":"资源",
     "MDLDescription":"MDL描述",
     "AttributeSet":"属性集",
@@ -112,11 +155,11 @@
     "Name":"名称",
     "Keywords":"关键词",
     "Abstract":"摘要",
-    "Wiki":"维基",
+    "Wiki":"链接",
     "HardwareConfigures":"硬件配置",
     "SoftwareConfigures":"软件配置",
     "Assemblies":"程序集",
-    "SupportiveResources":"支持资源",
+    "SupportiveResources":"依赖",
     "RelatedModelItem":"相关模型条目",
     "GroundWaterFlowSystem":"地下水流系统",
     "Type":"类型",
@@ -139,10 +182,10 @@
     "LogicalschematicModelList":"逻辑模型列表",
     "RelatedLogicalModel":"编辑相关逻辑模型",
     "anotherVersion":"还有一个版本还没有审核，您可以稍后编辑或联系我们。",
-    "RelatedModelItem":"编辑相关模型条目",
-    "Reference":"参考",
-    "Material":"原型",
-    "relatedMaterial":"编辑相关原型",
+    "EditRelatedModelItem":"编辑相关模型条目",
+    "Reference":"参考文献",
+    "Material":"知识点",
+    "relatedMaterial":"编辑相关知识",
     "relatedReference":"编辑相关参考",
 
     "authorshipSubmitted":"这些作者身份信息将提交给贡献者进行审查。",

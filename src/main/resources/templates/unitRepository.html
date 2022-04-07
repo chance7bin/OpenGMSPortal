@@ -114,9 +114,9 @@
                                 {{sortTypeName}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="View Count">{{htmlJSON.ViewCount}}</el-dropdown-item>
-                                    <el-dropdown-item command="Name">{{htmlJSON.Name}}</el-dropdown-item>
-                                    <el-dropdown-item command="Create Time">{{htmlJSON.CreateTime}} </el-dropdown-item>
+                                    <el-dropdown-item command="viewCount">{{htmlJSON.ViewCount[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="name">{{htmlJSON.Name[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="createTime">{{htmlJSON.CreateTime[0]}} </el-dropdown-item>
 
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -125,8 +125,8 @@
                                 {{sortOrder}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc}}</el-dropdown-item>
-                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc}}</el-dropdown-item>
+                                    <el-dropdown-item command="Asc.">{{htmlJSON.Asc[0]}}</el-dropdown-item>
+                                    <el-dropdown-item command="Desc.">{{htmlJSON.Desc[0]}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -172,7 +172,7 @@
                                         </user-avatar>
                                     </a>
                                     <a :href="'/profile/'+ pageOption.users[key].userId" target="_blank" style="display: inline-block; margin-left: 5px;"><h4>{{pageOption.users[key].name}}</h4></a>
-                                    <h4 class="screen_view">contributed at {{unit.createTime.substring(0,10)}} </h4>
+                                    <h4 class="screen_view">{{htmlJSON.contributeStr}}{{unit.createTime.substring(0,10)}} </h4>
                                     <h4 class="mobile_view">{{unit.createTime.substring(0,10)}} </h4>
                                 </div>
                                 <div class="detail_option">
@@ -191,7 +191,7 @@
                                 padding-bottom: 61px;
                             ">
                             <span v-if="pageOption.progressBar">&nbsp;</span>
-                            <span v-if="!pageOption.progressBar">No Result</span>
+                            <span v-if="!pageOption.progressBar">{{htmlJSON.noResult}}</span>
                         </div>
                     </div>
                     <el-pagination style="text-align: center;margin-top:20px" v-if="pageOption.paginationShow && pageOption.searchResult.length>0"
@@ -224,11 +224,11 @@
 
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>
-<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script> <script src="/static/js/common/navbar.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
 
 <script src="/static/js/page/unitRepository.js"></script>
-
+<script src="/static/js/common/navbar.js"></script>
 
 
 

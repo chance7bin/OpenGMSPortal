@@ -14,16 +14,54 @@
     "items": "items",
     "NoData": "no data",
     "SortBy":"Sorted By:",
-    "ViewCount": "View Count",
-    "Name": "Name",
-    "CreateTime": "CreateTime",
-    "Asc": "Asc.",
-    "Desc": "Desc."
+    "ViewCount": ["View Count", "viewCount"],
+    "Name": ["Name","name"],
+    "CreateTime": ["Create Time","createTime"],
+    "Asc": ["Asc.","Asc."],
+    "Desc": ["Desc.","Desc."],
+    "queryFields":[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+    "contributeStr":"contributed at ",
+
+    "applicationFocusedCategories":"Application-focused categories",
+    "naturalPerspective":"Natural-perspective",
+
+    "landRegions":"Land regions",
+    "oceanRegions":"Ocean regions",
+    "frozenRegions":"Frozen regions",
+    "atmosphericRegions":"Atmospheric regions",
+    "spaceEarthRegions":"Space-earth regions",
+    "solidEarthRegions":"Solid-earth regions",
+
+    "humanPerspective":"Human-perspective",
+
+    "developmentActivities":"Development activities",
+    "socialActivities":"Social activities",
+    "economicActivities":"Economic activities",
+
+    "integratedPerspective":"Integrated-perspective",
+
+    "globalScale":"Global scale",
+    "regionalScale":"Regional scale",
+
+    "methodFocusedCategories":"Method-focused categories",
+    "dataPerspective":"Data-perspective",
+
+    "geoinformationAnalysis":"Geoinformation analysis",
+    "remoteSensingAnalysis":"Remote sensing analysis",
+    "geostatisticalAnalysis":"Geostatistical analysis",
+    "intelligentComputationAnalysis":"Intelligent computation analysis",
+
+    "processPerspective":"Process-perspective",
+
+    "physicalProcessCalculation":"Physical process calculation",
+    "chemicalProcessCalculation":"Chemical process calculation",
+    "biologicalProcessCalculation":"Biological process calculation",
+    "humanActivityCalculation":"Human-activity calculation"
   },
   "zh-cn": {
-    "PageName": "数据条目仓库",
+    "PageName": "数据条目库",
     "PageIntro":"数据仓库（公开共享数据资源的一站式枢纽）",
-    "Contribute": "+ 添加",
+    "Contribute": "+ 创建新条目",
 
     "DataClass": "数据类别",
 
@@ -35,10 +73,50 @@
     "items": "个条目",
     "NoData": "没有数据",
     "SortBy":"排序:",
-    "ViewCount": "点击量",
-    "Name": "名称",
-    "CreateTime": "创建时间",
-    "Asc": "升序",
-    "Desc": "降序"
+    "ViewCount": ["点击量", "viewCount"],
+    "Name": ["名称","name"],
+    "CreateTime": ["创建时间","createTime"],
+    "Asc": ["升序","Asc."],
+    "Desc": ["降序","Desc."],
+    "queryFields":[[1,"名称","Name"],[2,"关键词","Keyword"],[3,"内容","Content"],[4,"贡献者","Contributor"]],
+    "contributeStr":"贡献于 ",
+
+
+    "applicationFocusedCategories":"面向应用的分类",
+    "naturalPerspective":"自然视角",
+
+    "landRegions":"陆地圈",
+    "oceanRegions":"海洋圈",
+    "frozenRegions":"冰冻圈",
+    "atmosphericRegions":"大气圈",
+    "spaceEarthRegions":"太空-地球",
+    "solidEarthRegions":"固体地球",
+
+    "humanPerspective":"人文视角",
+
+    "developmentActivities":"发展活动",
+    "socialActivities":"社会活动",
+    "economicActivities":"经济活动",
+
+    "integratedPerspective":"综合视角",
+
+    "globalScale":"全球尺度",
+    "regionalScale":"区域尺度",
+
+    "methodFocusedCategories":"面向方法的分类",
+    "dataPerspective":"数据视角",
+
+    "geoinformationAnalysis":"地理信息分析",
+    "remoteSensingAnalysis":"遥感分析",
+    "geostatisticalAnalysis":"地学统计分析",
+    "intelligentComputationAnalysis":"智能计算分析",
+
+    "processPerspective":"过程视角",
+
+    "physicalProcessCalculation":"物理过程计算",
+    "chemicalProcessCalculation":"化学过程计算",
+    "biologicalProcessCalculation":"生物过程计算",
+    "humanActivityCalculation":"人类活动计算"
+
   }
 }

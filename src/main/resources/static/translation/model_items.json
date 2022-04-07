@@ -105,9 +105,9 @@
       }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718"}]
   },
   "zh-cn": {
-    "PageName": "模型条目仓库",
+    "PageName": "模型条目库",
     "PageIntro":"模型仓库（包含工具、算法、包等等）",
-    "Contribute": "+ 添加",
+    "Contribute": "+ 创建新条目",
 
     "ModelClass": "模型类别",
 
@@ -135,22 +135,22 @@
       {"children": [{
         "children": [{
           "id": 2,
-          "label": "陆地领域",
+          "label": "陆地圈",
           "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e"
-        }, {"id": 3, "label": "海洋领域", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457"}, {
+        }, {"id": 3, "label": "海洋圈", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457"}, {
           "id": 4,
-          "label": "冰川领域",
+          "label": "冰冻圈",
           "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9"
-        }, {"id": 5, "label": "大气领域", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5"}, {
+        }, {"id": 5, "label": "大气圈", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5"}, {
           "id": 6,
-          "label": "地球空间领域",
+          "label": "太空-地球",
           "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee"
-        }, {"id": 7, "label": "地球土壤领域", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e"}
+        }, {"id": 7, "label": "固体地球", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e"}
         ], "id": 1, "label": "自然视角", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0"
       }, {
         "children": [{
           "id": 10,
-          "label": "开发活动",
+          "label": "发展活动",
           "oid": "808e74a4-41c6-4558-a850-4daec1f199df"
         }, {"id": 11, "label": "社会活动", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190"}, {
           "id": 12,
@@ -165,11 +165,11 @@
         "oid":"396cc739-ef33-4332-8d5d-9a67c89567c7",
         "children":[{
           "id": 31,
-          "label": "全球范围",
+          "label": "全球尺度",
           "oid": "14130969-fda6-41ea-aa32-0af43104840b"
         }, {
           "id": 32,
-          "label": "区域范围",
+          "label": "区域尺度",
           "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e"
         }]}], "id": 24, "label": "面向应用的分类", "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19"},
 

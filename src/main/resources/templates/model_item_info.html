@@ -192,6 +192,8 @@
         <translation-bar
                 json-file="all_model_info"
                 @translate-page="translatePage"
+                with-comments="true"
+                with-item-info-modules="true"
                 initial-lang="en-us"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
@@ -269,19 +271,19 @@
                                        th:text="${model.name}">Ground Water Flow System</a>
                                     <div style="display: inline-block;margin-left:5px">
                                         <span class="label label-success" th:if="${model.contentType == 'Package' || model.contentType == 'MD5'}">
-                                            OpenGMS Model-Service Package
+                                            {{htmlJSON.package}}
                                         </span>
                                         <span class="label label-success" th:if="${model.contentType == 'Code'}">
-                                            Source Code
+                                            {{htmlJSON.sourceCode}}
                                         </span>
                                         <span class="label label-success" th:if="${model.contentType == 'Library'}">
-                                            Executable Library
+                                            {{htmlJSON.library}}
                                         </span>
                                         <span class="label label-success" th:if="${model.contentType == 'Service'}">
-                                            Third-party Web-Service Link
+                                            {{htmlJSON.webLink}}
                                         </span>
                                         <span class="label label-success" th:if="${model.contentType == 'Link'}">
-                                            Downloadable Link
+                                            {{htmlJSON.downloadLink}}
                                         </span>
                                     </div>
                                     <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
@@ -516,6 +518,9 @@
                                 </el-pagination>
                             </div>
                             <div v-if="modelRelationGraphShow" style="height:550px;position: relative;">
+
+
+
                                 <div class="modelRelationGraphSideBar" v-if="modelRelationGraphSideBarShow" style="height:550px;width:200px;padding:15px;position: absolute;z-index: 999;background-color: #f6f6f6eb;overflow:auto;">
                                     <div class="mr_header" style="height:10px;">
                                         <a href="javascript:void(0);" @click="closeGraphSideBar" style="font-size: 20px;">×</a>
@@ -558,43 +563,43 @@
 
                                 </div>
                                 <div class="modelRelationGraphSideBar_right" style="position: absolute;right:0;top:40px;height:auto;width:130px;z-index: 999;background-color: #cacaca38;padding:15px;border-radius: 10px;">
-                                    <label>Node Label</label><br/>
+                                    <label>{{htmlJSON.nodeLabel}}</label><br/>
                                     <el-switch
                                         v-model="nodeLabelShow"
-                                        active-text="On"
-                                        inactive-text="Off"
+                                        :active-text="htmlJSON.On"
+                                        :inactive-text="htmlJSON.Off"
                                         @change="nodeLabelShowChange">
                                     </el-switch>
                                     <hr style="border-color: #00b9ff;"/>
-                                    <label>Full Name</label><br/>
+                                    <label>{{htmlJSON.fullName}}</label><br/>
                                     <el-switch
                                             v-model="fullNameShow"
-                                            active-text="On"
-                                            inactive-text="Off"
+                                            :active-text="htmlJSON.On"
+                                            :inactive-text="htmlJSON.Off"
                                             @change="fullNameShowChange">
                                     </el-switch>
                                     <hr style="border-color: #00b9ff;"/>
-                                    <label>Line Label</label><br/>
+                                    <label>{{htmlJSON.lineLabel}}</label><br/>
                                     <el-switch
                                             v-model="lineLabelShow"
-                                            active-text="On"
-                                            inactive-text="Off"
+                                            :active-text="htmlJSON.On"
+                                            :inactive-text="htmlJSON.Off"
                                             @change="lineLabelShowChange">
                                     </el-switch>
                                     <hr style="border-color: #00b9ff;"/>
-                                    <label>Line Color</label><br/>
+                                    <label>{{htmlJSON.lineColor}}</label><br/>
                                     <el-switch
                                             v-model="lineColorShow"
-                                            active-text="On"
-                                            inactive-text="Off"
+                                            :active-text="htmlJSON.On"
+                                            :inactive-text="htmlJSON.Off"
                                             @change="lineColorShowChange">
                                     </el-switch>
                                     <hr style="border-color: #00b9ff;"/>
-                                    <label>Full relation</label><br/>
+                                    <label>{{htmlJSON.fullRelation}}</label><br/>
                                     <el-switch
                                             v-model="fullRelationShow"
-                                            active-text="On"
-                                            inactive-text="Off"
+                                            :active-text="htmlJSON.On"
+                                            :inactive-text="htmlJSON.Off"
                                             @change="fullRelationShowChange">
                                     </el-switch>
                                 </div>
@@ -603,7 +608,7 @@
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                        @click="addRelation(1)" type="primary" icon="el-icon-plus"
                                        style="width: 100%">
-                                {{htmlJSON.RelatedModelItem}}
+                                {{htmlJSON.EditRelatedModelItem}}
                             </el-button>
                             <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                         popper-class="fontsize-15"
@@ -611,7 +616,7 @@
                                         effect="light" placement="top">
                                 <el-button plain type="info" icon="el-icon-plus"
                                            style="width: 100%">
-                                    {{htmlJSON.RelatedModelItem}}
+                                    {{htmlJSON.EditRelatedModelItem}}
                                 </el-button>
                             </el-tooltip>
 
@@ -1319,8 +1324,8 @@
             <div id="Contributor" class="detail_block">
                 <div class="block_head" style="border-left-color: #00d083;">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">Contributor</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
+                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
+                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>
                         <el-tooltip popper-class="fontsize-15" effect="light"
                                     content="Contributor is the person who contributed the item to OpenGMS, may not be the author of the item."
                                     placement="top">
@@ -1346,8 +1351,8 @@
                     </div>
                     <div class="el-row">
                         <div>
-                            <h5 th:if="${history!=true}" th:text="'Initial contribute: '+${date}">contributed at 2018-7-13 14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'Modify: '+${date}">modified at 2018-7-13 14:32:18 </h5>
+                            <h5 th:if="${history!=true}"><span>{{htmlJSON.InitialContribute}}</span><span th:text="${date}"></span></h5>
+                            <h5 th:if="${history==true}"><span>{{htmlJSON.ModifyTime}}</span><span th:text="${date}"></span></h5>
                         </div>
                     </div>
                     <!--<div class="flexCenter" style=" white-space: nowrap; justify-content: normal;">-->
@@ -1509,7 +1514,7 @@
         <div th:if="${history==true}" style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
     </div>
 
-    <el-dialog v-cloak :visible.sync="graphFullScreen" fullscreen show-close title="Model Relation Graph"
+    <el-dialog v-cloak :visible.sync="graphFullScreen" fullscreen show-close :title="htmlJSON.ModelRelationGraph"
     @close="graphFullDialogClose">
         <div class="fullScreenMask" style="height: 100%;width: 100%;position: relative;background-color: white;">
             <div class="modelRelationGraphSideBar" v-if="modelRelationGraphSideBarShow" style="height:100%;width:300px;padding:15px;position: absolute;z-index: 999;background-color: #f6f6f6eb">
@@ -1555,43 +1560,43 @@
             </div>
             <div id="fullScreenGraph" style="height: 100%;"></div>
             <div class="modelRelationGraphSideBar_right" style="position: absolute;right:0;top:40px;height:auto;width:130px;z-index: 999;background-color: #cacaca38;padding:15px;border-radius: 10px;">
-                <label>Node Label</label><br/>
+                <label>{{htmlJSON.nodeLabel}}</label><br/>
                 <el-switch
                         v-model="nodeLabelShow"
-                        active-text="On"
-                        inactive-text="Off"
+                        :active-text="htmlJSON.On"
+                        :inactive-text="htmlJSON.Off"
                         @change="nodeLabelShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
-                <label>Full Name</label><br/>
+                <label>{{htmlJSON.fullName}}</label><br/>
                 <el-switch
                         v-model="fullNameShow"
-                        active-text="On"
-                        inactive-text="Off"
+                        :active-text="htmlJSON.On"
+                        :inactive-text="htmlJSON.Off"
                         @change="fullNameShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
-                <label>Line Label</label><br/>
+                <label>{{htmlJSON.lineLabel}}</label><br/>
                 <el-switch
                         v-model="lineLabelShow"
-                        active-text="On"
-                        inactive-text="Off"
+                        :active-text="htmlJSON.On"
+                        :inactive-text="htmlJSON.Off"
                         @change="lineLabelShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
-                <label>Line Color</label><br/>
+                <label>{{htmlJSON.lineColor}}</label><br/>
                 <el-switch
                         v-model="lineColorShow"
-                        active-text="On"
-                        inactive-text="Off"
+                        :active-text="htmlJSON.On"
+                        :inactive-text="htmlJSON.Off"
                         @change="lineColorShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
-                <label>Full relation</label><br/>
+                <label>{{htmlJSON.fullRelation}}</label><br/>
                 <el-switch
                         v-model="fullRelationShow"
-                        active-text="On"
-                        inactive-text="Off"
+                        :active-text="htmlJSON.On"
+                        :inactive-text="htmlJSON.Off"
                         @change="fullRelationShowChange">
                 </el-switch>
             </div>
@@ -2590,6 +2595,7 @@
 <script src="/static/js/common/qrcode.min.js"></script>
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/js/common/commonValue.js"></script>
@@ -2602,7 +2608,7 @@
 <script src="/static/js/modules/userDataSpaceModule.js"></script>
 <script src="/static/js/common/copy.js"></script>
 <script src="/static/js/common/bootstrap.min.js"></script>
-<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+
 <script src="/static/js/common/navbar.js"></script>
 <script src="/static/js/modules/editModelitemModule.js"></script>
 <script src="/static/js/modules/editClassification.js"></script>

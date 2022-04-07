@@ -24,6 +24,17 @@ Vue.component("translation-bar",
                 type: String,
                 default: 'en-us',
             },
+
+            withComments:{
+                type: Boolean,
+                default: false,
+            },
+
+            withItemInfoModules:{
+                type: Boolean,
+                default: false,
+            }
+
         },
         data() {
             return {
@@ -61,8 +72,8 @@ Vue.component("translation-bar",
                         'Accept':'application/json'
                     },
                     success:((res)=>{
-                        result = res
-                    })
+                            result = res
+                        })
                     }
 
                 )
@@ -101,7 +112,12 @@ Vue.component("translation-bar",
                     this.transLateTargetPage()
                     this.loadNavBar()
                     this.loadFooter()
-                    this.loadComment()
+                    if(this.withComments) {
+                        this.loadComment()
+                    }
+                    if(this.withItemInfoModules) {
+                        this.loadItemInfoModules();
+                    }
                 }
             },
 
@@ -155,6 +171,13 @@ Vue.component("translation-bar",
             async loadComment(){//需要加载评论区的页面触发翻译 --- add by wyjq
                 let content = await this.getLangJson('comment')
                 let scopeDom = document.getElementById("comment")
+                this.defautTrans(content,scopeDom)
+                document.getElementById("commentTextArea").setAttribute("placeholder",content[this.currentLang]["writeYourComment"]);
+            },
+
+            async loadItemInfoModules(){
+                let content = await this.getLangJson('itemInfoModules')
+                let scopeDom = document.getElementById("app")
                 this.defautTrans(content,scopeDom)
             },
 
@@ -237,6 +260,12 @@ Vue.component("translation-bar",
             this.transLateTargetPage()
             this.loadNavBar()
             this.loadFooter()
+            if(this.withComments) {
+                this.loadComment()
+            }
+            if(this.withItemInfoModules) {
+                this.loadItemInfoModules();
+            }
         },
         mounted() {
 

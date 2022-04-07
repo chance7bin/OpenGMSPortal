@@ -14,17 +14,20 @@
     "items": "items",
     "NoData": "no data",
     "SortBy":"Sorted By:",
-    "ViewCount": "View Count",
-    "Name": "Name",
-    "CreateTime": "CreateTime",
-    "Asc": "Asc.",
-    "Desc": "Desc."
+    "ViewCount": ["View Count", "viewCount"],
+    "Name": ["Name","name"],
+    "CreateTime": ["Create Time","createTime"],
+    "Asc": ["Asc.","Asc."],
+    "Desc": ["Desc.","Desc."],
+    "queryFields":[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
+    "contributeStr":"contributed at ",
+    "noResult": "No Result"
 
 },
   "zh-cn": {
-    "PageName": "时空参考信息仓库",
+    "PageName": "时空参考信息库",
     "PageIntro":"时空参考信息",
-    "Contribute": "+ 添加",
+    "Contribute": "+ 创建新条目",
 
     "RepositoryCollections": "知识库集合",
 
@@ -36,10 +39,13 @@
     "items": "个条目",
     "NoData": "没有数据",
     "SortBy":"排序:",
-    "ViewCount": "点击量",
-    "Name": "名称",
-    "CreateTime": "创建时间",
-    "Asc": "升序",
-    "Desc": "降序"
+    "ViewCount": ["点击量", "viewCount"],
+    "Name": ["名称","name"],
+    "CreateTime": ["创建时间","createTime"],
+    "Asc": ["升序","Asc."],
+    "Desc": ["降序","Desc."],
+    "queryFields":[[1,"名称","Name"],[2,"关键词","Keyword"],[3,"内容","Content"],[4,"贡献者","Contributor"]],
+    "contributeStr":"贡献于 ",
+    "noResult": "查询结果为空"
   }
 }
