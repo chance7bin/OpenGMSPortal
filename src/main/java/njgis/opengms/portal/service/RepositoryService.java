@@ -111,22 +111,34 @@ public class RepositoryService {
      **/
     public ModelAndView getCommonAttribute(PortalItem item, GenericCategoryDao categoryDao, ModelAndView modelAndView){
         //兼容两种格式的数据
-        GenericCategory classification = null;
+        // GenericCategory classification = null;
 
-        JSONArray array = new JSONArray();
         JSONArray classResult = new JSONArray();
 
         List<String> classifications = item.getClassifications();
         for(int i=0;i<classifications.size();i++){
-            array.clear();
-            String classId=classifications.get(i);
-            classification= (GenericCategory) categoryDao.findFirstById(classId);
-            array.add(classification.getNameEn());
-            classId=classification.getParentId();
-            classification= (GenericCategory) categoryDao.findFirstById(classId);
-            array.add(classification.getNameEn());
 
-            JSONArray array1=new JSONArray();
+            JSONArray array = new JSONArray();
+            String classId=classifications.get(i);
+
+            do {
+                GenericCategory classification = (GenericCategory) categoryDao.findFirstById(classId);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name",classification.getNameEn());
+                jsonObject.put("id",classification.getId());
+
+                array.add(jsonObject);
+                classId=classification.getParentId();
+
+            } while (classId != null && !classId.equals("null"));
+
+            // classification= (GenericCategory) categoryDao.findFirstById(classId);
+            // array.add(classification.getNameEn());
+            // classId=classification.getParentId();
+            // classification= (GenericCategory) categoryDao.findFirstById(classId);
+            // array.add(classification.getNameEn());
+
+            JSONArray array1 = new JSONArray();
             for(int j=array.size()-1;j>=0;j--){
                 array1.add(array.getString(j));
             }
