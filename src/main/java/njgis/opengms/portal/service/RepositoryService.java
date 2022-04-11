@@ -111,22 +111,34 @@ public class RepositoryService {
      **/
     public ModelAndView getCommonAttribute(PortalItem item, GenericCategoryDao categoryDao, ModelAndView modelAndView){
         //兼容两种格式的数据
-        GenericCategory classification = null;
+        // GenericCategory classification = null;
 
-        JSONArray array = new JSONArray();
         JSONArray classResult = new JSONArray();
 
         List<String> classifications = item.getClassifications();
         for(int i=0;i<classifications.size();i++){
-            array.clear();
-            String classId=classifications.get(i);
-            classification= (GenericCategory) categoryDao.findFirstById(classId);
-            array.add(classification.getNameEn());
-            classId=classification.getParentId();
-            classification= (GenericCategory) categoryDao.findFirstById(classId);
-            array.add(classification.getNameEn());
 
-            JSONArray array1=new JSONArray();
+            JSONArray array = new JSONArray();
+            String classId=classifications.get(i);
+
+            do {
+                GenericCategory classification = (GenericCategory) categoryDao.findFirstById(classId);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name",classification.getNameEn());
+                jsonObject.put("id",classification.getId());
+
+                array.add(jsonObject);
+                classId=classification.getParentId();
+
+            } while (classId != null && !classId.equals("null"));
+
+            // classification= (GenericCategory) categoryDao.findFirstById(classId);
+            // array.add(classification.getNameEn());
+            // classId=classification.getParentId();
+            // classification= (GenericCategory) categoryDao.findFirstById(classId);
+            // array.add(classification.getNameEn());
+
+            JSONArray array1 = new JSONArray();
             for(int j=array.size()-1;j>=0;j--){
                 array1.add(array.getString(j));
             }
@@ -270,7 +282,7 @@ public class RepositoryService {
 
 
     public PortalItem updatePart(PortalItem item, AddDTO updateDTO, ItemTypeEnum itemType, String email){
-        BeanUtils.copyProperties(updateDTO, item);
+        BeanUtils.copyProperties(updateDTO, item, Utils.getNullPropertyNames(updateDTO));
         //判断是否为新图片
         String uploadImage = updateDTO.getUploadImage();
         if (uploadImage!=null&&!uploadImage.contains("/" + itemType.getText() + "/") && !uploadImage.equals("")) {
@@ -362,7 +374,7 @@ public class RepositoryService {
         templateDao.save(template);
 
         modelAndView = getCommonAttribute(template, templateClassificationDao, modelAndView);
-
+        modelAndView.addObject("modularType", ItemTypeEnum.Template);
         return modelAndView;
     }
 
@@ -402,7 +414,7 @@ public class RepositoryService {
         }
 
         modelAndView.addObject("related", relateArray);
-
+        modelAndView.addObject("modularType", ItemTypeEnum.Concept);
         return modelAndView;
     }
 
@@ -475,7 +487,7 @@ public class RepositoryService {
         }
 
         modelAndView.addObject("isTemporal", flag);
-
+        modelAndView.addObject("modularType", ItemTypeEnum.SpatialReference);
         return modelAndView;
     }
 
@@ -535,7 +547,7 @@ public class RepositoryService {
 
 
         modelAndView.addObject("oid_cvt",unit.getConversionId());
-
+        modelAndView.addObject("modularType", ItemTypeEnum.Unit);
         return modelAndView;
     }
 

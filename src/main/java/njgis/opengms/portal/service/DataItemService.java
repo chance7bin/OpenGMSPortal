@@ -210,6 +210,7 @@ public class DataItemService {
         view.addObject("itemInfo",dataItem);
         view.addObject("detail",detailResult);
 
+
         return view;
 
     }

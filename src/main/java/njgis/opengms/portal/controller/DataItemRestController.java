@@ -213,7 +213,9 @@ public class DataItemRestController {
     @RequestMapping (value = "/{id}", method = RequestMethod.GET)
     public ModelAndView getItem(@ApiParam(name = "id", value = "dataItem的id", required = true)
                          @PathVariable("id") String id) throws IOException, URISyntaxException, DocumentException {
-        return dataItemService.getPage(id, dataItemDao);
+        ModelAndView page = dataItemService.getPage(id, dataItemDao);
+        page.addObject("modularType", ItemTypeEnum.DataItem);
+        return page;
     }
 
 

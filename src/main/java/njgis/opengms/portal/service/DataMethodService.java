@@ -210,7 +210,7 @@ public class DataMethodService {
             modelAndView.addObject("resources", resourceArray);
             modelAndView.addObject("lastModifyTime", lastModifyTime);
 
-
+            modelAndView.addObject("modularType", ItemTypeEnum.DataMethod);
             return modelAndView;
 
 
