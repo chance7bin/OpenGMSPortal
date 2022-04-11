@@ -674,8 +674,13 @@ var createComputableModel = Vue.extend({
                 modelItem = await this.getBindModelInfo(basicInfo.relateModelItem)
             }
 
-            this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
-            this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
+            // this.itemInfo.relateModelItemName = modelItem==null?"":modelItem.name;
+            // this.itemInfo.relateModelItem = modelItem==null?"":modelItem.oid;
+
+            this.itemInfo.relateModelItemName = basicInfo.relatedModelItemInfoList[0].name
+            this.itemInfo.relateModelItem = basicInfo.relatedModelItemInfoList[0].id
+            $("#search-box").val(basicInfo.relatedModelItemInfoList[0].name)
+
             this.itemInfo.status=basicInfo.status;
             this.itemInfo.md5=basicInfo.md5;
             this.itemInfo.mdl=basicInfo.mdl;
@@ -686,14 +691,14 @@ var createComputableModel = Vue.extend({
             $(".providers").children(".panel").remove();
 
             //detail
-            $("#computableModelText").html(basicInfo.detail);
+            $("#computableModelText").html(basicInfo.localizationList[0].description);
 
             initTinymce('textarea#computableModelText')
 
             let user_num = 0;
-            let authorship = basicInfo.authorship;
-            if(authorship!=null) {
-                for (i = 0; i < authorship.length; i++) {
+            let authorships = basicInfo.authorships;
+            if(authorships!=null) {
+                for (i = 0; i < authorships.length; i++) {
                     user_num++;
                     var content_box = $(".providers");
                     var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
@@ -710,7 +715,7 @@ var createComputableModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"name\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].name +
+                        authorships[i].name +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -723,7 +728,7 @@ var createComputableModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"ins\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].ins +
+                        authorships[i].ins +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -736,7 +741,7 @@ var createComputableModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"email\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].email +
+                        authorships[i].email +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -749,7 +754,7 @@ var createComputableModel = Vue.extend({
                         "                                                                                                            <input type='text'\n" +
                         "                                                                                                                   name=\"homepage\"\n" +
                         "                                                                                                                   class='form-control' value='" +
-                        authorship[i].homepage +
+                        authorships[i].homepage +
                         "'>\n" +
                         "                                                                                                        </div>\n" +
                         "                                                                                                    </div>\n" +
@@ -759,7 +764,7 @@ var createComputableModel = Vue.extend({
             }
 
             this.itemInfo.name=basicInfo.name;
-            this.itemInfo.description=basicInfo.description
+            this.itemInfo.description=basicInfo.overview
 
             // $("#nameInput").val(basicInfo.name);
             // $("#descInput").val(basicInfo.description)
@@ -770,7 +775,7 @@ var createComputableModel = Vue.extend({
             let itemObj = {}
 
             itemObj.relatedModelItems = [this.itemInfo.relateModelItem]
-            console.log("aaaaaaaaaaaaaaaa",this.itemInfo)
+
             itemObj.status = this.itemInfo.status
             itemObj.name = this.itemInfo.name
             itemObj.image = this.itemInfo.image
@@ -1090,7 +1095,7 @@ var createComputableModel = Vue.extend({
             // document.title="Modify Computable Model | OpenGMS"
             if(window.localStorage.getItem('draft')==null){
                 $.ajax({
-                    url: "/computableModel/getInfo/" + oid,
+                    url: "/computableModel/itemInfo/" + oid,
                     type: "get",
                     data: {},
 
