@@ -374,7 +374,7 @@ public class RepositoryService {
         templateDao.save(template);
 
         modelAndView = getCommonAttribute(template, templateClassificationDao, modelAndView);
-
+        modelAndView.addObject("modularType", ItemTypeEnum.Template);
         return modelAndView;
     }
 
@@ -414,7 +414,7 @@ public class RepositoryService {
         }
 
         modelAndView.addObject("related", relateArray);
-
+        modelAndView.addObject("modularType", ItemTypeEnum.Concept);
         return modelAndView;
     }
 
@@ -487,7 +487,7 @@ public class RepositoryService {
         }
 
         modelAndView.addObject("isTemporal", flag);
-
+        modelAndView.addObject("modularType", ItemTypeEnum.SpatialReference);
         return modelAndView;
     }
 
@@ -547,7 +547,7 @@ public class RepositoryService {
 
 
         modelAndView.addObject("oid_cvt",unit.getConversionId());
-
+        modelAndView.addObject("modularType", ItemTypeEnum.Unit);
         return modelAndView;
     }
 

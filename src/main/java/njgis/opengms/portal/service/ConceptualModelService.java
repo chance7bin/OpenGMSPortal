@@ -193,7 +193,7 @@ public class ConceptualModelService {
         modelAndView.addObject("lastModifyTime", lastModifyTime);
 //        modelAndView.addObject("relateModelItem",modelItemInfo);
         modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
-
+        modelAndView.addObject("modularType", ItemTypeEnum.ConceptualModel);
         return modelAndView;
     }
 
