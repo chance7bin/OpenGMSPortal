@@ -146,7 +146,9 @@ public class DataHubController
     @ApiOperation(value = "根据id返回详情界面 [ /dataItem/hub/{id} ]")
     @RequestMapping (value = "/{id}", method = RequestMethod.GET)
     public ModelAndView getHub(@PathVariable("id") String id) throws IOException, URISyntaxException, DocumentException {
-        return dataItemService.getPage(id, dataHubDao);
+        ModelAndView page = dataItemService.getPage(id, dataHubDao);
+        page.addObject("modularType", ItemTypeEnum.DataHub);
+        return page;
     }
 
 
