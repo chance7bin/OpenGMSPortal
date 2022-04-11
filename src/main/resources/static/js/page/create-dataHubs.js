@@ -43,7 +43,7 @@ var createDataHubs = Vue.extend({
                 description: '',
                 detail: '',
                 author: '',
-                reference: '',
+                url: '',
                 dataType:"Url",//默认Url
                 keywords: [],
                 classifications: [],
@@ -410,7 +410,8 @@ var createDataHubs = Vue.extend({
             //     this.dataItemAddDTO.uploadImage = "";
             // }
 
-            this.dataItemAddDTO.reference = $("#ResourcesUrlText").val();
+            this.dataItemAddDTO.url = $("#ResourcesUrlText").val();
+            // this.dataItemAddDTO.url = "11111111111111111";
 
 
             //用户名
@@ -921,7 +922,8 @@ var createDataHubs = Vue.extend({
 
                         let classificationId = data.classifications;
                         this.dataItemAddDTO.dataType = data.contentType;
-                        $("#ResourcesUrlText").val(data.reference);//url内容填充
+                        // $("#ResourcesUrlText").val(data.reference);//url内容填充
+                        $("#ResourcesUrlText").val(data.url);//url内容填充
 
                         this.selectedFile = data.dataList;
 

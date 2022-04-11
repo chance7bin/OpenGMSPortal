@@ -392,7 +392,7 @@ public class ConceptualModelService {
                 List<Localization> list = new ArrayList<>();
                 list.add(localization);
                 conceptualModel.setLocalizationList(list);
-                conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 // conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
                 conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
 

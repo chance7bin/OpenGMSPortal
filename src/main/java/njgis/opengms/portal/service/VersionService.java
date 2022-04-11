@@ -385,6 +385,7 @@ public class VersionService {
                 findType.add(ItemTypeEnum.Theme);
                 break;
             }
+            case "All":
             default:{
                 findType.add(ItemTypeEnum.ModelItem);
                 findType.add(ItemTypeEnum.ConceptualModel);

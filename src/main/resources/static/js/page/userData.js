@@ -1,6 +1,7 @@
 var userData = Vue.extend(
     {
         template:'#userData',
+        props:["htmlJson"],
         data(){
             return{
                 //页面样式控制

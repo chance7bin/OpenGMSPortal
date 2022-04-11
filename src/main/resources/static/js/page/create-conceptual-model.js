@@ -309,7 +309,7 @@ var createConceptualModel = Vue.extend({
             itemObj.resourceJson = this.resources
             itemObj.name = this.itemInfo.name
             itemObj.description = this.itemInfo.description
-            itemObj.relateModelItems = [this.itemInfo.relateModelItem]
+            itemObj.relatedModelItems = [this.itemInfo.relateModelItem]
             itemObj.status = this.itemInfo.status
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
@@ -955,14 +955,14 @@ var createConceptualModel = Vue.extend({
                 });
             }
             else{
-                this.itemInfo.oid = oid;
+                this.itemInfo.id = oid;
                 this.itemInfo.resources=this.resources;
                 let file = new File([JSON.stringify(this.itemInfo)],'ant.txt',{
                     type: 'text/plain',
                 });
                 this.formData.append("conceptualModel",file)
                 $.ajax({
-                    url: '/conceptualModel/'+oid,
+                    url: '/conceptualModel/',
                     type: 'PUT',
                     data: this.formData,
                     cache: false,
@@ -971,27 +971,21 @@ var createConceptualModel = Vue.extend({
                     async: true
                 }).done((res)=> {
                     loading.close();
+                    console.log(res)
+
+
                     if(res.code===0) {
-                        switch (res.data.code) {
-                            case 0:
-                                this.deleteDraft()
-                                let currentUrl = window.location.href;
-                                let index = currentUrl.lastIndexOf("\/");
-                                that.conceptualModel_oid = currentUrl.substring(index + 1,currentUrl.length);
-                                console.log(that.conceptualModel_oid);
-                                //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-                                // that.getnoticeNum(that.conceptualModel_oid);
-                                // let params = that.message_num_socket;
-                                // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
-                                    type:"success",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        window.location.href = "/user/userSpace";
-                                    }
-                                });
-                                break;
-                            case 1:
+                        //返回包含code表示出错
+                        if(typeof(res.data.code) !== "undefined"){
+                            this.$alert('failed!', 'Error', {
+                                type:"error",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+
+                                }
+                            });
+                        }else{
+                            if(res.data.method==="update") {
                                 this.$confirm('<div style=\'font-size: 18px\'>Update conceptual model successfully!</div>', 'Tip', {
                                     dangerouslyUseHTMLString: true,
                                     confirmButtonText: 'View',
@@ -1007,28 +1001,104 @@ var createConceptualModel = Vue.extend({
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/models/conceptualmodel";
                                 });
-                                break;
-                            case -1:
-                                this.$alert('Save files error', 'Error', {
-                                    type:"error",
+                            }else{
+                                let currentUrl = window.location.href;
+                                let index = currentUrl.lastIndexOf("\/");
+                                that.conceptualModel_oid = currentUrl.substring(index + 1,currentUrl.length);
+                                console.log(that.conceptualModel_oid);
+                                //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                                // that.getnoticeNum(that.conceptualModel_oid);
+                                // let params = that.message_num_socket;
+                                // that.send(params);
+                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                    type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
-
+                                        window.location.href = "/user/userSpace";
                                     }
                                 });
-
-                                break;
-                            case -2:
-                                this.$alert('Create failed!', 'Error', {
-                                    type:"error",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-
-                                    }
-                                });
-                                break;
+                            }
                         }
                     }
+
+
+
+                    // if(res.code===0) {
+                    //     switch (res.data.code) {
+                    //         case 0:
+                    //             this.deleteDraft()
+                    //             if(res.data.data.method==="update") {
+                    //                 this.$confirm('<div style=\'font-size: 18px\'>Update conceptual model successfully!</div>', 'Tip', {
+                    //                     dangerouslyUseHTMLString: true,
+                    //                     confirmButtonText: 'View',
+                    //                     cancelButtonText: 'Go Back',
+                    //                     cancelButtonClass: 'fontsize-15',
+                    //                     confirmButtonClass: 'fontsize-15',
+                    //                     type: 'success',
+                    //                     center: true,
+                    //                     showClose: false,
+                    //                 }).then(() => {
+                    //                     $("#editModal", parent.document).remove();
+                    //                     window.location.href = "/conceptualModel/" + res.data.id;
+                    //                 }).catch(() => {
+                    //                     window.location.href = "/user/userSpace#/models/conceptualmodel";
+                    //                 });
+                    //             }else{
+                    //                 let currentUrl = window.location.href;
+                    //                 let index = currentUrl.lastIndexOf("\/");
+                    //                 that.conceptualModel_oid = currentUrl.substring(index + 1,currentUrl.length);
+                    //                 console.log(that.conceptualModel_oid);
+                    //                 //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                    //                 // that.getnoticeNum(that.conceptualModel_oid);
+                    //                 // let params = that.message_num_socket;
+                    //                 // that.send(params);
+                    //                 this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                    //                     type:"success",
+                    //                     confirmButtonText: 'OK',
+                    //                     callback: action => {
+                    //                         window.location.href = "/user/userSpace";
+                    //                     }
+                    //                 });
+                    //             }
+                    //             break;
+                    //         // case 1:
+                    //         //     this.$confirm('<div style=\'font-size: 18px\'>Update conceptual model successfully!</div>', 'Tip', {
+                    //         //         dangerouslyUseHTMLString: true,
+                    //         //         confirmButtonText: 'View',
+                    //         //         cancelButtonText: 'Go Back',
+                    //         //         cancelButtonClass: 'fontsize-15',
+                    //         //         confirmButtonClass: 'fontsize-15',
+                    //         //         type: 'success',
+                    //         //         center: true,
+                    //         //         showClose: false,
+                    //         //     }).then(() => {
+                    //         //         $("#editModal", parent.document).remove();
+                    //         //         window.location.href = "/conceptualModel/" + res.data.id;
+                    //         //     }).catch(() => {
+                    //         //         window.location.href = "/user/userSpace#/models/conceptualmodel";
+                    //         //     });
+                    //         //     break;
+                    //         case -1:
+                    //             this.$alert('Save files error', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //         case -2:
+                    //             this.$alert('Create failed!', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //
+                    //                 }
+                    //             });
+                    //             break;
+                    //     }
+                    // }
                     else{
                         this.$alert(res.msg, 'Error', {
                             type:"error",

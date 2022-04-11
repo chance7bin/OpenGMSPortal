@@ -155,6 +155,26 @@
                                 </div>
                             </div>
                         </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 12?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 12?'showLeftBorder':''"
+                                 @click="changeRter(12)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="fa fa-window-restore"
+                                       style="font-size: 18px;color: #d48634;margin: 4px;"></i>
+                                    <p>{{htmlJson.Version}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flexCol mainCenter" :class="curIndex == 13?'focus':''">
+                            <div class="liContent flexCol mainCenter" :class="curIndex == 13?'showLeftBorder':''"
+                                 @click="changeRter(13)">
+                                <div class="flexRow flexColCenter">
+                                    <i class="fa fa-comments"
+                                       style="font-size: 18px;color: #d48634;margin: 4px;"></i>
+                                    <p>{{htmlJson.Comment}}</p>
+                                </div>
+                            </div>
+                        </li>
                         <li class="flexCol mainCenter" :class="curIndex == 11?'focus':''">
                             <div class="liContent flexCol mainCenter" :class="curIndex == 11?'showLeftBorder':''"
                                  @click="changeRter(11)">
@@ -175,6 +195,7 @@
                                 </div>
                             </div>
                         </li>
+
                     </ul>
                 </div>
                 <div id="rightShade" style="background: rgba(252, 251, 251, 0.88);position: absolute; width: calc(100% - 240px);height: 100%;margin-left: 240px;"></div>

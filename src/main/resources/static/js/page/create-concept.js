@@ -1198,7 +1198,9 @@ var createConcept = Vue.extend({
             this.pageOption.searchResult[event].exist = true;
 
             con = this.pageOption.searchResult[event].name;
-            oid = this.pageOption.searchResult[event].oid;
+            oid = this.pageOption.searchResult[event].id;
+
+            // console.log("this.pageOption.searchResult[event]:",this.pageOption.searchResult[event])
 
             this.related.push(con);
             this.relatedOid.push(oid);
@@ -1215,7 +1217,7 @@ var createConcept = Vue.extend({
             this.pageOption.searchResult[event].exist = false;
 
             con = this.pageOption.searchResult[event].name;
-            oid = this.pageOption.searchResult[event].oid;
+            oid = this.pageOption.searchResult[event].id;
 
             this.related = this.related.filter(function (item) {
                 return item != con;
@@ -1233,12 +1235,12 @@ var createConcept = Vue.extend({
         },
         searchByOid(oid) {
             $.ajax({
-                url: "/repository/getConceptInfo/" + oid,
+                url: "/concept/itemInfo/" + oid,
                 type: 'GET',
                 data: {},
                 async: false,
                 success: (result) => {
-                    console.log(result);
+                    console.log("getConceptInfo:",result);
                     var basicInfo = result.data;
                     var relate = basicInfo.name;
                     this.related.push(relate);

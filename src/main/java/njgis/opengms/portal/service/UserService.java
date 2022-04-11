@@ -302,6 +302,9 @@ public class UserService {
             // role暂时没有，先注释调
             // result.put("role",user.getUserRole().getRole());
 
+            //更新该用户的资源数量
+            updateAllResourceCount(j_userShuttleDTO.getString("email"));
+
             return j_userShuttleDTO;
         }catch (Exception e){
             log.error(e.getMessage());
@@ -799,7 +802,7 @@ public class UserService {
      **/
     public UserResourceCount countResource(String email){
         //先更新，再查
-        updateAllResourceCount(email);
+//        updateAllResourceCount(email);
         User user = userDao.findFirstByEmail(email);
         return user.getResourceCount();
     }

@@ -1,6 +1,7 @@
 var userCommunity = Vue.extend(
     {
         template: "#userCommunity",
+        props:["htmlJson"],
         data(){
             return{
                 //页面样式控制

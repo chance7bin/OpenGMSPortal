@@ -336,6 +336,19 @@
 <!--notice组件-->
 <template th:replace="message_confirm :: notice"></template>
 <script src="/static/js/page/message_confirm.js"></script>
+
+<!--wyj新添加，将notice分为三个部分-->
+<!--userVersion组件-->
+<template th:replace="userVersion :: userVersion"></template>
+<script src="/static/js/page/userVersion.js"></script>
+<!--userComment组件-->
+<template th:replace="userComment :: userComment"></template>
+<script src="/static/js/page/userComment.js"></script>
+<!--userNotice组件-->
+<template th:replace="userNotice :: userNotice"></template>
+<script src="/static/js/page/userNotice.js"></script>
+
+
 <!--dataSpace通用组件-->
 <template th:replace="modules/userDataSpaceModule :: userDataSpaceModule"></template>
 <script src="/static/js/modules/userDataSpaceModule.js"></script>

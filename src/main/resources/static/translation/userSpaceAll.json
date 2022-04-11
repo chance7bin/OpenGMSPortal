@@ -9,8 +9,13 @@
     "Theme": "Theme",
     "MyAccount": "My Account",
     "Notice": "Notice",
+    "Version": "Version",
+    "Comment": "Comment",
     "DraftBox": "Draft Box",
     "Feedback":"Feedback",
+
+    "Manage": "manage",
+    "CreateNew": "create new",
 
 
     "HomeSplit": "-------------------",
@@ -27,8 +32,29 @@
 
 
     "ModelSplit": "-------------------",
+    "ModelInfo": "You can manage your model here",
+    "ModelItem":"Model Item",
+    "ModelItemInfo":"You can manage Model Items provided by yourself or create a new one",
+    "ConceptualModel":"Conceptual Model",
+    "ConceptualModelInfo":"You can manage Conceptual Models provided by yourself or create a new one",
+    "LogicalModel":"Logical Model",
+    "LogicalModelInfo":"You can manage Logical Models provided by yourself or create a new one",
+    "ComputableModel":"Computable Model",
+    "ComputableModelInfo":"You can manage Computable Models provided by yourself or create a new one",
+
 
     "DataSplit": "-------------------",
+    "ManageData": "manage data",
+    "DataInfo": "You can manage your data here",
+    "DataSpace":"Data Space",
+    "DataSpaceInfo":"You can upload file and manage them in your space",
+    "DataItemHubs":"Data Item Hubs",
+    "DataItemHubsInfo":"You can manage Data Item Hubs provided by yourself or create a new one",
+    "DataMethods":"Data Methods",
+    "DataMethodsInfo":"You can manage Data Methods provided by yourself or create a new one",
+    "DataItemRepository":"Data Item Repository",
+    "DataItemRepositoryInfo":"You can manage Data Item Repository provided by yourself or create a new one",
+
 
     "ServerSplit": "-------------------",
     "ServerInfo": "You can manage your model/data server here",
@@ -52,11 +78,20 @@
 
 
     "CommunitySplit": "-------------------",
+    "CommunityInfo": "You can manager your community here",
+    "ConceptSemantic":"Concept & Semantic",
+    "ConceptSemanticInfo":"You can manage Data provided by yourself or create a new one",
+    "SpatiotemporalReference":"Spatiotemporal Reference",
+    "SpatiotemporalReferenceInfo":"You can manage Data provided by yourself or create a new one",
+    "DataTemplate":"Data Template",
+    "DataTemplateInfo":"You can manage Data provided by yourself or create a new one",
+    "UnitMetric":"Unit & Metric",
+    "UnitMetricInfo":"You can manage Data provided by yourself or create a new one",
+
 
     "ThemeSplit": "-------------------",
     "ThemeInfo": "A theme is a page contains models that aim at a practical application",
     "SearchFor": "Search for ...",
-    "CreateNew": "create new",
     "NoFound": "No Result Found ...",
 
 
@@ -128,9 +163,14 @@
     "Theme": "专题",
     "MyAccount": "我的账户",
     "Notice": "消息",
+    "Version": "版本",
+    "Comment": "评论",
     "DraftBox": "草稿箱",
     "Feedback":"反馈",
 
+
+    "Manage": "管理 ",
+    "CreateNew": "新建 ",
 
     "HomeSplit": "-------------------",
     "HomeTitle": "我的空间",
@@ -146,8 +186,30 @@
 
 
     "ModelSplit": "-------------------",
+    "ModelInfo": "您可以在此处管理您的模型",
+    "ModelItem":"模型条目",
+    "ModelItemInfo":"您可以在此处管理您的模型条目或者新建一个",
+    "ConceptualModel":"概念模型",
+    "ConceptualModelInfo":"您可以在此处管理您的概念模型或者新建一个",
+    "LogicalModel":"逻辑模型",
+    "LogicalModelInfo":"您可以在此处管理您的逻辑模型或者新建一个",
+    "ComputableModel":"计算模型",
+    "ComputableModelInfo":"您可以在此处管理您的计算模型或者新建一个",
+
 
     "DataSplit": "-------------------",
+    "ManageData": "管理数据",
+    "DataInfo": "您可以在此处管理您的数据",
+    "DataSpace":"数据仓库",
+    "DataSpaceInfo":"您可以向个人数据仓库中上传文件并管理",
+    "DataItemHubs":"数据条目中心",
+    "DataItemHubsInfo":"您可以管理您的数据条目中心或者新建一个",
+    "DataMethods":"数据方法",
+    "DataMethodsInfo":"您可以管理您的数据方法或者新建一个",
+    "DataItemRepository":"数据条目仓库",
+    "DataItemRepositoryInfo":"您可以管理您的数据条目仓库或者新建一个",
+
+
 
     "ServerSplit": "-------------------",
     "ServerInfo": "您可以在此处管理自己的模型/数据服务",
@@ -171,6 +233,16 @@
 
 
     "CommunitySplit": "-------------------",
+    "CommunityInfo": "您可以在此处管理您的社区信息",
+    "ConceptSemantic":"概念和语义",
+    "ConceptSemanticInfo":"您可以管理自己的数据或者新建一个",
+    "SpatiotemporalReference":"时空参考",
+    "SpatiotemporalReferenceInfo":"您可以管理自己的数据或者新建一个",
+    "DataTemplate":"数据模板",
+    "DataTemplateInfo":"您可以管理自己的数据或者新建一个",
+    "UnitMetric":"单位与度量",
+    "UnitMetricInfo":"您可以管理自己的数据或者新建一个",
+
 
     "ThemeSplit": "-------------------",
     "ThemeInfo": "专题是一个包含特定实际应用目的的模型集合",
