@@ -44,7 +44,7 @@ var createDataItem = Vue.extend({
                 description: '',
                 detail: '',
                 author: '',
-                reference: '',
+                url: '',
                 dataType:"Url",//默认Url
                 keywords: [],
                 classifications: [],
@@ -221,7 +221,7 @@ var createDataItem = Vue.extend({
             //     this.dataItemAddDTO.uploadImage = "";
             // }
 
-            this.dataItemAddDTO.reference = $("#ResourcesUrlText").val();
+            this.dataItemAddDTO.url = $("#ResourcesUrlText").val();
 
 
             //用户名
@@ -716,7 +716,7 @@ var createDataItem = Vue.extend({
 
                     let classificationId = data.classifications;
                     this.dataItemAddDTO.dataType = data.dataType;
-                    $("#ResourcesUrlText").val(data.reference);//url内容填充
+                    $("#ResourcesUrlText").val(data.url);//url内容填充
 
                     this.selectedFile = data.dataList;
 

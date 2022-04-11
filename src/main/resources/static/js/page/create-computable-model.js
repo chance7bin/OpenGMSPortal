@@ -1246,8 +1246,6 @@ var createComputableModel = Vue.extend({
             }
 
             this.itemInfo = this.getItemContent();
-            console.log("bbbbbbbbbbb",this.itemInfo)
-
             if ((oid === "0") || (oid === "") || (oid == null)) {
 
                 let file = new File([JSON.stringify(this.itemInfo)],'ant.txt',{
@@ -1312,7 +1310,7 @@ var createComputableModel = Vue.extend({
                 });
             }
             else{
-                this.itemInfo.oid=oid;
+                this.itemInfo.id=oid;
 
                 // for(i=0;i<this.fileArray.length;i++){
                 //     this.formData.append("resources",this.fileArray[i]);
@@ -1327,8 +1325,8 @@ var createComputableModel = Vue.extend({
                 $(".uploading").css("display", "block");
 
                 $.ajax({
-                    url: '/computableModel/update',
-                    type: 'post',
+                    url: '/computableModel/',
+                    type: 'put',
                     data: this.formData,
                     cache: false,
                     processData: false,
@@ -1338,26 +1336,21 @@ var createComputableModel = Vue.extend({
                     loading.close();
                     // $("#step").css("display", "block");
                     // $(".uploading").css("display", "none");
+
+
                     if(res.code===0) {
-                        switch (res.data.code) {
-                            case 0:
-                                let currentUrl = window.location.href;
-                                let index = currentUrl.lastIndexOf("\/");
-                                that.computableModel_oid = currentUrl.substring(index + 1,currentUrl.length);
-                                console.log(that.computableModel_oid);
-                                //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-                                // that.getnoticeNum(that.computableModel_oid);
-                                // let params = that.message_num_socket;
-                                // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
-                                    type:"success",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        window.location.href = "/user/userSpace";
-                                    }
-                                });
-                            case 1:
-                                this.deleteDraft()
+                        //返回data包含code表示出错
+                        if(typeof(res.data.code) !== "undefined"){
+                            this.$alert('failed!', 'Error', {
+                                type:"error",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+
+                                }
+                            });
+                        }else{
+                            if(res.data.method==="update") {
+                                // this.deleteDraft()
                                 this.$confirm('<div style=\'font-size: 18px\'>Update computable model successfully!</div>', 'Tip', {
                                     dangerouslyUseHTMLString: true,
                                     confirmButtonText: 'View',
@@ -1373,31 +1366,89 @@ var createComputableModel = Vue.extend({
                                 }).catch(() => {
                                     window.location.href = "/user/userSpace#/models/computablemodel";
                                 });
-                                break;
-                            case -1:
-                                this.$alert('Save files error', 'Error', {
-                                    type:"error",
+                            }else{
+                                let currentUrl = window.location.href;
+                                let index = currentUrl.lastIndexOf("\/");
+                                that.computableModel_oid = currentUrl.substring(index + 1,currentUrl.length);
+                                console.log(that.computableModel_oid);
+                                //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                                // that.getnoticeNum(that.computableModel_oid);
+                                // let params = that.message_num_socket;
+                                // that.send(params);
+                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                    type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
-                                        $("#step").css("display", "block");
-                                        $(".uploading").css("display", "none");
+                                        window.location.href = "/user/userSpace";
                                     }
                                 });
-
-                                break;
-                            case -2:
-                                this.$alert('Create failed!', 'Error', {
-                                    type:"error",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        $("#step").css("display", "block");
-                                        $(".uploading").css("display", "none");
-                                    }
-                                });
-
-                                break;
+                            }
                         }
                     }
+
+
+
+
+                    // if(res.code===0) {
+                    //     switch (res.data.code) {
+                    //         case 0:
+                    //             let currentUrl = window.location.href;
+                    //             let index = currentUrl.lastIndexOf("\/");
+                    //             that.computableModel_oid = currentUrl.substring(index + 1,currentUrl.length);
+                    //             console.log(that.computableModel_oid);
+                    //             //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                    //             // that.getnoticeNum(that.computableModel_oid);
+                    //             // let params = that.message_num_socket;
+                    //             // that.send(params);
+                    //             this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                    //                 type:"success",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     window.location.href = "/user/userSpace";
+                    //                 }
+                    //             });
+                    //         case 1:
+                    //             this.deleteDraft()
+                    //             this.$confirm('<div style=\'font-size: 18px\'>Update computable model successfully!</div>', 'Tip', {
+                    //                 dangerouslyUseHTMLString: true,
+                    //                 confirmButtonText: 'View',
+                    //                 cancelButtonText: 'Go Back',
+                    //                 cancelButtonClass: 'fontsize-15',
+                    //                 confirmButtonClass: 'fontsize-15',
+                    //                 type: 'success',
+                    //                 center: true,
+                    //                 showClose: false,
+                    //             }).then(() => {
+                    //                 $("#editModal", parent.document).remove();
+                    //                 window.location.href = "/computableModel/" + res.data.id;
+                    //             }).catch(() => {
+                    //                 window.location.href = "/user/userSpace#/models/computablemodel";
+                    //             });
+                    //             break;
+                    //         case -1:
+                    //             this.$alert('Save files error', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     $("#step").css("display", "block");
+                    //                     $(".uploading").css("display", "none");
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //         case -2:
+                    //             this.$alert('Create failed!', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     $("#step").css("display", "block");
+                    //                     $(".uploading").css("display", "none");
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //     }
+                    // }
                     else{
                         this.$alert(res.msg, 'Error', {
                             type:"error",

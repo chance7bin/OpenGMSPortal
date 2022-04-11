@@ -279,7 +279,7 @@ var createDataApplication = Vue.extend({
         selectTemplate(index, info){
             let obj = {
                 templateName : info.name,
-                templateOid : info.id
+                templateId : info.id
             }
             this.dataApplication.bindDataTemplates.push(obj);
             this.bindTemplateDialogVisible = false;
@@ -501,18 +501,18 @@ var createDataApplication = Vue.extend({
             // document.title="Modify Data Application | OpenGMS";
             let that = this
             $.ajax({
-                url: "/dataMethod/method/" + oid,
+                url: "/dataMethod/itemInfo/" + oid,
                 type: "get",
                 data: {},
 
                 success: (result) => {
                     window.sessionStorage.setItem("editdataApplication_id", "");
-                    console.log(result)
-                    var basicInfo = result.data;
-                    // if(basicInfo.resourceJson!=null)
-                    //     that.resources=basicInfo.resources;
+                    console.log("/dataMethod/itemInfo/:",result)
+                    var basicInfo = result.data.data;
+                    if(basicInfo.resourceJson!=null)
+                        that.resources=basicInfo.resourceJson;
 
-                    that.resources=basicInfo.resources;
+                    // that.resources=basicInfo.resources;
 
                     // that.dataApplication.bindModelItem=basicInfo.relateModelItemName;
                     // that.dataApplication.bindOid=basicInfo.relateModelItem;
@@ -539,6 +539,8 @@ var createDataApplication = Vue.extend({
 
                     $(".providers").children(".panel").remove();
 
+                    // console.log("basicInfo:",basicInfo)
+                    // console.log("basicInfo.localizationList:",basicInfo.localizationList)
                     //detail
                     $("#dataApplicationText").html(basicInfo.localizationList[0].description);
 
@@ -726,10 +728,11 @@ var createDataApplication = Vue.extend({
             // this.dataApplication.method = this.method;
             let testData = [];
             let dataUrls = [];
+            console.log("this.selectedFile:",this.selectedFile)
             for(let item of this.selectedFile){
                 let obj = new Object();
-                obj.oid = item.id;
-                obj.url = item.url;
+                // obj.oid = item.uid;
+                obj.url = item.address;
                 dataUrls.push(item.url);
                 testData.push(obj);
             }
@@ -750,7 +753,7 @@ var createDataApplication = Vue.extend({
                     // console.log(res.data);
                     that.testDataPath = res.data;
                 }
-                console.log(res.data);
+                console.log("datafileUrl testDataPath:", res.data);
             })
 
             this.dataApplication.testDataPath = this.testDataPath;
@@ -809,7 +812,7 @@ var createDataApplication = Vue.extend({
                     // $("#step").css("display", "block");
                     // $(".uploading").css("display", "none");
                     switch (res.code) {
-                        case 1:
+                        case 0:
                             this.$confirm('<div style=\'font-size: 18px\'>Create data application successfully!</div>', 'Tip', {
                                 dangerouslyUseHTMLString: true,
                                 confirmButtonText: 'View',
@@ -823,7 +826,7 @@ var createDataApplication = Vue.extend({
                                 window.location.href = "/dataMethod/" + res.data;
                             }).catch(() => {
                                 window.location.reload(true)
-                                window.location.href = "/user/userSpace#/models/dataMethod";
+                                window.location.href = "/user/userSpace#/data/processingApplication";
                             });
 
                             break;

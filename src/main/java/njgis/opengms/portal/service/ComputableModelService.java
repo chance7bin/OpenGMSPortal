@@ -282,7 +282,7 @@ public class ComputableModelService {
                 computableModel.setStatus(jsonObject.getString("status"));
                 computableModel.setName(jsonObject.getString("name"));
 
-
+                computableModel.setOverview(jsonObject.getString("description"));
 
                 // computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
                 computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));

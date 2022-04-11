@@ -59,21 +59,21 @@
                     <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
                     <div class="flexColContainer mainContent" style="">
                         <section role="description" class="flexCol flexCenter contentSection">
-                            <h3>Model</h3>
-                            <h5>You can manage your model here</h5>
+                            <h3>{{htmlJson.Model}}</h3>
+                            <h5>{{htmlJson.ModelInfo}}</h5>
                         </section>
                         <section class="flexRowContainer flexWrap contentSection">
                             <div class="contentCard flexCol flexColCenter">
                                 <div class="content_h68 flexRow noPadding">
                                     <div class="content_w68 flexCol flexJustAround">
                                         <div class="flexAlignCenter ">
-                                            <h4>Model Item</h4>
+                                            <h4>{{htmlJson.ModelItem}}</h4>
                                             <div class="numTag bluePlain" style="margin-left: 5px">
 
                                                 <p class="noMargin" style="">{{countInfo.modelItem}}</p>
                                             </div>
                                         </div>
-                                        <p>You can manage Model Items provided by yourself or create a new one</p>
+                                        <p>{{htmlJson.ModelItemInfo}}</p>
                                     </div>
                                     <div class="flexCenter content_w32" style="">
                                         <img class="square_80" style="" src="../../static/img/model/model.png">
@@ -85,10 +85,10 @@
                                     <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                         <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                             <div class="lineButton flexCol" @click="manageItem(1)">
-                                                <p style="margin-block-end: 0">manage</p>
+                                                <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                 <div class="hoverLine"></div>
                                             </div>
-                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(1)">create new <span><i
+                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(1)">{{htmlJson.CreateNew}} <span><i
                                                     class="fa fa-arrow-right"></i></span></div>
                                         </div>
                                     </div>
@@ -99,12 +99,12 @@
                                 <div class="content_h68 flexRow noPadding">
                                     <div class="content_w68 flexCol flexJustAround">
                                         <div class="flexAlignCenter ">
-                                            <h4>Conceptual Model</h4>
+                                            <h4>{{htmlJson.ConceptualModel}}</h4>
                                             <div class="numTag bluePlain" style="margin-left: 5px">
                                                 <p class="noMargin" style="">{{countInfo.conceptualModel}}</p>
                                             </div>
                                         </div>
-                                        <p>You can manage Conceptual Models provided by yourself or create a new one</p>
+                                        <p>{{htmlJson.ConceptualModelInfo}}</p>
                                     </div>
                                     <div class="flexCenter content_w32" style="">
                                         <img class="square_80" style="" src="../../static/img/model/conceptual.png">
@@ -116,10 +116,10 @@
                                     <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                         <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                             <div class="lineButton flexCol" @click="manageItem(2)">
-                                                <p style="margin-block-end: 0">manage</p>
+                                                <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                 <div class="hoverLine"></div>
                                             </div>
-                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(2)">create new <span><i
+                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(2)">{{htmlJson.CreateNew}}<span><i
                                                     class="fa fa-arrow-right"></i></span></div>
                                         </div>
 
@@ -131,12 +131,12 @@
                                 <div class="content_h68 flexRow noPadding">
                                     <div class="content_w68 flexCol flexJustAround">
                                         <div class="flexAlignCenter ">
-                                            <h4>Logical Model</h4>
+                                            <h4>{{htmlJson.LogicalModel}}</h4>
                                             <div class="numTag bluePlain" style="margin-left: 5px">
                                                 <p class="noMargin" style="">{{countInfo.logicalModel}}</p>
                                             </div>
                                         </div>
-                                        <p>You can manage Logical Models provided by yourself or create a new one</p>
+                                        <p>{{htmlJson.LogicalModelInfo}}</p>
                                     </div>
                                     <div class="flexCenter content_w32" style="">
                                         <img class="square_80" style="" src="../../static/img/model/logical.png">
@@ -148,10 +148,10 @@
                                     <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                         <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                             <div class="lineButton flexCol" @click="manageItem(3)">
-                                                <p style="margin-block-end: 0">manage</p>
+                                                <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                 <div class="hoverLine"></div>
                                             </div>
-                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(3)">create new <span><i
+                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(3)">{{htmlJson.CreateNew}} <span><i
                                                     class="fa fa-arrow-right"></i></span></div>
                                         </div>
 
@@ -163,12 +163,12 @@
                                 <div class="content_h68 flexRow noPadding">
                                     <div class="content_w68 flexCol flexJustAround">
                                         <div class="flexAlignCenter ">
-                                            <h4>Computable Model</h4>
+                                            <h4>{{htmlJson.ComputableModel}}</h4>
                                             <div class="numTag bluePlain" style="margin-left: 5px">
                                                 <p class="noMargin" style="">{{countInfo.computableModel}}</p>
                                             </div>
                                         </div>
-                                        <p>You can manage Computable Models provided by yourself or create a new one</p>
+                                        <p>{{htmlJson.ComputableModelInfo}}</p>
                                     </div>
                                     <div class="flexCenter content_w32" style="">
                                         <img class="square_80" style="" src="../../static/img/model/calcModel.png">
@@ -180,10 +180,10 @@
                                     <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                         <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                             <div class="lineButton flexCol" @click="manageItem(4)">
-                                                <p style="margin-block-end: 0">manage</p>
+                                                <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                 <div class="hoverLine"></div>
                                             </div>
-                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(4)">create new <span><i
+                                            <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(4)">{{htmlJson.CreateNew}}<span><i
                                                     class="fa fa-arrow-right"></i></span></div>
                                         </div>
                                     </div>

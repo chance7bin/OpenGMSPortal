@@ -20,7 +20,7 @@ var userModel = Vue.extend(
             }
         },
 
-        props: ['itemindexRaw'],
+        props: ['itemindexRaw',"htmlJson"],
 
         methods: {
             //公共功能

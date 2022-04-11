@@ -211,12 +211,22 @@ var router = new VueRouter({
             },
             {
                 path:'/notice',
-                component:notice,
+                component:userNotice,
             },
             {
                 path:'/feedback',
                 component:feedback,
             },
+            {
+                path:'/version',
+                component:userVersion,
+            },
+            {
+                path:'/comment',
+                component:userComment,
+            },
+
+
             //
             // {
             //     path:'/logicalmodel',
