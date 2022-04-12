@@ -201,7 +201,7 @@ public class DataMethodService {
             //     classificationName.add(name);
             // }
 
-            modelAndView.addObject("dataMethodInfo", dataMethod);
+            modelAndView.addObject("itemInfo", dataMethod);
             modelAndView.addObject("classifications", classifications);
             modelAndView.addObject("date", dateResult);
             modelAndView.addObject("year", calendar.get(Calendar.YEAR));

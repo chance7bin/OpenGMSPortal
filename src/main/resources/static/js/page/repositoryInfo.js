@@ -470,6 +470,8 @@ new Vue({
         htmlJSON:{}
     },
     methods: {
+        getClassifications(){
+        },
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
         },

@@ -183,6 +183,7 @@ Vue.component("translation-bar",
 
 
             defautTrans(content,scopeDom){
+
                 content = content[this.currentLang]
                 for(let key in content){
                     let targets = new Set()

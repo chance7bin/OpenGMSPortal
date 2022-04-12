@@ -702,6 +702,7 @@ new Vue({
         }
     },
     methods: {
+
         translatePage(jsonContent){
             //切换列表中标签选择情况
             if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
