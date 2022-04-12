@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${dataMethodInfo.name}+' | Data Application | OpenGMS'">Data Application | OpenGMS</title>
+    <title th:text="${itemInfo.name}+' | Data Application | OpenGMS'">Data Application | OpenGMS</title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -54,79 +54,82 @@
                 @translate-page="translatePage"
                 with-comments="true"
                 initial-lang="en-us"
+                with-item-info-modules="true"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div class="detail">
-                <div class="detail_title">
-                    <i th:if="${dataMethodInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em pull-right"></i>
-                    <i th:if="${dataMethodInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em pull-right"></i>
-                    <i th:if="${dataMethodInfo.status=='Private'}" class="el-icon-lock private fontsize-2em pull-right"></i>
-                    <!--</el-tooltip>-->
-                    <h2 th:utext="${dataMethodInfo.name}"
-                        style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>
+            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
 
-                    <a href="javascript:void(0);" th:if="${dataMethodInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x'
-                       aria-hidden='true'
-                       @click="edit" style="float: right;">
-                    </a>
-                    <!--<el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="left">-->
-                        <!--<li th:if="${dataMethodInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>-->
-                    <!--</el-tooltip>-->
+<!--            <div class="detail">-->
+<!--                <div class="detail_title">-->
+<!--                    <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em pull-right"></i>-->
+<!--                    <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em pull-right"></i>-->
+<!--                    <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em pull-right"></i>-->
+<!--                    &lt;!&ndash;</el-tooltip>&ndash;&gt;-->
+<!--                    <h2 th:utext="${itemInfo.name}"-->
+<!--                        style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>-->
 
-                    <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
-                </div>
-                <div class="detail_overview">
-                    <div  class="img">
-                        <!--<img th:case="''" src="/static/img/model/calcModel.png">-->
-                        <!--<img src="/static/img/model/logical.png">-->
-                        <!--<img th:case="*" th:src="'/static/img'+${dataMethodInfo.image}">-->
-                        <div th:unless="${dataMethodInfo.image}">
-                            <avatar th:username="${dataMethodInfo.name}" :size="90" :rounded="false"></avatar>
-                        </div>
-                        <div th:if="${dataMethodInfo.image}">
-                            <img th:src="'/static'+${dataMethodInfo.image}" class="image">
-                        </div>
-                    </div>
-                    <div class="info" style="padding-top:0px">
-                        <p th:text="${dataMethodInfo.overview}"></p>
-                        <div class="tags">
-                            <span class="label label-warning">
-                                Data Application
-                            </span>
-                            <span th:if="${dataMethodInfo.contentType=='Code'}" class="label label-info"
-                                  style="margin-left: 10px">Source Code</span>
-                            <span th:if="${dataMethodInfo.contentType=='Library'}" class="label label-info"
-                                  style="margin-left: 10px">Library</span>
-                            <span th:if="${dataMethodInfo.contentType=='Service URL'}" class="label label-info"
-                                  style="margin-left: 10px">Service</span>
-                            <span th:if="${dataMethodInfo.contentType=='Link'}" class="label label-info"
-                                  style="margin-left: 10px">dataApplicationInfo</span>
-                        </div>
-                    </div>
+<!--                    <a href="javascript:void(0);" th:if="${itemInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x'-->
+<!--                       aria-hidden='true'-->
+<!--                       @click="edit" style="float: right;">-->
+<!--                    </a>-->
+<!--                    &lt;!&ndash;<el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="left">&ndash;&gt;-->
+<!--                        &lt;!&ndash;<li th:if="${itemInfo.status=='Public'&&history!=true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</el-tooltip>&ndash;&gt;-->
 
-                    <!--<div th:if="${history!=true}" class="detail_option">-->
-                        <!--&lt;!&ndash;<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>&ndash;&gt;-->
-                        <!--<span th:if="${dataMethodInfo.contentType=='Package'}">-->
-                            <!--<button th:unless="${modelInfo.deploy==true}" class="btn btn-lg btn-info" type="button"-->
-                                    <!--@click="dialogVisible = true">Deploy-->
-                            <!--</button>-->
-                            <!--<button th:if="${modelInfo.deploy==true}" class="btn btn-lg btn-success" type="button"-->
-                                    <!--@click="invoke()">-->
-                                <!--Invoke-->
-                            <!--</button>-->
-                        <!--</span>-->
+<!--                    &lt;!&ndash;<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>&ndash;&gt;-->
+<!--                </div>-->
+<!--                <div class="detail_overview">-->
+<!--                    <div  class="img">-->
+<!--                        &lt;!&ndash;<img th:case="''" src="/static/img/model/calcModel.png">&ndash;&gt;-->
+<!--                        &lt;!&ndash;<img src="/static/img/model/logical.png">&ndash;&gt;-->
+<!--                        &lt;!&ndash;<img th:case="*" th:src="'/static/img'+${itemInfo.image}">&ndash;&gt;-->
+<!--                        <div th:unless="${itemInfo.image}">-->
+<!--                            <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>-->
+<!--                        </div>-->
+<!--                        <div th:if="${itemInfo.image}">-->
+<!--                            <img th:src="'/static'+${itemInfo.image}" class="image">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="info" style="padding-top:0px">-->
+<!--                        <p th:text="${itemInfo.overview}"></p>-->
+<!--                        <div class="tags">-->
+<!--                            <span class="label label-warning">-->
+<!--                                Data Application-->
+<!--                            </span>-->
+<!--                            <span th:if="${itemInfo.contentType=='Code'}" class="label label-info"-->
+<!--                                  style="margin-left: 10px">Source Code</span>-->
+<!--                            <span th:if="${itemInfo.contentType=='Library'}" class="label label-info"-->
+<!--                                  style="margin-left: 10px">Library</span>-->
+<!--                            <span th:if="${itemInfo.contentType=='Service URL'}" class="label label-info"-->
+<!--                                  style="margin-left: 10px">Service</span>-->
+<!--                            <span th:if="${itemInfo.contentType=='Link'}" class="label label-info"-->
+<!--                                  style="margin-left: 10px">dataApplicationInfo</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                        <!--<a class="fa fa-eye " aria-hidden="true"></a>-->
-                        <!--<div th:utext="'&nbsp&nbsp'+${modelInfo.viewCount}">&nbsp&nbsp341</div>-->
-                    <!--</div>-->
+<!--                    &lt;!&ndash;<div th:if="${history!=true}" class="detail_option">&ndash;&gt;-->
+<!--                        &lt;!&ndash;&lt;!&ndash;<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>&ndash;&gt;&ndash;&gt;-->
+<!--                        &lt;!&ndash;&lt;!&ndash;<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>&ndash;&gt;&ndash;&gt;-->
+<!--                        &lt;!&ndash;<span th:if="${itemInfo.contentType=='Package'}">&ndash;&gt;-->
+<!--                            &lt;!&ndash;<button th:unless="${modelInfo.deploy==true}" class="btn btn-lg btn-info" type="button"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;@click="dialogVisible = true">Deploy&ndash;&gt;-->
+<!--                            &lt;!&ndash;</button>&ndash;&gt;-->
+<!--                            &lt;!&ndash;<button th:if="${modelInfo.deploy==true}" class="btn btn-lg btn-success" type="button"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;@click="invoke()">&ndash;&gt;-->
+<!--                                &lt;!&ndash;Invoke&ndash;&gt;-->
+<!--                            &lt;!&ndash;</button>&ndash;&gt;-->
+<!--                        &lt;!&ndash;</span>&ndash;&gt;-->
 
-                </div>
+<!--                        &lt;!&ndash;<a class="fa fa-eye " aria-hidden="true"></a>&ndash;&gt;-->
+<!--                        &lt;!&ndash;<div th:utext="'&nbsp&nbsp'+${modelInfo.viewCount}">&nbsp&nbsp341</div>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</div>&ndash;&gt;-->
 
-                <div class="detail_option"><a aria-hidden="true" class="fa fa-eye md-opjjpmhoiojifppkkcdabiobhakljdgm_doc"></a>&nbsp;&nbsp;<span>{{viewCount}}</span></div>
-            </div>
+<!--                </div>-->
+
+<!--                <div class="detail_option"><a aria-hidden="true" class="fa fa-eye md-opjjpmhoiojifppkkcdabiobhakljdgm_doc"></a>&nbsp;&nbsp;<span>{{viewCount}}</span></div>-->
+<!--            </div>-->
 
             <div id="Contributor0" class="detail_block minScreen">
                 <div class="block_head">
@@ -159,7 +162,7 @@
             </div>
 
             <div id="Authorship0" class="detail_block minScreen"
-                 th:if="${dataMethodInfo.authorships!=null&&#lists.size(dataMethodInfo.authorships)!=0}">
+                 th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
                         <h4>Authorship</h4>
@@ -171,7 +174,7 @@
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${dataMethodInfo.authorships}">
+                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
@@ -195,14 +198,14 @@
                 </div>
             </div>
 
-            <div id="description" class="detail_block" th:if="${#lists.size(dataMethodInfo.localizationList)} lt 0">
+            <div id="description" class="detail_block" th:if="${#lists.size(itemInfo.localizationList)} lt 0">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Detailed Description</h4>
                     </div>
                 </div>
                 <div class="block_content">
-                    <div th:utext="${dataMethodInfo.localizationList[0].description}" id="detail" class="detailIntroducePanel">
+                    <div th:utext="${itemInfo.localizationList[0].description}" id="detail" class="detailIntroducePanel">
                     </div>
                 </div>
                 <div class="fullPaper text-center hide">
@@ -214,7 +217,7 @@
             </div>
 
             <div id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"
-                 th:if="${(dataMethodInfo.contentType=='Code'||dataMethodInfo.contentType=='Library'||dataMethodInfo.contentType=='Package')&&(dataMethodInfo.resources!=null&&#lists.size(dataMethodInfo.resources)>0)}">
+                 th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>{{htmlJSON.Resource}}</h4>
@@ -238,7 +241,7 @@
                              style="width: 150px;">
                             <i class="fas fa-file-download"></i>
                             <a target="_blank"
-                               th:href="'/static'+'/dataMethod/'+${dataMethodInfo.contentType}+${data.path}"
+                               th:href="'/static'+'/dataMethod/'+${itemInfo.contentType}+${data.path}"
                                style="color:black">
                                 <div class="resouceFile el-card__body">
                                     <div class="el-row">
@@ -298,7 +301,7 @@
             </div>
 
             <div id="link" class="detail_block"
-                 th:if="${dataMethodInfo.contentType=='Link'||(dataMethodInfo.contentType=='Service')}">
+                 th:if="${itemInfo.contentType=='Link'||(itemInfo.contentType=='Service')}">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Link</h4>
@@ -306,7 +309,7 @@
                 </div>
                 <div class="block_content flex">
                     <div id="link-text" class="width:100%">
-                        <a th:href="${dataMethodInfo.url}" th:text="${dataMethodInfo.url}" target="_blank">
+                        <a th:href="${itemInfo.url}" th:text="${itemInfo.url}" target="_blank">
                             https://geomodeling.njnu.edu.cn/conceptualmodel/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -369,14 +372,14 @@
                 <div class="block_content">
                     <div id="cite-text" class="width:100%">
                         <span th:if="${authorship!=''}"
-                              th:text="${authorship}+' ('+${year}+'). '+${dataMethodInfo.name}+', Data Application, OpenGMS, '"></span>
+                              th:text="${authorship}+' ('+${year}+'). '+${itemInfo.name}+', Data Application, OpenGMS, '"></span>
                         <span th:if="${authorship==''}"
-                              th:text="${user.name}+' ('+${year}+'). '+${dataMethodInfo.name}+', Data Application, OpenGMS, '">
+                              th:text="${user.name}+' ('+${year}+'). '+${itemInfo.name}+', Data Application, OpenGMS, '">
                             Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                             </span>
                         <a style="word-break:break-all;"
-                           th:href="'https://geomodeling.njnu.edu.cn/dataMethod/'+${dataMethodInfo.id}"
-                           th:text="'https://geomodeling.njnu.edu.cn/dataMethod/'+${dataMethodInfo.id}">
+                           th:href="'https://geomodeling.njnu.edu.cn/dataMethod/'+${itemInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/dataMethod/'+${itemInfo.id}">
                             https://geomodeling.njnu.edu.cn/computableModel/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
@@ -386,18 +389,7 @@
                 </div>
             </div>
 
-            <div id="copyright" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="copyright_text">
-                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
-                    </div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true}">
@@ -440,38 +432,42 @@
         </div>
         <div class="right-panel el-col" style="border-left: #d2d2d2 solid 1px;margin-left:-1px">
             <div id="Contributor" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light"
-                                    :content="htmlJSON.ContributorInfo"   placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
-                                    Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13
-                                14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13
-                                14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
-
+                <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
             </div>
+
+<!--            <div id="Contributor" class="detail_block">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">-->
+<!--                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>-->
+<!--                        <h4 th:if="${history==true}">Modifier</h4>-->
+<!--                        <el-tooltip popper-class="fontsize-15" effect="light"-->
+<!--                                    :content="htmlJSON.ContributorInfo"   placement="top">-->
+<!--                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;"></i>-->
+<!--                        </el-tooltip>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content">-->
+<!--                    <div class="el-row"-->
+<!--                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">-->
+<!--                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>-->
+<!--                        <div class="el-col">-->
+<!--                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
+<!--                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom-->
+<!--                                    Marvolo Riddle</h4></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="el-row">-->
+<!--                        <div class="text-center">-->
+<!--                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13-->
+<!--                                14:32:18 </h5>-->
+<!--                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13-->
+<!--                                14:32:18 </h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
 
             <div id="Authorship" class="detail_block"
                  >
@@ -486,7 +482,7 @@
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${dataMethodInfo.authorships}">
+                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
@@ -507,53 +503,43 @@
                             </div>
                         </div>
                     </div>
-                    <div th:if="${dataMethodInfo.authorships==null||#lists.size(dataMethodInfo.authorships)==0}">
+                    <div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">
                         <el-tag type="info">{{htmlJSON.AuthorshipInfo2}} <a href="javascript:void(0)" @click=""
                                                                               style="text-decoration: underline">{{htmlJSON.AuthorshipInfo3}}</a>
 
                         </el-tag>
                     </div>
-                    <div th:if="${#lists.size(dataMethodInfo.authorships)>0}">
+                    <div th:if="${#lists.size(itemInfo.authorships)>0}">
                         <el-tag type="info">{{htmlJSON.AuthorshipInfo4}}<a href="javascript:void(0)" @click=""
                                                                           style="text-decoration: underline">{{htmlJSON.AuthorshipInfo5}}</a></el-tag>
                     </div>
                 </div>
             </div>
 
-            <div id="Modifier" class="detail_block"
-                 th:if="${history!=true}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.History}}</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+            <div th:replace="fragments/itemInfoModules :: History"></div>
+<!--            <div id="Modifier" class="detail_block"-->
+<!--                 th:if="${history!=true}">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;">-->
+<!--                        <h4>{{htmlJSON.History}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content text-center" style="padding-left:10px">-->
 
-                    <div style="text-align: left;">
+<!--                    <div style="text-align: left;">-->
 
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>{{htmlJSON.HistoryInfo}}</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                            </dl>
-                        </div>
+<!--                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">-->
+<!--                            <dl>-->
+<!--                                <dt>{{htmlJSON.HistoryInfo}}</dt>-->
+<!--                                <dd th:text="${lastModifyTime}"></dd>-->
+<!--                            </dl>-->
+<!--                        </div>-->
 
-                    </div>
-                </div>
-            </div>
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div id="QR" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
-
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: QR"></div>
 
         </div>
 

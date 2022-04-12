@@ -9,8 +9,7 @@
 
     "CopyrightAndDisclaimer":"Copyright and Disclaimer",
     "CopyrightAndDisclaimerInfo": "All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.",
-
-
+    "Copy":"Copy",
     "Contributor":"Contributor",
     "ContributorInfo": "Contributor is the person who contributes the item to OpenGMS, may not be the author of the item.",
     "Modifier": "Modifier",
@@ -21,7 +20,7 @@
     "Classification": "类别",
     "DetailedDescription": "详细描述",
 
-    "HowtoCite": "如何引用",
+    "HowtoCite": "引用格式",
 
     "CopyrightAndDisclaimer":"版权及免责声明",
     "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计者(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，贡献者应谨慎使用其他来源的材料，并给予适当的引用。",
@@ -30,7 +29,8 @@
     "ContributorInfo": "贡献者是将资源提交给OpenGMS的人，可能并不是该资源的所有者。",
     "Modifier": "修改者",
 
-    "QRCode": "二维码"
+    "QRCode": "二维码",
+        "Copy":"复制"
   }
 
 }

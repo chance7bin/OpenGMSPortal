@@ -140,7 +140,7 @@ public class RepositoryService {
 
             JSONArray array1 = new JSONArray();
             for(int j=array.size()-1;j>=0;j--){
-                array1.add(array.getString(j));
+                array1.add(array.get(j));
             }
             classResult.add(array1);
         }
@@ -158,7 +158,7 @@ public class RepositoryService {
             modifierJson = userService.getItemUserInfoByEmail(lastModifier);
         }
 
-        modelAndView.addObject("info", item);
+        modelAndView.addObject("itemInfo", item);
         modelAndView.addObject("classifications", classResult);
         modelAndView.addObject("image", htmlLoadPath+item.getImage());
         modelAndView.addObject("year", item.getCreateTime().getYear()+1900);
