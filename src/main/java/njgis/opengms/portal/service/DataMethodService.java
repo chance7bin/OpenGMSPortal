@@ -938,9 +938,11 @@ public class DataMethodService {
             BeanUtils.copyProperties(updateDTO, dataMethod, "bindDataTemplates");
 
             // 更新localization
-            if (dataMethod.getLocalizationList().size() == 0) {
+            if (dataMethod.getLocalizationList() == null || dataMethod.getLocalizationList().size() == 0) {
                 Localization localization = new Localization("en", "English", dataMethod.getName(), updateDTO.getDetail());
-                dataMethod.getLocalizationList().add(localization);
+                List<Localization> localizationList = new ArrayList<>();
+                localizationList.add(localization);
+                dataMethod.setLocalizationList(localizationList);
             }
             else {
                 dataMethod.getLocalizationList().get(0).setDescription(updateDTO.getDetail());

@@ -34,7 +34,7 @@ public class VersionController {
 
 //    @LoginRequired
     @ApiOperation(value = "接受版本")
-    @RequestMapping(value = "/accept/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/accept/{id}", method = RequestMethod.GET)
     public JsonResult accept(@PathVariable String id, HttpServletRequest request) {
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
@@ -43,7 +43,7 @@ public class VersionController {
 
 //    @LoginRequired
     @ApiOperation(value = "拒绝版本")
-    @RequestMapping(value = "/reject/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/reject/{id}", method = RequestMethod.GET)
     public JsonResult reject(@PathVariable String id, HttpServletRequest request) {
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
@@ -149,7 +149,7 @@ public class VersionController {
 
     @LoginRequired
     @ApiOperation(value = "得到用户提交的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
-    @RequestMapping(value = "/user/versionList/edit",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/versionList/edit",method = RequestMethod.GET)
     public JsonResult getUserEditVersion(HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
@@ -159,7 +159,7 @@ public class VersionController {
 
     @LoginRequired
     @ApiOperation(value = "得到用户审核的version（不建议，用下面的，没有分页很慢） [ /theme/getMessageData ]")
-    @RequestMapping(value = "/user/versionList/review",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/versionList/review",method = RequestMethod.GET)
     public JsonResult getUserReviewVersion(HttpServletRequest request){
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
