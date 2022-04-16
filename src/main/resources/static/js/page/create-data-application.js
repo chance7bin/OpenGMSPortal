@@ -824,8 +824,9 @@ var createDataApplication = Vue.extend({
                                 showClose: false,
                             }).then(() => {
                                 window.location.href = "/dataMethod/" + res.data;
+                                // window.location.href="/user/userSpace#/data/processingApplication"
                             }).catch(() => {
-                                window.location.reload(true)
+                                // window.location.reload(true)
                                 window.location.href = "/user/userSpace#/data/processingApplication";
                             });
 
@@ -885,77 +886,126 @@ var createDataApplication = Vue.extend({
                     loading.close();
                     // $("#step").css("display", "block");
                     // $(".uploading").css("display", "none");
-                    if(res.code===0) {
-                        switch (res.data.code) {
-                            case 0:
-                                let currentUrl = window.location.href;
-                                let index = currentUrl.lastIndexOf("\/");
-                                that.dataApplication_oid = currentUrl.substring(index + 1,currentUrl.length);
-                                //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-                                // that.getnoticeNum(that.dataApplication_oid);
-                                // let params = that.message_num_socket;
-                                // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
-                                    type:"success",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        window.location.href = "/user/userSpace";
-                                    }
-                                });
-                                break;
-                            case 1:
-                                this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
-                                    dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
-                                    cancelButtonClass: 'fontsize-15',
-                                    confirmButtonClass: 'fontsize-15',
-                                    type: 'success',
-                                    center: true,
-                                    showClose: false,
-                                }).then(() => {
-                                    $("#editModal", parent.document).remove();
-                                    window.location.href = "/dataMethod/" + res.data.id;
-                                }).catch(() => {
-                                    window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
-                                    window.location.reload(true)
-                                });
-                                break;
-                            case -1:
-                                this.$alert('Save files error', 'Error', {
-                                    type:"error",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        $("#step").css("display", "block");
-                                        $(".uploading").css("display", "none");
-                                    }
-                                });
-
-                                break;
-                            case -2:
-                                this.$alert('Create failed!', 'Error', {
-                                    type:"error",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        $("#step").css("display", "block");
-                                        $(".uploading").css("display", "none");
-                                    }
-                                });
-
-                                break;
+                    console.log("update data application:",res)
+                    if(res.code===0){
+                        if(res.data.method==="update"){
+                            this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
+                                dangerouslyUseHTMLString: true,
+                                confirmButtonText: 'View',
+                                cancelButtonText: 'Go Back',
+                                cancelButtonClass: 'fontsize-15',
+                                confirmButtonClass: 'fontsize-15',
+                                type: 'success',
+                                center: true,
+                                showClose: false,
+                            }).then(() => {
+                                $("#editModal", parent.document).remove();
+                                window.location.href = "/dataMethod/" + res.data.id;
+                            }).catch(() => {
+                                // window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
+                                // window.location.reload(true)
+                                window.location.href = "/user/userSpace#/data/processingApplication";
+                            });
+                        }else{
+                            let currentUrl = window.location.href;
+                            let index = currentUrl.lastIndexOf("\/");
+                            that.dataApplication_oid = currentUrl.substring(index + 1,currentUrl.length);
+                            //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                            // that.getnoticeNum(that.dataApplication_oid);
+                            // let params = that.message_num_socket;
+                            // that.send(params);
+                            this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                type:"success",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    window.location.href = "/user/userSpace";
+                                }
+                            });
                         }
+                    }else{
+                            this.$alert(res.msg, 'Error', {
+                                type:"error",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    $("#step").css("display", "block");
+                                    $(".uploading").css("display", "none");
+                                }
+                            });
                     }
-                    else{
-                        this.$alert(res.msg, 'Error', {
-                            type:"error",
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                $("#step").css("display", "block");
-                                $(".uploading").css("display", "none");
-                            }
-                        });
 
-                    }
+
+                    // if(res.code===0) {
+                    //     switch (res.code) {
+                    //         case 0:
+                    //             let currentUrl = window.location.href;
+                    //             let index = currentUrl.lastIndexOf("\/");
+                    //             that.dataApplication_oid = currentUrl.substring(index + 1,currentUrl.length);
+                    //             //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                    //             // that.getnoticeNum(that.dataApplication_oid);
+                    //             // let params = that.message_num_socket;
+                    //             // that.send(params);
+                    //             this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                    //                 type:"success",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     window.location.href = "/user/userSpace";
+                    //                 }
+                    //             });
+                    //             break;
+                    //         case 1:
+                    //             this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
+                    //                 dangerouslyUseHTMLString: true,
+                    //                 confirmButtonText: 'View',
+                    //                 cancelButtonText: 'Go Back',
+                    //                 cancelButtonClass: 'fontsize-15',
+                    //                 confirmButtonClass: 'fontsize-15',
+                    //                 type: 'success',
+                    //                 center: true,
+                    //                 showClose: false,
+                    //             }).then(() => {
+                    //                 $("#editModal", parent.document).remove();
+                    //                 window.location.href = "/dataMethod/" + res.data.id;
+                    //             }).catch(() => {
+                    //                 // window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
+                    //                 // window.location.reload(true)
+                    //                 window.location.href = "/user/userSpace#/data/processingApplication";
+                    //             });
+                    //             break;
+                    //         case -1:
+                    //             this.$alert('Save files error', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     $("#step").css("display", "block");
+                    //                     $(".uploading").css("display", "none");
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //         case -2:
+                    //             this.$alert('Create failed!', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     $("#step").css("display", "block");
+                    //                     $(".uploading").css("display", "none");
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //     }
+                    // }
+                    // else{
+                    //     this.$alert(res.msg, 'Error', {
+                    //         type:"error",
+                    //         confirmButtonText: 'OK',
+                    //         callback: action => {
+                    //             $("#step").css("display", "block");
+                    //             $(".uploading").css("display", "none");
+                    //         }
+                    //     });
+                    //
+                    // }
                 }).fail((res) => {
                     console.log("dataMethod put err",res)
                     this.$alert('Please login first', 'Error', {
