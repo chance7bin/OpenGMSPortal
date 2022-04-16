@@ -824,8 +824,9 @@ var createDataApplication = Vue.extend({
                                 showClose: false,
                             }).then(() => {
                                 window.location.href = "/dataMethod/" + res.data;
+                                // window.location.href="/user/userSpace#/data/processingApplication"
                             }).catch(() => {
-                                window.location.reload(true)
+                                // window.location.reload(true)
                                 window.location.href = "/user/userSpace#/data/processingApplication";
                             });
 
