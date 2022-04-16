@@ -115,11 +115,15 @@ public class VersionService {
             //给编辑者发邮件
             userService.sendAcceptMail(version.getEditor(),content);
 
-            List<String> recipientList;
-            if (version.getEditor().equals(version.getReviewer()))
-                recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
-            else
-                recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
+            List<String> recipientList = new ArrayList<>();
+            if (version.getEditor().equals(version.getReviewer())){
+                recipientList = new ArrayList<>(Arrays.asList(version.getItemCreator(),version.getEditor()));
+            }
+
+            else{
+                recipientList = new ArrayList<>(Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer()));
+                // recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
+            }
             recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
             recipientList = noticeService.addPortalAdmins(recipientList);
             recipientList = noticeService.addPortalRoot(recipientList);
@@ -158,9 +162,9 @@ public class VersionService {
 
             List<String> recipientList;
             if (version.getEditor().equals(version.getReviewer()))
-                recipientList = Arrays.asList(version.getItemCreator(),version.getEditor());
+                recipientList = new ArrayList<>(Arrays.asList(version.getItemCreator(),version.getEditor()));
             else
-                recipientList = Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer());
+                recipientList = new ArrayList<>(Arrays.asList(version.getItemCreator(),version.getEditor(),version.getReviewer()));
             recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
             recipientList = noticeService.addPortalAdmins(recipientList);
             recipientList = noticeService.addPortalRoot(recipientList);

@@ -274,7 +274,7 @@ public class ThemeService {
 
 
                 //发送通知
-                List<String> recipientList = Arrays.asList(author);
+                List<String> recipientList = new ArrayList<>( Arrays.asList(author));
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);

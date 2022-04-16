@@ -551,7 +551,8 @@ public class DataItemService {
             }else {
 
                 //发送通知
-                List<String> recipientList = Arrays.asList(author);
+                List<String> recipientList = new ArrayList<>();
+                recipientList.add(author);
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);

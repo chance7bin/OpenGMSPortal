@@ -91,6 +91,11 @@ public class NoticeService {
         switch (notice.getAction().getType()){
             case Version:{
                 Version version = versionDao.findFirstById(notice.getObjectId());
+                if (version == null){
+                    message = "unknown";
+                    break;
+                }
+
                 String itemName = version.getItemName();
                 String p1;
                 if (notice.getDispatcher().equals(currentUser))
@@ -281,7 +286,7 @@ public class NoticeService {
      **/
     public List<Notice> sendNoticeContains(String dispatcher, OperationEnum action, ItemTypeEnum itemType, String objectId, List<String> recipientList, @Nullable String... additionProperties){
 
-        List<String> additionList = additionProperties != null ? Arrays.asList(additionProperties) : null;
+        List<String> additionList = additionProperties != null ? new ArrayList<>(Arrays.asList(additionProperties)) : null;
 
 
         //添加门户管理员
