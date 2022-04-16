@@ -73,6 +73,9 @@ public class CommentController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public JsonResult delete(@RequestParam("id") String id, HttpServletRequest request){
 
+        if (id.contains("?"))
+            id = (id.split("\\?"))[0];
+
         Comment comment = commentDao.findFirstById(id);
 
         //删除与父评论关联
@@ -105,6 +108,10 @@ public class CommentController {
         ItemTypeEnum itemTypeEnum=ItemTypeEnum.getItemTypeByName(type);
         Sort sort=Sort.by(asc==1?Sort.Direction.ASC:Sort.Direction.DESC,"createTime");
         Pageable pageable=PageRequest.of(0,999,sort);
+
+        if (id.contains("?"))
+            id = (id.split("\\?"))[0];
+
         Page<CommentResultDTO> comments=commentDao.findAllByRelateItemTypeAndRelateItemId(itemTypeEnum,id,pageable);
 
         List<CommentResultDTO> commentResultDTOList=comments.getContent();
@@ -119,7 +126,7 @@ public class CommentController {
 
             commentObj.put("id",commentResultDTO.getId());
             commentObj.put("content",commentResultDTO.getContent());
-            commentObj.put("date",simpleDateFormat.format(commentResultDTO.getDate()));
+            commentObj.put("date",simpleDateFormat.format(commentResultDTO.getCreateTime()));
             commentObj.put("likeNum",commentResultDTO.getThumbsUpNumber());
             commentObj.put("author",getUserByEmail(commentResultDTO.getAuthorId()));
 

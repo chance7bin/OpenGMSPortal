@@ -1,7 +1,6 @@
 package njgis.opengms.portal.entity.dto.comment;
 
 import lombok.Data;
-import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -15,6 +14,6 @@ public class CommentDTO {
     String replyToUserEmail;
 
     String relateItemId;
-    ItemTypeEnum relateItemTypeName;
+    String relateItemTypeName;
 
 }
