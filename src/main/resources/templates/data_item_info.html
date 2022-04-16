@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${datainfo.data.name}+' | Data Item Info | OpenGMS'"></title>
+    <title th:text="${itemInfo.name}+' | Data Item Info | OpenGMS'"></title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
@@ -64,59 +64,61 @@
                 @translate-page="translatePage"
                 with-comments="true"
                 initial-lang="en-us"
+                with-item-info-modules="true"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
 
         <div class="left-panel el-col">
-            <div class="detail">
-                <div class="detail_title" th:object="${datainfo}">
-                    <h2 style="display: inline-block" th:text="${datainfo.data.name}"></h2>
-                    <div class="pull-right">
+            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
+<!--            <div class="detail">-->
+<!--                <div class="detail_title" th:object="${itemInfo}">-->
+<!--                    <h2 style="display: inline-block" th:text="${itemInfo.name}"></h2>-->
+<!--                    <div class="pull-right">-->
 
-                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <a th:if="${datainfo.data.status=='Public'&&datainfo.data.lock!=true}" href="javascript:void(0)" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
-                            <li th:if="${datainfo.data.status=='Public'&&history!=true&&datainfo.data.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" th:content="${datainfo.data.status}" effect="light" placement="top">
-                            <i th:if="${datainfo.data.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
-                            <i th:if="${datainfo.data.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
-                            <i th:if="${datainfo.data.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
-                        </el-tooltip>
+<!--                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">-->
+<!--                            <a th:if="${itemInfo.status=='Public'&&itemInfo.lock!=true}" href="javascript:void(0)" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>-->
+<!--                        </el-tooltip>-->
+<!--                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">-->
+<!--                            <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>-->
+<!--                        </el-tooltip>-->
+<!--                        <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light" placement="top">-->
+<!--                            <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>-->
+<!--                            <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>-->
+<!--                            <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>-->
+<!--                        </el-tooltip>-->
 
-                    </div>
-                </div>
+<!--                    </div>-->
+<!--                </div>-->
 
-                <div class="detail_overview">
-                    <div class="img" th:object="${datainfo}" v-if="">
-                        <div th:if="${#strings.isEmpty(datainfo.data.image)}">
-                            <avatar th:username="${datainfo.data.name}" :size="90" :rounded="false"></avatar>
-                        </div>
-                        <div th:unless="${#strings.isEmpty(datainfo.data.image)}">
-                            <img th:src="${datainfo.data.image}" class="image">
-                        </div>
-                    </div>
+<!--                <div class="detail_overview">-->
+<!--                    <div class="img" th:object="${itemInfo}" v-if="">-->
+<!--                        <div th:if="${#strings.isEmpty(itemInfo.image)}">-->
+<!--                            <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>-->
+<!--                        </div>-->
+<!--                        <div th:unless="${#strings.isEmpty(itemInfo.image)}">-->
+<!--                            <img th:src="${itemInfo.image}" class="image">-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="info" th:object="${datainfo}">
-                        <p th:text="${datainfo.data.overview}">description</p>
-                        <div class="tags">
-                            <span class="badge badge-info" th:each="key,iter : ${datainfo.data.keywords}"
-                                  th:text="${iter.current}">itercurrent</span>
-                        </div>
-                    </div>
+<!--                    <div class="info" th:object="${itemInfo}">-->
+<!--                        <p th:text="${itemInfo.overview}">description</p>-->
+<!--                        <div class="tags">-->
+<!--                            <span class="badge badge-info" th:each="key,iter : ${itemInfo.keywords}"-->
+<!--                                  th:text="${iter.current}">itercurrent</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="detail_option" th:object="${datainfo}">
+<!--                    <div class="detail_option" th:object="${itemInfo}">-->
 
-                        <a class="fa fa-eye" aria-hidden="true"></a>&nbsp&nbsp<span
-                            th:utext="${datainfo.data.viewCount}">{{viewCount}}</span>
+<!--                        <a class="fa fa-eye" aria-hidden="true"></a>&nbsp&nbsp<span-->
+<!--                            th:utext="${itemInfo.viewCount}">{{viewCount}}</span>-->
 
-                    </div>
+<!--                    </div>-->
 
-                </div>
+<!--                </div>-->
 
-            </div>
+<!--            </div>-->
 
             <div id="Owner0" class="detail_block minScreen">
 
@@ -140,7 +142,7 @@
                     </div>
                     <div class="el-row">
                         <div class="text-center">
-                            <h5 th:text="'contributed at '+${#dates.format(datainfo.data.createTime,'yyyy-MM-dd')}">
+                            <h5 th:text="'contributed at '+${#dates.format(itemInfo.createTime,'yyyy-MM-dd')}">
                                 contributed at 2018-7-13 14:32:18 </h5>
                         </div>
                     </div>
@@ -148,12 +150,12 @@
             </div>
 
             <div id="Authorship0" class="detail_block minScreen"
-                 th:if="${datainfo.data.authorships!=null&&#lists.size(datainfo.data.authorships)!=0}">
+                 th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
-                    <div style="text-align: left;" th:each="author,key:${datainfo.data.authorships}">
+                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;">
                             <a data-toggle="collapse" th:href="'#authorships'+${key.index}" class="detail-toggle" aria-expanded="true" >
                                 <i class="fa fa-caret-up" style="font-size: 21px"></i>
@@ -176,7 +178,7 @@
                             </div>
                         </div>
                     </div>
-                    <div th:if="${#lists.size(datainfo.data.authorships)>0}">
+                    <div th:if="${#lists.size(itemInfo.authorships)>0}">
                         <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">Feed back</a></el-tag>
                     </div>
                 </div>
@@ -195,7 +197,7 @@
             </div>
 
             <!--data resource url-->
-            <div th:if="(${datainfo.data.url!=null}) and (${datainfo.data.url!=''})" id="data_url" class="detail_block">
+            <div th:if="(${itemInfo.url!=null}) and (${itemInfo.url!=''})" id="data_url" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>{{htmlJSON.DataResourceUrl}}</h4>
@@ -203,9 +205,9 @@
                 </div>
                 <div class="block_content flex">
                     <div id="data-url" class="">
-                        <a th:href="${datainfo.data.url}"  target="_blank="><span
+                        <a th:href="${itemInfo.url}"  target="_blank="><span
                                 style="font-size: 17px;color: #67c23a;"
-                                th:text="${datainfo.data.url}">current</span>
+                                th:text="${itemInfo.url}">current</span>
                         </a>
                     </div>
 
@@ -348,14 +350,14 @@
             </div>&nbsp;&nbsp;
 
             <!--description-->
-            <div th:if="${#lists.size(datainfo.data.localizationList)} lt 0" id="description" class="detail_block">
+            <div th:if="${#lists.size(itemInfo.localizationList)} lt 0" id="description" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Detailed Description</h4>
                     </div>
                 </div>
                 <div class="block_content">
-                    <div id="detail" class="detailIntroducePanel" th:utext="${datainfo.data.localizationList[0].description}"
+                    <div id="detail" class="detailIntroducePanel" th:utext="${itemInfo.localizationList[0].description}"
                          style="overflow:auto"></div>
                 </div>
                 <div class="fullPaper text-center hide">
@@ -367,7 +369,7 @@
 
             </div>
 
-            <div th:if="${datainfo.data.dataList!=null && #lists.size(datainfo.data.dataList)!=0}" id="resources" class="detail_block" ref="browser">
+            <div th:if="${itemInfo.dataList!=null && #lists.size(itemInfo.dataList)!=0}" id="resources" class="detail_block" ref="browser">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Resources</h4>
@@ -410,7 +412,7 @@
 
                     <div class="el-card filecontent is-always-shadow" id="browsercont"
                          style="height: 300px; overflow-y: auto;"><!---->
-                        <el-card th:each="item,key:${datainfo.data.dataList}"
+                        <el-card th:each="item,key:${itemInfo.dataList}"
                                  th:title="${item.name}" class="dataitemisol" shadow="never" th:id="${item.url}"
                                  th:key="${key}" style="width: 150px;">
 
@@ -772,38 +774,23 @@
                         <h4>{{htmlJSON.HowtoCite}}</h4>
                     </div>
                 </div>
-                <div class="block_content" th:object="${datainfo}">
+                <div class="block_content" th:object="${itemInfo}">
                     <div id="cite-text" class="">
                         <span th:if="${authorships!=''}"
-                              th:text="${authorships}+' ('+${#dates.format(datainfo.data.createTime,'yyyy')}+'). '+${datainfo.data.name}+', Data Item, OpenGMS, '"></span>
+                              th:text="${authorships}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
                         <span th:if="${authorships==''}"
-                              th:text="${user.name}+' ('+${#dates.format(datainfo.data.createTime,'yyyy')}+'). '+${datainfo.data.name}+', Data Item, OpenGMS, '"></span>
+                              th:text="${user.name}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
                         <a style="word-break:break-all;"
-                           th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${datainfo.data.id}"
-                           th:text="'https://geomodeling.njnu.edu.cn/dataItem/'+${datainfo.data.id}"></a>
+                           th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"></a>
                     </div>
                     <div id="copy" class="btn btn-info">
                         Copy
                     </div>
-
-                    <!--<el-button>Copy</el-button>-->
-
-
                 </div>
             </div>
 
-            <div id="copyright" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="copyright_text">
-                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
-                    </div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
             <div id="QR0" class="detail_block minScreen">
                 <div class="block_head">
@@ -842,41 +829,41 @@
                 </div>
             </div>
 
-            <div id="Owner" class="detail_block">
-
-                <div class="block_head">
-<!--                    <div class="head_text" style="padding-left: 10px;">-->
-<!--                        <h4 th:if="${history!=true}">Contributor</h4>-->
-<!--                        <h4 th:if="${history==true}">Modifier</h4>-->
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>{{htmlJSON.Contributor}}</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" :content=htmlJSON.ContributorInfo placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-
-                </div>
-
-                <div class="block_content">
-                    <div class="el-row" style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">
-                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:text="'contributed at '+${#dates.format(datainfo.data.createTime,'yyyy-MM-dd')}">
-                                contributed at 2018-7-13 14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
+            <div id="Contributor" class="detail_block">
+                <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
             </div>
 
+<!--            <div id="Owner" class="detail_block">-->
+
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">-->
+<!--                        <h4>{{htmlJSON.Contributor}}</h4>-->
+<!--                        <el-tooltip popper-class="fontsize-15" effect="light" :content=htmlJSON.ContributorInfo placement="top">-->
+<!--                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>-->
+<!--                        </el-tooltip>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+
+<!--                <div class="block_content">-->
+<!--                    <div class="el-row" style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">-->
+<!--                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>-->
+<!--                        <div class="el-col">-->
+<!--                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
+<!--                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;"></h4></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="el-row">-->
+<!--                        <div class="text-center">-->
+<!--                            <h5 th:text="'contributed at '+${#dates.format(itemInfo.createTime,'yyyy-MM-dd')}"></h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
             <div id="Authorship" class="detail_block"
-                 th:if="${datainfo.data.authorships!=null&&#lists.size(datainfo.data.authorships)!=0}">
+                 th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
                         <h4>{{htmlJSON.Authorship}}</h4>
@@ -888,7 +875,7 @@
                 </div>
                 <div class="block_content text-center" style="padding-left:10px">
 
-                    <div style="text-align: left;" th:each="author,key:${datainfo.data.authorships}">
+                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;"><a
                                 data-toggle="collapse" th:href="'#authorships'+${key.index}" class="detail-toggle"
                                 aria-expanded="true" ><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
@@ -910,27 +897,17 @@
                         </div>
                     </div>
 
-                    <div th:if="${#lists.size(datainfo.data.authorships)>0}">
+                    <div th:if="${#lists.size(itemInfo.authorships)>0}">
                         <el-tag type="info">{{htmlJSON.AuthorshipInfo4}} <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">{{htmlJSON.AuthorshipInfo5}}</a></el-tag>
                     </div>
 
                 </div>
             </div>
 
-            <div id="QR" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-
-                    <div class="qrcode" style="width:200px;height:200px;margin: 0px auto;"></div>
-
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: QR"></div>
 
         </div>
+
         <div th:if="${history==true}"
              style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
 
