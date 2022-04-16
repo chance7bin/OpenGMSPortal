@@ -510,9 +510,11 @@ public class DataItemService {
             }
 
             // 更新localization
-            if (item.getLocalizationList().size() == 0) {
+            if (item.getLocalizationList() == null || item.getLocalizationList().size() == 0) {
                 Localization localization = new Localization("en", "English", item.getName(), dataItemUpdateDTO.getDetail());
-                item.getLocalizationList().add(localization);
+                List<Localization> localizationList = new ArrayList<>();
+                localizationList.add(localization);
+                item.setLocalizationList(localizationList);
             }
             else {
                 item.getLocalizationList().get(0).setDescription(dataItemUpdateDTO.getDetail());
