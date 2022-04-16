@@ -91,6 +91,11 @@ public class NoticeService {
         switch (notice.getAction().getType()){
             case Version:{
                 Version version = versionDao.findFirstById(notice.getObjectId());
+                if (version == null){
+                    message = "unknown";
+                    break;
+                }
+
                 String itemName = version.getItemName();
                 String p1;
                 if (notice.getDispatcher().equals(currentUser))
