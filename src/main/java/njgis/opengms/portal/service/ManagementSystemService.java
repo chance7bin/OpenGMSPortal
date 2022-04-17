@@ -628,7 +628,7 @@ public class ManagementSystemService {
         item.setStatus(status);
         genericService.saveItem(item, itemDao);
         //发送通知
-        List<String> recipientList = Arrays.asList(item.getAuthor());
+        List<String> recipientList = new ArrayList<>(Arrays.asList(item.getAuthor()));
         recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
 
         // notice的附加信息 通知类型为Information时构造msg时使用

@@ -40,19 +40,26 @@ public class CommentService {
 
     public JsonResult addComment(CommentDTO commentDTO, String commentEmail){
         Comment comment = new Comment();
-        BeanUtils.copyProperties(commentDTO, comment);
+        ItemTypeEnum itemTypeByName = ItemTypeEnum.getItemTypeByName(commentDTO.getRelateItemTypeName());
+        BeanUtils.copyProperties(commentDTO, comment, "relateItemTypeName","relateItemId");
 
-        JSONObject jsonObject = genericService.daoFactory(comment.getRelateItemType());
+        JSONObject jsonObject = genericService.daoFactory(itemTypeByName);
         GenericItemDao dao = (GenericItemDao)jsonObject.get("itemDao");
 
-        PortalItem item = (PortalItem) dao.findFirstById(comment.getRelateItemId());
+        //解决 relateItemId 出现 5cd455936af4560a78eff832?language=en 这种情况
 
+        String relateItemId = commentDTO.getRelateItemId();
+        if (relateItemId.contains("?"))
+            relateItemId = (relateItemId.split("\\?"))[0];
+
+        comment.setRelateItemId(relateItemId);
         comment.setCreateTime(new Date());
         comment.setCommentEmail(commentEmail);
-        comment.setRelateItemType(commentDTO.getRelateItemTypeName());
+        comment.setRelateItemType(itemTypeByName);
         comment.setReadStatus(0);
-
         commentDao.insert(comment);
+
+        PortalItem item = (PortalItem) dao.findFirstById(relateItemId);
 
         //关联子评论
         if (commentDTO.getParentId() != null) {
