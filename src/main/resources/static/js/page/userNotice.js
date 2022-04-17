@@ -15,6 +15,8 @@ var userNotice = Vue.extend({
             unReadNoticeCount:0,
 
 
+
+
             tableData: [{
                 date: '2016-05-02',
                 name: '王小虎',
@@ -67,7 +69,9 @@ var userNotice = Vue.extend({
                 "sortField": "createTime"
             })
                 .then(res=> {
-                    console.log("noticeList:",res)
+                    console.log("noticeList:",res.data)
+                    this.noticeTableData=res.data.data.content
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -77,7 +81,8 @@ var userNotice = Vue.extend({
         getNoticeCount(){
             axios.get("/notice/user/noticeCount")
                 .then(res=> {
-                    console.log("noticeCount:",res)
+                    console.log("noticeCount:",res.data)
+                    this.noticeCount=res.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -87,7 +92,8 @@ var userNotice = Vue.extend({
         getUnReadNoticeCount(){
             axios.get("/notice/user/unreadNoticeCount")
                 .then(res=> {
-                    console.log("unreadNoticeCount:",res)
+                    console.log("unreadNoticeCount:",res.data)
+                    this.unReadNoticeCount=res.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
