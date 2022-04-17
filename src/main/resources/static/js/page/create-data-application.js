@@ -733,13 +733,14 @@ var createDataApplication = Vue.extend({
                 let obj = new Object();
                 // obj.oid = item.uid;
                 obj.url = item.address;
-                dataUrls.push(item.url);
+                dataUrls.push(item.address);
                 testData.push(obj);
             }
 
             this.dataApplication.testData = testData;
             let dataForm = new FormData();
             dataForm.append("datafileUrl", dataUrls)
+
             $.ajax({
                 url:"http://172.21.213.111:8082/dataDownloadContainer/",
                 type:"POST",

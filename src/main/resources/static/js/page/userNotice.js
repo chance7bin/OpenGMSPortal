@@ -14,24 +14,8 @@ var userNotice = Vue.extend({
 
             unReadNoticeCount:0,
 
-
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄'
-            }]
+            noticeDialogVisible:false,
+            currentMessage:""
 
         }
     },
@@ -67,7 +51,9 @@ var userNotice = Vue.extend({
                 "sortField": "createTime"
             })
                 .then(res=> {
-                    console.log("noticeList:",res)
+                    console.log("noticeList:",res.data)
+                    this.noticeTableData=res.data.data.content
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -77,7 +63,8 @@ var userNotice = Vue.extend({
         getNoticeCount(){
             axios.get("/notice/user/noticeCount")
                 .then(res=> {
-                    console.log("noticeCount:",res)
+                    console.log("noticeCount:",res.data)
+                    this.noticeCount=res.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -87,17 +74,32 @@ var userNotice = Vue.extend({
         getUnReadNoticeCount(){
             axios.get("/notice/user/unreadNoticeCount")
                 .then(res=> {
-                    console.log("unreadNoticeCount:",res)
+                    console.log("unreadNoticeCount:",res.data)
+                    this.unReadNoticeCount=res.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
 
+        tableRowClassName({row, rowIndex}) {
+            if(row.hasRead===false){
+                return 'warning-row';
+            }else{
+                return ''
+            }
+        },
+        rowClass(){
+            return 'border-bottom: 1px solid ;'
+        },
+
         setAllNotice2Read(){
             axios.get("/notice/notice2read")
                 .then(res=> {
                     console.log(res)
+                    this.getNoticeList()
+                    this.getNoticeCount()
+                    this.getUnReadNoticeCount()
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -106,11 +108,18 @@ var userNotice = Vue.extend({
         setOneNotice2Read(noticeId){
             axios.get("/notice/notice2read/"+noticeId)
                 .then(res=> {
-                    console.log(res)
+                    console.log("",res)
+                    this.getNoticeList()
+                    this.getNoticeCount()
+                    this.getUnReadNoticeCount()
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        viewNotice(row){
+            this.noticeDialogVisible=true
+            this.currentMessage=row.message
         },
         handleSizeChange(val){
             this.pageSize=val;

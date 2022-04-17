@@ -13,8 +13,10 @@ var userVersion = Vue.extend({
             pageSize:10,
 
             activeMyName:0,
-            activeOthersName:3
+            activeOthersName:3,
+            activeName:0,
 
+            versionUrl:""
         }
     },
     mounted(){
@@ -30,82 +32,52 @@ var userVersion = Vue.extend({
                 this.ScreenMaxHeight = (height) + "px";
             };
         });
+        this.getVersionList("/version/user/versionList/edit/uncheck/All")
     },
     watch:{
-        "activeName":function (val){
+        "activeName":function(val){
             console.log(val)
             this.resetPageInfo()
-            let url=""
             switch(val) {
-                case 0:
-                    url="/version/user/versionList/edit/uncheck/All"
+                case "0":
+                    this.versionUrl="/version/user/versionList/edit/uncheck/All"
                     break;
-                case 1:
-                    url="/version/user/versionList/edit/accepted/All"
+                case "1":
+                    this.versionUrl="/version/user/versionList/edit/accepted/All"
                     break;
-                case 2:
-                    url="/version/user/versionList/edit/rejected/All"
+                case "2":
+                    this.versionUrl="/version/user/versionList/edit/rejected/All"
                     break;
-                case 3:
-                    url="/version/user/versionList/review/uncheck/All"
+                case "3":
+                    this.versionUrl="/version/user/versionList/review/uncheck/All"
                     break;
-                case 4:
-                    url="/version/user/versionList/review/accepted/All"
+                case "4":
+                    this.versionUrl="/version/user/versionList/review/accepted/All"
                     break;
-                case 5:
-                    url="/version/user/versionList/review/rejected/All"
+                case "5":
+                    this.versionUrl="/version/user/versionList/review/rejected/All"
                     break;
                 default:
-                    url=""
+                    this.versionUrl=""
             }
-
-            this.getVersionList(url)
-        },
-        "activeOthersName":function (val){
-            console.log(val)
-            this.resetPageInfo()
-            let url=""
-            switch(val) {
-                case 0:
-                    url="/version/user/versionList/edit/uncheck/All"
-                    break;
-                case 1:
-                    url="/version/user/versionList/edit/accepted/All"
-                    break;
-                case 2:
-                    url="/version/user/versionList/edit/rejected/All"
-                    break;
-                case 3:
-                    url="/version/user/versionList/review/uncheck/All"
-                    break;
-                case 4:
-                    url="/version/user/versionList/review/accepted/All"
-                    break;
-                case 5:
-                    url="/version/user/versionList/review/rejected/All"
-                    break;
-                default:
-                    url=""
-            }
-
-            this.getVersionList(url)
+            // console.log(this.versionUrl)
+            this.getVersionList(this.versionUrl)
         }
     },
     methods:{
         handleParentTabChange(val){
-            console.log(val.label)
-            // if(val.label==="My Edition"){
-            //     this.activeMyName=0
-            //     console.log("aaaaa")
-            // }else{
-            //     this.activeOthersName=3
-            // }
+            if(val.label==="My Edition"){
+                this.activeName="0"
+            }else{
+                this.activeName="3"
+            }
         },
 
         resetPageInfo(){
             this.currentPage=1
             this.totalCount=0
             this.pageSize=10
+            this.versionTableData=[]
         },
 
         getVersionList(url){
@@ -117,12 +89,15 @@ var userVersion = Vue.extend({
                 "sortField": "createTime"
             })
                 .then(res=> {
-                    console.log(url+" :",res)
+                    console.log(url+" :",res.data)
+                    this.versionTableData=res.data.data.content
+                    this.totalCount=res.data.data.totalElements
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
+
         viewVersionById(versionId){
             axios.get("/version/detail/"+versionId)
                 .then(res=> {
@@ -135,7 +110,7 @@ var userVersion = Vue.extend({
         acceptVersionById(versionId){
             axios.get("/version/accept/"+versionId)
                 .then(res=> {
-                    console.log(res)
+                    console.log("accept version:",res)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -144,7 +119,7 @@ var userVersion = Vue.extend({
         rejectVersionById(versionId){
             axios.get("/version/reject/"+versionId)
                 .then(res=> {
-                    console.log(res)
+                    console.log("reject version:",res)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -153,9 +128,11 @@ var userVersion = Vue.extend({
 
         handleSizeChange(val){
             this.pageSize=val;
+            this.getVersionList(this.versionUrl)
         },
         handleCurrentChange(val) {
             this.currentPage=val;
+            this.getVersionList(this.versionUrl)
         }
     }
 

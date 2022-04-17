@@ -26,62 +26,75 @@
            style="margin-left: 240px;overflow-x: hidden"
            :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}">
 
-        <div style="margin-top: 100px; display: flex; justify-content: space-around;">
+        <div style="margin-top: 70px; display: flex; justify-content: space-around;">
           <h1>{{htmlJson.Version}}</h1>
         </div>
 
         <div style="display: flex;justify-content: center;">
           <div class="contentCard flexCol flexColCenter" style="height: 700px;max-width: 1200px">
             <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 95%;">
-              <br/><br/>
-              <div style="width: 100%; margin-bottom: 10px;font-weight: bold;font-size: 20px;">
-                <span>Total:{{}}</span>
-                &nbsp;
-                <span>Unread:{{}}</span>
-              </div>
               <br/>
               <div style="width: 100%;">
                 <el-tabs type="border-card"  stretch @tab-click="handleParentTabChange">
                   <el-tab-pane  label="My Edition">
-                    <el-tabs type="border-card" v-model="activeMyName"   stretch  >
+                    <el-tabs type="border-card" v-model="activeName"   stretch  >
                       <el-tab-pane name="0" label="Unchecked version">
-                        Unchecked version
+<!--                        self unchecked version-->
                         <div style="width: 100%;">
                           <el-table
-                                  :show-header="false"
                                   :data="versionTableData"
                                   stripe
+                                  height="400"
                                   style="width: 100%">
                             <el-table-column
                                     prop="date"
-                                    label="日期"
-                                    width="300">
+                                    label="Date"
+                                    width="160">
                               <template slot-scope="scope">
-                                <h4>{{ scope.row.date }}</h4>
+                                <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="姓名"
-                                    width="300">
+                                    label="Name"
+                                    min-width="200"
+                                    show-overflow-tooltip>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.name }}</h5>
+                                <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column
+                                    prop="name"
+                                    label="Type"
+                                    min-width="120"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.type }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Editor"
+                                    min-width="180"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.editor }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="操作" min-width="250">
                               <template slot-scope="scope">
                                 <el-button
-                                        type="success"
+                                        type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.$index, scope.row)">View</el-button>
+                                        @click="viewVersionById(scope.row.id)">View</el-button>
                                 <el-button
                                         type="success"
                                         size="mini"
-                                        @click="acceptVersionById(scope.$index, scope.row)">Accept</el-button>
+                                        @click="acceptVersionById(scope.row.id)">Accept</el-button>
                                 <el-button
-                                        type="success"
+                                        type="warning"
                                         size="mini"
-                                        @click="rejectVersionById(scope.$index, scope.row)">Reject</el-button>
+                                        @click="rejectVersionById(scope.row.id)">Reject</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -103,28 +116,362 @@
 
                       </el-tab-pane>
                       <el-tab-pane name="1" label="Accepted version" >
-                        Accepted version
+<!--                        self accept version-->
+                        <div style="width: 100%;">
+                          <el-table
+                                  :data="versionTableData"
+                                  stripe
+                                  height="400"
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="Date"
+                                    width="160">
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.submitTime }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Name"
+                                    min-width="200"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.itemName }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Type"
+                                    min-width="120"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.type }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Editor"
+                                    min-width="180"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.editor }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="操作" min-width="250">
+                              <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                          <el-divider></el-divider>
+                        </div>
+                        <el-divider></el-divider>
+                        <div style="display: flex; justify-content: space-around;">
+                          <el-pagination
+                                  background
+                                  layout="total,prev, pager, next"
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page.sync="currentPage"
+                                  :page-sizes="[10, 20, 30, 40]"
+                                  :page-size="pageSize"
+                                  :total="totalCount">
+                          </el-pagination>
+                        </div>
 
                       </el-tab-pane>
                       <el-tab-pane name="2" label="Rejected version" >
-                        Rejected version
+<!--                        self rejected version-->
+                        <div style="width: 100%;">
+                          <el-table
+                                  :data="versionTableData"
+                                  stripe
+                                  height="400"
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="Date"
+                                    width="160">
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.submitTime }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Name"
+                                    min-width="200"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.itemName }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Type"
+                                    min-width="120"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.type }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Editor"
+                                    min-width="180"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.editor }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="操作" min-width="250">
+                              <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                          <el-divider></el-divider>
+                        </div>
+                        <el-divider></el-divider>
+                        <div style="display: flex; justify-content: space-around;">
+                          <el-pagination
+                                  background
+                                  layout="total,prev, pager, next"
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page.sync="currentPage"
+                                  :page-sizes="[10, 20, 30, 40]"
+                                  :page-size="pageSize"
+                                  :total="totalCount">
+                          </el-pagination>
+                        </div>
 
                       </el-tab-pane>
                     </el-tabs>
 
                   </el-tab-pane>
                   <el-tab-pane label="Others Edition" >
-                    <el-tabs v-model="activeOthersName"  type="border-card" stretch >
+                    <el-tabs v-model="activeName"  type="border-card" stretch >
                       <el-tab-pane name="3" label="Unchecked version">
-                        Unchecked version
+<!--                        other unchecked version-->
+                        <div style="width: 100%;">
+                          <el-table
+                                  :data="versionTableData"
+                                  stripe
+                                  height="400"
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="Date"
+                                    width="160">
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.submitTime }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Name"
+                                    min-width="200"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.itemName }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Type"
+                                    min-width="120"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.type }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Editor"
+                                    min-width="180"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.editor }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="操作" min-width="250">
+                              <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                <el-button
+                                        type="success"
+                                        size="mini"
+                                        @click="acceptVersionById(scope.row.id)">Accept</el-button>
+                                <el-button
+                                        type="warning"
+                                        size="mini"
+                                        @click="rejectVersionById(scope.row.id)">Reject</el-button>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                          <el-divider></el-divider>
+                        </div>
+<!--                        other unchecked version-->
+                        <el-divider></el-divider>
+                        <div style="display: flex; justify-content: space-around;">
+                          <el-pagination
+                                  background
+                                  layout="total,prev, pager, next"
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page.sync="currentPage"
+                                  :page-sizes="[10, 20, 30, 40]"
+                                  :page-size="pageSize"
+                                  :total="totalCount">
+                          </el-pagination>
+                        </div>
 
                       </el-tab-pane>
                       <el-tab-pane name="4" label="Accepted version">
-                        Accepted version
+<!--                        other Accepted version-->
+                        <div style="width: 100%;">
+                          <el-table
+                                  :data="versionTableData"
+                                  stripe
+                                  height="400"
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="Date"
+                                    width="160">
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.submitTime }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Name"
+                                    min-width="200"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.itemName }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Type"
+                                    min-width="120"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.type }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Editor"
+                                    min-width="180"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.editor }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="操作" min-width="250">
+                              <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                          <el-divider></el-divider>
+                        </div>
+                        <el-divider></el-divider>
+                        <div style="display: flex; justify-content: space-around;">
+                          <el-pagination
+                                  background
+                                  layout="total,prev, pager, next"
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page.sync="currentPage"
+                                  :page-sizes="[10, 20, 30, 40]"
+                                  :page-size="pageSize"
+                                  :total="totalCount">
+                          </el-pagination>
+                        </div>
 
                       </el-tab-pane>
                       <el-tab-pane name="5" label="Rejected version">
-                        Rejected version
+<!--                        other Rejected version-->
+                        <div style="width: 100%;">
+                          <el-table
+                                  :data="versionTableData"
+                                  stripe
+                                  height="400"
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="Date"
+                                    width="160">
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.submitTime }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Name"
+                                    min-width="200"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.itemName }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Type"
+                                    min-width="120"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.type }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="Editor"
+                                    min-width="180"
+                                    show-overflow-tooltip>
+                              <template slot-scope="scope">
+                                <h5>{{ scope.row.editor }}</h5>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="操作" min-width="250">
+                              <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                          <el-divider></el-divider>
+                        </div>
+                        <el-divider></el-divider>
+                        <div style="display: flex; justify-content: space-around;">
+                          <el-pagination
+                                  background
+                                  layout="total,prev, pager, next"
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page.sync="currentPage"
+                                  :page-sizes="[10, 20, 30, 40]"
+                                  :page-size="pageSize"
+                                  :total="totalCount">
+                          </el-pagination>
+                        </div>
 
                       </el-tab-pane>
                     </el-tabs>

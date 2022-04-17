@@ -1,5 +1,6 @@
 package njgis.opengms.portal.entity.po;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.base.PortalId;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
@@ -28,7 +29,9 @@ public class Version extends PortalId {
     String itemCreator; //条目创建者邮箱
     String editor; //修改人邮箱
     String reviewer; //审核人邮箱
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     Date submitTime; //版本提交时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     Date reviewTime; //审批时间
     Map<String,Object> changedField; //修改的字段
     int status = 0; //版本状态 0:待审核 -1:被拒绝 1:通过 2:原始版本（或忽略）
