@@ -9,6 +9,7 @@ var userComment = Vue.extend({
 
             commentTableData:[],
 
+
         }
     },
     mounted(){
@@ -24,6 +25,8 @@ var userComment = Vue.extend({
                 this.ScreenMaxHeight = (height) + "px";
             };
         });
+
+        this.getCommentList()
     },
     methods:{
 

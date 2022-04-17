@@ -1,0 +1,11 @@
+ .el-table .warning-row {
+    background: oldlace;
+}
+
+
+
+.noticeTableFont .cell {
+    font-size: 20px !important;
+    color: black !important;
+    font-weight: bold;
+}

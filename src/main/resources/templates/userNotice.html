@@ -31,48 +31,80 @@
                      style="margin-left: 240px;overflow-x: hidden"
                      :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}">
 
-                    <div style="margin-top: 100px; display: flex; justify-content: space-around;">
-                        <h1>{{htmlJson.Notice}}</h1>
+                    <div style="margin-top: 70px; display: flex; justify-content: space-around;">
+                        <h2>{{htmlJson.Notice}}</h2>
                     </div>
 
                     <div style="display: flex;justify-content: center;">
                         <div class="contentCard flexCol flexColCenter" style="height: 700px;max-width: 1200px">
-                            <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 85%;">
-                                <br/><br/>
-                                <div style="width: 100%; margin-bottom: 10px;font-weight: bold;font-size: 20px;">
+                            <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 90%;">
+                                <br/>
+                                <div style="width: 100%;font-weight: bold;font-size: 20px;">
                                     <span>Total:{{noticeCount}}</span>
                                     &nbsp;
                                     <span>Unread:{{unReadNoticeCount}}</span>
+                                    &nbsp;&nbsp;
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <el-button size="small" type="primary" @click="setAllNotice2Read">Mark All Read</el-button>
+                                    </div>
                                 </div>
-                                <br/>
+
                                 <div style="width: 100%;">
                                     <el-table
-                                            :show-header="false"
-                                            :data="tableData"
-                                            stripe
-                                            style="width: 100%">
+                                            :data="noticeTableData"
+                                            :row-class-name="tableRowClassName"
+                                            :cell-style="rowClass"
+                                            class="noticeTableFont"
+                                            height="500"
+                                            style="width: 100%;">
                                         <el-table-column
-                                                prop="date"
-                                                label="日期"
-                                                width="300">
+                                                prop="createTime"
+                                                label="Date"s
+                                                min-width="160">
                                             <template slot-scope="scope">
-                                                <h4>{{ scope.row.date }}</h4>
+                                                <h4>{{ scope.row.createTime }}</h4>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
-                                                prop="name"
-                                                label="姓名"
-                                                width="300">
+                                                prop="message"
+                                                label="Message"
+                                                min-width="320"
+                                                show-overflow-tooltip>
                                             <template slot-scope="scope">
-                                                <h5>{{ scope.row.name }}</h5>
+                                                <h5>{{ scope.row.message }}</h5>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="操作">
+                                        <el-table-column
+                                                prop="dispatcher"
+                                                label="Dispatcher"
+                                                min-width="200"
+                                                show-overflow-tooltip>
                                             <template slot-scope="scope">
+                                                <h4>{{ scope.row.dispatcher }}</h4>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="Conduct" min-width="200">
+                                            <template slot-scope="scope">
+
+                                                <el-dialog
+                                                        title="Message"
+                                                        :visible.sync="noticeDialogVisible"
+                                                        width="30%">
+                                                    <span>{{currentMessage}}</span>
+                                                    <span slot="footer" class="dialog-footer">
+                                                    <el-button @click="noticeDialogVisible = false">取 消</el-button>
+                                                    <el-button type="primary" @click="noticeDialogVisible = false">确 定</el-button>
+                                                  </span>
+                                                </el-dialog>
                                                 <el-button
-                                                        type="success"
+                                                        type="primary"
                                                         size="mini"
-                                                        @click="setOneNotice2Read(scope.$index, scope.row)">标为已读</el-button>
+                                                        @click="viewNotice(scope.row)">View</el-button>
+                                                <el-button
+                                                        v-if="scope.row.hasRead===false"
+                                                        type="warning"
+                                                        size="mini"
+                                                        @click="setOneNotice2Read(scope.row.id)">Mark Read</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>

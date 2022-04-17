@@ -14,26 +14,8 @@ var userNotice = Vue.extend({
 
             unReadNoticeCount:0,
 
-
-
-
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄'
-            }]
+            noticeDialogVisible:false,
+            currentMessage:""
 
         }
     },
@@ -100,10 +82,24 @@ var userNotice = Vue.extend({
                 });
         },
 
+        tableRowClassName({row, rowIndex}) {
+            if(row.hasRead===false){
+                return 'warning-row';
+            }else{
+                return ''
+            }
+        },
+        rowClass(){
+            return 'border-bottom: 1px solid ;'
+        },
+
         setAllNotice2Read(){
             axios.get("/notice/notice2read")
                 .then(res=> {
                     console.log(res)
+                    this.getNoticeList()
+                    this.getNoticeCount()
+                    this.getUnReadNoticeCount()
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -112,11 +108,18 @@ var userNotice = Vue.extend({
         setOneNotice2Read(noticeId){
             axios.get("/notice/notice2read/"+noticeId)
                 .then(res=> {
-                    console.log(res)
+                    console.log("",res)
+                    this.getNoticeList()
+                    this.getNoticeCount()
+                    this.getUnReadNoticeCount()
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        viewNotice(row){
+            this.noticeDialogVisible=true
+            this.currentMessage=row.message
         },
         handleSizeChange(val){
             this.pageSize=val;
