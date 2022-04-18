@@ -43,11 +43,13 @@ public class CommentService {
         ItemTypeEnum itemTypeByName = ItemTypeEnum.getItemTypeByName(commentDTO.getRelateItemTypeName());
         BeanUtils.copyProperties(commentDTO, comment, "relateItemTypeName","relateItemId");
 
+        if (itemTypeByName == null){
+            return ResultUtils.error("itemTypeByName输入错误");
+        }
         JSONObject jsonObject = genericService.daoFactory(itemTypeByName);
         GenericItemDao dao = (GenericItemDao)jsonObject.get("itemDao");
 
         //解决 relateItemId 出现 5cd455936af4560a78eff832?language=en 这种情况
-
         String relateItemId = commentDTO.getRelateItemId();
         if (relateItemId.contains("?"))
             relateItemId = (relateItemId.split("\\?"))[0];
