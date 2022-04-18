@@ -55,6 +55,14 @@ public class Utils {
     // }
 
 
+    // 对于id有语言信息的截取前面的id
+    public static String formatId4hasLang(String id){
+        if (id.contains("?"))
+            id = (id.split("\\?"))[0];
+        return id;
+    }
+
+
     /**
      * @Description 检查用户登录状态
      * @param request
