@@ -128,7 +128,7 @@ public class CommentController {
             commentObj.put("content",commentResultDTO.getContent());
             commentObj.put("date",simpleDateFormat.format(commentResultDTO.getCreateTime()));
             commentObj.put("likeNum",commentResultDTO.getThumbsUpNumber());
-            commentObj.put("author",getUserByEmail(commentResultDTO.getAuthorId()));
+            commentObj.put("author",getUserByEmail(commentResultDTO.getCommentEmail()));
 
             JSONArray subComments=new JSONArray();
             for(String subCommentOid:commentResultDTO.getSubComments()){
@@ -192,40 +192,36 @@ public class CommentController {
         return author;
     }
 
+    @LoginRequired
     @RequestMapping(value="/getCommentsByUser", method = RequestMethod.GET)
     public JsonResult getCommentsByUser(HttpServletRequest request){
 
         HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        List<Comment> commentList = commentDao.findAllByCommentEmailOrReplyToUserEmail(email,email);
+        JSONArray jsonArray = new JSONArray();
+        for(int i=0;i<commentList.size();i++){
+            Comment comment = commentList.get(i);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("content",comment.getContent());
+            jsonObject.put("author",getUserByEmail(comment.getCommentEmail()));
+            jsonObject.put("replier",getUserByEmail(comment.getReplyToUserEmail()));
+            jsonObject.put("date",simpleDateFormat.format(comment.getCreateTime()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            jsonObject.put("modifyTimeDay", sdf.format(comment.getCreateTime()));//与message的其他时间名称统一
+            jsonObject.put("status","comment");
+            jsonObject.put("readStatus",comment.getReadStatus());
+            String id = comment.getRelateItemId();
+            id = Utils.formatId4hasLang(id);
+            JSONObject itemInfo = getItemInfoByTypeAndId(comment.getRelateItemType(),id);
+            jsonObject.put("itemInfo",itemInfo);
 
-        if(Utils.checkLoginStatus(request)==null){
-            return ResultUtils.error(-1,"no login");
-        }else {
-            String email = session.getAttribute("email").toString();
-            List<Comment> commentList = commentDao.findAllByCommentEmailOrReplyToUserEmail(email,email);
-            JSONArray jsonArray = new JSONArray();
-            for(int i=0;i<commentList.size();i++){
-                Comment comment = commentList.get(i);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("content",comment.getContent());
-                jsonObject.put("author",getUserByEmail(comment.getCommentEmail()));
-                jsonObject.put("replier",getUserByEmail(comment.getReplyToUserEmail()));
-                jsonObject.put("date",simpleDateFormat.format(comment.getCreateTime()));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                jsonObject.put("modifyTimeDay", sdf.format(comment.getCreateTime()));//与message的其他时间名称统一
-                jsonObject.put("status","comment");
-                jsonObject.put("readStatus",comment.getReadStatus());
-                String id = comment.getRelateItemId();
-                id = Utils.formatId4hasLang(id);
-                JSONObject itemInfo = getItemInfoByTypeAndId(comment.getRelateItemType(),id);
-                jsonObject.put("itemInfo",itemInfo);
+            jsonArray.add(jsonObject);
 
-                jsonArray.add(jsonObject);
-
-            }
-            jsonArray.add(email);
-
-            return ResultUtils.success(jsonArray);
         }
+        jsonArray.add(email);
+
+        return ResultUtils.success(jsonArray);
 
 
     }
