@@ -36,7 +36,6 @@ var userVersion = Vue.extend({
     },
     watch:{
         "activeName":function(val){
-            console.log(val)
             this.resetPageInfo()
             switch(val) {
                 case "0":
@@ -60,7 +59,6 @@ var userVersion = Vue.extend({
                 default:
                     this.versionUrl=""
             }
-            // console.log(this.versionUrl)
             this.getVersionList(this.versionUrl)
         }
     },
