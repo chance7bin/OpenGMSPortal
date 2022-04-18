@@ -200,7 +200,7 @@ public class DataItemService {
         view.addObject("user",userJson);
         view.addObject("classifications",classifications);
         view.addObject("relatedModels",modelItemArray);
-        view.addObject("authorship",authorshipString);
+        view.addObject("authorships",authorshipString);
         view.addObject("fileName",fileName);//后期应该是放该name下的所有数据
         view.addObject("distributeData", invokeServices);//存放远程节点信息
         //多语言description

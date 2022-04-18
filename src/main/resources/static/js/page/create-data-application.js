@@ -742,7 +742,7 @@ var createDataApplication = Vue.extend({
             dataForm.append("datafileUrl", dataUrls)
 
             $.ajax({
-                url:"http://172.21.213.111:8082/dataDownloadContainer/",
+                url:"http://geomodeling.njnu.edu.cn/dataTransferServer/dataDownloadContainer/",
                 type:"POST",
                 data:dataForm,
                 cache: false,
@@ -772,7 +772,7 @@ var createDataApplication = Vue.extend({
                 dataForm2.append("resources",this.fileArray[i]);
             }
             $.ajax({
-                url:"http://172.21.213.111:8082/dataDownloadAndCpmpress/",
+                url:"http://geomodeling.njnu.edu.cn/dataTransferServer/dataDownloadAndCpmpress/",
                 type:"POST",
                 data:dataForm2,
                 cache: false,
