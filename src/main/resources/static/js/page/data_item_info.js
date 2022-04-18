@@ -1143,7 +1143,7 @@ var  data_item_info = new Vue({
                 success: (result) => {
                     // data = JSON.parse(data);
                     let data = result.data
-                    if (data.accessId == "") {
+                    if (result.code == -3) {
                         this.confirmLogin()
 
                     }
@@ -1152,8 +1152,7 @@ var  data_item_info = new Vue({
                         let hrefs = href.split('/');
                         let oid = hrefs[hrefs.length - 1].split("#")[0];
                         //正则匹配hub
-                        let re = "hub";
-                        let result = href.match("hub");
+                        let result = href.match("Hub");
                         if (result!=null){
                             window.location.href = '/user/userSpace#/data/manageDataHubs/'+oid
                         }else {

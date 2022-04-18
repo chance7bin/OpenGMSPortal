@@ -89,7 +89,7 @@
                     <li><a class="login" href="/user/register" translateId="signup">Sign Up</a></li>
                 </div>
                 <div th:unless="${logged}" class="login2">
-                    <li id="dropls"><a style="cursor:pointer"><p style="font-size: 13px">Log in</p><div class="innerBorder"></div><p style="font-size: 13px" translateId="signup">Sign up</p></a></li>
+                    <li id="dropls"><a style="cursor:pointer"><p style="font-size: 13px" translateId="login">Log in</p><div class="innerBorder"></div><p style="font-size: 13px" translateId="signup">Sign up</p></a></li>
                 </div>
                 <!--/*@thymesVar id="logged" type=""*/-->
                 <div th:if="${logged}" class="loged" >

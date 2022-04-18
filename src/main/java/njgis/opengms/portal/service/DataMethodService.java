@@ -383,7 +383,7 @@ public class DataMethodService {
             ResponseEntity<JSONObject> response = restTemplate.exchange(url.trim(), HttpMethod.GET, requestEntity, JSONObject.class);
             j_result = response.getBody();
         }catch (Exception e){
-            return ResultUtils.error("request user server err");
+            return ResultUtils.error("request data server err");
         }
 
         return ResultUtils.success(j_result);
