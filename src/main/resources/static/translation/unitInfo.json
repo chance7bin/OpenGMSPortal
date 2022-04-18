@@ -13,7 +13,8 @@
     "Contributor":"Contributor",
     "ContributorInfo": "Contributor is the person who contributes the item to OpenGMS, may not be the author of the item.",
     "Modifier": "Modifier",
-
+"Transform":"Transform",
+"Convert":"Convert",
     "QRCode": "QR Code"
   },
   "zh-cn": {
@@ -28,6 +29,8 @@
     "Contributor":"贡献者",
     "ContributorInfo": "贡献者是将资源提交给OpenGMS的人，可能并不是该资源的所有者。",
     "Modifier": "修改者",
+"Transform":"转换",
+"Convert":"转换",
 
     "QRCode": "二维码",
         "Copy":"复制"

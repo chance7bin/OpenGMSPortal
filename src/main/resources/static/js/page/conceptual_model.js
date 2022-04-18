@@ -11,6 +11,7 @@ new Vue({
             activeIndex:'3-1',
             activeNameGraph: 'Image',
             activeName: 'Conceptual Model',
+            lightenContributor:{},
 
             form:{
                 name:"",
@@ -245,6 +246,9 @@ new Vue({
 
     },
     mounted(){
+        this.lightenContributor = author
+        this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
+        this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
 
         this.setSession("history", window.location.href);
         axios.get("/user/load")
