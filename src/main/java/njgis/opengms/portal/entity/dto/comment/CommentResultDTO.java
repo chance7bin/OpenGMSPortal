@@ -15,8 +15,10 @@ public class CommentResultDTO {
     String id;
     String parentId;
     String content;
-    String authorId;
-    String replyToUserId;
+    // String authorId;
+    String commentEmail;
+    // String replyToUserId;
+    String replyToUserEmail;
 
     int thumbsUpNumber=0;
     Date createTime;

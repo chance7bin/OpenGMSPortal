@@ -16,8 +16,8 @@ public class Comment extends PortalId {
 
     String parentId;
     String content;
-    String commentEmail; //关联user的email
-    String replyToUserEmail;
+    String commentEmail; //评论人的email
+    String replyToUserEmail; //回复评论的那个人的email
 
     String relateItemId;
     ItemTypeEnum relateItemType;

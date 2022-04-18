@@ -17,7 +17,7 @@ Vue.component("comments",
                 commentText: "",
                 commentParentId:null,
                 commentList:[],
-                replyToUserId:"",
+                replyToUserEmail:"",
                 commentTextAreaPlaceHolder:"Write your comment...",
                 replyTo:"",
                 htmlJSON:{},
@@ -65,7 +65,7 @@ Vue.component("comments",
                         parentId: this.commentParentId,
                         content: this.commentText,
                         // authorId: this.comment_userOid,
-                        replyToUserId: this.replyToUserId,
+                        replyToUserEmail: this.replyToUserEmail,
                         relateItemId: id,
                         relateItemTypeName: typeName,
                     };
@@ -157,21 +157,21 @@ Vue.component("comments",
                 })
             },
             replyComment(comment){
-                this.commentParentId=comment.oid;
-                this.replyToUserId=comment.author.oid;
+                this.commentParentId=comment.id;
+                this.replyToUserEmail=comment.author.userId;
                 this.replyTo="Reply to "+comment.author.name;
                 setTimeout(function () { $("#commentTextArea").focus();}, 1);
             },
             replySubComment(comment,subComment){
-                this.commentParentId=comment.oid;
-                this.replyToUserId=subComment.author.oid;
+                this.commentParentId=comment.id;
+                this.replyToUserEmail=subComment.author.userId;
                 // this.commentTextAreaPlaceHolder="Reply to "+subComment.author.name;
                 this.replyTo="Reply to "+subComment.author.name;
                 setTimeout(function () { $("#commentTextArea").focus();}, 1);
             },
             tagClose(){
                 this.replyTo="";
-                this.replyToUserId="";
+                this.replyToUserEmail="";
                 this.commentParentId=null;
             },
         },

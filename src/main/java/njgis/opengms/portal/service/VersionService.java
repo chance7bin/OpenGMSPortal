@@ -52,6 +52,10 @@ public class VersionService {
      **/
     public Version addVersion(PortalItem item, String editor, String originalItemName){
         Version version = new Version();
+
+        // 如果editor和itemCreator相同的话直接审核通过，status设置为1
+        if (editor.equals(item.getAuthor()))
+            version.setStatus(1);
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         version.setItemId(item.getId());
