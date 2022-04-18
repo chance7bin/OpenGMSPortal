@@ -42,6 +42,10 @@
             -webkit-line-clamp: 6;
             -webkit-box-orient: vertical;
         }
+
+        .list-item{
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -92,9 +96,17 @@
     </div>
 
     <div id="userPage" class="clearfix flex-rowDirect" style="display: flex;justify-content:center; flex-wrap: wrap; height: auto;background-color: #ffffff" v-cloak>
+        <translation-bar
+                json-file="userPage"
+                @translate-page="translatePage"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 105px;right:15px">
+        </translation-bar>
         <el-col :lg="4" :xs="18" :sm="11" :md="12" class="leftContainer">
 
             <div class="flex-center flex-colDirect">
+
                 <div class="flex-center">
                     <div class="user_img flex-center" style="position: relative;">
 
@@ -116,12 +128,12 @@
                     <span>{{userPersonalInfo.introduction}}</span>
                 </div>
                 <div class="userInfo infoEdit flex-center flex-colDirect text-center" v-if="userPersonalInfo.introduction==''">
-                    <span>No Introduction</span>
+                    <span>{{htmlJSON.noIntro}}</span>
                 </div>
 
                 <!--                编辑用户信息的按钮-->
                 <div class="userInfo_editBtn infoEdit flex-center flex-colDirect text-center" :class="{editDisplay:editDisplayIndex==1}" th:if="${userInfo.email==userInfo.loginId}">
-                    <el-button icon="el-icon-setting" style="margin: 0 10px 0 10px" @click="editDisplayIndex==0?editDisplayIndex=1:editDisplayIndex=0">Edit profile</el-button>
+                    <el-button icon="el-icon-setting" style="margin: 0 10px 0 10px" @click="editDisplayIndex==0?editDisplayIndex=1:editDisplayIndex=0">{{htmlJSON.editProfile}}</el-button>
                 </div>
 
                 <!--                    展示用户信息-->
@@ -134,14 +146,14 @@
                         <span>{{userPersonalInfo.email}}</span>
                     </div>
 
-                    <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.organizations.length!=0 || userPersonalInfo.organizations[0] != ''">
+                    <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.organizations!=null && userPersonalInfo.organizations.length!=0 && userPersonalInfo.organizations[0] != ''">
                         <el-tooltip class="item" effect="dark" content="Organization" placement="top-start" >
                             <i class="el-icon-s-custom"></i>
                         </el-tooltip>
                         <span>{{userPersonalInfo.organizations[0]}}</span>
                     </div>
 
-                    <div class="location flex-rowDirect edit_col1" v-if="userPersonalInfo.location!=''&&userPersonalInfo.location!=null" >
+                    <div class="location flex-rowDirect edit_col1" v-if="userPersonalInfo.location!='' && userPersonalInfo.location!=null" >
                         <el-tooltip class="item" effect="dark" content="Location" placement="top-start" >
                             <i class="el-icon-location-information"></i>
                         </el-tooltip>
@@ -149,7 +161,7 @@
                     </div>
 
 
-                    <div class="researchInterests flex-rowDirect edit_col1" v-if="userPersonalInfo.researchInterests.length!=0" >
+                    <div class="researchInterests flex-rowDirect edit_col1" v-if="userPersonalInfo.researchInterests!=null && userPersonalInfo.researchInterests.length!=0" >
                         <el-tooltip class="item" effect="dark" content="Research Interests" placement="top-start" >
                             <i class="el-icon-star-on"></i>
                         </el-tooltip>
@@ -158,7 +170,7 @@
                         </div>
                     </div>
 
-                    <div class="website flex-rowDirect edit_col1" v-if="userPersonalInfo.externalLinks.length!=0 && userPersonalInfo.externalLinks[0]!=''" >
+                    <div class="website flex-rowDirect edit_col1" v-if="userPersonalInfo.externalLinks!=null && userPersonalInfo.externalLinks.length!=0 && userPersonalInfo.externalLinks[0]!=''" >
                         <el-tooltip class="item" effect="dark" content="Website" placement="top-start" >
                             <i class="el-icon-link"></i>
                         </el-tooltip>
@@ -218,15 +230,15 @@
                         </el-input>
                     </div>
                     <div class="edit_btnGroups flex-rowDirect edit_col" style="margin-top: 15px" >
-                        <el-button size="mini" type="primary" style="margin: 0!important;" @click="saveUpdateUserInfo()">Save</el-button>
-                        <el-button size="mini" id="editUserInfoCancel" @click="editDisplayIndex=0;console.log(this.researchInterests)">Cancel</el-button>
+                        <el-button size="mini" type="primary" style="margin: 0!important;" @click="saveUpdateUserInfo()">{{htmlJSON.save}}</el-button>
+                        <el-button size="mini" id="editUserInfoCancel" @click="editDisplayIndex=0;console.log(this.researchInterests)">{{htmlJSON.cancel}}</el-button>
                     </div>
 
                 </div>
                 <!--                resources按钮组-->
                 <div class="userInfo_btnGroup">
-                    <p th:if="${userInfo.email==userInfo.loginId}" style="font-size: 20px;line-height: 20px;margin: 0">My Resources</p>
-                    <p th:if="${userInfo.email!=userInfo.loginId}" style="font-size: 20px;line-height: 20px;margin: 0">Resources</p>
+                    <p th:if="${userInfo.email==userInfo.loginId}" style="font-size: 20px;line-height: 20px;margin: 0">{{htmlJSON.myRes}}</p>
+                    <p th:if="${userInfo.email!=userInfo.loginId}" style="font-size: 20px;line-height: 20px;margin: 0">{{htmlJSON.res}}</p>
                     <hr>
                     <div class="btn-groups flex-around flex-rowDirect">
                         <div class="singleBtn cursor-point text-center" @click="resourceClick('Model')">
@@ -235,20 +247,20 @@
                             <!--                                <path d="M820.6 344.1l3-1.6c16-10.2 25.6-27.6 25.8-46.7 0.1-19.7-9.7-38.1-26.3-49l-277-135.3c-18-11-40.6-11.3-58.6-0.8L218.3 237l-3 1.6c-16 10.2-25.6 27.6-25.8 46.8-0.1 19.7 9.7 38.1 26.4 49l276.9 135.2c9.3 5.6 19.7 8.5 30.1 8.5 9.9 0 19.7-2.6 28.5-7.7l269.2-126.3z m-296.1 80.4c-1.1 0.7-2.7 0.5-4.1-0.4L244.3 289.3c-1.3-1.2-1.5-2.7-1.5-3.5 0-0.8 0.2-1.4 0.5-1.7l268.1-125.8 3-1.6c1.1-0.7 2.7-0.5 4.1 0.4l276.1 134.8c1.3 1.2 1.5 2.7 1.5 3.5 0 0.8-0.2 1.4-0.5 1.7L527.5 422.8l-3 1.7zM847.8 375.6c-18.4-10.6-40.4-10.4-57.4-0.3L556 496.1c-18.5 10.9-30.1 31.4-30.2 53.5L523.9 856c-0.1 22.7 11.7 43.7 30.9 54.7 9.1 5.2 19.1 7.9 29.1 7.9 9.6 0 19.3-2.4 28.1-7.3l231.8-101.8 2.8-1.5c18.5-10.9 30.1-31.4 30.2-53.5l1.9-324.1c0.1-22.8-11.7-43.8-30.9-54.8z m-24.2 378.5c0 3-1.3 5.9-3.3 7.5L589.3 863l-2.8 1.5c-1.2 0.7-2.9 1.4-5.2 0.1-1-0.6-4.2-2.8-4.2-8.2L579 550c0-3.4 1.6-6.6 2.7-7.3l234.4-120.8c0.7-0.4 1.6-0.8 2.6-0.8 0.8 0 1.6 0.2 2.6 0.8 1 0.6 4.2 2.8 4.2 8.2l-1.9 324zM472.8 495.4L241.1 376c-18.3-10.9-40.3-11-58.8-0.4-19.2 11-31 32-30.9 54.7l1.9 324.1c0.2 22.1 11.7 42.6 30.2 53.5l234.6 103.2c8.9 4.9 18.5 7.3 28.1 7.3 10 0 19.9-2.6 29-7.8 19.2-11 31-32 30.9-54.7l-1.9-306.4c0-21.9-11.6-42.5-31.4-54.1z m-24 369.1c-2.3 1.3-4 0.7-5.2-0.1L209.7 761.6c-2-1.6-3.3-4.4-3.3-7.5L204.6 430c0-5.4 3.2-7.7 4.2-8.2 2.3-1.3 3.9-0.7 6.5 0.8L447 541.9c2.5 1.5 4.1 4.6 4.1 8l1.9 306.3c0 5.5-3.2 7.8-4.2 8.3z" fill="#00C0FF" p-id="1266"></path></svg>-->
                             <p class="overTotalFont" v-text="resourceCount.modelItem+resourceCount.conceptualModel+resourceCount.logicalModel+resourceCount.computableModel"></p>
 <!--                            <p class="overTotalFont" v-text="modelItems.total+conceptualModels.total+logicalModels.total+computableModels.total"></p>-->
-                            <p>Model</p>
+                            <p>{{htmlJSON.model}}</p>
                         </div>
                         <div class="singleBtn cursor-point text-center" @click="resourceClick('Data')">
                             <!--                            <svg t="1625493923353" class="icon singleImg" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2378" width="200" height="200">-->
                             <!--                                <path d="M891.2 461l-76.5-36.5-53.8 25.7 107.6 51.3c12.1 5.8 12.1 15.2 0 21L534 682.1c-6 2.9-14 4.3-22 4.3s-15.9-1.4-22-4.3L155.6 522.5c-12.1-5.8-12.1-15.2 0-21l107.6-51.3-53.8-25.7-76.6 36.5C110.4 471.7 97 490.8 97 512s13.4 40.3 35.8 51l334.5 159.6c16.3 7.8 33.3 9.4 44.7 9.4 11.4 0 28.4-1.6 44.7-9.4L891.2 563c22.4-10.7 35.8-29.8 35.8-51s-13.4-40.3-35.8-51z" p-id="2379" fill="#00C0FF"></path><path d="M512 142.6c8 0 15.9 1.4 22 4.3l334.5 159.6c12.1 5.8 12.1 15.2 0 21L534 487.1c-6 2.9-14 4.3-22 4.3s-15.9-1.4-22-4.3L155.6 327.5c-12.1-5.8-12.1-15.2 0-21L490 146.9c6.1-2.8 14-4.3 22-4.3m0-45.6c-11.4 0-28.4 1.6-44.7 9.4L132.8 266C110.4 276.7 97 295.8 97 317s13.4 40.3 35.8 51l334.5 159.6c16.3 7.8 33.3 9.4 44.7 9.4 11.4 0 28.4-1.6 44.7-9.4L891.2 368c22.4-10.7 35.8-29.8 35.8-51s-13.4-40.3-35.8-51L556.7 106.4C540.4 98.6 523.4 97 512 97zM891.2 656l-76.5-36.5-53.8 25.7 107.6 51.3c12.1 5.8 12.1 15.2 0 21L534 877.1c-6 2.9-14 4.3-22 4.3s-15.9-1.4-22-4.3L155.6 717.5c-12.1-5.8-12.1-15.2 0-21l107.6-51.3-53.8-25.7-76.6 36.5C110.4 666.7 97 685.8 97 707s13.4 40.3 35.8 51l334.5 159.6c16.3 7.8 33.3 9.4 44.7 9.4 11.4 0 28.4-1.6 44.7-9.4L891.2 758c22.4-10.7 35.8-29.8 35.8-51s-13.4-40.3-35.8-51z" p-id="2380" fill="#00C0FF"></path></svg>-->
                             <p class="overTotalFont" v-text="resourceCount.dataHub+resourceCount.dataMethod+resourceCount.dataItem" ></p>
-                            <p>Data</p>
+                            <p>{{htmlJSON.data}}</p>
                         </div>
                         <div class="singleBtn cursor-point text-center" @click="resourceClick('Community')" >
                             <!--                            <svg t="1625494634374" class="icon singleImg" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5199" width="200" height="200">-->
                             <!--                                <path d="M919.296 104.704c37.845333 37.845333 25.6 118.570667-24.746667 218.154667A425.024 425.024 0 0 1 938.666667 512c0 235.648-191.018667 426.666667-426.666667 426.666667-67.925333 0-132.138667-15.872-189.141333-44.117334-99.584 50.346667-180.309333 62.592-218.154667 24.746667-37.845333-37.845333-25.6-118.570667 24.746667-218.154667A425.024 425.024 0 0 1 85.333333 512C85.333333 276.352 276.352 85.333333 512 85.333333c67.925333 0 132.138667 15.872 189.141333 44.096 99.584-50.346667 180.288-62.570667 218.154667-24.725333zM169.6 766.592l-2.069333 4.906667c-10.026667 24.661333-16.533333 46.634667-19.370667 65.066666l-0.746667 5.397334c-2.346667 19.861333-0.042667 29.482667 2.56 32.085333 2.56 2.581333 12.202667 4.885333 32.064 2.538667 20.629333-2.453333 46.208-9.898667 75.370667-22.144a429.696 429.696 0 0 1-87.808-87.850667z m685.098667-373.546667l-3.477334 5.504c-48.853333 76.928-115.754667 160.533333-196.309333 242.026667l-7.146667 7.189333-7.04 6.997334c-83.498667 82.56-169.216 150.784-247.68 199.936C430.293333 867.648 470.336 874.666667 512 874.666667c200.298667 0 362.666667-162.368 362.666667-362.666667 0-41.664-7.04-81.706667-19.968-118.976zM512 149.333333C311.701333 149.333333 149.333333 311.701333 149.333333 512c0 131.157333 69.632 246.058667 173.952 309.76 87.232-49.088 185.898667-125.930667 279.232-219.242667 93.312-93.333333 170.154667-192 219.264-279.253333C758.058667 218.965333 643.157333 149.333333 512 149.333333z m329.962667-1.92c-20.629333 2.453333-46.208 9.898667-75.349334 22.144a430.442667 430.442667 0 0 1 87.808 87.850667c12.266667-29.162667 19.712-54.741333 22.165334-75.370667 2.346667-19.861333 0.042667-29.482667-2.56-32.085333-2.56-2.581333-12.202667-4.885333-32.064-2.538667z" p-id="5200" fill="#00C0FF"></path></svg>-->
                             <p class="overTotalFont" v-text="resourceCount.concept+resourceCount.spatialReference+resourceCount.template+resourceCount.unit">
                             </p>
-                            <p>Community</p>
+                            <p>{{htmlJSON.community}}</p>
                         </div>
                     </div>
                 </div>
@@ -263,16 +275,16 @@
                 <div class="userInfo_menu">
 
                     <el-tabs v-model="mainActiveName">
-                        <el-tab-pane label="Model" name="Model">
+                        <el-tab-pane :label="htmlJSON.model" name="Model">
                                 <span slot="label" style="width: 100px">
                                     <img src="../../static/img/model/model.png" class="square_15">
-                                    <span>Model</span>
+                                    <span>{{htmlJSON.model}}</span>
                             </span>
                             <div class="defaultTabs Model-tabs deleteBorder">
                                 <el-tabs v-model="modelActiveName" class="deleteBorder" @tab-click="handleClick">
-                                    <el-tab-pane label="Model Item" name="ModelItem">
+                                    <el-tab-pane :label="htmlJSON.modelItem" name="ModelItem">
                                         <span slot="label">
-                                            <span>ModelItem</span>
+                                            <span>{{htmlJSON.modelItem}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{modelItems.total}}&nbsp;&nbsp;
                                             </span>
@@ -281,7 +293,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Model Item</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.modelItem}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
 
@@ -297,9 +309,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -344,7 +356,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{modelItem.description}}</p>
+                                                                            <p>{{modelItem.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -361,7 +373,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <h4 v-if="modelItems.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="modelItems.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
                                                 <div>
@@ -381,9 +393,9 @@
                                             </div>
                                         </div>
                                     </el-tab-pane>
-                                    <el-tab-pane label="Conceptual Model" name="ConceptualModel">
+                                    <el-tab-pane :label="htmlJSON.conceptualModel" name="ConceptualModel">
                                          <span slot="label">
-                                            <span>Conceptual Model</span>
+                                            <span>{{htmlJSON.conceptualModel}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{conceptualModels.total}}&nbsp;&nbsp;
                                             </span>
@@ -392,7 +404,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 66%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Conceptual Model</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.conceptualModel}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchConceptualModel" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(3)"/>
@@ -407,9 +419,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -448,7 +460,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{conceptualModel.description}}</p>
+                                                                            <p>{{conceptualModel.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -478,7 +490,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('conceptModel')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="conceptualModels.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="conceptualModels.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
                                                         <el-pagination
@@ -496,9 +508,9 @@
                                             </div>
                                         </div>
                                     </el-tab-pane>
-                                    <el-tab-pane label="Logical Model" name="LogicalModel">
+                                    <el-tab-pane :label="htmlJSON.logicalModel" name="LogicalModel">
                                         <span slot="label">
-                                            <span>Logical Model</span>
+                                            <span>{{htmlJSON.logicalModel}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{logicalModels.total}}&nbsp;&nbsp;
                                             </span>
@@ -507,7 +519,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Logical Model</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.logicalModel}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchLogicalModel" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(4)"/>
@@ -522,9 +534,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -563,7 +575,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{logicalModel.description}}</p>
+                                                                            <p>{{logicalModel.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -591,7 +603,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('logicalmodel')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="logicalModels.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="logicalModels.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -610,9 +622,9 @@
                                             </div>
                                         </div>
                                     </el-tab-pane>
-                                    <el-tab-pane label="Computable Model" name="ComputableModel">
+                                    <el-tab-pane :label="htmlJSON.computableModel" name="ComputableModel">
                                          <span slot="label">
-                                            <span>Computable Model</span>
+                                            <span>{{htmlJSON.computableModel}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{computableModels.total}}&nbsp;&nbsp;
                                             </span>
@@ -621,7 +633,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 66%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Computable Model</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.computableModel}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchComputableModel" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(5)"/>
@@ -636,9 +648,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -677,7 +689,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{computableModel.description}}</p>
+                                                                            <p>{{computableModel.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -693,7 +705,7 @@
                                                     </div>
                                                 </div>
                                                 <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
-                                                <!--                                                <h4 v-if="computableModels.total==0" style="color: #999999;margin-top: 20px;">No result found</h4>-->
+                                                <!--                                                <h4 v-if="computableModels.total==0" style="color: #999999;margin-top: 20px;">{{htmlJSON.noResult}}</h4>-->
                                                 <!--                                                <div v-if="computableModels.total==0" class="list-item" style="-->
                                                 <!--                                font-size: 26px;-->
                                                 <!--                                font-style: italic;-->
@@ -706,7 +718,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('computableModel')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="computableModels.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="computableModels.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
                                                         <el-pagination
@@ -728,16 +740,16 @@
                             </div>
 
                         </el-tab-pane>
-                        <el-tab-pane label="Data" name="Data">
+                        <el-tab-pane :label="htmlJSON.data" name="Data">
                             <span slot="label">
                                 <i class="fa fa-database" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
-                                <span>Data</span>
+                                <span>{{htmlJSON.data}}</span>
                             </span>
                             <div class="defaultTabs Data-tabs deleteBorder">
                                 <el-tabs v-model="dataActiveName" class="deleteBorder" @tab-click="handleClick">
-                                    <el-tab-pane label="Data Hub" name="DataHub">
+                                    <el-tab-pane :label="htmlJSON.dataHub" name="DataHub">
                                             <span slot="label">
-                                                <span>Data Hub</span>
+                                                <span>{{htmlJSON.dataHub}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{dataHubs.total}}&nbsp;&nbsp;
                                                 </span>
@@ -746,7 +758,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Data Hub</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.dataHub}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchdataHubs" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(2)"/>
@@ -761,9 +773,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -801,7 +813,7 @@
                                                                 <div style="flex: 1;">
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{dataHub.description}}</p>
+                                                                            <p>{{dataHub.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -831,7 +843,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('dataHub')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="dataHubs.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="dataHubs.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -851,111 +863,9 @@
                                         </div>
 
                                     </el-tab-pane>
-                                    <el-tab-pane label="Data Method" name="DataMethod">
-                                             <span slot="label">
-                                                <span>Data Method</span>
-                                                <span class="btn-bell-badge">
-                                                    &nbsp;&nbsp;{{dataMethods.total}}&nbsp;&nbsp;
-                                                </span>
-                                            </span>
-                                        <div class="itemContainer" >
-                                            <div  class="contentColContainer" style="margin-bottom: 0">
-                                                <div class="subTitle" >
-                                                    <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Data Method</h4>
-                                                        <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
-                                                            <div class="contentContainer  searchInputContainer">
-                                                                <input id="searchMethod" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(10)"/>
-                                                                <button class="confirmButton noMargin" @click="searchResourceClick(10)" >
-                                                                    <i class="fa fa-search"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <el-dropdown class="viewCountDrp" split-button type="primary" plain size="small" trigger="click" @command="selectSortEle" @click="changeSort()">
-                                                        <i v-if="pageOption.sortAsc" class="fa fa-sort-amount-asc"></i>
-                                                        <i v-else class="fa fa-sort-amount-desc"></i>
-                                                        <p style="float:right">{{resourceSortEleText}}</p>
-                                                        <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
-                                                        </el-dropdown-menu>
-                                                    </el-dropdown>
-                                                </div>
-                                            </div>
-                                            <div class="contentColContainer modelTable" style="margin-top: 0">
-
-                                                <div class="list-item" :key="dataMethod.id" v-if="dataMethods.result" v-for="(dataMethod,key) in dataMethods.result">
-                                                    <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
-                                                        <div class="cardUpper">
-                                                            <div class="subTitle resourceTitle" >
-                                                                <div style="display: flex">
-                                                                    <el-tooltip class="item" effect="dark" :content="dataMethod.name" placement="bottom-end">
-                                                                        <a :href="'/dataMethod/'+dataMethod.id" target="_blank">
-                                                                            <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataMethod.name}}</h4>
-                                                                        </a>
-                                                                    </el-tooltip>
-
-                                                                    <div :class="dataMethod.viewCount>500?'hotVisit':'noneDisplay'">hot</div>
-                                                                </div>
-                                                                <div>
-                                                                    <a class="fa fa-eye" aria-hidden="true" style="margin-left: 20px;">&nbsp&nbsp{{dataMethod.viewCount}}</a>
-                                                                </div>
-                                                            </div>
-                                                            <div style="display: flex;">
-                                                                <div class="imgPallet">
-                                                                    <a class="img" :href="'/dataMethod/'+ dataMethod.id" target="_blank">
-                                                                        <!--                                                                        <i class="fa fa-database" style="font-size: 66px; color: rgb(0, 192, 255); font-weight: 600; margin-bottom: 5px;"></i>-->
-                                                                        <img v-if="dataMethod.image!=''&&dataMethod.image!=null" :src="'/static'+dataMethod.image"
-                                                                             style="width:100px;height: 100px;">
-                                                                        <img v-else src="../static/img/model/logical.png" style="width:100px;height: 100px;">
-
-                                                                    </a>
-                                                                </div>
-                                                                <div style="flex: 1;">
-
-                                                                    <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
-                                                                        <div class="modelInfo">
-                                                                            <p>{{dataMethod.description}}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="cardDowner" style="display: flex; background-color: rgba(232,232,232,0.5);min-height: 40px;max-height: 54px" >
-                                                            <div class="tags">
-                                                                <!--                                            <span class="badge badge-info" v-for="keyword in dataMethod.keywords">{{keyword.toUpperCase()}}</span>-->
-                                                            </div>
-                                                            <div style="padding-right: 10px">
-                                                                <a class="fa fa-calendar" aria-hidden="true">&nbsp&nbsp{{dataMethod.createTime.substring(0,10)}}</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
-                                                <h4 v-if="dataMethods.total==0" class="noResult">No result found</h4>
-                                                <div>
-                                                    <div class="text-center" style="margin:15px 0;">
-                                                        <el-pagination
-                                                                @current-change="resourceHandleCurrentChange"
-                                                                :current-page="pageOption.currentPage"
-                                                                :page-size="pageOption.pageSize"
-                                                                layout="total, prev, pager, next, jumper"
-                                                                :total="dataMethods.total"
-                                                                :pager-count="pageOption.pageCount"
-                                                                background>
-                                                        </el-pagination>
-                                                    </div>
-                                                </div>
-                                                <!--                        </div>-->
-                                            </div>
-                                        </div>
-                                    </el-tab-pane>
-                                    <el-tab-pane label="Data Item Repository" name="DataItemRepository">
+                                    <el-tab-pane :label="htmlJSON.dataItem" name="DataItemRepository">
                                         <span slot="label">
-                                            <span>Data Item Repository</span>
+                                            <span>{{htmlJSON.dataItem}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{dataItems.total}}&nbsp;&nbsp;
                                             </span>
@@ -964,7 +874,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Data Item</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.dataItem}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchData" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(11)"/>
@@ -979,9 +889,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -1019,7 +929,7 @@
                                                                 <div style="flex: 1;">
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{dataItem.description}}</p>
+                                                                            <p>{{dataItem.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1049,7 +959,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('dataItem')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="dataItems.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="dataItems.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -1068,22 +978,125 @@
                                             </div>
                                         </div>
                                     </el-tab-pane>
+                                    <el-tab-pane :label="htmlJSON.dataMethod" name="DataMethod">
+                                             <span slot="label">
+                                                <span>{{htmlJSON.dataMethod}}</span>
+                                                <span class="btn-bell-badge">
+                                                    &nbsp;&nbsp;{{dataMethods.total}}&nbsp;&nbsp;
+                                                </span>
+                                            </span>
+                                        <div class="itemContainer" >
+                                            <div  class="contentColContainer" style="margin-bottom: 0">
+                                                <div class="subTitle" >
+                                                    <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.dataMethod}}</h4>
+                                                        <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
+                                                            <div class="contentContainer  searchInputContainer">
+                                                                <input id="searchMethod" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(10)"/>
+                                                                <button class="confirmButton noMargin" @click="searchResourceClick(10)" >
+                                                                    <i class="fa fa-search"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <el-dropdown class="viewCountDrp" split-button type="primary" plain size="small" trigger="click" @command="selectSortEle" @click="changeSort()">
+                                                        <i v-if="pageOption.sortAsc" class="fa fa-sort-amount-asc"></i>
+                                                        <i v-else class="fa fa-sort-amount-desc"></i>
+                                                        <p style="float:right">{{resourceSortEleText}}</p>
+                                                        <el-dropdown-menu slot="dropdown">
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
+                                                        </el-dropdown-menu>
+                                                    </el-dropdown>
+                                                </div>
+                                            </div>
+                                            <div class="contentColContainer modelTable" style="margin-top: 0">
+
+                                                <div class="list-item" :key="dataMethod.id" v-if="dataMethods.result" v-for="(dataMethod,key) in dataMethods.result">
+                                                    <div class="itemCardCol" style="width: 98%;height: auto;max-height: 225px;margin-top: 7px;border: none">
+                                                        <div class="cardUpper">
+                                                            <div class="subTitle resourceTitle" >
+                                                                <div style="display: flex">
+                                                                    <el-tooltip class="item" effect="dark" :content="dataMethod.name" placement="bottom-end">
+                                                                        <a :href="'/dataMethod/'+dataMethod.id" target="_blank">
+                                                                            <h4 class="ellipText" style="margin-top: 10px;margin-left: 5px;color: #383838;">{{dataMethod.name}}</h4>
+                                                                        </a>
+                                                                    </el-tooltip>
+
+                                                                    <div :class="dataMethod.viewCount>500?'hotVisit':'noneDisplay'">hot</div>
+                                                                </div>
+                                                                <div>
+                                                                    <a class="fa fa-eye" aria-hidden="true" style="margin-left: 20px;">&nbsp&nbsp{{dataMethod.viewCount}}</a>
+                                                                </div>
+                                                            </div>
+                                                            <div style="display: flex;">
+                                                                <div class="imgPallet">
+                                                                    <a class="img" :href="'/dataMethod/'+ dataMethod.id" target="_blank">
+                                                                        <!--                                                                        <i class="fa fa-database" style="font-size: 66px; color: rgb(0, 192, 255); font-weight: 600; margin-bottom: 5px;"></i>-->
+                                                                        <img v-if="dataMethod.image!=''&&dataMethod.image!=null" :src="'/static'+dataMethod.image"
+                                                                             style="width:100px;height: 100px;">
+                                                                        <img v-else src="../static/img/model/logical.png" style="width:100px;height: 100px;">
+
+                                                                    </a>
+                                                                </div>
+                                                                <div style="flex: 1;">
+
+                                                                    <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
+                                                                        <div class="modelInfo">
+                                                                            <p>{{dataMethod.overview}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="cardDowner" style="display: flex; background-color: rgba(232,232,232,0.5);min-height: 40px;max-height: 54px" >
+                                                            <div class="tags">
+                                                                <!--                                            <span class="badge badge-info" v-for="keyword in dataMethod.keywords">{{keyword.toUpperCase()}}</span>-->
+                                                            </div>
+                                                            <div style="padding-right: 10px">
+                                                                <a class="fa fa-calendar" aria-hidden="true">&nbsp&nbsp{{dataMethod.createTime.substring(0,10)}}</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
+                                                <h4 v-if="dataMethods.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
+                                                <div>
+                                                    <div class="text-center" style="margin:15px 0;">
+                                                        <el-pagination
+                                                                @current-change="resourceHandleCurrentChange"
+                                                                :current-page="pageOption.currentPage"
+                                                                :page-size="pageOption.pageSize"
+                                                                layout="total, prev, pager, next, jumper"
+                                                                :total="dataMethods.total"
+                                                                :pager-count="pageOption.pageCount"
+                                                                background>
+                                                        </el-pagination>
+                                                    </div>
+                                                </div>
+                                                <!--                        </div>-->
+                                            </div>
+                                        </div>
+                                    </el-tab-pane>
+
                                 </el-tabs>
                             </div>
 
                         </el-tab-pane>
-                        <el-tab-pane label="Community" name="Community">
+                        <el-tab-pane :label="htmlJSON.community" name="Community">
                              <span slot="label">
                                  <i class="el-icon-s-opportunity" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
                                  <!--                                 <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"-->
 <!--                                    style="font-size: 18px;color: rgb(5, 196, 255);margin: 4px;font-weight: 400;position: relative;top: 2px;"></i>-->
-                                <span>Community</span>
+                                <span>{{htmlJSON.community}}</span>
                             </span>
                             <div class="defaultTabs Community-tabs deleteBorder">
                                 <el-tabs v-model="communityActiveName" class="deleteBorder" @tab-click="handleClick">
-                                    <el-tab-pane label="Concept & Semantic" name="Concept&Semantic">
+                                    <el-tab-pane :label="htmlJSON.concept" name="Concept&Semantic">
                                             <span slot="label">
-                                                <span>Concept & Semantic</span>
+                                                <span>{{htmlJSON.concept}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{concepts.total}}&nbsp;&nbsp;
                                                 </span>
@@ -1092,7 +1105,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 68%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Concept & Semantic</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.concept}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchConcept" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(6)"/>
@@ -1107,9 +1120,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -1148,7 +1161,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{concept.description}}</p>
+                                                                            <p>{{concept.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1179,7 +1192,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('concept')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="concepts.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="concepts.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -1199,9 +1212,9 @@
                                         </div>
 
                                     </el-tab-pane>
-                                    <el-tab-pane label="Spatiotemporal Reference" name="SpatialReference">
+                                    <el-tab-pane :label="htmlJSON.spatial" name="SpatialReference">
                                              <span slot="label">
-                                                <span>Spatiotemporal Reference</span>
+                                                <span>{{htmlJSON.spatial}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{spatials.total}}&nbsp;&nbsp;
                                                 </span>
@@ -1210,7 +1223,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 68%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Spatiotemporal Reference</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.spatial}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchSpatial" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(7)"/>
@@ -1225,9 +1238,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -1266,7 +1279,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{spatial.description}}</p>
+                                                                            <p>{{spatial.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1294,7 +1307,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('spatial')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="spatials.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="spatials.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -1314,9 +1327,9 @@
                                         </div>
 
                                     </el-tab-pane>
-                                    <el-tab-pane label="Data Template" name="DataTemplate">
+                                    <el-tab-pane :label="htmlJSON.template" name="DataTemplate">
                                         <span slot="label">
-                                            <span>Data Template</span>
+                                            <span>{{htmlJSON.template}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{templates.total}}&nbsp;&nbsp;
                                             </span>
@@ -1325,7 +1338,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Data Template</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.template}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchTemplate" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(8)"/>
@@ -1340,9 +1353,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -1381,7 +1394,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{template.description}}</p>
+                                                                            <p>{{template.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1409,7 +1422,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        <a class="cursorPointer" style="color: #0069ba;font-size: 25px" @click="createNew('template')">create one</a> or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="templates.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="templates.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -1428,9 +1441,9 @@
                                             </div>
                                         </div>
                                     </el-tab-pane>
-                                    <el-tab-pane label="Unit & Metric" name="Unit&Metric">
+                                    <el-tab-pane :label="htmlJSON.unit" name="Unit&Metric">
                                         <span slot="label">
-                                            <span>Unit & Metric</span>
+                                            <span>{{htmlJSON.unit}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{units.total}}&nbsp;&nbsp;
                                             </span>
@@ -1439,7 +1452,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 62.2%">
-                                                        <h4 style="margin-top: 10px;color: #999999;">Unit & Metric</h4>
+                                                        <h4 style="margin-top: 10px;color: #999999;">{{htmlJSON.unit}}</h4>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer  searchInputContainer">
                                                                 <input id="searchUnit" class="searchInput" v-model="searchText" @keydown.enter="searchResourceClick(9)"/>
@@ -1454,9 +1467,9 @@
                                                         <i v-else class="fa fa-sort-amount-desc"></i>
                                                         <p style="float:right">{{resourceSortEleText}}</p>
                                                         <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item command="viewCount">View Count</el-dropdown-item>
-                                                            <el-dropdown-item command="name">Name</el-dropdown-item>
-                                                            <el-dropdown-item command="createTime">Create Time</el-dropdown-item>
+                                                            <el-dropdown-item command="viewCount">{{htmlJSON.viewCount}}</el-dropdown-item>
+                                                            <el-dropdown-item command="name">{{htmlJSON.name}}</el-dropdown-item>
+                                                            <el-dropdown-item command="createTime">{{htmlJSON.createTime}}</el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
                                                 </div>
@@ -1495,7 +1508,7 @@
 
                                                                     <div class="contentContainer" style="height: 125px; justify-content: flex-start;align-items: center">
                                                                         <div class="modelInfo">
-                                                                            <p>{{unit.description}}</p>
+                                                                            <p>{{unit.overview}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1511,7 +1524,7 @@
                                                     </div>
                                                 </div>
                                                 <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
-                                                <h4 v-if="units.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="units.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <div>
                                                     <div class="text-center" style="margin:15px 0;">
@@ -1534,16 +1547,16 @@
                                 </el-tabs>
                             </div>
                         </el-tab-pane>
-                        <el-tab-pane label="Research" name="Research">
+                        <el-tab-pane :label="htmlJSON.research" name="Research">
                           <span slot="label">
                             <i class="el-icon-s-order" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
-                            <span>Research</span>
+                            <span>{{htmlJSON.research}}</span>
                           </span>
                             <div class="defaultTabs Research-tabs deleteBorder">
                                 <el-tabs v-model="researchActiveName" class="deleteBorder">
-                                    <el-tab-pane label="Articles" name="Articles">
+                                    <el-tab-pane :label="htmlJSON.article" name="Articles">
                                         <span slot="label">
-                                            <span>Articles</span>
+                                            <span>{{htmlJSON.article}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{articles.total}}&nbsp;&nbsp;
                                             </span>
@@ -1552,7 +1565,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 60%">
-                                                        <h4 style="margin-top: 10px">Articles</h4>
+                                                        <h4 style="margin-top: 10px">{{htmlJSON.article}}</h4>
                                                         <!--                                    <div class="searchIcon confirmButton" style="margin-top: 0;margin-bottom: 0" @click="searchArticlesClick()">-->
                                                         <!--                                        <div class="hoverLine"></div>-->
                                                         <!--                                    </div>-->
@@ -1569,7 +1582,7 @@
                                                     <button th:if="${userInfo.email==userInfo.loginId}" id="addArticle"
                                                             class="addEditButton sizeAdaption"
                                                             data-toggle="modal" data-target="#articleInfo"  @click="addArticleClick()">
-                                                        Add Article
+                                                        {{htmlJSON.addArticle}}
                                                         <div class="hoverLine"></div>
                                                     </button>
                                                 </div>
@@ -1601,11 +1614,11 @@
                                                             </div>
                                                             <div class="cardContentContainer articleCard" style="">
                                                                 <div>
-                                                                    <p><span>Authors:</span><span>&nbsp&nbsp{{article.authors[0]}},</span><span v-if="article.authors[1]">{{article.authors[1]}}, </span><span v-if="article.authors[2]">{{article.authors[2]}},</span>
-                                                                        <span v-if="article.authors.length>3"> et al.</span> </p>
-                                                                    <p v-if="article.journal!=''"><span>Journal:</span> &nbsp&nbsp{{article.journal}}</p>
-                                                                    <p v-if="article.date!=''"><span>Date:</span> &nbsp&nbsp{{article.date}}</p>
-                                                                    <p v-if="article.pageRange!=''"><span>Page range:</span> &nbsp&nbsp{{article.pageRange}}</p>
+                                                                    <p><span>{{htmlJSON.authors}}:</span><span>&nbsp&nbsp{{article.authors[0]}},</span><span v-if="article.authors[1]">{{article.authors[1]}}, </span><span v-if="article.authors[2]">{{article.authors[2]}},</span>
+                                                                        <span v-if="article.authors.length>3">{{htmlJSON.et_al}}.</span> </p>
+                                                                    <p v-if="article.journal!=''"><span>{{htmlJSON.journal}}:</span> &nbsp&nbsp{{article.journal}}</p>
+                                                                    <p v-if="article.date!=''"><span>{{htmlJSON.date}}:</span> &nbsp&nbsp{{article.date}}</p>
+                                                                    <p v-if="article.pageRange!=''"><span>{{htmlJSON.pageRange}}:</span> &nbsp&nbsp{{article.pageRange}}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1631,7 +1644,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                       create one or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="articles.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="articles.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
                                                 <div>
@@ -1648,7 +1661,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <el-dialog :title="addorEdit + ' Article'" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
+                                            <el-dialog :title="addorEdit + ' ' +htmlJSON.article" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
 
                                                 <div class="wzhScrollbar" style="max-height: 500px" >
                                                     <div class="tab-content" v-loading="doiLoading">
@@ -1795,9 +1808,9 @@
                                         </div>
 
                                     </el-tab-pane>
-                                    <el-tab-pane label="Projects" name="Projects">
+                                    <el-tab-pane :label="htmlJSON.project" name="Projects">
                                         <span slot="label">
-                                            <span>Projects</span>
+                                            <span>{{htmlJSON.project}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{projects.total}}&nbsp;&nbsp;
                                             </span>
@@ -1806,7 +1819,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 60%">
-                                                        <div><h4  style="margin-top: 10px;">Projects</h4></div>
+                                                        <div><h4  style="margin-top: 10px;">{{htmlJSON.project}}</h4></div>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer   searchInputContainer">
                                                                 <input id="searchProject" class="searchInput" @keydown.enter="searchResearchClick(2)"/>
@@ -1819,7 +1832,7 @@
                                                     <button th:if="${userInfo.email==userInfo.loginId}" id="addProject"
                                                             class="addEditButton sizeAdaption"
                                                             data-toggle="modal" data-target="#projectInfo"  @click="addProjectClick()">
-                                                        Add Project
+                                                        {{htmlJSON.addProject}}
                                                         <div class="hoverLine"></div>
                                                     </button>
                                                 </div>
@@ -1850,10 +1863,10 @@
                                                             </div>
                                                             <div class="cardContentContainer">
                                                                 <div>
-                                                                    <p><span>Start Time:</span> &nbsp&nbsp{{project.startTime}}</p>
-                                                                    <p><span>End Time:</span> &nbsp&nbsp{{project.endTime}}</p>
-                                                                    <p><span>Role:</span> &nbsp&nbsp{{project.role}}</p>
-                                                                    <p><span>Fund Agency:</span> &nbsp&nbsp{{project.fundAgency}}</p>
+                                                                    <p><span>{{htmlJSON.startTime}}:</span> &nbsp&nbsp{{project.startTime}}</p>
+                                                                    <p><span>{{htmlJSON.endTime}}:</span> &nbsp&nbsp{{project.endTime}}</p>
+                                                                    <p><span>{{htmlJSON.role}}:</span> &nbsp&nbsp{{project.role}}</p>
+                                                                    <p><span>{{htmlJSON.fundAgency}}:</span> &nbsp&nbsp{{project.fundAgency}}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1879,7 +1892,7 @@
                                                 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
                                                 <!--                                                        create one or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
                                                 <!--                                                </div>-->
-                                                <h4 v-if="projects.total==0" class="noResult">No result found</h4>
+                                                <h4 v-if="projects.total==0" class="noResult">{{htmlJSON.noResult}}</h4>
 
                                                 <!--                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
                                                 <div>
@@ -1901,7 +1914,7 @@
                                                     <div class="modal-content" >
                                                         <div class="modal-header" style="background: deepskyblue">
                                                             <h3 class="modal-title" style="color:aliceblue;text-align: center">
-                                                                {{addorEdit}} Project
+                                                                {{addorEdit}} {{htmlJSON.project}}
                                                             </h3>
                                                         </div>
                                                         <div class="modal-body" style="font-size: 20px;overflow: hidden">
@@ -1945,7 +1958,7 @@
                                                                             <!--                                                        </div>-->
                                                                             <div class="form-group flexCenter">
                                                                                 <label for="role"
-                                                                                       class="col-sm-4 control-label">Role</label>
+                                                                                       class="col-sm-4 control-label">{{htmlJSON.role}}</label>
                                                                                 <div class="col-sm-12">
                                                                                     <input type="text" class="form-control"
                                                                                            id="role"/>
@@ -1953,7 +1966,7 @@
                                                                             </div>
                                                                             <div class="form-group flexCenter">
                                                                                 <label for="fundAgency"
-                                                                                       class="col-sm-4 control-label">Fund Agency</label>
+                                                                                       class="col-sm-4 control-label">{{htmlJSON.fundAgency}}</label>
                                                                                 <div class="col-sm-12">
                                                                                     <input type="text" class="form-control"
                                                                                            id="fundAgency"/>
@@ -1974,11 +1987,11 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-success" style="font-size:15px" @click="updateProjectConfirmClick()">
-                                                                Save
+                                                                {{htmlJSON.save}}
                                                             </button>
                                                             <button type="button" class="btn btn-default" data-dismiss="modal"
                                                                     style="font-size:15px">
-                                                                Cancel
+                                                                {{htmlJSON.cancel}}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -1988,9 +2001,9 @@
                                             </div>
                                         </div>
                                     </el-tab-pane>
-                                    <el-tab-pane label="Conferences" name="Conferences">
+                                    <el-tab-pane :label="htmlJSON.conference" name="Conferences">
                                         <span slot="label">
-                                            <span>Conferences</span>
+                                            <span>{{htmlJSON.conference}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{conferences.total}}&nbsp;&nbsp;
                                             </span>
@@ -1999,7 +2012,7 @@
                                             <div  class="contentColContainer" style="margin-bottom: 0">
                                                 <div class="subTitle" >
                                                     <div class="colCenter" style="display: flex;justify-content: flex-start;width: 60%">
-                                                        <div><h4 style="margin-top: 10px;">Conferences</h4></div>
+                                                        <div><h4 style="margin-top: 10px;">{{htmlJSON.conference}}</h4></div>
                                                         <div class="colCenter searchContainer" style="display: flex;justify-content: flex-start;flex: 1;">
                                                             <div class="contentContainer searchInputContainer">
                                                                 <input id="searchConference" class="searchInput"  @keydown.enter="searchResearchClick(3)"/>
@@ -2012,7 +2025,7 @@
                                                     <button th:if="${userInfo.email==userInfo.loginId}" id="addConference"
                                                             class="addEditButton sizeAdaption"
                                                             data-toggle="modal" data-target="#conferenceInfo"  @click="addConferenceClick()">
-                                                        Add Conference
+                                                        {{htmlJSON.addConference}}
                                                         <div class="hoverLine"></div>
                                                     </button>
                                                 </div>
@@ -2043,8 +2056,8 @@
                                                                 <div>
                                                                     <p><span>Theme:</span> &nbsp&nbsp{{conference.theme}} </p>
                                                                     <p><span>Conference Role:</span> &nbsp&nbsp{{conference.conferenceRole}}</p>
-                                                                    <p><span>Start Time:</span> &nbsp&nbsp{{conference.startTime}}</p>
-                                                                    <p><span>End Time:</span> &nbsp&nbsp{{conference.endTime}}</p>
+                                                                    <p><span>{{htmlJSON.startTime}}:</span> &nbsp&nbsp{{conference.startTime}}</p>
+                                                                    <p><span>{{htmlJSON.endTime}}:</span> &nbsp&nbsp{{conference.endTime}}</p>
                                                                     <p><span>Location:</span> &nbsp&nbsp{{conference.location}}</p>
                                                                 </div>
                                                             </div>
@@ -2071,7 +2084,7 @@
 <!--                                                    <span style="font-style: italic;font-weight: 400;font-size: 25px">You can either-->
 <!--                                                        create one or <a style="color: #0069ba;font-size: 25px" class="cursorPointer" @click="window.location.href='mailto:opengms@njnu.edu.cn'">feed back to us.</a></span>-->
 <!--                                                </div>-->
-                                                <h4 v-if="conferences.total==0" style="color: #999999;margin: 30px 0 30px 0;">No result found</h4>
+                                                <h4 v-if="conferences.total==0" style="color: #999999;margin: 30px 0 30px 0;">{{htmlJSON.noResult}}</h4>
 
                                                 <!--                                                        <div class="splitBlock" style="background-color:#e5e5e5;width: 99% ">-->
                                                 <div>
@@ -2093,7 +2106,7 @@
                                                     <div class="modal-content" >
                                                         <div class="modal-header" style="background: deepskyblue">
                                                             <h3 class="modal-title" style="color:aliceblue;text-align: center">
-                                                                {{addorEdit}} Conference
+                                                                {{addorEdit}} {{htmlJSON.conference}}
                                                             </h3>
                                                         </div>
                                                         <div class="modal-body" style="font-size: 20px;overflow: hidden">
@@ -2128,7 +2141,7 @@
                                                                             </div>
                                                                             <div class="form-group flexCenter">
                                                                                 <label for="conferenceRole"
-                                                                                       class="col-sm-4 control-label">Role</label>
+                                                                                       class="col-sm-4 control-label">{{htmlJSON.role}}</label>
                                                                                 <div class="col-sm-12">
                                                                                     <input type="text" class="form-control"
                                                                                            id="conferenceRole"/>
@@ -2149,11 +2162,11 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-success" style="font-size:15px" @click="updateConferenceConfirmClick()">
-                                                                Save
+                                                                {{htmlJSON.save}}
                                                             </button>
                                                             <button type="button" class="btn btn-default" data-dismiss="modal"
                                                                     style="font-size:15px">
-                                                                Cancel
+                                                                {{htmlJSON.cancel}}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -2195,7 +2208,10 @@
 <script type="text/javascript" src="../../static/js/common/bootstrap.min.js"></script>
 
 <script src="/static/element-ui/index.js"></script>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
 <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
 <script src="/static/js/common/navbar.js"></script>
 
 <script src="/static/js/modules/userAvatar.js"></script>

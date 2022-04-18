@@ -346,10 +346,15 @@ new Vue({
 
             resourcesortField:'viewCount',
             resourceSortEleText:'View Count',
+
+            htmlJSON:{},
         }
     },
 
     methods: {
+        translatePage(jsonContent){
+            this.htmlJSON = jsonContent
+        },
         selectFirstActive(){
             if(this.modelItems.total!=0){
                 this.mainActiveName = 'Model';
