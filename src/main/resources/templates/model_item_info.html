@@ -210,8 +210,6 @@
                 <div th:replace="fragments/itemInfoModules :: author"></div>
             </div>
 
-<!--            Classification(s)  -->
-
             <div th:replace="fragments/itemInfoModules :: classifications"></div>
 
             <div th:replace="fragments/itemInfoModules :: description"></div>
@@ -995,43 +993,11 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.History}}</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
-
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank">View
-                                    {{htmlJSON.History}}</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
-            <div th:if="${history!=true}" id="QR0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="qrcode"  style="width:200px;height:200px;margin:0 auto"></div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div th:if="${history!=true}" id="comment" class="detail_block">
                 <comments></comments>
@@ -1043,57 +1009,10 @@
                 <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
             </div>
 
-            <div th:replace="fragments/itemInfoModules :: Modifier"></div>
+            <div th:replace="fragments/itemInfoModules :: coContributor"></div>
 
-            <div id="Authorship" class="detail_block"
-                 >
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>{{htmlJSON.Authorship}}</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light"
-                                    content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
-                                    placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
-
-                    <div style="text-align: left;"
-                         th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}"
-                         th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" class="ab" style="float: right;"
-                              th:class="${key.index==0?'ab':'ab transform180'}"><a
-                                data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
-                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorship'+${key.index}" class="panel-collapse" name="authorshipContent"
-                             th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''}">{{htmlJSON.Affiliation}} : </dt>
-                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                                    <dt th:if="${author.email!=''}">{{htmlJSON.Email}}: &nbsp</dt>
-                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                                    <dt th:if="${author.homepage!=''}">{{htmlJSON.Homepage}}: &nbsp</dt>
-                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    <div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">
-                        <el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"
-                                                                              style="text-decoration: underline">claim</a>
-                            the item.
-                        </el-tag>
-                    </div>
-                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">{{htmlJSON.authorshipCorrect}} <a href="javascript:void(0)" @click="feedBack"
-                                                                          style="text-decoration: underline">{{htmlJSON.Feedback}}</a></el-tag>
-                    </div>
-                </div>
+            <div id="Authorship" class="detail_block">
+                <div th:replace="fragments/itemInfoModules :: author"></div>
             </div>
 
             <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph" class="detail_block">
@@ -1111,7 +1030,7 @@
 
             <div th:replace="fragments/itemInfoModules :: History"></div>
 
-            <div th:replace="fragments/itemInfoModules :: QR"></div>
+            <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
         </div>
 
         <div th:if="${history==true}" style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>

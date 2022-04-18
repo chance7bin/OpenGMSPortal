@@ -23,13 +23,19 @@
     "CopyrightAndDisclaimerInfo": "All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.",
      "Modifier":"Modifier(s)",
      "Lastmodifier":"Last modifier : ",
-         "Lastmodifytime":"Last modify time :",
-         "Modifytimes":"Modify times :",
-         "History":"History",
-         "QRCode": "QR Code",
-         "CoContributor":"Co-contributor(s)"
-
-
+     "Lastmodifytime":"Last modify time :",
+     "Modifytimes":"Modify times :",
+     "History":"History",
+     "QRCode": "QR Code",
+     "CoContributor":"Co-contributor(s)",
+     "ConceptSemantic":"Concept & Semantic",
+     "SpatialReference":"Spatial Reference",
+     "DataTemplate":"Data Template",
+     "UnitMetric":"Unit & Metric",
+     "logicalModel":"Logical Model",
+     "computableModel":"Computable Model",
+     "conceptualModel":"Conceptual Model",
+     "relateModelItem":"Related Model Item"
   },
   "zh-cn": {
     "HowtoCite": "引用格式",
@@ -56,11 +62,23 @@
     "CopyrightAndDisclaimerInfo": "OpenGMS中的资源(模型、数据、文章等)的所有版权完全属于其作者/开发人员/设计者(或关于所有者的任何其他说法)。 OpenGMS会尽一切努力避免版权侵犯问题，贡献者应谨慎使用其他来源的材料，并给予适当的引用。",
      "Modifier":"修改者",
      "Lastmodifier":"上次修改者 : ",
-         "Lastmodifytime":"上次修改时间 :",
-         "Modifytimes":"修改次数 :",
-         "History":"历史",
-          "QRCode": "二维码",
-          "CoContributor":"共同创建者"
+     "Lastmodifytime":"上次修改时间 :",
+     "Modifytimes":"修改次数 :",
+     "History":"历史",
+      "QRCode": "二维码",
+      "CoContributor":"共同创建者",
+      "ConceptSemantic":"概念和语义",
+   "SpatialReference":"空间参考",
+    "DataTemplate":"数据模板",
+     "UnitMetric":"单位度量",
+      "logicalModel":"逻辑模型",
+       "computableModel":"计算模型",
+       "conceptualModel":"概念模型",
+        "relateModelItem":"相关模型条目"
+
+
+
+
   }
 
 }

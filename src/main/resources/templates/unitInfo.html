@@ -128,48 +128,51 @@
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
+            <div th:replace="fragments/itemInfoModules :: alias"></div>
 
-            <div id="alias" class="detail_block" th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Alias</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="margin-bottom:10px;">
+<!--            <div id="alias" class="detail_block" th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text">-->
+<!--                        <h4>Alias</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content" style="margin-bottom:10px;">-->
 
-                    <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
+<!--                    &lt;!&ndash;<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>&ndash;&gt;-->
 
-                    <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"
-                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
+<!--                    <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"-->
+<!--                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>-->
 
-                </div>
-            </div>
+<!--                </div>-->
+<!--            </div>-->
 
 
             <div id="Contributor0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4 th:if="${history!=true}">Contributor</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
+
+                <!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;">-->
+<!--                        <h4 th:if="${history!=true}">Contributor</h4>-->
+<!--                        <h4 th:if="${history==true}">Modifier</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content">-->
+<!--                    <div class="el-row"-->
+<!--                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">-->
+<!--                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>-->
+<!--                        <div class="el-col">-->
+<!--                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
+<!--                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="el-row">-->
+<!--                        <div class="text-center">-->
+<!--                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>-->
+<!--                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
             </div>
             <div th:replace="fragments/itemInfoModules :: classifications"></div>
@@ -195,7 +198,7 @@
             <div id="transform" class="detail_block" style="display: none">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Transform</h4>
+                        <h4>{{htmlJSON.Transform}}</h4>
                     </div>
                 </div>
                 <div class="block_content transformContainer" >
@@ -270,7 +273,7 @@
                     <div class="col-sm-2 flexCol flexAlignCenter">
 <!--                        <el-button id="btn-cvt" type="primary" >Convert</el-button>-->
                         <el-button id="btn-cvt1" type="primary" size="medium" style="margin: 0 20px" @click="cvtclick" >
-                            Convert
+                            {{htmlJSON.Convert}}
                         </el-button>
                     </div>
 
@@ -345,45 +348,24 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
 
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/unit/'+${itemInfo.id}" target="_blank">View
-                                    History</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
+            <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
-            <div id="QR0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
-                    </div>
-                </div>
-                <div class="block_content">
+<!--            <div id="QR0" class="detail_block minScreen">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;">-->
+<!--                        <h4>QR Code</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content">-->
 
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+<!--                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>-->
 
-                </div>
-            </div>
+<!--                </div>-->
+<!--            </div>-->
 
             <div id="comment" class="detail_block">
                 <comments></comments>
@@ -423,34 +405,11 @@
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
-
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/unit/'+${itemInfo.id}" target="_blank">View
-                                    History</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
-            <div th:replace="fragments/itemInfoModules :: QR"></div>
+            <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
 
 
         </div>
