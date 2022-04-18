@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title th:text="${info.name}+' | Unit & Metric | OpenGMS'">Unit & Metric | OpenGMS</title>
+    <title th:text="${itemInfo.name}+' | Unit & Metric | OpenGMS'">Unit & Metric | OpenGMS</title>
     <link href="/static/css/base/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" th:href="@{/static/css/base/font-awesome/css/font-awesome.min.css}">
@@ -20,6 +20,14 @@
 
 
     <style>
+        .blockEdit{
+            display:none;
+            margin-top:-5px;
+            background-color:white;
+            float:right;
+            padding-left:10px;
+            padding-right:5px;
+        }
         #description h1{
             font-size: 24px;
         }
@@ -51,7 +59,7 @@
             border-radius: 0!important;
         }
 
-        .form-control{c
+        .form-control{
             border-radius: 0!important;
         }
     </style>
@@ -69,56 +77,59 @@
                 @translate-page="translatePage"
                 with-comments="true"
                 initial-lang="en-us"
+                with-item-info-modules="true"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div class="detail">
-                <div class="detail_title">
+            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
 
-                    <h2 th:utext="${info.name}" style="display: inline-block;margin-right:15px;"></h2>
-                    <div class="pull-right">
-                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <a href="javascript:void(0);" th:if="${info.status=='Public'&&history!=true&&info.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
-                            <li th:if="${info.status=='Public'&&history!=true&&info.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" th:content="${info.status}" effect="light" placement="top">
-                            <i th:if="${info.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
-                            <i th:if="${info.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
-                            <i th:if="${info.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
-                        </el-tooltip>
-                        <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
-                    </div>
-                </div>
-                <div class="detail_overview">
+<!--            <div class="detail">-->
+<!--                <div class="detail_title">-->
 
-                    <div class="img">
-                        <div th:switch="${info.image}" class="img">
-                            <avatar th:case="''" th:username="${info.name}" :size="90" :rounded="false"></avatar>
-                            <avatar th:case="null" th:username="${info.name}" :size="90" :rounded="false"></avatar>
-                            <img th:case="*" th:src="${image}">
-                        </div>
-                    </div>
+<!--                    <h2 th:utext="${itemInfo.name}" style="display: inline-block;margin-right:15px;"></h2>-->
+<!--                    <div class="pull-right">-->
+<!--                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">-->
+<!--                            <a href="javascript:void(0);" th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>-->
+<!--                        </el-tooltip>-->
+<!--                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">-->
+<!--                            <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>-->
+<!--                        </el-tooltip>-->
+<!--                        <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light" placement="top">-->
+<!--                            <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>-->
+<!--                            <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>-->
+<!--                            <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>-->
+<!--                        </el-tooltip>-->
+<!--                        &lt;!&ndash;<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="detail_overview">-->
 
-                    <div class="info">
-                        <p th:text="${info.overview}" style="word-break: break-word;"></p>
-                        <div class="tags">
-                            <span class="badge badge-info">Unit & Metric</span>
-                        </div>
-                    </div>
+<!--                    <div class="img">-->
+<!--                        <div th:switch="${itemInfo.image}" class="img">-->
+<!--                            <avatar th:case="''" th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>-->
+<!--                            <avatar th:case="null" th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>-->
+<!--                            <img th:case="*" th:src="${image}">-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div th:if="${history!=true}" class="detail_option">
-                        <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
-                        <!--<div th:utext="'&nbsp&nbsp'+${modelInfo.shareCount}">&nbsp&nbsp37</div>-->
-                        <a class="fa fa-eye" aria-hidden="true"></a>
-                        <div th:utext="'&nbsp&nbsp'+${info.viewCount}">&nbsp&nbsp341</div>
-                    </div>
-                </div>
-            </div>
+<!--                    <div class="info">-->
+<!--                        <p th:text="${itemInfo.overview}" style="word-break: break-word;"></p>-->
+<!--                        <div class="tags">-->
+<!--                            <span class="badge badge-info">Unit & Metric</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-            <div id="alias" class="detail_block" th:if="${info.alias!=null&&#lists.size(info.alias)>0}">
+<!--                    <div th:if="${history!=true}" class="detail_option">-->
+<!--                        &lt;!&ndash;<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>&ndash;&gt;-->
+<!--                        &lt;!&ndash;<div th:utext="'&nbsp&nbsp'+${modelitemInfo.shareCount}">&nbsp&nbsp37</div>&ndash;&gt;-->
+<!--                        <a class="fa fa-eye" aria-hidden="true"></a>-->
+<!--                        <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}">&nbsp&nbsp341</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div id="alias" class="detail_block" th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Alias</h4>
@@ -128,7 +139,7 @@
 
                     <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
 
-                    <el-tag th:each="alias:${info.alias}" th:text="${alias}"
+                    <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"
                             style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
 
                 </div>
@@ -161,24 +172,25 @@
                 </div>
 
             </div>
+            <div th:replace="fragments/itemInfoModules :: classifications"></div>
 
-            <div id="classification" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.Classification}}</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="margin-top:20px;">
-                    <div th:each="classS:${classifications}">
-                        <span style="font-size:24px;margin-right: 8px">●</span>
-                        <el-breadcrumb separator-class="el-icon-arrow-right">
-                            <el-breadcrumb-item th:each="class:${classS}" th:text="${class}" :to="{ path: '/' }">Earth
-                                System Classification
-                            </el-breadcrumb-item>
-                        </el-breadcrumb>
-                    </div>
-                </div>
-            </div>
+<!--            <div id="classification" class="detail_block">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text">-->
+<!--                        <h4>{{htmlJSON.Classification}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content" style="margin-top:20px;">-->
+<!--                    <div th:each="classS:${classifications}">-->
+<!--                        <span style="font-size:24px;margin-right: 8px">●</span>-->
+<!--                        <el-breadcrumb separator-class="el-icon-arrow-right">-->
+<!--                            <el-breadcrumb-item th:each="class:${classS}" th:text="${class}" :to="{ path: '/' }">Earth-->
+<!--                                System Classification-->
+<!--                            </el-breadcrumb-item>-->
+<!--                        </el-breadcrumb>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div id="transform" class="detail_block" style="display: none">
                 <div class="block_head">
@@ -266,14 +278,14 @@
 
             </div>
 
-            <div id="description" th:if="${#lists.size(info.localizationList)>0}" class="detail_block">
+            <div id="description" th:if="${#lists.size(itemInfo.localizationList)>0}" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>{{htmlJSON.DetailedDescription}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
-                    <div class="LanguageInfoContainer" th:each="localization:${info.localizationList}" th:id="${localization.localCode}">
+                    <div class="LanguageInfoContainer" th:each="localization:${itemInfo.localizationList}" th:id="${localization.localCode}">
                         <table class="table table-bordered" >
                             <thead>
                             <tr>
@@ -301,7 +313,7 @@
 
             </div>
 
-<!--            <div th:if="${info.detail == null}" class="text-center" >-->
+<!--            <div th:if="${itemInfo.detail == null}" class="text-center" >-->
 <!--                <a id="addLocalization" style="cursor:pointer;font-size:16px;" data-toggle="modal" data-target="#myModal">Add Localization<i class="fa fa-plus" style="margin-left: 10px;color:#339fff;font-weight: bold" aria-hidden="true"></i></a>-->
 <!--            </div>-->
 
@@ -314,34 +326,25 @@
                 <div class="block_content">
                     <div id="cite-text">
 
-                        <span th:text="${user.name}+' ('+${year}+'). '+${info.name}+', Unit & Metric, OpenGMS, '">
+                        <span th:text="${user.name}+' ('+${year}+'). '+${itemInfo.name}+', Unit & Metric, OpenGMS, '">
                         Tom Marvolo Riddle.(2018).Integrated stand growth model data,
                         </span>
-                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.id}"
-                           th:text="'https://geomodeling.njnu.edu.cn/repository/unit/'+${info.id}">
+                        <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/unit/'+${itemInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/repository/unit/'+${itemInfo.id}">
                             https://geomodeling.njnu.edu.cn/modelitem/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        Copy
+                        {{htmlJSON.Copy}}
                     </div>
                 </div>
             </div>
 
-            <div id="copyright" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="copyright_text">
-                        {{htmlJSON.CopyrightAndDisclaimerInfo}} </div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: copyright"></div>
+
 
             <div id="Modifier0" class="detail_block minScreen"
-                 th:if="${history!=true&&info.contributors!=null&&#lists.size(info.contributors)!=0}">
+                 th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
                         <h4>History</h4>
@@ -359,8 +362,8 @@
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/unit/'+${info.id}" target="_blank">View
+                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/unit/'+${itemInfo.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -389,34 +392,37 @@
 
         <div class="right-panel el-col">
             <div id="Contributor" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <user-avatar email="user.email" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
-
+                <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
             </div>
+<!--            <div id="Contributor" class="detail_block">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;">-->
+<!--                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>-->
+<!--                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content">-->
+<!--                    <div class="el-row"-->
+<!--                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">-->
+<!--                        <user-avatar email="user.email" style="width:40px;height: 40px;float:left;"></user-avatar>-->
+<!--                        <div class="el-col">-->
+<!--                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
+<!--                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="el-row">-->
+<!--                        <div class="text-center">-->
+<!--                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>-->
+<!--                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
 
             <div id="Modifier" class="detail_block"
-                 th:if="${history!=true&&info.contributors!=null&&#lists.size(info.contributors)!=0}">
+                 th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
                         <h4>History</h4>
@@ -434,8 +440,8 @@
                                 <dt>Last modify time :&nbsp</dt>
                                 <dd th:text="${lastModifyTime}"></dd>
                                 <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(info.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/unit/'+${info.id}" target="_blank">View
+                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
+                                        th:href="'/version/historyList/unit/'+${itemInfo.id}" target="_blank">View
                                     History</a></dd>
                             </dl>
                         </div>
@@ -444,18 +450,8 @@
                 </div>
             </div>
 
-            <div id="QR" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
+            <div th:replace="fragments/itemInfoModules :: QR"></div>
 
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
-
-                </div>
-            </div>
 
         </div>
 
@@ -474,7 +470,7 @@
                 <div class="modal-body">
                     <form id="addConceptLocalizationForm" role="form" method="post">
                         <div class="form-group hidden">
-                            <input type="text" name="id" class="form-control" th:value="${info.id}">
+                            <input type="text" name="id" class="form-control" th:value="${itemInfo.id}">
                         </div>
                         <div class="form-group">
                             <label>Language</label>
@@ -520,7 +516,7 @@
 
 <script th:inline="javascript">
     var oidcvt=[[${oid_cvt}]];
-    var infoname = [[${info.name}]];
+    var infoname = [[${itemInfo.name}]];
 </script>
 
 <!--翻译组件，本页面组件js引入位置不能靠后-->

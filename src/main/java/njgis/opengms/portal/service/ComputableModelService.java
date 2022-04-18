@@ -231,6 +231,8 @@ public class ComputableModelService {
             modelAndView.addObject("lastModifyTime", lastModifyTime);
 //            modelAndView.addObject("relateModelItem", modelItemInfo);
             modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
+
+            modelAndView.addObject("modularType", ItemTypeEnum.ComputableModel);
             return modelAndView;
 
         } catch (Exception e) {
@@ -280,7 +282,7 @@ public class ComputableModelService {
                 computableModel.setStatus(jsonObject.getString("status"));
                 computableModel.setName(jsonObject.getString("name"));
 
-
+                computableModel.setOverview(jsonObject.getString("description"));
 
                 // computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
                 computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));

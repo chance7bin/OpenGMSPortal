@@ -19,7 +19,7 @@ public class CommentResultDTO {
     String replyToUserId;
 
     int thumbsUpNumber=0;
-    Date date;
+    Date createTime;
 
     List<String> subComments=new ArrayList<>();
 

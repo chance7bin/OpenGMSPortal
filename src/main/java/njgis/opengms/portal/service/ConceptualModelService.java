@@ -193,7 +193,7 @@ public class ConceptualModelService {
         modelAndView.addObject("lastModifyTime", lastModifyTime);
 //        modelAndView.addObject("relateModelItem",modelItemInfo);
         modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
-
+        modelAndView.addObject("modularType", ItemTypeEnum.ConceptualModel);
         return modelAndView;
     }
 
@@ -392,7 +392,7 @@ public class ConceptualModelService {
                 List<Localization> list = new ArrayList<>();
                 list.add(localization);
                 conceptualModel.setLocalizationList(list);
-                conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 // conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
                 conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
 

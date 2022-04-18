@@ -210,6 +210,7 @@ public class DataItemService {
         view.addObject("itemInfo",dataItem);
         view.addObject("detail",detailResult);
 
+
         return view;
 
     }
@@ -509,9 +510,11 @@ public class DataItemService {
             }
 
             // 更新localization
-            if (item.getLocalizationList().size() == 0) {
+            if (item.getLocalizationList() == null || item.getLocalizationList().size() == 0) {
                 Localization localization = new Localization("en", "English", item.getName(), dataItemUpdateDTO.getDetail());
-                item.getLocalizationList().add(localization);
+                List<Localization> localizationList = new ArrayList<>();
+                localizationList.add(localization);
+                item.setLocalizationList(localizationList);
             }
             else {
                 item.getLocalizationList().get(0).setDescription(dataItemUpdateDTO.getDetail());
@@ -548,7 +551,8 @@ public class DataItemService {
             }else {
 
                 //发送通知
-                List<String> recipientList = Arrays.asList(author);
+                List<String> recipientList = new ArrayList<>();
+                recipientList.add(author);
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);

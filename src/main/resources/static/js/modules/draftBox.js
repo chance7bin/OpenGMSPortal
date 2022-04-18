@@ -111,32 +111,32 @@ Vue.component("draft-box",
             },
 
             loadDraftByOid(oid){
-                axios.get('/draft/getByOid',{
-                    params:{
-                        oid:oid
-                    }
-                }).then(res=>{
-                    if(res.data.code==0){
-                        this.insertDraft(res.data.data)
-                    }
-                })
+                // axios.get('/draft/getByOid',{
+                //     params:{
+                //         oid:oid
+                //     }
+                // }).then(res=>{
+                //     if(res.data.code==0){
+                //         this.insertDraft(res.data.data)
+                //     }
+                // })
             },
 
             loadMatchedDraft(oid){//匹配edit对应的
                 this.matchedDraft={}
-                axios.get('/draft/getByItemAndUser',{
-                    params:{
-                        itemOid:oid
-                    }
-                }).then(res=>{
-                    if(res.data.code==0){
-                        this.matchedDraft=res.data.data;
-                        if(this.matchedDraft!={}&&this.matchedDraft!=null){
-                           this.loadDraftDialog = true
-                        }
-                    }
-
-                })
+                // axios.get('/draft/getByItemAndUser',{
+                //     params:{
+                //         itemOid:oid
+                //     }
+                // }).then(res=>{
+                //     if(res.data.code==0){
+                //         this.matchedDraft=res.data.data;
+                //         if(this.matchedDraft!={}&&this.matchedDraft!=null){
+                //            this.loadDraftDialog = true
+                //         }
+                //     }
+                //
+                // })
             },
 
             loadMatchedCreateDraft(){
@@ -146,22 +146,22 @@ Vue.component("draft-box",
 
             loadCreateDraft(){//
                 this.matchedCreateDraft=[]
-                axios.get('/draft/draftByUserAndType',{
-                    params:{
-                        itemType:this.itemType,
-                        editType:'create',
-                    }
-                }).then(res=>{
-                    console.log(res)
-                    if(res.data.code==0){
-                        if(res.data.data.length>=1){
-                            this.matchedCreateDraft=res.data.data;
-                            this.matchedCreateDraftDialog=true
-                        }
-                    }
-
-
-                })
+                // axios.get('/draft/draftByUserAndType',{
+                //     params:{
+                //         itemType:this.itemType,
+                //         editType:'create',
+                //     }
+                // }).then(res=>{
+                //     console.log(res)
+                //     if(res.data.code==0){
+                //         if(res.data.data.length>=1){
+                //             this.matchedCreateDraft=res.data.data;
+                //             this.matchedCreateDraftDialog=true
+                //         }
+                //     }
+                //
+                //
+                // })
             },
 
             handlePageChange(val) {
@@ -186,38 +186,38 @@ Vue.component("draft-box",
 
             loadDraft(){
                 this.draftLoading = true
-                axios.get('/draft/pageByUser',{
-                    params:{
-                        asc:0,
-                        page:this.pageOption.currentPage-1,
-                        size:6,
-                        itemType:this.itemType
-                    }
-                }).then(res=>{
-                    if(res.data.code==0){
-                        let data=res.data.data
-                        this.draftList=data.content
-                        this.pageOption.total = data.total;
-                        setTimeout(()=>{
-                            this.draftLoading = false;
-                        },150)
-                    }else if(res.data.code==1){
-                        this.$alert('Please login first!', 'Error', {
-                            type:"error",
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                window.location.href = "/user/login";
-                            }
-                        });
-                    }else{
-                        this.$alert('Please try again','Warning', {
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                this.draftLoading = false;
-                            }
-                        })
-                    }
-                })
+                // axios.get('/draft/pageByUser',{
+                //     params:{
+                //         asc:0,
+                //         page:this.pageOption.currentPage-1,
+                //         size:6,
+                //         itemType:this.itemType
+                //     }
+                // }).then(res=>{
+                //     if(res.data.code==0){
+                //         let data=res.data.data
+                //         this.draftList=data.content
+                //         this.pageOption.total = data.total;
+                //         setTimeout(()=>{
+                //             this.draftLoading = false;
+                //         },150)
+                //     }else if(res.data.code==1){
+                //         this.$alert('Please login first!', 'Error', {
+                //             type:"error",
+                //             confirmButtonText: 'OK',
+                //             callback: action => {
+                //                 window.location.href = "/user/login";
+                //             }
+                //         });
+                //     }else{
+                //         this.$alert('Please try again','Warning', {
+                //             confirmButtonText: 'OK',
+                //             callback: action => {
+                //                 this.draftLoading = false;
+                //             }
+                //         })
+                //     }
+                // })
             },
 
             createDraft(draft){
@@ -233,17 +233,17 @@ Vue.component("draft-box",
                 }
                 obj.itemOid=draft.itemOid?draft.itemOid:null
 
-                axios.post('/draft/init',obj
-                ).then(
-                    res=>{
-                        if(res.data.code==0){
-                            this.draft=res.data.data;
-                            setTimeout(()=>{
-                                this.savingDraft=false
-                            },1005)
-                        }
-                    }
-                )
+                // axios.post('/draft/init',obj
+                // ).then(
+                //     res=>{
+                //         if(res.data.code==0){
+                //             this.draft=res.data.data;
+                //             setTimeout(()=>{
+                //                 this.savingDraft=false
+                //             },1005)
+                //         }
+                //     }
+                // )
             },
 
             updateDraft(draft){
@@ -280,25 +280,25 @@ Vue.component("draft-box",
                     oid:this.draft.oid,
 
                 }
-                axios.post('/draft/update',obj
-                ).then(
-                    res=>{
-                        if(res.data.code==0){
-                            this.$message({message: 'Save draft successfully',type: 'success'})
-                        }
-                        setTimeout(()=>{
-                            this.savingDraft=false
-                        },895)
-                        setTimeout(()=>{
-                            this.$emit('draftJump')
-                        },905)
-                    }
-                ).catch(()=>{
-                    this.$message({message: 'Something wrong',type: 'warning'})
-                    setTimeout(()=>{
-                        this.savingDraft=false
-                    },195)
-                })
+                // axios.post('/draft/update',obj
+                // ).then(
+                //     res=>{
+                //         if(res.data.code==0){
+                //             this.$message({message: 'Save draft successfully',type: 'success'})
+                //         }
+                //         setTimeout(()=>{
+                //             this.savingDraft=false
+                //         },895)
+                //         setTimeout(()=>{
+                //             this.$emit('draftJump')
+                //         },905)
+                //     }
+                // ).catch(()=>{
+                //     this.$message({message: 'Something wrong',type: 'warning'})
+                //     setTimeout(()=>{
+                //         this.savingDraft=false
+                //     },195)
+                // })
             },
 
             insertDraft(draft){
@@ -316,25 +316,25 @@ Vue.component("draft-box",
             },
 
             deleteDraft(){
-                axios.delete('/draft/deleteByOid?oid='+this.draft.oid)
+                // axios.delete('/draft/deleteByOid?oid='+this.draft.oid)
             },
 
             deleteSelected(index,oid){
-                axios.delete('/draft/deleteByOid?oid='+oid).then(
-                    (res)=>{
-                        let data = res.data
-                        if(data.code==0){
-                            if(data.data=='del suc'){
-                                this.$message({message: 'Delete successfully',type: 'success'})
-                                if(index==1){
-                                    this.loadMatchedCreateDraft()
-                                }else if(index==2){
-                                    this.loadDraft()
-                                }
-                            }
-                        }
-                    }
-                )
+                // axios.delete('/draft/deleteByOid?oid='+oid).then(
+                //     (res)=>{
+                //         let data = res.data
+                //         if(data.code==0){
+                //             if(data.data=='del suc'){
+                //                 this.$message({message: 'Delete successfully',type: 'success'})
+                //                 if(index==1){
+                //                     this.loadMatchedCreateDraft()
+                //                 }else if(index==2){
+                //                     this.loadDraft()
+                //                 }
+                //             }
+                //         }
+                //     }
+                // )
             },
 
             checkItem(item){

@@ -57,16 +57,16 @@
                     <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
                     <div class="flexColContainer mainContent" style="">
                         <section role="description" class="flexCol flexCenter contentSection">
-                            <h3>Data</h3>
-                            <h5>You can manage your data here</h5>
+                            <h3>{{htmlJson.Data}}</h3>
+                            <h5>{{htmlJson.DataInfo}}</h5>
                         </section>
                         <section class="flexRowContainer flexWrap contentSection">
                             <div class="leftData" style="width: 50%;">
                                 <div class="contentCard flexCol flexColCenter" style="width: auto">
                                     <div class="content_h68 flexRow noPadding">
                                         <div class="content_w68 flexCol flexJustAround">
-                                            <h4>Data Space</h4>
-                                            <p>You can upload file and manage them in your space</p>
+                                            <h4>{{htmlJson.DataSpace}}</h4>
+                                            <p>{{htmlJson.DataSpaceInfo}}</p>
                                         </div>
                                         <div class="flexCenter content_w32" style="">
                                             <i class="fa fa-cloud-upload"
@@ -78,7 +78,7 @@
                                         <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                             <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                                 <div class="lineButton flexCol" @click="manageItem(1)">
-                                                    <p style="margin-block-end: 0">manage data</p>
+                                                    <p style="margin-block-end: 0">{{htmlJson.ManageData}}</p>
                                                     <div class="hoverLine"></div>
                                                 </div>
                                             </div>
@@ -90,12 +90,12 @@
                                     <div class="content_h68 flexRow noPadding">
                                         <div class="content_w68 flexCol flexJustAround">
                                             <div class="flexAlignCenter ">
-                                                <h4>Data Methods</h4>
+                                                <h4>{{htmlJson.DataMethods}}</h4>
                                                 <div class="numTag bluePlain" style="margin-left: 5px">
                                                     <p class="noMargin" style="">{{countInfo.dataMethod}}</p>
                                                 </div>
                                             </div>
-                                            <p>You can manage Data Methods provided by yourself or create a new one</p>
+                                            <p>{{htmlJson.DataMethodsInfo}}</p>
                                         </div>
                                         <div class="flexCenter content_w32" style="">
                                             <img class="square_80" style="" src="../../static/img/model/logical.png">
@@ -107,10 +107,10 @@
                                         <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                             <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                                 <div class="lineButton flexCol"  @click="manageItem(5)">
-                                                    <p style="margin-block-end: 0">manage</p>
+                                                    <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                     <div class="hoverLine"></div>
                                                 </div>
-                                                <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(21)">create new <span>
+                                                <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(21)">{{htmlJson.CreateNew}}<span>
                                                     <i class="fa fa-arrow-right"></i></span></div>
                                             </div>
 
@@ -178,12 +178,12 @@
                                        <div class="content_h68 flexRow noPadding">
                                            <div class="content_w68 flexCol flexJustAround">
                                                <div class="flexAlignCenter ">
-                                                   <h4>Data Item Hubs</h4>
+                                                   <h4>{{htmlJson.DataItemHubs}}</h4>
                                                    <div class="numTag bluePlain" style="margin-left: 5px">
                                                        <p class="noMargin" style="">{{countInfo.dataHub}}</p>
                                                    </div>
                                                </div>
-                                               <p>You can manage Data Item Hubs provided by yourself or create a new one</p>
+                                               <p>{{htmlJson.DataItemHubsInfo}}</p>
                                            </div>
                                            <div class="flexCenter content_w32" style="">
                                                <img class="square_80" style="" src="../../static/img/model/spatialreference.png">
@@ -194,10 +194,10 @@
                                            <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                                <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                                    <div class="lineButton flexCol" @click="manageItem(3)">
-                                                       <p style="margin-block-end: 0">manage</p>
+                                                       <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                        <div class="hoverLine"></div>
                                                    </div>
-                                                   <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(0)">create new <span><i
+                                                   <div class="btn btn-info btn-round btn-noShadow" style="" @click="creatItem(0)">{{htmlJson.CreateNew}}<span><i
                                                            class="fa fa-arrow-right"></i></span></div>
                                                </div>
                                            </div>
@@ -208,12 +208,12 @@
                                        <div class="content_h68 flexRow noPadding">
                                            <div class="content_w68 flexCol flexJustAround">
                                                <div class="flexAlignCenter ">
-                                                   <h4>Data Item Repository</h4>
+                                                   <h4>{{htmlJson.DataItemRepository}}</h4>
                                                    <div class="numTag bluePlain" style="margin-left: 5px">
                                                        <p class="noMargin" style="">{{countInfo.dataItem}}</p>
                                                    </div>
                                                </div>
-                                               <p>You can manage Data Item Repository provided by yourself or create a new one</p>
+                                               <p>{{htmlJson.DataItemRepositoryInfo}}</p>
                                            </div>
                                            <div class="flexCenter content_w32" style="">
                                                <i class="fa fa-database"
@@ -226,10 +226,10 @@
                                            <div class="flexColCenter" style="width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.2)">
                                                <div class="flexRow flexColCenter flexJustAround " style="width: 100%;margin-left: 5%">
                                                    <div class="lineButton flexCol" @click="manageItem(4)">
-                                                       <p style="margin-block-end: 0">manage</p>
+                                                       <p style="margin-block-end: 0">{{htmlJson.Manage}}</p>
                                                        <div class="hoverLine"></div>
                                                    </div>
-                                                   <div class="btn btn-info btn-round btn-noShadow" style=""  @click="creatItem(1)">create new
+                                                   <div class="btn btn-info btn-round btn-noShadow" style=""  @click="creatItem(1)">{{htmlJson.CreateNew}}
                                                        <span>
                                                 <i class="fa fa-arrow-right"></i>
                                             </span>

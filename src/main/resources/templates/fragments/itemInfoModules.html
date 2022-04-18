@@ -135,8 +135,11 @@
         </div>
         <div class="el-row">
             <div>
-                <h5 th:if="${history!=true}"><span translateId="InitialContribute">Initial contribute: </span><span th:text="${date}"></span></h5>
-                <h5 th:if="${history==true}"><span translateId="ModifyTime">Modify Time: </span><span th:text="${date}"></span></h5>
+                <h5 th:if="${history!=true}"><span translateId="InitialContribute">Initial contribute : </span>
+                    <span th:if="${itemType} eq 'Data'" th:text="${#dates.format(itemInfo.createTime,'yyyy-MM-dd')}"></span>
+                    <span th:text="${date}"></span>
+                </h5>
+                <h5 th:if="${history==true}"><span translateId="ModifyTime">Modify Time : </span><span th:text="${date}"></span></h5>
             </div>
         </div>
 
@@ -198,7 +201,7 @@
     <div class="detail_title">
         <h2 th:utext="${itemInfo.name}"
             style="display: inline-block;word-wrap:break-word; word-break:break-all;width:90%;"></h2>
-        <div class="pull-right" style="width:10%;">
+        <div class="pull-right">
             <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
                 <a th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" href="javascript:void(0);"
                    class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
@@ -221,19 +224,50 @@
         </div>
     </div>
     <div class="detail_overview">
-
-        <div th:switch="${itemInfo.image}" class="img">
+        <div th:if="${modularType.name} eq'ModelItem'"  th:switch="${itemInfo.image}" class="img">
             <img th:case="''" src="/static/img/model/model.png">
             <img th:case="null" src="/static/img/model/model.png">
             <img th:case="*" th:src="${itemInfo.image}">
         </div>
 
+        <div th:if="${itemType} eq'Data'" class="img" th:object="${itemInfo}">
+            <div th:if="${#strings.isEmpty(itemInfo.image)}">
+                <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
+            </div>
+            <div th:unless="${#strings.isEmpty(itemInfo.image)}">
+                <img th:src="${itemInfo.image}" class="image">
+            </div>
+        </div>
+
+        <div th:if="${modularType.name} eq'DataMethod'" class="img">
+            <div th:unless="${itemInfo.image}">
+                <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
+            </div>
+            <div th:if="${itemInfo.image}">
+                <img th:src="'/static'+${itemInfo.image}" class="image">
+            </div>
+        </div>
+
+        <div th:if="(${modularType.name} eq 'Concept') or (${modularType.name} eq 'SpatialReference') or (${modularType.name} eq 'Template') or (${modularType.name} eq 'Unit')"
+             class="img">
+            <div th:switch="${itemInfo.image}" class="img">
+                <avatar th:case="''" th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
+                <avatar th:case="null" th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
+                <img th:case="*" th:src="${image}">
+            </div>
+        </div>
+
         <div class="info">
             <p th:text="${itemInfo.overview}"></p>
-            <div class="tags">
-                            <span th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info">
-                                DEM Characteristics
-                            </span>
+            <div class="tags" th:switch="${modularType.name}">
+                <span th:case="'Concept'" class="badge badge-info">Concept & Semantic</span>
+                <span th:case="'SpatialReference'"  class="badge badge-info">Spatial Reference</span>
+                <span th:case="'Template'" class="badge badge-info">Data Template</span>
+                <span th:case="'Unit'" class="badge badge-info">Unit & Metric</span>
+                <span th:case="*" th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info">
+
+
+                </span>
 
             </div>
         </div>
@@ -242,7 +276,7 @@
             <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
             <!--<div th:utext="'&nbsp&nbsp'+${itemInfo.shareCount}">&nbsp&nbsp37</div>-->
             <a class="fa fa-eye" aria-hidden="true"></a>
-            <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}">&nbsp&nbsp341</div>
+            <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}"></div>
         </div>
 
     </div>
@@ -250,37 +284,57 @@
 </div>
 
 <div th:fragment="classifications">
-    <div th:if="${#lists.size(classifications)>0}" id="classification" class="detail_block">
-        <div class="block_head">
-            <div class="head_text">
-                <h4 translateId="Classification">Classification(s)</h4>
+        <div th:if="${#lists.size(classifications)>0}" id="classification" class="detail_block">
+            <div class="block_head">
+                <div class="head_text">
+                    <h4 translateId="Classification">Classification(s)</h4>
+                </div>
+                <span class="blockEdit">
+                            <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                                <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                                           type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
+                            </el-tooltip>
+                            <el-tooltip popper-class="fontsize-15"
+                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                        effect="light" placement="top">
+                                <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                                           icon="el-icon-edit" plain circle></el-button>
+                            </el-tooltip>
+                        </span>
             </div>
-            <span class="blockEdit">
-                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                                       type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
-                                    effect="light" placement="top">
-                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
-                                       icon="el-icon-edit" plain circle></el-button>
-                        </el-tooltip>
-                    </span>
-        </div>
-        <div th:fragment="classificationsContent" class="block_content" style="margin-top:20px;">
-            <div th:each="classS:${classifications}">
-                <span style="font-size:24px;margin-right: 8px">●</span>
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item th:each="class:${classS}" th:text="${class.name}"
-                                        th:onclick="window.open('/modelItem/repository?category='+[[${class.id}]])"
-                                        :to="{ path: '/' }">Earth
-                        System Classification
-                    </el-breadcrumb-item>
-                </el-breadcrumb>
+            <div th:fragment="classificationsContent" class="block_content" style="margin-top:20px;" >
+                <div  >
+                    <div   th:each="classS:${classifications}">
+                        <span style="font-size:24px;margin-right: 8px">●</span>
+                        <el-breadcrumb separator-class="el-icon-arrow-right" >
+
+                            <el-breadcrumb-item  th:if="${modularType.name} eq'ModelItem'" th:each="class:${classS}" th:text="${class.name}"
+                                                 th:onclick="window.open('/modelItem/repository?category='+[[${class.id}]])"
+                                                 :to="{ path: '/' }">
+                            </el-breadcrumb-item>
+                            <el-breadcrumb-item  th:if="${modularType.name} eq'Concept'" th:each="class:${classS}" th:text="${class.name}"
+                                                 th:onclick="window.open('/repository/concept?category='+[[${class.id}]])"
+                                                 :to="{ path: '/' }">
+                            </el-breadcrumb-item>
+                            <el-breadcrumb-item  th:if="${modularType.name} eq'SpatialReference'" th:each="class:${classS}" th:text="${class.name}"
+                                                 th:onclick="window.open('/repository/spatialReference?category='+[[${class.id}]])"
+                                                 :to="{ path: '/' }">
+                            </el-breadcrumb-item>
+                            <el-breadcrumb-item  th:if="${modularType.name} eq'Template'" th:each="class:${classS}" th:text="${class.name}"
+                                                 th:onclick="window.open('/repository/template?category='+[[${class.id}]])"
+                                                 :to="{ path: '/' }">
+                            </el-breadcrumb-item>
+                            <el-breadcrumb-item  th:if="${modularType.name} eq'Unit'" th:each="class:${classS}" th:text="${class.name}"
+                                                 th:onclick="window.open('/repository/unit?category='+[[${class.id}]])"
+                                                 :to="{ path: '/' }">
+                            </el-breadcrumb-item>
+
+                        </el-breadcrumb>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
 </div>
 
 <div th:fragment="alias" id="alias" class="detail_block"
@@ -313,5 +367,90 @@
 
 </div>
 
+
+<!--Copyright and Disclaimer 版权及免责声明-->
+<div th:fragment="copyright" id="copyright" class="detail_block">
+    <div class="block_head">
+        <div class="head_text">
+            <h4 translateId="CopyrightAndDisclaimer">Copyright and Disclaimer</h4>
+        </div>
+    </div>
+    <div class="block_content">
+        <div class="copyright_text" translateId="CopyrightAndDisclaimerInfo">
+            All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.
+        </div>
+    </div>
+</div>
+
+<!--history 历史-->
+<div th:fragment="History" id="History" class="detail_block">
+<!--     th:if="${history!=true&&itemInfo.versions!=null&&#lists.size(itemInfo.versions)!=0}">-->
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px;">
+            <h4 translateId="History">History</h4>
+        </div>
+    </div>
+    <div class="block_content text-center" style="padding-left:10px">
+
+        <div style="text-align: left;">
+
+            <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
+                <dl>
+                    <dt translateId="Lastmodifier" th:if="${lastModifier}">Last modifier : </dt>
+                    <dd><a th:if="${lastModifier}" th:text="${lastModifier.name}"  th:href="${'/profile/'+lastModifier.accessId}"
+                           target="_blank"></a></dd>
+                    <dt translateId="Lastmodifytime" th:if="${lastModifyTime}">Last modify time :</dt>
+                    <dd th:if="${lastModifyTime}" th:text="${lastModifyTime}"></dd>
+                    <dt translateId="Modifytimes" th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0">Modify times :</dt>
+                    <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
+                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--qrcode 二维码-->
+<div th:if="${history!=true}" th:fragment="QR" id="QR" class="detail_block">
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px;">
+            <h4 translateId="QRCode">QR Code</h4>
+        </div>
+    </div>
+    <div class="block_content">
+        <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
+    </div>
+</div>
+
+<!--Co-contributor(s) 共同创建者-->
+<div v-if="contributors!=null&&contributors.length>0" th:fragment="Modifier" id="Modifier" class="detail_block">
+    <div class="block_head" style="border-left-color: #00d083;">
+        <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
+            <h4 translateId="CoContributor">Co-contributor(s)</h4>
+        </div>
+    </div>
+    <div class="block_content" style="padding-left:10px;">
+
+        <div class="flexCenter" style=" white-space: nowrap; justify-content: normal;">
+            <div class="wzhScrollbar">
+                <div  v-for="(contributor,index) in contributors" :key="contributor.accessId"
+                      class="inlineBlock cursorPointer" style="margin: 10px 5px;">
+                    <el-tooltip effect="dark"
+                                :content="contributor.name"
+                                placement="bottom">
+                        <a :href="'/profile/'+contributor.accessId" target="_blank">
+                            <!--                                    <img :src="contributor.avatar==''?'/static/img/icon/default.png':contributor.avatar" onerror="src='/static/img/icon/default.png'"-->
+                            <!--                                         class="round_icon iconImg">-->
+                            <user-avatar ref="coContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
+                        </a>
+                    </el-tooltip>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 </body>
 </html>

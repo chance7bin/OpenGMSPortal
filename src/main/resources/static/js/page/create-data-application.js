@@ -279,7 +279,7 @@ var createDataApplication = Vue.extend({
         selectTemplate(index, info){
             let obj = {
                 templateName : info.name,
-                templateOid : info.id
+                templateId : info.id
             }
             this.dataApplication.bindDataTemplates.push(obj);
             this.bindTemplateDialogVisible = false;
@@ -501,18 +501,18 @@ var createDataApplication = Vue.extend({
             // document.title="Modify Data Application | OpenGMS";
             let that = this
             $.ajax({
-                url: "/dataMethod/method/" + oid,
+                url: "/dataMethod/itemInfo/" + oid,
                 type: "get",
                 data: {},
 
                 success: (result) => {
                     window.sessionStorage.setItem("editdataApplication_id", "");
-                    console.log(result)
-                    var basicInfo = result.data;
-                    // if(basicInfo.resourceJson!=null)
-                    //     that.resources=basicInfo.resources;
+                    console.log("/dataMethod/itemInfo/:",result)
+                    var basicInfo = result.data.data;
+                    if(basicInfo.resourceJson!=null)
+                        that.resources=basicInfo.resourceJson;
 
-                    that.resources=basicInfo.resources;
+                    // that.resources=basicInfo.resources;
 
                     // that.dataApplication.bindModelItem=basicInfo.relateModelItemName;
                     // that.dataApplication.bindOid=basicInfo.relateModelItem;
@@ -539,6 +539,8 @@ var createDataApplication = Vue.extend({
 
                     $(".providers").children(".panel").remove();
 
+                    // console.log("basicInfo:",basicInfo)
+                    // console.log("basicInfo.localizationList:",basicInfo.localizationList)
                     //detail
                     $("#dataApplicationText").html(basicInfo.localizationList[0].description);
 
@@ -726,17 +728,19 @@ var createDataApplication = Vue.extend({
             // this.dataApplication.method = this.method;
             let testData = [];
             let dataUrls = [];
+            console.log("this.selectedFile:",this.selectedFile)
             for(let item of this.selectedFile){
                 let obj = new Object();
-                obj.oid = item.id;
-                obj.url = item.url;
-                dataUrls.push(item.url);
+                // obj.oid = item.uid;
+                obj.url = item.address;
+                dataUrls.push(item.address);
                 testData.push(obj);
             }
 
             this.dataApplication.testData = testData;
             let dataForm = new FormData();
             dataForm.append("datafileUrl", dataUrls)
+
             $.ajax({
                 url:"http://172.21.213.111:8082/dataDownloadContainer/",
                 type:"POST",
@@ -750,7 +754,7 @@ var createDataApplication = Vue.extend({
                     // console.log(res.data);
                     that.testDataPath = res.data;
                 }
-                console.log(res.data);
+                console.log("datafileUrl testDataPath:", res.data);
             })
 
             this.dataApplication.testDataPath = this.testDataPath;
@@ -809,7 +813,7 @@ var createDataApplication = Vue.extend({
                     // $("#step").css("display", "block");
                     // $(".uploading").css("display", "none");
                     switch (res.code) {
-                        case 1:
+                        case 0:
                             this.$confirm('<div style=\'font-size: 18px\'>Create data application successfully!</div>', 'Tip', {
                                 dangerouslyUseHTMLString: true,
                                 confirmButtonText: 'View',
@@ -821,9 +825,10 @@ var createDataApplication = Vue.extend({
                                 showClose: false,
                             }).then(() => {
                                 window.location.href = "/dataMethod/" + res.data;
+                                // window.location.href="/user/userSpace#/data/processingApplication"
                             }).catch(() => {
-                                window.location.reload(true)
-                                window.location.href = "/user/userSpace#/models/dataMethod";
+                                // window.location.reload(true)
+                                window.location.href = "/user/userSpace#/data/processingApplication";
                             });
 
                             break;
@@ -882,77 +887,126 @@ var createDataApplication = Vue.extend({
                     loading.close();
                     // $("#step").css("display", "block");
                     // $(".uploading").css("display", "none");
-                    if(res.code===0) {
-                        switch (res.data.code) {
-                            case 0:
-                                let currentUrl = window.location.href;
-                                let index = currentUrl.lastIndexOf("\/");
-                                that.dataApplication_oid = currentUrl.substring(index + 1,currentUrl.length);
-                                //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
-                                // that.getnoticeNum(that.dataApplication_oid);
-                                // let params = that.message_num_socket;
-                                // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
-                                    type:"success",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        window.location.href = "/user/userSpace";
-                                    }
-                                });
-                                break;
-                            case 1:
-                                this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
-                                    dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
-                                    cancelButtonClass: 'fontsize-15',
-                                    confirmButtonClass: 'fontsize-15',
-                                    type: 'success',
-                                    center: true,
-                                    showClose: false,
-                                }).then(() => {
-                                    $("#editModal", parent.document).remove();
-                                    window.location.href = "/dataMethod/" + res.data.id;
-                                }).catch(() => {
-                                    window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
-                                    window.location.reload(true)
-                                });
-                                break;
-                            case -1:
-                                this.$alert('Save files error', 'Error', {
-                                    type:"error",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        $("#step").css("display", "block");
-                                        $(".uploading").css("display", "none");
-                                    }
-                                });
-
-                                break;
-                            case -2:
-                                this.$alert('Create failed!', 'Error', {
-                                    type:"error",
-                                    confirmButtonText: 'OK',
-                                    callback: action => {
-                                        $("#step").css("display", "block");
-                                        $(".uploading").css("display", "none");
-                                    }
-                                });
-
-                                break;
+                    console.log("update data application:",res)
+                    if(res.code===0){
+                        if(res.data.method==="update"){
+                            this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
+                                dangerouslyUseHTMLString: true,
+                                confirmButtonText: 'View',
+                                cancelButtonText: 'Go Back',
+                                cancelButtonClass: 'fontsize-15',
+                                confirmButtonClass: 'fontsize-15',
+                                type: 'success',
+                                center: true,
+                                showClose: false,
+                            }).then(() => {
+                                $("#editModal", parent.document).remove();
+                                window.location.href = "/dataMethod/" + res.data.id;
+                            }).catch(() => {
+                                // window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
+                                // window.location.reload(true)
+                                window.location.href = "/user/userSpace#/data/processingApplication";
+                            });
+                        }else{
+                            let currentUrl = window.location.href;
+                            let index = currentUrl.lastIndexOf("\/");
+                            that.dataApplication_oid = currentUrl.substring(index + 1,currentUrl.length);
+                            //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                            // that.getnoticeNum(that.dataApplication_oid);
+                            // let params = that.message_num_socket;
+                            // that.send(params);
+                            this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                type:"success",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    window.location.href = "/user/userSpace";
+                                }
+                            });
                         }
+                    }else{
+                            this.$alert(res.msg, 'Error', {
+                                type:"error",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    $("#step").css("display", "block");
+                                    $(".uploading").css("display", "none");
+                                }
+                            });
                     }
-                    else{
-                        this.$alert(res.msg, 'Error', {
-                            type:"error",
-                            confirmButtonText: 'OK',
-                            callback: action => {
-                                $("#step").css("display", "block");
-                                $(".uploading").css("display", "none");
-                            }
-                        });
 
-                    }
+
+                    // if(res.code===0) {
+                    //     switch (res.code) {
+                    //         case 0:
+                    //             let currentUrl = window.location.href;
+                    //             let index = currentUrl.lastIndexOf("\/");
+                    //             that.dataApplication_oid = currentUrl.substring(index + 1,currentUrl.length);
+                    //             //当change submitted时，其实数据库中已经更改了，但是对于消息数目来说还没有及时改变，所以在此处获取消息数目，实时更新导航栏消息数目，
+                    //             // that.getnoticeNum(that.dataApplication_oid);
+                    //             // let params = that.message_num_socket;
+                    //             // that.send(params);
+                    //             this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                    //                 type:"success",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     window.location.href = "/user/userSpace";
+                    //                 }
+                    //             });
+                    //             break;
+                    //         case 1:
+                    //             this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
+                    //                 dangerouslyUseHTMLString: true,
+                    //                 confirmButtonText: 'View',
+                    //                 cancelButtonText: 'Go Back',
+                    //                 cancelButtonClass: 'fontsize-15',
+                    //                 confirmButtonClass: 'fontsize-15',
+                    //                 type: 'success',
+                    //                 center: true,
+                    //                 showClose: false,
+                    //             }).then(() => {
+                    //                 $("#editModal", parent.document).remove();
+                    //                 window.location.href = "/dataMethod/" + res.data.id;
+                    //             }).catch(() => {
+                    //                 // window.location.href = "http://localhost:8080/user/userSpace#/data/processingApplication";
+                    //                 // window.location.reload(true)
+                    //                 window.location.href = "/user/userSpace#/data/processingApplication";
+                    //             });
+                    //             break;
+                    //         case -1:
+                    //             this.$alert('Save files error', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     $("#step").css("display", "block");
+                    //                     $(".uploading").css("display", "none");
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //         case -2:
+                    //             this.$alert('Create failed!', 'Error', {
+                    //                 type:"error",
+                    //                 confirmButtonText: 'OK',
+                    //                 callback: action => {
+                    //                     $("#step").css("display", "block");
+                    //                     $(".uploading").css("display", "none");
+                    //                 }
+                    //             });
+                    //
+                    //             break;
+                    //     }
+                    // }
+                    // else{
+                    //     this.$alert(res.msg, 'Error', {
+                    //         type:"error",
+                    //         confirmButtonText: 'OK',
+                    //         callback: action => {
+                    //             $("#step").css("display", "block");
+                    //             $(".uploading").css("display", "none");
+                    //         }
+                    //     });
+                    //
+                    // }
                 }).fail((res) => {
                     console.log("dataMethod put err",res)
                     this.$alert('Please login first', 'Error', {

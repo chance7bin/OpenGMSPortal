@@ -201,7 +201,7 @@ public class DataMethodService {
             //     classificationName.add(name);
             // }
 
-            modelAndView.addObject("dataMethodInfo", dataMethod);
+            modelAndView.addObject("itemInfo", dataMethod);
             modelAndView.addObject("classifications", classifications);
             modelAndView.addObject("date", dateResult);
             modelAndView.addObject("year", calendar.get(Calendar.YEAR));
@@ -210,7 +210,7 @@ public class DataMethodService {
             modelAndView.addObject("resources", resourceArray);
             modelAndView.addObject("lastModifyTime", lastModifyTime);
 
-
+            modelAndView.addObject("modularType", ItemTypeEnum.DataMethod);
             return modelAndView;
 
 
@@ -938,9 +938,11 @@ public class DataMethodService {
             BeanUtils.copyProperties(updateDTO, dataMethod, "bindDataTemplates");
 
             // 更新localization
-            if (dataMethod.getLocalizationList().size() == 0) {
+            if (dataMethod.getLocalizationList() == null || dataMethod.getLocalizationList().size() == 0) {
                 Localization localization = new Localization("en", "English", dataMethod.getName(), updateDTO.getDetail());
-                dataMethod.getLocalizationList().add(localization);
+                List<Localization> localizationList = new ArrayList<>();
+                localizationList.add(localization);
+                dataMethod.setLocalizationList(localizationList);
             }
             else {
                 dataMethod.getLocalizationList().get(0).setDescription(updateDTO.getDetail());

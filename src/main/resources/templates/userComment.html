@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Version</title>
+  <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+  <link rel="stylesheet" href="/static/css/page/message_confirm.css">
+  <link rel="stylesheet" href="/static/css/base/navbar.css">
+  <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
+  <link rel="stylesheet" href="/static/css/base/universal.css">
+
+</head>
+<body>
+
+<div id="app">
+  <head-side-bar :user-infoin-parent="userInfo"></head-side-bar>
+
+<template id="userComment" th:fragment="userComment">
+  <div>
+    <div class="innerShadowCol">
+      <div class="page-content clearfix scrollbar el-col-lg-21 el-col-md-20 pageContent"
+           style="margin-left: 240px;overflow-x: hidden"
+           :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}">
+
+        <div style="margin-top: 100px; display: flex; justify-content: space-around;">
+          <h1>{{htmlJson.Comment}}</h1>
+        </div>
+
+        <div style="display: flex;justify-content: center;">
+          <div class="contentCard flexCol flexColCenter" style="height: 700px;max-width: 1200px">
+            <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 85%;">
+              <br/><br/>
+              <div style="width: 100%; margin-bottom: 10px;font-weight: bold;font-size: 20px;">
+                <span>Total:{{}}</span>
+                &nbsp;
+                <span>Unread:{{}}</span>
+              </div>
+              <br/>
+              <div style="width: 100%;">
+                <div style="width: 100%;">
+                  <el-table
+                          :show-header="false"
+                          :data="commentTableData"
+                          stripe
+                          style="width: 100%">
+                    <el-table-column
+                            prop="date"
+                            label="日期"
+                            width="300">
+                      <template slot-scope="scope">
+                        <h4>{{ scope.row.date }}</h4>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="name"
+                            label="姓名"
+                            width="300">
+                      <template slot-scope="scope">
+                        <h5>{{ scope.row.name }}</h5>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                      <template slot-scope="scope">
+                        <el-button
+                                type="success"
+                                size="mini"
+                                @click="setOneNotice2Read(scope.$index, scope.row)">标为已读</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <el-divider></el-divider>
+                </div>
+                <el-divider></el-divider>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</template>
+
+
+</div>
+
+</body>
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/page/userComment.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jutils-src"></script>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Version</title>
+<!--    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">-->
+<!--    <link rel="stylesheet" href="/static/css/page/message_confirm.css">-->
+<!--    <link rel="stylesheet" href="/static/css/base/navbar.css">-->
+<!--    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">-->
+<!--    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">-->
+<!--    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/bootstrap.min.css"/>-->
+<!--    <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>-->
+<!--    <link rel="stylesheet" href="/static/css/base/universal.css">-->
+
+<!--    <script src="/static/element-ui/index.js"></script>-->
+<!--    <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">-->
+<!--    <script src="/static/js/common/axios.min.js"></script>-->
+
+</head>
+<body>
+
+<div id="app">
+    <head-side-bar :user-infoin-parent="userInfo"></head-side-bar>
+
+    <template id="userNotice" th:fragment="userNotice">
+        <div>
+            <div class="innerShadowCol">
+                <div class="page-content clearfix scrollbar el-col-lg-21 el-col-md-20 pageContent"
+                     style="margin-left: 240px;overflow-x: hidden"
+                     :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}">
+
+                    <div style="margin-top: 70px; display: flex; justify-content: space-around;">
+                        <h2>{{htmlJson.Notice}}</h2>
+                    </div>
+
+                    <div style="display: flex;justify-content: center;">
+                        <div class="contentCard flexCol flexColCenter" style="height: 700px;max-width: 1200px">
+                            <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 90%;">
+                                <br/>
+                                <div style="width: 100%;font-weight: bold;font-size: 20px;">
+                                    <span>Total:{{noticeCount}}</span>
+                                    &nbsp;
+                                    <span>Unread:{{unReadNoticeCount}}</span>
+                                    &nbsp;&nbsp;
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <el-button size="small" type="primary" @click="setAllNotice2Read">Mark All Read</el-button>
+                                    </div>
+                                </div>
+
+                                <div style="width: 100%;">
+                                    <el-table
+                                            :data="noticeTableData"
+                                            :row-class-name="tableRowClassName"
+                                            :cell-style="rowClass"
+                                            class="noticeTableFont"
+                                            height="500"
+                                            style="width: 100%;">
+                                        <el-table-column
+                                                prop="createTime"
+                                                label="Date"s
+                                                min-width="160">
+                                            <template slot-scope="scope">
+                                                <h4>{{ scope.row.createTime }}</h4>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="message"
+                                                label="Message"
+                                                min-width="320"
+                                                show-overflow-tooltip>
+                                            <template slot-scope="scope">
+                                                <h5>{{ scope.row.message }}</h5>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="dispatcher"
+                                                label="Dispatcher"
+                                                min-width="200"
+                                                show-overflow-tooltip>
+                                            <template slot-scope="scope">
+                                                <h4>{{ scope.row.dispatcher }}</h4>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="Conduct" min-width="200">
+                                            <template slot-scope="scope">
+
+                                                <el-dialog
+                                                        title="Message"
+                                                        :visible.sync="noticeDialogVisible"
+                                                        width="30%">
+                                                    <span>{{currentMessage}}</span>
+                                                    <span slot="footer" class="dialog-footer">
+                                                    <el-button @click="noticeDialogVisible = false">取 消</el-button>
+                                                    <el-button type="primary" @click="noticeDialogVisible = false">确 定</el-button>
+                                                  </span>
+                                                </el-dialog>
+                                                <el-button
+                                                        type="primary"
+                                                        size="mini"
+                                                        @click="viewNotice(scope.row)">View</el-button>
+                                                <el-button
+                                                        v-if="scope.row.hasRead===false"
+                                                        type="warning"
+                                                        size="mini"
+                                                        @click="setOneNotice2Read(scope.row.id)">Mark Read</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-divider></el-divider>
+                                </div>
+
+                                <el-pagination
+                                        background
+                                        layout="total,prev, pager, next"
+                                        @size-change="handleSizeChange"
+                                        @current-change="handleCurrentChange"
+                                        :current-page.sync="currentPage"
+                                        :page-sizes="[10, 20, 30, 40]"
+                                        :page-size="pageSize"
+                                        :total="noticeCount">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </template>
+
+
+</div>
+
+</body>
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/vue.min.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/page/userNotice.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jutils-src"></script>
+</html>

@@ -1,5 +1,6 @@
 package njgis.opengms.portal.entity.po;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,8 @@ public class Notice extends PortalId {
     // String objectAuthor; //资源作者，用于消息内容生成，区别超级用户和普通用户
     // String objectName; //资源名
     String recipient; //接收者email
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     Date createTime; //发送时间
     // String title; //消息标题
     String message = "The message needs to be generated through a template"; //消息内容，根据action由消息模版生成

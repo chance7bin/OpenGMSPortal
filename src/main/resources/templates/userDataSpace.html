@@ -107,10 +107,12 @@
                                                             <i style="font-size: 16px" class="fa fa-clipboard">></i><span
                                                                 style="font-size: 15px">Paste</span>
                                                         </button>
-                                                        <button class="dwload btn btn-secondary btn-round"
-                                                                @click="allFileShareAsDataItem()">
-                                                            <i class="glyphicon glyphicon-share"></i><span style="font-size: 15px">Share as Data Item</span>
-                                                        </button>
+
+<!--                                                        这个功能先注释掉-->
+<!--                                                        <button class="dwload btn btn-secondary btn-round"-->
+<!--                                                                @click="allFileShareAsDataItem()">-->
+<!--                                                            <i class="glyphicon glyphicon-share"></i><span style="font-size: 15px">Share as Data Item</span>-->
+<!--                                                        </button>-->
                                                         <button class="dwload btn btn-danger btn-round" v-if="selectedDataSet.length>0"
                                                                 @click="deleteAll()">
                                                             <i style="font-size: 16px" class="fa fa-trash"></i><span style="font-size: 15px">Delete all</span>

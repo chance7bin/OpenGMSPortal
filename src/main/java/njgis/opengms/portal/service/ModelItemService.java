@@ -417,6 +417,8 @@ public class ModelItemService {
         modelAndView.addObject("lastModifyTime", lastModifyTime);
         modelAndView.addObject("references", getReferences(modelInfo.getId()));
 
+        modelAndView.addObject("modularType", ItemTypeEnum.ModelItem);
+
         return modelAndView;
     }
 

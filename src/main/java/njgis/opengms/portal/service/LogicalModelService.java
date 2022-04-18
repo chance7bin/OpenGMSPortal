@@ -194,7 +194,7 @@ public class LogicalModelService {
         modelAndView.addObject("lastModifyTime", lastModifyTime);
 //        modelAndView.addObject("relateModelItem",modelItemInfo);
         modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
-
+        modelAndView.addObject("modularType", ItemTypeEnum.LogicalModel);
         return modelAndView;
     }
 
@@ -393,7 +393,7 @@ public class LogicalModelService {
                 List<Localization> list = new ArrayList<>();
                 list.add(localization);
                 logicalModel.setLocalizationList(list);
-                logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorship"),AuthorInfo.class));
+                logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 // logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
                 logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
                 logicalModel.setOverview(jsonObject.getString("description"));
