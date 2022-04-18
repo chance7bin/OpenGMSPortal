@@ -776,9 +776,9 @@
                 </div>
                 <div class="block_content" th:object="${itemInfo}">
                     <div id="cite-text" class="">
-                        <span th:if="${authorships!=''}"
+                        <span th:if="${authorship!=''}"
                               th:text="${authorships}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
-                        <span th:if="${authorships==''}"
+                        <span th:if="${authorship==''}"
                               th:text="${user.name}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
                         <a style="word-break:break-all;"
                            th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"

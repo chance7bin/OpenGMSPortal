@@ -85,7 +85,7 @@
                 "publicExample": "公共示例",
                 "myTaskData": "我的任务数据",
                 "user": "用户",
-                "runTime": "运行时",
+                "runTime": "调用时间",
                 "description": "描述",
                 "operation": "操作",
                 "load": "加载",
