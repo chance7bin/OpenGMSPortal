@@ -215,7 +215,8 @@ public class CommentController {
                 jsonObject.put("status","comment");
                 jsonObject.put("readStatus",comment.getReadStatus());
                 String id = comment.getRelateItemId();
-                JSONObject itemInfo = getItemInfoByTypeAndId(comment.getRelateItemType(),comment.getRelateItemId());
+                id = Utils.formatId4hasLang(id);
+                JSONObject itemInfo = getItemInfoByTypeAndId(comment.getRelateItemType(),id);
                 jsonObject.put("itemInfo",itemInfo);
 
                 jsonArray.add(jsonObject);
