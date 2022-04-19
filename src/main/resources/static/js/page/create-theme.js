@@ -1048,7 +1048,7 @@ var createTheme = Vue.extend({
             this.relateType = "modelItem";
             if(this.pageOption1.currentPage==0){
                 this.pageOption1.currentPage++;
-            };
+            }
             var data = {
                 asc: this.pageOption1.sortAsc,
 
@@ -1362,7 +1362,7 @@ var createTheme = Vue.extend({
             let arr = window.location.href.split("/");
             let oid = arr[arr.length - 1].split("#")[0];
             let data = {
-                oid: oid,
+                id: oid,
                 type: this.relateType
             };
             $.ajax({
@@ -1470,7 +1470,7 @@ var createTheme = Vue.extend({
             that.pageOption1.currentPage=0;
             that.pageOption1.searchResult = [];
             that.relateSearch = "";
-            that.getRelation();
+            // that.getRelation();
             that.search1();
 
 
@@ -1479,7 +1479,7 @@ var createTheme = Vue.extend({
             that.pageOption2.currentPage=0;
             that.pageOption2.searchResult = [];
             that.relateSearch = "";
-            that.getRelation();
+            // that.getRelation();
             that.search2();
 
             //method,application
@@ -1488,7 +1488,7 @@ var createTheme = Vue.extend({
             that.pageOption3.currentPage = 0;
             that.pageOption3.searchResult = [];
             that.relateSearch = "";
-            that.getRelation();
+            // that.getRelation();
             that.search3();
         });
 

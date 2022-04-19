@@ -1329,7 +1329,7 @@ public class UserService {
 
     public void sendHtmlMail(String to, String subject, String content) {
 
-        log.info("发送HTML邮件：{},{},{}", to, subject, content);
+        // log.info("发送HTML邮件：{},{},{}", to, subject, content);
         //使用MimeMessage，MIME协议
         MimeMessage message = mailSender.createMimeMessage();
 
@@ -1342,9 +1342,9 @@ public class UserService {
             helper.setSubject(subject);
             helper.setText(content, true);//true代表支持html
             mailSender.send(message);
-            log.info("发送HTML邮件成功");
+            log.info("向 [{}] 发送邮件成功", to);
         } catch (MessagingException e) {
-            log.error("发送HTML邮件失败：" +  e);
+            log.error("向 [{}] 发送邮件失败", to);
         }
     }
 

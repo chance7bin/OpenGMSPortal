@@ -201,10 +201,10 @@ var router = new VueRouter({
                 path:'/userTheme/createTheme',
                 component:createTheme,
             },
-            {
-                path:'/draftBox',
-                component:userDraftBox,
-            },
+            // {
+            //     path:'/draftBox',
+            //     component:userDraftBox,
+            // },
             {
                 path:'/account',
                 component:userAccount,
