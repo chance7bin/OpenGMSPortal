@@ -189,7 +189,7 @@
         </div>
         <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
             <el-tag type="info"><span translateId="authorshipCorrect">Is authorship not correct? </span>
-                <a href="javascript:void(0)" @click="feedBack" translateId="authorshipCorrect" style="text-decoration: underline">Feed back</a>
+                <a href="javascript:void(0)" @click="feedBack" translateId="Feedback" style="text-decoration: underline">Feed back</a>
             </el-tag>
         </div>
     </div>
@@ -270,7 +270,7 @@
                 <span th:case="'LogicalModel'" class="label label-info" translateId="logicalModel"></span>
                 <span th:case="'ComputableModel'" class="label label-info" translateId="computableModel"></span>
                 <span th:case="'ConceptualModel'" class="label label-info" translateId="conceptualModel"></span>
-                <span th:case="*" th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info">
+                <span th:case="*" th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info"></span>
 
 
     </div>
@@ -472,6 +472,8 @@
         <!--<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>-->
         <!--<el-button icon="el-icon-check" type="text">selectAll</el-button>-->
         <!--</el-card>-->
+    </div>
+</div>
 
 <!--Copyright and Disclaimer 版权及免责声明-->
 <div th:fragment="copyright" id="copyright" class="detail_block">
