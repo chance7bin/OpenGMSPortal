@@ -3327,7 +3327,7 @@ var vue = new Vue({
         let id = ids[ids.length - 1];
         this.modelId = id;
 
-        if(id==='selecttask'){
+        if(id.indexOf('selecttask')!=-1){
             this.selectModelPage=true
             this.initializing=false
         }else{
