@@ -71,117 +71,13 @@
 
         <div class="left-panel el-col">
             <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
-<!--            <div class="detail">-->
-<!--                <div class="detail_title" th:object="${itemInfo}">-->
-<!--                    <h2 style="display: inline-block" th:text="${itemInfo.name}"></h2>-->
-<!--                    <div class="pull-right">-->
-
-<!--                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">-->
-<!--                            <a th:if="${itemInfo.status=='Public'&&itemInfo.lock!=true}" href="javascript:void(0)" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>-->
-<!--                        </el-tooltip>-->
-<!--                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">-->
-<!--                            <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>-->
-<!--                        </el-tooltip>-->
-<!--                        <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light" placement="top">-->
-<!--                            <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>-->
-<!--                            <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>-->
-<!--                            <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>-->
-<!--                        </el-tooltip>-->
-
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--                <div class="detail_overview">-->
-<!--                    <div class="img" th:object="${itemInfo}" v-if="">-->
-<!--                        <div th:if="${#strings.isEmpty(itemInfo.image)}">-->
-<!--                            <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>-->
-<!--                        </div>-->
-<!--                        <div th:unless="${#strings.isEmpty(itemInfo.image)}">-->
-<!--                            <img th:src="${itemInfo.image}" class="image">-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="info" th:object="${itemInfo}">-->
-<!--                        <p th:text="${itemInfo.overview}">description</p>-->
-<!--                        <div class="tags">-->
-<!--                            <span class="badge badge-info" th:each="key,iter : ${itemInfo.keywords}"-->
-<!--                                  th:text="${iter.current}">itercurrent</span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="detail_option" th:object="${itemInfo}">-->
-
-<!--                        <a class="fa fa-eye" aria-hidden="true"></a>&nbsp&nbsp<span-->
-<!--                            th:utext="${itemInfo.viewCount}">{{viewCount}}</span>-->
-
-<!--                    </div>-->
-
-<!--                </div>-->
-
-<!--            </div>-->
-
             <div id="Owner0" class="detail_block minScreen">
-
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>Contributor</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row" style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">
-                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
-
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:text="'contributed at '+${#dates.format(itemInfo.createTime,'yyyy-MM-dd')}">
-                                contributed at 2018-7-13 14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
             </div>
 
             <div id="Authorship0" class="detail_block minScreen"
                  th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
-                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" class="ab" style="float: right;">
-                            <a data-toggle="collapse" th:href="'#authorships'+${key.index}" class="detail-toggle" aria-expanded="true" >
-                                <i class="fa fa-caret-up" style="font-size: 21px"></i>
-                            </a>
-                        </span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorships'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}"aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''&&author.ins!=null}">Affiliation：</dt>
-                                    <dd th:if="${author.ins!=''&&author.ins!=null}" th:text="${author.ins}"></dd>
-                                    <div th:if="${author.email!='unknow'&&author.email!=''}">
-                                        <dt>Email：</dt>
-                                        <dd th:text="${author.email}">njgis@163.com</dd>
-                                    </div>
-                                    <dt>Home Page：</dt>
-                                    <dd><a th:href="${author.homepage}">View</a></dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    <div th:if="${#lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">Feed back</a></el-tag>
-                    </div>
-                </div>
+                <div th:replace="fragments/itemInfoModules :: author"></div>
             </div>
 
             <div id="classification0" class="detail_block minScreen">
@@ -534,144 +430,7 @@
                         </button>
                     </div>
 
-                    <!--<el-tabs value="first" >-->
-                    <!--<el-tab-pane label="Related Models List" name="first" style="width: 100%;height:320px;">-->
 
-                    <!--<el-card v-show="relatedModelNotNull"  class="is-hover-shadow relatedModelsInfo"  v-for="item in related3Models" style="margin-top: 10px;margin-bottom: 10px;">-->
-                    <!--<div > <strong>Model: <a :href="checkRelatedModels(item)" target="_blank">{{item.name}}</a></strong>-->
-                    <!--<br><strong>Description:</strong><span>{{item.description}}</span>-->
-
-                    <!--</div>-->
-
-                    <!--</el-card>-->
-                    <!--<el-button v-show="relatedModelNotNull" @click="showRelatedModels" type="primary" icon="el-icon-star-off" style="width: 100%">-->
-
-                    <!--More...-->
-                    <!--</el-button>-->
-                    <!--<el-card v-show="relatedModelIsNull" class="is-never-shadow relatedModelsInfo" style="margin-top: 10px;margin-bottom: 10px"  >-->
-                    <!--<div style="-->
-                    <!--text-align: center;-->
-                    <!--font-weight: 600;-->
-                    <!--margin-top: 30px;-->
-                    <!--margin-bottom: 20px;">-->
-                    <!--<strong>There are no related models for this data, you can add one!</strong>-->
-
-                    <!--</div>-->
-
-                    <!--<el-button @click="addRelatedModel()" type="primary" icon="el-icon-plus" style="width: 100%">-->
-                    <!--add the first model for this data-->
-                    <!--</el-button>-->
-                    <!--</el-card>-->
-
-                    <!--</el-tab-pane>-->
-
-                    <!--<el-tab-pane label="Search From Related Models" name="second">-->
-                    <!--<div style="-->
-                    <!--text-align: center;-->
-                    <!--font-weight: 600;-->
-                    <!--margin-top: 30px;-->
-                    <!--margin-bottom: 20px;-->
-                    <!--"><span>Search the models from the current data related models</span></div>-->
-
-                    <!--<el-button type="success" @click="showRelatedModels" icon="el-icon-search" style="width: 100%">-->
-
-                    <!--search related-->
-                    <!--</el-button>-->
-
-                    <!--</el-tab-pane>-->
-
-                    <!--&lt;!&ndash;search related model dialog&ndash;&gt;-->
-                    <!--<el-dialog-->
-                    <!--title="Related Models of current Data"-->
-                    <!--:visible.sync="searchRelatedModelsDialogVisible"-->
-                    <!--width="30%"-->
-                    <!--height="50%"-->
-                    <!--:before-close="handleClose"-->
-                    <!--style="overflow-y: scroll"-->
-                    <!--&gt;-->
-
-
-                    <!--<el-input v-model="relatedModelsSearchText" placeholder="search related models.."  @keyup.native="searchFromRelatedModels"></el-input>-->
-                    <!--<el-card id="allReM" class="is-never-shadow" style="height: 300px;overflow-y: scroll" v-loading="loading" @scroll.native="loadMore($event)"  >-->
-
-                    <!--<div class="el-card is-hover-shadow relatedModelsInfo" v-for="item in allRelatedModels" style="margin-top: 10px;margin-bottom: 10px;">-->
-                    <!--<div > <strong>Model: <a :href="checkRelatedModels(item)" target="_blank">{{item.name}}</a></strong>-->
-                    <!--<br><strong>Description:</strong><span>{{item.description}}</span>-->
-
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--<div v-if="nomore!=''" style="text-align: center">-->
-                    <!--<span  >no more data</span>-->
-                    <!--</div>-->
-
-
-                    <!--</el-card>-->
-
-
-                    <!--<span slot="footer" class="dialog-footer">-->
-                    <!--<el-button @click="searchRelatedModelsDialogVisible = false">Cancel</el-button>-->
-                    <!--<el-button type="primary" @click="searchRelatedModelsDialogVisible = false">Sure</el-button>-->
-                    <!--</span>-->
-                    <!--</el-dialog>-->
-
-                    <!--<el-tab-pane label="Add Models" name="third">-->
-                    <!--<div style="-->
-                    <!--text-align: center;-->
-                    <!--font-weight: 600;-->
-                    <!--margin-top: 30px;-->
-                    <!--margin-bottom: 20px;-->
-                    <!--"><span>Add the models into the current data related models</span></div>-->
-                    <!--<el-button @click="addRelatedModel()" type="primary" icon="el-icon-plus" style="width: 100%">-->
-                    <!--add models-->
-                    <!--</el-button></br>-->
-                    <!--</el-tab-pane>-->
-
-                    <!--&lt;!&ndash;add related model dialog&ndash;&gt;-->
-                    <!--<el-dialog-->
-                    <!--title="Add Models for current data"-->
-                    <!--:visible.sync="addRelatedModelsDialogVisible"-->
-                    <!--width="30%"-->
-                    <!--:before-close="handleClose">-->
-
-
-                    <!--<el-form :inline="true"  class="demo-form-inline">-->
-                    <!--<el-radio v-model="value1" label="1" @change="clearSearchResult()" >from my created models</el-radio>-->
-                    <!--<el-radio v-model="value1" label="2" @change="clearSearchResult()">from all models</el-radio>-->
-                    <!--</el-form>-->
-
-                    <!--<el-input v-model="addModelsSearchText" placeholder="search related models and Enter.."  @keyup.enter.native="searchRelatedModels"></el-input></br>-->
-
-                    <!--<el-alert-->
-                    <!--title=""-->
-                    <!--type="success"-->
-                    <!--:closable="false">-->
-                    <!--{{selectedModels}}-->
-
-                    <!--</el-alert>-->
-
-
-                    <!--<el-card v-if="searchAddRelatedModels.length!=0" class="is-never-shadow relatedModelsInfo" style="height: 300px;overflow-y: scroll" v-loading="loading" @scroll.native="loadAddMore($event)" >-->
-
-                    <!--<el-card class="is-hover-shadow models_margin_style" v-for="item in searchAddRelatedModels"   @click.native="selectRelatedModel(item,$event)">-->
-                    <!--<div > <strong>Model: <a :href="checkRelatedModels(item)" target="_blank">{{item.name}}</a></strong>-->
-                    <!--<br><strong>Description:</strong><span>{{item.description}}</span>-->
-
-                    <!--</div>-->
-                    <!--</el-card>-->
-                    <!--<div v-if="nomore!=''" style="text-align: center">-->
-                    <!--<span  >no more data</span>-->
-                    <!--</div>-->
-
-
-                    <!--</el-card>-->
-
-                    <!--<span slot="footer" class="dialog-footer">-->
-                    <!--<el-button @click="relatedToCurrentData()" type="success">RelatedToCurrentData</el-button>-->
-                    <!--&lt;!&ndash;<el-button type="primary" @click="addRelatedModelsDialogVisible = false">Close</el-button>&ndash;&gt;-->
-                    <!--</span>-->
-                    <!--</el-dialog>-->
-
-                    <!--</el-tabs>-->
                 </div>
 
             </div>
@@ -792,18 +551,7 @@
 
             <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
-            <div id="QR0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-
-                    <div class="qrcode" style="width:200px;height:200px;margin: 0px auto;"></div>
-
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div id="comment" class="detail_block">
                 <comments></comments>
@@ -833,78 +581,12 @@
                 <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
             </div>
 
-<!--            <div id="Owner" class="detail_block">-->
-
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">-->
-<!--                        <h4>{{htmlJSON.Contributor}}</h4>-->
-<!--                        <el-tooltip popper-class="fontsize-15" effect="light" :content=htmlJSON.ContributorInfo placement="top">-->
-<!--                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>-->
-<!--                        </el-tooltip>-->
-<!--                    </div>-->
-
-<!--                </div>-->
-
-<!--                <div class="block_content">-->
-<!--                    <div class="el-row" style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">-->
-<!--                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>-->
-<!--                        <div class="el-col">-->
-<!--                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
-<!--                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;"></h4></a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="el-row">-->
-<!--                        <div class="text-center">-->
-<!--                            <h5 th:text="'contributed at '+${#dates.format(itemInfo.createTime,'yyyy-MM-dd')}"></h5>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
             <div id="Authorship" class="detail_block"
                  th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4>{{htmlJSON.Authorship}}</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light"
-                                    :content="htmlJSON.AuthorshipInfo"
-                                    placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>   </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
-
-                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" class="ab" style="float: right;"><a
-                                data-toggle="collapse" th:href="'#authorships'+${key.index}" class="detail-toggle"
-                                aria-expanded="true" ><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorships'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}"aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''&&author.ins!=null}">Affiliation：</dt>
-                                    <dd th:if="${author.ins!=''&&author.ins!=null}" th:text="${author.ins}"></dd>
-                                    <div th:if="${author.email!='unknow'&&author.email!=''}">
-                                        <dt>Email：</dt>
-                                        <dd th:text="${author.email}">njgis@163.com</dd>
-                                    </div>
-                                    <dt th:if="${author.homepage!=''}">Home Page：</dt>
-                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}">View</a></dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div th:if="${#lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">{{htmlJSON.AuthorshipInfo4}} <a href="javascript:void(0)" @click="feedBack" style="text-decoration: underline">{{htmlJSON.AuthorshipInfo5}}</a></el-tag>
-                    </div>
-
-                </div>
+                <div th:replace="fragments/itemInfoModules :: author" ></div>
             </div>
 
-            <div th:replace="fragments/itemInfoModules :: QR"></div>
+            <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
 
         </div>
 

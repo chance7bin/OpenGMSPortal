@@ -57,130 +57,21 @@
                 @translate-page="translatePage"
                 with-comments="true"
                 initial-lang="en-us"
+                with-item-info-modules="true"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div class="detail">
-                <div class="detail_title">
-                    <!--<a th:if="${history!=true}" th:href="${itemInfo.relateModelItem}==null?'/modelItem/repository':'/modelItem/'+${itemInfo.relateModelItem}"-->
-                       <!--class="el-icon-arrow-left" style="font-size: 20px"></a>-->
-
-                    <h2 th:utext="${itemInfo.name}"
-                        style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>
-                    <div class="pull-right">
-                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <a href="javascript:void(0);" th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
-                            <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light" placement="top">
-                            <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
-                            <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
-                            <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
-                        </el-tooltip>
-                        <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
-                    </div>
-                </div>
-                <div class="detail_overview">
-
-                    <div th:switch="${#lists.size(itemInfo.imageList)}" class="img">
-                        <img th:case="0" src="/static/img/model/conceptual.png">
-                        <img th:case="*" th:src="${loadPath}+${itemInfo.imageList[0]}">
-                    </div>
-
-                    <div class="info" style="padding-top:0px">
-                        <p th:text="${itemInfo.overview}"></p>
-                        <div class="tags">
-                                    <span class="label label-success">
-                                        {{htmlJSON.logicalModel}}
-                                    </span>
-
-                        </div>
-                    </div>
-
-                    <div class="detail_option" th:if="${history!=true}">
-                        <button type="button" class="btn btn-default" style="font-weight: bold;font-size:16px"
-                                data-toggle="tooltip" data-placement="left" title="bind to another model item"
-                                @click="modelItemFormVisible=true">+
-                        </button>
-                        <a class="fa fa-eye" aria-hidden="true"></a>
-                        <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}">&nbsp&nbsp341</div>
-
-                    </div>
-
-                </div>
-
-            </div>
+            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
 
             <div id="Contributor0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
 
             </div>
 
             <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: author"></div>
 
-                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
-                                data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
-                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorshipPhone'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
-                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
-                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
-                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">-->
-                        <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
-                                                                              <!--style="text-decoration: underline">claim</a>-->
-                            <!--the item.-->
-                        <!--</el-tag>-->
-                    <!--</div>-->
-                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
-                                                                          style="text-decoration: underline">Feedback</a></el-tag>
-                    </div>
-                </div>
             </div>
 
             <div id="graph" class="detail_block"
@@ -201,9 +92,9 @@
                         </el-tab-pane>
                         <el-tab-pane label="Image" name="Image"  style="position: unset"  th:if="${itemInfo.contentType}=='MxGraph'">
                             <center>
-                                <div th:if="${#lists.size(itemInfo.image)}==0" th:utext="${itemInfo.svg}"></div>
-                                <div th:if="${#lists.size(itemInfo.image)}!=0">
-                                    <img th:src="${loadPath}+${itemInfo.image[0]}">
+                                <div th:if="${#lists.size(itemInfo.imageList)}==0" th:utext="${itemInfo.svg}"></div>
+                                <div th:if="${#lists.size(itemInfo.imageList)}!=0">
+                                    <img th:src="${loadPath}+${itemInfo.imageList[0]}">
 
                                 </div>
                             </center>
@@ -232,37 +123,38 @@
                             <!--aria-hidden="true"></i></a>-->
                 <!--</div>-->
             <!--</div>-->
+            <div th:replace="fragments/itemInfoModules :: related_models" ></div>
 
-            <div id="related_models" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.RelateModelItem}}</h4>
-                    </div>
-                </div>
-                <div class="block_content flex">
+<!--            <div id="related_models" class="detail_block">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text">-->
+<!--                        <h4>{{htmlJSON.RelateModelItem}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content flex">-->
 
-                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">
-                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">
-                            <div th:switch="${relateModelItem.img}">
-                                <img th:case="null" src="/static/img/model/model.png">
-                                <img th:case="*" th:src="${relateModelItem.img}">
-                            </div>
+<!--                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">-->
+<!--                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">-->
+<!--                            <div th:switch="${relateModelItem.img}">-->
+<!--                                <img th:case="null" src="/static/img/model/model.png">-->
+<!--                                <img th:case="*" th:src="${relateModelItem.img}">-->
+<!--                            </div>-->
 
-                        </a>
+<!--                        </a>-->
 
-                        <div class="info" style="margin-top:0px;">
-                            <a th:href="'/modelItem/'+${relateModelItem.id}"
-                               th:text="${relateModelItem.name}">Ground Water Flow System</a>
+<!--                        <div class="info" style="margin-top:0px;">-->
+<!--                            <a th:href="'/modelItem/'+${relateModelItem.id}"-->
+<!--                               th:text="${relateModelItem.name}">Ground Water Flow System</a>-->
 
-                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial
-                                neural network method to extract
-                                land use change rules in the study area, and then applies the rules to
-                                subsequent
-                                simulations and predictions.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!--                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial-->
+<!--                                neural network method to extract-->
+<!--                                land use change rules in the study area, and then applies the rules to-->
+<!--                                subsequent-->
+<!--                                simulations and predictions.</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div id="cite" class="detail_block">
                 <div class="block_head">
@@ -288,60 +180,15 @@
                 </div>
             </div>
 
-            <div id="copyright" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="copyright_text">
-                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
-                    </div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
-
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/conceptualModel/'+${itemInfo.id}" target="_blank">View
-                                    History</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
-            <div id="QR0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>QR Code</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
-
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div id="comment" class="detail_block">
                 <comments></comments>
@@ -352,116 +199,22 @@
         <div class="right-panel el-col">
 
             <div id="Contributor" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Contributor is the person who contributes the item to OpenGMS, may not be the author of the item." placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
-
+                <div th:replace="fragments/itemInfoModules :: contributor_lg"></div>
             </div>
 
             <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: author"></div>
 
-                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" class="ab"  style="float: right;"
-                              th:class="${key.index==0?'ab':'ab transform180'}"><a
-                                data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
-                                aria-expanded="true" ><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorship'+${key.index}" class="panel-collapse" th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
-                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
-                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
-                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">-->
-                        <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
-                                                                              <!--style="text-decoration: underline">claim</a>-->
-                            <!--the item.-->
-                        <!--</el-tag>-->
-                    <!--</div>-->
-                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
-                                                                          style="text-decoration: underline">Feedback</a></el-tag>
-                    </div>
-                </div>
             </div>
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
-
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/conceptualModel/'+${itemInfo.id}" target="_blank">View
-                                    History</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
-            <div id="QR" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
+            <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
 
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
-
-                </div>
-            </div>
 
         </div>
 

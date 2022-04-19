@@ -69,8 +69,6 @@
         <div class="el-row"
              style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">
             <div class="el-col ">
-<!--                <img :src="lightenContributor.avatar==''?'/static/img/icon/default.png':lightenContributor.avatar"-->
-<!--                     class="round_icon" style="width:40px;height: 40px;float:left;">-->
                 <user-avatar ref="mainContributorAvatar"
                              style="width:40px;height: 40px;float:left;">
                 </user-avatar>
@@ -87,7 +85,7 @@
                 <h5 th:if="${history==true}" ><span translateId="ModifyTime">Modify Time: </span><span th:text="${date}"></span></h5>
             </div>
         </div>
-        <div class="flexAlignEnd flexJustCenter">
+        <div th:if="${modularType.name} eq 'ModelItem'" class="flexAlignEnd flexJustCenter">
             <div class="wzhScrollbar " style="max-height: 135px">
                 <div v-if="contributors!=null&&contributors.length>0" v-for="(contributor,index) in contributors" :key="contributor.accessId"
                      class="inlineBlock cursorPointer" style="margin: 10px 5px;">
@@ -146,7 +144,7 @@
     </div>
 </div>
 
-<div th:fragment="author">
+<div th:fragment="author" th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
             <h4 translateId="Authorship">Authorship</h4>
@@ -165,18 +163,18 @@
                               th:class="${key.index==0?'ab':'ab transform180'}"><a
                                 data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-            <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
+            <li class="NavHead" style="font-size: 16px;" th:text="${author.name}"></li>
             <div th:id="'authorshipPhone'+${key.index}" class="panel-collapse" name="authorshipContent"
                  th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
                  style="">
                 <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
                     <dl>
-                        <dt th:if="${author.ins!=''}"><span translateId="Affiliation">Affiliation</span>: &nbsp</dt>
+                        <dt th:if="${author.ins!=''}"><span translateId="Affiliation"></span>: &nbsp</dt>
                         <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                        <dt th:if="${author.email!=''}"><span translateId="Email">Email</span>: &nbsp</dt>
-                        <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                        <dt th:if="${author.homepage!=''}"><span translateId="Homepage">Homepage</span>: &nbsp</dt>
-                        <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
+                        <dt th:if="${author.email!=''}"><span translateId="Email"></span>: &nbsp</dt>
+                        <dd th:if="${author.email!=''}" th:text="${author.email}"></dd>
+                        <dt th:if="${author.homepage!=''}"><span translateId="Homepage"></span>: &nbsp</dt>
+                        <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank"></a>
                         </dd>
                     </dl>
                 </div>
@@ -220,14 +218,19 @@
                 <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em "></i>
             </el-tooltip>
 
-            <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
         </div>
     </div>
     <div class="detail_overview">
+
         <div th:if="${modularType.name} eq'ModelItem'"  th:switch="${itemInfo.image}" class="img">
             <img th:case="''" src="/static/img/model/model.png">
             <img th:case="null" src="/static/img/model/model.png">
             <img th:case="*" th:src="${itemInfo.image}">
+        </div>
+
+        <div th:if="${modularType.name} eq'LogicalModel'" th:switch="${#lists.size(itemInfo.imageList)}" class="img">
+            <img th:case="0" src="/static/img/model/logical.png">
+            <img th:case="*" th:src="${loadPath}+${itemInfo.imageList[0]}">
         </div>
 
         <div th:if="${itemType} eq'Data'" class="img" th:object="${itemInfo}">
@@ -260,12 +263,44 @@
         <div class="info">
             <p th:text="${itemInfo.overview}"></p>
             <div class="tags" th:switch="${modularType.name}">
-                <span th:case="'Concept'" class="badge badge-info">Concept & Semantic</span>
-                <span th:case="'SpatialReference'"  class="badge badge-info">Spatial Reference</span>
-                <span th:case="'Template'" class="badge badge-info">Data Template</span>
-                <span th:case="'Unit'" class="badge badge-info">Unit & Metric</span>
+                <span th:case="'Concept'" class="badge badge-info" translateId="ConceptSemantic"></span>
+                <span th:case="'SpatialReference'"  class="badge badge-info" translateId="SpatialReference"></span>
+                <span th:case="'Template'" class="badge badge-info" translateId="DataTemplate"></span>
+                <span th:case="'Unit'" class="badge badge-info" translateId="UnitMetric"></span>
+                <span th:case="'LogicalModel'" class="label label-info" translateId="logicalModel"></span>
+                <span th:case="'ComputableModel'" class="label label-info" translateId="computableModel"></span>
+                <span th:case="'ConceptualModel'" class="label label-info" translateId="conceptualModel"></span>
                 <span th:case="*" th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info">
 
+
+    </div>
+</div>
+
+<!--相关模型条目-->
+<div th:fragment="related_models" id="related_models" class="detail_block">
+    <div class="block_head">
+        <div class="head_text">
+            <h4 translateId="relateModelItem">Related Model Item</h4>
+        </div>
+    </div>
+    <div class="block_content flex">
+        <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">
+            <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">
+                <div th:switch="${relateModelItem.img}">
+                    <img th:case="null" src="/static/img/model/model.png">
+                    <img th:case="*" th:src="${relateModelItem.img}">
+                </div>
+
+            </a>
+
+            <div class="info" style="margin-top:0px;">
+                <a th:href="'/modelItem/'+${relateModelItem.id}"
+                   th:text="${relateModelItem.name}"></a>
+                <p style="margin-top: 0px" th:text="${relateModelItem.description}"></p>
+            </div>
+        </div>
+    </div>
+</div>
 
                 </span>
 
@@ -344,21 +379,19 @@
             <h4 translateId="Alias">Alias</h4>
         </div>
         <span class="blockEdit">
-                         <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                                       type="primary" icon="el-icon-edit" @click="getAlias" circle></el-button>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
-                                    effect="light" placement="top">
-                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
-                                       icon="el-icon-edit" plain circle></el-button>
-                        </el-tooltip>
-                    </span>
+                 <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                               type="primary" icon="el-icon-edit" @click="getAlias" circle></el-button>
+                </el-tooltip>
+                <el-tooltip popper-class="fontsize-15"
+                            content="There is another version haven't been reviewed, you can edit it later or contact us."
+                            effect="light" placement="top">
+                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                               icon="el-icon-edit" plain circle></el-button>
+                </el-tooltip>
+        </span>
     </div>
     <div th:fragment="aliasContent" class="block_content" style="margin-bottom:10px;">
-
-        <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
 
         <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"
                 style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
@@ -367,6 +400,78 @@
 
 </div>
 
+<!--resource资源-->
+<div th:fragment="Resource" id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"
+     th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
+    <div class="block_head">
+        <div class="head_text">
+            <h4>{{htmlJSON.Resource}}</h4>
+        </div>
+    </div>
+    <div class="block_content" style="margin-right: 0;">
+        <div class="el-card filecontent is-always-shadow" id="browsercont"
+             style=" overflow-y: auto;">
+            <div class="el-card dataitemisol is-never-shadow"
+                 th:each="data,key:${resources}"
+                 th:title="${data.name}" shadow="never" th:id="${key.index}"
+                 th:key="${key.index}" @click.native="getid(id)"
+                 style="width: 150px;">
+                <i class="fas fa-file-download"></i>
+                <a target="_blank"
+                   th:href="'/static'+'/dataMethod/'+${itemInfo.contentType}+${data.path}"
+                   style="color:black">
+                    <div class="resouceFile el-card__body">
+                        <div class="el-row">
+                            <!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
+                            <div class="fileIcon el-col el-col-12" style="margin-left: 30px;">
+                                <img
+                                        th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"
+                                        onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
+                                        style="width: 100%;">
+                            </div>
+                            <div style="margin-left: 15px;display: none" class="downloadIcon" >
+                                <img
+                                        th:src="'/static/img/filebrowser/download.png'"
+                                        onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'">
+                            </div>
+                            <div class="el-col el-col-6">&nbsp;</div>
+                        </div>
+                        <div class="el-row" style="height: 45px;">
+                            <div class="el-col el-col-2">&nbsp;</div>
+                            <div class="el-col el-col-20 fileIcon">
+                                <p th:text="${data.name}" style="overflow: hidden;
+                                        overflow-wrap: break-word; word-break: break-all; text-align: center;
+                                        display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
+                                </p>
+                            </div>
+                            <div class="el-col el-col-2">&nbsp;</div>
+                        </div>
+                    </div>
+
+                    <!--                                <div id="imgMask" class="flexCenter" th:if="data!=undefined"-->
+                    <!--                                     style="position: absolute;width: 100px;height: 100px">-->
+                    <!--                                    <div class="fa fa-times imgDelete" @click="deleteImg"></div>-->
+                    <!--                                    <div class="fa fa-pencil imgEditBlock flexCenter" style="" @click="imgFile"></div>-->
+                    <!--                                </div>-->
+                </a>
+            </div>
+
+
+        </div>
+
+
+        <!--                    <el-card class="browsermenu">-->
+        <!--                        <el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download-->
+        <!--                        </el-button>-->
+        <!--                        <br>-->
+        <!--                        <el-button id="sbtn" icon="el-icon-share" @click="share" type="text">share</el-button>-->
+        <!--                    </el-card>-->
+        <!--refresh 白板刷新和全选功能，待进一步完善-->
+
+        <!--<el-card class="browser">-->
+        <!--<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>-->
+        <!--<el-button icon="el-icon-check" type="text">selectAll</el-button>-->
+        <!--</el-card>-->
 
 <!--Copyright and Disclaimer 版权及免责声明-->
 <div th:fragment="copyright" id="copyright" class="detail_block">
@@ -411,8 +516,8 @@
     </div>
 </div>
 
-<!--qrcode 二维码-->
-<div th:if="${history!=true}" th:fragment="QR" id="QR" class="detail_block">
+<!--qrcode 二维码大屏-->
+<div th:if="${history!=true}" th:fragment="QR_lg" id="QR" class="detail_block">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;">
             <h4 translateId="QRCode">QR Code</h4>
@@ -422,9 +527,20 @@
         <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
     </div>
 </div>
+<!--qrcode 二维码小屏-->
+<div th:if="${history!=true}" th:fragment="QR_sm" id="QR0" class="detail_block minScreen">
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px;">
+            <h4>{{htmlJSON.QRCode}}</h4>
+        </div>
+    </div>
+    <div class="block_content">
+        <div class="qrcode"  style="width:200px;height:200px;margin:0 auto"></div>
+    </div>
+</div>
 
 <!--Co-contributor(s) 共同创建者-->
-<div v-if="contributors!=null&&contributors.length>0" th:fragment="Modifier" id="Modifier" class="detail_block">
+<div th:if="${modularType.name} eq 'ModelItem'" v-if="contributors!=null&&contributors.length>0" th:fragment="coContributor" id="coContributor" class="detail_block">
     <div class="block_head" style="border-left-color: #00d083;">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
             <h4 translateId="CoContributor">Co-contributor(s)</h4>

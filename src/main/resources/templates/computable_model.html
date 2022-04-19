@@ -53,6 +53,7 @@
                 @translate-page="translatePage"
                 with-comments="true"
                 initial-lang="en-us"
+                with-item-info-modules="true"
                 theme="dark"
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
@@ -160,154 +161,85 @@
 
             </div>
             <div id="Contributor0" class="detail_block minScreen">
+                <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
 
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <user-avatar ref="mainContributorAvatar" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
-                                    Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13
-                                14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13
-                                14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
 
             </div>
 
             <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex"><h4>
-                        Authorship</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light"
-                                    content="We deeply understand that a model may be attributed to the efforts of a team.
-                                    If all author information is not listed here, please click the feedback below."
-                                    placement="top"><i class="fa fa-question-circle-o" aria-hidden="true"
-                                                       style="margin-top:4px;"></i></el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: author"></div>
 
-                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
-                                data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
-                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorshipPhone'+${key.index}" class="panel-collapse"
-                             th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
-                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
-                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
-                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">-->
-                        <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
-                                                                              <!--style="text-decoration: underline">claim</a>-->
-                            <!--the item.-->
-                        <!--</el-tag>-->
-                    <!--</div>-->
-                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
-                                                                          style="text-decoration: underline">Feedback</a></el-tag>
-                    </div>
-                </div>
             </div>
+            <div th:replace="fragments/itemInfoModules :: Resource"></div>
 
-            <div id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"
-                 th:if="${(itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.Resource}}</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="margin-right: 0;">
+<!--            <div id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"-->
+<!--                 th:if="${(itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text">-->
+<!--                        <h4>{{htmlJSON.Resource}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content" style="margin-right: 0;">-->
 
-                    <!--<div class="el-card is-always-shadow">&lt;!&ndash;&ndash;&gt;-->
-                        <!--<div class="el-card__body" style="padding: 9px;"><span><i class="el-icon-document"></i>&nbsp;&nbsp; contents</span>-->
-                        <!--</div>-->
-                    <!--</div>-->
+<!--                    &lt;!&ndash;<div class="el-card is-always-shadow">&lt;!&ndash;&ndash;&gt;&ndash;&gt;-->
+<!--                        &lt;!&ndash;<div class="el-card__body" style="padding: 9px;"><span><i class="el-icon-document"></i>&nbsp;&nbsp; contents</span>&ndash;&gt;-->
+<!--                        &lt;!&ndash;</div>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</div>&ndash;&gt;-->
 
-                    <div class="el-card filecontent is-always-shadow" id="browsercont"
-                         style=" overflow-y: auto;">
+<!--                    <div class="el-card filecontent is-always-shadow" id="browsercont"-->
+<!--                         style=" overflow-y: auto;">-->
 
-                        <!--</el-row>-->
-                        <div class="el-card dataitemisol is-never-shadow"
-                             th:each="data,key:${resources}"
-                             th:title="${data.name}" shadow="never" th:id="${key.index}"
-                             th:key="${key.index}" @click.native="getid(id)" @contextmenu.prevent="openMenu($event,id)"
-                             style="width: 150px;"><!---->
-                            <a target="_blank"
-                               th:href="${loadPath}+'/computableModel/'+${itemInfo.contentType}+${data.path}"
-                                style="color:black">
-                                <div class="el-card__body">
-                                    <div class="el-row">
-                                        <div class="el-col el-col-6">&nbsp;</div>
-                                        <div class="el-col el-col-12">
-                                            <img
-                                                    th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"
-                                                    onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
-                                                    style="width: 100%;">
-                                        </div>
-                                        <div class="el-col el-col-6">&nbsp;</div>
-                                    </div>
-                                    <div class="el-row" style="height: 45px;">
-                                        <div class="el-col el-col-2">&nbsp;</div>
-                                        <div class="el-col el-col-20"><p th:text="${data.name}"
-                                                                         style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
-                                        </p></div>
-                                        <div class="el-col el-col-2">&nbsp;</div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-
-                    </div>
+<!--                        &lt;!&ndash;</el-row>&ndash;&gt;-->
+<!--                        <div class="el-card dataitemisol is-never-shadow"-->
+<!--                             th:each="data,key:${resources}"-->
+<!--                             th:title="${data.name}" shadow="never" th:id="${key.index}"-->
+<!--                             th:key="${key.index}" @click.native="getid(id)" @contextmenu.prevent="openMenu($event,id)"-->
+<!--                             style="width: 150px;">&lt;!&ndash;&ndash;&gt;-->
+<!--                            <a target="_blank"-->
+<!--                               th:href="${loadPath}+'/computableModel/'+${itemInfo.contentType}+${data.path}"-->
+<!--                                style="color:black">-->
+<!--                                <div class="el-card__body">-->
+<!--                                    <div class="el-row">-->
+<!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
+<!--                                        <div class="el-col el-col-12">-->
+<!--                                            <img-->
+<!--                                                    th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"-->
+<!--                                                    onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"-->
+<!--                                                    style="width: 100%;">-->
+<!--                                        </div>-->
+<!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
+<!--                                    </div>-->
+<!--                                    <div class="el-row" style="height: 45px;">-->
+<!--                                        <div class="el-col el-col-2">&nbsp;</div>-->
+<!--                                        <div class="el-col el-col-20"><p th:text="${data.name}"-->
+<!--                                                                         style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">-->
+<!--                                        </p></div>-->
+<!--                                        <div class="el-col el-col-2">&nbsp;</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </a>-->
+<!--                        </div>-->
 
 
-                    <!--<el-card v-if="rightMenuShow" class="browsermenu" ref="rightMenu">-->
-                        <!--<el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download-->
-                        <!--</el-button>-->
-                        <!--<br>-->
-                        <!--<el-button id="sbtn" icon="el-icon-share" @click="share" type="text">share</el-button>-->
-                    <!--</el-card>-->
-                    <!--refresh 白板刷新和全选功能，待进一步完善-->
-
-                    <!--<el-card class="browser">-->
-                    <!--<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>-->
-                    <!--<el-button icon="el-icon-check" type="text">selectAll</el-button>-->
-                    <!--</el-card>-->
+<!--                    </div>-->
 
 
-                </div>
-            </div>
+<!--                    &lt;!&ndash;<el-card v-if="rightMenuShow" class="browsermenu" ref="rightMenu">&ndash;&gt;-->
+<!--                        &lt;!&ndash;<el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download&ndash;&gt;-->
+<!--                        &lt;!&ndash;</el-button>&ndash;&gt;-->
+<!--                        &lt;!&ndash;<br>&ndash;&gt;-->
+<!--                        &lt;!&ndash;<el-button id="sbtn" icon="el-icon-share" @click="share" type="text">share</el-button>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</el-card>&ndash;&gt;-->
+<!--                    &lt;!&ndash;refresh 白板刷新和全选功能，待进一步完善&ndash;&gt;-->
+
+<!--                    &lt;!&ndash;<el-card class="browser">&ndash;&gt;-->
+<!--                    &lt;!&ndash;<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>&ndash;&gt;-->
+<!--                    &lt;!&ndash;<el-button icon="el-icon-check" type="text">selectAll</el-button>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</el-card>&ndash;&gt;-->
+
+
+<!--                </div>-->
+<!--            </div>-->
 
             <div id="link" class="detail_block"
                  th:if="${itemInfo.contentType=='Link'||(itemInfo.contentType=='Service' && itemInfo.mdl == null)}">
@@ -441,36 +373,38 @@
 
             <div th:replace="fragments/itemInfoModules :: description"></div>
 
-            <div id="related_models" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.RelatedModelItem}}</h4>
-                    </div>
-                </div>
-                <div class="block_content flex">
+            <div th:replace="fragments/itemInfoModules :: related_models"></div>
 
-                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">
-                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">
-                            <div th:switch="${relateModelItem.img}">
-                                <img th:case="null" src="/static/img/model/model.png">
-                                <img th:case="*" th:src="${relateModelItem.img}">
-                            </div>
+            <!--            <div id="related_models" class="detail_block">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text">-->
+<!--                        <h4>{{htmlJSON.RelatedModelItem}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content flex">-->
 
-                        </a>
+<!--                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">-->
+<!--                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">-->
+<!--                            <div th:switch="${relateModelItem.img}">-->
+<!--                                <img th:case="null" src="/static/img/model/model.png">-->
+<!--                                <img th:case="*" th:src="${relateModelItem.img}">-->
+<!--                            </div>-->
 
-                        <div class="info" style="margin-top:0px;">
-                            <a th:href="'/modelItem/'+${relateModelItem.id}"
-                               th:text="${relateModelItem.name}">{{htmlJSON.GroundWaterFlowSystem}}</a>
+<!--                        </a>-->
 
-                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial
-                                neural network method to extract
-                                land use change rules in the study area, and then applies the rules to
-                                subsequent
-                                simulations and predictions.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!--                        <div class="info" style="margin-top:0px;">-->
+<!--                            <a th:href="'/modelItem/'+${relateModelItem.id}"-->
+<!--                               th:text="${relateModelItem.name}">{{htmlJSON.GroundWaterFlowSystem}}</a>-->
+
+<!--                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial-->
+<!--                                neural network method to extract-->
+<!--                                land use change rules in the study area, and then applies the rules to-->
+<!--                                subsequent-->
+<!--                                simulations and predictions.</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div id="cite" class="detail_block">
                 <div class="block_head">
@@ -498,61 +432,17 @@
                 </div>
             </div>
 
-            <div id="copyright" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.CopyrightAndDisclaimer}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="copyright_text">
-                        {{htmlJSON.CopyrightAndDisclaimerInfo}}
-                    </div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: copyright"></div>
+
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
-
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/computableModel/'+${itemInfo.id}"
-                                        target="_blank">View
-                                    History</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
-            <div id="QR0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
+            <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
-
-                </div>
-            </div>
 
             <div id="comment" class="detail_block">
                 <comments></comments>
@@ -560,122 +450,23 @@
         </div>
         <div class="right-panel el-col" style="border-left: #d2d2d2 solid 1px;margin-left:-1px">
             <div id="Contributor" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>
-                        <h4 th:if="${history==true}">Modifier</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJSON.ContributorInfo" placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="el-row"
-                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">
-                        <div class="el-col">
-                            <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>
-                        </div>
-                        <div class="el-col">
-                            <div class="pull-left" style="display: block;margin-left: 15px;">
-                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom
-                                    Marvolo Riddle</h4></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="el-row">
-                        <div class="text-center">
-                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13
-                                14:32:18 </h5>
-                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13
-                                14:32:18 </h5>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="fragments/itemInfoModules :: contributor_lg"></div>
+
 
             </div>
 
             <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div class="block_head">
-                    <div class="head_text " style="padding-left: 10px;padding-right: 15px;display: inline-flex">                         <h4>Authorship</h4>                         <el-tooltip popper-class="fontsize-15" effect="light"                                     content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."                                     placement="top">                             <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>                         </el-tooltip>                     </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: author"></div>
 
-                    <div style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
-                        <span role="button" tabindex="0" th:class="${key.index==0?'ab':'ab transform180'}" style="float: right;"><a
-                                data-toggle="collapse" th:href="'#authorship'+${key.index}" class="detail-toggle"
-                                aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
-                        <li class="NavHead" style="font-size: 16px;" th:text="${author.name}">NNU_Group</li>
-                        <div th:id="'authorship'+${key.index}" class="panel-collapse"
-                             th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
-                             style="">
-                            <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
-                                <dl>
-                                    <dt th:if="${author.ins!=''}">Affiliation: &nbsp</dt>
-                                    <dd th:if="${author.ins!=''}" th:text="${author.ins}"></dd>
-                                    <dt th:if="${author.email!=''}">Email: &nbsp</dt>
-                                    <dd th:if="${author.email!=''}" th:text="${author.email}">njgis@163.com</dd>
-                                    <dt th:if="${author.homepage!=''}">Homepage: &nbsp</dt>
-                                    <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank">View</a>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">-->
-                        <!--<el-tag type="info">Authorship is unclear, you can <a href="javascript:void(0)" @click="claim"-->
-                                                                              <!--style="text-decoration: underline">claim</a>-->
-                            <!--the item.-->
-                        <!--</el-tag>-->
-                    <!--</div>-->
-                    <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                        <el-tag type="info">Is authorship not correct? <a href="javascript:void(0)" @click="feedBack"
-                                                                          style="text-decoration: underline">Feedback</a></el-tag>
-                    </div>
-                </div>
             </div>
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>History</h4>
-                    </div>
-                </div>
-                <div class="block_content text-center" style="padding-left:10px">
+                <div th:replace="fragments/itemInfoModules :: History"></div>
 
-                    <div style="text-align: left;">
-
-                        <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
-                            <dl>
-                                <dt>Last modifier :&nbsp</dt>
-                                <dd><a th:text="${lastModifier.name}" th:href="${'/profile/'+lastModifier.accessId}"
-                                       target="_blank"></a></dd>
-                                <dt>Last modify time :&nbsp</dt>
-                                <dd th:text="${lastModifyTime}"></dd>
-                                <dt>Modify times :&nbsp</dt>
-                                <dd><span th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span><a
-                                        th:href="'/version/historyList/computableModel/'+${itemInfo.id}"
-                                        target="_blank">View
-                                    History</a></dd>
-                            </dl>
-                        </div>
-
-                    </div>
-                </div>
             </div>
+            <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
 
-            <div id="QR" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.QRCode}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-
-                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
-
-                </div>
-            </div>
 
         </div>
 

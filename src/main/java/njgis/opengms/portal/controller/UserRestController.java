@@ -89,6 +89,7 @@ public class UserRestController {
     @ApiOperation(value = "访问用户个人主页")
     @RequestMapping(value = "/{accessId}", method = RequestMethod.GET)
     public ModelAndView getUserPage(@PathVariable("accessId") String accessId, HttpServletRequest req) {
+//        accessId = accessId.split("\\?")[0];
 //        个人主页使用session的uid也就是username判断
         ModelAndView modelAndView = new ModelAndView();
         HttpSession session = req.getSession();
@@ -668,6 +669,7 @@ public class UserRestController {
     @ApiOperation(value = "根据用户名得到email")
     @RequestMapping (value = "/email", method = RequestMethod.GET)
     public JsonResult getUserEmail(@PathParam("userName") String userName){
+        userName = userName.split("\\?")[0];
         return ResultUtils.success(userService.getUserEmail(userName));
     }
 
