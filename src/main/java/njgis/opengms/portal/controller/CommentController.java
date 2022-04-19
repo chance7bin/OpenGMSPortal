@@ -70,8 +70,8 @@ public class CommentController {
     }
 
     @LoginRequired
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public JsonResult delete(@RequestParam("id") String id, HttpServletRequest request){
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public JsonResult delete(@PathVariable("id") String id, HttpServletRequest request){
 
         if (id.contains("?"))
             id = (id.split("\\?"))[0];
@@ -203,6 +203,8 @@ public class CommentController {
         for(int i=0;i<commentList.size();i++){
             Comment comment = commentList.get(i);
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id",comment.getId()); //返回comment的id
+            jsonObject.put("nowUserEmail",email);  //返回当前登录的user email，前端实在找不到了
             jsonObject.put("content",comment.getContent());
             jsonObject.put("author",getUserByEmail(comment.getCommentEmail()));
             jsonObject.put("replier",getUserByEmail(comment.getReplyToUserEmail()));
@@ -217,9 +219,7 @@ public class CommentController {
             jsonObject.put("itemInfo",itemInfo);
 
             jsonArray.add(jsonObject);
-
         }
-        jsonArray.add(email);
 
         return ResultUtils.success(jsonArray);
 

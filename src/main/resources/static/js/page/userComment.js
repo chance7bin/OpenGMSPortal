@@ -34,21 +34,40 @@ var userComment = Vue.extend({
             axios.get("/comment/getCommentsByUser")
                 .then(res=> {
                     console.log("commentList:",res)
+                    this.commentTableData=res.data.data
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
+
+
         deleteCommentById(commentId){
-            axios.post("/comment/delete",{
-                id:commentId
-            })
-                .then(res=> {
-                    console.log(res)
-                })
-                .catch(function (error) {
-                    console.log(error);
+
+            this.$confirm('删除评论, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                axios.get("/comment/delete/"+commentId)
+                    .then(res=> {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        this.getCommentList()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
+            });
+
         }
     }
 

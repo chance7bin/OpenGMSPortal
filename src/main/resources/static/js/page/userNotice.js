@@ -96,7 +96,6 @@ var userNotice = Vue.extend({
         setAllNotice2Read(){
             axios.get("/notice/notice2read")
                 .then(res=> {
-                    console.log(res)
                     this.getNoticeList()
                     this.getNoticeCount()
                     this.getUnReadNoticeCount()
@@ -108,7 +107,6 @@ var userNotice = Vue.extend({
         setOneNotice2Read(noticeId){
             axios.get("/notice/notice2read/"+noticeId)
                 .then(res=> {
-                    console.log("",res)
                     this.getNoticeList()
                     this.getNoticeCount()
                     this.getUnReadNoticeCount()
@@ -120,12 +118,19 @@ var userNotice = Vue.extend({
         viewNotice(row){
             this.noticeDialogVisible=true
             this.currentMessage=row.message
+            this.setOneNotice2Read(row.id)
+            this.getNoticeList()
+            this.getNoticeCount()
+            this.getUnReadNoticeCount()
         },
         handleSizeChange(val){
             this.pageSize=val;
+            this.getNoticeList()
         },
         handleCurrentChange(val) {
             this.currentPage=val;
+            this.getNoticeList()
+
         }
 
     }

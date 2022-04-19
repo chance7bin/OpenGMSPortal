@@ -36,7 +36,6 @@ var userVersion = Vue.extend({
     },
     watch:{
         "activeName":function(val){
-            console.log(val)
             this.resetPageInfo()
             switch(val) {
                 case "0":
@@ -60,13 +59,13 @@ var userVersion = Vue.extend({
                 default:
                     this.versionUrl=""
             }
-            // console.log(this.versionUrl)
             this.getVersionList(this.versionUrl)
         }
     },
     methods:{
         handleParentTabChange(val){
-            if(val.label==="My Edition"){
+            console.log(val)
+            if(val.index==="0"){
                 this.activeName="0"
             }else{
                 this.activeName="3"
@@ -98,32 +97,59 @@ var userVersion = Vue.extend({
                 });
         },
 
-        viewVersionById(versionId){
-            axios.get("/version/detail/"+versionId)
-                .then(res=> {
-                    console.log("version detail:",res)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+        viewVersionById(type,versionId){
+            let versionViewUrl="/version/history/"+type+"/"+versionId
+            window.open(versionViewUrl, '_blank')
         },
         acceptVersionById(versionId){
-            axios.get("/version/accept/"+versionId)
-                .then(res=> {
-                    console.log("accept version:",res)
-                })
-                .catch(function (error) {
-                    console.log(error);
+            this.$confirm('接受该版本, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                axios.get("/version/accept/"+versionId)
+                    .then(res=> {
+                        this.$message({
+                            type: 'success',
+                            message: '接受成功!'
+                        });
+                        this.getVersionList(this.versionUrl)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
+            });
+
         },
         rejectVersionById(versionId){
-            axios.get("/version/reject/"+versionId)
-                .then(res=> {
-                    console.log("reject version:",res)
-                })
-                .catch(function (error) {
-                    console.log(error);
+            this.$confirm('拒接该版本, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                axios.get("/version/reject/"+versionId)
+                    .then(res=> {
+                        this.$message({
+                            type: 'success',
+                            message: '拒绝成功!'
+                        });
+                        this.getVersionList(this.versionUrl)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
+            });
+
         },
 
         handleSizeChange(val){
