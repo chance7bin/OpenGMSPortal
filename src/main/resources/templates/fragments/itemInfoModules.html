@@ -270,11 +270,11 @@
                 <span th:case="'LogicalModel'" class="label label-info" translateId="logicalModel"></span>
                 <span th:case="'ComputableModel'" class="label label-info" translateId="computableModel"></span>
                 <span th:case="'ConceptualModel'" class="label label-info" translateId="conceptualModel"></span>
-                <span th:case="*" th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info">
-
-
-    </div>
+                <span th:case="*" th:each="keyword:${itemInfo.keywords}" th:text="${keyword}" class="badge badge-info"></span>
+            </div>
+        </div>
 </div>
+    </div>
 
 <!--相关模型条目-->
 <div th:fragment="related_models" id="related_models" class="detail_block">
