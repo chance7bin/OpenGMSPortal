@@ -2039,7 +2039,7 @@ var vue = new Vue({
             let arr = window.location.href.split("/");
             let oid = arr[arr.length - 1].split("#")[0];
             let data = {
-                oid: oid,
+                id: oid,
                 type: this.relateType
             };
             $.ajax({

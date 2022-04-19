@@ -183,6 +183,15 @@ public class CommentController {
 
     private JSONObject getUserByEmail(String email){
 
+        if (email == null || email.equals("")){
+            JSONObject author=new JSONObject();
+            author.put("userId",null);
+            author.put("name",null);
+            author.put("img",null);
+            return author;
+        }
+
+
         JSONObject jsonObject = userService.getInfoFromUserServer(email);
         JSONObject author=new JSONObject();
         author.put("userId",email);

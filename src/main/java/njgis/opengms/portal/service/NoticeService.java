@@ -1,7 +1,10 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
-import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.dao.CommentDao;
+import njgis.opengms.portal.dao.NoticeDao;
+import njgis.opengms.portal.dao.UserDao;
+import njgis.opengms.portal.dao.VersionDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.Comment;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description
@@ -285,6 +289,8 @@ public class NoticeService {
      * @Author bin
      **/
     public List<Notice> sendNoticeContains(String dispatcher, OperationEnum action, ItemTypeEnum itemType, String objectId, List<String> recipientList, @Nullable String... additionProperties){
+
+        recipientList = recipientList.stream().distinct().collect(Collectors.toList());
 
         List<String> additionList = additionProperties != null ? new ArrayList<>(Arrays.asList(additionProperties)) : null;
 
