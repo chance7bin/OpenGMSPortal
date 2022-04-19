@@ -27,7 +27,7 @@
            :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}">
 
         <div style="margin-top: 70px; display: flex; justify-content: space-around;">
-          <h1>{{htmlJson.Version}}</h1>
+          <h2>{{htmlJson.Version}}</h2>
         </div>
 
         <div style="display: flex;justify-content: center;">
@@ -36,7 +36,7 @@
               <br/>
               <div style="width: 100%;">
                 <el-tabs type="border-card"  stretch @tab-click="handleParentTabChange">
-                  <el-tab-pane  label="My Edition">
+                  <el-tab-pane  label="My Submission">
                     <el-tabs type="border-card" v-model="activeName"   stretch  >
                       <el-tab-pane name="0" label="Unchecked version">
 <!--                        self unchecked version-->
@@ -45,11 +45,13 @@
                                   :data="versionTableData"
                                   stripe
                                   height="400"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
                                     label="Date"
-                                    width="160">
+                                    width="160"
+                                    sortable>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
@@ -64,7 +66,7 @@
                               </template>
                             </el-table-column>
                             <el-table-column
-                                    prop="name"
+                                    prop="type"
                                     label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
@@ -86,7 +88,7 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
                                 <el-button
                                         type="success"
                                         size="mini"
@@ -122,11 +124,13 @@
                                   :data="versionTableData"
                                   stripe
                                   height="400"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
                                     label="Date"
-                                    width="160">
+                                    width="160"
+                                    sortable>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
@@ -163,7 +167,7 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -191,11 +195,13 @@
                                   :data="versionTableData"
                                   stripe
                                   height="400"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
                                     label="Date"
-                                    width="160">
+                                    width="160"
+                                    sortable>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
@@ -232,7 +238,7 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -256,7 +262,7 @@
                     </el-tabs>
 
                   </el-tab-pane>
-                  <el-tab-pane label="Others Edition" >
+                  <el-tab-pane label="Others Review" >
                     <el-tabs v-model="activeName"  type="border-card" stretch >
                       <el-tab-pane name="3" label="Unchecked version">
 <!--                        other unchecked version-->
@@ -265,11 +271,13 @@
                                   :data="versionTableData"
                                   stripe
                                   height="400"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
                                     label="Date"
-                                    width="160">
+                                    width="160"
+                                    sortable>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
@@ -306,7 +314,7 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
                                 <el-button
                                         type="success"
                                         size="mini"
@@ -320,7 +328,6 @@
                           </el-table>
                           <el-divider></el-divider>
                         </div>
-<!--                        other unchecked version-->
                         <el-divider></el-divider>
                         <div style="display: flex; justify-content: space-around;">
                           <el-pagination
@@ -343,11 +350,13 @@
                                   :data="versionTableData"
                                   stripe
                                   height="400"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
                                     label="Date"
-                                    width="160">
+                                    width="160"
+                                    sortable>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
@@ -384,7 +393,7 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -412,11 +421,13 @@
                                   :data="versionTableData"
                                   stripe
                                   height="400"
-                                  style="width: 100%">
+                                  style="width: 100%"
+                                  :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
                                     label="Date"
-                                    width="160">
+                                    width="160"
+                                    sortable>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
@@ -453,7 +464,7 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
