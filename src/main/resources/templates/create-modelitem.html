@@ -71,7 +71,7 @@
                                  style="max-width: 100%;margin: 15px 10px;">
                             <div class="flexRowContainer flexColCenter" style="margin-left: 18px">
                                 <img class="square_40" style="margin-top: 10px" src="../../../static/img/model/model.png">
-                                <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/model">Model </a>
+                                <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/model">{{htmlJson.Model}} </a>
                                     <span id="subRteTitle"></span></h3>
                             </div>
                             <draft-box ref="draftBox"
@@ -84,6 +84,7 @@
 <!--                                <i class="ms-Icon ms-Icon&#45;&#45;ProgressLoopOuter rotate_cw_3" style="margin-right: 5px;font-size: 16px"></i>-->
 <!--                                <p style="margin: 0">Saving draft...</p>-->
 <!--                            </div>-->
+<!--                            取消draft-->
 <!--                            <div v-if="editType=='create'&&!savingDraft" class="flexJustStart flexAlignCenter" style="margin:15px 15px 0 0;color: rgb(6,91,186)">-->
 <!--                               <button class="btn btn-noShadow btn-round" @click="loadDraftListClick"><p style="margin: 0;color: rgb(6,91,186)">Load draft</p></button>-->
 <!--                            </div>-->
@@ -106,19 +107,19 @@
                                                         <div class="step-app">
                                                             <ul class="step-steps text-center">
                                                                 <li>
-                                                                    <a href="#step0">Classification</a>
+                                                                    <a href="#step0">{{htmlJson.Classification}}</a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#step1">Basic Info</a>
+                                                                    <a href="#step1">{{htmlJson.BasicInfo}}</a>
                                                                 </li>
 <!--                                                                <li>-->
 <!--                                                                    <a href="#step2">MetaData</a>-->
 <!--                                                                </li>-->
                                                                 <li>
-                                                                    <a href="#step3">Content</a>
+                                                                    <a href="#step3">{{htmlJson.Content}}</a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#step4">Authorship</a>
+                                                                    <a href="#step4">{{htmlJson.Authorship}}</a>
                                                                 </li>
 
                                                             </ul>
@@ -132,17 +133,17 @@
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
                                                                                     <label for="nameInput"
-                                                                                           class="col-sm-2 control-label"><span class="xing">* </span>Status</label>
+                                                                                           class="col-sm-2 control-label"><span class="xing">* </span>{{htmlJson.Status}}</label>
                                                                                     <div class="col-sm-10">
                                                                                         <el-radio-group v-model="status" size="medium">
-                                                                                            <el-tooltip popper-class="fontsize-15" effect="light" content="This item can be retrieved, shared and edited." placement="top">
-                                                                                                <el-radio-button label="Public"></el-radio-button>
+                                                                                            <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJson.Public.content" placement="top">
+                                                                                                <el-radio-button label="Public">{{htmlJson.Public.label}}</el-radio-button>
                                                                                             </el-tooltip>
-                                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="This item can be retrieved and shared, can ONLY be edited by creator." placement="top">
-                                                                                                <el-radio-button label="Discoverable"></el-radio-button>
+                                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Discoverable.content" placement="top">
+                                                                                                <el-radio-button label="Discoverable">{{htmlJson.Discoverable.label}}</el-radio-button>
                                                                                             </el-tooltip>
-                                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="This item can NOT be retrieved and shared, can ONLY be edited by creator." placement="top">
-                                                                                                <el-radio-button label="Private"></el-radio-button>
+                                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Private.content" placement="top">
+                                                                                                <el-radio-button label="Private">{{htmlJson.Private.label}}</el-radio-button>
                                                                                             </el-tooltip>
 
                                                                                         </el-radio-group>
@@ -153,7 +154,7 @@
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
                                                                                     <label for="nameInput"
-                                                                                           class="col-sm-2 control-label"><span class="xing">* </span>Name</label>
+                                                                                           class="col-sm-2 control-label"><span class="xing">* </span>{{htmlJson.Name}}</label>
                                                                                     <div class="col-sm-10">
                                                                                         <input type="text" @input="onInputName()" v-model="itemName"
                                                                                                class="form-control"
@@ -165,7 +166,7 @@
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
                                                                                     <label for="aliasInput"
-                                                                                           class="col-sm-2 control-label">Alias</label>
+                                                                                           class="col-sm-2 control-label">{{htmlJson.Alias}}</label>
                                                                                     <div class="col-sm-10">
                                                                             <textarea class="form-control"
                                                                                       id="aliasInput"></textarea>
@@ -176,7 +177,7 @@
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
                                                                                     <label for="descInput"
-                                                                                           class="col-sm-2 control-label"><span class="xing">* </span>Overview</label>
+                                                                                           class="col-sm-2 control-label"><span class="xing">* </span>{{htmlJson.Overview}}</label>
                                                                                     <div class="col-sm-10">
                                                                             <textarea rows="4" class="form-control"
                                                                                       id="descInput"></textarea>
@@ -187,7 +188,7 @@
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
                                                                                     <label for="tagInput"
-                                                                                           class="col-sm-2 control-label">Keywords</label>
+                                                                                           class="col-sm-2 control-label">{{htmlJson.Keywords}}</label>
                                                                                     <div class="col-sm-10">
                                                                                         <textarea class="form-control"
                                                                                             id="tagInput">
@@ -199,10 +200,10 @@
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
                                                                                     <label
-                                                                                           class="col-sm-2 control-label">Image</label>
+                                                                                           class="col-sm-2 control-label">{{htmlJson.Image}}</label>
                                                                                     <div class="col-sm-10">
 
-                                                                                        <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="itemInfo.image"/>
+                                                                                        <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="'/static' + itemInfo.image"/>
                                                                                         <div id="imgMask" class="flexCenter" v-if="itemInfo.image!=undefined&&itemInfo.image!=''"
                                                                                              style="position: absolute;width: 100px;height: 100px">
                                                                                             <div class="fa fa-times imgDelete" @click="deleteImg"></div>
@@ -222,7 +223,7 @@
 
                                                                             <div class="form-horizontal">
                                                                                 <div class="form-group">
-                                                                                    <label class="col-sm-2 control-label">References</label>
+                                                                                    <label class="col-sm-2 control-label">{{htmlJson.References}}</label>
                                                                                     <div class="col-sm-10">
                                                                                         <table class="display table table-bordered table-striped dataTable"
                                                                                                id="dynamic-table"
@@ -236,7 +237,7 @@
                                                                                                     rowspan="1" colspan="1"
                                                                                                     aria-label="Title: activate to sort column ascending"
                                                                                                     width="200px">
-                                                                                                    Title
+                                                                                                    {{htmlJson.Title}}
                                                                                                 </th>
                                                                                                 <th class="sorting"
                                                                                                     role="columnheader"
@@ -245,7 +246,7 @@
                                                                                                     rowspan="1" colspan="1"
                                                                                                     aria-label="Author: activate to sort column ascending"
                                                                                                     width="200px">
-                                                                                                    Author
+                                                                                                    {{htmlJson.Author}}
                                                                                                 </th>
                                                                                                 <th class="sorting"
                                                                                                     role="columnheader"
@@ -254,7 +255,7 @@
                                                                                                     rowspan="1" colspan="1"
                                                                                                     aria-label="Date: activate to sort column ascending"
                                                                                                     width="100px">
-                                                                                                    Date
+                                                                                                    {{htmlJson.Date}}
                                                                                                 </th>
                                                                                                 <th class="hidden-phone sorting"
                                                                                                     role="columnheader"
@@ -263,7 +264,7 @@
                                                                                                     rowspan="1" colspan="1"
                                                                                                     aria-label="Journal: activate to sort column ascending"
                                                                                                     width="100px">
-                                                                                                    Journal
+                                                                                                    {{htmlJson.Journal}}
                                                                                                 </th>
                                                                                                 <th class="hidden-phone sorting"
                                                                                                     role="columnheader"
@@ -273,7 +274,7 @@
                                                                                                     aria-sort="descending"
                                                                                                     aria-label="Pages: activate to sort column ascending"
                                                                                                     width="100px">
-                                                                                                    Volume(Issue)
+                                                                                                    {{htmlJson.Volume}}
                                                                                                 </th>
                                                                                                 <th class="hidden-phone sorting"
                                                                                                     role="columnheader"
@@ -283,7 +284,7 @@
                                                                                                     aria-sort="descending"
                                                                                                     aria-label="Pages: activate to sort column ascending"
                                                                                                     width="100px">
-                                                                                                    Pages
+                                                                                                    {{htmlJson.Pages}}
                                                                                                 </th>
                                                                                                 <th class="hidden-phone sorting"
                                                                                                     role="columnheader"
@@ -293,7 +294,7 @@
                                                                                                     aria-sort="descending"
                                                                                                     aria-label="Links: activate to sort column ascending"
                                                                                                     width="100px">
-                                                                                                    Links
+                                                                                                    {{htmlJson.Links}}
                                                                                                 </th>
                                                                                                 <th class="hidden-phone sorting"
                                                                                                     role="columnheader"
@@ -303,7 +304,7 @@
                                                                                                     aria-sort="descending"
                                                                                                     aria-label="Links: activate to sort column ascending"
                                                                                                     width="100px">
-                                                                                                    Doi
+                                                                                                    {{htmlJson.Doi}}
                                                                                                 </th>
                                                                                                 <th class="hidden-phone sorting"
                                                                                                     role="columnheader"
@@ -313,7 +314,7 @@
                                                                                                     aria-sort="descending"
                                                                                                     aria-label="CSS grade: activate to sort column ascending"
                                                                                                     width="82px">
-                                                                                                    Operation
+                                                                                                    {{htmlJson.Operation}}
                                                                                                 </th>
                                                                                             </tr>
                                                                                             </thead>
@@ -329,7 +330,7 @@
                                                                                                 data-toggle="modal"
                                                                                                 data-target="#refinfo"
                                                                                                 @click="addArticleClick"
-                                                                                                type="button">Add Reference
+                                                                                                type="button">{{htmlJson.AddReference}}
                                                                                         </button>
                                                                                     </div>
                                                                                 </div>
@@ -363,13 +364,13 @@
 
                                                                 <div class="step-tab-panel" id="step0">
                                                                     <div>
-                                                                        <label>Please select one or more classifications the model belongs to:</label>
+                                                                        <label>{{htmlJson.modelClassificationsTip}}</label>
                                                                     </div>
 
                                                                     <div class="col-sm-offset-0 col-sm-7 tree" style="margin-top:10px">
                                                                         <el-card shadow="never">
                                                                             <div slot="header" class="clearfix text-center">
-                                                                                <span style="font-size: 20px;color:#444">Model Classifications</span>
+                                                                                <span style="font-size: 20px;color:#444">{{htmlJson.ModelClassifications}}</span>
                                                                             </div>
                                                                             <el-tree style="height: 400px;overflow: auto"
                                                                                      class="col-lg-6 col-md-12 wzhScrollbar"
@@ -401,7 +402,7 @@
 
                                                                         <el-card shadow="never">
                                                                             <div slot="header" class="clearfix text-center">
-                                                                                <span style="font-size: 20px;color:#444">Selected Classifications</span>
+                                                                                <span style="font-size: 20px;color:#444">{{htmlJson.SelectedClassifications}}</span>
                                                                             </div>
                                                                             <el-tree style="height: 287px;overflow: auto"
                                                                                      class="wzhScrollbar"
@@ -646,11 +647,11 @@
                                                                     <div v-if="editType=='create'" class="singleLocalization">
                                                                         <div style="margin:15px 0;width:15%;float: left;">
                                                                             <div>
-                                                                                <b>Language:</b>
+                                                                                <b>{{htmlJson.Language.label}}:</b>
                                                                                 <el-tooltip
                                                                                             popper-class="fontsize-15"
                                                                                             effect="light"
-                                                                                            content="After creating, you can describe the item in different languages by editing"
+                                                                                            :content="htmlJson.Language.content"
                                                                                             placement="top">
                                                                                     <i class="fa fa-question-circle-o" aria-hidden="true" style="cursor:help;"></i>
                                                                                 </el-tooltip>
@@ -668,19 +669,19 @@
                                                                         </div>
                                                                         <div style="margin:15px 0;padding-left:10px;width:85%;float: left;">
                                                                             <div>
-                                                                                <b>Local Name:</b>
+                                                                                <b>{{htmlJson.LocalName.label}}:</b>
                                                                                 <el-tooltip
                                                                                         popper-class="fontsize-15"
                                                                                         effect="light"
-                                                                                        content="A name in localized language should be given"
+                                                                                        :content="htmlJson.LocalName.content"
                                                                                         placement="top">
                                                                                     <i class="fa fa-question-circle-o" aria-hidden="true" style="cursor:help;"></i>
                                                                                 </el-tooltip>
                                                                             </div>
-                                                                            <el-input v-model="currentLocalization.name" placeholder="Please enter the model's name in your selected language"></el-input>
+                                                                            <el-input v-model="currentLocalization.name" :placeholder="htmlJson.LocalName.placeholder"></el-input>
                                                                         </div>
                                                                         <div style="margin-bottom:10px;">
-                                                                            <div><b>Description:</b> </div>
+                                                                            <div><b>{{htmlJson.Description}}:</b> </div>
                                                                             <textarea id="singleDescription"></textarea>
                                                                         </div>
                                                                     </div>
@@ -761,7 +762,7 @@
                                                                                                 style="color:white">
                                                                                                 <a class="accordion-toggle"
                                                                                                    data-parent="#accordion2">
-                                                                                                    Authorship
+                                                                                                    {{htmlJson.Authorship}}
                                                                                                 </a>
                                                                                             </h4>
                                                                                         </div>
@@ -778,7 +779,7 @@
                                                                                                                data-toggle='collapse'
                                                                                                                data-target='#user1'
                                                                                                                href="javascript:;">
-                                                                                                                NEW
+                                                                                                                {{htmlJson.authorshipPart.NEW}}
                                                                                                             </a>
                                                                                                         </h4>
                                                                                                         <a href="javascript:;"
@@ -792,7 +793,7 @@
                                                                                                                 <div>
                                                                                                                     <lable class='control-label col-sm-2 text-center'
                                                                                                                            style='font-weight: bold;'>
-                                                                                                                        Name:
+                                                                                                                        {{htmlJson.authorshipPart.Name}}:
                                                                                                                     </lable>
                                                                                                                     <div class='input-group col-sm-10'>
                                                                                                                         <input type='text'
@@ -803,7 +804,7 @@
                                                                                                                 <div style="margin-top:10px">
                                                                                                                     <lable class='control-label col-sm-2 text-center'
                                                                                                                            style='font-weight: bold;'>
-                                                                                                                        Affiliation:
+                                                                                                                        {{htmlJson.authorshipPart.Affiliation}}:
                                                                                                                     </lable>
                                                                                                                     <div class='input-group col-sm-10'>
                                                                                                                         <input type='text'
@@ -814,7 +815,7 @@
                                                                                                                 <div style="margin-top:10px">
                                                                                                                     <lable class='control-label col-sm-2 text-center'
                                                                                                                            style='font-weight: bold;'>
-                                                                                                                        Email:
+                                                                                                                        {{htmlJson.authorshipPart.Email}}:
                                                                                                                     </lable>
                                                                                                                     <div class='input-group col-sm-10'>
                                                                                                                         <input type='text'
@@ -825,7 +826,7 @@
                                                                                                                 <div style="margin-top:10px">
                                                                                                                     <lable class='control-label col-sm-2 text-center'
                                                                                                                            style='font-weight: bold;'>
-                                                                                                                        Homepage:
+                                                                                                                        {{htmlJson.authorshipPart.Homepage}}:
                                                                                                                     </lable>
                                                                                                                     <div class='input-group col-sm-10'>
                                                                                                                         <input type='text'
@@ -841,7 +842,7 @@
                                                                                             <button type="button"
                                                                                                     class="btn btn-success btn-lg btn-block user-add"
                                                                                                     style="border-radius: 3px;border-top-left-radius: 0px;border-top-right-radius: 0px">
-                                                                                                Add
+                                                                                                {{htmlJson.authorshipPart.Add}}
                                                                                             </button>
                                                                                         </div>
                                                                                     </div>
@@ -853,20 +854,20 @@
                                                             </div>
                                                             <div class="step-footer text-right pull-right">
                                                                 <button class="btn btn-danger prev" @click="cancelEditClick()" style="">
-                                                                    Exit
+                                                                    {{htmlJson.Exit}}
                                                                 </button>
                                                                 <div class="innerBorderCol btn btn-warning"
                                                                      style="padding: 0;margin: 0 10px;height: 20px;background-color: #cccccc !important;cursor: auto">
                                                                 </div>
                                                                 <button class="btn btn-warning prev" data-direction="prev">
-                                                                    Previous
+                                                                    {{htmlJson.Previous}}
                                                                 </button>
                                                                 <button class="btn btn-primary next" data-direction="next">
-                                                                    Next
+                                                                    {{htmlJson.Next}}
                                                                 </button>
                                                                 <button class="btn btn-success finish"
                                                                         data-direction="finish">
-                                                                    Finish
+                                                                    {{htmlJson.Finish}}
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -882,29 +883,29 @@
                     </div>
                 </div>
 
-                <el-dialog title="Reference Info" :close-on-click-modal="false" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
+                <el-dialog :title="htmlJson.references.ReferenceInfo" :close-on-click-modal="false" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
                     <div class="wzhScrollbar" style="max-height: 500px;padding-right:10px" >
                         <div class="tab-content" v-loading="doiLoading">
                             <div class="tab-pane active articleInfo" id="manually" >
                                 <div class="form-group">
                                     <label for="doiTitle" class="col-sm-2 control-label">
-                                        Get by doi :
+                                        {{htmlJson.references.GetByDoi}} :
                                     </label>
-                                    <el-tag size="middle" primary>Enter the doi and click search, information may be filled automaticly. </el-tag>
+                                    <el-tag size="middle" primary>{{htmlJson.references.ReferenceInfoTip}} </el-tag>
                                     <div class="input-group col-md-12">
                                         <input id="doiTitle" type="text"
                                                class="form-control" v-model="doi">
                                         <span class="input-group-btn" style="width: 19%">
                                                     <button id="doiSearch"
                                                             class="btn btn-info"
-                                                            type="button" @click="searchDoi()" style="height: 34px;width: 100%;margin: 0;">Search</button>
+                                                            type="button" @click="searchDoi()" style="height: 34px;width: 100%;margin: 0;">{{htmlJson.Search}}</button>
                                                 </span>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="refTitle"
-                                           class="col-sm-12 control-label">Title</label>
+                                           class="col-sm-12 control-label">{{htmlJson.Title}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="refTitle"/>
@@ -912,7 +913,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="refAuthor"
-                                           class="col-sm-12 control-label">Author</label>
+                                           class="col-sm-12 control-label">{{htmlJson.references.Author}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="refAuthor"/>
@@ -922,7 +923,7 @@
 
                                 <div class="form-group">
                                     <label for="refDate"
-                                           class="col-sm-12 control-label">Date</label>
+                                           class="col-sm-12 control-label">{{htmlJson.Date}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="refDate"/>
@@ -930,7 +931,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="refJournal"
-                                           class="col-sm-12 control-label">Journal</label>
+                                           class="col-sm-12 control-label">{{htmlJson.references.Journal}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="refJournal"/>
@@ -938,7 +939,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="volumeIssue"
-                                           class="col-sm-12 control-label">Volume(issue)</label>
+                                           class="col-sm-12 control-label">{{htmlJson.references.Volume}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="volumeIssue"/>
@@ -946,7 +947,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="refPages"
-                                           class="col-sm-12 control-label">Page Range</label>
+                                           class="col-sm-12 control-label">{{htmlJson.references.PageRange}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="refPages"/>
@@ -954,7 +955,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="refLink"
-                                           class="col-sm-12 control-label">Link</label>
+                                           class="col-sm-12 control-label">{{htmlJson.references.Link}}</label>
                                     <div>
                                         <input type="text" class="form-control"
                                                id="refLink"/>
@@ -978,17 +979,17 @@
                         <el-button size="small" @click="cancelSearch()">Cancel</el-button>
                     </span>
                 </el-dialog>
-                <el-dialog title="Is this article you want to add?" :visible.sync = "showUploadArticleDialog" width="30%" custom-class="min400w">
+                <el-dialog :title="htmlJson.references.getDoiTitle" :visible.sync = "showUploadArticleDialog" width="30%" custom-class="min400w">
                     <h4>{{articleUploading.title}}</h4>
-                    <p v-if="articleUploading.authors.length>0"><span>Authors:</span><span>&nbsp&nbsp{{articleUploading.authors[0]}},</span>
+                    <p v-if="articleUploading.authors.length>0"><span>{{htmlJson.references.Authors}}:</span><span>&nbsp&nbsp{{articleUploading.authors[0]}},</span>
                         <span v-if="articleUploading.authors[1]">{{articleUploading.authors[1]}}, </span>
                         <span v-if="articleUploading.authors[2]">{{articleUploading.authors[2]}},</span>
                         <span v-if="articleUploading.authors.length>3"> et al.</span> </p>
-                    <p v-if="articleUploading.journal!=''"><span>Journal:</span> &nbsp&nbsp{{articleUploading.journal}}</p>
-                    <p v-if="articleUploading.date!=''"><span>Date:</span> &nbsp&nbsp{{articleUploading.date}}</p>
-                    <p v-if="articleUploading.pageRange!=''"><span>Page range:</span> &nbsp&nbsp{{articleUploading.pageRange}}</p>
-                    <p v-if="articleUploading.link!=''"><span>Link:</span> &nbsp&nbsp{{articleUploading.link}}</p>
-                    <p v-if="articleUploading.doi!=''"><span>DOI:</span> &nbsp&nbsp{{articleUploading.doi}}</p>
+                    <p v-if="articleUploading.journal!=''"><span>{{htmlJson.references.Journal}}:</span> &nbsp&nbsp{{articleUploading.journal}}</p>
+                    <p v-if="articleUploading.date!=''"><span>{{htmlJson.Date}}:</span> &nbsp&nbsp{{articleUploading.date}}</p>
+                    <p v-if="articleUploading.pageRange!=''"><span>{{htmlJson.references.PageRange}}:</span> &nbsp&nbsp{{articleUploading.pageRange}}</p>
+                    <p v-if="articleUploading.link!=''"><span>{{htmlJson.references.Link}}:</span> &nbsp&nbsp{{articleUploading.link}}</p>
+                    <p v-if="articleUploading.doi!=''"><span>{{htmlJson.references.Doi}}:</span> &nbsp&nbsp{{articleUploading.doi}}</p>
                     <!--                            <div class="flex">-->
 
                     <!--                            </div>-->
@@ -1000,8 +1001,8 @@
                         <!--                                        <el-button type="primary" @click="articleDoiUploadConfirm('learner')" plain>I am a learner</el-button>-->
                         <!--                                    </div>-->
                         <!--                                    <div class="innerBorderCol" style="height: 40px"></div>-->
-                                    <el-button type="success" @click="articleDoiUploadConfirm()" plain>Yes, this is it</el-button>
-                                    <el-button @click="showUploadArticleDialog = false">Cancel</el-button>
+                                    <el-button type="success" @click="articleDoiUploadConfirm()" plain>{{htmlJson.references.getDoiYes}}</el-button>
+                                    <el-button @click="showUploadArticleDialog = false">{{htmlJson.references.getDoiNo}}</el-button>
                         <!--                                </div>-->
                             </span>
                 </el-dialog>

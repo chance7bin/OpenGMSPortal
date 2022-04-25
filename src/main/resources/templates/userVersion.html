@@ -36,9 +36,9 @@
               <br/>
               <div style="width: 100%;">
                 <el-tabs type="border-card"  stretch @tab-click="handleParentTabChange">
-                  <el-tab-pane  label="My Submission">
+                  <el-tab-pane  :label="htmlJson.MySubmission">
                     <el-tabs type="border-card" v-model="activeName"   stretch  >
-                      <el-tab-pane name="0" label="Unchecked version">
+                      <el-tab-pane name="0" :label="htmlJson.UncheckedVersion">
 <!--                        self unchecked version-->
                         <div style="width: 100%;">
                           <el-table
@@ -52,38 +52,50 @@
                                     label="Date"
                                     width="160"
                                     sortable>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Date}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Name"
                                     min-width="200"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.ItemName}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="type"
-                                    label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Type}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.type }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Editor"
                                     min-width="180"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.editor }}</h5>
                               </template>
                             </el-table-column>
-                            <el-table-column label="Conduct" min-width="250">
+                            <el-table-column min-width="250">
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Conduct}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <el-button
                                         type="primary"
@@ -117,7 +129,7 @@
                         </div>
 
                       </el-tab-pane>
-                      <el-tab-pane name="1" label="Accepted version" >
+                      <el-tab-pane name="1" :label="htmlJson.AcceptedVersion" >
 <!--                        self accept version-->
                         <div style="width: 100%;">
                           <el-table
@@ -128,46 +140,57 @@
                                   :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
-                                    label="Date"
                                     width="160"
                                     sortable>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Date}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Name"
                                     min-width="200"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.ItemName}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Type}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.type }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Editor"
                                     min-width="180"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.editor }}</h5>
                               </template>
                             </el-table-column>
-                            <el-table-column label="Conduct" min-width="250">
+                            <el-table-column min-width="250">
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Conduct}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">{{htmlJson.View}}</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -188,7 +211,7 @@
                         </div>
 
                       </el-tab-pane>
-                      <el-tab-pane name="2" label="Rejected version" >
+                      <el-tab-pane name="2" :label="htmlJson.RejectedVersion" >
 <!--                        self rejected version-->
                         <div style="width: 100%;">
                           <el-table
@@ -199,46 +222,57 @@
                                   :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
-                                    label="Date"
                                     width="160"
                                     sortable>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Date}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Name"
                                     min-width="200"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.ItemName}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Type}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.type }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Editor"
                                     min-width="180"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.editor }}</h5>
                               </template>
                             </el-table-column>
-                            <el-table-column label="Conduct" min-width="250">
+                            <el-table-column min-width="250">
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">{{htmlJson.View}}</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -262,9 +296,9 @@
                     </el-tabs>
 
                   </el-tab-pane>
-                  <el-tab-pane label="Others Review" >
+                  <el-tab-pane :label="htmlJson.OthersReview" >
                     <el-tabs v-model="activeName"  type="border-card" stretch >
-                      <el-tab-pane name="3" label="Unchecked version">
+                      <el-tab-pane name="3" :label="htmlJson.UncheckedVersion">
 <!--                        other unchecked version-->
                         <div style="width: 100%;">
                           <el-table
@@ -275,54 +309,65 @@
                                   :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
-                                    label="Date"
                                     width="160"
                                     sortable>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Date}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Name"
                                     min-width="200"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.ItemName}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Type}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.type }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Editor"
                                     min-width="180"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.editor }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column label="Conduct" min-width="250">
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Conduct}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">{{htmlJson.View}}</el-button>
                                 <el-button
                                         type="success"
                                         size="mini"
-                                        @click="acceptVersionById(scope.row.id)">Accept</el-button>
+                                        @click="acceptVersionById(scope.row.id)">{{htmlJson.Accept}}</el-button>
                                 <el-button
                                         type="warning"
                                         size="mini"
-                                        @click="rejectVersionById(scope.row.id)">Reject</el-button>
+                                        @click="rejectVersionById(scope.row.id)">{{htmlJson.Reject}}</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -343,7 +388,7 @@
                         </div>
 
                       </el-tab-pane>
-                      <el-tab-pane name="4" label="Accepted version">
+                      <el-tab-pane name="4" :label="htmlJson.AcceptedVersion">
 <!--                        other Accepted version-->
                         <div style="width: 100%;">
                           <el-table
@@ -354,46 +399,57 @@
                                   :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
-                                    label="Date"
                                     width="160"
                                     sortable>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Date}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Name"
                                     min-width="200"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.ItemName}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Type}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.type }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Editor"
                                     min-width="180"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.editor }}</h5>
                               </template>
                             </el-table-column>
-                            <el-table-column label="Conduct" min-width="250">
+                            <el-table-column  min-width="250">
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Conduct}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">{{htmlJson.View}}</el-button>
                               </template>
                             </el-table-column>
                           </el-table>
@@ -414,7 +470,7 @@
                         </div>
 
                       </el-tab-pane>
-                      <el-tab-pane name="5" label="Rejected version">
+                      <el-tab-pane name="5" :label="htmlJson.RejectedVersion">
 <!--                        other Rejected version-->
                         <div style="width: 100%;">
                           <el-table
@@ -425,46 +481,57 @@
                                   :default-sort = "{prop: 'date', order: 'descending'}">
                             <el-table-column
                                     prop="date"
-                                    label="Date"
                                     width="160"
                                     sortable>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Date}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.submitTime }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Name"
                                     min-width="200"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.ItemName}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.itemName }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Type"
                                     min-width="120"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Type}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.type }}</h5>
                               </template>
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="Editor"
                                     min-width="180"
                                     show-overflow-tooltip>
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Editor}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <h5>{{ scope.row.editor }}</h5>
                               </template>
                             </el-table-column>
-                            <el-table-column label="Conduct" min-width="250">
+                            <el-table-column min-width="250">
+                              <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Conduct}}</span>
+                              </template>
                               <template slot-scope="scope">
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">{{htmlJson.View}}</el-button>
                               </template>
                             </el-table-column>
                           </el-table>

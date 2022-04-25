@@ -7,17 +7,18 @@
 <body>
 <template id="draftBox" th:fragment="draftBox">
     <div>
-        <div v-if="savingDraft" class="flexJustStart flexAlignCenter" style="margin:15px 15px 0 0;color: rgb(6,91,186)">
-            <svg t="1616998639042" class="icon rotate_cw_3" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2090" width="16" height="16">
-                <path d="M512 1024c-19.2 0-35.2-16-35.2-35.2s16-35.2 35.2-35.2c246.4 0 444.8-198.4 444.8-444.8S758.4 67.2 512 67.2 67.2 264 67.2 512c0 108.8 38.4 211.2 108.8 291.2 12.8 16 9.6 35.2-3.2 48-16 12.8-35.2 9.6-48-3.2-38.4-44.8-70.4-96-92.8-150.4C9.6 640 0 576 0 513.6c0-70.4 12.8-134.4 41.6-198.4 25.6-60.8 60.8-115.2 108.8-163.2s102.4-83.2 163.2-108.8C377.6 14.4 444.8 1.6 512 1.6s134.4 12.8 198.4 41.6c60.8 25.6 115.2 60.8 163.2 108.8s83.2 102.4 108.8 163.2c28.8 64 41.6 131.2 41.6 198.4s-12.8 134.4-41.6 198.4c-25.6 60.8-60.8 115.2-108.8 163.2s-102.4 83.2-163.2 108.8c-64 25.6-128 40-198.4 40z"
-                      fill="#065bbe" p-id="2091">
-                </path>
-            </svg>
-            <p style="margin: 0">Saving draft...</p>
-        </div>
-        <div v-if="editType=='create'&&!savingDraft" class="flexJustStart flexAlignCenter" style="margin:15px 15px 0 0;color: rgb(6,91,186)">
-            <button class="btn btn-noShadow btn-round" @click="loadDraftListClick"><p style="margin: 0;color: rgb(6,91,186)">Load draft</p></button>
-        </div>
+        <!--取消draft-->
+        <!--<div v-if="savingDraft" class="flexJustStart flexAlignCenter" style="margin:15px 15px 0 0;color: rgb(6,91,186)">-->
+        <!--    <svg t="1616998639042" class="icon rotate_cw_3" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2090" width="16" height="16">-->
+        <!--        <path d="M512 1024c-19.2 0-35.2-16-35.2-35.2s16-35.2 35.2-35.2c246.4 0 444.8-198.4 444.8-444.8S758.4 67.2 512 67.2 67.2 264 67.2 512c0 108.8 38.4 211.2 108.8 291.2 12.8 16 9.6 35.2-3.2 48-16 12.8-35.2 9.6-48-3.2-38.4-44.8-70.4-96-92.8-150.4C9.6 640 0 576 0 513.6c0-70.4 12.8-134.4 41.6-198.4 25.6-60.8 60.8-115.2 108.8-163.2s102.4-83.2 163.2-108.8C377.6 14.4 444.8 1.6 512 1.6s134.4 12.8 198.4 41.6c60.8 25.6 115.2 60.8 163.2 108.8s83.2 102.4 108.8 163.2c28.8 64 41.6 131.2 41.6 198.4s-12.8 134.4-41.6 198.4c-25.6 60.8-60.8 115.2-108.8 163.2s-102.4 83.2-163.2 108.8c-64 25.6-128 40-198.4 40z"-->
+        <!--              fill="#065bbe" p-id="2091">-->
+        <!--        </path>-->
+        <!--    </svg>-->
+        <!--    <p style="margin: 0">Saving draft...</p>-->
+        <!--</div>-->
+        <!--<div v-if="editType=='create'&&!savingDraft" class="flexJustStart flexAlignCenter" style="margin:15px 15px 0 0;color: rgb(6,91,186)">-->
+        <!--    <button class="btn btn-noShadow btn-round" @click="loadDraftListClick"><p style="margin: 0;color: rgb(6,91,186)">Load draft</p></button>-->
+        <!--</div>-->
         <el-dialog title="Load Draft" center :visible.sync="draftListDialog" append-to-body>
             <div v-loading="draftLoading">
                 <!--                        <div class="flexRow flexJustCenter" style="margin-top: 12px; margin-left: 10px;">-->

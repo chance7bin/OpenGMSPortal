@@ -285,6 +285,7 @@ var userspace = new Vue(
 
             translatePage(jsonContent){
                 this.htmlJSON = jsonContent
+                // console.log("htmlJSON:",this.htmlJSON)
             },
             //公共功能
             formatDate(value,callback) {

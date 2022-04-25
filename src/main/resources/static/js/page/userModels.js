@@ -1,10 +1,10 @@
 //组件
 var modelItem = Vue.extend({
     template: '#modelItemShow',
-    props: ['searchResultRaw'],
-    created(){
-        console.log(this.searchResultRaw);
-    },
+    props: ['searchResultRaw','htmlJson'],
+    // created(){
+    //     console.log("searchResultRaw:",this.searchResultRaw);
+    // },
     watch:{
         searchResultRaw:{
             handler(val) {
@@ -197,6 +197,7 @@ var modelItem = Vue.extend({
 var userModels = Vue.extend(
     {
         template: "#userModels",
+        props: ["htmlJson"],
         data(){
             return{
 
@@ -243,8 +244,6 @@ var userModels = Vue.extend(
             }
         },
 
-        props:[],
-
         components: {
         },
 
@@ -252,6 +251,12 @@ var userModels = Vue.extend(
             $route() {
                 this.getModels()
             },
+            htmlJson: function (newData) {
+                let href = window.location.href;
+                let arr = href.split("/");
+                let currentType = arr[arr.length-1]
+                this.itemTitle = newData.userModel[currentType];
+            }
         },
 
         // router:modelRouter,
@@ -435,16 +440,16 @@ var userModels = Vue.extend(
                 this.await = true
                 //副标题切换
                 let titles={
-                    'modelitem':'Model Item',
-                    'conceptualmodel':'Conceptual Model',
-                    'logicalmodel':'Logical Model',
-                    'computablemodel':'Computable Model'
+                    'modelitem':this.htmlJson.userModel.modelitem,
+                    'conceptualmodel':this.htmlJson.userModel.conceptualmodel,
+                    'logicalmodel':this.htmlJson.userModel.logicalmodel,
+                    'computablemodel':this.htmlJson.userModel.computablemodel
                 }
                 this.itemTitle=titles[a]
 
                 var url = "";
                 var name = "";
-                console.log(this.searchResult);
+                // console.log(this.searchResult);
                 if (a === 'modelitem') {
                     // url = "/modelItem/queryListOfAuthorSelf";
                     url = QueryModelItemListOfAuthorSelf()
@@ -486,7 +491,7 @@ var userModels = Vue.extend(
                             this.resourceLoad = false;
                             this.totalNum = data.total;
                             this.$set(this,"searchResult",data.list);
-                            console.log(this.searchResult);
+                            // console.log(this.searchResult);
                             //this.modelItemResult = data[name];
                             if (this.page == 1) {
                                 this.pageInit();
@@ -580,7 +585,8 @@ var userModels = Vue.extend(
                     'computablemodel':'/user/userSpace#/model/manageComputableModel/'+oid,
                 }
                 this.setSession('editId', oid)
-                window.open(urls[a])
+                // window.open(urls[a])
+                window.location.href = urls[a];
             },
 
             deleteItem(index,oid) {
@@ -589,14 +595,14 @@ var userModels = Vue.extend(
                 this.$msgbox({
                     title: ' ',
                     message: h('p', null, [
-                        h('span', null, 'Are you sure to '),
-                        h('span', {style: 'font-weight:600'}, 'delete'),
-                        h('span', null, ' this item?'),
+                        h('span', null, this.htmlJson.userModel.sure),
+                        h('span', {style: 'font-weight:600'}, this.htmlJson.userModel.delete),
+                        h('span', null, this.htmlJson.userModel.thisItem),
                     ]),
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.userModel.Confirm,
+                    cancelButtonText: this.htmlJson.userModel.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {

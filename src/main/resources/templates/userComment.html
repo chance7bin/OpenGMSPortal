@@ -44,16 +44,20 @@
                           height="500">
                     <el-table-column
                             prop="date"
-                            label="Date"
                             min-width="200">
+                      <template slot="header" slot-scope="scope">
+                        <span>{{htmlJson.Date}}</span>
+                      </template>
                       <template slot-scope="scope">
                         <h4>{{ scope.row.date }}</h4>
                       </template>
                     </el-table-column>
                     <el-table-column
                             prop="name"
-                            label="Message"
                             min-width="500">
+                      <template slot="header" slot-scope="scope">
+                        <span>{{htmlJson.Message}}</span>
+                      </template>
                       <template slot-scope="scope">
                         <div v-if="scope.row.replier.userId===null">
                           <h5>you review {{scope.row.itemInfo.name}} : {{scope.row.content}}</h5>
@@ -69,12 +73,15 @@
 
                       </template>
                     </el-table-column>
-                    <el-table-column label="Conduct" min-width="100">
+                    <el-table-column min-width="100">
+                      <template slot="header" slot-scope="scope">
+                        <span>{{htmlJson.Conduct}}</span>
+                      </template>
                       <template slot-scope="scope">
                         <el-button
                                 type="danger"
                                 size="mini"
-                                @click="deleteCommentById(scope.row.id)">Delete</el-button>
+                                @click="deleteCommentById(scope.row.id)">{{htmlJson.Delete}}</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
