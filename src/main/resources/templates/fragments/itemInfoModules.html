@@ -302,11 +302,6 @@
     </div>
 </div>
 
-                </span>
-
-            </div>
-        </div>
-
         <div class="detail_option" th:if="${history!=true}">
             <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
             <!--<div th:utext="'&nbsp&nbsp'+${itemInfo.shareCount}">&nbsp&nbsp37</div>-->
@@ -458,7 +453,8 @@
 
 
         </div>
-
+    </div>
+</div>
 
         <!--                    <el-card class="browsermenu">-->
         <!--                        <el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download-->
@@ -558,8 +554,6 @@
                                 :content="contributor.name"
                                 placement="bottom">
                         <a :href="'/profile/'+contributor.accessId" target="_blank">
-                            <!--                                    <img :src="contributor.avatar==''?'/static/img/icon/default.png':contributor.avatar" onerror="src='/static/img/icon/default.png'"-->
-                            <!--                                         class="round_icon iconImg">-->
                             <user-avatar ref="coContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
                         </a>
                     </el-tooltip>
