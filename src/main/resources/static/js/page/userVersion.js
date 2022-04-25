@@ -16,7 +16,9 @@ var userVersion = Vue.extend({
             activeOthersName:3,
             activeName:0,
 
-            versionUrl:""
+            versionUrl:"",
+
+            // htmlJSON:{}
         }
     },
     mounted(){
@@ -26,7 +28,7 @@ var userVersion = Vue.extend({
             this.ScreenMaxHeight = (height) + "px";
 
             window.onresize = () => {
-                console.log('come on ..');
+                // console.log('come on ..');
                 height = document.documentElement.clientHeight;
                 this.ScreenMinHeight = (height) + "px";
                 this.ScreenMaxHeight = (height) + "px";
@@ -88,7 +90,7 @@ var userVersion = Vue.extend({
                 "sortField": "createTime"
             })
                 .then(res=> {
-                    console.log(url+" :",res.data)
+                    // console.log(url+" :",res.data)
                     this.versionTableData=res.data.data.content
                     this.totalCount=res.data.data.totalElements
                 })

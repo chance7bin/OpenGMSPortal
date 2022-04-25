@@ -143,13 +143,249 @@
     "APPRECIATEInfo": "We sincerely appreciate for using our platform, your feedback will be taken seriously.",
     "SendFeedback": "Send Feedback",
     "FeedBackInfo": "Enter your feedback here",
-    "Send": "Send"
+    "Send": "Send",
 
 
+    "Total": "Total",
+    "Unread": "Unread",
+    "Date": "Date",
+    "Message":"Message",
+    "Dispatcher": "Dispatcher",
+    "Conduct": "Conduct",
+    "View": "View",
+    "MySubmission": "Submission",
+    "OthersReview": "Review",
+    "UncheckedVersion": "Unchecked version",
+    "ItemName": "ItemName",
+    "Type": "Type",
+    "Editor": "Editor",
+    "Delete": "Delete",
+    "Cancel": "Cancel",
+    "Confirm": "Confirm",
+    "MarkAllRead": "Mark All Read",
+    "MarkRead": "Mark Read",
 
+    "CreateModelItem": "Create Model Item",
+    "ModifyModelItem": "Modify Model Item",
+    "Classification": "Classification",
+    "BasicInfo": "Basic Info",
+    "Content": "Content",
+    "Authorship": "Authorship",
+    "modelClassificationsTip": "Please select one or more classifications the model belongs to:",
+    "ModelClassifications": "Model Classifications",
+    "SelectedClassifications": "Selected Classifications",
+    "Exit": "Exit",
+    "Previous": "Previous",
+    "Next": "Next",
+    "Finish": "Finish",
+    "Status": "Status",
+    "Alias": "Alias",
+    "Overview": "Overview",
+    "Keywords": "Keywords",
+    "Image": "Image",
+    "References": "References",
+    "AddReference": "Add Reference",
+    "Public": {
+      "label": "Public",
+      "content": "This item can be retrieved, shared and edited."
+    },
+    "Discoverable": {
+      "label": "Discoverable",
+      "content": "This item can be retrieved and shared, can ONLY be edited by creator."
+    },
+    "Private": {
+      "label": "Private",
+      "content": "This item can NOT be retrieved and shared, can ONLY be edited by creator."
+    },
+    "noCLSTip": "Please select at least one classification!",
+    "references":{
+      "ReferenceInfo": "Reference Info",
+      "GetByDoi": "Get by doi",
+      "ReferenceInfoTip": "Enter the doi and click search, information may be filled automaticly.",
+      "Author": "Author",
+      "Journal": "Journal",
+      "Volume": "Volume(issue)",
+      "PageRange": "Page Range",
+      "Link": "Link",
+      "Doi": "Doi",
+      "Operation": "Operation",
+      "Pages": "Pages",
+      "Links": "Links",
+      "getDoiTitle": "Is this article you want to add",
+      "Authors": "Authors",
+      "getDoiYes": "Yes, this is it",
+      "getDoiNo": "Cancel"
+    },
+    "Language": {
+      "label": "Language",
+      "content": "After creating, you can describe the item in different languages by editing"
+    },
+    "LocalName": {
+      "label": "Local Name",
+      "content": "A name in localized language should be given",
+      "placeholder": "Please enter the model's name in your selected language"
+    },
+    "Description": "Description",
+    "authorshipPart": {
+      "NEW": "NEW",
+      "Name": "Name",
+      "Affiliation": "Affiliation",
+      "Email": "Email",
+      "Homepage": "Homepage",
+      "Add": "Add"
+    },
+    "Tip": "Tip",
+    "confirmButtonText": "View",
+    "cancelButtonText": "Go Back",
+    "addSuccess": "Create model item successfully!",
+    "treeData_part1": [
+      {
+        "children": [{
+          "children": [{
+            "id": 2,
+            "label": "Land regions",
+            "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
+            "desc": "Models that mainly related to land regions, includes hydrology, hydrodynamics, soil, landform, terrestrial ecosystem etc."
+          }, {"id": 3, "label": "Ocean regions", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457",
+            "desc": "Models that mainly related to ocean regions, includes coastal, seawater, sea-ice, marine ecosystem etc."
+          }, {
+            "id": 4,
+            "label": "Frozen regions",
+            "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9",
+            "desc": "Models that mainly related to frozen regions, includes galicer, permafrost, snow etc."
+          }, {"id": 5, "label": "Atmospheric regions", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5",
+            "desc": "Models that mainly related to atmospheric regions, includes climate, weather, air etc."
+          }, {
+            "id": 6,
+            "label": "Space-earth regions",
+            "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee",
+            "desc": "Models that mainly related to space-earth regions, includes sun-earth, planets etc."
 
+          }, {"id": 7, "label": "Solid-earth regions", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e",
+            "desc": "Models that mainly related to solid-earth regions, includes lithosphere, mantle, earthquack etc."
+          }
+          ], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0",
+          "desc": "Models that mainly related to physical geography."
 
+        }, {
+          "children": [{
+            "id": 10,
+            "label": "Development activities",
+            "oid": "808e74a4-41c6-4558-a850-4daec1f199df",
+            "desc": "Models that mainly related to development activities, includes continents, countries, cities, administrative zones etc."
+          }, {"id": 11, "label": "Social activities", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190",
+            "desc": "Models that mainly related to social activities, includes urban, rural, cultural area, travel area, built-up area, indoor area etc."}, {
+            "id": 12,
+            "label": "Economic activities",
+            "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769",
+            "desc": "Models that mainly related to economic activities, includes agriculture, industry, tourism, trasport, energy, markets etc."
+          }],
+          "id": 9,
+          "label": "Human-perspective",
+          "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da",
+          "desc": "Models that mainly related to human geography."
+        }, {
+          "id": 30,
+          "label": "Integrated-perspective",
+          "oid": "396cc739-ef33-4332-8d5d-9a67c89567c7",
+          "desc": "Models that integrate many different models.",
+          "children": [{
+            "id": 31,
+            "label": "Global scale",
+            "oid": "14130969-fda6-41ea-aa32-0af43104840b",
+            "desc": "Integrated models that apply in global scale."
+          }, {
+            "id": 32,
+            "label": "Regional scale",
+            "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e",
+            "desc": "Integrated models that apply in regional scale."
 
+          }]
+        }],
+        "id": 24,
+        "label": "Application-focused categories",
+        "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19",
+        "desc": "Models that apply in one or more field."
+      }
+    ],
+    "treeData_part2": [
+      {"children": [{
+        "children": [{
+          "id": 15,
+          "label": "Geoinformation analysis",
+          "oid": "afa99af9-4224-4fac-a81f-47a7fb663dba",
+          "desc": "Models that mainly related to geoinformation analysis, includes vector analysis, raster analysis, network analysis, topology analysis etc."
+        }, {
+          "id": 16,
+          "label": "Remote sensing analysis",
+          "oid": "f20411a5-2f55-4ee9-9590-c2ec826b8bd5",
+          "desc": "Models that mainly related to remote sensing analysis, includes imagery analysis, spectrum analysis etc."
+        }, {
+          "id": 17,
+          "label": "Geostatistical analysis",
+          "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8",
+          "desc": "Models that mainly related to geostatistical analysis, includes pattern detection, relation detection, clustering, interpolation etc."
+        }, {
+          "id": 18,
+          "label": "Intelligent computation analysis",
+          "oid": "c6fcc899-8ca4-4269-a21e-a39d38c034a6",
+          "desc": "Models that mainly related to intelligent computation analysis, includes machine learning, deep learning etc."
+        }],
+        "id": 14,
+        "label": "Data-perspective",
+        "oid": "4785308f-b2ef-4193-a74b-b9fe025cbc5e",
+        "desc": "Models that mainly related to data process."
+      }, {
+        "children": [{
+          "id": 20,
+          "label": "Physical process calculation",
+          "oid": "1d564d0f-51c6-40ca-bd75-3f9489ccf1d6",
+          "desc": "Models that mainly related to physical process calculation, includes CFD, acoustic simulation, light simulation etc."
+        }, {
+          "id": 21,
+          "label": "Chemical process calculation",
+          "oid": "63266a14-d7f9-44cb-8204-c877eaddcaa1",
+          "desc": "Models that mainly related to chemical process calculation, includes insecticide, photosynthesis, combustion etc."
+        }, {
+          "id": 22,
+          "label": "Biological process calculation",
+          "oid": "6d1efa2c-830d-4546-b759-c66806c4facc",
+          "desc": "Models that mainly related to biological process calculation, includes genome, metabolic, cellular simulation etc."
+        }, {
+          "id": 23,
+          "label": "Human-activity calculation",
+          "oid": "6952d5b2-cb0f-4ba7-96fd-5761dd566344",
+          "desc": "Models that mainly related to human-activity calculation, includes monte carlo, CA, agent-based, travel, crime, disease, migration, health etc."
+        }],
+        "id": 19,
+        "label": "Process-perspective",
+        "oid": "746887cf-d490-4080-9754-1dc389986cf2",
+        "desc": "Models that mainly related to process."
+      }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718",
+        "desc": "Models that mainly related to method."
+      }],
+
+    "userModel": {
+      "modelitem": "Model Item",
+      "conceptualmodel": "Conceptual Model",
+      "logicalmodel": "Logical Model",
+      "computablemodel": "Computable Model",
+      "SearchFor": "Search for ...",
+      "Back": "Back",
+      "createNew": "create new",
+      "Edit": "Edit",
+      "Delete": "Delete",
+      "First": "First",
+      "Previous": "Previous",
+      "Next": "Next",
+      "Last": "Last",
+      "TotalNum": "Total Num",
+      "sure": "Are you sure to",
+      "delete": "delete",
+      "thisItem": " this item?",
+      "Confirm": "Confirm",
+      "Cancel": "Cancel"
+    }
 
 
   },
@@ -301,7 +537,249 @@
     "APPRECIATEInfo": "真诚地感谢您使用我们的平台，我们将认真考虑您的反馈。",
     "SendFeedback": "发送反馈",
     "FeedBackInfo": "在这里输入您的反馈内容",
-    "Send": "发送"
+    "Send": "发送",
+
+    "Total": "总数",
+    "Unread": "未读",
+    "Date": "时间",
+    "Message":"消息",
+    "Dispatcher": "发送人",
+    "Conduct": "操作",
+    "View": "查看",
+    "MySubmission": "我的提交",
+    "OthersReview": "需我审核",
+    "UncheckedVersion": "未审核版本",
+    "ItemName": "条目名",
+    "Type": "类型",
+    "Editor": "编辑者",
+    "Delete": "删除",
+    "Cancel": "取消",
+    "Confirm": "确认",
+    "MarkAllRead": "标记全部已读",
+    "MarkRead": "标记已读",
+
+    "CreateModelItem": "创建模型条目",
+    "ModifyModelItem": "修改模型条目",
+    "Classification": "分类",
+    "BasicInfo": "基本信息",
+    "Content": "内容",
+    "Authorship": "贡献者",
+    "modelClassificationsTip": "请选择该模型所属的一个或多个分类：",
+    "ModelClassifications": "模型分类",
+    "SelectedClassifications": "已选择的分类",
+    "Exit": "退出",
+    "Previous": "上一步",
+    "Next": "下一步",
+    "Finish": "完成",
+    "Status": "状态",
+    "Alias": "别名",
+    "Overview": "描述",
+    "Keywords": "关键词",
+    "Image": "图片",
+    "References": "引用",
+    "AddReference": "添加引用",
+    "Public": {
+      "label": "共有的",
+      "content": "这个项目可以被检索、分享和编辑。"
+    },
+    "Discoverable": {
+      "label": "可发现的",
+      "content": "这个项目可以被检索和分享，只能由创建者编辑。"
+    },
+    "Private": {
+      "label": "私有的",
+      "content": "这个项目不能被检索和分享，只能由创造者编辑。"
+    },
+    "noCLSTip": "请至少选择一种分类!",
+    "references":{
+      "ReferenceInfo": "引用信息",
+      "GetByDoi": "doi",
+      "ReferenceInfoTip": "输入doi并点击搜索，信息可能会被自动填写。",
+      "Author": "作者",
+      "Journal": "期刊",
+      "Volume": "卷(期)",
+      "PageRange": "页面范围",
+      "Link": "链接",
+      "Doi": "Doi",
+      "Operation": "操作",
+      "Pages": "页数",
+      "Links": "链接",
+      "getDoiTitle": "这篇文章是你想要添加的吗",
+      "Authors": "相关作者",
+      "getDoiYes": "是的，就是它",
+      "getDoiNo": "取消"
+    },
+    "Language": {
+      "label": "语言",
+      "content": "创建后，你可以通过编辑不同的语言来描述该项目"
+    },
+    "LocalName": {
+      "label": "模型名称",
+      "content": "应给出一个本地化语言的名称",
+      "placeholder": "请用你选择的语言输入模型的名称"
+    },
+    "Description": "描述",
+    "authorshipPart": {
+      "NEW": "新增",
+      "Name": "姓名",
+      "Affiliation": "所属机构",
+      "Email": "邮箱",
+      "Homepage": "个人主页",
+      "Add": "添加"
+    },
+    "Tip": "提示",
+    "confirmButtonText": "查看",
+    "cancelButtonText": "返回",
+    "addSuccess": "成功创建模型条目!",
+    "treeData_part1": [
+      {
+        "children": [{
+          "children": [{
+            "id": 2,
+            "label": "陆地圈",
+            "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
+            "desc": "主要与陆地区域有关的模型，包括水文、流体力学、土壤、地貌、陆地生态系统等。"
+          }, {"id": 3, "label": "海洋圈", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457",
+            "desc": "主要与海洋区域有关的模型，包括沿海、海水、海冰、海洋生态系统等。"
+          }, {
+            "id": 4,
+            "label": "冰冻圈",
+            "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9",
+            "desc": "主要与冰冻地区有关的模型，包括冰川、永冻土、雪等。"
+          }, {"id": 5, "label": "大气圈", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5",
+            "desc": "主要与大气区域有关的模型，包括气候、天气、空气等。"
+          }, {
+            "id": 6,
+            "label": "太空-地球",
+            "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee",
+            "desc": "主要与空间-地球区域有关的模型，包括太阳-地球、行星等。"
+
+          }, {"id": 7, "label": "固体地球", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e",
+            "desc": "主要与固体地球区域有关的模型，包括岩石圈、地幔、地震等。"
+          }
+          ], "id": 1, "label": "自然视角", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0",
+          "desc": "主要与自然地理学有关的模型。"
+
+        }, {
+          "children": [{
+            "id": 10,
+            "label": "发展活动",
+            "oid": "808e74a4-41c6-4558-a850-4daec1f199df",
+            "desc": "主要与发展活动有关的模型，包括大陆、国家、城市、行政区域等。"
+          }, {"id": 11, "label": "社会活动", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190",
+            "desc": "主要与社会活动相关的模型，包括城市、农村、文化区、旅游区、建成区、室内区等。"}, {
+            "id": 12,
+            "label": "经济活动",
+            "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769",
+            "desc": "主要与经济活动有关的模型，包括农业、工业、旅游业、运输业、能源、市场等。"
+          }],
+          "id": 9,
+          "label": "人文视角",
+          "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da",
+          "desc": "主要与人文地理学有关的模型。"
+        }, {
+          "id": 30,
+          "label": "综合视角",
+          "oid": "396cc739-ef33-4332-8d5d-9a67c89567c7",
+          "desc": "整合许多不同的模型。",
+          "children": [{
+            "id": 31,
+            "label": "全球尺度",
+            "oid": "14130969-fda6-41ea-aa32-0af43104840b",
+            "desc": "适用于全球范围的综合模式。"
+          }, {
+            "id": 32,
+            "label": "区域尺度",
+            "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e",
+            "desc": "适用于区域范围的综合模式。"
+
+          }]
+        }],
+        "id": 24,
+        "label": "面向应用的分类",
+        "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19",
+        "desc": "适用于一个或多个领域的模式。"
+      }
+    ],
+    "treeData_part2": [
+      {"children": [{
+        "children": [{
+          "id": 15,
+          "label": "地理信息分析",
+          "oid": "afa99af9-4224-4fac-a81f-47a7fb663dba",
+          "desc": "主要与地理信息分析有关的模型，包括矢量分析、栅格分析、网络分析、拓扑分析等。"
+        }, {
+          "id": 16,
+          "label": "遥感分析",
+          "oid": "f20411a5-2f55-4ee9-9590-c2ec826b8bd5",
+          "desc": "主要与遥感分析有关的模型，包括图像分析、光谱分析等。"
+        }, {
+          "id": 17,
+          "label": "地学统计分析",
+          "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8",
+          "desc": "主要与地理统计分析有关的模型，包括模式检测、关系检测、聚类、内插等。"
+        }, {
+          "id": 18,
+          "label": "智能计算分析",
+          "oid": "c6fcc899-8ca4-4269-a21e-a39d38c034a6",
+          "desc": "主要与智能计算分析有关的模型，包括机器学习、深度学习等。"
+        }],
+        "id": 14,
+        "label": "数据视角",
+        "oid": "4785308f-b2ef-4193-a74b-b9fe025cbc5e",
+        "desc": "主要与数据处理有关的模型。"
+      }, {
+        "children": [{
+          "id": 20,
+          "label": "物理过程计算",
+          "oid": "1d564d0f-51c6-40ca-bd75-3f9489ccf1d6",
+          "desc": "主要与物理过程计算有关的模型，包括CFD、声学模拟、光模拟等。"
+        }, {
+          "id": 21,
+          "label": "化学过程计算",
+          "oid": "63266a14-d7f9-44cb-8204-c877eaddcaa1",
+          "desc": "主要与化学过程计算有关的模型，包括杀虫剂、光合作用、燃烧等。"
+        }, {
+          "id": 22,
+          "label": "生物过程计算",
+          "oid": "6d1efa2c-830d-4546-b759-c66806c4facc",
+          "desc": "主要与生物过程计算有关的模型，包括基因组、新陈代谢、细胞模拟等。"
+        }, {
+          "id": 23,
+          "label": "人类活动计算",
+          "oid": "6952d5b2-cb0f-4ba7-96fd-5761dd566344",
+          "desc": "主要与人类活动计算有关的模型，包括蒙特卡洛、CA、基于代理人、旅行、犯罪、疾病、移民、健康等。"
+        }],
+        "id": 19,
+        "label": "过程视角",
+        "oid": "746887cf-d490-4080-9754-1dc389986cf2",
+        "desc": "主要与过程有关的模型。"
+      }], "id": 25, "label": "面向方法的分类", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718",
+        "desc": "主要与方法有关的模型。"
+      }],
+
+    "userModel": {
+      "modelitem": "模型条目",
+      "conceptualmodel": "概念模型",
+      "logicalmodel": "逻辑模型",
+      "computablemodel": "计算模型",
+      "SearchFor": "查找 ...",
+      "Back": "返回",
+      "createNew": "创建",
+      "Edit": "编辑",
+      "Delete": "删除",
+      "First": "首页",
+      "Previous": "前一页",
+      "Next": "后一页",
+      "Last": "尾页",
+      "TotalNum": "总数量",
+      "sure": "确定",
+      "delete": "删除",
+      "thisItem": " 这个条目吗？",
+      "Confirm": "确认",
+      "Cancel": "取消"
+    }
+
 
   }
 }

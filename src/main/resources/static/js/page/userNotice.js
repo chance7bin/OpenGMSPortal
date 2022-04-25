@@ -15,8 +15,9 @@ var userNotice = Vue.extend({
             unReadNoticeCount:0,
 
             noticeDialogVisible:false,
-            currentMessage:""
+            currentMessage:"",
 
+            // htmlJSON:{}
         }
     },
     mounted(){

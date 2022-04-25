@@ -40,12 +40,12 @@
                             <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 90%;">
                                 <br/>
                                 <div style="width: 100%;font-weight: bold;font-size: 20px;">
-                                    <span>Total:{{noticeCount}}</span>
+                                    <span>{{htmlJson.Total}}:{{noticeCount}}</span>
                                     &nbsp;
-                                    <span>Unread:{{unReadNoticeCount}}</span>
+                                    <span>{{htmlJson.Unread}}:{{unReadNoticeCount}}</span>
                                     &nbsp;&nbsp;
                                     <div style="display: flex; justify-content: flex-end;">
-                                        <el-button size="small" type="primary" @click="setAllNotice2Read">Mark All Read</el-button>
+                                        <el-button size="small" type="primary" @click="setAllNotice2Read">{{htmlJson.MarkAllRead}}</el-button>
                                     </div>
                                 </div>
 
@@ -59,35 +59,44 @@
                                             style="width: 100%;">
                                         <el-table-column
                                                 prop="createTime"
-                                                label="Date"
                                                 min-width="160">
+                                            <template slot="header" slot-scope="scope">
+                                                <span>{{htmlJson.Date}}</span>
+                                            </template>
                                             <template slot-scope="scope">
                                                 <h4>{{ scope.row.createTime }}</h4>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
                                                 prop="message"
-                                                label="Message"
                                                 min-width="320"
                                                 show-overflow-tooltip>
+                                            <template slot="header" slot-scope="scope">
+                                                <span>{{htmlJson.Message}}</span>
+                                            </template>
                                             <template slot-scope="scope">
                                                 <h5>{{ scope.row.message }}</h5>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
                                                 prop="dispatcher"
-                                                label="Dispatcher"
                                                 min-width="200"
                                                 show-overflow-tooltip>
+                                            <template slot="header" slot-scope="scope">
+                                                <span>{{htmlJson.Dispatcher}}</span>
+                                            </template>
                                             <template slot-scope="scope">
                                                 <h4>{{ scope.row.dispatcher }}</h4>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="Conduct" min-width="200">
+                                        <el-table-column min-width="200">
+                                            <template slot="header" slot-scope="scope">
+                                                <span>{{htmlJson.Conduct}}</span>
+                                            </template>
                                             <template slot-scope="scope">
 
                                                 <el-dialog
-                                                        title="Message"
+                                                        :title="htmlJson.Message"
                                                         :visible.sync="noticeDialogVisible"
                                                         width="30%">
                                                     <span>{{currentMessage}}</span>
@@ -99,12 +108,12 @@
                                                 <el-button
                                                         type="primary"
                                                         size="mini"
-                                                        @click="viewNotice(scope.row)">View</el-button>
+                                                        @click="viewNotice(scope.row)">{{htmlJson.View}}</el-button>
                                                 <el-button
                                                         v-if="scope.row.hasRead===false"
                                                         type="warning"
                                                         size="mini"
-                                                        @click="setOneNotice2Read(scope.row.id)">Mark Read</el-button>
+                                                        @click="setOneNotice2Read(scope.row.id)">{{htmlJson.MarkRead}}</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>

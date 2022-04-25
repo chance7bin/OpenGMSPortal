@@ -1,6 +1,6 @@
 var createModelItem = Vue.extend({
     template:'#createModelItem',
-
+    props: ["htmlJson"],
     components: {
         'avatar': VueAvatar.Avatar,
         // 'vue-cropper':VueCropper.
@@ -32,7 +32,7 @@ var createModelItem = Vue.extend({
                 insName: ""
             },
 
-            treeData_part1: [
+            /*treeData_part1: [
                 {
                     "children": [{
                         "children": [{
@@ -157,7 +157,7 @@ var createModelItem = Vue.extend({
                         "desc": "Models that mainly related to process.",
                     }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718",
                     "desc": "Models that mainly related to method.",
-                }],
+                }],*/
             treeData_select:[],
             defaultProps: {
                 children: 'children',
@@ -387,17 +387,53 @@ var createModelItem = Vue.extend({
 
             metaDataTab:'first',
 
+            //htmlJSON中需要初始化的对象属性
+            // htmlJSON:{
+            //     "noCLSTip":"Please select at least one classification!",
+            //     "Tip": "Tip",
+            //     "confirmButtonText": "View",
+            //     "cancelButtonText": "Go Back",
+            //     "addSuccess": "Create model item successfully!",
+            // }
         }
 
 
 
     },
 
-    computed(){
-
+    computed:{
+        // 中英文切换
+        // htmlJSON(){
+        //     // console.log("htmlJson:",this.htmlJson);
+        //     // if (this.editType = 'create'){
+        //     //     $("#subRteTitle").text("/" + this.htmlJson.CreateModelItem);
+        //     // } else {
+        //     //     $("#subRteTitle").text("/" + this.htmlJson.ModifyModelItem);
+        //     // }
+        //     // // this.htmlJSON = this.htmlJson;
+        //     // this.treeData_part1 = this.htmlJson.treeData_part1;
+        //     // this.treeData_part2 = this.htmlJson.treeData_part2;
+        //     return this.htmlJson;
+        //     // $("#title").text("Create Model Item")
+        //
+        // },
+        treeData_part1(){
+            return this.htmlJson.treeData_part1;
+        },
+        treeData_part2(){
+            return this.htmlJson.treeData_part2;
+        }
+        // htmlJSON(){
+        //     return this.htmlJson;
+        // }
     },
 
     methods: {
+        // translatePage(jsonContent){
+        //     this.htmlJSON = jsonContent
+        //     console.log("htmlJSON:",this.htmlJSON)
+        // },
+
         addLocalization() {
             this.languageAdd.show = true;
         },
@@ -577,7 +613,7 @@ var createModelItem = Vue.extend({
 
                 console.log($("#tree_select .el-tree-node"))
                 $("#tree_select").on("mouseenter",".el-tree-node",(event)=>{
-                    console.log(event)
+                    // console.log(event)
                     let name = event.currentTarget.innerText
                     let desc = this.getClassificationDesc(name)
                     console.log(desc);
@@ -1474,6 +1510,24 @@ var createModelItem = Vue.extend({
 
     },
 
+
+    watch:{
+    //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateModelItem);
+            } else {
+                $("#subRteTitle").text("/" + newData.ModifyModelItem);
+            }
+            // $("#title").text("Create Model Item")
+
+        }
+    },
+
     mounted() {
 
         let that = this;
@@ -1604,6 +1658,8 @@ var createModelItem = Vue.extend({
             this.editType = 'create';
             // $("#title").text("Create Model Item")
             $("#subRteTitle").text("/Create Model Item");
+            // console.log("this.htmlJSON:",this.htmlJSON);
+            // $("#subRteTitle").text("/" + this.CreateModelItem);
 
             let interval = setInterval(function () {
                 initTinymce('textarea#singleDescription');
@@ -1614,22 +1670,26 @@ var createModelItem = Vue.extend({
             this.$set(this.languageAdd.local, "label", "English");
             initTinymce('textarea#modelItemText');
 
-            if(this.draft.oid!=''&&this.draft.oid!=null&&typeof (this.draft.oid)!="undefined"){
-                // this.loadDraftByOid()
-                this.initDraft('create','/user/userSpace#/models/modelitem','draft',this.draft.oid)
-            }else{
-                this.loadMatchedCreateDraft();
-            }
+            // 取消draft
+            // if(this.draft.oid!=''&&this.draft.oid!=null&&typeof (this.draft.oid)!="undefined"){
+            //     // this.loadDraftByOid()
+            //     this.initDraft('create','/user/userSpace#/models/modelitem','draft',this.draft.oid)
+            // }else{
+            //     this.loadMatchedCreateDraft();
+            // }
 
         }
         else {
 
             this.editType = 'modify';
-            if(this.draft.oid==''||this.draft.oid==null||typeof (this.draft.oid)=="undefined"){
-                this.initDraft('edit','/user/userSpace#/models/modelitem','item',this.$route.params.editId)
-            }else{
-                this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
-            }
+
+            // 取消draft
+            // if(this.draft.oid==''||this.draft.oid==null||typeof (this.draft.oid)=="undefined"){
+            //     this.initDraft('edit','/user/userSpace#/models/modelitem','item',this.$route.params.editId)
+            // }else{
+            //     this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
+            // }
+
                 // $("#title").text("Modify Model Item")
             $("#subRteTitle").text("/Modify Model Item");
 
@@ -1652,6 +1712,22 @@ var createModelItem = Vue.extend({
             // window.sessionStorage.setItem("editModelItem_id", "");
         }
 
+
+
+        // console.log("htmlJSON:",this.htmlJSON);
+        // console.log("htmlJson:",this.htmlJson);
+        //中英文切换
+        // console.log("this.htmlJson:",this.htmlJson);
+        if (this.editType == 'create'){
+            console.log("create:",this.htmlJson.CreateModelItem);
+            $("#subRteTitle").text("/" + this.htmlJson.CreateModelItem);
+        } else {
+            console.log("modify:",this.htmlJson.ModifyModelItem);
+            $("#subRteTitle").text("/" + this.htmlJson.ModifyModelItem);
+        }
+
+
+
         window.localStorage.removeItem('draft');
         // if(this.draft.oid!=''&&this.draft.oid!=null&&typeof (this.draft.oid)!="undefined")
         //     this.loadDraftByOid()
@@ -1661,11 +1737,13 @@ var createModelItem = Vue.extend({
 
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
-                console.log("step  tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
+                // console.log("step  tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
+                console.log("step:",currentIndex,newIndex,stepDirection);
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.treeData_select.length === 0) {
                         new Vue().$message({
-                            message: 'Please select at least one classification!',
+                            // message: 'Please select at least one classification!',
+                            message: this.htmlJson.noCLSTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -1785,7 +1863,6 @@ var createModelItem = Vue.extend({
         //
         // })
         //table end
-
         $(document).on("click", ".refClose", function () {
             vthis.dynamicTable.row($(this).parents("tr")).remove().draw();
             //$(this).parents("tr").eq(0).remove();
@@ -1800,7 +1877,7 @@ var createModelItem = Vue.extend({
         this.IframeHeight = (height - 20) + "px";
 
         window.onresize = () => {
-            console.log('come on ..');
+            // console.log('come on ..');
             height = document.documentElement.clientHeight;
             this.ScreenMaxHeight = (height) + "px";
             this.IframeHeight = (height - 20) + "px";
@@ -1882,6 +1959,7 @@ var createModelItem = Vue.extend({
 
         $(".finish").click(()=> {
 
+            console.log("finish");
             modelItemObj = this.getItemContent('finish')
 
             let formData = new FormData();
@@ -1910,10 +1988,10 @@ var createModelItem = Vue.extend({
                         loading.close();
                         if (result.code == 0) {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create model item successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>' + this.htmlJson.addSuccess + '</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -2056,13 +2134,13 @@ var createModelItem = Vue.extend({
             var content_box = $(this).parent().children('div');
             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
             str += user_num;
-            str += "' href='javascript:;'> NEW </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW + " </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
             str += user_num;
             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                 "                                                                                                    <div>\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Name:\n" +
+                                                                                                                            that.htmlJson.authorshipPart.NEW + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -2073,7 +2151,7 @@ var createModelItem = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Affiliation:\n" +
+                                                                                                                            that.htmlJson.authorshipPart.Affiliation + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -2084,7 +2162,7 @@ var createModelItem = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Email:\n" +
+                                                                                                                            that.htmlJson.authorshipPart.Email + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -2095,7 +2173,7 @@ var createModelItem = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Homepage:\n" +
+                                                                                                                            that.htmlJson.authorshipPart.Homepage + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +

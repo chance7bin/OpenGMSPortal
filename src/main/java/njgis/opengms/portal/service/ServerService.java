@@ -114,7 +114,8 @@ public class ServerService {
         if (modelContainerList.size() == 0){
             // 用email找不到的话再换成用accessId找
             User user = userService.getByEmail(email);
-            modelContainerList = modelContainerDao.findAllByAccount(user.getAccessId());
+            if (user.getAccessId() != null)
+                modelContainerList = modelContainerDao.findAllByAccount(user.getAccessId());
 
         }
 
