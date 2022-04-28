@@ -64,7 +64,7 @@
                         <div class="flexRowContainer flexColCenter" style="margin-left: 18px">
                             <img class="square_40" style="margin-top: 10px" src="../../../static/img/model/model.png">
                             <h3 style="margin-left: 10px"><a class="itemTitle"
-                                                             href="/user/userSpace#/model">Model </a><span
+                                                             href="/user/userSpace#/model">{{htmlJson.Model}} </a><span
                                     id="subRteTitle"></span></h3>
                         </div>
                         <draft-box ref="draftBox"
@@ -83,16 +83,16 @@
                                             <div class="step-app">
                                                 <ul class="step-steps text-center">
                                                     <li>
-                                                        <a href="#step1">Basic Info</a>
+                                                        <a href="#step1">{{htmlJson.BasicInfo}}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#step2">Resource</a>
+                                                        <a href="#step2">{{htmlJson.Resource}}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#step3">Content</a>
+                                                        <a href="#step3">{{htmlJson.Content}}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#step4">Authorship</a>
+                                                        <a href="#step4">{{htmlJson.Authorship}}</a>
                                                     </li>
                                                 </ul>
                                                 <div class="step-content">
@@ -102,31 +102,31 @@
                                                             <label data-original-title="Tooltip on top"
                                                                    class="control-label col-lg-2 col-md-3 col-md-offset-2 tooltips"
                                                                    data-toggle="tooltip" data-placement="top" title="">
-                                                                <span class="xing">* </span>Status
+                                                                <span class="xing">* </span>{{htmlJson.Status}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <el-radio-group v-model="itemInfo.status"
                                                                                 size="medium">
                                                                     <el-tooltip popper-class="fontsize-15"
                                                                                 effect="light"
-                                                                                content="This item can be retrieved, shared and edited."
+                                                                                :content="htmlJson.Public.content"
                                                                                 placement="top">
                                                                         <el-radio-button
-                                                                                label="Public"></el-radio-button>
+                                                                                label="Public">{{htmlJson.Public.label}}</el-radio-button>
                                                                     </el-tooltip>
                                                                     <el-tooltip popper-class="fontsize-15" class="item"
                                                                                 effect="light"
-                                                                                content="This item can be retrieved and shared, can ONLY be edited by creator."
+                                                                                :content="htmlJson.Discoverable.content"
                                                                                 placement="top">
                                                                         <el-radio-button
-                                                                                label="Discoverable"></el-radio-button>
+                                                                                label="Discoverable">{{htmlJson.Discoverable.label}}</el-radio-button>
                                                                     </el-tooltip>
                                                                     <el-tooltip popper-class="fontsize-15" class="item"
                                                                                 effect="light"
-                                                                                content="This item can NOT be retrieved and shared, can ONLY be edited by creator."
+                                                                                :content="htmlJson.Private.content"
                                                                                 placement="top">
                                                                         <el-radio-button
-                                                                                label="Private"></el-radio-button>
+                                                                                label="Private">{{htmlJson.Private.label}}</el-radio-button>
                                                                     </el-tooltip>
 
                                                                 </el-radio-group>
@@ -137,12 +137,12 @@
                                                             <label data-original-title="Tooltip on top"
                                                                    class="control-label col-lg-2 col-md-3 col-md-offset-2 tooltips"
                                                                    data-toggle="tooltip" data-placement="top" title="">
-                                                                <span class="xing">* </span>Bind Model Item
+                                                                <span class="xing">* </span>{{htmlJson.BindModelItem}}
                                                             </label>
                                                             <div class="input-group col-md-5">
 
                                                                 <el-button type="primary" @click="openModelItemDialog()"
-                                                                           style="margin-right:10px">Select
+                                                                           style="margin-right:10px">{{htmlJson.Select}}
                                                                 </el-button>
                                                                 {{itemInfo.relateModelItemName}}
                                                             </div>
@@ -151,7 +151,7 @@
 
                                                         <div class="form-group">
                                                             <label class="control-label col-lg-2 col-md-3 col-md-offset-2">
-                                                                <span class="xing">* </span>Name
+                                                                <span class="xing">* </span>{{htmlJson.Name}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <input type="text" class="form-control"
@@ -162,7 +162,7 @@
 
                                                         <div class="form-group">
                                                             <label class="control-label col-lg-2 col-md-3 col-md-offset-2">
-                                                                <span class="xing">* </span>Overview
+                                                                <span class="xing">* </span>{{htmlJson.Overview}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                         <textarea class="form-control" id="descInput"
@@ -171,7 +171,7 @@
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label class="control-label col-lg-2 col-md-3 col-md-offset-2"><span style="margin-left: 21px;">Image</span></label>
+                                                            <label class="control-label col-lg-2 col-md-3 col-md-offset-2"><span style="margin-left: 21px;">{{htmlJson.Image}}</span></label>
                                                             <div class="input-group col-md-5">
 
                                                                 <img-upload style="width: 100px;height: 100px"
@@ -186,7 +186,7 @@
 
                                                         <div class="form-group" style="margin-top:10px">
                                                             <label class="control-label col-lg-2 col-md-3 col-md-offset-2">
-                                                                <span class="xing">* </span>Content Type
+                                                                <span class="xing">* </span>{{htmlJson.ContentType}}
                                                             </label>
                                                             <div class="input-group col-md-5"
                                                                  style="padding:5px 0;font-size:20px">
@@ -197,7 +197,7 @@
                                                                                 content="Using a OpenGMS Model-Service Package to create model service."
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
-                                                                                  label="Package">OpenGMS Model-Service Package
+                                                                                  label="Package">{{htmlJson.OpenGMSModelServicePackage}}
                                                                         </el-radio>
                                                                     </el-tooltip>
                                                                     <br/>
@@ -205,7 +205,7 @@
                                                                                 content="Using a deployed OpenGMS Model-Service Package's MD5 to create model service"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
-                                                                                  label="MD5">OpenGMS Package Tag
+                                                                                  label="MD5">{{htmlJson.OpenGMSPackageTag}}
                                                                         </el-radio>
                                                                     </el-tooltip>
                                                                     <br/>
@@ -213,7 +213,7 @@
                                                                                 content="I have the model's source code."
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
-                                                                                  label="Code">Source Code
+                                                                                  label="Code">{{htmlJson.SourceCode}}
                                                                         </el-radio>
                                                                     </el-tooltip>
                                                                     <br/>
@@ -221,7 +221,7 @@
                                                                                 content="I have the model's executable library."
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
-                                                                                  label="Library">Executable Library
+                                                                                  label="Library">{{htmlJson.ExecutableLibrary}}
                                                                         </el-radio>
                                                                     </el-tooltip>
                                                                     <br/>
@@ -229,8 +229,7 @@
                                                                                 content="The model have been deployed at third-party website as a service."
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
-                                                                                  label="Service">Third-party
-                                                                            Web-Service Link
+                                                                                  label="Service">{{htmlJson.ThirdPartyWebServiceLink}}
                                                                         </el-radio>
                                                                     </el-tooltip>
                                                                     <br/>
@@ -238,7 +237,7 @@
                                                                                 content="The model can be downloaded at third-party website."
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
-                                                                                  label="Link">Downloadable Link
+                                                                                  label="Link">{{htmlJson.DownloadableLink}}
                                                                         </el-radio>
                                                                     </el-tooltip>
                                                                 </el-radio-group>
@@ -339,24 +338,24 @@
                                                              v-if="itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library'">
                                                             <div style="flex: 1;margin-left: 5px">
                                                                 <h5 style="font-weight: 500;flex: 1;min-width: 400px">
-                                                                    Upload your package:</h5>
+                                                                    {{htmlJson.UploadYourPackage}}:</h5>
                                                                 <el-button
                                                                         v-if="(resources.length==0&&itemInfo.contentType=='Package')||itemInfo.contentType!='Package'"
                                                                         type="primary"
-                                                                        @click="addFile()">+ Add
+                                                                        @click="addFile()">+ {{htmlJson.authorshipPart.Add}}
                                                                 </el-button>
                                                                 <el-button v-if="resources.length!=0" type="danger"
-                                                                           @click="removeFile()">- Remove
+                                                                           @click="removeFile()">- {{htmlJson.Remove}}
                                                                 </el-button>
                                                                 <el-button
                                                                         v-if="resources.length!=0&&itemInfo.contentType=='Package'"
                                                                         type="success"
-                                                                        @click="replaceFile()">Replace
+                                                                        @click="replaceFile()">{{htmlJson.Replace}}
                                                                 </el-button>
 
                                                                 <el-card :body-style="{ padding:'9px'}"
                                                                          style="margin-top: 10px">
-                                                                    <span><i class="el-icon-document"></i>&nbsp&nbsp contents</span>
+                                                                    <span><i class="el-icon-document"></i>&nbsp&nbsp {{htmlJson.Content}}</span>
                                                                 </el-card>
 
 
@@ -473,7 +472,7 @@
                                                                                     style="color:white">
                                                                                     <a class="accordion-toggle"
                                                                                        data-parent="#accordion2">
-                                                                                        Authorship
+                                                                                        {{htmlJson.Authorship}}
                                                                                     </a>
                                                                                 </h4>
                                                                             </div>
@@ -490,7 +489,7 @@
                                                                                                    data-toggle='collapse'
                                                                                                    data-target='#user1'
                                                                                                    href="javascript:;">
-                                                                                                    NEW
+                                                                                                    {{htmlJson.authorshipPart.NEW}}
                                                                                                 </a>
                                                                                             </h4>
                                                                                             <a href="javascript:;"
@@ -504,7 +503,7 @@
                                                                                                     <div>
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Name:
+                                                                                                            {{htmlJson.authorshipPart.Name}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -515,7 +514,7 @@
                                                                                                     <div style="margin-top:10px">
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Affiliation:
+                                                                                                            {{htmlJson.authorshipPart.Affiliation}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -526,7 +525,7 @@
                                                                                                     <div style="margin-top:10px">
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Email:
+                                                                                                            {{htmlJson.authorshipPart.Email}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -537,7 +536,7 @@
                                                                                                     <div style="margin-top:10px">
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Homepage:
+                                                                                                            {{htmlJson.authorshipPart.Homepage}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -553,7 +552,7 @@
                                                                                 <button type="button"
                                                                                         class="btn btn-success btn-lg btn-block user-add"
                                                                                         style="border-radius: 3px;border-top-left-radius: 0px;border-top-right-radius: 0px">
-                                                                                    Add
+                                                                                    {{htmlJson.authorshipPart.Add}}
                                                                                 </button>
                                                                             </div>
                                                                         </div>
@@ -569,22 +568,22 @@
                                                     <!--                                                    </button>-->
                                                     <button class="btn btn-danger prev" @click="cancelEditClick()"
                                                             style="">
-                                                        Exit
+                                                        {{htmlJson.Exit}}
                                                     </button>
                                                     <div class="innerBorderCol btn btn-warning"
                                                          style="padding: 0;margin: 0 10px;height: 20px;background-color: #cccccc !important;cursor: auto"></div>
                                                     <button class="btn btn-warning prev" data-direction="prev">
-                                                        Previous
+                                                        {{htmlJson.Previous}}
                                                     </button>
-                                                    <button class="btn btn-primary next" data-direction="next">Next
+                                                    <button class="btn btn-primary next" data-direction="next">{{htmlJson.Next}}
                                                     </button>
                                                     <button v-if="editType=='modify'" @click="submitEdit"
                                                             class="btn btn-success " data-direction="next">
-                                                        Submit Edit
+                                                        {{htmlJson.SubmitEdit}}
                                                     </button>
                                                     <button v-show="editType=='create'" class="btn btn-success finish"
                                                             data-direction="finish">
-                                                        Finish
+                                                        {{htmlJson.Finish}}
                                                     </button>
                                                 </div>
 
@@ -608,11 +607,11 @@
                         </div>
                     </div>
                 </div>
-                <el-dialog :visible.sync="bindModelItemDialogVisible" title="Bind Model Item" width="50%"
+                <el-dialog :visible.sync="bindModelItemDialogVisible" :title="htmlJson.BindModelItem" width="50%"
                            top="40px">
 
 
-                    <el-input placeholder="Model item name..." v-model="pageOption.searchText" class="input-with-select"
+                    <el-input :placeholder="htmlJson.BindModelItemPlaceholder" v-model="pageOption.searchText" class="input-with-select"
                               @keyup.enter.native="searchModelItem()">
                         <el-button slot="append" icon="el-icon-search" @click="searchModelItem()"></el-button>
                     </el-input>
@@ -631,23 +630,23 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                                label="Name">
+                                :label="htmlJson.Name">
                             <template slot-scope="props">
                                 <a :href="'/modelItem/'+props.row.oid" target="_blank">{{props.row.name}}</a>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Contributor">
+                        <el-table-column :label="htmlJson.Contributor">
                             <template slot-scope="props">
                                 <a :href="'/profile/'+props.row.author_name"
                                    target="_blank">{{props.row.author_name}}</a>
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="Operation" width="100">
+                        <el-table-column fixed="right" :label="htmlJson.references.Operation" width="100">
                             <template slot-scope="scope">
                                 <el-button
                                         size="mini"
                                         type="success"
-                                        @click="selectModelItem(scope.$index, scope.row)">Choose
+                                        @click="selectModelItem(scope.$index, scope.row)">{{htmlJson.Choose}}
                                 </el-button>
 
                             </template>

@@ -1,5 +1,6 @@
 new Vue({
     el: '#app',
+    props:['htmlJson'],
     data: function () {
         return {
             htmlJSON:{},

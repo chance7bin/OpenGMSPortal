@@ -1,5 +1,6 @@
 var createDataHubs = Vue.extend({
     template: "#createDataHubs",
+    props: ["htmlJson"],
     data() {
         return {
 

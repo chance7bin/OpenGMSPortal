@@ -815,7 +815,7 @@ Vue.component("editComputableModelModule",
 
                 let loading = this.$loading({
                     lock: true,
-                    text: "Uploading...",
+                    text: this.htmlJson.Uploading,
                     spinner: "el-icon-loading",
                     background: "rgba(0, 0, 0, 0.7)"
                 });
