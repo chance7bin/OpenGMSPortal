@@ -387,6 +387,58 @@
       "Cancel": "Cancel"
     },
 
+    "CreateConceptualModel": "Create Conceptual Model",
+    "CreateLogicalModel": "Create Logical Model",
+    "CreateComputableModel": "Create Computable Model",
+    "Resource": "Resource",
+    "BindModelItem": "Bind Model Item",
+    "Select": "Select",
+    "ResourceType": "Resource Type",
+    "Interactive": "Interactive",
+    "Remove": "Remove",
+    "BindModelItemMessage": "Please bind a model item!",
+    "NameMessage": "Please enter name!",
+    "overviewMessage": "Please enter overview!",
+
+    "BindModelItemPlaceholder": "Model item name...",
+    "Contributor": "Contributor",
+    "Choose": "Choose",
+
+    "CreateConceptualModelSuccess": "Create Conceptual Model successfully!",
+    "UpdateConceptualModelSuccess": "Update Conceptual Model successfully!",
+    "CreateLogicalModelSuccess": "Create Logical Model successfully",
+    "UpdateLogicalModelSuccess": "Update Logical Model successfully",
+    "CreateComputableModelSuccess": "Create Computable Model successfully",
+    "UpdateComputableModelSuccess": "Update Computable Model successfully",
+
+
+    "ContentType": "Content Type",
+    "OpenGMSModelServicePackage": "OpenGMS Model-Service Package",
+    "OpenGMSPackageTag": "OpenGMS Package Tag",
+    "SourceCode": "Source Code",
+    "ExecutableLibrary": "Executable Library",
+    "ThirdPartyWebServiceLink": "Third-party Web-Service Link",
+    "DownloadableLink": "Downloadable Link",
+
+    "UploadYourPackage": "Upload your package",
+    "Replace": "Replace",
+    "PleaseSelectAtLeastOneFile": "Please select at least one file!",
+    "PleaseEnterURL": "Please enter URL!",
+    "PleaseEnterMd5": "Please enter md5!",
+    "PleaseEnterMdl": "Please enter mdl!",
+
+    "Uploading": "Uploading...",
+    "Deleting": "deleting...",
+    "RefreshPage": "please refresh the page!",
+    "DeleteFailed": "delete Failed!",
+    "DeleteSuccess": "delete successfully!",
+    "LoginInFirst": "Please log in first!",
+    "SureDeleteModel": "Are you sure to delete this model?",
+
+
+    "Overview_Detail": "Overview & Detail"
+    },
+
 
     "CreateSpatiotemporalReference": "Create Spatiotemporal Reference",
     "Classifications": "Classifications",
@@ -785,7 +837,56 @@
       "thisItem": " 这个条目吗？",
       "Confirm": "确认",
       "Cancel": "取消"
-    }
+    },
+
+    "CreateConceptualModel": "创建概念模型",
+    "CreateLogicalModel": "创建逻辑模型",
+    "CreateComputableModel":"创建计算模型",
+    "Resource": "资源",
+    "BindModelItem": "绑定模型项",
+    "Select": "选择",
+    "ResourceType": "资源类型",
+    "Interactive": "交互",
+    "Remove": "移除",
+    "BindModelItemMessage":"请绑定一个模型项！",
+    "NameMessage": "请输入名称",
+    "overviewMessage":"请输入描述",
+
+    "BindModelItemPlaceholder": "模型项名称",
+    "Contributor":"贡献者",
+    "Choose": "选择",
+
+    "CreateConceptualModelSuccess": "创建概念模型成功！",
+    "UpdateConceptualModelSuccess": "修改概念模型成功！",
+    "CreateLogicalModelSuccess": "创建逻辑模型成功",
+    "UpdateLogicalModelSuccess": "修改逻辑模型成功",
+    "CreateComputableModelSuccess": "创建计算模型成功",
+    "UpdateComputableModelSuccess": "修改计算模型成功",
+
+    "ContentType": "内容类型",
+    "OpenGMSModelServicePackage": "OpenGMS模型服务包",
+    "OpenGMSPackageTag": "OpenGMS包标签",
+    "SourceCode": "源码",
+    "ExecutableLibrary": "可执行库",
+    "ThirdPartyWebServiceLink": "第三方网络服务链接",
+    "DownloadableLink": "下载链接",
+
+    "UploadYourPackage": "上传您的包",
+    "Replace": "替换",
+    "PleaseSelectAtLeastOneFile": "请至少选择一个文件！",
+    "PleaseEnterURL": "请输入URL！",
+    "PleaseEnterMd5": "请输入md5！",
+    "PleaseEnterMdl": "请输入mdl！",
+
+    "Uploading": "上传中...",
+    "Deleting": "删除中...",
+    "RefreshPage": "请刷新页面！",
+    "DeleteFailed": "删除失败！",
+    "DeleteSuccess": "删除成功！",
+    "LoginInFirst": "请先登录！",
+    "SureDeleteModel": "您确认删除该模型吗？",
+
+    "Overview_Detail":"概述 & 详情"
 
 
   }
