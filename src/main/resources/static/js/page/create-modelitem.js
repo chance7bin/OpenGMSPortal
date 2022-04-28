@@ -1719,10 +1719,10 @@ var createModelItem = Vue.extend({
         //中英文切换
         // console.log("this.htmlJson:",this.htmlJson);
         if (this.editType == 'create'){
-            console.log("create:",this.htmlJson.CreateModelItem);
+            // console.log("create:",this.htmlJson.CreateModelItem);
             $("#subRteTitle").text("/" + this.htmlJson.CreateModelItem);
         } else {
-            console.log("modify:",this.htmlJson.ModifyModelItem);
+            // console.log("modify:",this.htmlJson.ModifyModelItem);
             $("#subRteTitle").text("/" + this.htmlJson.ModifyModelItem);
         }
 

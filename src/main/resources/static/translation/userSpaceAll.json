@@ -30,6 +30,7 @@
     "ModelApplication": "Model Application",
     "GoTo": "Go to!",
 
+
     "ModelSplit": "-------------------",
     "ModelInfo": "You can manage your model here",
     "ModelItem":"Model Item",
@@ -177,7 +178,6 @@
     "Previous": "Previous",
     "Next": "Next",
     "Finish": "Finish",
-    "SubmitEdit": "Submit Edit",
     "Status": "Status",
     "Alias": "Alias",
     "Overview": "Overview",
@@ -198,6 +198,8 @@
       "content": "This item can NOT be retrieved and shared, can ONLY be edited by creator."
     },
     "noCLSTip": "Please select at least one classification!",
+    "noNameTip": "Please enter name!",
+    "noOverviewTip": "Please enter overview!",
     "references":{
       "ReferenceInfo": "Reference Info",
       "GetByDoi": "Get by doi",
@@ -435,8 +437,59 @@
     "LoginInFirst": "Please log in first!",
     "SureDeleteModel": "Are you sure to delete this model?",
 
+    "Overview_Detail": "Overview & Detail",
 
-    "Overview_Detail": "Overview & Detail"
+
+
+    "CreateSpatiotemporalReference": "Create Spatiotemporal Reference",
+    "ModifySpatiotemporalReference": "Modify Spatiotemporal Reference",
+    "Classifications": "Classifications",
+    "wkt":"wkt",
+    "SpatiotemporalReferenceClassifications": "Spatiotemporal Reference Classifications",
+    "treeData": [{
+      "id": 1,
+      "label": "Spatial Reference Repository",
+      "oid": "58340c92-d74f-4d81-8a80-e4fcff286008",
+      "children": [{
+        "id": 100,
+        "oid": "da70ad83-de57-4fc3-a85d-c1dcf4961433",
+        "label": "Basic"
+      },
+        {
+          "id": 101,
+          "oid": "c4642926-e797-4f61-92d6-7933df2413d2",
+          "label": "EPSG"
+        },
+        {
+          "id": 102,
+          "oid": "e8562394-b55f-46d7-870e-ef5ad3aaf110",
+          "label": "ESRI"
+        },
+        {
+          "id": 103,
+          "oid": "ee830613-1603-4f38-a196-5028e4e10d39",
+          "label": "IAU"
+        },
+        {
+          "id": 104,
+          "oid": "b2f2fbfd-f21a-47ac-9e1f-a96ac0218bf1",
+          "label": "Customized"
+        }]
+    }, {
+      "id": 2,
+      "label": "Temporal Reference Repository",
+      "oid": "ce37e343-bf2c-4e7b-902e-46616604e184",
+      "children": [{
+        "id": 3,
+        "label": "Date",
+        "oid": "295d2120-402b-4ee6-a0b5-308b67fe2c40"
+      },
+        {
+          "id": 4,
+          "label": "Time",
+          "oid": "6883d3fb-8485-4771-9a3e-3276c759364e"
+        }]
+    }]
 
 
   },
@@ -563,7 +616,6 @@
     "ReverseOrder": "逆序",
     "PositiveOrder": "正序",
     "OverView": "概览",
-    "CreateTime": "Create Time",
     "Version": "版本",
     "UnapprovedVersion": "未接受版本",
     "AcceptedVersion": "已接受版本",
@@ -623,11 +675,9 @@
     "Previous": "上一步",
     "Next": "下一步",
     "Finish": "完成",
-    "SubmitEdit":"提交修改",
     "Status": "状态",
     "Alias": "别名",
     "Overview": "描述",
-    "CreateTime": "创建时间",
     "Keywords": "关键词",
     "Image": "图片",
     "References": "引用",
@@ -881,8 +931,56 @@
     "LoginInFirst": "请先登录！",
     "SureDeleteModel": "您确认删除该模型吗？",
 
-    "Overview_Detail":"概述 & 详情"
+    "Overview_Detail":"概述 & 详情",
 
-
+    "CreateSpatiotemporalReference": "创建时空参考",
+    "ModifySpatiotemporalReference": "修改时空参考",
+    "Classifications": "分类",
+    "wkt":"wkt",
+    "SpatiotemporalReferenceClassifications": "空间参考分类",
+    "treeData": [{
+      "id": 1,
+      "label": "空间参考库",
+      "oid": "58340c92-d74f-4d81-8a80-e4fcff286008",
+      "children": [{
+        "id": 100,
+        "oid": "da70ad83-de57-4fc3-a85d-c1dcf4961433",
+        "label": "基础"
+      },
+        {
+          "id": 101,
+          "oid": "c4642926-e797-4f61-92d6-7933df2413d2",
+          "label": "EPSG"
+        },
+        {
+          "id": 102,
+          "oid": "e8562394-b55f-46d7-870e-ef5ad3aaf110",
+          "label": "ESRI"
+        },
+        {
+          "id": 103,
+          "oid": "ee830613-1603-4f38-a196-5028e4e10d39",
+          "label": "IAU"
+        },
+        {
+          "id": 104,
+          "oid": "b2f2fbfd-f21a-47ac-9e1f-a96ac0218bf1",
+          "label": "自定义"
+        }]
+    }, {
+      "id": 2,
+      "label": "时间参考库",
+      "oid": "ce37e343-bf2c-4e7b-902e-46616604e184",
+      "children": [{
+        "id": 3,
+        "label": "日期",
+        "oid": "295d2120-402b-4ee6-a0b5-308b67fe2c40"
+      },
+        {
+          "id": 4,
+          "label": "时间",
+          "oid": "6883d3fb-8485-4771-9a3e-3276c759364e"
+        }]
+    }]
   }
 }
