@@ -75,6 +75,73 @@
     "SearchInfo": "please enter name",
     "SpendTime": "This possibly needs to spend some time",
     "NoCalTask": "No calculation tasks",
+    "Calculation": "calculation",
+    "SomethingWrong": "Something with it",
+    "TaskWaitingInvoke": "This task is waiting to be invoked, please be patient",
+    "TaskPrivate": "Private",
+    "TaskPublic": "Public",
+    "ShareDataItem": "Share as Data Item",
+    "CheckTaskInfo": "Check Task Info",
+    "TaskStatusSelect": {
+      "All": "All",
+      "Inited": "inited",
+      "Calculating": "Calculating",
+      "Successful": "Successful",
+      "Failed": "Failed"
+    },
+    "AddOutputToMyData": "Add Output to My Data",
+    "DownloadFile": "DOWNLOAD FILE",
+    "AddNewFolder": "Add New Folder",
+    "OK": "OK",
+    "SelectData": "Select Data",
+    "DetailedDescription": "Detailed Description",
+    "NoCalculationTasks":"No calculation tasks",
+    "Loading": "Loading",
+    "CreateTime": "Create Time",
+    "options": [
+      {
+        "value": "all",
+        "label": "All"
+      },
+      {
+        "value": "inited",
+        "label": "Inited"
+      },
+      {
+        "value": "calculating",
+        "label": "Calculating"
+      },
+      {
+        "value": "successful",
+        "label": "Successful"
+      },
+      {
+        "value": "failed",
+        "label": "Failed"
+      }
+    ],
+    "itdOptions": [
+      {
+        "value": "all",
+        "label": "All"
+      },
+      {
+        "value": "builded",
+        "label": "builded"
+      },
+      {
+        "value": "successful",
+        "label": "successful"
+      },
+      {
+        "value": "calculating",
+        "label": "Calculating"
+      },
+      {
+        "value": "failed",
+        "label": "Failed"
+      }
+    ],
 
 
     "CommunitySplit": "-------------------",
@@ -570,6 +637,73 @@
     "SearchInfo": "请输入名称",
     "SpendTime": "这可能会花费一点时间",
     "NoCalTask":"没有计算任务",
+    "Calculation": "计算",
+    "SomethingWrong": "出错了",
+    "TaskWaitingInvoke": "这个任务正在等待执行，请稍后",
+    "TaskPrivate": "私有",
+    "TaskPublic": "公开",
+    "ShareDataItem": "作为数据项分享",
+    "CheckTaskInfo": "查看任务信息",
+    "TaskStatusSelect": {
+      "All": "所有",
+      "Inited": "已初始化",
+      "Calculating": "计算中",
+      "Successful": "成功",
+      "Failed": "失败"
+    },
+    "AddOutputToMyData": "将结果添加到我的数据",
+    "DownloadFile": "下载文件",
+    "AddNewFolder": "添加文件夹",
+    "OK": "确定",
+    "SelectData": "选择数据",
+    "DetailedDescription": "详细描述",
+    "NoCalculationTasks":"没有计算任务",
+    "Loading": "加载中",
+    "CreateTime": "创建时间",
+    "options": [
+      {
+        "value": "all",
+        "label": "所有"
+      },
+      {
+        "value": "inited",
+        "label": "已初始化"
+      },
+      {
+        "value": "calculating",
+        "label": "计算中"
+      },
+      {
+        "value": "successful",
+        "label": "成功"
+      },
+      {
+        "value": "failed",
+        "label": "失败"
+      }
+    ],
+    "itdOptions": [
+      {
+        "value": "all",
+        "label": "所有"
+      },
+      {
+        "value": "builded",
+        "label": "已构建"
+      },
+      {
+        "value": "successful",
+        "label": "成功"
+      },
+      {
+        "value": "calculating",
+        "label": "计算中"
+      },
+      {
+        "value": "failed",
+        "label": "失败"
+      }
+    ],
 
 
     "CommunitySplit": "-------------------",

@@ -72,66 +72,66 @@ var userTask = Vue.extend(
                 dataTaskStatus:'all',
                 itdTaskStatus:'all',
 
-                options: [
-                    {
-                        value: 'all',
-                        label: 'All',
+                // options: [
+                //     {
+                //         value: 'all',
+                //         label: 'All',
+                //
+                //     },
+                //     {
+                //         value: 'inited',
+                //         label: 'Inited',
+                //
+                //     },
+                //     {
+                //         value: 'calculating',
+                //         label: 'Calculating',
+                //
+                //     },
+                //     {
+                //         value: 'successful',
+                //         label: 'Successful',
+                //
+                //     },
+                //
+                //     {
+                //         value: 'failed',
+                //         label: 'Failed',
+                //
+                //     },
+                // ],
 
-                    },
-                    {
-                        value: 'inited',
-                        label: 'Inited',
-
-                    },
-                    {
-                        value: 'calculating',
-                        label: 'Calculating',
-
-                    },
-                    {
-                        value: 'successful',
-                        label: 'Successful',
-
-                    },
-
-                    {
-                        value: 'failed',
-                        label: 'Failed',
-
-                    },
-                ],
-
-                itdOptions: [
-                    {
-                        value: 'all',
-                        label: 'all',
-
-                    },
-
-                    {
-                        value: 'builded',
-                        label: 'builded',
-
-                    },
-
-                    {
-                        value: 'successful',
-                        label: 'successful',
-
-                    },
-
-                    {
-                        value: 'calculating',
-                        label: 'calculating',
-
-                    },
-
-                    {
-                        value: 'failed',
-                        label: 'failed',
-
-                    },
-                ],
+                // itdOptions: [
+                //     {
+                //         value: 'all',
+                //         label: 'all',
+                //
+                //     },
+                //
+                //     {
+                //         value: 'builded',
+                //         label: 'builded',
+                //
+                //     },
+                //
+                //     {
+                //         value: 'successful',
+                //         label: 'successful',
+                //
+                //     },
+                //
+                //     {
+                //         value: 'calculating',
+                //         label: 'calculating',
+                //
+                //     },
+                //
+                //     {
+                //         value: 'failed',
+                //         label: 'failed',
+                //
+                //     },
+                // ],
 
                 addOutputToMyDataVisible: false,
                 taskSharingVisible:false,
@@ -1800,8 +1800,18 @@ var userTask = Vue.extend(
         //
         //
         // },
+        computed:{
+            options(){
+                return this.htmlJson.options
+            },
+            itdOptions(){
+                return this.htmlJson.itdOptions
+            }
+        },
 
         mounted() {
+
+
             this.showTasksByStatus();
             this.clipBoard = new ClipboardJS(".copyLinkBtn");
             $(() => {
