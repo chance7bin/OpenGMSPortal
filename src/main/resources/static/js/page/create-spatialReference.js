@@ -1,5 +1,6 @@
 var createSpatialReference = Vue.extend({
     template: "#createSpatialReference",
+    props: ["htmlJson"],
     data() {
         return {
             status: "Public",
@@ -27,7 +28,7 @@ var createSpatialReference = Vue.extend({
                 insName: ""
             },
 
-            treeData: [{
+            /*treeData: [{
                 id: 1,
                 label: "Spatial Reference Repository",
                 oid: '58340c92-d74f-4d81-8a80-e4fcff286008',
@@ -70,7 +71,7 @@ var createSpatialReference = Vue.extend({
                         label: "Time",
                         oid: '6883d3fb-8485-4771-9a3e-3276c759364e',
                     }]
-            }],
+            }],*/
 
             defaultProps: {
                 children: 'children',
@@ -203,6 +204,12 @@ var createSpatialReference = Vue.extend({
             startDraft:0,
 
             itemInfoImage:''
+        }
+    },
+    computed:{
+        // 中英文切换
+        treeData(){
+            return this.htmlJson.treeData;
         }
     },
     methods: {

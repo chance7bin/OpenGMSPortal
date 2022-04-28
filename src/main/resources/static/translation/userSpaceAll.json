@@ -385,7 +385,14 @@
       "thisItem": " this item?",
       "Confirm": "Confirm",
       "Cancel": "Cancel"
-    }
+    },
+
+
+    "CreateSpatiotemporalReference": "Create Spatiotemporal Reference",
+    "Classifications": "Classifications",
+    "wkt":"wkt",
+    "SpatiotemporalReferenceClassifications": "Spatiotemporal Reference Classifications"
+
 
 
   },
