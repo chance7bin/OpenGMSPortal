@@ -136,25 +136,25 @@
                                                                     <span>
                                                                         <i class="fa fa-unlock "></i>
                                                                     </span>
-                                                                    Public
+                                                                    {{htmlJson.TaskPublic}}
                                                                 </span>
                                                                 <span v-else>
                                                                     <span style="margin-right: 2px">
                                                                         <i class="fa fa-lock wzhI"></i>
                                                                     </span>
-                                                                    Private
+                                                                    {{htmlJson.TaskPrivate}}
                                                                 </span>
                                                             </el-button>
                                                             <el-button v-if="task.status==2&&!task.integrate"
                                                                        @click="sharingTaskData(task)" plain size="mini"
                                                                        style="margin: 0 5px;"><i
-                                                                    class="fa fa-share-square-o" aria-hidden="true"></i>Share as
-                                                                Data Item
+                                                                    class="fa fa-share-square-o" aria-hidden="true"></i>
+                                                                {{htmlJson.ShareDataItem}}
                                                             </el-button>
                                                             <el-button type="primary" size="mini"
                                                                        style="float: right;margin-right: 3px;background-color: rgb(0,200,255);border:0"
                                                                        @click="checkOutput(task.computableId,task.taskId,task.integrate)">
-                                                                Check Task Info
+                                                                {{htmlJson.CheckTaskInfo}}
                                                             </el-button>
                                                         </div>
 
@@ -165,21 +165,21 @@
                                                         <h4 v-if="task.status==2"
                                                             style="font-style: italic; font-weight: 600;font-family: sans-serif; ; color: rgb(153, 153, 153); margin-left: 10px;cursor: pointer"
                                                             @click="expandRunInfo(index,$event)">
-                                                            <span style="color: rgb(103,194,58)">Successful</span> caculation !</h4>
+                                                            <span style="color: rgb(103,194,58)">{{htmlJson.TaskStatusSelect.Successful}}</span> {{htmlJson.Calculation}} !</h4>
                                                         <h4 v-if="task.status==-1"
                                                             style="font-style: italic; font-weight: 600;font-family: sans-serif; ; color: rgb(153, 153, 153); margin-left: 10px;cursor: pointer"
                                                             @click="expandRunInfo(index,$event)">
-                                                            Something <span style="color: rgb(224,101,80)"
-                                                                            @click="expandRunInfo(index,$event)">wrong</span> with it !</h4>
+                                                             <span style="color: rgb(224,101,80)"
+                                                                            @click="expandRunInfo(index,$event)">{{htmlJson.SomethingWrong}} !</span> </h4>
                                                         <h4 v-if="task.status==1"
                                                             style="font-style: italic; font-weight: 600;font-family: sans-serif; ; color: rgb(153, 153, 153); margin-left: 10px;cursor: pointer"
                                                             @click="expandRunInfo(index,$event)">
-                                                            <span style="color: rgb(64,158,255)">Calculating</span>!</h4>
+                                                            <span style="color: rgb(64,158,255)">{{htmlJson.TaskStatusSelect.Calculating}} </span>!</h4>
                                                          <h4 v-if="task.status==0"
                                                             style="font-style: italic; font-weight: 600;font-family: sans-serif; ; color: rgb(153, 153, 153); margin-left: 10px;cursor: pointer"
                                                             @click="expandRunInfo(index,$event)">
-                                                             <span style="color: #e6c13c">Inited</span>!
-                                                             <span style="font-size: 13px">This task is waiting to be invoked, please be patient.</span></h4>
+                                                             <span style="color: #e6c13c">{{htmlJson.TaskStatusSelect.Inited}}</span>!
+                                                             <span style="font-size: 13px">{{htmlJson.TaskWaitingInvoke}}.</span></h4>
                                                         <span role="button" tabindex="0" class="ab"
                                                               style="float: right;margin-top: -33px;margin-right: 70px;cursor: pointer"><a
                                                                 data-toggle="collapse" class="" aria-expanded="true"
@@ -188,7 +188,7 @@
                                                     </div>
                                                     <div class="panel-body modelRunInfo collapse" style="padding-top: 0">
                                                         <h5 v-if="task.status==0||task.status==1">
-                                                            Calculating
+                                                            {{htmlJson.TaskStatusSelect.Calculating}}
                                                         </h5>
                                                         <ul>
                                                             <h5 style="font-family: aktiv-grotesk; font-style: italic">Input:</h5>
@@ -199,18 +199,18 @@
                                                                 <div class="flex">
                                                                     <button class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
-                                                                            @click="downloadSingle(input.url)">Download File
+                                                                            @click="downloadSingle(input.url)">{{htmlJson.DownloadFile}}
                                                                     </button>
                                                                     <button class="pull-right clearfix btn btn-info btn-round downloadAFile"
                                                                             style="background-color: #71c76f;border-color: #71c76f;margin:0 5px"
-                                                                            @click="addOutputToMyData(input,index)">Add to My Data
+                                                                            @click="addOutputToMyData(input,index)">{{htmlJson.AddOutputToMyData}}
                                                                     </button>
                                                                 </div>
                                                             </li>
                                                         </ul>
 
                                                         <h5 v-if="task.status==-1">
-                                                            Calculation Failure
+                                                            {{htmlJson.TaskStatusSelect.Failed}}
                                                         </h5>
                                                         <ul v-if="task.status==2">
                                                             <h5 style="font-family: aktiv-grotesk; font-style: italic">Output:</h5>
@@ -219,11 +219,11 @@
                                                                 <div class="flex">
                                                                     <button v-if="!output.multiple" class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
-                                                                            @click="downloadSingle(output.url)">Download File
+                                                                            @click="downloadSingle(output.url)">{{htmlJson.DownloadFile}}
                                                                     </button>
                                                                     <button v-if="!output.multiple" class="pull-right clearfix btn btn-info btn-round downloadAFile"
                                                                             style="background-color: #71c76f;border-color: #71c76f;margin:0 5px"
-                                                                            @click="addOutputToMyData(output,index)">Add to My Data
+                                                                            @click="addOutputToMyData(output,index)">{{htmlJson.AddOutputToMyData}}
                                                                     </button>
                                                                     <button v-if="output.multiple" class="pull-right clearfix btn btn-secondary btn-round downloadAFile"
                                                                             style="background-color: #71c76f;border-color: #71c76f;margin:0 5px"
@@ -240,7 +240,7 @@
                                                     <div class="pull-right" :attr.uid="task.msr_id"
                                                          style="margin-top: -3px;padding: 5px;background-color: #ebf2e6">
                                             <span style="margin-right:20px">
-                                                <b>Create Time:</b>{{formatDate(task.runTime)}}
+                                                <b>{{htmlJson.CreateTime}}:</b>{{formatDate(task.runTime)}}
                                             </span>
                                                         <!--<button class="btn btn-primary downloadAll"-->
                                                         <!--@click="downloadAll(task.id,task.name,task.runTime)"-->
@@ -459,7 +459,7 @@
                                                     <div class="pull-right"
                                                          style="margin-top: -3px;padding: 5px;background-color: #ebf2e6">
                                             <span style="margin-right:20px">
-                                                <b>Create Time:</b>{{formatDate(task.runTime)}}
+                                                <b>{{htmlJson.CreateTime}}:</b>{{formatDate(task.runTime)}}
                                             </span>
                                                         <!--<button class="btn btn-primary downloadAll"-->
                                                         <!--@click="downloadAll(task.id,task.name,task.runTime)"-->
@@ -472,8 +472,8 @@
                                                 </div>
                                             </div>
                                             <div style="margin-top: 50px">
-                                                <h4 class="col-sm-12 text-center" v-if="dataResourceLoad"><i class="ms-Icon ms-Icon--ProgressRingDots rotate_cw_1" style="margin-right: 10px"></i>Loading ...</h4>
-                                                <h4 class="col-sm-12 text-center" v-if="dataSearchResult.length==0&&dataResourceLoad==false&&!dataTaskIsWrong">No calculation tasks</h4>
+                                                <h4 class="col-sm-12 text-center" v-if="dataResourceLoad"><i class="ms-Icon ms-Icon--ProgressRingDots rotate_cw_1" style="margin-right: 10px"></i>{{htmlJson.Loading}} ...</h4>
+                                                <h4 class="col-sm-12 text-center" v-if="dataSearchResult.length==0&&dataResourceLoad==false&&!dataTaskIsWrong">{{htmlJson.NoCalculationTasks}}</h4>
                                                 <h4 class="col-sm-12 text-center" v-if="dataSearchResult.length==0&&dataResourceLoad==false&&dataTaskIsWrong">data tasks is wrong</h4>
                                             </div>
                                         </div>
@@ -676,7 +676,7 @@
                                                     <div class="pull-right" :attr.uid="task.msr_id"
                                                          style="margin-top: -3px;padding: 5px;background-color: #ebf2e6">
                                             <span style="margin-right:20px">
-                                                <b>Create Time:</b>{{formatDate(task.createTime)}}
+                                                <b>{{htmlJson.CreateTime}}:</b>{{formatDate(task.createTime)}}
                                             </span><span style="margin-right:20px">
                                                 <b>Last Modified Time:</b>{{formatDate(task.lastModifiedTime)}}
                                             </span>
@@ -691,7 +691,7 @@
                                                 </div>
                                             </div>
                                             <div style="margin-top: 50px">
-                                                <h4 class="col-sm-12 text-center" v-if="resourceLoad"><i class="ms-Icon ms-Icon--ProgressRingDots rotate_cw_1" style="margin-right: 10px"></i>Loading ...</h4>
+                                                <h4 class="col-sm-12 text-center" v-if="resourceLoad"><i class="ms-Icon ms-Icon--ProgressRingDots rotate_cw_1" style="margin-right: 10px"></i>{{htmlJson.Loading}} ...</h4>
                                                 <h4 class="col-sm-12 text-center" v-if="integratedTaskList.length==0&&resourceLoad==false">No
                                                     calculation tasks</h4>
                                             </div>
@@ -750,7 +750,7 @@
                           placeholder="Input detail about the data here."></textarea>
 
 <!--                el-dialog放在这一层-->
-                <el-dialog :visible.sync="addOutputToMyDataVisible" title="Add Output to My Data"
+                <el-dialog :visible.sync="addOutputToMyDataVisible" :title=htmlJson.AddOutputToMyData
                            width="35%">
                     <el-card style="min-height: 300px;">
                         <el-tree
@@ -768,20 +768,20 @@
                     </el-card>
                     <span slot="footer" class="dialog-footer">
                                         <el-button class="pull-left" type="primary" icon="el-icon-folder-add"
-                                                   @click="addFolderinTree(2)">Add new folder</el-button>
-                                        <el-button @click="addOutputToMyDataVisible = false">Cancel</el-button>
+                                                   @click="addFolderinTree(2)">{{htmlJson.AddNewFolder}}</el-button>
+                                        <el-button @click="addOutputToMyDataVisible = false">{{htmlJson.Cancel}}</el-button>
                                         <el-button type="primary"
-                                                   @click="addOutputToMyDataConfirm()">OK</el-button>
+                                                   @click="addOutputToMyDataConfirm()">{{htmlJson.OK}}</el-button>
                                     </span>
                 </el-dialog>
 
-                <el-dialog id="taskDataShareDialog" top="20px" width="70%" title="Share as Data Item"
+                <el-dialog id="taskDataShareDialog" top="20px" width="70%" :title=htmlJson.ShareDataItem
                            :visible.sync="taskSharingVisible" :before-close="handleClose">
                     <el-steps style="margin-bottom: 15px;" align-center :active="taskSharingActive" finish-status="success">
-                        <el-step class="taskSharingStep" title="Select Data"></el-step>
-                        <el-step class="taskSharingStep" title="Basic Info"></el-step>
-                        <el-step class="taskSharingStep" title="Detailed Description"></el-step>
-                        <el-step class="taskSharingStep" title="Authorship"></el-step>
+                        <el-step class="taskSharingStep" :title=htmlJson.SelectData></el-step>
+                        <el-step class="taskSharingStep" :title=htmlJson.BasicInfo></el-step>
+                        <el-step class="taskSharingStep" :title=htmlJson.DetailedDescription></el-step>
+                        <el-step class="taskSharingStep" :title=htmlJson.Authorship></el-step>
                     </el-steps>
                     <el-card :style="{display:(taskSharingActive==0?'block':'none')}" shadow="never">
                         <el-table
