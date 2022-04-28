@@ -212,6 +212,22 @@ var createSpatialReference = Vue.extend({
             return this.htmlJson.treeData;
         }
     },
+    watch:{
+        //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateSpatiotemporalReference);
+            } else {
+                $("#subRteTitle").text("/" + newData.ModifySpatiotemporalReference);
+            }
+            // $("#title").text("Create Model Item")
+
+        }
+    },
     methods: {
         addLocalization(){
             this.languageAdd.show = true;
@@ -774,6 +790,14 @@ var createSpatialReference = Vue.extend({
             window.sessionStorage.setItem("editSpatial_id", "");
         }
 
+        if (this.editType == 'create'){
+            // console.log("create:",this.htmlJson.CreateModelItem);
+            $("#subRteTitle").text("/" + this.htmlJson.CreateSpatiotemporalReference);
+        } else {
+            // console.log("modify:",this.htmlJson.ModifyModelItem);
+            $("#subRteTitle").text("/" + this.htmlJson.ModifySpatiotemporalReference);
+        }
+
         window.localStorage.removeItem('draft');
 
         $("#step").steps({
@@ -784,7 +808,7 @@ var createSpatialReference = Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.cls.length == 0) {
                         new Vue().$message({
-                            message: 'Please select at least one classification!',
+                            message: this.htmlJson.noCLSTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -792,14 +816,14 @@ var createSpatialReference = Vue.extend({
                     }
                     else if ($("#nameInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     } else if ($("#descInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
