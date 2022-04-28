@@ -1,5 +1,6 @@
 var data_items = new Vue({
     el:"#data_items",
+    props:["htmlJson"],
     components: {
         'avatar': VueAvatar.Avatar
     },

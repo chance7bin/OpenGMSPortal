@@ -284,6 +284,7 @@ var userspace = new Vue(
         methods:{
 
             translatePage(jsonContent){
+                // console.log("jsonContent:",jsonContent)
                 this.htmlJSON = jsonContent
                 // console.log("htmlJSON:",this.htmlJSON)
             },

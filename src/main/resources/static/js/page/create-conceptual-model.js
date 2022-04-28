@@ -1,4 +1,5 @@
 var createConceptualModel = Vue.extend({
+    props: ["htmlJson"],
     template: "#createConceptualModel",
     data() {
         return {
@@ -74,6 +75,15 @@ var createConceptualModel = Vue.extend({
             draftOid:'',
         }
     },
+
+    watch:{
+        // 中英文切换
+        htmlJson:function(newData){
+            $("#subRteTitle").text("/" + newData.CreateConceptualModel);
+        }
+    },
+
+
     methods: {
         selectModelItem(index,info){
             console.log(info);
@@ -780,7 +790,7 @@ var createConceptualModel = Vue.extend({
 
             this.editType = 'create';
             // $("#title").text("Create Conceptual Model")
-            $("#subRteTitle").text("/Create Conceptual Model")
+            $("#subRteTitle").text("/"+this.htmlJson.CreateConceptualModel);
 
             $("input[name='ContentType']").eq(0).iCheck('check');
             $("#MxGraph").show();
@@ -838,7 +848,7 @@ var createConceptualModel = Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.itemInfo.relateModelItem == ""||this.itemInfo.relateModelItem == null) {
                         new Vue().$message({
-                            message: 'Please bind a model item!',
+                            message: this.htmlJson.BindModelItemMessage,
                             type: 'warning',
                             offset: 70,
                         });
@@ -846,14 +856,14 @@ var createConceptualModel = Vue.extend({
                     }
                     else if (this.itemInfo.name.trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.NameMessage,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if (this.itemInfo.description.trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.overviewMessage,
                             type: 'warning',
                             offset: 70,
                         });
@@ -875,7 +885,7 @@ var createConceptualModel = Vue.extend({
             this.formData=new FormData();
             let loading = this.$loading({
                 lock: true,
-                text: "Uploading...",
+                text: this.htmlJson.Uploading,
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
@@ -909,10 +919,10 @@ var createConceptualModel = Vue.extend({
                     switch (res.data.code) {
                         case 1:
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create conceptual model successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateConceptualModelSuccess +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -986,10 +996,10 @@ var createConceptualModel = Vue.extend({
                             });
                         }else{
                             if(res.data.method==="update") {
-                                this.$confirm('<div style=\'font-size: 18px\'>Update conceptual model successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateConceptualModelSuccess +'</div>', this.htmlJson.Tip, {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',
@@ -1222,13 +1232,13 @@ var createConceptualModel = Vue.extend({
             var content_box = $(this).parent().children('div');
             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
             str += user_num;
-            str += "' href='javascript:;'> NEW </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW + " </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
             str += user_num;
             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                 "                                                                                                    <div>\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Name:\n" +
+                that.htmlJson.authorshipPart.NEW + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1239,7 +1249,7 @@ var createConceptualModel = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Affiliation:\n" +
+                that.htmlJson.authorshipPart.Affiliation + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1250,7 +1260,7 @@ var createConceptualModel = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Email:\n" +
+                that.htmlJson.authorshipPart.Email + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1261,7 +1271,7 @@ var createConceptualModel = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Homepage:\n" +
+                that.htmlJson.authorshipPart.Homepage + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
