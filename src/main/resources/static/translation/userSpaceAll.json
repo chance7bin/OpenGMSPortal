@@ -1,5 +1,10 @@
 {
   "en-us": {
+    "noCLSTip": "Please select at least one classification!",
+    "noNameTip": "Please enter name!",
+    "noOverviewTip": "Please enter overview!",
+    "enterURLTip": "Please enter URL!",
+
     "Home": "Home",
     "Model":"Model",
     "Data": "Data",
@@ -121,6 +126,7 @@
     "ReverseOrder": "Reverse order",
     "PositiveOrder": "Positive order",
     "OverView": "OverView",
+    "CreateTime": "Create Time",
     "Version": "Version",
     "UnapprovedVersion": "Unapproved version",
     "AcceptedVersion": "Accepted version",
@@ -197,9 +203,7 @@
       "label": "Private",
       "content": "This item can NOT be retrieved and shared, can ONLY be edited by creator."
     },
-    "noCLSTip": "Please select at least one classification!",
-    "noNameTip": "Please enter name!",
-    "noOverviewTip": "Please enter overview!",
+
     "references":{
       "ReferenceInfo": "Reference Info",
       "GetByDoi": "Get by doi",
@@ -416,6 +420,7 @@
 
     "ContentType": "Content Type",
     "OpenGMSModelServicePackage": "OpenGMS Model-Service Package",
+    "OpenGMSDataServicePackage": "OpenGMS Data-Service Package",
     "OpenGMSPackageTag": "OpenGMS Package Tag",
     "SourceCode": "Source Code",
     "ExecutableLibrary": "Executable Library",
@@ -489,11 +494,98 @@
           "label": "Time",
           "oid": "6883d3fb-8485-4771-9a3e-3276c759364e"
         }]
-    }]
+    }],
+
+    "UploadData": "Upload Data",
+    "AddFolder": "Add folder",
+    "DownloadAll": "Download All",
+    "Paste": "Paste",
+    "DeleteAll": "Delete all",
+    "filenamePlaceHolder": "file name...",
+    "YouHaveSelected": "You have selected",
+    "path": "path",
+    "noData": "no data...",
+    "Max": "Max",
+    "Download": "Download",
+    "Copy": "Copy",
+    "Share": "Share",
+    "Rename": "Rename",
+    "rightClick": "Left or right click can call out some function",
+    "DatasetName": "Dataset name",
+    "StoragePath": "Storage path",
+    "UploadFiles": "Upload files",
+    "Change": "Change",
+    "SelectFile": "Select File",
+    "SelectFolder": "Select Folder",
+    "AddNewFolder": "Add new folder",
+    "deleteInfo": "All of the content will be deleted.",
+    "AreYouSureTo": "Are you sure to ",
+    "continue": "continue",
+    "Back": "Back",
+    "allDeleteInfo": "All of the selected files will be deleted.",
+    "selectDirTip": "Please select a file directory.",
+
+
+    "CreateDataMethod": "Create Data Method",
+    "ModifyDataMethod": "Modify Data Method",
+    "BindDataTemplate": "Bind Data Template",
+    "Method": "Method",
+    "Conversion": {
+      "label": "Conversion",
+      "content": "Data conversion method"
+    },
+    "Processing": {
+      "label": "Processing",
+      "content": "Data processing method"
+    },
+    "Visualization": {
+      "label": "Visualization",
+      "content": "Data visualization method"
+    },
+    "BindTemplateItem": "Bind Template Item",
+    "TemplateName": "Template name...",
+    "Operation": "Operation",
+    "BindTestData": "Bind Test Data",
+    "AddZipFile": "Add a Zip File",
+    "Add": "Add",
+    "DataSelect": "DataSelect",
+    "ConfirmToClose": "Confirm to close?",
+    "contents": "contents",
+    "Detail": "Detail",
+    "newFolderTip": "Please input the name of the new folder",
+    "enterUrl": "Please enter computable model's URL",
+
+
+    "ModelServerContainer": "Model Server Container",
+    "ModelServerContainerSub": "The OpenGMS Wrapper System is a service-oriented system, which aims to share and reuse standard model service on the web.",
+    "RefreshMyNodes": "Refresh My Nodes",
+    "HowToAddModelContainer": "How to Add My Model Container",
+
+
+    "DataServerNode": "Data Server Node",
+    "DataServerDataNode": "OpenGMS Data Server dataNode",
+    "MyDataServerNode": "My data server node",
+    "Running": "Running",
+    "Offline": "Offline",
+    "checkContent": "check content",
+    "Refresh": "Refresh",
+    "TotalNum": "Total Num",
+
+    "ThemeInfoTitle": "Theme Info",
+    "CreateTheme": "Create Theme",
+    "ModifyTheme": "Modify Theme",
+    "ThemeName": "Theme Name",
+    "ThemeImage": "Theme Image"
 
 
   },
   "zh-cn": {
+    "noCLSTip": "请至少选择一种分类!",
+    "noNameTip": "请输入名称!",
+    "noOverviewTip": "请输入描述!",
+    "enterURLTip": "请输入URL!",
+
+
     "Home": "主页",
     "Model":"模型",
     "Data": "数据",
@@ -616,6 +708,7 @@
     "ReverseOrder": "逆序",
     "PositiveOrder": "正序",
     "OverView": "概览",
+    "CreateTime": "创建时间",
     "Version": "版本",
     "UnapprovedVersion": "未接受版本",
     "AcceptedVersion": "已接受版本",
@@ -694,7 +787,7 @@
       "label": "私有的",
       "content": "这个项目不能被检索和分享，只能由创造者编辑。"
     },
-    "noCLSTip": "请至少选择一种分类!",
+
     "references":{
       "ReferenceInfo": "引用信息",
       "GetByDoi": "doi",
@@ -910,6 +1003,7 @@
 
     "ContentType": "内容类型",
     "OpenGMSModelServicePackage": "OpenGMS模型服务包",
+    "OpenGMSDataServicePackage": "OpenGMS数据服务包",
     "OpenGMSPackageTag": "OpenGMS包标签",
     "SourceCode": "源码",
     "ExecutableLibrary": "可执行库",
@@ -981,6 +1075,87 @@
           "label": "时间",
           "oid": "6883d3fb-8485-4771-9a3e-3276c759364e"
         }]
-    }]
+    }],
+
+    "UploadData": "上传数据",
+    "AddFolder": "新增文件夹",
+    "DownloadAll": "下载全部",
+    "Paste": "粘贴",
+    "DeleteAll": "全部删除",
+    "filenamePlaceHolder": "文件名...",
+    "YouHaveSelected": "您已经选择",
+    "path": "路径",
+    "noData": "无数据...",
+    "Max": "最大",
+    "Download": "下载",
+    "Copy": "复制",
+    "Share": "共享",
+    "Rename": "重命名",
+    "rightClick": "左键或右键可以展示一些功能",
+    "DatasetName": "数据集名",
+    "StoragePath": "存储路径",
+    "UploadFiles": "上传文件",
+    "Change": "修改",
+    "SelectFile": "选择文件",
+    "SelectFolder": "选择文件夹",
+    "AddNewFolder": "新增文件夹",
+    "deleteInfo": "已选内容将会被删除。",
+    "AreYouSureTo": "您是否要",
+    "continue": "继续",
+    "Back": "返回",
+    "allDeleteInfo": "所有已选择的将会被删除。",
+    "selectDirTip": "请选择一个文件夹",
+
+
+    "CreateDataMethod": "创建数据方法",
+    "ModifyDataMethod": "修改数据方法",
+    "BindDataTemplate": "绑定数据模板",
+    "Method": "方法",
+    "Conversion": {
+      "label": "转换",
+      "content": "数据转换方法"
+    },
+    "Processing": {
+      "label": "处理",
+      "content": "数据处理方法"
+    },
+    "Visualization": {
+      "label": "可视化",
+      "content": "数据可视化方法"
+    },
+    "BindTemplateItem": "绑定模板条目",
+    "TemplateName": "模板名称...",
+    "Operation": "操作",
+    "BindTestData": "绑定测试数据",
+    "AddZipFile": "添加一个zip文件",
+    "Add": "添加",
+    "DataSelect": "数据选择",
+    "ConfirmToClose": "确认关闭?",
+    "contents": "内容",
+    "Detail": "详情",
+    "newFolderTip": "请输入新文件夹的名称",
+    "enterUrl": "请输入计算模型的URL",
+
+    "ModelServerContainer": "模型服务容器",
+    "ModelServerContainerSub": "OpenGMS封装系统是一个面向服务的系统，其目的是在网络上共享和重用标准模型服务。",
+    "RefreshMyNodes": "更新我的节点",
+    "HowToAddModelContainer": "如何添加我的模型容器",
+
+    "DataServerNode": "数据服务器节点",
+    "DataServerDataNode": "OpenGMS数据服务器节点",
+    "MyDataServerNode": "我的数据服务器节点",
+    "Running": "正在运行",
+    "Offline": "离线",
+    "checkContent": "检查内容",
+    "Refresh": "更新",
+
+    "TotalNum": "总数",
+
+    "ThemeInfoTitle": "专题信息",
+    "CreateTheme": "创建主题",
+    "ModifyTheme": "修改主题",
+    "ThemeName": "主题名称",
+    "ThemeImage": "主题图片"
+
   }
 }

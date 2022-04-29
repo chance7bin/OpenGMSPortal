@@ -14,8 +14,8 @@
             <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
             <div class="flexColContainer mainContent" style="padding:20px 10px;max-width: 1120px">
                 <section role="description" class="flexCol flexCenter contentSection">
-                    <h3>Data Server Node</h3>
-                    <h5 style="text-align: center">OpenGMS Data Server dataNode </h5>
+                    <h3>{{htmlJson.DataServerNode}}</h3>
+                    <h5 style="text-align: center">{{htmlJson.DataServerDataNode}}</h5>
 
                 </section>
                 <section class="flexRowContainer flexWrap " style="max-width: 1050px">
@@ -27,12 +27,12 @@
                                         <div class="form-horizontal">
                                             <div class="flexJustBetween flexAlignCenter">
                                                 <div>
-                                                    <a href="../user/userSpace#/server"><i class="fa fa-arrow-left"></i>Back</a>
+                                                    <a href="../user/userSpace#/server"><i class="fa fa-arrow-left"></i>{{htmlJson.Back}}</a>
                                                 </div>
                                                 <div class="" style="float: right;margin-right: 15px">
                                                     <a>
                                                         <button class="btn btn-info" @click="refreshDataNode()">
-                                                            <i class="fa fa-refresh"></i>Refresh My Nodes
+                                                            <i class="fa fa-refresh"></i>{{htmlJson.RefreshMyNodes}}
                                                         </button>
                                                     </a>
                                                 </div>
@@ -47,22 +47,23 @@
                                 <el-card class="box-card serverCard" style="min-height: 150px">
                                     <div class="content">
                                         <h4>
-                                            My data server node
+                                            {{htmlJson.MyDataServerNode}}
                                         </h4>
                                         <div class="clearfix"
                                              style="margin-top:10px" v-loading="nodeLoading">
                                             <div class="serverStatus pull-left"
                                                  v-if="dataNode.status">
                                                 <span style="background: #6FCE7F;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>
-                                                Running
+                                                {{htmlJson.Running}}
                                             </div>
                                             <div class="serverStatus pull-left"
                                                  v-else>
                                                 <span style="background: #929994;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>
-                                                Offline
+                                                {{htmlJson.Offline}}
                                             </div>
                                         </div>
-                                        <div v-if="dataNode.status" class="btn btn-info btn-round btn-noShadow" style="float: right" @click="changeServerView(2)">check content</div>
+                                        <div v-if="dataNode.status" class="btn btn-info btn-round btn-noShadow" style="float: right" @click="changeServerView(2)">
+                                            {{htmlJson.checkContent}}</div>
                                         <div class="btn btn-info btn-round btn-noShadow" style="float: right" @click="refreshDataNode">
                                             <i class="fa fa-refresh" style="margin: 0"></i></div>
                                     </div>
@@ -81,13 +82,13 @@
                                                 <div class="" style="float: left;margin-left: 15px">
                                                     <a class="flexCenter" style="height: 35px" @click="changeServerView(1)">
                                                         <i class="fa fa-arrow-left"></i>
-                                                        <p class="noMargin hoverLine" style="margin-left: 5px;margin-top: 3px;font-size: 15px; ">Back</p>
+                                                        <p class="noMargin hoverLine" style="margin-left: 5px;margin-top: 3px;font-size: 15px; ">{{htmlJson.Back}}</p>
                                                     </a>
                                                 </div>
                                                 <div class="" style="float: right;margin-right: 15px">
                                                     <a>
                                                         <button class="btn btn-info" @click="refreshDataNode()">
-                                                            <i class="fa fa-refresh"></i>Refresh
+                                                            <i class="fa fa-refresh"></i>{{htmlJson.Refresh}}
                                                         </button>
                                                     </a>
                                                 </div>
@@ -103,7 +104,7 @@
                                 <div class="">
                                     <el-card class="box-card" style="margin-top: 20px;border-top: #8cd1e5 8px solid" >
                                         <el-tabs v-model="activeName" stretch="stretch" @tab-click="handleClick" style="min-height: 105px">
-                                            <el-tab-pane label="Data" name="Data" v-loading="nodeLoading">
+                                            <el-tab-pane :label="htmlJson.Data" name="Data" v-loading="nodeLoading">
                                                 <div  v-if="dataNode.status==1">
                                                     <el-table
                                                             :data="dataNode.data">
@@ -133,7 +134,7 @@
                                                     <h5 style="font-style: italic;color: rgb(128,128,128);text-align: center;">Node Offline</h5>
                                                 </div>
                                             </el-tab-pane>
-                                            <el-tab-pane label="Processing" name="Processing" v-loading="nodeLoading">
+                                            <el-tab-pane :label="htmlJson.Processing.label" name="Processing" v-loading="nodeLoading">
                                                 <div  v-if="dataNode.status==1">
                                                     <el-table
                                                             :data="dataNode.processing">
@@ -161,7 +162,7 @@
                                                     <h5 style="font-style: italic;color: rgb(128,128,128);text-align: center;">Node Offline</h5>
                                                 </div>
                                             </el-tab-pane>
-                                            <el-tab-pane label="Visualization" name="Visualization" v-loading="nodeLoading">
+                                            <el-tab-pane :label="htmlJson.Visualization.label" name="Visualization" v-loading="nodeLoading">
                                                 <div  v-if="dataNode.status==1">
                                                     <el-table
                                                             :data="dataNode.visualization">

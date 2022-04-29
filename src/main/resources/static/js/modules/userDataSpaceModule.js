@@ -2,6 +2,7 @@ var DATACONTAINER = 'https://geomodeling.njnu.edu.cn/dataTransferServer'
 Vue.component("user-data",
     {
         template: "#userDataSpaceModule",
+
         props: {
             deleteButton: {
                 type: Boolean,
@@ -13,7 +14,8 @@ Vue.component("user-data",
             },
             lazy:{
 
-            }
+            },
+            htmlJson:{}
         },
         data() {
             return {
@@ -1738,7 +1740,7 @@ Vue.component("user-data",
 
                 this.selectLoading = true;
                 let query = {
-                    page: 0,
+                    page: 1,
                     pageSize: 999,
                     asc: 1,
                     searchText: searchText

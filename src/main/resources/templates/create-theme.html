@@ -70,7 +70,7 @@
                                  style="max-width: 1050px;margin: 15px 10px;">
                             <div class="flexRowContainer flexColCenter" style="margin-left: 18px">
                                 <img class="square_40" style="margin-top: 10px" src="../../../static/img/model/model.png">
-                                <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/userTheme">Theme </a>
+                                <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/userTheme">{{htmlJson.Theme}} </a>
                                     <span id="subRteTitle"></span></h3>
                             </div>
                         </section>
@@ -93,7 +93,7 @@
                                                             <ul class="step-steps text-center">
 
                                                                 <li>
-                                                                    <a href="#step1">Theme Info</a>
+                                                                    <a href="#step1">{{htmlJson.ThemeInfoTitle}}</a>
                                                                 </li>
 <!--                                                                <li>-->
 <!--                                                                    <a href="#step2">Models</a>-->
@@ -116,7 +116,7 @@
                                                                             <div class="form-group" style="display: flex;justify-content: flex-start;">
                                                                                 <label for="nameInput"
                                                                                        class="control-label"
-                                                                                       style="text-align:center;font-weight: bold;width: 150px"><span class="star">* </span>Theme Name:</label>
+                                                                                       style="text-align:center;font-weight: bold;width: 150px"><span class="star">* </span>{{htmlJson.ThemeName}}:</label>
                                                                                 <div class="col-sm-10">
                                                                                     <input type="text" class="form-control"
                                                                                            id="nameInput"/>
@@ -128,7 +128,7 @@
                                                                             <div class="form-group" style="display: flex;justify-content: flex-start;">
                                                                                 <label for="nameInput"
                                                                                        class="control-label"
-                                                                                       style="text-align:center;width: 150px;font-weight: bold"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Theme Image:</label>
+                                                                                       style="text-align:center;width: 150px;font-weight: bold"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{htmlJson.ThemeImage}}:</label>
                                                                                 <div class="col-sm-10">
 <!--                                                                                    <img id="imgShow" src=""/>-->
 <!--                                                                                    <div id="imgChange" class="cursorPointer" style="width: 72px">-->
@@ -156,14 +156,14 @@
                                                                         <div class="form-group"  style="display: flex;justify-content: flex-start;">
                                                                             <label for="nameInput"
                                                                                    class="control-label"
-                                                                                   style="text-align:center;width: 150px;font-weight: bold">Description:</label>
+                                                                                   style="text-align:center;width: 150px;font-weight: bold">{{htmlJson.Description}}:</label>
                                                                         </div>
                                                                     </div>
 
                                                                     <textarea id="themeText"></textarea>
                                                                         <button class="btn btn-success finish"
                                                                                 data-direction="finish" style="float: right">
-                                                                            Finish
+                                                                            {{htmlJson.Finish}}
                                                                         </button>
                                                                 </div>
 <!--                                                                <div class="step-tab-panel" id="step2">-->

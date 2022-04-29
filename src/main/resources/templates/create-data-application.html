@@ -61,7 +61,7 @@
                              style="max-width: 1050px;margin: 15px 10px;">
                         <div class="flexRowContainer flexColCenter" style="margin-left: 18px">
                             <img class="square_40" style="margin-top: 10px" src="../../../static/img/model/model.png">
-                            <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/data">Data </a><span
+                            <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/data">{{htmlJson.Data}} </a><span
                                     id="subRteTitle"></span></h3>
                         </div>
                     </section>
@@ -74,16 +74,16 @@
                                             <div class="step-app">
                                                 <ul class="step-steps text-center">
                                                     <li>
-                                                        <a href="#step1">Basic Info</a>
+                                                        <a href="#step1">{{htmlJson.BasicInfo}}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#step2">Resource</a>
+                                                        <a href="#step2">{{htmlJson.Resource}}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#step3">Detail</a>
+                                                        <a href="#step3">{{htmlJson.Detail}}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="#step4">Authorship</a>
+                                                        <a href="#step4">{{htmlJson.Authorship}}</a>
                                                     </li>
                                                 </ul>
                                                 <br><br>
@@ -103,7 +103,7 @@
 <!--                                                        </div>-->
                                                         <div class="form-group cl-md-6">
                                                             <label class="control-label col-lg-2 col-md-3 col-md-offset-1">
-                                                                <span class="xing">* </span>Name
+                                                                <span class="xing">* </span>{{htmlJson.Name}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <input type="text" class="form-control" style="border-radius: 4px"
@@ -113,12 +113,12 @@
                                                         <div class="form-group cl-md-6" >
                                                             <label data-original-title="Tooltip on top"
                                                                    class="control-label col-lg-2 col-md-3 col-md-offset-1"
-                                                                   data-toggle="tooltip" data-placement="top" title="">Bind Data Template
+                                                                   data-toggle="tooltip" data-placement="top" title="">{{htmlJson.BindDataTemplate}}
                                                             </label>
                                                             <div class="input-group col-md-5">
 
                                                                 <el-button type="primary" @click="openTemplateDialog()"
-                                                                           style="margin-right:10px">Select
+                                                                           style="margin-right:10px">{{htmlJson.Select}}
                                                                 </el-button>
                                                                 <div v-for="(item,index) in dataApplication.bindDataTemplates" style="display: inline-block;padding-left: 5px;">
                                                                     <el-tag type="success"
@@ -134,7 +134,7 @@
                                                             <label data-original-title="Tooltip on top"
                                                                    class="control-label col-lg-2 col-md-3 col-md-offset-1"
                                                                    data-toggle="tooltip" data-placement="top" title="">
-                                                                <span class="xing">  </span>Keywords
+                                                                <span class="xing">  </span>{{htmlJson.Keywords}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <input id="keyWords" class="form-control">
@@ -142,7 +142,7 @@
                                                         </div>
                                                         <div class="form-group cl-md-6">
                                                             <label class="control-label col-lg-2 col-md-3 col-md-offset-1">
-                                                                <span class="xing">* </span>Overview
+                                                                <span class="xing">* </span>{{htmlJson.Overview}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <textarea class="form-control" id="descInput"
@@ -153,18 +153,18 @@
                                                             <label data-original-title="Tooltip on top"
                                                                    class="control-label col-lg-2 col-md-3 col-md-offset-1 tooltips"
                                                                    data-toggle="tooltip" data-placement="top" title="">
-                                                                <span class="xing">* </span>Method
+                                                                <span class="xing">* </span>{{htmlJson.Method}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <el-radio-group v-model="dataApplication.method" size="medium">
-                                                                    <el-tooltip popper-class="fontsize-15" effect="light" content="Data processing method" placement="top">
-                                                                        <el-radio-button label="Conversion"></el-radio-button>
+                                                                    <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJson.Conversion.content" placement="top">
+                                                                        <el-radio-button label="Conversion">{{htmlJson.Conversion.label}}</el-radio-button>
                                                                     </el-tooltip>
-                                                                    <el-tooltip popper-class="fontsize-15" effect="light" content="Data processing method" placement="top">
-                                                                        <el-radio-button label="Processing"></el-radio-button>
+                                                                    <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJson.Processing.content" placement="top">
+                                                                        <el-radio-button label="Processing">{{htmlJson.Processing.label}}</el-radio-button>
                                                                     </el-tooltip>
-                                                                    <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="Data visualization method" placement="top">
-                                                                        <el-radio-button label="Visualization"></el-radio-button>
+                                                                    <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Visualization.content" placement="top">
+                                                                        <el-radio-button label="Visualization">{{htmlJson.Visualization.label}}</el-radio-button>
                                                                     </el-tooltip>
 
                                                                 </el-radio-group>
@@ -175,35 +175,40 @@
                                                             <label data-original-title="Tooltip on top"
                                                                    class="control-label col-lg-2 col-md-3 col-md-offset-1 tooltips"
                                                                    data-toggle="tooltip" data-placement="top" title="">
-                                                                <span class="xing">* </span>Status
+                                                                <span class="xing">* </span>{{htmlJson.Status}}
                                                             </label>
                                                             <div class="input-group col-md-5">
                                                                 <el-radio-group v-model="dataApplication.status" size="medium">
-                                                                    <el-tooltip popper-class="fontsize-15" effect="light" content="This item can be retrieved, shared and edited." placement="bottom">
-                                                                        <el-radio-button label="Public"></el-radio-button>
+                                                                    <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJson.Public.content" placement="bottom">
+                                                                        <el-radio-button label="Public">{{htmlJson.Public.label}}</el-radio-button>
                                                                     </el-tooltip>
-                                                                    <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="This item can be retrieved and shared, can ONLY be edited by creator." placement="bottom">
-                                                                        <el-radio-button label="Discoverable"></el-radio-button>
+                                                                    <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Discoverable.content" placement="bottom">
+                                                                        <el-radio-button label="Discoverable">{{htmlJson.Discoverable.label}}</el-radio-button>
                                                                     </el-tooltip>
-                                                                    <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="This item can NOT be retrieved and shared, can ONLY be edited by creator." placement="bottom">
-                                                                        <el-radio-button label="Private"></el-radio-button>
+                                                                    <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Private.content" placement="bottom">
+                                                                        <el-radio-button label="Private">{{htmlJson.Private.label}}</el-radio-button>
                                                                     </el-tooltip>
                                                                 </el-radio-group>
                                                             </div>
                                                         </div>
                                                         <div class="form-group cl-md-6" style="margin-top:10px">
                                                             <label class="control-label col-lg-2 col-md-3 col-md-offset-1">
-                                                                <span class="xing">* </span>Content Type
+                                                                <span class="xing">* </span>{{htmlJson.ContentType}}
                                                             </label>
                                                             <div class="input-group col-md-5" style="padding:5px 0;font-size:20px">
                                                                 <el-radio-group v-model="dataApplication.contentType" @change="contentTypeChange">
                                                                     <!--<el-radio label="Package">Model Service Package</el-radio>-->
                                                                     <!--<el-radio label="md5">MD5</el-radio>-->
-                                                                    <el-radio label = "Package" style="display: block;padding: 5px">OpenGMS Data-Service Package</el-radio>
-                                                                    <el-radio label="Code" style="display: block;padding: 5px">Source Code</el-radio>
-                                                                    <el-radio label="Library" style="display: block;padding: 5px">Executable Library</el-radio>
-                                                                    <el-radio label="Service" style="display: block;padding: 5px">Third-party Web-Service Link</el-radio>
-                                                                    <el-radio label="Link" style="display: block;padding: 5px">Downloadable Link</el-radio>
+                                                                    <el-radio label = "Package" style="display: block;padding: 5px">
+                                                                        {{htmlJson.OpenGMSDataServicePackage}}</el-radio>
+                                                                    <el-radio label="Code" style="display: block;padding: 5px">
+                                                                        {{htmlJson.SourceCode}}</el-radio>
+                                                                    <el-radio label="Library" style="display: block;padding: 5px">
+                                                                        {{htmlJson.ExecutableLibrary}}</el-radio>
+                                                                    <el-radio label="Service" style="display: block;padding: 5px">
+                                                                        {{htmlJson.ThirdPartyWebServiceLink}}</el-radio>
+                                                                    <el-radio label="Link" style="display: block;padding: 5px">
+                                                                        {{htmlJson.DownloadableLink}}</el-radio>
                                                                 </el-radio-group>
                                                             </div>
                                                         </div>
@@ -214,8 +219,7 @@
                                                              style="margin-top:50px" v-if="dataApplication.contentType=='Link'||dataApplication.contentType=='Service'">
                                                             <div class="form-group">
                                                                 <label for="URL_text"
-                                                                       class="control-label col-md-4 col-md-offset-2">Please
-                                                                    enter computable model's URL:</label>
+                                                                       class="control-label col-md-4 col-md-offset-2">{{htmlJson.enterUrl}}:</label>
                                                                 <div class="col-sm-8 col-md-offset-2">
                                                                     <textarea id="URL_text" class="form-control"
                                                                               v-model="dataApplication.url"></textarea>
@@ -227,10 +231,10 @@
                                                             <div v-if="bindDataVisible">
                                                                 <label class="control-label" style="margin-top:10px;width: 10%;float: left">
                                                                     <!--                                                                <span class="xing">* </span>-->
-                                                                    Bind Test Data
+                                                                    {{htmlJson.BindTestData}}
                                                                 </label>
                                                                 <div class="input-group">
-                                                                    <el-button type="primary" @click="openDataSpace()" style="margin-right:10px;display: inline-block">Bind Test Data</el-button>
+                                                                    <el-button type="primary" @click="openDataSpace()" style="margin-right:10px;display: inline-block">{{htmlJson.BindTestData}}</el-button>
                                                                     <div v-for="(item,index) in selectedFile" style="display: inline-block;padding-left: 5px;">
                                                                         <el-tag type="success"
                                                                                 :key="item.name"
@@ -244,17 +248,17 @@
                                                             <div>
                                                                 <label class="control-label" style="margin-top:10px;width: 10%;float: left">
                                                                     <!--                                                                <span class="xing">* </span>-->
-                                                                    Add a Zip File
+                                                                    {{htmlJson.AddZipFile}}
                                                                 </label>
                                                                 <div class="input-group">
                                                                     <el-button v-if="(resources.length==0&&dataApplication.contentType=='Package')||dataApplication.contentType!='Package'" type="primary"
-                                                                               @click="addFile()">+ Add
+                                                                               @click="addFile()">+ {{htmlJson.Add}}
                                                                     </el-button>
                                                                     <el-button v-if="resources.length!=0" type="danger"
-                                                                               @click="removeFile()">- Remove
+                                                                               @click="removeFile()">- {{htmlJson.Remove}}
                                                                     </el-button>
                                                                     <el-button v-if="resources.length!=0&&dataApplication.contentType=='Package'" type="success"
-                                                                               @click="replaceFile()">Replace
+                                                                               @click="replaceFile()">{{htmlJson.Replace}}
                                                                     </el-button>
                                                                 </div>
                                                             </div>
@@ -270,7 +274,7 @@
 
                                                             <el-card :body-style="{ padding:'9px'}"
                                                                      style="margin-top: 10px">
-                                                                <span><i class="el-icon-document"></i>&nbsp&nbsp contents</span>
+                                                                <span><i class="el-icon-document"></i>&nbsp&nbsp {{htmlJson.contents}}</span>
                                                             </el-card>
 
 
@@ -339,7 +343,7 @@
                                                                                     style="color:white">
                                                                                     <a class="accordion-toggle"
                                                                                        data-parent="#accordion2">
-                                                                                        Authorship
+                                                                                        {{htmlJson.Authorship}}
                                                                                     </a>
                                                                                 </h4>
                                                                             </div>
@@ -356,7 +360,7 @@
                                                                                                    data-toggle='collapse'
                                                                                                    data-target='#user1'
                                                                                                    href="javascript:;">
-                                                                                                    NEW
+                                                                                                    {{htmlJson.authorshipPart.NEW}}
                                                                                                 </a>
                                                                                             </h4>
                                                                                             <a href="javascript:;"
@@ -370,7 +374,7 @@
                                                                                                     <div>
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Name:
+                                                                                                            {{htmlJson.authorshipPart.Name}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -381,7 +385,7 @@
                                                                                                     <div style="margin-top:10px">
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Affiliation:
+                                                                                                            {{htmlJson.authorshipPart.Affiliation}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -392,7 +396,7 @@
                                                                                                     <div style="margin-top:10px">
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Email:
+                                                                                                            {{htmlJson.authorshipPart.Email}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -403,7 +407,7 @@
                                                                                                     <div style="margin-top:10px">
                                                                                                         <lable class='control-label col-sm-2 text-center'
                                                                                                                style='font-weight: bold;'>
-                                                                                                            Homepage:
+                                                                                                            {{htmlJson.authorshipPart.Homepage}}:
                                                                                                         </lable>
                                                                                                         <div class='input-group col-sm-10'>
                                                                                                             <input type='text'
@@ -419,7 +423,7 @@
                                                                                 <button type="button"
                                                                                         class="btn btn-success btn-lg btn-block user-add"
                                                                                         style="border-radius: 3px;border-top-left-radius: 0px;border-top-right-radius: 0px">
-                                                                                    Add
+                                                                                    {{htmlJson.Add}}
                                                                                 </button>
                                                                             </div>
                                                                         </div>
@@ -430,12 +434,12 @@
                                                     </div>
                                                 <div class="step-footer text-right" style="margin: 0 100px 0 0;">
                                                     <button class="btn btn-warning prev" data-direction="prev">
-                                                        Previous
+                                                        {{htmlJson.Previous}}
                                                     </button>
-                                                    <button class="btn btn-primary next" data-direction="next">Next
+                                                    <button class="btn btn-primary next" data-direction="next">{{htmlJson.Next}}
                                                     </button>
                                                     <button class="btn btn-success finish" data-direction="finish">
-                                                        Finish
+                                                        {{htmlJson.Finish}}
                                                     </button>
                                                 </div>
 
@@ -443,7 +447,7 @@
                                         </div>
 
                                         <div class="uploading" style="display: none;">
-                                            <h3 class="text-center">Uploading ...</h3>
+                                            <h3 class="text-center">{{htmlJson.Uploading}}</h3>
                                             <div class="progress progress-striped active progress-sm">
 
                                                 <div style="width: 100%" aria-valuemax="100" aria-valuemin="0"
@@ -461,20 +465,20 @@
                 </div>
                 </div>
                 <el-dialog
-                        title="Data Select"
+                        :title="htmlJson.DataSelect"
                         :visible.sync="dialogVisible"
                         width="80%"
                         :before-close="handleClose">
-                    <user-data @com-selectfile="selectDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
+                    <user-data :html-Json="htmlJson" @com-selectfile="selectDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
                     <span slot="footer" class="dialog-footer">
-                      <el-button @click="dialogVisible = false">Cancel</el-button>
-                      <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+                      <el-button @click="dialogVisible = false">{{htmlJson.Cancel}}</el-button>
+                      <el-button type="primary" @click="dialogVisible = false">{{htmlJson.Confirm}}</el-button>
                     </span>
                 </el-dialog>
 
-                <el-dialog :visible.sync="bindTemplateDialogVisible" title="Bind Template Item" width="50%"
+                <el-dialog :visible.sync="bindTemplateDialogVisible" :title="htmlJson.BindTemplateItem" width="50%"
                            top="40px">
-                    <el-input placeholder="Template name..." v-model="pageOption.searchText" class="input-with-select"
+                    <el-input :placeholder="htmlJson.TemplateName" v-model="pageOption.searchText" class="input-with-select"
                               @keyup.enter.native="searchTemplate()">
                         <el-button slot="append" icon="el-icon-search" @click="searchTemplate()"></el-button>
                     </el-input>
@@ -492,19 +496,27 @@
                                 </el-form>
                             </template>
                         </el-table-column>
-                        <el-table-column
-                                label="Name">
+                        <el-table-column>
+                            <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Name}}</span>
+                            </template>
                             <template slot-scope="props">
                                 <a :href="'/repository/template/'+props.row.oid" target="_blank">{{props.row.name}}</a>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Contributor">
+                        <el-table-column>
+                            <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Contributor}}</span>
+                            </template>
                             <template slot-scope="props">
                                 <a :href="'/profile/'+props.row.author_name"
                                    target="_blank">{{props.row.author}}</a>
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="Operation" width="100">
+                        <el-table-column fixed="right" width="100">
+                            <template slot="header" slot-scope="scope">
+                                <span>{{htmlJson.Operation}}</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-button
                                         size="mini"
