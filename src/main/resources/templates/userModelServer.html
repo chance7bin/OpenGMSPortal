@@ -69,8 +69,8 @@
                     <!--            <div class="titleContainer"><h4>My Space</h4></div>-->
                     <div class="flexColContainer mainContent" style="padding:20px 10px;max-width: 1120px">
                         <section role="description" class="flexCol flexCenter contentSection">
-                            <h3>Model Server Container</h3>
-                            <h5 style="text-align: center">The OpenGMS Wrapper System is a service-oriented system, which aims to share and reuse standard model service on the web. </h5>
+                            <h3>{{htmlJson.ModelServerContainer}}</h3>
+                            <h5 style="text-align: center">{{htmlJson.ModelServerContainerSub}} </h5>
 
                         </section>
                         <section class="flexRowContainer flexWrap " style="max-width: 1050px">
@@ -82,15 +82,15 @@
                                                 <div class="form-horizontal">
                                                     <div class="flexJustBetween flexAlignCenter">
                                                         <div>
-                                                            <a href="../user/userSpace#/server"><i class="fa fa-arrow-left"></i>Back</a>
+                                                            <a href="../user/userSpace#/server"><i class="fa fa-arrow-left"></i>{{htmlJson.Back}}</a>
                                                         </div>
                                                         <div class="" style="float: right;margin-right: 15px">
                                                             <a style="float: right">
                                                                 <button class="btn btn-info" @click="refreshUserNodes()">
-                                                                    <i class="fa fa-refresh"></i>Refresh My Nodes
+                                                                    <i class="fa fa-refresh"></i>{{htmlJson.RefreshMyNodes}}
                                                                 </button>
                                                             </a>
-                                                            <el-tooltip content="How to add my model container?" placement="bottom-end">
+                                                            <el-tooltip :content="htmlJson.HowToAddModelContainer" placement="bottom-end">
                                                                 <div class="flexCenter cursorPointer" style="height:35px; float: right;margin-right: 15px"
                                                                    @click="window.open('/help/support/Server_Nodes#1_Model_Service_Container')" >
                                                                     <i class="fa fa-question-circle-o" style="font-size: 21px;color: #eb830e"></i>
@@ -174,7 +174,7 @@
                                                 <div class="addModelContainer" @click="window.open('/help/support/Server_Nodes#1_Model_Service_Container')">
                                                     <i class="fa fa-question-circle-o" style="font-size: 35px;margin-bottom:10px"></i>
                                                     <br/>
-                                                    How to Add My Model Container
+                                                    {{htmlJson.HowToAddModelContainer}}
                                                 </div>
                                             </el-card>
                                         </div>
@@ -193,7 +193,8 @@
                                                         <div class="" style="float: left;margin-left: 15px">
                                                             <a class="flexCenter" style="height: 35px" @click="changeServerView(1)">
                                                                 <i class="fa fa-arrow-left"></i>
-                                                                <p class="noMargin hoverLine" style="margin-left: 5px;margin-top: 3px;font-size: 15px; ">Back</p>
+                                                                <p class="noMargin hoverLine" style="margin-left: 5px;margin-top: 3px;font-size: 15px; ">
+                                                                    {{htmlJson.Back}}</p>
                                                             </a>
                                                         </div>
                                                         <el-tooltip content="How to refresh content of this node?" placement="bottom-end">

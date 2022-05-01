@@ -64,10 +64,10 @@
                     <div class="flexColContainer mainContent mainDataSpaceContent" style="max-width: 1500px;height: 100%;min-height: 300px;">
                         <section role="description" class="flexCenter flexWrap contentSection" style="max-width: 100%;position: relative">
                             <div style="margin-top: 10px;position: absolute;left: 25px">
-                                <a href="../user/userSpace#/data"><i class="fa fa-arrow-left"></i>Back</a>
+                                <a href="../user/userSpace#/data"><i class="fa fa-arrow-left"></i>{{htmlJson.Back}}</a>
                             </div>
                             <i class="fa fa-cloud-upload" style="font-size: 40px;color: #00c0ff;font-weight: 600;margin:10px 10px 0 0;"></i>
-                            <h3>Data Space</h3>
+                            <h3>{{htmlJson.DataSpace}}</h3>
                         </section>
                         <section class="flexRowContainer flexWrap contentSection" style="max-width: 100%;height: 100%;margin-top: 24px">
                             <div class="page-content-wrap container-fluid  myDataContainer">
@@ -91,21 +91,21 @@
                                                         <button id="uploadButton" class="dwload btn btn-info btn-round"
                                                                 v-if="myFileShown.length==0||myFileShown[0].name!='All Folder'"
                                                                 @click="uploadClick(0)">
-                                                            <i class="glyphicon glyphicon-upload"></i><span style="font-size: 15px">Upload Data</span>
+                                                            <i class="glyphicon glyphicon-upload"></i><span style="font-size: 15px">{{htmlJson.UploadData}}</span>
                                                         </button>
                                                         <button class="dwload btn btn-info btn-round" @click="addFolderInPath">
                                                             <i class="glyphicon glyphicon-plus-sign"></i><span
-                                                                style="font-size: 15px">Add folder</span>
+                                                                style="font-size: 15px">{{htmlJson.AddFolder}}</span>
                                                         </button>
                                                         <button class="dwload btn btn-info btn-round"
                                                                 v-if="selectedDataSet.length>0" @click="userDownload">
                                                             <i class="glyphicon glyphicon-download"></i><span
-                                                                style="font-size: 15px">Download All</span>
+                                                                style="font-size: 15px">{{htmlJson.DownloadAll}}</span>
                                                         </button>
                                                         <button class="dwload btn btn-primary btn-round" v-if="pasteTargetItem.id"
                                                                 @click="pasteFile">
                                                             <i style="font-size: 16px" class="fa fa-clipboard">></i><span
-                                                                style="font-size: 15px">Paste</span>
+                                                                style="font-size: 15px">{{htmlJson.Paste}}</span>
                                                         </button>
 
 <!--                                                        这个功能先注释掉-->
@@ -115,7 +115,7 @@
 <!--                                                        </button>-->
                                                         <button class="dwload btn btn-danger btn-round" v-if="selectedDataSet.length>0"
                                                                 @click="deleteAll()">
-                                                            <i style="font-size: 16px" class="fa fa-trash"></i><span style="font-size: 15px">Delete all</span>
+                                                            <i style="font-size: 16px" class="fa fa-trash"></i><span style="font-size: 15px">{{htmlJson.DeleteAll}}</span>
                                                         </button>
                                                         <!--//todo share-->
                                                         <!--<button class="dwload btn btn-primary btn-md"   @click="share">-->
@@ -127,7 +127,7 @@
                                                     <el-col :span="6" style="float: right">
                                                         <el-input id="searchinput"
                                                                   clearable
-                                                                  placeholder="file name..."
+                                                                  :placeholder="htmlJson.filenamePlaceHolder"
                                                                   v-model="searchContent"
                                                                   @keyup.enter.native="keywordsSearch()"
                                                                   @clear="keywordsSearch()"
@@ -141,8 +141,8 @@
                                             </el-card>
                                             <div class="infoBar" role="alert" id="outputDataChosen">
                                                 <div>
-                                                    <span><i class="el-icon-document"></i>&nbsp&nbsp You have selected:</span>&nbsp;&nbsp;&nbsp;
-                                                    <span v-if="selectedDataSetName.length==0">no data...</span>
+                                                    <span><i class="el-icon-document"></i>&nbsp&nbsp {{htmlJson.YouHaveSelected}}:</span>&nbsp;&nbsp;&nbsp;
+                                                    <span v-if="selectedDataSetName.length==0">{{htmlJson.noData}}</span>
                                                     <span v-for="item in selectedDataSetName">{{item.name}}<span
                                                             v-if="item.package==false">.{{item.suffix}}</span>, </span>
                                                 </div>
@@ -186,7 +186,7 @@
                                                                     <i class="fa fa-refresh" style="font-weight: 600;transition: .5s ease-out"></i>
                                                                 </div>
                                                                 <div class="showPathContainer" style="margin-left: 10px">
-                                                                    <div style="color: #3f4d60">path</div>
+                                                                    <div style="color: #3f4d60">{{htmlJson.path}}</div>
                                                                     :
                                                                     <div v-for="(path,index) in pathShown"
                                                                          v-if="searchContentShown==''"
@@ -200,7 +200,7 @@
                                                             </div>
 
                                                             <p style="font-style: italic;color: #999999;float: right;margin: 0">
-                                                                Left or right click can call out some function</p>
+                                                                {{htmlJson.rightClick}}</p>
                                                         </div>
                                                         <h4 v-if="myFileShown==null||myFileShown.length==0" style="margin-top: 50px;text-align: center;color: #999999">
                                                             No content to show
@@ -312,21 +312,23 @@
 
                                                     <el-card v-show="rightMenuShow" class="browsermenu" ref="browsermenu">
                                                         <el-button id="dbtn" @click="right_download()" v-if="!rightTargetItem.package"
-                                                                   type="text">Download
+                                                                   type="text">{{htmlJson.Download}}
                                                         </el-button>
                                                         <br v-if="!rightTargetItem.package">
                                                         <el-button id="dbtn" @click="copyFile()" v-if="!rightTargetItem.package"
-                                                                   type="text">Copy
+                                                                   type="text">{{htmlJson.Copy}}
                                                         </el-button>
                                                         <br v-if="!rightTargetItem.package">
                                                         <!--                                    <el-button id="dbtn" @click="pasteFile()" v-if="!rightTargetItem.package" type="text">paste</el-button>-->
                                                         <!--                                    <br v-if="!rightTargetItem.package">-->
-                                                        <el-button id="dbtn" @click="right_deleteFile()" type="text">Delete</el-button>
+                                                        <el-button id="dbtn" @click="right_deleteFile()" type="text">
+                                                            {{htmlJson.Delete}}</el-button>
                                                         <br>
-                                                        <el-button id="sbtn" @click="right_share" v-if="!rightTargetItem.package" type="text">Share</el-button>
+                                                        <el-button id="sbtn" @click="right_share" v-if="!rightTargetItem.package" type="text">
+                                                            {{htmlJson.Share}}</el-button>
                                                         <br v-if="!rightTargetItem.package">
                                                         <el-button id="renameBtn" @click="rename" type="text">
-                                                            Rename
+                                                            {{htmlJson.Rename}}
                                                         </el-button>
                                                         <!--                                    <el-button id="sbtn" @click="relatedModels_dataManager()" type="text">relatedModels-->
                                                         <!--                                    </el-button>-->
@@ -521,7 +523,7 @@
                 </div>
                 <el-dialog
 
-                        title="Upload Data"
+                        :title="htmlJson.UploadData"
                         :visible.sync="uploadDialogVisible"
                         width="32%"
                         :before-close="uploadBeforeClose"
@@ -539,12 +541,12 @@
                             <el-progress class="headProgress" type="circle" :percentage="uploadProgress"></el-progress>
                         </div>
                         <div class="form-group flexColContainer">
-                            <label style="margin-right:5px;font-size: 1.4rem">Name :</label>
-                            <el-input v-model="uploadName" placeholder="Dataset name"></el-input>
+                            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.Name}} :</label>
+                            <el-input v-model="uploadName" :placeholder="htmlJson.DatasetName"></el-input>
                         </div>
 
                         <div class="form-group flexColContainer">
-                            <label style="margin-right:5px;font-size: 1.4rem">Data template :</label>
+                            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.DataTemplate}} :</label>
                             <el-select
                                     v-model="selectValue"
                                     filterable
@@ -563,7 +565,7 @@
                         </div>
 
                         <div class="form-group flexColContainer">
-                            <label style="margin-right:5px;font-size: 1.4rem">Storage path :</label>
+                            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.StoragePath}} :</label>
                             <div class="flexJustBetween">
                                 <div class="showPathContainer" style="margin-left: 10px;margin-bottom: 5px"
                                      v-if="uploadInPath==0">
@@ -572,7 +574,7 @@
                                     </div>
                                 </div>
                                 <el-button type="primary" plain size="mini" @click="selectFolder"
-                                           v-if="uploadInPath==0">Change
+                                           v-if="uploadInPath==0">{{htmlJson.Change}}
                                 </el-button>
                             </div>
 
@@ -585,8 +587,9 @@
                             <!--                                                    </el-button>-->
                         </div>
                         <div class="form-group flexColContainer" style="margin-bottom: -15px">
-                            <label style="margin-right:5px;font-size: 1.4rem">Upload files :</label>
-                            <el-button size="mini" type="primary" plain @click="selectFile()" style="margin-top: 5px">Select File</el-button>
+                            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.UploadFiles}} :</label>
+                            <el-button size="mini" type="primary" plain @click="selectFile()" style="margin-top: 5px">
+                                {{htmlJson.SelectFile}}</el-button>
                         </div>
                         <el-upload
                                 class="upload-demo wzhScrollbar customUpload"
@@ -616,9 +619,9 @@
                             </span>
                 </el-dialog>
 
-                <el-dialog :visible.sync="addFolderIndex" title="Add New Folder" :close-on-click-modal="false" width="32%">
+                <el-dialog :visible.sync="addFolderIndex" :title="htmlJson.AddFolder" :close-on-click-modal="false" width="32%">
                     <div class="showPathContainer">
-                        <div class="containerWithBorder">path</div>
+                        <div class="containerWithBorder">{{htmlJson.path}}</div>
                         :
                         <div v-for="(path,index) in pathShown"
                              :style="{color:index==pathShown.length-1?'#222222':'#666666'}">
@@ -630,13 +633,13 @@
                               v-model="newFolderName"
                               style="width: calc(100% - 10px);margin:5px 5px 0"></el-input>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @click="addFolderIndex = false">Cancel</el-button>
+                        <el-button @click="addFolderIndex = false">{{htmlJson.Cancel}}</el-button>
                         <el-button type="primary" style="margin-right: 5px"
-                                   icon="el-icon-folder-add" @click="addFolder()">Confirm</el-button>
+                                   icon="el-icon-folder-add" @click="addFolder()">{{htmlJson.Confirm}}</el-button>
                                                 </span>
                 </el-dialog>
                 <el-dialog
-                        title="Select Folder"
+                        :title="htmlJson.SelectFolder"
                         :visible.sync="selectFolderVisible"
                         width="550px"
                 >
@@ -662,9 +665,9 @@
                     <div class="modal-footer">
                                              <span>
                                                  <el-button class="pull-left" type="primary" icon="el-icon-folder-add"
-                                                            @click="addFolderinTree('myData')">Add new folder</el-button>
-                                                 <el-button @click="closeSelectFolder">Cancel</el-button>
-                                                 <el-button type="primary" @click="confirmFolder()">OK</el-button>
+                                                            @click="addFolderinTree('myData')">{{htmlJson.AddNewFolder}}</el-button>
+                                                 <el-button @click="closeSelectFolder">{{htmlJson.Cancel}}</el-button>
+                                                 <el-button type="primary" @click="confirmFolder()">{{htmlJson.Confirm}}</el-button>
                                              </span>
                     </div>
                 </el-dialog>

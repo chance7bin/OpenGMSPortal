@@ -1,6 +1,7 @@
 var userModelServer = Vue.extend(
     {
         template:'#userModelServer',
+        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制

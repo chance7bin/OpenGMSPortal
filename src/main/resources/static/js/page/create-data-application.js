@@ -1,10 +1,11 @@
 var createDataApplication = Vue.extend({
     template: "#createDataApplication",
+    props: ["htmlJson"],
     data() {
         return {
             defaultActive: '2-4',
             curIndex: '3',
-
+            editType: "",
             dataApplication: {
                 method:"Conversion",
                 status:"Public",
@@ -70,6 +71,18 @@ var createDataApplication = Vue.extend({
             bindDataVisible: true,
         }
     },
+
+    watch:{
+        // 中英文切换
+        htmlJson:function(newData){
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateDataMethod);
+            } else {
+                $("#subRteTitle").text("/" + newData.ModifyDataMethod);
+            }
+        }
+    },
+
     methods: {
         changeRter(index){
             this.curIndex = index;
@@ -205,7 +218,7 @@ var createDataApplication = Vue.extend({
             this.selectedFile.splice(this.selectedFile.indexOf(tag), 1)
         },
         handleClose(done) {
-            this.$confirm('Confirm to close?')
+            this.$confirm(this.htmlJson.ConfirmToClose)
                 .then(_ => {
                     done();
                 })
@@ -488,8 +501,9 @@ var createDataApplication = Vue.extend({
         var user_num = 0;
 
 
-        if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
 
+        if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
+            this.editType = 'create';
             $("#subRteTitle").text("/Create Data Method");
             $("#keyWords").tagEditor()
 
@@ -497,6 +511,7 @@ var createDataApplication = Vue.extend({
 
         }
         else {
+            this.editType = 'modify';
             $("#subRteTitle").text("/Modify Data Application");
             // document.title="Modify Data Application | OpenGMS";
             let that = this
@@ -554,13 +569,13 @@ var createDataApplication = Vue.extend({
                             var content_box = $(".providers");
                             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
                             str += user_num;
-                            str += "' href='javascript:;'> NEW </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+                            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW +" </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
                             str += user_num;
                             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                                 "                                                                                                    <div>\n" +
                                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                                 "                                                                                                               style='font-weight: bold;'>\n" +
-                                "                                                                                                            Name:\n" +
+                                that.htmlJson.authorshipPart.Name + ":\n" +
                                 "                                                                                                        </lable>\n" +
                                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                                 "                                                                                                            <input type='text'\n" +
@@ -573,7 +588,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                                 "                                                                                                               style='font-weight: bold;'>\n" +
-                                "                                                                                                            Affiliation:\n" +
+                                that.htmlJson.authorshipPart.Affiliation + ":\n" +
                                 "                                                                                                        </lable>\n" +
                                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                                 "                                                                                                            <input type='text'\n" +
@@ -586,7 +601,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                                 "                                                                                                               style='font-weight: bold;'>\n" +
-                                "                                                                                                            Email:\n" +
+                                that.htmlJson.authorshipPart.Email + ":\n" +
                                 "                                                                                                        </lable>\n" +
                                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                                 "                                                                                                            <input type='text'\n" +
@@ -599,7 +614,7 @@ var createDataApplication = Vue.extend({
                                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                                 "                                                                                                               style='font-weight: bold;'>\n" +
-                                "                                                                                                            Homepage:\n" +
+                                that.htmlJson.authorshipPart.Homepage + ":\n" +
                                 "                                                                                                        </lable>\n" +
                                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                                 "                                                                                                            <input type='text'\n" +
@@ -628,6 +643,13 @@ var createDataApplication = Vue.extend({
             })
         }
 
+        if (this.editType == 'create'){
+            $("#subRteTitle").text("/" + this.htmlJson.CreateDataMethod);
+        } else {
+            $("#subRteTitle").text("/" + this.htmlJson.ModifyDataMethod);
+        }
+
+
         $("#step").steps({
             onFinish: function () {
                 alert('Wizard Completed');
@@ -644,7 +666,7 @@ var createDataApplication = Vue.extend({
                     // }
                     if (this.dataApplication.name.trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -661,7 +683,7 @@ var createDataApplication = Vue.extend({
                         //wyj data application 不显示overview 这里和上边，我把description改成overview字段，但是报错null
                     } else if (this.dataApplication.description.trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -685,7 +707,7 @@ var createDataApplication = Vue.extend({
                     if(this.dataApplication.contentType=="Service"||this.dataApplication.contentType=="Link"){
                         if(this.dataApplication.url==""){
                             new Vue().$message({
-                                message: 'Please enter URL!',
+                                message: this.htmlJson.enterURLTip,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -1080,17 +1102,18 @@ var createDataApplication = Vue.extend({
         //作者添加
         var user_num = 1;
         $(".user-add").click(function () {
+            console.log("this.htmlJson:",this.htmlJson);
             user_num++;
             var content_box = $(this).parent().children('div');
             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
             str += user_num;
-            str += "' href='javascript:;'> NEW </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW + " </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
             str += user_num;
             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                 "                                                                                                    <div>\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Name:\n" +
+                that.htmlJson.authorshipPart.Name + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1101,7 +1124,7 @@ var createDataApplication = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Affiliation:\n" +
+                that.htmlJson.authorshipPart.Affiliation + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1112,7 +1135,7 @@ var createDataApplication = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Email:\n" +
+                that.htmlJson.authorshipPart.Email + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1123,7 +1146,7 @@ var createDataApplication = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Homepage:\n" +
+                that.htmlJson.authorshipPart.Homepage + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
