@@ -1,6 +1,7 @@
 var userDataHubs = Vue.extend(
     {
         template: "#userDataHubs",
+        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -189,6 +190,7 @@ var userDataHubs = Vue.extend(
                 var _this = this;
                 // todo 从后台拿到用户创建的data—item
                 axios.post(QueryHubListOfAuthorSelf(), data).then(res => {
+                    // console.log("QueryHubListOfAuthorSelf:",res);
                     const data = res.data.data;
                     _this.searchResult = data.list
                     _this.resourceLoad = false;
@@ -196,6 +198,7 @@ var userDataHubs = Vue.extend(
                     if (_this.page == 1) {
                         _this.pageInit();
                     }
+                    console.log("111");
                     _this.data_show = true
                     _this.loading = false
                     _this.await = false

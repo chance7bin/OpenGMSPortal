@@ -2,6 +2,7 @@ var DATATRANFERStr = 'https://geomodeling.njnu.edu.cn/dataTransferServer'
 var userDataSpace = Vue.extend(
     {
         template: "#userDataSpace",
+        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -1380,16 +1381,16 @@ var userDataSpace = Vue.extend(
                 this.$msgbox({
                     title: ' ',
                     message: h('p', null, [
-                        h('span', { style: 'font-size:15px' }, 'All of the selected files will be deleted.'),
+                        h('span', { style: 'font-size:15px' }, this.htmlJson.allDeleteInfo),
                         h('br'),
-                        h('span', null, 'Are you sure to '),
-                        h('span', { style: 'color: #e6a23c;font-weight:600' }, 'continue'),
+                        h('span', null, this.htmlJson.AreYouSureTo),
+                        h('span', { style: 'color: #e6a23c;font-weight:600' }, this.htmlJson.continue),
                         h('span', null, '?'),
                     ]),
                     type:'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.Confirm,
+                    cancelButtonText: this.htmlJson.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {
@@ -1487,16 +1488,16 @@ var userDataSpace = Vue.extend(
                 this.$msgbox({
                     title: ' ',
                     message: h('p', null, [
-                        h('span', { style: 'font-size:15px' }, 'All of the content will be deleted.'),
+                        h('span', { style: 'font-size:15px' }, this.htmlJson.deleteInfo),
                         h('br'),
-                        h('span', null, 'Are you sure to '),
-                        h('span', { style: 'color: #e6a23c;font-weight:600' }, 'continue'),
+                        h('span', null, this.htmlJson.AreYouSureTo),
+                        h('span', { style: 'color: #e6a23c;font-weight:600' }, this.htmlJson.continue),
                         h('span', null, '?'),
                     ]),
                     type:'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.Confirm,
+                    cancelButtonText: this.htmlJson.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {
@@ -1932,7 +1933,7 @@ var userDataSpace = Vue.extend(
 
                 this.selectLoading = true;
                 let query = {
-                    page: 0,
+                    page: 1,
                     pageSize: 999,
                     asc: 1,
                     searchText: searchText

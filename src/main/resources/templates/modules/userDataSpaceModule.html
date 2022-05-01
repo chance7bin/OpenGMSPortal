@@ -61,11 +61,11 @@
                           <button id="uploadButton" class="dwload btn btn-info btn-round"
                                   v-if="myFileShown.length==0||myFileShown[0].label!='All Folder'"
                                   @click="uploadClick(0)">
-                            <i class="glyphicon glyphicon-upload"></i><span style="font-size: 15px">Upload</span>
+                            <i class="glyphicon glyphicon-upload"></i><span style="font-size: 15px">{{htmlJson.UploadData}}</span>
                           </button>
                           <button class="dwload btn btn-info btn-round" @click="addFolderInPath">
                             <i class="glyphicon glyphicon-plus-sign"></i><span
-                                  style="font-size: 15px">Add folder</span>
+                                  style="font-size: 15px">{{htmlJson.AddFolder}}</span>
                           </button>
                           <!--                                                        <button class="dwload btn btn-info btn-round"-->
                           <!--                                                                v-if="downloadDataSet.length>0" @click="userDownload">-->
@@ -75,7 +75,7 @@
                           <button class="dwload btn btn-primary btn-round" v-if="pasteTargetItem.id"
                                   @click="pasteFile">
                             <i style="font-size: 16px" class="fa fa-clipboard"></i><span
-                                  style="font-size: 15px">Paste</span>
+                                  style="font-size: 15px">{{htmlJson.Paste}}</span>
                           </button>
 <!--                          <button class="dwload btn btn-secondary btn-round"-->
 <!--                                  @click="allFileShareAsDataItem()">-->
@@ -83,7 +83,7 @@
 <!--                          </button>-->
                           <button class="dwload btn btn-danger btn-round" v-if="downloadDataSet.length>0&&deleteButton"
                                   @click="deleteAll()">
-                            <i class="glyphicon glyphicon-share"></i><span style="font-size: 15px">Delete all</span>
+                            <i class="glyphicon glyphicon-share"></i><span style="font-size: 15px">{{htmlJson.DeleteAll}}</span>
                           </button>
 <!--                          <button class="dwload btn btn-success btn-round" v-if="downloadDataSet.length==1"-->
 <!--                                  @click="selectData()">-->
@@ -94,7 +94,7 @@
                         </el-col>
                         <el-col :span="6" style="float: right">
                           <el-input id="searchinput"
-                                    placeholder="file name..."
+                                    :placeholder="htmlJson.filenamePlaceHolder"
                                     v-model="searchContent"
                                     @keyup.enter.native="keywordsSearch()"
                           >
@@ -107,8 +107,8 @@
                     </el-card>
                     <div class="infoBar" role="alert" id="outputDataChosen">
                       <div>
-                        <span><i class="el-icon-document"></i>&nbsp&nbsp You have selected:</span>&nbsp;&nbsp;&nbsp;
-                        <span v-if="downloadDataSetName.length==0">no data..</span>
+                        <span><i class="el-icon-document"></i>&nbsp&nbsp {{htmlJson.YouHaveSelected}}:</span>&nbsp;&nbsp;&nbsp;
+                        <span v-if="downloadDataSetName.length==0">{{htmlJson.noData}}</span>
                         <span v-for="item in downloadDataSetName">{{item.name}}<span
                                 v-if="item.package==false">.{{item.suffix}}</span>, </span>
                       </div>
@@ -136,7 +136,7 @@
                                 <i class="fa fa-refresh" style="font-weight: 600;transition: .5s ease-out"></i>
                               </div>
                               <div class="showPathContainer" style="margin-left: 10px">
-                                <div>path</div>
+                                <div>{{htmlJson.path}}</div>
                                 :
                                 <div v-for="(path,index) in pathShown"
                                      v-if="searchContentShown==''"
@@ -226,7 +226,7 @@
 
                           <el-row style="padding-top:10px;" >
                             <el-progress :text-inside="true" :stroke-width="20" :percentage="capacityPercent" :format="processBarFormat" :color="customColors" style="width: calc(100% - 100px);display: inline-block;"></el-progress>
-                            Max: {{toDecimal1(capacity/1073741824)}} GB
+                            {{htmlJson.Max}}: {{toDecimal1(capacity/1073741824)}} GB
                           </el-row>
                         </el-card>
 
@@ -274,7 +274,7 @@
 <!--                  placeholder="Input detail about the data here."></textarea>-->
       <el-dialog
               modal-append-to-body append-to-body
-              title="Upload Data"
+              :title="htmlJson.UploadData"
               :visible.sync="uploadDialogVisible"
               width="32%"
               :before-close="uploadBeforeClose"
@@ -292,12 +292,12 @@
             <el-progress class="headProgress" type="circle" :percentage="uploadProgress"></el-progress>
           </div>
           <div class="form-group flexColContainer">
-            <label style="margin-right:5px;font-size: 1.4rem">Name :</label>
-            <el-input v-model="uploadName" placeholder="Dataset name"></el-input>
+            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.Name}} :</label>
+            <el-input v-model="uploadName" :placeholder="htmlJson.DatasetName"></el-input>
           </div>
 
           <div class="form-group flexColContainer">
-            <label style="margin-right:5px;font-size: 1.4rem">Data template :</label>
+            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.DataTemplate}} :</label>
             <el-select
                     v-model="selectValue"
                     filterable
@@ -316,7 +316,7 @@
           </div>
 
           <div class="form-group flexColContainer">
-            <label style="margin-right:5px;font-size: 1.4rem">Storage path :</label>
+            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.StoragePath}} :</label>
             <div class="flexJustBetween">
               <div class="showPathContainer" style="margin-left: 10px;margin-bottom: 5px"
                    v-if="uploadInPath==0">
@@ -325,7 +325,7 @@
                 </div>
               </div>
               <el-button type="primary" plain size="mini" @click="selectFolder"
-                         v-if="uploadInPath==0">Change
+                         v-if="uploadInPath==0">{{htmlJson.Change}}
               </el-button>
             </div>
 
@@ -338,8 +338,8 @@
             <!--                                                    </el-button>-->
           </div>
           <div class="form-group flexColContainer" style="margin-bottom: -15px">
-            <label style="margin-right:5px;font-size: 1.4rem">Upload files :</label>
-            <el-button size="mini" type="primary" plain @click="selectFile()" style="margin-top: 5px">Select File</el-button>
+            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.UploadFiles}} :</label>
+            <el-button size="mini" type="primary" plain @click="selectFile()" style="margin-top: 5px">{{htmlJson.SelectFile}}</el-button>
           </div>
           <el-upload
                   class="upload-demo wzhScrollbar customUpload"
@@ -360,18 +360,18 @@
 
         <span slot="footer" class="dialog-footer">
                                 <el-button @click="uploadClose">
-                                    Cancel
+                                    {{htmlJson.Cancel}}
                                 </el-button>
 
                                 <el-button type="primary" @click="submitUpload">
-                                    Confirm
+                                    {{htmlJson.Confirm}}
                                 </el-button>
                             </span>
       </el-dialog>
 
-      <el-dialog append-to-body :visible.sync="addFolderIndex" title="Add New Folder" width="32%">
+      <el-dialog append-to-body :visible.sync="addFolderIndex" :title="htmlJson.AddNewFolder" width="32%">
         <div class="showPathContainer">
-          <div class="containerWithBorder">path</div>
+          <div class="containerWithBorder">{{htmlJson.path}}</div>
           :
           <div v-for="(path,index) in pathShown"
                :style="{color:index==pathShown.length-1?'#222222':'#666666'}">
@@ -379,18 +379,18 @@
           </div>
           /..
         </div>
-        <el-input placeholder="Please input the name of the new folder"
+        <el-input :placeholder="htmlJson.newFolderTip"
                   v-model="newFolderName"
                   style="width: calc(100% - 10px);margin:5px 5px 0"></el-input>
         <span slot="footer" class="dialog-footer">
-                        <el-button @click="addFolderIndex = false">Cancel</el-button>
+                        <el-button @click="addFolderIndex = false">{{htmlJson.Cancel}}</el-button>
                         <el-button type="primary" style="margin-right: 5px"
-                                   icon="el-icon-folder-add" @click="addFolder()">Confirm</el-button>
+                                   icon="el-icon-folder-add" @click="addFolder()">{{htmlJson.Confirm}}</el-button>
                                                 </span>
       </el-dialog>
 
       <el-dialog append-to-body
-              title="Select Folder"
+              :title="htmlJson.SelectFolder"
               :visible.sync="selectFolderVisible"
               width="550px"
       >
@@ -416,9 +416,9 @@
         <div class="modal-footer">
                                                <span>
                                                    <el-button class="pull-left" type="primary" icon="el-icon-folder-add"
-                                                              @click="addFolderinTree('myData')">Add new folder</el-button>
-                                                   <el-button @click="closeSelectFolder">Cancel</el-button>
-                                                   <el-button type="primary" @click="confirmFolder()">OK</el-button>
+                                                              @click="addFolderinTree('myData')">{{htmlJson.AddNewFolder}}</el-button>
+                                                   <el-button @click="closeSelectFolder">{{htmlJson.Cancel}}</el-button>
+                                                   <el-button type="primary" @click="confirmFolder()">{{htmlJson.Confirm}}</el-button>
                                                </span>
         </div>
       </el-dialog>

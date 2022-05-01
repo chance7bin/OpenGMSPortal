@@ -1,6 +1,7 @@
 let id = 1000;
 var createTheme = Vue.extend({
     template: "#createTheme",
+    props: ["htmlJson"],
     data() {
         const themeModelData = [
             {
@@ -42,6 +43,7 @@ var createTheme = Vue.extend({
             }
         ];
         return {
+            editType:"",
             themeModelData: JSON.parse(JSON.stringify(themeModelData)),
             themeData: JSON.parse(JSON.stringify(themeData)),
             themeDataMethodData: JSON.parse(JSON.stringify(themeDataMethodData)),
@@ -263,6 +265,17 @@ var createTheme = Vue.extend({
             model_num1: 1,
 
             themeImg:'',
+        }
+    },
+    watch:{
+        // 中英文切换
+        htmlJson:function(newData){
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateTheme);
+            } else {
+                $("#subRteTitle").text("/" + newData.ModifyTheme);
+            }
+
         }
     },
     methods: {
@@ -1682,11 +1695,13 @@ var createTheme = Vue.extend({
 
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
             $("#subRteTitle").text("/Create Theme");
+            this.editType = "create";
             initTinymce('textarea#themeText');
         }
         else {
             // $("#title").text("Modify Theme")
             $("#subRteTitle").text("/Modify Theme")
+            this.editType = "modify"
             // document.title="Modify Theme | OpenGMS"
             $.ajax({
                 url: "/theme/getInfo/" + oid,
@@ -1734,6 +1749,12 @@ var createTheme = Vue.extend({
                 }
             });
             window.sessionStorage.setItem("edittheme_id", "");
+        }
+
+        if (this.editType == 'create'){
+            $("#subRteTitle").text("/" + newData.CreateTheme);
+        } else {
+            $("#subRteTitle").text("/" + newData.ModifyTheme);
         }
 
         $("#step").steps({
