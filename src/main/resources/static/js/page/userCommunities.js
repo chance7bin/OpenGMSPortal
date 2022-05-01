@@ -1,7 +1,7 @@
 
 var communityItem = Vue.extend({
     template: '#communityShow',
-    props: ['searchResultRaw'],
+    props: ['searchResultRaw','htmlJson'],
     created(){
         console.log(this.searchResultRaw);
     },
@@ -71,6 +71,7 @@ var communityItem = Vue.extend({
 var userCommunities = Vue.extend(
     {
         template: "#userCommunities",
+        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -115,7 +116,7 @@ var userCommunities = Vue.extend(
             }
         },
 
-        props:['itemindexRaw'],
+        props:['itemindexRaw', 'htmlJson'],
 
         components: {
         },
@@ -124,6 +125,12 @@ var userCommunities = Vue.extend(
             $route() {
                 this.getCommunity()
             },
+            htmlJson: function (newData) {
+                let href = window.location.href;
+                let arr = href.split("/");
+                let currentType = arr[arr.length-1]
+                this.itemTitle = newData.userModel[currentType];
+            }
         },
 
         methods:{
@@ -383,10 +390,10 @@ var userCommunities = Vue.extend(
 
 
                 let titles={
-                    'concept&semantic':'Concept & Semantic',
-                    'spatialReference':'Spatial Reference',
-                    'dataTemplate':'Data Template',
-                    'unit&metric':'Unit & Metric'
+                    'concept&semantic':this.htmlJson.userCommunity.ConceptSemantic,
+                    'spatialReference':this.htmlJson.userCommunity.SpatialReference,
+                    'dataTemplate':this.htmlJson.userCommunity.DataTemplate,
+                    'unit&metric':this.htmlJson.userCommunity.UnitMetric
                 }
                 this.itemTitle=titles[a]
 
@@ -538,19 +545,19 @@ var userCommunities = Vue.extend(
                 this.$msgbox({
                     title: ' ',
                     message: h('p', null, [
-                        h('span', null, 'Are you sure to '),
-                        h('span', {style: 'font-weight:600'}, 'delete'),
-                        h('span', null, ' this item?'),
+                        h('span', null, this.htmlJson.userModel.sure),
+                        h('span', {style: 'font-weight:600'}, this.htmlJson.userModel.delete),
+                        h('span', null, this.htmlJson.userModel.thisItem),
                     ]),
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.userModel.Confirm,
+                    cancelButtonText: this.htmlJson.userModel.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {
                             instance.confirmButtonLoading = true;
-                            instance.confirmButtonText = 'deleting...';
+                            instance.confirmButtonText = this.htmlJson.Deleting;
                             setTimeout(() => {
                                 var urls = {
                                     'concept&semantic':"/concept/",
@@ -575,14 +582,14 @@ var userCommunities = Vue.extend(
                                     crossDomain: true,
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please log in first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                         } else {
                                             if (json.data == 1) {
                                                 // this.$alert("delete successfully!")
                                             } else if (json.data == -1) {
-                                                this.$alert("delete failed!")
+                                                this.$alert(this.htmlJSon.DeleteFailed)
                                             } else
-                                                this.$alert("please refresh the page!")
+                                                this.$alert(this.htmlJson.RefreshPage)
                                         }
                                         if (this.searchText.trim() != "") {
                                             this.searchCommunity();
@@ -604,7 +611,7 @@ var userCommunities = Vue.extend(
                 }).then(action => {
                     this.$message({
                         type: 'success',
-                        message: 'delete successful '
+                        message: this.htmlJson.DeleteSuccess
                     });
                 });
             },

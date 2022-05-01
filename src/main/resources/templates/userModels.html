@@ -123,7 +123,7 @@
                                 <!--                        model item-->
                             </router-view>
                             <!--                        <model-item :searchResultRaw="searchResult"></model-item>-->
-                            <h4 style="margin:80px auto;color: #666666" v-if="searchResult.length==0&&!await">No Result Found ...</h4>
+                            <h4 style="margin:80px auto;color: #666666" v-if="searchResult.length==0&&!await">{{htmlJson.NoFound}}</h4>
                             <!--                        页码-->
                             <nav v-if="searchResult.length>0&&!await" class="flexCenter" style="width: 100%;position: relative"  aria-label="Page navigation example">
                                 <div class="flexCenter totalContainer">
@@ -229,7 +229,7 @@
                         <div class="content_w100" style="padding-top: 20px">
                             <div class="flexJustStart flexAlignStrench overviewContainer" style="">
                                 <div>
-                                    <b style="margin-right: 25px;">Overview:</b>
+                                    <b style="margin-right: 25px;">{{htmlJson.Overview}}:</b>
                                 </div>
                                 <div>
                                     <p class="threeLine" style="">{{modelItem.overview}}</p>
@@ -237,7 +237,7 @@
                             </div>
 
                             <p>
-                                <b style="margin-right: 3px">Create Time:</b> {{formatDateChild(modelItem.createTime)}}</p>
+                                <b style="margin-right: 3px">{{htmlJson.userModel.CreateTime}}:</b> {{formatDateChild(modelItem.createTime)}}</p>
                         </div>
 
                     </div>

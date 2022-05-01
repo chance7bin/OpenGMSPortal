@@ -931,10 +931,10 @@ var createSpatialReference = Vue.extend({
                         loading.close();
                         if (result.code == "0") {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create spatiotemporal reference successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateSpatioTemporalReferenceSuccessfully +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',

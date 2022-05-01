@@ -2051,8 +2051,8 @@ var createModelItem = Vue.extend({
                             if(result.data.method==="update") {
                                 this.$confirm('<div style=\'font-size: 18px\'>Update model item successfully!</div>', 'Tip', {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',

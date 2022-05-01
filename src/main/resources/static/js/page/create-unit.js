@@ -1,5 +1,6 @@
 var createUnit =Vue.extend({
     template:"#createUnit",
+    props:['htmlJson'],
     data() {
         return {
             status:"Public",
@@ -27,58 +28,58 @@ var createUnit =Vue.extend({
                 insName: ""
             },
 
-            treeData: [
-                {
-                    id: 1,
-                    label: 'Unit & Metric',
-                    oid: '9a8680fe-ffd6-4e5a-959b-d0f157506cd3',
-                    children: [{
-                        id: 2,
-                        label: 'Acoustics',
-                        oid: '58d45317-6dfa-4615-94a7-b0549125e2b0'
-                    }, {
-                        id: 3,
-                        label: 'Atomic and Nuclear physics',
-                        oid: '143787c5-d011-468b-b319-66e9c941707b'
-                    }, {
-                        id: 4,
-                        label: 'Electricity and Magnetism',
-                        oid: 'eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2'
-                    }, {
-                        id: 5,
-                        label: 'Heat',
-                        oid: 'f82fcaa2-abde-4e85-8dd5-4e23270f8c60'
-                    }, {
-                        id: 6,
-                        label: 'Light',
-                        oid: '4c8f27b7-7f14-451b-907f-a7cf2eebd6f0'
-                    }, {
-                        id: 7,
-                        label: 'Mechanics',
-                        oid: '5fbe2a8f-64ac-4dd9-806b-b2a8166e1522'
-                    }, {
-                        id: 8,
-                        label: 'Nuclear',
-                        oid: 'f6710cbd-3158-49c0-994a-ef64c909c10e'
-                    }, {
-                        id: 9,
-                        label: 'Periodic',
-                        oid: '783bc5ce-55c5-48b0-ba5c-2313afac675a'
-                    }, {
-                        id: 10,
-                        label: 'Physical',
-                        oid: '6dad7da1-6b16-4851-994f-54a5a1153dfa'
-                    }, {
-                        id: 11,
-                        label: 'Solid',
-                        oid: 'e5c598d0-5a89-4ee5-9c91-3c78fc26d084'
-                    }, {
-                        id: 12,
-                        label: 'Time and Space',
-                        oid: '3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f'
-                    }]
-                }
-            ],
+            // treeData: [
+            //     {
+            //         id: 1,
+            //         label: 'Unit & Metric',
+            //         oid: '9a8680fe-ffd6-4e5a-959b-d0f157506cd3',
+            //         children: [{
+            //             id: 2,
+            //             label: 'Acoustics',
+            //             oid: '58d45317-6dfa-4615-94a7-b0549125e2b0'
+            //         }, {
+            //             id: 3,
+            //             label: 'Atomic and Nuclear physics',
+            //             oid: '143787c5-d011-468b-b319-66e9c941707b'
+            //         }, {
+            //             id: 4,
+            //             label: 'Electricity and Magnetism',
+            //             oid: 'eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2'
+            //         }, {
+            //             id: 5,
+            //             label: 'Heat',
+            //             oid: 'f82fcaa2-abde-4e85-8dd5-4e23270f8c60'
+            //         }, {
+            //             id: 6,
+            //             label: 'Light',
+            //             oid: '4c8f27b7-7f14-451b-907f-a7cf2eebd6f0'
+            //         }, {
+            //             id: 7,
+            //             label: 'Mechanics',
+            //             oid: '5fbe2a8f-64ac-4dd9-806b-b2a8166e1522'
+            //         }, {
+            //             id: 8,
+            //             label: 'Nuclear',
+            //             oid: 'f6710cbd-3158-49c0-994a-ef64c909c10e'
+            //         }, {
+            //             id: 9,
+            //             label: 'Periodic',
+            //             oid: '783bc5ce-55c5-48b0-ba5c-2313afac675a'
+            //         }, {
+            //             id: 10,
+            //             label: 'Physical',
+            //             oid: '6dad7da1-6b16-4851-994f-54a5a1153dfa'
+            //         }, {
+            //             id: 11,
+            //             label: 'Solid',
+            //             oid: 'e5c598d0-5a89-4ee5-9c91-3c78fc26d084'
+            //         }, {
+            //             id: 12,
+            //             label: 'Time and Space',
+            //             oid: '3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f'
+            //         }]
+            //     }
+            // ],
 
             defaultProps: {
                 children: 'children',
@@ -213,6 +214,13 @@ var createUnit =Vue.extend({
             itemInfoImage:''
         }
     },
+
+    computed:{
+        treeData(){
+            return this.htmlJson.treeData5;
+        }
+    },
+
     methods:{
         addLocalization(){
             this.languageAdd.show = true;
@@ -762,21 +770,21 @@ var createUnit =Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.cls.length == 0) {
                         new Vue().$message({
-                            message: 'Please select at least one classification!',
+                            message: this.htmlJson.noCLSTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#nameInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#descInput").val().trim() == ""){
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -885,10 +893,10 @@ var createUnit =Vue.extend({
                         loading.close();
                         if (result.code == "0") {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create unit successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+this.htmlJson.CreateUnitSuccessfully+'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',

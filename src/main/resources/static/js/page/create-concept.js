@@ -1,5 +1,6 @@
 var createConcept = Vue.extend({
     template: "#createConcept",
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -152,7 +153,7 @@ var createConcept = Vue.extend({
                 { value: 'zu', label: 'Zulu' },
             ],
 
-            treeData: [
+            /*treeData: [
                 {
                     id: 1,
                     "oid": "34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP",
@@ -915,7 +916,8 @@ var createConcept = Vue.extend({
                         }
                     ]
                 }
-            ],
+            ],*/
+
 
             defaultProps: {
                 children: 'children',
@@ -949,6 +951,19 @@ var createConcept = Vue.extend({
 
         }
     },
+
+    computed:{
+        treeData(){
+            return this.htmlJson.treeData3;
+        }
+        // treeData_part2(){
+        //     return this.htmlJson.treeData_part2;
+        // }
+        // htmlJSON(){
+        //     return this.htmlJson;
+        // }
+    },
+
     methods: {
 
         getLanguageList(){
@@ -1256,6 +1271,7 @@ var createConcept = Vue.extend({
             //cls
             this.cls = basicInfo.classifications;
             this.status = basicInfo.status;
+
             let ids = [];
             for (i = 0; i < this.cls.length; i++) {
                 for (j = 0; j < 2; j++) {
@@ -1744,7 +1760,7 @@ var createConcept = Vue.extend({
         $('#related').tagEditor({
             initialTags: this.related,
             forceLowercase: false,
-            placeholder: 'Enter keywords ...'
+            placeholder: this.htmlJson.EnterKeywords
         });
 
 
@@ -1833,10 +1849,10 @@ var createConcept = Vue.extend({
                         loading.close();
                         if (result.code == "0") {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create concept successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateConceptSuccessfully +'<div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -1886,10 +1902,10 @@ var createConcept = Vue.extend({
                         if (result.code === 0) {
                             this.deleteDraft()
                             if (result.data.method === "update") {
-                                this.$confirm('<div style=\'font-size: 18px\'>Update concept successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateConceptSuccessfully+ '</div>', this.htmlJson.Tip, {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',

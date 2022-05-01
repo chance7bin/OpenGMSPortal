@@ -61,7 +61,7 @@
                                  style="max-width: 1050px">
                             <div class="flexRowContainer flexColCenter">
                                 <div style="margin: 12px 20px 0 0">
-                                    <a href="../user/userSpace#/community"><i class="fa fa-arrow-left"></i>Back</a>
+                                    <a href="../user/userSpace#/community"><i class="fa fa-arrow-left"></i>{{htmlJson.userModel.Back}}</a>
                                 </div>
                                 <img class="square_40" style="margin-top: 10px"
                                      :src="getIcon()">
@@ -77,20 +77,20 @@
                                     <!--                                    </div>-->
                                     <div class="dropdown-menu flexDrop" aria-labelledby="dropdownMenu4" style="width: 215px; ">
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Concept & Semantic'?'active':''" @click="manageItem(1)">
-                                            <h4>Concept & Semantic</h4></div>
+                                            <h4>{{htmlJson.userCommunity.ConceptSemantic}}</h4></div>
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Spatial Reference'?'active':''" @click="manageItem(2)">
-                                            <h4>Spatial Reference</h4></div>
+                                            <h4>{{htmlJson.userCommunity.SpatialReference}}</h4></div>
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Data Template'?'active':''" @click="manageItem(3)">
-                                            <h4>Data Template</h4></div>
+                                            <h4>{{htmlJson.userCommunity.DataTemplate}}</h4></div>
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Unit & Metric'?'active':''" @click="manageItem(4)">
-                                            <h4>Unit & Metric</h4></div>
+                                            <h4>{{htmlJson.userCommunity.UnitMetric}}</h4></div>
                                         <div class="dropdown-divider"></div>
                                     </div>
                                 </div>
                                 <div class="flexRow flexColCenter" style="margin-top: 12px;margin-left: 10px;">
 
                                     <div class="searchContainer flexRow flexColCenter">
-                                        <input class="noBorderInput" placeholder="Search for ..." v-model="searchText" @keyup.enter="searchCommunity(1)">
+                                        <input class="noBorderInput" :placeholder="htmlJson.SearchFor" v-model="searchText" @keyup.enter="searchCommunity(1)">
                                     </div>
                                     <div class="flexCenter cursorPointer" style="padding: 8px" @click="searchCommunity(1)">
                                         <i class="fa fa-search" style="font-size: 18px;" ></i>
@@ -100,7 +100,7 @@
                             <!--                        <h5>You can manager your model and data here</h5>-->
                             <div class="btn btn-info btn-round btn-noShadow" style="margin-top: 20px"
                                  @click="creatItem(1)">
-                                create new <span><i class="fa fa-arrow-right"></i></span>
+                                {{htmlJson.userModel.createNew}} <span><i class="fa fa-arrow-right"></i></span>
                             </div>
                         </section>
                         <section class="flexRowContainer flexWrap listSection" style="max-width: 1050px">
@@ -113,26 +113,26 @@
                                     <span class="progress-span"></span>
                                 </div>
                             </div>
-                            <router-view v-if="!await" :search-result-raw="searchResult" @com-edit="editItem" @com-delete="deleteItem" @com-format="formatDate" >
+                            <router-view  :html-Json="htmlJson"  v-if="!await" :search-result-raw="searchResult" @com-edit="editItem" @com-delete="deleteItem" @com-format="formatDate" >
                                 <!--                        model item-->
                             </router-view>
                             <!--                        <model-item :searchResultRaw="searchResult"></model-item>-->
-                            <h4 style="margin:80px auto;color: #666666" v-if="searchResult.length==0&&!await">No Result Found ...</h4>
+                            <h4 style="margin:80px auto;color: #666666" v-if="searchResult.length==0&&!await">{{htmlJson.NoFound}}</h4>
                             <!--                        页码-->
                             <nav v-if="searchResult.length>0&&!await" class="flexCenter" style="width: 100%;position: relative"  aria-label="Page navigation example">
                                 <div class="flexCenter totalContainer">
-                                    <p class="noMargin">Total Num: </p>
+                                    <p class="noMargin">{{htmlJson.userModel.TotalNum}}: </p>
                                     <h5 style="margin: 0 0 1px 0">{{totalNum}}</h5>
                                 </div>
                                 <ul class="pagination pagination-circle pg-blue wzhPageControl flexJustAround">
                                     <li class="page-item" :class="curPage!=1?'':'disabled'" @click="changePage(1)"><a
                                             class="page-link"
-                                            style="border-radius: 10%;background-color: inherit">First</a></li>
+                                            style="border-radius: 10%;background-color: inherit">{{htmlJson.userModel.First}}</a></li>
                                     <li class="page-item " :class="curPage!=1?'':'disabled'"
                                         @click="changePage(curPage-1)">
                                         <a class="page-link" aria-label="Previous">
                                             <span aria-hidden="true" style="font-weight: 700;">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
+                                            <span class="sr-only">{{htmlJson.userModel.Previous}}}</span>
                                         </a>
                                     </li>
                                     <li class="page-item " :class="curPage==page?'active':''" v-for="page in pageList">
@@ -142,12 +142,12 @@
                                         @click="changePage(curPage+1)">
                                         <a class="page-link" aria-label="Next">
                                             <span aria-hidden="true" style="font-weight: 700;">&raquo;</span>
-                                            <span class="sr-only">Next</span>
+                                            <span class="sr-only">{{htmlJson.userModel.Next}}</span>
                                         </a>
                                     </li>
                                     <li class="page-item" :class="curPage!=totalPage?'':'disabled'"
                                         @click="changePage(totalPage)">
-                                        <a class="page-link">Last</a></li>
+                                        <a class="page-link">{{htmlJson.userModel.Last}}</a></li>
 
                                 </ul>
 
@@ -189,14 +189,14 @@
                     <div class="lineButton flexJustStart flexColCenter" @click="comEditItem(1,community.id)">
                         <i class="fa fa-edit" style="margin-right: 5px"></i>
                         <div class="lineButton flexCol">
-                            <p style="margin-block-end: 0">Edit</p>
+                            <p style="margin-block-end: 0">{{htmlJson.Edit}}</p>
                             <div class="hoverLine"></div>
                         </div>
                     </div>
                     <div class="btn btn-danger btn-round btn-noShadow waves-effect waves-light flexCenter"
                          @click="comDeleteItem(1,community.id)">
                         <i class="fa fa-trash-o"></i>
-                        <p>Delete</p>
+                        <p>{{htmlJson.Delete}}</p>
                     </div>
 
                 </div>
@@ -209,9 +209,9 @@
                     <div class="flexRow " style="width: 100%;">
                         <div class="content_w100" style="padding-top: 20px">
                             <p class="threeLine" style="word-break: break-all;">
-                                <b style="margin-right: 25px">Overview:</b>{{community.overview}}</p>
+                                <b style="margin-right: 25px">{{htmlJson.OverView}}:</b>{{community.overview}}</p>
                             <p>
-                                <b style="margin-right: 3px">Create Time:</b> {{formatDateChild(community.createTime)}}</p>
+                                <b style="margin-right: 3px">{{htmlJson.userModel.CreateTime}}:</b> {{formatDateChild(community.createTime)}}</p>
                         </div>
 
                     </div>

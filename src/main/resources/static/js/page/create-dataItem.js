@@ -1,5 +1,6 @@
 var createDataItem = Vue.extend({
     template: "#createDataItem",
+    props:['htmlJson'],
     data() {
         return {
 
@@ -303,10 +304,10 @@ var createDataItem = Vue.extend({
                             that.ctegorys = [];
                             //清空displays内容
                             that.data_img = [];
-                            this.$confirm('<div style=\'font-size: 18px\'>Create data item successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateDataItemSuccessfully +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -986,13 +987,13 @@ var createDataItem = Vue.extend({
             var content_box = $(this).parent().children('div');
             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
             str += user_num;
-            str += "' href='javascript:;'> NEW </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW + " </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
             str += user_num;
             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                 "                                                                                                    <div>\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Name:\n" +
+                that.htmlJson.authorshipPart.NEW + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1003,7 +1004,18 @@ var createDataItem = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Email:\n" +
+                that.htmlJson.authorshipPart.Affiliation + ":\n" +
+                "                                                                                                        </lable>\n" +
+                "                                                                                                        <div class='input-group col-sm-10'>\n" +
+                "                                                                                                            <input type='text'\n" +
+                "                                                                                                                   name=\"ins\"\n" +
+                "                                                                                                                   class='form-control'>\n" +
+                "                                                                                                        </div>\n" +
+                "                                                                                                    </div>\n" +
+                "                                                                                                    <div style=\"margin-top:10px\">\n" +
+                "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
+                "                                                                                                               style='font-weight: bold;'>\n" +
+                that.htmlJson.authorshipPart.Email + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1014,7 +1026,7 @@ var createDataItem = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Homepage:\n" +
+                that.htmlJson.authorshipPart.Homepage + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
