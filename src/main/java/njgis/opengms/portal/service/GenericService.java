@@ -22,7 +22,6 @@ import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -979,6 +978,13 @@ public class GenericService {
 
         return queryResult;
 
+    }
+
+    //4b7abd4c-44dd-4ec7-b03b-07c6a7f3b5da?language=zh-cn => 4b7abd4c-44dd-4ec7-b03b-07c6a7f3b5da
+    public String formatId(String id){
+        if (id.contains("?"))
+            id = (id.split("\\?"))[0];
+        return id;
     }
 
 }

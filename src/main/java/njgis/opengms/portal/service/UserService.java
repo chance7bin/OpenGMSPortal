@@ -302,8 +302,9 @@ public class UserService {
             // role暂时没有，先注释调
             // result.put("role",user.getUserRole().getRole());
 
+            // TODO: 2022/5/4 这边很慢，怎么加速
             //更新该用户的资源数量
-            updateAllResourceCount(j_userShuttleDTO.getString("email"));
+            // updateAllResourceCount(j_userShuttleDTO.getString("email"));
 
             return j_userShuttleDTO;
         }catch (Exception e){

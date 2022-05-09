@@ -8,6 +8,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.TaskService;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.dom4j.DocumentException;
@@ -36,6 +37,9 @@ public class TaskController {
     @Autowired
     ComputableModelDao computableModelDao;
 
+    @Autowired
+    GenericService genericService;
+
     @LoginRequired
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     ModelAndView getTask(@PathVariable("id") String id) {
@@ -60,6 +64,9 @@ public class TaskController {
     @ApiOperation(value = "Task初始化API，获取模型描述信息，State信息，task以及Dx相关信息 [ /TaskInit/{id} ]")
     @RequestMapping(value = "/init/{id}", method = RequestMethod.GET)
     public JsonResult initTask(@PathVariable("id") String id, HttpServletRequest request){
+
+        id = genericService.formatId(id);
+
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
 //        String email = "opengms@126.com";
@@ -85,7 +92,10 @@ public class TaskController {
     @RequestMapping(value = "/invoke", method = RequestMethod.POST)
     public JsonResult invoke(@RequestBody JSONObject lists, HttpServletRequest request) {
 
-         HttpSession session = request.getSession();
+        String oid = genericService.formatId(lists.getString("oid"));
+        lists.put("oid",oid);
+
+        HttpSession session = request.getSession();
          String email = session.getAttribute("email").toString();
 //        String email = "opengms@126.com";
         return taskService.handleInvoke(lists, email);

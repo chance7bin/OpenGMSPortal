@@ -1185,6 +1185,7 @@ var vue = new Vue({
                             type: 'text/plain',
                         });
                         //上传文件
+                        console.log("content:",content);
                         this.uploadToDataContainer(file, event);
 
                     }
@@ -2208,7 +2209,14 @@ var vue = new Vue({
                 }
             }
 
+            // console.log("1 this.info.modelInfo.states:",states);
+
             this.createAndUploadParamFile();
+
+            // console.log("2 this.info.modelInfo.states1:",states);
+
+            // return;
+
             let prepare = setInterval(() => {
                 let prepared = true;
 
@@ -2246,7 +2254,7 @@ var vue = new Vue({
 
                 if (prepared) {
                     clearInterval(prepare);
-                    console.log(this.modelInEvent)
+                    // console.log(this.modelInEvent)
                     loading.close();
                     this.taskRunning = true
 
