@@ -1,5 +1,6 @@
 new Vue({
     el: '#userPage',
+    props:['htmlJson'],
 
     components: {
         'avatar': VueAvatar.Avatar
@@ -437,7 +438,7 @@ new Vue({
             axios.get("/user/load").then(
                 res => {
                     if(res.data.oid==''){
-                        this.$alert('Please login first', 'Tip', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                 type:"warning",
                                 confirmButtonText: 'OK',
                                 callback: ()=>{
@@ -1453,7 +1454,7 @@ new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -1498,7 +1499,7 @@ new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -1543,7 +1544,7 @@ new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -1588,7 +1589,7 @@ new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -2233,7 +2234,7 @@ new Vue({
                 },
                 success:(json)=>{
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -2328,7 +2329,7 @@ new Vue({
                 },
                 success:(json)=>{
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -2372,7 +2373,7 @@ new Vue({
                 },
                 success:(json)=>{
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -2414,7 +2415,7 @@ new Vue({
                 },
                 success:(json)=>{
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else {
                         const data = json.data;
@@ -2462,7 +2463,7 @@ new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if(json.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -3154,7 +3155,7 @@ new Vue({
                     async: true,
                     success: (res) => {
                         if(res.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -3819,7 +3820,7 @@ new Vue({
                     async:true,
                 success:(json)=>{
                     if (json.code == -1) {
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.location.href = "/user/login"
                     } else {
                         that.getUserInfo();

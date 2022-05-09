@@ -1,5 +1,6 @@
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -478,12 +479,12 @@ var vue = new Vue({
                     console.log(this.themeModelData[0],this.edit_themeObj)
                     this.$message({
                         type: 'success',
-                        message: 'Removed successfully!'
+                        message: this.htmlJson.RemovedSuccessfully
                     });
                 }).catch(()=>{
                     this.$message({
                         type: 'info',
-                        message: 'Remove cancel!'
+                        message: this.htmlJson.RemoveCancel
                     });
 
                 })
@@ -521,12 +522,12 @@ var vue = new Vue({
                     console.log(this.themeData[0],this.edit_themeObj)
                     this.$message({
                         type: 'success',
-                        message: 'Removed successfully!'
+                        message: this.htmlJson.RemovedSuccessfully
                     });
                 }).catch(()=>{
                     this.$message({
                         type: 'info',
-                        message: 'Remove cancel!'
+                        message: this.htmlJson.RemoveCancel
                     });
 
                 })
@@ -564,12 +565,12 @@ var vue = new Vue({
                     console.log(this.themeDataMethod[0],this.edit_themeObj)
                     this.$message({
                         type: 'success',
-                        message: 'Removed successfully!'
+                        message: this.htmlJson.RemovedSuccessfully
                     });
                 }).catch(()=>{
                     this.$message({
                         type: 'info',
-                        message: 'Remove cancel!'
+                        message: this.htmlJson.RemoveCancel
                     });
 
                 })
@@ -934,7 +935,7 @@ var vue = new Vue({
             if(this.editThemeName.replace(/\s+/g,"")==""){
                 this.$message(
                     {
-                        message:"Please enter an available name!",
+                        message:this.htmlJson.PleaseEnterAnAvailableName,
                         type:"warning"
                     })
             }
@@ -1031,7 +1032,7 @@ var vue = new Vue({
                         if(result.data.method==="update") {
                             // alert("Update Success");
                             that.$message({
-                                message : 'Update Success',
+                                message : this.htmlJson.UpdateSuccess,
                                 type: 'success'});
                             $("#editModal", parent.document).remove();
                             that.dialogVisible3 = false;
@@ -1042,7 +1043,7 @@ var vue = new Vue({
                             // window.location.href = "/repository/theme/" + result.data.id;
                         }
                         else{
-                            this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                            this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
                                 type:"success",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1057,7 +1058,7 @@ var vue = new Vue({
                         }
                     }
                     else if(result.code==-2){
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         // window.location.href="/user/login";
                     }
                     else{
@@ -1067,7 +1068,7 @@ var vue = new Vue({
                 error:function(){
 
                     _this.$message({
-                        message: 'Failure to update,Please login first!',
+                        message: this.htmlJson.LoginInFirst,
                         type: 'warning'
                     });
                     setTimeout(() => {

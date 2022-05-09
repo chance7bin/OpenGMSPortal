@@ -1,5 +1,6 @@
 var distributedNode = Vue.extend({
     template:"#distributedNode",
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -97,7 +98,7 @@ var distributedNode = Vue.extend({
                     data = JSON.parse(data);
                     console.log(data);
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;

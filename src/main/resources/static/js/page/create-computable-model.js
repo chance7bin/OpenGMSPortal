@@ -984,7 +984,7 @@ var createComputableModel = Vue.extend({
                     console.log(data);
 
                     if (data.email == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -1045,7 +1045,7 @@ var createComputableModel = Vue.extend({
             crossDomain:true,
             success: (data) => {
                 if (data.email == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else{
@@ -1470,7 +1470,7 @@ var createComputableModel = Vue.extend({
 
                     }
                 }).fail((res) => {
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {

@@ -1,6 +1,7 @@
 var userDataVisualApplication = Vue.extend(
     {
         template: "#userDataVisualApplication",
+        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制
@@ -225,15 +226,15 @@ var userDataVisualApplication = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code == -1) {
-                                alert("Please log in first!")
+                                alert(this.htmlJson.LoginInFirst)
                             } else {
                                 if (json.data == 1) {
-                                    this.$alert("delete successfully!")
+                                    this.$alert(this.htmlJson.DeleteSuccess)
                                     this. getDataItems();
                                 } else if(json.data == -1) {
-                                    this.$alert("delete failed!")
+                                    this.$alert(this.htmlJson.DeleteFailed)
                                 }else
-                                    this.$alert("please refresh the page!")
+                                    this.$alert(this.htmlJson.RefreshPage)
                             }
                         }
                     })
@@ -313,7 +314,7 @@ var userDataVisualApplication = Vue.extend(
                         // data = JSON.parse(data);
                         console.log(data);
                         if (data.oid == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.oid;

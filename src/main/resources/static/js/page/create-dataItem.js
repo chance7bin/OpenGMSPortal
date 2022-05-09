@@ -28,6 +28,7 @@ var createDataItem = Vue.extend({
                 insName: ""
             },
 
+            treetrans: [],
             classif: [],
             active: 0,
             categoryTree: [],
@@ -95,6 +96,7 @@ var createDataItem = Vue.extend({
             imageExist:false,
         }
     },
+
     methods: {
         changeRter(index){
             this.curIndex = index;
@@ -354,7 +356,7 @@ var createDataItem = Vue.extend({
                                     }
                                 }
                                 else if(result.data.code==-2){
-                                    alert("Please login first!");
+                                    alert(this.htmlJson.LoginInFirst);
                                     window.location.href="/user/login";
                                 }
                                 else{
@@ -455,62 +457,100 @@ var createDataItem = Vue.extend({
                 this.$refs.userDataSpace.getFilePackage();
             })
         },
+
+        classificationShow(){
+            var tha = this;
+            tha.id = this.$route.params.editId;
+
+            this.classif = [];
+            $("#classification").val('');
+
+            axios.get("/dataItem/categoryTree")
+                .then(res => {
+                    tha.tObj = res.data.data;
+                    tree = [];
+                    for (let i in Object.values(tha.tObj)){
+                        let grandpa = Object.values(tha.tObj)[i];
+                        // let grandpa = tha.tObj[i];
+                        for (let j in Object.values(Object.values(grandpa))){
+                            let father = Object.values(grandpa)[j];
+                            let gChildren=[];
+                            for (let k in Object.values((Object.values(father)))){
+                                let son = Object.values(Object.values((father)[k]));
+                                let sons = son[0];
+                                let children = [];
+                                for (let ii=0;ii<sons.length;ii++){
+                                    let child = {
+                                        label : Object.keys(sons[ii])[0],
+                                        id:Object.values(sons[ii])[0]
+                                    }
+
+                                    if (treetrans[child.label] != undefined){
+                                        child.label = treetrans[child.label];
+                                    }
+
+                                    // console.log('child.label',child.label)
+
+                                    if (child.label!="all"){
+                                        children.push(child);
+                                    }
+                                }
+                                var s = {
+                                    label:Object.keys(father[k])[0],
+                                    children:children,
+                                }
+
+                                if (treetrans[s.label] != undefined){
+                                    s.label = treetrans[s.label];
+                                }
+
+                                // console.log('s.label',s.label)
+
+                                if(s.label!="all"){
+                                    gChildren.push(s)
+                                }
+                            }
+
+                            let g = {
+                                label:Object.keys(grandpa)[0],
+                                children:gChildren,
+                            }
+
+                            if (treetrans[g.label] != undefined){
+                                g.label = treetrans[g.label];
+                            }
+
+                            // console.log('g.label',g.label)
+
+
+                            ;
+                            tree.push(g);
+                        }
+                    }
+                    // console.log("treeData:",tree);
+                    tha.treeData = tree;
+                })
+        }
     },
+
+    watch:{
+        //     // 中英文切换
+        htmlJson:{
+            handler:function (val) {
+                treetrans = val.tree7
+                this.classificationShow()
+                }
+            },
+            immediate:true
+    },
+
     mounted() {
         //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
         this.sendcurIndexToParent();
 
+        treetrans = this.htmlJson.tree7
+        this.classificationShow();
 
-        var tha = this;
-        tha.id = this.$route.params.editId;
-
-        this.classif = [];
-        $("#classification").val('');
-
-        axios.get("/dataItem/categoryTree")
-            .then(res => {
-                tha.tObj = res.data.data;
-                let tree = [];
-                for (let i in Object.values(tha.tObj)){
-                    // console.log(grandpa);
-                    let grandpa = Object.values(tha.tObj)[i];
-                    // let grandpa = tha.tObj[i];
-                    for (let j in Object.values(Object.values(grandpa))){
-                        let father = Object.values(grandpa)[j];
-                        let gChildren=[];
-                        for (let k in Object.values((Object.values(father)))){
-                            let son = Object.values(Object.values((father)[k]));
-                            let sons = son[0];
-                            let children = [];
-                            for (let ii=0;ii<sons.length;ii++){
-                                let child = {
-                                    label : Object.keys(sons[ii])[0],
-                                    id:Object.values(sons[ii])[0]
-                                }
-
-                                if (child.label!="all"){
-                                    children.push(child);
-                                }
-                            }
-                            var s = {
-                                label:Object.keys(father[k])[0],
-                                children:children,
-                            }
-                            if(s.label!="all"){
-                                gChildren.push(s)
-                            }
-                        }
-
-                        let g = {
-                            label:Object.keys(grandpa)[0],
-                            children:gChildren,
-                        }
-                        ;
-                        tree.push(g);
-                    }
-                }
-                tha.treeData = tree;
-            })
         var that = this;
 
         $(".step2").steps({
@@ -518,13 +558,13 @@ var createDataItem = Vue.extend({
             onFinish: function () {
                 alert('complete');
             },
-            onChange: function (currentIndex, newIndex, stepDirection) {
+            onChange: (currentIndex, newIndex, stepDirection) => {
 
                 if (currentIndex === 0) {
                     if (stepDirection === "forward") {
                         if ($("#dataname").val().length == 0 || that.clsStr.length == 0) {
                             new Vue().$message({
-                                message: 'Please complete data information!',
+                                message: this.htmlJson.CompleteDataInformation,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -542,7 +582,7 @@ var createDataItem = Vue.extend({
                     if (stepDirection === "forward") {
                         if ($("#description").val().length == 0) {
                             new Vue().$message({
-                                message: 'Please complete data\'s description!',
+                                message: this.htmlJson.CompleteDataDescription,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -586,7 +626,7 @@ var createDataItem = Vue.extend({
                     console.log(data);
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -637,7 +677,7 @@ var createDataItem = Vue.extend({
             success: (data) => {
                 console.log(data);
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else {
@@ -655,7 +695,7 @@ var createDataItem = Vue.extend({
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
 
             // $("#title").text("Create Model Item")
-            $("#subRteTitle").text("/Create Data Item")
+            $("#subRteTitle").text("/"+this.htmlJson.CreateDataItem)
             $("#keywords").tagEditor('destory');
             $("#keywords").tagEditor({
                 forceLowercase: false,
@@ -710,7 +750,7 @@ var createDataItem = Vue.extend({
             axios.get('/dataItem/itemInfo/'+oid).then(res=>{
                 const resData = res.data
                 if(resData.code==-1){
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }else if(resData.data.noResult!=1){
                     let data = resData.data.result;
@@ -832,6 +872,12 @@ var createDataItem = Vue.extend({
                 }
             )
             // window.sessionStorage.setItem("editModelItem_id", "");
+        }
+
+        if (this.editType == 'create'){
+            $("#subRteTitle").text("/" + this.htmlJson.CreateDataItem1);
+        } else {
+            $("#subRteTitle").text("/" + this.htmlJson.ModifyDataItem1);
         }
 
         $("#step").steps({

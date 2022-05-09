@@ -1,5 +1,6 @@
 var data_items = new Vue({
     el:"#data_applications",
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -213,7 +214,7 @@ var data_items = new Vue({
         },
         contribute(){
             if(this.useroid==''){
-                alert("Please login");
+                alert(this.htmlJson.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 window.location.href="/user/userSpace#/data/createDataApplication";

@@ -623,7 +623,7 @@ var createLogicalModel = Vue.extend({
                     console.log(data);
 
                     if (data.oid == "") {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -854,7 +854,7 @@ var createLogicalModel = Vue.extend({
 
                             break;
                         case -1:
-                            this.$alert('Save files error!', 'Error', {
+                            this.$alert(this.htmlJson.SaveFilesError, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -863,7 +863,7 @@ var createLogicalModel = Vue.extend({
                             });
                             break;
                         case -2:
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -873,7 +873,7 @@ var createLogicalModel = Vue.extend({
                             break;
                     }
                 }).fail(function (res) {
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -907,7 +907,7 @@ var createLogicalModel = Vue.extend({
                         //返回包含code表示出错
                         if(typeof(res.data.code) !== "undefined"){
                             console.log("aaaaaa")
-                            this.$alert('failed!', 'Error', {
+                            this.$alert(this.htmlJson.failed, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -940,7 +940,7 @@ var createLogicalModel = Vue.extend({
                                 // that.getnoticeNum(that.logicalModel_oid);
                                 // let params = that.message_num_socket;
                                 // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, this.htmlJson.Success, {
                                     type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -1010,7 +1010,7 @@ var createLogicalModel = Vue.extend({
                     //     }
                     // }
                     else{
-                        this.$alert(res.msg, 'Error', {
+                        this.$alert(res.msg, this.htmlJson.Error, {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1019,7 +1019,7 @@ var createLogicalModel = Vue.extend({
                         });
                     }
                 }).fail(function (res) {
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {

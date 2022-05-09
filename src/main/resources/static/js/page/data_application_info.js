@@ -1,5 +1,6 @@
 var data_application_info = new Vue({
     el: '#data_application_info',
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -60,13 +61,13 @@ var data_application_info = new Vue({
             if(this.useroid==""||this.useroid==null||this.useroid==undefined){
                 this.$message({
                     dangerouslyUseHTMLString: true,
-                    message: '<strong>Please <a href="/user/login">log in</a> first.</strong>',
+                    message: '<strong>'+ this.htmlJson.Please +' <a href="/user/login">'+this.htmlJson.login+'</a></strong>',
                     offset: 40,
                     showClose: true,
                 });
             }else if(this.commentText.trim()==""){
                 this.$message({
-                    message: 'Comment can not be empty!',
+                    message: this.htmlJson.CommentCanNotBeEmpty,
                     offset: 40,
                     showClose: true,
                 });
@@ -97,7 +98,7 @@ var data_application_info = new Vue({
                         }else if (result.code == 0) {
                             this.commentText = "";
                             this.$message({
-                                message: 'Comment submitted successfully!',
+                                message: this.htmlJson.CommentSubmittedSuccessfully,
                                 type: 'success',
                                 offset: 40,
                                 showClose: true,
@@ -105,7 +106,7 @@ var data_application_info = new Vue({
                             // this.getComments();
                         } else {
                             this.$message({
-                                message: 'Submit Error!',
+                                message: this.htmlJson.SubmitError,
                                 type: 'error',
                                 offset: 40,
                                 showClose: true,
@@ -133,7 +134,7 @@ var data_application_info = new Vue({
                     }else if (result.code == 0) {
                         this.commentText = "";
                         this.$message({
-                            message: 'Comment deleted successfully!',
+                            message: this.htmlJson.CommentDeletedSuccessfully,
                             type: 'success',
                             offset: 40,
                             showClose: true,
@@ -141,7 +142,7 @@ var data_application_info = new Vue({
                         // this.getComments();
                     } else {
                         this.$message({
-                            message: 'Delete Error!',
+                            message: this.htmlJson.DeleteError,
                             type: 'error',
                             offset: 40,
                             showClose: true,
@@ -253,7 +254,7 @@ var data_application_info = new Vue({
 
             }else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message('please select file first!!');
+                this.$message(this.htmlJson.PleaseSelectFileFirst);
             }
         },
         //批量下载还有问题，待修改
@@ -292,7 +293,7 @@ var data_application_info = new Vue({
                 link.click();
 
             }else {
-                this.$message('please select file first!!');
+                this.$message(this.htmlJson.PleaseSelectFileFirst);
             }
 
 
@@ -433,7 +434,7 @@ var data_application_info = new Vue({
                     //根据当前节点在线状态链接页面
                     if (this.methodsData[i].onlineStatus === 'offline'){
                         this.$message({
-                            message: 'Sorry, Service Offline !',
+                            message: this.htmlJson.ServiceOffline,
                             type: 'error',
                         })
                     }else {
@@ -450,7 +451,7 @@ var data_application_info = new Vue({
             if(this.useroid==""||this.useroid==null||this.useroid==undefined){
                 this.$message({
                     dangerouslyUseHTMLString: true,
-                    message: '<strong>Please <a href="/user/login">log in</a> first.</strong>',
+                    message: '<strong>'+ this.htmlJson.Please +' <a href="/user/login">'+this.htmlJson.login+'</a></strong>',
                     offset: 40,
                     showClose: true,
                 });

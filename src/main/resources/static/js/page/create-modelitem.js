@@ -441,7 +441,7 @@ var createModelItem = Vue.extend({
 
             if (this.languageAdd.local.label == undefined) {
                 this.$message({
-                    message: 'Please selcet a language!',
+                    message: this.htmlJson.PleaseSelectALanguage,
                     type: 'warning'
                 });
                 return;
@@ -450,7 +450,7 @@ var createModelItem = Vue.extend({
                 let localization = this.localizationList[i];
                 if (localization.localName == this.languageAdd.local.label) {
                     this.$message({
-                        message: 'This language already exists!',
+                        message: this.htmlJson.ThisLanguageAlreadyExists,
                         type: 'warning'
                     });
                     return;
@@ -494,7 +494,7 @@ var createModelItem = Vue.extend({
 
                 this.$message({
                     type: 'success',
-                    message: 'Delete ' + row.localName + ' successfully!',
+                    message: this.htmlJson.Delete + row.localName + this.htmlJson.successfully,
                 });
             }).catch(() => {
 
@@ -1054,7 +1054,7 @@ var createModelItem = Vue.extend({
         //reference
         searchDoi(){
             if(this.doi == ''){
-                this.$alert('Please input the DOI', 'Tip', {
+                this.$alert(this.htmlJson.PleaseInputTheDOI, this.htmlJson.Tip, {
                         type:"warning",
                         confirmButtonText: 'OK',
                         callback: ()=>{
@@ -1082,7 +1082,7 @@ var createModelItem = Vue.extend({
                     async: true,
                     success: (res) => {
                         if(res.code==-1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1093,7 +1093,7 @@ var createModelItem = Vue.extend({
                         data=res.data;
                         this.doiLoading = false;
                         if (data.find == -1) {
-                            this.$alert('Failed to connect, please try again!', 'Tip', {
+                            this.$alert(this.htmlJson.FailedToConnectPleaseTryAgain, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -1102,7 +1102,7 @@ var createModelItem = Vue.extend({
                                 }
                             );
                         }else if(data.find==0){
-                            this.$alert('Find no result, check the DOI you have input or fill information manually.', 'Tip', {
+                            this.$alert(this.htmlJson.FindNoResultCheckTheDOIYouHaveInputOrFillInformationManually, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -1125,7 +1125,7 @@ var createModelItem = Vue.extend({
                     error: (data) => {
                         this.doiLoading = false;
                         $("#doi_searchBox").removeClass("spinner")
-                        this.$alert('Failed to connect, please try again!', 'Tip', {
+                        this.$alert(this.htmlJson.FailedToConnectPleaseTryAgain, this.htmlJson.Tip, {
                                 type:"warning",
                                 confirmButtonText: 'OK',
                                 callback: ()=>{
@@ -1145,7 +1145,7 @@ var createModelItem = Vue.extend({
             var tags = $('#refAuthor').tagEditor('getTags')[0].tags;
             for (i = 0; i < tags.length; i++) { $('#articleAuthor').tagEditor('removeTag', tags[i]); }
             if(tags.length<1||$("#refTitle").val()==''){
-                this.$alert('Please enter the Title and at least one Author.', 'Tip', {
+                this.$alert(this.htmlJson.PleaseEnterTheTitleAndAtLeastOneAuthor, this.htmlJson.Tip, {
                         type:"warning",
                         confirmButtonText: 'OK',
                         callback: ()=>{
@@ -1571,7 +1571,7 @@ var createModelItem = Vue.extend({
                     console.log(data);
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -1631,7 +1631,7 @@ var createModelItem = Vue.extend({
                 // data=JSON.parse(data);
                 console.log(data);
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else {
@@ -1759,14 +1759,14 @@ var createModelItem = Vue.extend({
                 else if (currentIndex === 1 && stepDirection === "forward") {
                     if ($("#nameInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#descInput").val().trim() == ""){
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -2004,7 +2004,7 @@ var createModelItem = Vue.extend({
                             });
                         }
                         else if(result.code==-1){
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -2014,7 +2014,7 @@ var createModelItem = Vue.extend({
 
                         }
                         else{
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -2077,7 +2077,7 @@ var createModelItem = Vue.extend({
                                 // that.getnoticeNum(that.modelitem_oid);
                                 // let params = that.message_num_socket;
                                 // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
                                     type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -2087,7 +2087,7 @@ var createModelItem = Vue.extend({
                             }
                         }
                         else if(result.code==-2){
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {

@@ -51,13 +51,13 @@
                                  style="max-width: 1050px">
                             <div class="flexRowContainer flexColCenter">
                                 <div style="margin: 12px 20px 0 0">
-                                    <a href="../user/userSpace#/data"><i class="fa fa-arrow-left"></i>Back</a>
+                                    <a href="../user/userSpace#/data"><i class="fa fa-arrow-left"></i>{{htmlJson.Back}}</a>
                                 </div>
                                 <i class="fa fa-database" style="margin-top: 7px; font-size: 40px;color: #05c4ff;" ></i>
-                                <h3 style="margin-left: 10px" >Data Processing Application</h3>
+                                <h3 style="margin-left: 10px" >{{htmlJson.DataProcessingApplication}}</h3>
                                 <div class="flexRow flexColCenter" style="margin-top: 12px;margin-left: 10px;">
                                     <div class="searchContainer flexRow flexColCenter">
-                                        <input class="noBorderInput" placeholder="Search for ..." v-model="searchText" @keyup.enter="searchItems(1)">
+                                        <input class="noBorderInput" :placeholder="htmlJson.SearchFor" v-model="searchText" @keyup.enter="searchItems(1)">
                                     </div>
                                     <div class="flexCenter cursorPointer" style="padding: 8px" @click="searchItems(1)">
                                         <i class="fa fa-search" style="font-size: 18px;" ></i>
@@ -66,8 +66,7 @@
                             </div>
                             <!--                        <h5>You can manager your model and data here</h5>-->
                             <div class="btn btn-info btn-round btn-noShadow" style="margin-top: 20px"
-                                 @click="creatItem(21)">
-                                create new <span><i class="fa fa-arrow-right"></i></span>
+                                 @click="creatItem(21)">{{htmlJson.CreateNew}}<span><i class="fa fa-arrow-right"></i></span>
                             </div>
                         </section>
                         <section class="flexRowContainer flexWrap listSection" style="max-width: 1050px">
@@ -100,14 +99,14 @@
                                         <div class="lineButton flexJustStart flexColCenter" @click="editItem(1,dataPro.id)">
                                             <i class="fa fa-edit" style="margin-right: 5px"></i>
                                             <div class="lineButton flexCol">
-                                                <p style="margin-block-end: 0">Edit</p>
+                                                <p style="margin-block-end: 0">{{htmlJson.userModel.Edit}}</p>
                                                 <div class="hoverLine"></div>
                                             </div>
                                         </div>
                                         <div class="btn btn-danger btn-round btn-noShadow waves-effect waves-light flexCenter"
                                              @click="deleteItem(dataPro.id)">
                                             <i class="fa fa-trash-o"></i>
-                                            <p>Delete</p>
+                                            <p>{{htmlJson.userModel.Delete}}</p>
                                         </div>
 
                                     </div>
@@ -121,13 +120,13 @@
                                             <div class="content_w100" style="padding-top: 21px">
                                                 <div class="flexJustStart flexAlignStrench overviewContainer">
                                                     <div>
-                                                        <b style="margin-right: 25px;">Overview:</b>
+                                                        <b style="margin-right: 25px;word-break:keep-all">{{htmlJson.Overview}}:</b>
                                                     </div>
                                                     <div>
                                                         <p class="threeLine" style="">{{dataPro.overview}}</p>
                                                     </div>
                                                 </div>
-                                                <p><b style="margin-right: 3px">Create Time:</b> {{formatDate(dataPro.createTime)}}</p>
+                                                <p><b style="margin-right: 3px">{{htmlJson.CreateTime}}:</b> {{formatDate(dataPro.createTime)}}</p>
                                             </div>
 
                                         </div>
@@ -136,19 +135,19 @@
                                 </div>
                             </div>
 
-                            <h4 style="margin:80px auto;color: #666666" v-if="searchResult.length==0&&!await ">No Result Found ...</h4>
+                            <h4 style="margin:80px auto;color: #666666" v-if="searchResult.length==0&&!await ">{{htmlJson.NoFound}}</h4>
 
                             <!--                        页码-->
                             <nav v-if="searchResult.length>0&&!await" aria-label="Page navigation example">
                                 <ul class="pagination pagination-circle pg-blue wzhPageControl">
                                     <li class="page-item" :class="curPage!=1?'':'disabled'" @click="changePage(1)"><a
                                             class="page-link"
-                                            style="border-radius: 10%;background-color: inherit">First</a></li>
+                                            style="border-radius: 10%;background-color: inherit">{{htmlJson.userModel.First}}</a></li>
                                     <li class="page-item " :class="curPage!=1?'':'disabled'"
                                         @click="changePage(curPage-1)">
                                         <a class="page-link" aria-label="Previous">
                                             <span aria-hidden="true" style="font-weight: 700;">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
+                                            <span class="sr-only">{{htmlJson.userModel.Previous}}</span>
                                         </a>
                                     </li>
                                     <li class="page-item " :class="curPage==page?'active':''" v-for="page in pageList">
@@ -158,12 +157,12 @@
                                         @click="changePage(curPage+1)">
                                         <a class="page-link" aria-label="Next">
                                             <span aria-hidden="true" style="font-weight: 700;">&raquo;</span>
-                                            <span class="sr-only">Next</span>
+                                            <span class="sr-only">{{htmlJson.userModel.Next}}</span>
                                         </a>
                                     </li>
                                     <li class="page-item" :class="curPage!=totalPage?'':'disabled'"
                                         @click="changePage(totalPage)">
-                                        <a class="page-link">Last</a></li>
+                                        <a class="page-link">{{htmlJson.userModel.Last}}</a></li>
                                 </ul>
                             </nav>
                         </section>
@@ -188,7 +187,7 @@
 <script src="/static/js/common/vue-router.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
 <script src="/static/element-ui/index.js"></script>
-<script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery.tag-For.js"></script>
 <script src="/static/js/common/bootstrap-tagsinput.js"></script>
 <script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script th:replace="fragments/newSideBar :: headSideBar"></script>

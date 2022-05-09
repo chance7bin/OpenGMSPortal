@@ -77,13 +77,13 @@
                                     <!--                                    </div>-->
                                     <div class="dropdown-menu flexDrop" aria-labelledby="dropdownMenu4" style="width: 215px; ">
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Concept & Semantic'?'active':''" @click="manageItem(1)">
-                                            <h4>{{htmlJson.userCommunity.ConceptSemantic}}</h4></div>
+                                            <h4>{{htmlJson.ConceptSemantic}}</h4></div>
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Spatial Reference'?'active':''" @click="manageItem(2)">
-                                            <h4>{{htmlJson.userCommunity.SpatialReference}}</h4></div>
+                                            <h4>{{htmlJson.SpatialReference}}</h4></div>
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Data Template'?'active':''" @click="manageItem(3)">
-                                            <h4>{{htmlJson.userCommunity.DataTemplate}}</h4></div>
+                                            <h4>{{htmlJson.DataTemplate}}</h4></div>
                                         <div class="dropdown-item cursorPointer" :class="itemTitle == 'Unit & Metric'?'active':''" @click="manageItem(4)">
-                                            <h4>{{htmlJson.userCommunity.UnitMetric}}</h4></div>
+                                            <h4>{{htmlJson.UnitMetric}}</h4></div>
                                         <div class="dropdown-divider"></div>
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@
                             <p class="threeLine" style="word-break: break-all;">
                                 <b style="margin-right: 25px">{{htmlJson.OverView}}:</b>{{community.overview}}</p>
                             <p>
-                                <b style="margin-right: 3px">{{htmlJson.userModel.CreateTime}}:</b> {{formatDateChild(community.createTime)}}</p>
+                                <b style="margin-right: 3px">{{htmlJson.CreateTime}}:</b> {{formatDateChild(community.createTime)}}</p>
                         </div>
 
                     </div>

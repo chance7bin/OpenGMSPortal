@@ -1,5 +1,6 @@
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     data() {
             return {
                 ScreenMinHeight: 400,
@@ -105,7 +106,7 @@ var vue = new Vue({
                             this.loading = false;
                         }, 100)
                     } else {
-                        this.$alert('Please try again', 'Warning', {
+                        this.$alert(this.htmlJson.ErrorPleaseTryAgain, 'Warning', {
                             confirmButtonText: 'OK',
                             callback: action => {
                                 this.loading = false;
@@ -140,7 +141,7 @@ var vue = new Vue({
                         }, 150)
 
                     } else {
-                        this.$alert('Please try again', 'Warning', {
+                        this.$alert(this.htmlJson.ErrorPleaseTryAgain, 'Warning', {
                             confirmButtonText: 'OK',
                             callback: action => {
                                 this.loading = false;
@@ -235,7 +236,7 @@ var vue = new Vue({
                 $("#eventInp_" + this.eventChoosing.eventId).val(this.eventChoosing.tag + this.eventChoosing.suffix);
                 $("#download_" + this.eventChoosing.eventId).css("display", "block");
             } else {
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
 
         },
@@ -253,10 +254,10 @@ var vue = new Vue({
             this.taskConfigurationLoading = true
             let {data} = await (await fetch("/task/init/" + model.oid)).json();
             if (data == null || data == undefined) {
-                this.$alert('Initialization failure: an error occured on the server.<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Error', {
+                this.$alert(this.htmlJson.InitializationFailureErrorOccurredOnTheServer + '<br/> '+ this.htmlJson.PleaseTryAgainOr +' <a href="mailto:opengms@njnu.edu.cn">'+ this.htmlJson.contactus +'</a>.', 'Error', {
                     type: "error",
                     showClose: false,
-                    confirmButtonText: 'Try again',
+                    confirmButtonText: this.htmlJson.TryAgain,
                     dangerouslyUseHTMLString: true,
                     callback: action => {
                         this.configureTask(model);
@@ -360,8 +361,8 @@ var vue = new Vue({
                             let child = event.children[k];
                             if (child.value == undefined || child.value.trim() == "") {
                                 loading.close();
-                                this.$message.error("Some input parameters are not set");
-                                throw new Error("Some input parameters are not set");
+                                this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
+                                throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
                                 return;
                             }
                         }
@@ -446,8 +447,8 @@ var vue = new Vue({
                                             }
                                         } else {
                                             if (url === null || url === undefined) {
-                                                this.$message.error("Some input data are not provided");
-                                                throw new Error("Some input data are not provided");
+                                                this.$message.error(this.htmlJson.SomeInputDataAreNotProvided);
+                                                throw new Error(this.htmlJson.SomeInputDataAreNotProvided);
                                             }
                                             json.inputs.push({
                                                 statename,
@@ -562,14 +563,14 @@ var vue = new Vue({
                                 if (taskCount == 0) {
                                     if (sucCount != 0) {
                                         clearInterval(interval);
-                                        this.$alert("The model has run successfully!", 'Success', {
+                                        this.$alert(this.htmlJson.TheModelHasRunSuccessfully, 'Success', {
                                             type: 'success',
                                             confirmButtonText: 'OK',
                                             callback: action => {
 
                                             }
                                         });
-                                        this.$alert("The model has run successfully!", 'Success', {
+                                        this.$alert(this.htmljson.TheModelHasRunSuccessfully, 'Success', {
                                             type: 'success',
                                             confirmButtonText: 'OK',
                                             callback: action => {
@@ -626,7 +627,7 @@ var vue = new Vue({
                                         }
 
                                     } else {
-                                        this.$alert("Something wrong with these tasks!", 'Error', {
+                                        this.$alert(this.htmlJson.SomethingWrongWithTheseTasks, 'Error', {
                                             type: 'success',
                                             confirmButtonText: 'OK',
                                             callback: action => {

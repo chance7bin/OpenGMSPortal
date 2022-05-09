@@ -48,7 +48,7 @@ var feedback = Vue.extend(
 
 
                     success: (result)=> {
-                        this.$alert('Send suggestion successfully!', 'Success', {
+                        this.$alert(this.htmlJson.SendSuggestionSuccessfully, 'Success', {
                             type:'success',
                             confirmButtonText: 'OK',
                             callback: action => {

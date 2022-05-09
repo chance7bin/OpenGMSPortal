@@ -551,7 +551,7 @@ var userTask = Vue.extend(
                                         contentType: "application/x-www-form-urlencoded",
                                         success: (json) => {
                                             if (json.code == -1) {
-                                                alert("Please login first!")
+                                                alert(this.htmlJson.LoginInFirst)
                                                 window.sessionStorage.setItem("history", window.location.href);
                                                 window.location.href = "/user/login"
                                             } else {
@@ -607,7 +607,7 @@ var userTask = Vue.extend(
                                         contentType: "application/x-www-form-urlencoded",
                                         success: (json) => {
                                             if (json.code == -1) {
-                                                alert("Please login first!")
+                                                alert(this.htmlJson.LoginInFirst)
                                                 window.sessionStorage.setItem("history", window.location.href);
                                                 window.location.href = "/user/login"
                                             } else {
@@ -670,7 +670,7 @@ var userTask = Vue.extend(
                                         contentType: "application/x-www-form-urlencoded",
                                         success: (json) => {
                                             if (json.code == -1) {
-                                                alert("Please login first!")
+                                                alert(this.htmlJson.LoginInFirst)
                                                 window.sessionStorage.setItem("history", window.location.href);         // 为什么要存这个东西？
                                                 window.location.href = "/user/login"
                                             } else {
@@ -726,7 +726,7 @@ var userTask = Vue.extend(
                                         contentType: "application/x-www-form-urlencoded",
                                         success: (json) => {
                                             if (json.code == -1) {
-                                                alert("Please login first!")
+                                                alert(this.htmlJson.LoginInFirst)
                                                 window.sessionStorage.setItem("history", window.location.href);
                                                 window.location.href = "/user/login"
                                             } else {
@@ -807,7 +807,7 @@ var userTask = Vue.extend(
                     res => {
 
                         if (res.data.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             const data = res.data.data;
@@ -859,7 +859,7 @@ var userTask = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -891,7 +891,7 @@ var userTask = Vue.extend(
                     .then(res => {
                         let json = res.data;
                         if (json.code == -1) {
-                            alert("Please login first!")
+                            alert(this.htmlJson.LoginInFirst)
                             window.sessionStorage.setItem("history", window.location.href);
                             window.location.href = "/user/login"
                         } else {
@@ -1514,7 +1514,7 @@ var userTask = Vue.extend(
                         contentType: "application/x-www-form-urlencoded",
                         success: (json) => {
                             if (json.code == -1) {
-                                alert("Please login first!")
+                                alert(this.htmlJson.LoginInFirst)
                                 window.sessionStorage.setItem("history", window.location.href);
                                 window.location.href = "/user/login"
                             }
@@ -1703,7 +1703,7 @@ var userTask = Vue.extend(
                     contentType: "application/json",
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please login first!")
+                            alert(this.htmlJson.LoginInFirst)
                             window.sessionStorage.setItem("history", window.location.href);
                             window.location.href = "/user/login"
                         }else{
@@ -1842,7 +1842,7 @@ var userTask = Vue.extend(
                         // console.log(data);
 
                         if (data.oid == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.oid;

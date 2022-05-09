@@ -1,5 +1,6 @@
 new Vue({
     el:"#app",
+    props:['htmlJson'],
 
     components:{
     },
@@ -114,7 +115,7 @@ new Vue({
                 ).then(res=>{
                     let code = res.data.code
                     if(code == -1){
-                         this.$alert('Failed to get result', 'Tip', {
+                         this.$alert(this.htmlJson.FailedToGetResult, this.htmlJson.Tip, {
                                   type:"warning",
                                   confirmButtonText: 'OK',
                                   callback: ()=>{
@@ -141,7 +142,7 @@ new Vue({
             ).then(res=>{
                     let code = res.data.code
                     if(code == -1){
-                        this.$alert('Failed to get result', 'Tip', {
+                        this.$alert(this.htmlJson.FailedToGetResult, this.htmlJson.Tip, {
                                 type:"warning",
                                 confirmButtonText: 'OK',
                                 callback: ()=>{
@@ -170,7 +171,7 @@ new Vue({
                 }
             }
 
-             this.$alert('Cannot find the container', 'Tip', {
+             this.$alert(this.htmlJson.CannotFindTheContainer, this.htmlJson.Tip, {
                       type:"warning",
                       confirmButtonText: 'OK',
                       callback: ()=>{

@@ -854,7 +854,7 @@ var createSpatialReference = Vue.extend({
             success: (data) => {
                 console.log(data);
                 if (data.oid == "") {
-                    this.$alert('Please login first!', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type: "error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -887,7 +887,7 @@ var createSpatialReference = Vue.extend({
         $(".finish").click(() => {
             let loading = this.$loading({
                 lock: true,
-                text: "Uploading...",
+                text: this.htmlJson.Uploading,
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
@@ -898,7 +898,7 @@ var createSpatialReference = Vue.extend({
             for(i=0;i<this.localizationList.length;i++){
                 let local = this.localizationList[i];
                 if(local.localName.trim()==""||local.localCode.trim()==""){
-                    this.$alert('<b>'+local.localName+'</b> localized name or description has not been filled in, please fill it or delete the localization language.', 'Warning', {
+                    this.$alert('<b>'+local.localName+'</b>'+this.htmlJson.LocalizedNameOrDescriptionHasNotBeenFilledPleaseFillItOrDeleteTheLocalizationLanguage, 'Warning', {
                         confirmButtonText: 'OK',
                         type: 'warning',
                         dangerouslyUseHTMLString: true,
@@ -947,7 +947,7 @@ var createSpatialReference = Vue.extend({
                             });
                         }
                         else if (result.code == -1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type: "error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -956,7 +956,7 @@ var createSpatialReference = Vue.extend({
                             });
                         }
                         else {
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, 'Error', {
                                 type: "error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -987,10 +987,10 @@ var createSpatialReference = Vue.extend({
                         if (result.code === 0) {
                             if (result.data.method === "update") {
                                 this.deleteDraft()
-                                this.$confirm('<div style=\'font-size: 18px\'>Update spatiotemporal reference successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>‘+ this.htmlJson.UpdateSpatioTemporalReferenceSuccessfully +’</div>', this.htmlJson.Tip, {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',
@@ -1023,7 +1023,7 @@ var createSpatialReference = Vue.extend({
 
                         }
                         else if (result.code == -2) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type: "error",
                                 confirmButtonText: 'OK',
                                 callback: action => {

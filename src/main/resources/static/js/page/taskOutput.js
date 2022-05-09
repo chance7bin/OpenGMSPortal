@@ -1,5 +1,6 @@
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     data: {
         tableLoading: true,
         first: true,
@@ -370,7 +371,7 @@ var vue = new Vue({
                                     contentType: "application/x-www-form-urlencoded",
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please login first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                             window.sessionStorage.setItem("history", window.location.href);
                                             window.location.href = "/user/login"
                                         } else {
@@ -393,7 +394,7 @@ var vue = new Vue({
                     this.rightMenuShow=false
                     this.$message({
                         type: 'success',
-                        message: 'This page can be visited by public'
+                        message: this.htmlJson.ThisPageCanBeVisitedByPublic
                     });
                 });
             }else {
@@ -426,7 +427,7 @@ var vue = new Vue({
                                     contentType: "application/x-www-form-urlencoded",
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please login first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                             window.sessionStorage.setItem("history", window.location.href);
                                             window.location.href = "/user/login"
                                         } else {
@@ -449,7 +450,7 @@ var vue = new Vue({
                     this.rightMenuShow = false
                     this.$message({
                         type: 'success',
-                        message: 'This task has been set private'
+                        message: this.htmlJson.ThisTaskHasBeenSetPrivate
                     });
                 });
             }
@@ -461,11 +462,11 @@ var vue = new Vue({
             console.log(this.clipBoard);
             let vthis = this;
             this.clipBoard.on('success', function () {
-                vthis.$alert('Copy link successly',{type:'success',confirmButtonText: 'OK',})
+                vthis.$alert(this.htmlJson.CopyLinkSuccessfully,{type:'success',confirmButtonText: 'OK',})
                 this.clipBoard.destroy()
             });
             this.clipBoard.on('error', function () {
-                vthis.$alert("Failed to copy link",{type:'error',confirmButtonText: 'OK',})
+                vthis.$alert(this.htmlJson.FailedToCopyLink,{type:'error',confirmButtonText: 'OK',})
                 this.clipBoard.destroy()
             });
             this.shareIndex=false
@@ -478,7 +479,7 @@ var vue = new Vue({
                 window.open(this.eventChoosing.url);
             }
             else{
-                this.$message.error("No data can be downloaded.");
+                this.$message.error(this.htmlJson.NoDataCanBeDownloaded);
             }
         },
         upload(event) {
@@ -564,7 +565,7 @@ var vue = new Vue({
         },
         selectUserData(item,e){
             // console.log(e)
-            this.$message("you have selected:  "+item.fileName+'.'+item.suffix);
+            this.$message(this.htmlJson.YouHaveSelected + item.fileName+'.'+item.suffix);
             if(this.selectData.length===0){
                 let d={e,item}
                 this.selectData.push(d)

@@ -39,7 +39,7 @@ var dataServerIp = '111.229.14.128:8898'
 
 var vue = new Vue({
     el: "#app",
-    props: [],
+    props: ['htmlJson'],
     data: {
         models:[],
         modelActions: [],
@@ -831,7 +831,7 @@ var vue = new Vue({
                 res => {
                     if (res.data.code != 0) {
                         if(res.data.code == -1){
-                            this.$alert('Please login first!',{
+                            this.$alert(this.htmlJson.LoginInFirst,{
                                 confirmButtonText:'Confirm',
                                 callback:action => {
                                 }
@@ -1293,7 +1293,7 @@ var vue = new Vue({
                 success: (res) => {
                     if (res.code == -1) {
                         if(res.data.code == -1){
-                            this.$alert('Please login first!',{
+                            this.$alert(this.htmlJson.LoginInFirst,{
                                 confirmButtonText:'Confirm',
                                 callback:action => {
                                 }

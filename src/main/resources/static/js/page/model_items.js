@@ -441,7 +441,7 @@ new Vue({
                 class2:this.cls2,
             };
             $.post("/modelItem/updateClass",data,(result)=>{
-                this.$alert("Change classification successfully!", 'Success', {
+                this.$alert(this.htmlJson.ChangeClassificationSuccess, 'Success', {
                     type: 'success',
                     confirmButtonText: 'OK',
                     callback: action => {
@@ -956,7 +956,7 @@ new Vue({
             axios.get("/user/load").then(
                 res => {
                     if(res.data.oid==''){
-                         this.$alert('Please login first', 'Tip', {
+                         this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                   type:"warning",
                                   confirmButtonText: 'OK',
                                   callback: ()=>{

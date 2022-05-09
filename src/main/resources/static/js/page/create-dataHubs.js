@@ -523,7 +523,7 @@ var createDataHubs = Vue.extend({
                             that.ctegorys = [];
                             //清空displays内容
                             that.data_img = [];
-                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateDataHubSuccessfully +'</div>', this.htmlJson.Tip, {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateDataHubsSuccessfully +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
                                 confirmButtonText: this.htmlJson.confirmButtonText,
                                 cancelButtonText: this.htmlJson.cancelButtonText,
@@ -573,7 +573,7 @@ var createDataHubs = Vue.extend({
                                 }
                             }
                             else if(result.data.code==-2){
-                                alert("Please login first!");
+                                alert(this.htmlJson.LoginInFirst);
                                 window.location.href="/user/login";
                             }
                             else{
@@ -668,6 +668,25 @@ var createDataHubs = Vue.extend({
             this.$set(this.itemInfo,'image' , '')
         },
     },
+
+    watch:{
+        //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            console.log(this.editType)
+            if (this.editType != 'modify'){
+                $("#subRteTitle").text("/" + newData.CreateDataHubs);
+            } else {
+                $("#subRteTitle").text("/" + newData.UpdateDataHubs);
+            }
+            // $("#title").text("Create Model Item")
+
+        }
+    },
+
     mounted() {
         //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
         this.sendcurIndexToParent();
@@ -764,7 +783,7 @@ var createDataHubs = Vue.extend({
                 else if (currentIndex === 1 && stepDirection === "forward") {
                     if ($("#dataname").val().length == 0){
                         new Vue().$message({
-                                            message: 'Please complete data information!',
+                                            message: this.htmlJson.CompleteDataInformation,
                                             type: 'warning',
                                             offset: 70,
                                         });
@@ -779,7 +798,7 @@ var createDataHubs = Vue.extend({
                     if (stepDirection === "forward") {
                         if ($("#description").val().length == 0) {
                             new Vue().$message({
-                                message: 'Please complete data\'s description!',
+                                message: this.htmlJson.CompleteDataDescription,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -822,7 +841,7 @@ var createDataHubs = Vue.extend({
                 success: (data) => {
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -871,7 +890,7 @@ var createDataHubs = Vue.extend({
             async: false,
             success: (data) => {
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else {
@@ -889,7 +908,7 @@ var createDataHubs = Vue.extend({
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
 
             // $("#title").text("Create Model Item")
-            $("#subRteTitle").text("/Create Data Hubs")
+            $("#subRteTitle").text("/"+this.htmlJson.CreateDataHubs)
             $("#keywords").tagEditor('destory');
             $("#keywords").tagEditor({
                 forceLowercase: false,
@@ -944,7 +963,7 @@ var createDataHubs = Vue.extend({
             axios.get('/dataHub/itemInfo/'+oid).then(res=>{
                     const resData = res.data
                     if(resData.code==-1){
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else if(resData.data.noResult!=1){
                         let data = resData.data.result;

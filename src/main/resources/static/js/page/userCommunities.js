@@ -386,14 +386,14 @@ var userCommunities = Vue.extend(
                 let a=this.$route.params.communityKind
 
                 // if(index!=null&&index!=undefined)
-                //     this.itemIndex = index;
+                //     this.itemIndex = index;userCommunity
 
 
                 let titles={
-                    'concept&semantic':this.htmlJson.userCommunity.ConceptSemantic,
-                    'spatialReference':this.htmlJson.userCommunity.SpatialReference,
-                    'dataTemplate':this.htmlJson.userCommunity.DataTemplate,
-                    'unit&metric':this.htmlJson.userCommunity.UnitMetric
+                    'concept&semantic':this.htmlJson.ConceptSemantic,
+                    'spatialReference':this.htmlJson.SpatialReference,
+                    'dataTemplate':this.htmlJson.DataTemplate,
+                    'unit&metric':this.htmlJson.UnitMetric
                 }
                 this.itemTitle=titles[a]
 
@@ -441,7 +441,7 @@ var userCommunities = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -507,7 +507,7 @@ var userCommunities = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -661,7 +661,7 @@ var userCommunities = Vue.extend(
                         console.log(data);
 
                         if (data.oid == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.data.accessId;

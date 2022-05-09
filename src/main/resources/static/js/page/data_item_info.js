@@ -2,6 +2,7 @@
 
 var  data_item_info = new Vue({
     el: '#data_item_info',
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -143,7 +144,7 @@ var  data_item_info = new Vue({
         },
 
         confirmLogin(){
-            this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
+            this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>'+ this.htmlJson.LoginInFirst +'</div>', 'Tip', {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: 'Log In',
                 cancelButtonClass: 'fontsize-15',
@@ -222,7 +223,7 @@ var  data_item_info = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: 'Cancel'
+                    message: this.htmlJson.Cancel
                 });
             });
         },
@@ -275,7 +276,7 @@ var  data_item_info = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: 'Cancel'
+                    message: this.htmlJson.Cancel
                 });
             });
 
@@ -376,7 +377,7 @@ var  data_item_info = new Vue({
                 data: data,
                 async: true,
                 success: (json) => {
-                    this.$alert('Success!', 'Tip', {
+                    this.$alert(this.htmlJson.Success, 'Tip', {
                     type:'success',
                     confirmButtonText: 'OK',
                     callback: action => {
@@ -386,7 +387,7 @@ var  data_item_info = new Vue({
                 });
                 },
                 error:(json)=>{
-                    this.$alert('Submitted failed!', 'Error', {
+                    this.$alert(this.htmlJson.failed, 'Error', {
                     type:'error',
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -397,7 +398,7 @@ var  data_item_info = new Vue({
             })
         },
         handleClose(done) {
-            this.$confirm('Are you sure to close？')
+            this.$confirm(this.htmlJson.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })
@@ -521,7 +522,7 @@ var  data_item_info = new Vue({
 
             }else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message('please select file first!!');
+                this.$message(this.htmlJson.PleaseSelectFileFirst);
             }
         },
         dall(){
@@ -558,7 +559,7 @@ var  data_item_info = new Vue({
                 window.open("/dispatchRequest/download?url=" + currentData);
             }
             else{
-                this.$message('please select file first!!');
+                this.$message(this.htmlJson.PleaseSelectFileFirst);
             }
 
         },
@@ -710,7 +711,7 @@ var  data_item_info = new Vue({
         reply(id){
 
             if(this.useroid==''){
-                alert("Please login");
+                alert(this.htmlJson.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 var curid=window.location.href;
@@ -757,7 +758,7 @@ var  data_item_info = new Vue({
         //对数据条目的评论
         putcomment(){
             if(this.useroid==''){
-                alert("Please login");
+                alert(this.htmlJson.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 var curid=window.location.href;
@@ -881,7 +882,7 @@ var  data_item_info = new Vue({
         addRelatedModel(){
 
             if(this.useroid==''){
-                alert("Please login");
+                alert(this.htmlJson.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 this.searchAddModelPage=0
@@ -1126,7 +1127,7 @@ var  data_item_info = new Vue({
                 })
             }
             else{
-                alert('please select file first!!');
+                alert(this.htmlJson.PleaseSelectFileFirst);
             }
         },
         edit() {
@@ -1186,7 +1187,7 @@ var  data_item_info = new Vue({
                         that.mseeageByWebSocket("distributed")
 
                     }else if(json.code==-1){
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1234,7 +1235,7 @@ var  data_item_info = new Vue({
                         this.xml = json.xml;
                         this.parameters = json.parameters
                     }else if(json.code==-1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1274,7 +1275,7 @@ var  data_item_info = new Vue({
                         this.xml = json.xml;
                         this.parameters = json.parameters
                     }else if(json.code==-1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1448,7 +1449,7 @@ var  data_item_info = new Vue({
                             that.loading = false;
                             this.$message({
                                 type: 'error',
-                                message: 'Distribute Node Offline'
+                                message: this.htmlJson.DistributeNodeOffline
                             });
                         }
                     })

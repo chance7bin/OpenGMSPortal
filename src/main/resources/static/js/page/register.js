@@ -204,7 +204,7 @@ new Vue({
                 error : (e)=> {
                     this.$message({
                         showClose: true,
-                        message: 'register error',
+                        message: this.htmlJson.RegisterError,
                         type: 'error'
                     });
                 }

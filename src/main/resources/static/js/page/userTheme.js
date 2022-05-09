@@ -201,14 +201,14 @@ var userTheme = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code == -1) {
-                                this.$alert("Please log in first!")
+                                this.$alert(this.htmlJson.LoginInFirst)
                             } else {
                                 if (json.msg == 'Success') {
-                                    this.$message({message: "delete successfully!",
+                                    this.$message({message: this.htmlJson.DeleteSuccess,
                                                   type:"success"});
                                     this.getTheme();
                                 } else {
-                                    this.$message({message:"delete failed!",
+                                    this.$message({message:this.htmlJson.DeleteFailed,
                                                       type:"error"})
                                 }
                             }
@@ -248,7 +248,7 @@ var userTheme = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -302,7 +302,7 @@ var userTheme = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code != 0) {
-                                alert("Please login first!");
+                                alert(this.htmlJson.LoginInFirst);
                                 window.location.href = "/user/login";
                             } else {
                                 data = json.data;
@@ -373,7 +373,7 @@ var userTheme = Vue.extend(
                     success: (result) => {
                         let data = result.data
                         if (data.accessId == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.accessId;

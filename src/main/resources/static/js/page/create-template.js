@@ -234,7 +234,7 @@ var createTemplate = Vue.extend({
 
             if(this.languageAdd.local.label==undefined){
                 this.$message({
-                    message: 'Please selcet a language!',
+                    message: this.htmlJson.PleaseSelectALanguage,
                     type: 'warning'
                 });
                 return;
@@ -243,7 +243,7 @@ var createTemplate = Vue.extend({
                 let localization = this.localizationList[i];
                 if(localization.localName==this.languageAdd.local.label){
                     this.$message({
-                        message: 'This language already exists!',
+                        message: this.htmlJson.ThisLanguageAlreadyExists,
                         type: 'warning'
                     });
                     return;
@@ -287,7 +287,7 @@ var createTemplate = Vue.extend({
 
                 this.$message({
                     type: 'success',
-                    message: 'Delete '+row.localName+' successfully!',
+                    message: this.htmlJson.Delete+row.localName+this.htmlJson.successfully,
                 });
             }).catch(() => {
 
@@ -686,6 +686,24 @@ var createTemplate = Vue.extend({
 
 
     },
+
+    watch:{
+        //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateDataTemplate);
+            } else {
+                $("#subRteTitle").text("/" + newData.UpdateDataTemplate);
+            }
+            // $("#title").text("Create Model Item")
+
+        }
+    },
+
     mounted() {
         let that = this;
         that.init();
@@ -714,7 +732,7 @@ var createTemplate = Vue.extend({
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
 
             // $("#title").text("Create Data Template")
-            $("#subRteTitle").text("/Create Data Template")
+            $("#subRteTitle").text("/" + this.htmlJson.CreateDataTemplate);
 
             $('#aliasInput').tagEditor({
                 forceLowercase: false
@@ -784,7 +802,7 @@ var createTemplate = Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.cls.length == 0) {
                         new Vue().$message({
-                            message: 'Please select at least one classification!',
+                            message: this.htmlJson.noCLSTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -792,14 +810,14 @@ var createTemplate = Vue.extend({
                     }
                     else if ($("#nameInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#descInput").val().trim() == ""){
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -828,7 +846,7 @@ var createTemplate = Vue.extend({
             success: (data) => {
                 console.log(data);
                 if (data.oid == "") {
-                    this.$alert('Please login first!', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type: "error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -871,7 +889,7 @@ var createTemplate = Vue.extend({
             for(i=0;i<this.localizationList.length;i++){
                 let local = this.localizationList[i];
                 if(local.localName.trim()==""||local.localCode.trim()==""){
-                    this.$alert('<b>'+local.localName+'</b> localized name or description has not been filled in, please fill it or delete the localization language.', 'Warning', {
+                    this.$alert('<b>'+local.localName+'</b>'+this.htmlJson.LocalizedNameOrDescriptionHasNotBeenFilledPleaseFillItOrDeleteTheLocalizationLanguage, 'Warning', {
                         confirmButtonText: 'OK',
                         type: 'warning',
                         dangerouslyUseHTMLString: true,
@@ -903,7 +921,7 @@ var createTemplate = Vue.extend({
                         loading.close();
                         if (result.code == "0") {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>'+this.htmlJson.CreateTemplateSuccessfully+'</div>', this.htmlJson.Tip, {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+this.htmlJson.CreateDataTemplateSuccessfully+'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
                                 confirmButtonText: this.htmlJson.confirmButtonText,
                                 cancelButtonText: this.htmlJson.cancelButtonText,
@@ -919,7 +937,7 @@ var createTemplate = Vue.extend({
                             });
                         }
                         else if(result.code==-1){
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -928,7 +946,7 @@ var createTemplate = Vue.extend({
                             });
                         }
                         else{
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -982,7 +1000,7 @@ var createTemplate = Vue.extend({
                                 // let params = that.message_num_socket;
                                 // that.send(params);
 
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
                                     type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -992,7 +1010,7 @@ var createTemplate = Vue.extend({
                             }
                         }
                         else if(result.code==-2){
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {

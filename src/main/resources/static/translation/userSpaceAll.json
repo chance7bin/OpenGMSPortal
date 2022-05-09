@@ -157,6 +157,7 @@
     "CommunitySplit": "-------------------",
     "CommunityInfo": "You can manager your community here",
     "ConceptSemantic":"Concept & Semantic",
+    "SpatialReference": "Spatial Reference",
     "ConceptSemanticInfo":"You can manage Data provided by yourself or create a new one",
     "SpatiotemporalReference":"Spatiotemporal Reference",
     "SpatiotemporalReferenceInfo":"You can manage Data provided by yourself or create a new one",
@@ -463,12 +464,15 @@
       "delete": "delete",
       "thisItem": " this item?",
       "Confirm": "Confirm",
-      "Cancel": "Cancel"
+      "Cancel": "Cancel",
+      "DeleteSuccessful": "Delete Successful!"
     },
 
     "CreateConceptualModel": "Create Conceptual Model",
     "CreateLogicalModel": "Create Logical Model",
     "CreateComputableModel": "Create Computable Model",
+    "CreateDataItem1": "Create Data Item",
+    "ModifyDataItem1":"Modify Data Item",
     "Resource": "Resource",
     "BindModelItem": "Bind Model Item",
     "Select": "Select",
@@ -489,6 +493,15 @@
     "UpdateLogicalModelSuccess": "Update Logical Model successfully",
     "CreateComputableModelSuccess": "Create Computable Model successfully",
     "UpdateComputableModelSuccess": "Update Computable Model successfully",
+    "CreateDataItemSuccessfully": "Create data item successfully！",
+    "CreateConceptSuccessfully": "Create concept successfully!",
+    "CreateSpatioTemporalReferenceSuccessfully": "Create spatiotemporal reference successfully!",
+    "CreateDataTemplateSuccessfully": "Create data template successfully!",
+    "CreateUnitMetricSuccessfully": "Create Unit & MetricSuccessfully!",
+    "CreateDataHubsSuccessfully": "Create data hubs successfully",
+    "UpdateSpatioTemporalReferenceSuccessfully": "Update spatiotemporal reference successfully!",
+    "CreateDataApplicationSuccessfully": "Create data application successfully",
+
 
 
     "ContentType": "Content Type",
@@ -647,8 +660,7 @@
     "CreateTheme": "Create Theme",
     "ModifyTheme": "Modify Theme",
     "ThemeName": "Theme Name",
-    "ThemeImage": "Theme Image"
-    }],
+    "ThemeImage": "Theme Image",
 
 
     "ConceptClassifications": "Concept Classifications",
@@ -1482,8 +1494,59 @@
           "oid": "8a189836-d563-440c-b5ea-c04778ac05f9",
           "label": "Tabular Data Format"
         }]
-  }],
+    }],
 
+    "treeData5": [
+      {
+        "id": 1,
+        "label":"Unit & Metric",
+        "oid":"9a8680fe-ffd6-4e5a-959b-d0f157506cd3",
+        "children": [{
+          "id": 2,
+          "label": "Acoustics",
+          "oid": "58d45317-6dfa-4615-94a7-b0549125e2b0"
+        }, {
+          "id": 3,
+          "label": "Atomic and Nuclear physics",
+          "oid": "143787c5-d011-468b-b319-66e9c941707b"
+        }, {
+          "id": 4,
+          "label": "Electricity and Magnetism",
+          "oid": "eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2"
+        }, {
+          "id": 5,
+          "label": "Heat",
+          "oid": "f82fcaa2-abde-4e85-8dd5-4e23270f8c60"
+        }, {
+          "id": 6,
+          "label": "Light",
+          "oid": "4c8f27b7-7f14-451b-907f-a7cf2eebd6f0"
+        }, {
+          "id": 7,
+          "label": "Mechanics",
+          "oid": "5fbe2a8f-64ac-4dd9-806b-b2a8166e1522"
+        }, {
+          "id": 8,
+          "label": "Nuclear",
+          "oid": "f6710cbd-3158-49c0-994a-ef64c909c10e"
+        }, {
+          "id": 9,
+          "label": "Periodic",
+          "oid": "783bc5ce-55c5-48b0-ba5c-2313afac675a"
+        }, {
+          "id": 10,
+          "label": "Physical",
+          "oid": "6dad7da1-6b16-4851-994f-54a5a1153dfa"
+        }, {
+          "id": 11,
+          "label": "Solid",
+          "oid": "e5c598d0-5a89-4ee5-9c91-3c78fc26d084"
+        }, {
+          "id": 12,
+          "label": "Time and Space",
+          "oid": "3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f"
+        }]
+      }],
 
     "UnitMetricClassification": "Unit & Metric Classifications",
     "InputNameToUpload": "Please input the name of the data which you are ready to upload",
@@ -1503,7 +1566,157 @@
     "InputNameOfDataToUpload": "Please input the name of the data which you are ready to upload.",
     "CompleteDataInformation": "Please complete data information!",
     "CompleteDataDescription": "Please complete data description!",
-    "InputUrlOfDataToSelect": "Please input the url of the data which you are ready to select."
+    "InputUrlOfDataToSelect": "Please input the url of the data which you are ready to select.",
+
+
+    "CreateConceptSemantic": "Create Concept & Semantic",
+    "UpdateConceptSemantic": "Update Concept & Semantic",
+    "CreateDataTemplate": "Create Data Template",
+    "UpdateDataTemplate": "Update Data Template",
+    "CreateUnitMetric": "Create Unit & Metric",
+    "UpdateUnitMetric": "Update Unit & Metric",
+    "CreateDataHubs": "Create Data Hubs",
+    "UpdateDataHubs": "Update Data Hubs",
+    "DataHubs": "Data Hubs",
+    "DataItem": "Data Item",
+
+    "DataProcessingApplication": "Data Processing Application",
+
+    "tree7": {
+      "Application-focused categories":"Application-focused categories",
+      "Natural-perspective":"Natural-perspective",
+
+      "Land regions":"Land regions",
+      "Ocean regions":"Ocean regions",
+      "Frozen regions":"Frozen regions",
+      "Atmospheric regions":"Atmospheric regions",
+      "Space-earth regions":"Space-earth regions",
+      "Solid-earth regions":"Solid-earth regions",
+
+      "Human-perspective":"Human-perspective",
+
+      "Development activities":"Development activities",
+      "Social activities":"Social activities",
+      "Economic activities":"Economic activities",
+
+      "Integrated-perspective":"Integrated-perspective",
+
+      "Global scale":"Global scale",
+      "Regional scale":"Regional scale",
+
+      "Method-focused categories":"Method-focused categories",
+      "Data-perspective":"Data-perspective",
+
+      "Geoinformation analysis":"Geoinformation analysis",
+      "Remote sensing analysis":"Remote sensing analysis",
+      "Geostatistical analysis":"Geostatistical analysis",
+      "Intelligent computation analysis":"Intelligent computation analysis",
+
+      "Process-perspective":"Process-perspective",
+
+      "Physical process calculation":"Physical process calculation",
+      "Chemical process calculation":"Chemical process calculation",
+      "Biological process calculation":"Biological process calculation",
+      "Human-activity calculation":"Human-activity calculation"
+    },
+
+    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "PleaseSelectFileFirst": "please select file first!!",
+    "ServiceOffline": "Sorry, Service Offline !",
+    "CommentSubmittedSuccessfully": "Comment submitted successfully!",
+    "SubmitError": "Submit Error",
+    "CommentDeletedSuccessfully": "Comment deleted successfully!",
+    "DeleteError": "Delete Error!",
+    "PleaseSelectZipFile": "Please select a zip file!",
+    "PleaseCompleteDataCategory": "'Please complete data category!",
+    "PleaseSelectALanguage": "Please select a language!",
+    "ThisLanguageAlreadyExists": "This language already exists!",
+    "ThisItemForbiddenToBeDeleted": "This item is forbidden to be deleted!",
+    "PleaseEnterTheDatasetName": "Please enter the dataset name!",
+    "PleaseSelectADataTemplate": "Please select a data template!",
+    "PleaseSelectAFolderFirst": "Please select a folder first!",
+    "PleaseSelectFiles": "Please select files!",
+    "UploadFailed": "Upload failed!",
+    "UploadSuccessfully": "Upload successfully!",
+    "PleaseSelectDataFirst":"Please select data first!",
+    "TestDataWasSuccessfullyLoaded": "Test data was successfully loaded",
+    "NoDataCanBeDownloaded": "No data can be downloaded.",
+    "SomeInputParametersAreNotSet": "Some input parameters are not set",
+    "AreYouSureToDelete": "Are you sure to delete?",
+    "PleaseUploadFileIntoTheTemplateFirst": "Please upload the file into the template first",
+    "DistributeNodeOffline": "Distribute Node Offline",
+    "ErrorSubmit":"error submit!",
+    "PleaseEnterDescription": "Please enter description",
+    "FailToTransform": "Fail to transform.",
+    "UrlHasBeenCopiedToClipboard": "The url has been copied to clipboard",
+    "PleaseSelectCalendarYouWantToConvert": "Please select the calendar you want to convert",
+    "PleaseEnterTheCorrectYear": "Please enter the correct year",
+    "PleaseSelectTheMonthYouWantToConvert": "Please select the month you want to convert",
+    "PleaseEnterTheCorrectDay": "Please enter the correct day",
+    "PleaseSelectTheTimeYouWantToConvert": "Please select the time you want to convert",
+    "PleaseEnterTheCorrectHour": "Please enter the correct hour",
+    "PleaseEnterTheCorrectMinute": "Please enter the correct minute",
+    "PleaseEnterTheCorrectSecond": "Please enter the correct second",
+    "ThisPageCanBeVisitedByPublic": "This page can be visited by public",
+    "ThisTaskHasBeenSetPrivate": "This task has been set private",
+    "YouHaveSelected": "you have selected:",
+    "RemovedSuccessfully": "Removed successfully",
+    "RemoveCancel": "Remove cancel",
+    "PleaseEnterAnAvailableName": "Please enter an available name!",
+    "UpdateSuccess": "Update Success",
+    "RefreshError": "Refresh error",
+    "InsufficientStorageCapacityPleaseDeleteSomeFilesBeforeUploadingNewFiles": "Insufficient storage capacity! Please delete some files before uploading new files.'",
+    "AddAdminSuccessfully": "Add admin successfully",
+    "DeleteAdminSuccessfully": "Delete admin successfully",
+    "FailedToGetResult": "Failed to get result",
+    "CannotFindTheContainer": "Cannot find the container",
+    "ModelItemIsNotExistPleaseCheckTheName": "Model item is not exist,please check the name",
+    "Error": "Error",
+    "BindSuccessfully": "Bind successfully",
+    "Success": "Success",
+    "SaveFilesError": "Save files error",
+    "ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview": "Changes have been submitted, please wait for the author to review.",
+    "CreatedFailed": "Created failed",
+    "failed": "failed",
+    "ErrorPleaseTryAgain": "Error, please try again",
+    "ThisNameIsExistingPleaseInputNewOne": "This name is existing in this path, please input a new one",
+    "FailedToUploadResourcePleaseTryAgain": "Failed to upload resource, please try again",
+    "FailedToUpdateFilePleaseTryAgain": "Failed to update file, please try again",
+    "FailedToGetFileTryAgainLater": "Failed to get file, please try again later.",
+    "PleaseInputTheFolderName": "Please input the folder name",
+    "UpdateDataApplicationSuccessfully": "Update data application successfully",
+    "PleaseInputTheDOI": "Please input the DOI",
+    "FailedToConnectPleaseTryAgain": "Failed to connect, please try again",
+    "FindNoResultCheckTheDOIYouHaveInputOrFillInformationManually": "Find no result, check the DOI you have input or fill information manually",
+    "PleaseEnterTheTitleAndAtLeastOneAuthor": "Please enter the Title and at least one Author",
+    "LocalizedNameOrDescriptionHasNotBeenFilledPleaseFillItOrDeleteTheLocalizationLanguage": "localized name or description has not been filled in, please fill it or delete the localization language",
+    "AreYouSureToClose": "Are you sure to close？",
+    "SendSuggestionSuccessfully": "Send suggestion successfully",
+    "ChangeClassificationSuccess": "Change classification successfully",
+    "SomeInputDataAreNotProvided": "Some input data are not provided",
+    "TheModelHasRunSuccessfully": "The model has run successfully",
+    "SomethingWrongWithTheseTasks": "Something wrong with these tasks!",
+    "SetSubscribedListSuccessfully": "Set subscribed list successfully",
+    "FailedToUpdateInfoPleaseTryAgain": "Failed to update info, please try again",
+    "OldPasswordIsNotCorrect": "Old password is not correct",
+    "ChangePasswordError": "Change password error",
+    "ChangePasswordSuccessfully": "Change password successfully",
+    "PleaseInputAtLeastOneLetter": "Please input at least one letter",
+    "CopyLinkSuccessfully": "Copy link successfully",
+    "FailedToCopyLink": "Failed to copy link",
+    "AddFolderSuccessfully": "Add folder successfully",
+    "CanNotLoadTestDataPleaseLoadInputsOfModelManually": "Can not load the test data, please load inputs of the model manually",
+    "InitializationFailureErrorOccurredOnTheServer": "Initialization failure: an error occurred on the server",
+    "PleaseTryAgainOr": "Please try again or",
+    "contactus": "contact us",
+    "TryAgain": "Try again",
+    "PleaseSelectUnitYouWantToConvert": "Please select the unit you want to convert",
+    "PleaseInputACorrectValue": "Please input a correct value",
+    "login": "log in",
+    "Please": "Please",
+    "successfully": "successfully",
+    "RegisterError": "register error",
+    "PleaseSelectDataInFormat:": "Please select the data in format:"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -1660,6 +1873,7 @@
     "CommunitySplit": "-------------------",
     "CommunityInfo": "您可以在此处管理您的社区信息",
     "ConceptSemantic":"概念和语义",
+    "SpatialReference": "空间参考",
     "ConceptSemanticInfo":"您可以管理自己的数据或者新建一个",
     "SpatiotemporalReference":"时空参考",
     "SpatiotemporalReferenceInfo":"您可以管理自己的数据或者新建一个",
@@ -1966,12 +2180,15 @@
       "delete": "删除",
       "thisItem": " 这个条目吗？",
       "Confirm": "确认",
-      "Cancel": "取消"
+      "Cancel": "取消",
+      "DeleteSuccessful": "删除成功！"
     },
 
     "CreateConceptualModel": "创建概念模型",
     "CreateLogicalModel": "创建逻辑模型",
     "CreateComputableModel":"创建计算模型",
+    "CreateDataItem1": "创建数据项",
+    "ModifyDataItem1": "修改数据项",
     "Resource": "资源",
     "BindModelItem": "绑定模型项",
     "Select": "选择",
@@ -1992,6 +2209,15 @@
     "UpdateLogicalModelSuccess": "修改逻辑模型成功",
     "CreateComputableModelSuccess": "创建计算模型成功",
     "UpdateComputableModelSuccess": "修改计算模型成功",
+    "CreateDataItemSuccessfully": "创建数据项成功！",
+    "CreateConceptSuccessfully": "创建概念成功！",
+    "CreateSpatioTemporalReferenceSuccessfully": "创建时空参考成功！",
+    "CreateDataTemplateSuccessfully": "创建数据模板成功！",
+    "CreateUnitMetricSuccessfully": "创建单位和度量成功！",
+    "CreateDataHubsSuccessfully": "创建数据中心成功！",
+    "UpdateSpatioTemporalReferenceSuccessfully": "更新时空参考成功！",
+    "CreateDataApplicationSuccessfully": "创建数据应用成功！",
+
 
     "ContentType": "内容类型",
     "OpenGMSModelServicePackage": "OpenGMS模型服务包",
@@ -2146,10 +2372,7 @@
     "CreateTheme": "创建主题",
     "ModifyTheme": "修改主题",
     "ThemeName": "主题名称",
-    "ThemeImage": "主题图片"
-
-    }],
-
+    "ThemeImage": "主题图片",
 
     "ConceptClassifications": "概念分类",
     "PleaseEnterName": "请输入名称...",
@@ -3042,7 +3265,7 @@
 
     "InputNameToUpload": "请输入上传数据的名称",
     "EnterDataHubURL": "请输入数据中心的URL",
-    "DetailDescription": "数据描述",
+    "DetailDescription": "细节描述",
     "InputDataDescription": "在这里输入数据的描述.",
     "DetailDescriptionPlaceholder":"在这里输入数据的详细信息.",
 
@@ -3057,6 +3280,156 @@
     "InputNameOfDataToUpload": "请输入要上传的数据名称",
     "CompleteDataInformation": "请完成数据信息！",
     "CompleteDataDescription": "请完成数据描述！",
-    "InputUrlOfDataToSelect": "请输入您要选择的数据的URL."
+    "InputUrlOfDataToSelect": "请输入您要选择的数据的URL.",
+
+    "CreateConceptSemantic": "创建概念和语义",
+    "UpdateConceptSemantic": "更新概念和语义",
+    "CreateDataTemplate": "创建数据模板",
+    "UpdateDataTemplate": "更新数据模板",
+    "CreateUnitMetric": "创建单位和度量",
+    "UpdateUnitMetric": "更新单位和度量",
+    "CreateDataHubs": "创建数据中心",
+    "UpdateDataHubs": "更新数据中心",
+    "DataHubs": "数据中心",
+    "DataItem": "数据项",
+
+    "DataProcessingApplication": "数据处理应用",
+
+    "tree7": {
+      "Application-focused categories":"面向应用的分类",
+      "Natural-perspective":"自然视角",
+
+      "Land regions":"陆地圈",
+      "Ocean regions":"海洋圈",
+      "Frozen regions":"冰冻圈",
+      "Atmospheric regions":"大气圈",
+      "Space-earth regions":"太空-地球",
+      "Solid-earth regions":"固体地球",
+
+      "Human-perspective":"人文感知",
+
+      "Development activities":"发展活动",
+      "Social activities":"社会活动",
+      "Economic activities":"经济活动",
+
+      "Integrated-perspective":"综合视角",
+
+      "Global scale":"全球尺度",
+      "Regional scale":"区域尺度",
+
+      "Method-focused categories":"面向方法的分类",
+      "Data-perspective":"数据视角",
+
+      "Geoinformation analysis":"地理信息分析",
+      "Remote sensing analysis":"遥感分析",
+      "Geostatistical analysis":"地学统计分析",
+      "Intelligent computation analysis":"智能分析计算",
+
+      "Process-perspective":"过程视角",
+
+      "Physical process calculation":"物理过程计算",
+      "Chemical process calculation":"化学过程计算",
+      "Biological process calculation":"生物过程计算",
+      "Human-activity calculation":"人类活动计算"
+    },
+
+    "SearchFor": "查找 ...",
+    "CommentCanNotBeEmpty": "评论不能为空！",
+    "PleaseSelectFileFirst": "请先选择文件！",
+    "ServiceOffline": "抱歉，服务已下线！",
+    "CommentSubmittedSuccessfully": "评论已成功提交！",
+    "SubmitError": "提交失败！",
+    "CommentDeletedSuccessfully": "评论删除成功！",
+    "DeleteError": "删除失败！",
+    "PleaseSelectZipFile": "请选择一个zip文件！",
+    "PleaseCompleteDataCategory": "请完成数据类别！",
+    "PleaseSelectALanguage": "请选择一种语言！",
+    "ThisLanguageAlreadyExists": "该语言已被选择！",
+    "ThisItemForbiddenToBeDeleted": "该项禁止被删除！",
+    "PleaseEnterTheDatasetName": "请输入数据集名称！",
+    "PleaseSelectADataTemplate": "请选择一个数据模板！",
+    "PleaseSelectAFolderFirst": "请先选择一个文件夹！",
+    "PleaseSelectFiles": "请选择文件！",
+    "UploadFailed": "上传失败！",
+    "UploadSuccessfully": "上传成功！",
+    "PleaseSelectDataFirst": "请先选择数据！",
+    "TestDataWasSuccessfullyLoaded": "测试数据上传成功！",
+    "NoDataCanBeDownloaded": "没有数据可被下载！",
+    "SomeInputParametersAreNotSet": "一些输入参数未被设置！",
+    "AreYouSureToDelete": "您确认删除吗？",
+    "PleaseUploadFileIntoTheTemplateFirst": "请先在模板中上传数据",
+    "DistributeNodeOffline": "分配节点已离线",
+    "ErrorSubmit": "提交出错！",
+    "PleaseEnterDescription": "请输入描述",
+    "FailToTransform": "转换失败.",
+    "UrlHasBeenCopiedToClipboard": "URL已复制至剪贴板！",
+    "PleaseSelectCalendarYouWantToConvert": "请选择您想转换的日期",
+    "PleaseEnterTheCorrectYear": "请输入正确的年份！",
+    "PleaseSelectTheMonthYouWantToConvert": "请选择您要转换的月份！",
+    "PleaseEnterTheCorrectDay": "请输入正确的天数！",
+    "PleaseSelectTheTimeYouWantToConvert": "请选择您要转换的时间",
+    "PleaseEnterTheCorrectHour": "请输入正确的小时",
+    "PleaseEnterTheCorrectMinute": "请输入正确的分钟",
+    "PleaseEnterTheCorrectSecond": "请输入正确的秒",
+    "ThisPageCanBeVisitedByPublic": "该页面可以被公共访问",
+    "ThisTaskHasBeenSetPrivate": "该任务被设置为私有",
+    "YouHaveSelected": "您已经选择了:",
+    "RemovedSuccessfully": "移除成功",
+    "RemoveCancel": "取消移除",
+    "PleaseEnterAnAvailableName": "请输入一个有效名称！",
+    "UpdateSuccess": "更新成功",
+    "RefreshError": "刷新失败",
+    "InsufficientStorageCapacityPleaseDeleteSomeFilesBeforeUploadingNewFiles": "存储空间不足！上传文件前请先删除一些文件！",
+    "AddAdminSuccessfully": "添加管理员成功",
+    "DeleteAdminSuccessfully": "删除管理员成功",
+    "FailedToGetResult": "获取结果失败",
+    "CannotFindTheContainer": "无法找到容器",
+    "ModelItemIsNotExistPleaseCheckTheName": "模型项不存在，请检查名称",
+    "Error": "失败",
+    "BindSuccessfully": "绑定成功",
+    "Success": "成功",
+    "SaveFilesError": "保存文件失败",
+    "ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview": "更改已经提交，请等待作者审阅",
+    "CreatedFailed": "创建失败",
+    "failed": "失败",
+    "ErrorPleaseTryAgain": "失败，请重试",
+    "ThisNameIsExistingPleaseInputNewOne": "该名称在路径中已存在，请输入一个新名称",
+    "FailedToUploadResourcePleaseTryAgain": "资源上传失败，请重试",
+    "FailedToUpdateFilePleaseTryAgain": "更新文件失败，请重试",
+    "FailedToGetFileTryAgainLater": "获取文件失败，请稍后重试",
+    "PleaseInputTheFolderName": "请输入文件夹名称",
+    "UpdateDataApplicationSuccessfully": "更新数据应用成功",
+    "PleaseInputTheDOI": "请输入DOI",
+    "FailedToConnectPleaseTryAgain": "连接失败，请重试",
+    "FindNoResultCheckTheDOIYouHaveInputOrFillInformationManually": "没有结果，请检查你输入的DOI或者手动填充信息",
+    "PleaseEnterTheTitleAndAtLeastOneAuthor": "请输入标题与至少一位作者",
+    "LocalizedNameOrDescriptionHasNotBeenFilledPleaseFillItOrDeleteTheLocalizationLanguage": "本地化名称或描述未填写，请填写或删除本地化语言",
+    "AreYouSureToClose": "确认关闭？",
+    "SendSuggestionSuccessfully": "提交建议成功！",
+    "ChangeClassificationSuccess": "修改分类成功！",
+    "SomeInputDataAreNotProvided": "一些输入数据未被提供",
+    "TheModelHasRunSuccessfully": "模型运行成功",
+    "SomethingWrongWithTheseTasks": "这些任务出现了错误",
+    "SetSubscribedListSuccessfully": "设置订阅列表成功",
+    "FailedToUpdateInfoPleaseTryAgain": "更新信息失败，请重试",
+    "OldPasswordIsNotCorrect": "旧密码不正确",
+    "ChangePasswordError": "修改密码失败",
+    "ChangePasswordSuccessfully": "修改密码成功",
+    "PleaseInputAtLeastOneLetter": "请至少输入一个字母",
+    "CopyLinkSuccessfully": "复制链接成功",
+    "FailedToCopyLink": "复制链接失败",
+    "AddFolderSuccessfully": "添加文件夹成功",
+    "CanNotLoadTestDataPleaseLoadInputsOfModelManually": "无法加载测试数据，请手动加载模型的输入",
+    "InitializationFailureErrorOccurredOnTheServer": "初始化失败：服务器发生错误",
+    "PleaseTryAgainOr": "请重试，或",
+    "contactus":"联系我们",
+    "TryAgain": "重试",
+    "PleaseSelectUnitYouWantToConvert": "请输入您要转换的单位",
+    "PleaseInputACorrectValue": "请输入一个正确的值",
+    "login": "登录",
+    "Please": "请",
+    "successfully": "成功",
+    "RegisterError": "注册成功",
+    "PleaseSelectDataInFormat": "请选择数据格式为："
   }
 }

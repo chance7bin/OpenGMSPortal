@@ -156,7 +156,7 @@ var userDataServer = Vue.extend(
                     async: true,
                     success: (res) => {
                         if (res.code == -1) {
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         } else {
                             if(res.data == undefined||Object.keys(res.data).length == 0||res.data=='offline'){
@@ -197,7 +197,7 @@ var userDataServer = Vue.extend(
                     async:false,
                     success: (res) => {
                         if (res.code == -1) {
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         } else {
                             if(res.data == undefined){
@@ -226,7 +226,7 @@ var userDataServer = Vue.extend(
                     async:false,
                     success: (res) => {
                         if (res.code == -1) {
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         } else {
                             if(res.data == undefined){
@@ -261,7 +261,7 @@ var userDataServer = Vue.extend(
                     res=>{
                         data = res.data
                         if (data.code == -1) {
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         } else {
                             if(data.data!=null){
@@ -309,7 +309,7 @@ var userDataServer = Vue.extend(
                     async:false,
                     success: (res) => {
                         if (res.code == -1) {
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         } else {
                             if(res.data == undefined){
@@ -346,7 +346,7 @@ var userDataServer = Vue.extend(
                     async:false,
                     success: (res) => {
                         if (res.code == -1) {
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         } else {
                             if(res.data == undefined){
@@ -398,7 +398,7 @@ var userDataServer = Vue.extend(
                     res=>{
                         let data = res.data
                         if(data.code==-1){
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         }else if(data.code==0) {
                             if (data.data != null) {
@@ -429,7 +429,7 @@ var userDataServer = Vue.extend(
                     res=>{
                         let data = res.data
                         if(data.code==-1){
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         }else if(data.code==0){
                             if(data.data!=null){
@@ -470,7 +470,7 @@ var userDataServer = Vue.extend(
                     res=>{
                         let data = res.data
                         if(data.code==-1){
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         }else if(data.code==0){
                             if(data.data!=null){
@@ -499,7 +499,7 @@ var userDataServer = Vue.extend(
                     res=>{
                         let data = res.data
                         if(data.code==-1){
-                            this.$alert("Please login first!")
+                            this.$alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login";
                         }else if(data.code==0){
                             if(data.data!=null){
@@ -563,7 +563,7 @@ var userDataServer = Vue.extend(
                         console.log(data);
 
                         if (data.oid == "") {
-                            this.$alert("Please login");
+                            this.$alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.oid;

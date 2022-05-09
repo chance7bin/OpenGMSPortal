@@ -137,7 +137,7 @@ Vue.component('headSideBar', {
 
                         this.load = false;
                     }else if (res.data.code == -1) {
-                        this.$alert("Please login first!")
+                        this.$alert(this.htmlJson.LoginInFirst)
                         window.sessionStorage.setItem("history", window.location.href);
                         window.location.href = "/user/login"
                     }else if(res.data.code == -2){
