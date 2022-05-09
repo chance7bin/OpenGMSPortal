@@ -18,6 +18,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -577,4 +578,26 @@ public class MyHttpUtils {
         return jsonObject;
 
     }
+
+    public static JSONObject uploadDataToDataServer(String dataContainerIpAndPort, @Nullable org.springframework.http.HttpEntity<?> requestEntity, int ...fileSize) {
+
+        String url="http://"+ dataContainerIpAndPort +"/configData";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        JSONObject jsonObject = restTemplate.postForObject(url, requestEntity, JSONObject.class);
+
+        if(jsonObject.getIntValue("code")==-1){
+            throw new MyException("远程服务出错");
+        }
+
+        if(fileSize!=null){
+            jsonObject.put("file_size",fileSize);
+        }
+
+        return jsonObject;
+
+    }
+
+
 }

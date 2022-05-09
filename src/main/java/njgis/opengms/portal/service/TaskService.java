@@ -134,6 +134,7 @@ public class TaskService {
             dxInfo.put("dxIP", dxServer.getString("ip"));
             dxInfo.put("dxPort", dxServer.getString("port"));
             dxInfo.put("dxType", dxServer.getString("type"));
+            // dxInfo.put("access_url", dxServer.getString("access_url")); //数据容器部署在内网的话要用这个url访问数据容器
             msg = "success";
         }else if(code==-2){
             msg="no service";
@@ -822,8 +823,8 @@ public class TaskService {
      **/
     public JsonResult getTasksByUserByStatus(String email, TaskFindDTO taskFindDTO) {
 
-        Sort sort = Sort.by(taskFindDTO.getAsc() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, taskFindDTO.getSortType());
-        Pageable pageable = PageRequest.of(taskFindDTO.getPage(), taskFindDTO.getPageSize(), sort);
+        Sort sort = Sort.by(taskFindDTO.getAsc() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "runTime");
+        Pageable pageable = PageRequest.of(taskFindDTO.getPage()-1, taskFindDTO.getPageSize(), sort);
         Page<Task> tasks = Page.empty();
         String status = taskFindDTO.getStatus();
         try{
@@ -853,6 +854,19 @@ public class TaskService {
                 }
 
             }
+
+            //把内网ip换成外网可以访问的地址，供外网下载(这段代码迁移到task server了)
+            // for (Task t : ts) {
+            //     List<TaskData> outputs = t.getOutputs();
+            //     for (TaskData output : outputs) {
+            //         String url = output.getUrl();
+            //         if (url != null && url.contains("172.21.213.111:8082")){
+            //             url = url.replaceFirst("172.21.213.111:8082", dataContainerIpAndPort);
+            //             // url = url.replaceFirst("221.226.60.2:8082", dataContainerIpAndPort);
+            //             output.setUrl(url);
+            //         }
+            //     }
+            // }
 
             JSONObject taskObject = new JSONObject();
             taskObject.put("count", tasks.getTotalElements());

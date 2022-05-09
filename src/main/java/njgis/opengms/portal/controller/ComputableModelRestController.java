@@ -231,4 +231,20 @@ public class ComputableModelRestController {
 
     }
 
+    @LoginRequired
+    @RequestMapping(value = "/deployToGivenServer",method = RequestMethod.POST)
+    JsonResult deploy(@RequestParam("id")String id,@RequestParam("ip")String ip,@RequestParam("port")String port,HttpServletRequest request) throws IOException {
+
+        if (id.contains("?"))
+            id = (id.split("\\?"))[0];
+
+        String result=computableModelService.deployToGivenServer(id,ip,port);
+        if(result!=null){
+            return ResultUtils.success(result);
+        }
+        else {
+            return ResultUtils.success("failed");
+        }
+    }
+
 }
