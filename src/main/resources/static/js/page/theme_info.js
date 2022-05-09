@@ -2216,10 +2216,10 @@ var vue = new Vue({
         },
         send_message() {
             this.dialogVisible = false;
-            alert("Send Message Success!")
+            alert(this.htmlJson.SendMessageSuccess)
         },
         handleClose(done) {
-            this.$confirm('Confirm closing？')
+            this.$confirm(this.htmlJson.ConfirmClosing)
                 .then(_ => {
                     done();
                 })

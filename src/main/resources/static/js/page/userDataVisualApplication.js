@@ -271,7 +271,7 @@ var userDataVisualApplication = Vue.extend(
                                     }
                                     this.await = false
                                 } else {
-                                    alert("no result")
+                                    alert(this.htmlJson.NoFound)
                                 }
                             }
                         }, 1)

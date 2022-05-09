@@ -1,5 +1,6 @@
 new Vue({
     el: '#app',
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -841,7 +842,7 @@ new Vue({
                     }
                 },
                 error: function (e) {
-                    alert("load user error");
+                    alert(this.htmlJson.loadUserError);
                 }
             });
         },

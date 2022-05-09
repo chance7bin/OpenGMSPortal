@@ -33,7 +33,7 @@ var feedback = Vue.extend(
 
             send(){
                 if(this.content===''){
-                    alert('please input at lease one word')
+                    alert(this.htmlJson.PleaseInputAtLeaseOneWord)
                     return
                 }
                 let that=this;

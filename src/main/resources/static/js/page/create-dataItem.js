@@ -321,7 +321,7 @@ var createDataItem = Vue.extend({
                                 window.location.href = "/user/userSpace#/data/dataitem";
                             });
                         }else{
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -338,13 +338,13 @@ var createDataItem = Vue.extend({
                             if (result.status ===200){
                                 if (result.data.code === 0) {
                                     if(result.data.data.method==="update") {
-                                        alert("Update Success");
+                                        alert(this.htmlJson.UpdateSuccess);
                                         $("#editModal", parent.document).remove();
                                         window.location.href = "/dataItem/" + result.data.data.id;
                                     }
                                     else{
 
-                                        this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                        this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
                                             type:"success",
                                             confirmButtonText: 'OK',
                                             callback: action => {
@@ -556,7 +556,7 @@ var createDataItem = Vue.extend({
         $(".step2").steps({
 
             onFinish: function () {
-                alert('complete');
+                alert(this.htmlJson.complete);
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
 
@@ -882,7 +882,7 @@ var createDataItem = Vue.extend({
 
         $("#step").steps({
             onFinish: function () {
-                alert('Wizard Completed');
+                alert(this.htmlJson.WizardCompleted);
             }
         });
 
@@ -955,7 +955,7 @@ var createDataItem = Vue.extend({
                 },
                 error: (data) => {
                     $("#doi_searchBox").removeClass("spinner")
-                    alert("ERROR!")
+                    alert(this.htmlJson.Error)
                     $("#doiDetails").css("display", "none");
                     $("#doiTitle").val("")
                 }
@@ -979,7 +979,7 @@ var createDataItem = Vue.extend({
 
             if ($(".nav-tabs li").eq(0)[0].className == "active") {
                 if ($("#refTitle").val().trim() == "") {
-                    alert("Please Enter Title");
+                    alert(this.htmlJson.PleaseEnterTitle);
                 }
                 else {
                     table.row.add([
@@ -1004,7 +1004,7 @@ var createDataItem = Vue.extend({
             }
             else {
                 if ($("#doiTitle").val() == "") {
-                    alert("Details are empty");
+                    alert(this.htmlJson.DetailsAreEmpty);
                 }
                 else {
                     table.row.add([

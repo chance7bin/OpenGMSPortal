@@ -307,7 +307,7 @@ var vue = new Vue({
                 // dataType: "json",
                 success:(json)=>{
                     if(json.code==0){
-                        alert("Add Success");
+                        alert(this.htmlJson.AddSuccess);
                     }
                 }
                 }
@@ -622,9 +622,9 @@ var vue = new Vue({
 
         console.log(this.info);
         if(info==null||info==undefined){
-            alert("Initialization error!")
+            alert(this.htmlJson.InitializationError)
         }else if(info.permission==='forbid'){
-            alert("You do not have a permission to this private page")
+            alert(this.htmlJson.YouDontHavePermissionToThisPrivatePage)
             return
         }
 

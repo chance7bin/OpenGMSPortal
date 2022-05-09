@@ -465,7 +465,8 @@
       "thisItem": " this item?",
       "Confirm": "Confirm",
       "Cancel": "Cancel",
-      "DeleteSuccessful": "Delete Successful!"
+      "DeleteSuccessful": "Delete Successful!",
+      "PleaseCheckNameCannotFindModelItem": "Please check the name! Can not find model item:"
     },
 
     "CreateConceptualModel": "Create Conceptual Model",
@@ -1716,7 +1717,31 @@
     "Please": "Please",
     "successfully": "successfully",
     "RegisterError": "register error",
-    "PleaseSelectDataInFormat:": "Please select the data in format:"
+    "PleaseSelectDataInFormat:": "Please select the data in format:",
+    "loadUserError": "load user error",
+    "WizardCompleted": "Wizard Completed",
+    "ForkSuccessfully": "Fork successfully!",
+    "EnterFolderName": "Enter Folder Name",
+    "PleaseSelectModelFirst": "pleasa select model first",
+    "RelatedModelsSuccessfully": "Cgts,related models successfully!",
+    "NoDataInServiceNode": "no data in service node",
+    "noAuthority": "no authority",
+    "ServiceNodeOffline": "service node offline",
+    "complete": "complete",
+    "PleaseEnterTitle": "Please Enter Title",
+    "DetailsAreEmpty": "Details are empty",
+    "PleaseInputAtLeaseOneWord": "please input at lease one word",
+    "AddSuccess": "Add Success",
+    "InitializationError": "Initialization error",
+    "YouDontHavePermissionToThisPrivatePage": "You do not have a permission to this private page",
+    "SendMessageSuccess": "Send Message Success!",
+    "ConfirmClosing": "Confirm closing？",
+    "ResetPasswordError": "reset password error",
+    "PleaseEnterOldPassword": "Please enter old passw",
+    "PleaseEnterNewPassword": "Please enter new password!",
+    "PleaseConfirmNewPassword": "Please confirm new password!",
+    "PasswordAndConfirmPasswordAreInconsistent": "Password and Confirm Password are inconsistent!",
+    "PleaseSelectFirst": "please select first!"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -1909,7 +1934,6 @@
     "SubModel": "订阅计算模型",
     "Edit": "编辑",
 
-
     "NoticeSplit": "-------------------",
     "Sort": "排序",
     "ReverseOrder": "逆序",
@@ -1924,9 +1948,6 @@
     "OthersEdition": "其他的编辑",
     "Reply": "回复",
     "EmptyInfo": "此页面暂时为空",
-
-
-
 
     "DraftBoxSplit": "-------------------",
     "ModelItem": "模型条目",
@@ -3430,6 +3451,31 @@
     "Please": "请",
     "successfully": "成功",
     "RegisterError": "注册成功",
-    "PleaseSelectDataInFormat": "请选择数据格式为："
+    "PleaseSelectDataInFormat": "请选择数据格式为：",
+    "loadUserError": "加载用户失败",
+    "WizardCompleted": "向导完成",
+    "ForkSuccessfully": "分支成功",
+    "EnterFolderName": "输入文件夹名称",
+    "PleaseSelectModelFirst": "请先选择模型",
+    "RelatedModelsSuccessfully": "关联模型成功！",
+    "NoDataInServiceNode": "服务节点中没有数据",
+    "noAuthority": "没有权限",
+    "ServiceNodeOffline": "服务节点离线",
+    "complete": "完成",
+    "PleaseEnterTitle": "请输入标题",
+    "DetailsAreEmpty": "详情为空",
+    "PleaseInputAtLeaseOneWord": "请至少输入一个单词",
+    "AddSuccess": "添加成功",
+    "InitializationError": "初始化失败",
+    "YouDontHavePermissionToThisPrivatePage": "您没有访问私有页面的权限",
+    "PleaseCheckNameCannotFindModelItem": "请检查名称！没有找到模型项：",
+    "SendMessageSuccess": "发送消息成功！",
+    "ConfirmClosing": "确认关闭？",
+    "ResetPasswordError": "重置密码失败",
+    "PleaseEnterOldPassword": "请输入旧密码!",
+    "PleaseEnterNewPassword": "请输入新密码!",
+    "PleaseConfirmNewPassword": "请确认新密码!",
+    "PasswordAndConfirmPasswordAreInconsistent": "两次输入不一致!",
+    "PleaseSelectFirst": "请先选择!"
   }
 }

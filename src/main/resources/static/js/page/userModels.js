@@ -629,7 +629,7 @@ var userModels = Vue.extend(
                                     crossDomain: true,
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please log in first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                         } else {
                                             if (json.data == 1) {
                                                 this.$message({
@@ -716,7 +716,7 @@ var userModels = Vue.extend(
                         console.log(data);
 
                         if (data.oid == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.email;
