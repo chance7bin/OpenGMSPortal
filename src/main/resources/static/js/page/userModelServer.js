@@ -184,7 +184,7 @@ var userModelServer = Vue.extend(
 
             updateNodeAlias(){
                 if(this.nodeAlias.trim()==''){
-                     this.$alert('Please input at least one letter', 'Tip', {
+                     this.$alert(this.htmlJson.PleaseInputAtLeastOneLetter, 'Tip', {
                               type:"warning",
                               confirmButtonText: 'OK',
                               callback: ()=>{
@@ -349,7 +349,7 @@ var userModelServer = Vue.extend(
                         console.log(data);
 
                         if (data.oid == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.oid;

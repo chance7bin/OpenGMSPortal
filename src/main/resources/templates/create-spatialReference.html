@@ -90,10 +90,10 @@
                                                     <div class="step-app">
                                                         <ul class="step-steps text-center">
                                                             <li>
-                                                                <a href="#step1">Basic Info</a>
+                                                                <a href="#step1">{{htmlJson.BasicInfo}}</a>
                                                             </li>
                                                             <li>
-                                                                <a href="#step2">Content</a>
+                                                                <a href="#step2">{{htmlJson.Content}}</a>
                                                             </li>
 
                                                         </ul>
@@ -240,11 +240,11 @@
                                                                 <div v-if="editType=='create'" class="singleLocalization">
                                                                     <div style="margin:15px 0;width:15%;float: left;">
                                                                         <div>
-                                                                            <b>Language:</b>
+                                                                            <b>{{htmlJson.Language.label}}:</b>
                                                                             <el-tooltip
                                                                                     popper-class="fontsize-15"
                                                                                     effect="light"
-                                                                                    content="After creating, you can describe the item in different languages by editing"
+                                                                                    :content="htmlJson.Language.content"
                                                                                     placement="top">
                                                                                 <i class="fa fa-question-circle-o" aria-hidden="true" style="cursor:help;"></i>
                                                                             </el-tooltip>
@@ -262,19 +262,19 @@
                                                                     </div>
                                                                     <div style="margin:15px 0;padding-left:10px;width:85%;float: left;">
                                                                         <div>
-                                                                            <b>Local Name:</b>
+                                                                            <b>{{htmlJson.LocalName.label}}:</b>
                                                                             <el-tooltip
                                                                                     popper-class="fontsize-15"
                                                                                     effect="light"
-                                                                                    content="A name in localized language should be given"
+                                                                                    :content="htmlJson.LocalName.content"
                                                                                     placement="top">
                                                                                 <i class="fa fa-question-circle-o" aria-hidden="true" style="cursor:help;"></i>
                                                                             </el-tooltip>
                                                                         </div>
-                                                                        <el-input v-model="currentLocalization.name" placeholder="Please enter the model's name in your selected language"></el-input>
+                                                                        <el-input v-model="currentLocalization.name" :placeholder="htmlJson.LocalName.placeholder"></el-input>
                                                                     </div>
                                                                     <div style="margin-bottom:10px;">
-                                                                        <div><b>Description :</b> </div>
+                                                                        <div><b>{{htmlJson.Description}} :</b> </div>
                                                                         <textarea id="singleDescription"></textarea>
                                                                     </div>
                                                                 </div>
@@ -284,7 +284,8 @@
                                                                             <span style="font-weight: bold">Localizations</span>
                                                                             <el-button
                                                                                     style="float: right; padding: 3px 0"
-                                                                                    type="text" @click="addLocalization">+ Add
+                                                                                    type="text" @click="addLocalization">+
+                                                                                {{htmlJson.authorshipPart.Add}}
                                                                             </el-button>
                                                                         </div>
                                                                         <el-collapse-transition>
@@ -345,18 +346,19 @@
 
                                                         <div class="step-footer text-right">
                                                             <button class="btn btn-danger prev" @click="cancelEditClick()" style="">
-                                                                Exit
+                                                                {{htmlJson.Exit}}
                                                             </button>
                                                             <div class="innerBorderCol btn btn-warning"
                                                                  style="padding: 0;margin: 0 10px;height: 20px;background-color: #cccccc !important;cursor: auto">
                                                             </div>
                                                             <button class="btn btn-warning prev" data-direction="prev">
-                                                                Previous
+                                                                {{htmlJson.Previous}}
                                                             </button>
-                                                            <button class="btn btn-primary next" data-direction="next">Next
+                                                            <button class="btn btn-primary next" data-direction="next">
+                                                                {{htmlJson.Next}}
                                                             </button>
                                                             <button class="btn btn-success finish" data-direction="finish">
-                                                                Finish
+                                                                {{htmlJson.Finish}}
                                                             </button>
                                                         </div>
                                                     </div>

@@ -185,7 +185,7 @@ var userAccount = Vue.extend(
                 $.post("/user/setSubscribe",{subscribe:this.subscribe},(result)=>{
                     let data = result.data;
                     if(result.code==-1){
-                        this.$alert('Please login first', 'Tip', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                             type:"info",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -214,7 +214,7 @@ var userAccount = Vue.extend(
                     dataType: "json",
                     contentType:"application/json",
                     success: (res)=> {
-                        this.$alert('Set subscribed list successfully!', 'Success', {
+                        this.$alert(this.htmlJson.SetSubscribedListSuccessfully, 'Success', {
                             type:"success",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -223,7 +223,7 @@ var userAccount = Vue.extend(
                         });
                     },
                     error: (res)=> {
-                        this.$alert('Submit failed!', 'Error', {
+                        this.$alert(this.htmlJson.failed, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -239,7 +239,7 @@ var userAccount = Vue.extend(
                 // this.getSubscribedList();
                 $.get("/user/getModelCounts",{},(result)=>{
                     if(result.code==-1) {
-                        this.$alert('Please login first', 'Tip', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                             type: "info",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -512,7 +512,7 @@ var userAccount = Vue.extend(
 
                         let code = result.code
                         if(code === -1)    {
-                             this.$alert('Please login first', 'Tip', {
+                             this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                       type:"warning",
                                       confirmButtonText: 'OK',
                                       callback: ()=>{
@@ -522,7 +522,7 @@ var userAccount = Vue.extend(
                               );
                              return
                         }else if(code === -2){
-                            this.$alert('Failed to update info, please try again', 'Tip', {
+                            this.$alert(this.htmlJson.FailedToUpdateInfoPleaseTryAgain, 'Tip', {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -533,7 +533,7 @@ var userAccount = Vue.extend(
                         }
 
                         $("#saveUser").removeAttr("disabled");
-                        that.$alert('Update successfully!', {
+                        that.$alert(this.htmlJson.UpdateSuccess, {
                             type:"success ",
                             confirmButtonText: 'OK',
                         });
@@ -576,7 +576,7 @@ var userAccount = Vue.extend(
                         data: data,
                         success: (result)=> {
                             if (result.code == -1) {
-                                this.$alert('Please login first', 'Tip', {
+                                this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                     type:"info",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -586,7 +586,7 @@ var userAccount = Vue.extend(
 
                             } else if(result.code == -2){
                                 if(result.data === "wrong oldpass"){
-                                    this.$alert('Old password is not correct!', 'Tip', {
+                                    this.$alert(this.htmlJson.OldPasswordIsNotCorrect, 'Tip', {
                                             type:"warning",
                                             confirmButtonText: 'OK',
                                             callback: ()=>{
@@ -595,7 +595,7 @@ var userAccount = Vue.extend(
                                         }
                                     );
                                 }else{
-                                    this.$alert('Change password error!', 'Tip', {
+                                    this.$alert(this.htmlJson.ChangePasswordError, 'Tip', {
                                             type:"warning",
                                             confirmButtonText: 'OK',
                                             callback: ()=>{
@@ -606,7 +606,7 @@ var userAccount = Vue.extend(
                                 }
 
                             } else {
-                                this.$alert('Change password successfully!', 'Tip', {
+                                this.$alert(this.htmlJson.ChangePasswordSuccessfully, 'Tip', {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -618,7 +618,7 @@ var userAccount = Vue.extend(
                             }
                         },
                         error: function (result) {
-                             this.$alert('Change password error!', 'Tip', {
+                             this.$alert(this.htmlJson.ChangePasswordError, 'Tip', {
                                       type:"warning",
                                       confirmButtonText: 'OK',
                                       callback: ()=>{
@@ -675,7 +675,7 @@ var userAccount = Vue.extend(
                     success: (result) => {
                         let data = result.data
                         if (data.accessId == "") {
-                            this.$alert('Please login first', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                 type:"info",
                                 confirmButtonText: 'OK',
                                 callback: action => {

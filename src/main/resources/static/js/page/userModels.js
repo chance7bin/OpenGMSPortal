@@ -145,7 +145,7 @@ var modelItem = Vue.extend({
                     if(code === 0){
                         this.$message({
                             type: 'success',
-                            message: 'Add admin successfully.'
+                            message: this.htmlJson.AddAdminSuccessfully
                         });
                         this.admins.push(result.data);
                     }else{
@@ -174,7 +174,7 @@ var modelItem = Vue.extend({
                     }
                     this.$message({
                         type: 'success',
-                        message: 'Delete admin successfully.'
+                        message: this.htmlJson.DeleteAdminSuccessfully
                     });
                 }
             })
@@ -484,7 +484,7 @@ var userModels = Vue.extend(
                     async: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -549,7 +549,7 @@ var userModels = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code != 0) {
-                                alert("Please login first!");
+                                alert(this.htmlJson.LoginInFirst);
                                 window.location.href = "/user/login";
                             } else {
                                 let data = json.data;
@@ -634,13 +634,13 @@ var userModels = Vue.extend(
                                             if (json.data == 1) {
                                                 this.$message({
                                                     type: 'success',
-                                                    message: 'delete successful '
+                                                    message: this.htmlJson.userModel.DeleteSuccessful
                                                 });
                                                 // this.$alert("delete successfully!")
                                             } else if (json.data == -1) {
-                                                this.$alert("delete failed!")
+                                                this.$alert(this.htmlJson.DeleteFailed)
                                             } else
-                                                this.$alert("please refresh the page!")
+                                                this.$alert(this.htmlJson.RefreshPage)
                                         }
                                         if (this.searchText.trim() != "") {
                                             this.searchItems(this.page);

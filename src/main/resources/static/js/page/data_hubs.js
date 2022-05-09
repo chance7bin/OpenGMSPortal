@@ -223,7 +223,7 @@ var data_items = new Vue({
         },
         contribute(event){
             if(this.useroid==''){
-                alert("Please login");
+                alert(this.htmlJson.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 console.log(event.currentTarget._prevClass.split(" ")[event.currentTarget._prevClass.split(" ").length-1]);

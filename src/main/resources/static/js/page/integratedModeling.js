@@ -30,7 +30,7 @@
 //
 var vue = new Vue({
     el: "#app",
-    props: [],
+    props: ['htmlJson'],
     data: {
         models:[],
         modelActions: [],

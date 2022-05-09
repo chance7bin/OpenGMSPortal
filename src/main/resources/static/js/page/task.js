@@ -1,5 +1,6 @@
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     data: {
         htmlJSON:{
             selectModel:"Select Computable Model",
@@ -822,7 +823,7 @@ var vue = new Vue({
                 contentType: "application/json",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -957,7 +958,7 @@ var vue = new Vue({
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1016,7 +1017,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {

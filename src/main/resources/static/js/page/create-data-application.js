@@ -342,7 +342,7 @@ var createDataApplication = Vue.extend({
                     console.log(data);
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -404,7 +404,7 @@ var createDataApplication = Vue.extend({
 
             if(res.suffix!=='zip'){
                 this.$message({
-                    message: 'Please select a zip file!',
+                    message: this.htmlJson.PleaseSelectZipFile,
                     type: 'error',
                     offset: 70,
                 });
@@ -466,7 +466,7 @@ var createDataApplication = Vue.extend({
             success: (data) => {
                 // data=JSON.parse(data);
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else{
@@ -569,13 +569,13 @@ var createDataApplication = Vue.extend({
                             var content_box = $(".providers");
                             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
                             str += user_num;
-                            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW +" </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+                            str += "' href='javascript:;'> " + that.htmlJson.NEW +" </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
                             str += user_num;
                             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                                 "                                                                                                    <div>\n" +
                                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                                 "                                                                                                               style='font-weight: bold;'>\n" +
-                                that.htmlJson.authorshipPart.Name + ":\n" +
+                                that.htmlJson.Name + ":\n" +
                                 "                                                                                                        </lable>\n" +
                                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                                 "                                                                                                            <input type='text'\n" +
@@ -697,7 +697,7 @@ var createDataApplication = Vue.extend({
                         ||this.dataApplication.contentType=="Package"){
                         if(this.fileArray.length==0&&this.resources.length==0){
                             new Vue().$message({
-                                message: 'Please select at least one file!',
+                                message: this.htmlJson.PleaseSelectAtLeastOneFile,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -734,7 +734,7 @@ var createDataApplication = Vue.extend({
 
             let loading = this.$loading({
                 lock: true,
-                text: "Uploading...",
+                text: this.htmlJson.Uploading,
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
@@ -836,10 +836,10 @@ var createDataApplication = Vue.extend({
                     // $(".uploading").css("display", "none");
                     switch (res.code) {
                         case 0:
-                            this.$confirm('<div style=\'font-size: 18px\'>Create data application successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateDataApplicationSuccessfully +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -855,7 +855,7 @@ var createDataApplication = Vue.extend({
 
                             break;
                         case -2:
-                            this.$alert('Save files error!', 'Error', {
+                            this.$alert(this.htmlJson.SaveFilesError, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -864,7 +864,7 @@ var createDataApplication = Vue.extend({
                             });
                             break;
                         case -1:
-                            this.$alert(res.msg, 'Error', {
+                            this.$alert(res.msg, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -937,7 +937,7 @@ var createDataApplication = Vue.extend({
                             // that.getnoticeNum(that.dataApplication_oid);
                             // let params = that.message_num_socket;
                             // that.send(params);
-                            this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                            this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, this.htmlJson.Success, {
                                 type:"success",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -946,7 +946,7 @@ var createDataApplication = Vue.extend({
                             });
                         }
                     }else{
-                            this.$alert(res.msg, 'Error', {
+                            this.$alert(res.msg, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1031,7 +1031,7 @@ var createDataApplication = Vue.extend({
                     // }
                 }).fail((res) => {
                     console.log("dataMethod put err",res)
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -1113,7 +1113,7 @@ var createDataApplication = Vue.extend({
                 "                                                                                                    <div>\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                that.htmlJson.authorshipPart.Name + ":\n" +
+                that.htmlJson.Name + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +

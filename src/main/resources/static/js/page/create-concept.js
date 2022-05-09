@@ -1,5 +1,6 @@
 var createConcept = Vue.extend({
     template: "#createConcept",
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -152,7 +153,7 @@ var createConcept = Vue.extend({
                 { value: 'zu', label: 'Zulu' },
             ],
 
-            treeData: [
+            /*treeData: [
                 {
                     id: 1,
                     "oid": "34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP",
@@ -915,7 +916,8 @@ var createConcept = Vue.extend({
                         }
                     ]
                 }
-            ],
+            ],*/
+
 
             defaultProps: {
                 children: 'children',
@@ -949,6 +951,19 @@ var createConcept = Vue.extend({
 
         }
     },
+
+    computed:{
+        treeData(){
+            return this.htmlJson.treeData3;
+        }
+        // treeData_part2(){
+        //     return this.htmlJson.treeData_part2;
+        // }
+        // htmlJSON(){
+        //     return this.htmlJson;
+        // }
+    },
+
     methods: {
 
         getLanguageList(){
@@ -1256,6 +1271,7 @@ var createConcept = Vue.extend({
             //cls
             this.cls = basicInfo.classifications;
             this.status = basicInfo.status;
+
             let ids = [];
             for (i = 0; i < this.cls.length; i++) {
                 for (j = 0; j < 2; j++) {
@@ -1603,6 +1619,23 @@ var createConcept = Vue.extend({
         this.socket.onclose = this.close
     },
 
+    watch:{
+        //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateConceptSemantic);
+            } else {
+                $("#subRteTitle").text("/" + newData.UpdateConceptSemantic);
+            }
+            // $("#title").text("Create Model Item")
+
+        }
+    },
+
     mounted() {
 
         let that = this;
@@ -1633,7 +1666,7 @@ var createConcept = Vue.extend({
         if ((oid === "0") || (oid === "") || (oid === null) || (oid === undefined)) {
 
             // $("#title").text("Create Concept & Semantic")
-            $("#subRteTitle").text("/Create Concept & Semantic")
+            $("#subRteTitle").text("/"+this.htmlJson.CreateConceptSemantic);
 
             $('#aliasInput').tagEditor({
                 forceLowercase: false
@@ -1700,7 +1733,7 @@ var createConcept = Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.cls.length == 0) {
                         new Vue().$message({
-                            message: 'Please select at least one classification!',
+                            message: this.htmlJson.noCLSTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -1708,14 +1741,14 @@ var createConcept = Vue.extend({
                     }
                     else if ($("#nameInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#descInput").val().trim() == ""){
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -1744,7 +1777,7 @@ var createConcept = Vue.extend({
         $('#related').tagEditor({
             initialTags: this.related,
             forceLowercase: false,
-            placeholder: 'Enter keywords ...'
+            placeholder: this.htmlJson.EnterKeywords
         });
 
 
@@ -1758,7 +1791,7 @@ var createConcept = Vue.extend({
             success: (data) => {
                 console.log(data);
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 } else {
                     this.userId = data.oid;
@@ -1788,7 +1821,7 @@ var createConcept = Vue.extend({
 
             let loading = this.$loading({
                 lock: true,
-                text: "Uploading...",
+                text: this.htmlJson.Uploading,
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
@@ -1799,7 +1832,7 @@ var createConcept = Vue.extend({
             for(i=0;i<this.localizationList.length;i++){
                 let local = this.localizationList[i];
                 if(local.localName.trim()==""||local.localCode.trim()==""){
-                    this.$alert('<b>'+local.localName+'</b> localized name or description has not been filled in, please fill it or delete the localization language.', 'Warning', {
+                    this.$alert('<b>'+local.localName+'</b>'+this.htmlJson.LocalizedNameOrDescriptionHasNotBeenFilledPleaseFillItOrDeleteTheLocalizationLanguage, 'Warning', {
                         confirmButtonText: 'OK',
                         type: 'warning',
                         dangerouslyUseHTMLString: true,
@@ -1833,10 +1866,10 @@ var createConcept = Vue.extend({
                         loading.close();
                         if (result.code == "0") {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create concept successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateConceptSuccessfully +'<div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -1849,7 +1882,7 @@ var createConcept = Vue.extend({
                             });
 
                         } else if (result.code == -1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1886,10 +1919,10 @@ var createConcept = Vue.extend({
                         if (result.code === 0) {
                             this.deleteDraft()
                             if (result.data.method === "update") {
-                                this.$confirm('<div style=\'font-size: 18px\'>Update concept successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateConceptSuccessfully+ '</div>', this.htmlJson.Tip, {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',
@@ -1920,7 +1953,7 @@ var createConcept = Vue.extend({
 
                             }
                         } else if (result.code == -2) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {

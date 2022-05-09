@@ -644,7 +644,7 @@ var createConceptualModel = Vue.extend({
                     let data = result.data
 
                     if (data.oid == "") {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -723,7 +723,7 @@ var createConceptualModel = Vue.extend({
             crossDomain:true,
             success: (data) => {
                 if (data.oid == "") {
-                    this.$alert('Please login first!', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -955,7 +955,7 @@ var createConceptualModel = Vue.extend({
                             break;
                     }
                 }).fail(function (res) {
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -1119,7 +1119,7 @@ var createConceptualModel = Vue.extend({
                         });
                     }
                 }).fail(function (res) {
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {
