@@ -319,7 +319,7 @@ var userDataSpace = Vue.extend(
 
                 }
                 else {
-                    alert("Please select data first!")
+                    alert(this.htmlJson.PleaseSelectDataFirst)
 
                 }
             },
@@ -1205,7 +1205,7 @@ var userDataSpace = Vue.extend(
                     // link.click();
 
                 } else {
-                    alert("please select first!!")
+                    alert(this.htmlJson.PleaseSelectFirst)
                 }
 
 

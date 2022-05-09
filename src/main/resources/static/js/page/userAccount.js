@@ -172,7 +172,7 @@ var userAccount = Vue.extend(
                             }
                         },
                         error: function (e) {
-                            alert("reset password error");
+                            alert(this.htmlJson.ResetPasswordError);
                         }
                     });
                 }).catch(() => {
@@ -552,16 +552,16 @@ var userAccount = Vue.extend(
                     let newPass = $("#inputPassword").val();
                     let newPassAgain = $("#inputPassAgain").val();
                     if (oldPass == "") {
-                        alert("Please enter old password!")
+                        alert(this.htmlJson.PleaseEnterOldPassword)
                         return;
                     } else if (newPass == "") {
-                        alert("Please enter new password!")
+                        alert(this.htmlJson.PleaseEnterNewPassword)
                         return;
                     } else if (newPassAgain == "") {
-                        alert("Please confirm new password!")
+                        alert(this.htmlJson.PleaseConfirmNewPassword)
                         return;
                     } else if (newPass != newPassAgain) {
-                        alert("Password and Confirm Password are inconsistent!")
+                        alert(this.htmlJson.PasswordAndConfirmPasswordAreInconsistent)
                         return;
                     }
 

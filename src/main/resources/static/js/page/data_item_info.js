@@ -177,7 +177,7 @@ var  data_item_info = new Vue({
 
             }
             else{
-                alert("Please select data first!")
+                alert(this.htmlJson.PleaseSelectDataFirst)
             }
         },
         addFolder(){
@@ -191,7 +191,7 @@ var  data_item_info = new Vue({
             }
             console.log(paths)
 
-            this.$prompt(null, 'Enter Folder Name', {
+            this.$prompt(null, this.htmlJson.EnterFolderName, {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
@@ -253,7 +253,7 @@ var  data_item_info = new Vue({
                         this.confirmLogin();
                     }
                     else {
-                        alert("Fork successfully!");
+                        alert(this.htmlJson.ForkSuccessfully);
                         this.forkDialogVisible=false;
                     }
 
@@ -262,7 +262,7 @@ var  data_item_info = new Vue({
         },
         append(data) {
 
-            this.$prompt(null, 'Enter Folder Name', {
+            this.$prompt(null, this.htmlJson.EnterFolderName, {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
@@ -1020,7 +1020,7 @@ var  data_item_info = new Vue({
         relatedToCurrentData(){
 
             if(this.selectedModelsOid.length===0){
-                alert("pleasa select model first!")
+                alert(this.htmlJson.PleaseSelectModelFirst)
             }else{
 
                 let curentId=document.location.href.split("/");
@@ -1035,7 +1035,7 @@ var  data_item_info = new Vue({
 
                     .then((res)=>{
                         if(res.status===200){
-                            alert("Cgts,related models successfully!")
+                            alert(this.htmlJson.RelatedModelsSuccessfully)
 
                         }
 
@@ -1343,7 +1343,7 @@ var  data_item_info = new Vue({
                         that.loading = false;
                     }
                     // loading = false;
-                    alert('no data in service node!')
+                    alert(this.htmlJson.NoDataInServiceNode)
                 } else
                     //没有权限
                 if (e.data === 'no authority') {
@@ -1352,7 +1352,7 @@ var  data_item_info = new Vue({
                     }else {
                         that.loading = false;
                     }
-                    alert('no authority')
+                    alert(this.htmlJson.noAuthority)
                 } else
                     //服务结点离线
                 if (e.data == 'node offline') {
@@ -1361,7 +1361,7 @@ var  data_item_info = new Vue({
                     }else {
                         that.loading = false;
                     }
-                    alert('service node offline')
+                    alert(this.htmlJson.ServiceNodeOffline)
                 } else
                     //注册门户到中转服务器成功
                 if (e.data === 'success') {
@@ -1679,7 +1679,7 @@ $(function () {
             link.click();
         }
         else{
-            alert('please select file first!!');
+            alert(this.htmlJson.PleaseSelectFileFirst);
         }
 
 

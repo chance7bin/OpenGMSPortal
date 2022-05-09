@@ -981,7 +981,7 @@ var vue = new Vue({
 
             } else {
                 if (this.selectedPath.length == 0) {
-                    alert('Please select a folder')
+                    alert(this.htmlJson.PleaseSelectAFolderFirst)
                     return
                 }
 
@@ -1098,7 +1098,7 @@ var vue = new Vue({
             var node, data
             if (pageIndex == 'myData') {
                 data = this.$refs.folderTree.getCurrentNode();
-                if (data == undefined) alert('Please select a file directory')
+                if (data == undefined) alert(this.htmlJson.selectDirTip)
                 node = this.$refs.folderTree.getNode(data);
             }
             // else {
@@ -1129,7 +1129,7 @@ var vue = new Vue({
                 if (folderExited.some((item) => {
                     return item.label === value;
                 }) == true) {
-                    alert('this name is existing in this path, please input a new one');
+                    alert(this.htmlJson.ThisNameIsExistingPleaseInputNewOne);
                     return
                 }
 
@@ -2803,7 +2803,7 @@ var vue = new Vue({
                         tha.rightMenuShow = false
                         tha.databrowser = []
                         tha.addAllData()
-                        alert("delete successful")
+                        alert(this.htmlJson.DeleteSuccessful)
 
                     }
 
@@ -3247,7 +3247,7 @@ var vue = new Vue({
                 link.click();
 
             } else {
-                alert("please select first!!")
+                alert(this.htmlJson.PleaseSelectFirst)
             }
 
 

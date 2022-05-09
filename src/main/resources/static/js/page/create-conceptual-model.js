@@ -1191,7 +1191,7 @@ var createConceptualModel = Vue.extend({
                             this.itemInfo.relateModelItem=json.data.oid;
                         }
                         else{
-                            alert("Can not find model item \""+this.itemInfo.relateModelItemName.trim()+"\",please check the name!")
+                            alert(this.htmlJson.PleaseCheckNameCannotFindModelItem+this.itemInfo.relateModelItemName.trim())
                         }
                     }
                 })

@@ -252,7 +252,7 @@ var userDataItems = Vue.extend(
                                     crossDomain: true,
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please log in first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                         } else {
                                             if (json.data == 1) {
                                                 // this.$alert("delete successfully!")
@@ -315,7 +315,7 @@ var userDataItems = Vue.extend(
                                     }
                                     this.await = false
                                 } else {
-                                    alert("no result")
+                                    alert(this.htmlJson.NoFound)
                                 }
                             }
                         }, 1)

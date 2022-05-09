@@ -712,7 +712,7 @@ new Vue({
             if (this.useroid == "" || this.useroid == null || this.useroid == undefined) {
                 this.$message({
                     dangerouslyUseHTMLString: true,
-                    message: '<strong>Please <a href="/user/login">log in</a> first.</strong>',
+                    message: this.htmlJson.LoginInFirst,
                     offset: 40,
                     showClose: true,
                 });

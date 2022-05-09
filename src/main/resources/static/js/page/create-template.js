@@ -796,7 +796,7 @@ var createTemplate = Vue.extend({
 
         $("#step").steps({
             onFinish: function () {
-                alert('Wizard Completed');
+                alert(this.htmlJson.WizardCompleted);
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
                 if (currentIndex === 0 && stepDirection === "forward") {

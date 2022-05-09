@@ -694,7 +694,7 @@ new Vue({
                     }
                 },
                 error: function (e) {
-                    alert("load user error");
+                    alert(this.htmlJson.loadUserError);
                 }
             });
         },

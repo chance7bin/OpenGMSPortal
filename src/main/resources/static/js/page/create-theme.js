@@ -1570,7 +1570,7 @@ var createTheme = Vue.extend({
         $(".step").steps({
 
             onFinish: function () {
-                alert('complete');
+                alert(this.htmlJson.complete);
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
                 switch (newIndex) {

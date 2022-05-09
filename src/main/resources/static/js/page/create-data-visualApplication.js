@@ -505,7 +505,7 @@ var createDataVisualApplication = Vue.extend({
 
         $("#step").steps({
             onFinish: function () {
-                alert('Wizard Completed');
+                alert(this.htmlJson.WizardCompleted);
             },
             onChange: (currentIndex, newIndex, stepDirection) => {
                 if (currentIndex === 0 && stepDirection === "forward") {
@@ -570,7 +570,7 @@ var createDataVisualApplication = Vue.extend({
             this.formData=new FormData();
 
             if(this.dataApplication.name.trim()==""){
-                alert("Please enter name")
+                alert(this.htmlJson.noNameTip)
                 return;
             }
 
