@@ -77,132 +77,132 @@ var createDataHubs = Vue.extend({
                     }]
                 }]
             }],
-            treeData_part1: [
-                {
-                    "children": [{
-                        "children": [{
-                            "id": 2,
-                            "label": "Land regions",
-                            "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
-                            "desc": "Models that mainly related to land regions, includes hydrology, hydrodynamics, soil, landform, terrestrial ecosystem etc.",
-                        }, {"id": 3, "label": "Ocean regions", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457",
-                            "desc": "Models that mainly related to ocean regions, includes coastal, seawater, sea-ice, marine ecosystem etc.",
-                        }, {
-                            "id": 4,
-                            "label": "Frozen regions",
-                            "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9",
-                            "desc": "Models that mainly related to frozen regions, includes galicer, permafrost, snow etc.",
-                        }, {"id": 5, "label": "Atmospheric regions", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5",
-                            "desc": "Models that mainly related to atmospheric regions, includes climate, weather, air etc.",
-                        }, {
-                            "id": 6,
-                            "label": "Space-earth regions",
-                            "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee",
-                            "desc": "Models that mainly related to space-earth regions, includes sun-earth, planets etc.",
-
-                        }, {"id": 7, "label": "Solid-earth regions", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e",
-                            "desc": "Models that mainly related to solid-earth regions, includes lithosphere, mantle, earthquack etc.",
-                        }
-                        ], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0",
-                        "desc": "Models that mainly related to physical geography.",
-
-                    }, {
-                        "children": [{
-                            "id": 10,
-                            "label": "Development activities",
-                            "oid": "808e74a4-41c6-4558-a850-4daec1f199df",
-                            "desc": "Models that mainly related to development activities, includes continents, countries, cities, administrative zones etc.",
-                        }, {"id": 11, "label": "Social activities", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190",
-                            "desc": "Models that mainly related to social activities, includes urban, rural, cultural area, travel area, built-up area, indoor area etc.",}, {
-                            "id": 12,
-                            "label": "Economic activities",
-                            "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769",
-                            "desc": "Models that mainly related to economic activities, includes agriculture, industry, tourism, trasport, energy, markets etc.",
-                        }],
-                        "id": 9,
-                        "label": "Human-perspective",
-                        "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da",
-                        "desc": "Models that mainly related to human geography.",
-                    }, {
-                        "id": 30,
-                        "label": "Integrated-perspective",
-                        "oid": "396cc739-ef33-4332-8d5d-9a67c89567c7",
-                        "desc": "Models that integrate many different models.",
-                        "children": [{
-                            "id": 31,
-                            "label": "Global scale",
-                            "oid": "14130969-fda6-41ea-aa32-0af43104840b",
-                            "desc": "Integrated models that apply in global scale.",
-                        }, {
-                            "id": 32,
-                            "label": "Regional scale",
-                            "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e",
-                            "desc": "Integrated models that apply in regional scale.",
-
-                        }]
-                    }],
-                    "id": 24,
-                    "label": "Application-focused categories",
-                    "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19",
-                    "desc": "Models that apply in one or more field.",
-                },
-            ],
-            treeData_part2: [
-                {"children": [{
-                        "children": [{
-                            "id": 15,
-                            "label": "Geoinformation analysis",
-                            "oid": "afa99af9-4224-4fac-a81f-47a7fb663dba",
-                            "desc": "Models that mainly related to geoinformation analysis, includes vector analysis, raster analysis, network analysis, topology analysis etc.",
-                        }, {
-                            "id": 16,
-                            "label": "Remote sensing analysis",
-                            "oid": "f20411a5-2f55-4ee9-9590-c2ec826b8bd5",
-                            "desc": "Models that mainly related to remote sensing analysis, includes imagery analysis, spectrum analysis etc.",
-                        }, {
-                            "id": 17,
-                            "label": "Geostatistical analysis",
-                            "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8",
-                            "desc": "Models that mainly related to geostatistical analysis, includes pattern detection, relation detection, clustering, interpolation etc.",
-                        }, {
-                            "id": 18,
-                            "label": "Intelligent computation analysis",
-                            "oid": "c6fcc899-8ca4-4269-a21e-a39d38c034a6",
-                            "desc": "Models that mainly related to intelligent computation analysis, includes machine learning, deep learning etc.",
-                        }],
-                        "id": 14,
-                        "label": "Data-perspective",
-                        "oid": "4785308f-b2ef-4193-a74b-b9fe025cbc5e",
-                        "desc": "Models that mainly related to data process.",
-                    }, {
-                        "children": [{
-                            "id": 20,
-                            "label": "Physical process calculation",
-                            "oid": "1d564d0f-51c6-40ca-bd75-3f9489ccf1d6",
-                            "desc": "Models that mainly related to physical process calculation, includes CFD, acoustic simulation, light simulation etc.",
-                        }, {
-                            "id": 21,
-                            "label": "Chemical process calculation",
-                            "oid": "63266a14-d7f9-44cb-8204-c877eaddcaa1",
-                            "desc": "Models that mainly related to chemical process calculation, includes insecticide, photosynthesis, combustion etc.",
-                        }, {
-                            "id": 22,
-                            "label": "Biological process calculation",
-                            "oid": "6d1efa2c-830d-4546-b759-c66806c4facc",
-                            "desc": "Models that mainly related to biological process calculation, includes genome, metabolic, cellular simulation etc.",
-                        }, {
-                            "id": 23,
-                            "label": "Human-activity calculation",
-                            "oid": "6952d5b2-cb0f-4ba7-96fd-5761dd566344",
-                            "desc": "Models that mainly related to human-activity calculation, includes monte carlo, CA, agent-based, travel, crime, disease, migration, health etc.",
-                        }],
-                        "id": 19,
-                        "label": "Process-perspective",
-                        "oid": "746887cf-d490-4080-9754-1dc389986cf2",
-                        "desc": "Models that mainly related to process.",
-                    }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718",
-                    "desc": "Models that mainly related to method.",
-                }],
+            // treeData_part1: [
+            //     {
+            //         "children": [{
+            //             "children": [{
+            //                 "id": 2,
+            //                 "label": "Land regions",
+            //                 "oid": "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
+            //                 "desc": "Models that mainly related to land regions, includes hydrology, hydrodynamics, soil, landform, terrestrial ecosystem etc.",
+            //             }, {"id": 3, "label": "Ocean regions", "oid": "75aee2b7-b39a-4cd0-9223-3b7ce755e457",
+            //                 "desc": "Models that mainly related to ocean regions, includes coastal, seawater, sea-ice, marine ecosystem etc.",
+            //             }, {
+            //                 "id": 4,
+            //                 "label": "Frozen regions",
+            //                 "oid": "1bf4f381-6bd8-4716-91ab-5a56e51bd2f9",
+            //                 "desc": "Models that mainly related to frozen regions, includes galicer, permafrost, snow etc.",
+            //             }, {"id": 5, "label": "Atmospheric regions", "oid": "8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5",
+            //                 "desc": "Models that mainly related to atmospheric regions, includes climate, weather, air etc.",
+            //             }, {
+            //                 "id": 6,
+            //                 "label": "Space-earth regions",
+            //                 "oid": "d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee",
+            //                 "desc": "Models that mainly related to space-earth regions, includes sun-earth, planets etc.",
+            //
+            //             }, {"id": 7, "label": "Solid-earth regions", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e",
+            //                 "desc": "Models that mainly related to solid-earth regions, includes lithosphere, mantle, earthquack etc.",
+            //             }
+            //             ], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0",
+            //             "desc": "Models that mainly related to physical geography.",
+            //
+            //         }, {
+            //             "children": [{
+            //                 "id": 10,
+            //                 "label": "Development activities",
+            //                 "oid": "808e74a4-41c6-4558-a850-4daec1f199df",
+            //                 "desc": "Models that mainly related to development activities, includes continents, countries, cities, administrative zones etc.",
+            //             }, {"id": 11, "label": "Social activities", "oid": "40534cf8-039a-4a0a-8db9-7c9bff484190",
+            //                 "desc": "Models that mainly related to social activities, includes urban, rural, cultural area, travel area, built-up area, indoor area etc.",}, {
+            //                 "id": 12,
+            //                 "label": "Economic activities",
+            //                 "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769",
+            //                 "desc": "Models that mainly related to economic activities, includes agriculture, industry, tourism, trasport, energy, markets etc.",
+            //             }],
+            //             "id": 9,
+            //             "label": "Human-perspective",
+            //             "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da",
+            //             "desc": "Models that mainly related to human geography.",
+            //         }, {
+            //             "id": 30,
+            //             "label": "Integrated-perspective",
+            //             "oid": "396cc739-ef33-4332-8d5d-9a67c89567c7",
+            //             "desc": "Models that integrate many different models.",
+            //             "children": [{
+            //                 "id": 31,
+            //                 "label": "Global scale",
+            //                 "oid": "14130969-fda6-41ea-aa32-0af43104840b",
+            //                 "desc": "Integrated models that apply in global scale.",
+            //             }, {
+            //                 "id": 32,
+            //                 "label": "Regional scale",
+            //                 "oid": "e56c1254-70b8-4ff4-b461-b8fa3039944e",
+            //                 "desc": "Integrated models that apply in regional scale.",
+            //
+            //             }]
+            //         }],
+            //         "id": 24,
+            //         "label": "Application-focused categories",
+            //         "oid": "9f7816be-c6e3-44b6-addf-98251e3d2e19",
+            //         "desc": "Models that apply in one or more field.",
+            //     },
+            // ],
+            // treeData_part2: [
+            //     {"children": [{
+            //             "children": [{
+            //                 "id": 15,
+            //                 "label": "Geoinformation analysis",
+            //                 "oid": "afa99af9-4224-4fac-a81f-47a7fb663dba",
+            //                 "desc": "Models that mainly related to geoinformation analysis, includes vector analysis, raster analysis, network analysis, topology analysis etc.",
+            //             }, {
+            //                 "id": 16,
+            //                 "label": "Remote sensing analysis",
+            //                 "oid": "f20411a5-2f55-4ee9-9590-c2ec826b8bd5",
+            //                 "desc": "Models that mainly related to remote sensing analysis, includes imagery analysis, spectrum analysis etc.",
+            //             }, {
+            //                 "id": 17,
+            //                 "label": "Geostatistical analysis",
+            //                 "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8",
+            //                 "desc": "Models that mainly related to geostatistical analysis, includes pattern detection, relation detection, clustering, interpolation etc.",
+            //             }, {
+            //                 "id": 18,
+            //                 "label": "Intelligent computation analysis",
+            //                 "oid": "c6fcc899-8ca4-4269-a21e-a39d38c034a6",
+            //                 "desc": "Models that mainly related to intelligent computation analysis, includes machine learning, deep learning etc.",
+            //             }],
+            //             "id": 14,
+            //             "label": "Data-perspective",
+            //             "oid": "4785308f-b2ef-4193-a74b-b9fe025cbc5e",
+            //             "desc": "Models that mainly related to data process.",
+            //         }, {
+            //             "children": [{
+            //                 "id": 20,
+            //                 "label": "Physical process calculation",
+            //                 "oid": "1d564d0f-51c6-40ca-bd75-3f9489ccf1d6",
+            //                 "desc": "Models that mainly related to physical process calculation, includes CFD, acoustic simulation, light simulation etc.",
+            //             }, {
+            //                 "id": 21,
+            //                 "label": "Chemical process calculation",
+            //                 "oid": "63266a14-d7f9-44cb-8204-c877eaddcaa1",
+            //                 "desc": "Models that mainly related to chemical process calculation, includes insecticide, photosynthesis, combustion etc.",
+            //             }, {
+            //                 "id": 22,
+            //                 "label": "Biological process calculation",
+            //                 "oid": "6d1efa2c-830d-4546-b759-c66806c4facc",
+            //                 "desc": "Models that mainly related to biological process calculation, includes genome, metabolic, cellular simulation etc.",
+            //             }, {
+            //                 "id": 23,
+            //                 "label": "Human-activity calculation",
+            //                 "oid": "6952d5b2-cb0f-4ba7-96fd-5761dd566344",
+            //                 "desc": "Models that mainly related to human-activity calculation, includes monte carlo, CA, agent-based, travel, crime, disease, migration, health etc.",
+            //             }],
+            //             "id": 19,
+            //             "label": "Process-perspective",
+            //             "oid": "746887cf-d490-4080-9754-1dc389986cf2",
+            //             "desc": "Models that mainly related to process.",
+            //         }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718",
+            //         "desc": "Models that mainly related to method.",
+            //     }],
             treeData_select:[],
             curClassDesc: {
                 label:'',
@@ -232,6 +232,34 @@ var createDataHubs = Vue.extend({
             imageExist:false,
         }
     },
+
+    computed:{
+        // 中英文切换
+        // htmlJSON(){
+        //     // console.log("htmlJson:",this.htmlJson);
+        //     // if (this.editType = 'create'){
+        //     //     $("#subRteTitle").text("/" + this.htmlJson.CreateModelItem);
+        //     // } else {
+        //     //     $("#subRteTitle").text("/" + this.htmlJson.ModifyModelItem);
+        //     // }
+        //     // // this.htmlJSON = this.htmlJson;
+        //     // this.treeData_part1 = this.htmlJson.treeData_part1;
+        //     // this.treeData_part2 = this.htmlJson.treeData_part2;
+        //     return this.htmlJson;
+        //     // $("#title").text("Create Model Item")
+        //
+        // },
+        treeData_part1(){
+            return this.htmlJson.treeData_part1;
+        },
+        treeData_part2(){
+            return this.htmlJson.treeData_part2;
+        }
+        // htmlJSON(){
+        //     return this.htmlJson;
+        // }
+    },
+
     methods: {
         changeRter(index){
             this.curIndex = index;
@@ -495,10 +523,10 @@ var createDataHubs = Vue.extend({
                             that.ctegorys = [];
                             //清空displays内容
                             that.data_img = [];
-                            this.$confirm('<div style=\'font-size: 18px\'>Create data hubs successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateDataHubsSuccessfully +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -545,7 +573,7 @@ var createDataHubs = Vue.extend({
                                 }
                             }
                             else if(result.data.code==-2){
-                                alert("Please login first!");
+                                alert(this.htmlJson.LoginInFirst);
                                 window.location.href="/user/login";
                             }
                             else{
@@ -640,6 +668,25 @@ var createDataHubs = Vue.extend({
             this.$set(this.itemInfo,'image' , '')
         },
     },
+
+    watch:{
+        //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            console.log(this.editType)
+            if (this.editType != 'modify'){
+                $("#subRteTitle").text("/" + newData.CreateDataHubs);
+            } else {
+                $("#subRteTitle").text("/" + newData.UpdateDataHubs);
+            }
+            // $("#title").text("Create Model Item")
+
+        }
+    },
+
     mounted() {
         //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
         this.sendcurIndexToParent();
@@ -736,7 +783,7 @@ var createDataHubs = Vue.extend({
                 else if (currentIndex === 1 && stepDirection === "forward") {
                     if ($("#dataname").val().length == 0){
                         new Vue().$message({
-                                            message: 'Please complete data information!',
+                                            message: this.htmlJson.CompleteDataInformation,
                                             type: 'warning',
                                             offset: 70,
                                         });
@@ -751,7 +798,7 @@ var createDataHubs = Vue.extend({
                     if (stepDirection === "forward") {
                         if ($("#description").val().length == 0) {
                             new Vue().$message({
-                                message: 'Please complete data\'s description!',
+                                message: this.htmlJson.CompleteDataDescription,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -794,7 +841,7 @@ var createDataHubs = Vue.extend({
                 success: (data) => {
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -843,7 +890,7 @@ var createDataHubs = Vue.extend({
             async: false,
             success: (data) => {
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else {
@@ -861,7 +908,7 @@ var createDataHubs = Vue.extend({
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
 
             // $("#title").text("Create Model Item")
-            $("#subRteTitle").text("/Create Data Hubs")
+            $("#subRteTitle").text("/"+this.htmlJson.CreateDataHubs)
             $("#keywords").tagEditor('destory');
             $("#keywords").tagEditor({
                 forceLowercase: false,
@@ -916,7 +963,7 @@ var createDataHubs = Vue.extend({
             axios.get('/dataHub/itemInfo/'+oid).then(res=>{
                     const resData = res.data
                     if(resData.code==-1){
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     }else if(resData.data.noResult!=1){
                         let data = resData.data.result;
@@ -1230,13 +1277,13 @@ var createDataHubs = Vue.extend({
             var content_box = $(this).parent().children('div');
             var str = "<div class='panel panel-primary'> <div class='panel-heading newAuthorHeader'> <h4 class='panel-title'> <a class='accordion-toggle collapsed' style='color:white' data-toggle='collapse' data-target='#user";
             str += user_num;
-            str += "' href='javascript:;'> NEW </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
+            str += "' href='javascript:;'> " + that.htmlJson.authorshipPart.NEW + " </a> </h4><a href='javascript:;' class='fa fa-times author_close' style='float:right;margin-top:8px;color:white'></a></div><div id='user";
             str += user_num;
             str += "' class='panel-collapse collapse in'><div class='panel-body user-contents'> <div class='user-attr'>\n" +
                 "                                                                                                    <div>\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Name:\n" +
+                that.htmlJson.authorshipPart.NEW + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1247,7 +1294,18 @@ var createDataHubs = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Email:\n" +
+                that.htmlJson.authorshipPart.Affiliation + ":\n" +
+                "                                                                                                        </lable>\n" +
+                "                                                                                                        <div class='input-group col-sm-10'>\n" +
+                "                                                                                                            <input type='text'\n" +
+                "                                                                                                                   name=\"ins\"\n" +
+                "                                                                                                                   class='form-control'>\n" +
+                "                                                                                                        </div>\n" +
+                "                                                                                                    </div>\n" +
+                "                                                                                                    <div style=\"margin-top:10px\">\n" +
+                "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
+                "                                                                                                               style='font-weight: bold;'>\n" +
+                that.htmlJson.authorshipPart.Email + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +
@@ -1258,7 +1316,7 @@ var createDataHubs = Vue.extend({
                 "                                                                                                    <div style=\"margin-top:10px\">\n" +
                 "                                                                                                        <lable class='control-label col-sm-2 text-center'\n" +
                 "                                                                                                               style='font-weight: bold;'>\n" +
-                "                                                                                                            Homepage:\n" +
+                that.htmlJson.authorshipPart.Homepage + ":\n" +
                 "                                                                                                        </lable>\n" +
                 "                                                                                                        <div class='input-group col-sm-10'>\n" +
                 "                                                                                                            <input type='text'\n" +

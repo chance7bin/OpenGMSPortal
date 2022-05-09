@@ -594,13 +594,13 @@ var createTheme = Vue.extend({
                 if(node.data.id=="2"){
                     this.$message({
                         type:'warning',
-                        message:'This item is forbidden to be deleted!',
+                        message:this.htmlJson.ThisItemForbiddenToBeDeleted,
                     });
                 }
                 else{
                     this.$message({
                         type: 'success',
-                        message: 'delete successfully!'
+                        message: this.htmlJson.DeleteSuccess
                     });
                     const parent = node.parent;
                     //删除themeobj中的data class
@@ -637,13 +637,13 @@ var createTheme = Vue.extend({
                 if(node.data.id=="2"){
                     this.$message({
                         type:'warning',
-                        message:'This item is forbidden to be deleted!',
+                        message:this.htmlJson.ThisItemForbiddenToBeDeleted,
                     });
                 }
                 else{
                     this.$message({
                         type: 'success',
-                        message: 'delete successfully!'
+                        message: this.htmlJson.DeleteSuccess
                     });
                     const parent = node.parent;
                     //删除themeobj中的model class
@@ -681,13 +681,13 @@ var createTheme = Vue.extend({
                 if(node.data.id=="2"){
                     this.$message({
                         type:'warning',
-                        message:'This item is forbidden to be deleted!',
+                        message:this.htmlJson.ThisItemForbiddenToBeDeleted,
                     });
                 }
                 else{
                     this.$message({
                         type: 'success',
-                        message: 'delete successfully!'
+                        message: this.htmlJson.DeleteSuccess
                     });
                     const parent = node.parent;
                     //删除themeobj中的data method class
@@ -1679,7 +1679,7 @@ var createTheme = Vue.extend({
             success: (data) => {
                 console.log(data);
                 if (data.oid == "") {
-                    that.$alert("Please login");
+                    that.$alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else {
@@ -2033,7 +2033,7 @@ var createTheme = Vue.extend({
 
             let loading = this.$loading({
                 lock: true,
-                text: "Uploading...",
+                text: this.htmlJson.Uploading,
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
@@ -2111,7 +2111,7 @@ var createTheme = Vue.extend({
                             // window.location.href = "/repository/theme/" + result.data;//刷新当前页面
                         }
                         else if(result.code==-1){
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href="/user/login";
                         }
                         else{
@@ -2155,7 +2155,7 @@ var createTheme = Vue.extend({
                             }
                         }
                         else if(result.code==-2){
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href="/user/login";
                         }
                         else{

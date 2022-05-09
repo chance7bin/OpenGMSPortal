@@ -1,5 +1,6 @@
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     data: {
         active: 1,
 
@@ -89,7 +90,7 @@ var vue = new Vue({
             crossDomain:true,
             success: (data) => {
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else{

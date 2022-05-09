@@ -1,6 +1,7 @@
 var userDataItems = Vue.extend(
     {
         template: "#userDataItems",
+        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制
@@ -224,14 +225,14 @@ var userDataItems = Vue.extend(
                 this.$msgbox({
                     title: ' ',
                     message: h('p', null, [
-                        h('span', null, 'Are you sure to '),
-                        h('span', {style: 'font-weight:600'}, 'delete'),
-                        h('span', null, ' this item?'),
+                        h('span', null, this.htmlJson.userModel.sure),
+                        h('span', {style: 'font-weight:600'}, this.htmlJson.userModel.delete),
+                        h('span', null, this.htmlJson.userModel.thisItem),
                     ]),
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.userModel.Confirm,
+                    cancelButtonText: this.htmlJson.userModel.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {
@@ -256,9 +257,9 @@ var userDataItems = Vue.extend(
                                             if (json.data == 1) {
                                                 // this.$alert("delete successfully!")
                                             } else if (json.data == -1) {
-                                                this.$alert("delete failed!")
+                                                this.$alert(this.htmlJson.DeleteFailed)
                                             } else
-                                                this.$alert("please refresh the page!")
+                                                this.$alert(this.htmlJson.RefreshPage)
                                         }
                                         if (this.searchText.trim() != "") {
                                             this.searchDataItem();
@@ -280,7 +281,7 @@ var userDataItems = Vue.extend(
                 }).then(action => {
                     this.$message({
                         type: 'success',
-                        message: 'delete successful '
+                        message: this.htmlJson.DeleteSuccessful
                     });
                 });
             },
@@ -372,7 +373,7 @@ var userDataItems = Vue.extend(
                         console.log(data);
 
                         if (data.accessId == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.countInfo = data.data

@@ -1,5 +1,6 @@
 var createUnit =Vue.extend({
     template:"#createUnit",
+    props:['htmlJson'],
     data() {
         return {
             status:"Public",
@@ -27,58 +28,58 @@ var createUnit =Vue.extend({
                 insName: ""
             },
 
-            treeData: [
-                {
-                    id: 1,
-                    label: 'Unit & Metric',
-                    oid: '9a8680fe-ffd6-4e5a-959b-d0f157506cd3',
-                    children: [{
-                        id: 2,
-                        label: 'Acoustics',
-                        oid: '58d45317-6dfa-4615-94a7-b0549125e2b0'
-                    }, {
-                        id: 3,
-                        label: 'Atomic and Nuclear physics',
-                        oid: '143787c5-d011-468b-b319-66e9c941707b'
-                    }, {
-                        id: 4,
-                        label: 'Electricity and Magnetism',
-                        oid: 'eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2'
-                    }, {
-                        id: 5,
-                        label: 'Heat',
-                        oid: 'f82fcaa2-abde-4e85-8dd5-4e23270f8c60'
-                    }, {
-                        id: 6,
-                        label: 'Light',
-                        oid: '4c8f27b7-7f14-451b-907f-a7cf2eebd6f0'
-                    }, {
-                        id: 7,
-                        label: 'Mechanics',
-                        oid: '5fbe2a8f-64ac-4dd9-806b-b2a8166e1522'
-                    }, {
-                        id: 8,
-                        label: 'Nuclear',
-                        oid: 'f6710cbd-3158-49c0-994a-ef64c909c10e'
-                    }, {
-                        id: 9,
-                        label: 'Periodic',
-                        oid: '783bc5ce-55c5-48b0-ba5c-2313afac675a'
-                    }, {
-                        id: 10,
-                        label: 'Physical',
-                        oid: '6dad7da1-6b16-4851-994f-54a5a1153dfa'
-                    }, {
-                        id: 11,
-                        label: 'Solid',
-                        oid: 'e5c598d0-5a89-4ee5-9c91-3c78fc26d084'
-                    }, {
-                        id: 12,
-                        label: 'Time and Space',
-                        oid: '3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f'
-                    }]
-                }
-            ],
+            // treeData: [
+            //     {
+            //         id: 1,
+            //         label: 'Unit & Metric',
+            //         oid: '9a8680fe-ffd6-4e5a-959b-d0f157506cd3',
+            //         children: [{
+            //             id: 2,
+            //             label: 'Acoustics',
+            //             oid: '58d45317-6dfa-4615-94a7-b0549125e2b0'
+            //         }, {
+            //             id: 3,
+            //             label: 'Atomic and Nuclear physics',
+            //             oid: '143787c5-d011-468b-b319-66e9c941707b'
+            //         }, {
+            //             id: 4,
+            //             label: 'Electricity and Magnetism',
+            //             oid: 'eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2'
+            //         }, {
+            //             id: 5,
+            //             label: 'Heat',
+            //             oid: 'f82fcaa2-abde-4e85-8dd5-4e23270f8c60'
+            //         }, {
+            //             id: 6,
+            //             label: 'Light',
+            //             oid: '4c8f27b7-7f14-451b-907f-a7cf2eebd6f0'
+            //         }, {
+            //             id: 7,
+            //             label: 'Mechanics',
+            //             oid: '5fbe2a8f-64ac-4dd9-806b-b2a8166e1522'
+            //         }, {
+            //             id: 8,
+            //             label: 'Nuclear',
+            //             oid: 'f6710cbd-3158-49c0-994a-ef64c909c10e'
+            //         }, {
+            //             id: 9,
+            //             label: 'Periodic',
+            //             oid: '783bc5ce-55c5-48b0-ba5c-2313afac675a'
+            //         }, {
+            //             id: 10,
+            //             label: 'Physical',
+            //             oid: '6dad7da1-6b16-4851-994f-54a5a1153dfa'
+            //         }, {
+            //             id: 11,
+            //             label: 'Solid',
+            //             oid: 'e5c598d0-5a89-4ee5-9c91-3c78fc26d084'
+            //         }, {
+            //             id: 12,
+            //             label: 'Time and Space',
+            //             oid: '3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f'
+            //         }]
+            //     }
+            // ],
 
             defaultProps: {
                 children: 'children',
@@ -213,6 +214,13 @@ var createUnit =Vue.extend({
             itemInfoImage:''
         }
     },
+
+    computed:{
+        treeData(){
+            return this.htmlJson.treeData5;
+        }
+    },
+
     methods:{
         addLocalization(){
             this.languageAdd.show = true;
@@ -221,7 +229,7 @@ var createUnit =Vue.extend({
 
             if(this.languageAdd.local.label==undefined){
                 this.$message({
-                    message: 'Please selcet a language!',
+                    message: this.htmlJson.PleaseSelectALanguage,
                     type: 'warning'
                 });
                 return;
@@ -230,7 +238,7 @@ var createUnit =Vue.extend({
                 let localization = this.localizationList[i];
                 if(localization.localName==this.languageAdd.local.label){
                     this.$message({
-                        message: 'This language already exists!',
+                        message: this.htmlJson.ThisLanguageAlreadyExists,
                         type: 'warning'
                     });
                     return;
@@ -282,7 +290,7 @@ var createUnit =Vue.extend({
 
                 this.$message({
                     type: 'success',
-                    message: 'Delete '+row.localName+' successfully!',
+                    message: this.htmlJson.Delete+row.localName+this.htmlJson.successfully,
                 });
             }).catch(() => {
 
@@ -669,6 +677,23 @@ var createUnit =Vue.extend({
 
 
     },
+
+    watch:{
+        //     // 中英文切换
+        htmlJson:function(newData){
+            // console.log("htmlJson:",newData);
+            // this.htmlJSON = newData;
+            // this.treeData_part1 = newData.treeData_part1;
+            // this.treeData_part2 = newData.treeData_part2;
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateUnitMetric);
+            } else {
+                $("#subRteTitle").text("/" + newData.UpdateUnitMetric);
+            }
+            // $("#title").text("Create Model Item")
+        }
+    },
+
     mounted() {
         let that = this;
         that.init();
@@ -697,7 +722,7 @@ var createUnit =Vue.extend({
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
             this.editType = 'create';
             // $("#title").text("Create Unit & Metric")
-            $("#subRteTitle").text("/Create Unit & Metric")
+            $("#subRteTitle").text("/"+this.htmlJson.CreateUnitMetric)
 
             $('#aliasInput').tagEditor({
                 forceLowercase: false
@@ -762,21 +787,21 @@ var createUnit =Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (this.cls.length == 0) {
                         new Vue().$message({
-                            message: 'Please select at least one classification!',
+                            message: this.htmlJson.noCLSTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#nameInput").val().trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if ($("#descInput").val().trim() == ""){
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -807,7 +832,7 @@ var createUnit =Vue.extend({
             success: (data) => {
                 console.log(data);
                 if (data.oid == "") {
-                    this.$alert('Please login first!', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -840,7 +865,7 @@ var createUnit =Vue.extend({
         $(".finish").click(()=> {
             let loading = this.$loading({
                 lock: true,
-                text: "Uploading...",
+                text: this.htmlJson.Uploading,
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)"
             });
@@ -851,7 +876,7 @@ var createUnit =Vue.extend({
             for(i=0;i<this.localizationList.length;i++){
                 let local = this.localizationList[i];
                 if(local.localName.trim()==""||local.localCode.trim()==""){
-                    this.$alert('<b>'+local.localName+'</b> localized name or description has not been filled in, please fill it or delete the localization language.', 'Warning', {
+                    this.$alert('<b>'+local.localName+'</b>'+this.htmlJson.LocalizedNameOrDescriptionHasNotBeenFilledPleaseFillItOrDeleteTheLocalizationLanguage, 'Warning', {
                         confirmButtonText: 'OK',
                         type: 'warning',
                         dangerouslyUseHTMLString: true,
@@ -885,10 +910,10 @@ var createUnit =Vue.extend({
                         loading.close();
                         if (result.code == "0") {
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>Create unit successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+this.htmlJson.CreateUnitMetricSuccessfully+'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',
@@ -901,7 +926,7 @@ var createUnit =Vue.extend({
                             });
                         }
                         else if(result.code==-1){
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -910,7 +935,7 @@ var createUnit =Vue.extend({
                             });
                         }
                         else{
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -964,7 +989,7 @@ var createUnit =Vue.extend({
                                 // that.getnoticeNum(that.unit_oid);
                                 // let params = that.message_num_socket;
                                 // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
                                     type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -975,7 +1000,7 @@ var createUnit =Vue.extend({
                             }
                         }
                         else if(result.code==-2){
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {

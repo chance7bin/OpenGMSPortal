@@ -208,7 +208,7 @@ new Vue({
                 async: false,
                 success: (json) => {
                     if(json.code==-1){
-                        this.$alert('Model item is not exist,please check the name.', 'Error', {
+                        this.$alert(this.htmlJson.ModelItemIsNotExistPleaseCheckTheName, this.htmlJson.Error, {
                             type:'error',
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -217,7 +217,7 @@ new Vue({
                         });
                     }
                     else{
-                        this.$alert('Bind successfully!', 'Success', {
+                        this.$alert(this.htmlJson.BindSuccessfully, this.htmlJson.Success, {
                             type:'success',
                             confirmButtonText: 'OK',
                             callback: action => {

@@ -761,7 +761,7 @@ Vue.component("editConceptualModelModule",
                 this.formData=new FormData();
                 let loading = this.$loading({
                     lock: true,
-                    text: this.htmlJson.Uploading,
+                    text: "Uploading...",
                     spinner: "el-icon-loading",
                     background: "rgba(0, 0, 0, 0.7)"
                 });

@@ -545,7 +545,7 @@ new Vue({
                 class2:this.cls2,
             };
             $.post("/modelItem/updateClass",data,(result)=>{
-                this.$alert("Change classification successfully!", 'Success', {
+                this.$alert(this.htmlJson.ChangeClassificationSuccess, 'Success', {
                     type: 'success',
                     confirmButtonText: 'OK',
                     callback: action => {

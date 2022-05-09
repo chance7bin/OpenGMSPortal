@@ -2,6 +2,7 @@
 ELEMENT.locale(ELEMENT.lang.en)
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     data: {
         total: 100,
         dataFromDataContainer: [],
@@ -386,7 +387,7 @@ var vue = new Vue({
                         alert("register successfully!")
                     }
                     else if(res.code==-1){
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.location.href = "/user/login";
                     }
                     else{
@@ -915,7 +916,7 @@ var vue = new Vue({
                                     contentType: "application/x-www-form-urlencoded",
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please login first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                             window.location.href = "/user/login"
                                         } else {
                                             // this.rightTargetItem=null;
@@ -970,7 +971,7 @@ var vue = new Vue({
                                     contentType: "application/x-www-form-urlencoded",
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert("Please login first!")
+                                            alert(this.htmlJson.LoginInFirst)
                                             window.location.href = "/user/login"
                                         } else {
                                             // this.rightTargetItem=null;
@@ -1029,7 +1030,7 @@ var vue = new Vue({
             ,).then(
                 res=>{
                     if (res.data.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = res.data.data;
@@ -1063,7 +1064,7 @@ var vue = new Vue({
                 .then(res=> {
                     let json=res.data;
                     if(json.code==-1){
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.sessionStorage.setItem("history", window.location.href);
                         window.location.href="/user/login"
                     }
@@ -1203,7 +1204,7 @@ var vue = new Vue({
                     .then(res=> {
                         let json=res.data;
                         if(json.code==-1){
-                            alert("Please login first!")
+                            alert(this.htmlJson.LoginInFirst)
                             window.location.href="/user/login"
                         }
                         else {
@@ -1280,7 +1281,7 @@ var vue = new Vue({
                 .then(res=> {
                     let json=res.data;
                     if(json.code==-1){
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.sessionStorage.setItem("history", window.location.href);
                         window.location.href="/user/login"
                     }
@@ -1369,7 +1370,7 @@ var vue = new Vue({
                 contentType: "application/x-www-form-urlencoded",
                 success: (json) => {
                     if (json.code == -1) {
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.location.href = "/user/login"
                     } else {
                         this.myFileShown = json.data.data;
@@ -1460,7 +1461,7 @@ var vue = new Vue({
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please login first!")
+                            alert(this.htmlJson.LoginInFirst)
                             window.sessionStorage.setItem("history", window.location.href);
                             window.location.href = "/user/login"
                         } else {
@@ -1529,7 +1530,7 @@ var vue = new Vue({
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please login first!")
+                            alert(this.htmlJson.LoginInFirst)
                             window.location.href = "/user/login"
                         }
                         else {
@@ -2801,7 +2802,7 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert("Please login first!");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -2875,7 +2876,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -2914,7 +2915,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -2953,7 +2954,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -2992,7 +2993,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3036,7 +3037,7 @@ var vue = new Vue({
                 },
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -3081,7 +3082,7 @@ var vue = new Vue({
                 },
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -3126,7 +3127,7 @@ var vue = new Vue({
                 },
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -3162,7 +3163,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -3226,7 +3227,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3273,7 +3274,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3311,7 +3312,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3349,7 +3350,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3387,7 +3388,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3426,7 +3427,7 @@ var vue = new Vue({
                 crossDomain: true,
                 success: (json) => {
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         data = json.data;
@@ -3474,7 +3475,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         setTimeout(() => {
@@ -3520,7 +3521,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         setTimeout(() => {
@@ -3567,7 +3568,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         setTimeout(() => {
@@ -3619,12 +3620,12 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please log in first!")
+                            alert(this.htmlJson.LoginInFirst)
                         } else {
                             if (json.data == 1) {
-                                alert("delete successfully!")
+                                alert(this.htmlJson.DeleteSuccess)
                             } else {
-                                alert("delete failed!")
+                                alert(this.htmlJson.DeleteFailed)
                             }
                         }
                         if (this.searchText.trim() != "") {
@@ -3655,12 +3656,12 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please log in first!")
+                            alert(this.htmlJson.LoginInFirst)
                         } else {
                             if (json.data == 1) {
-                                alert("delete successfully!")
+                                alert(this.htmlJson.DeleteSuccess)
                             } else {
-                                alert("delete failed!")
+                                alert(this.htmlJson.DeleteFailed)
                             }
                         }
                         if (this.searchText.trim() != "") {
@@ -3690,12 +3691,12 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please log in first!")
+                            alert(this.htmlJson.LoginInFirst)
                         } else {
                             if (json.data == 1) {
-                                alert("delete successfully!")
+                                alert(this.htmlJson.DeleteSuccess)
                             } else {
-                                alert("delete failed!")
+                                alert(this.htmlJson.DeleteFailed)
                             }
                         }
                         if (this.searchText.trim() != "") {
@@ -3725,12 +3726,12 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please log in first!")
+                            alert(this.htmlJson.LoginInFirst)
                         } else {
                             if (json.data == 1) {
-                                alert("delete successfully!")
+                                alert(this.htmlJson.DeleteSuccess)
                             } else {
-                                alert("delete failed!")
+                                alert(this.htmlJson.DeleteFailed)
                             }
                         }
                         if (this.searchText.trim() != "") {
@@ -3743,7 +3744,7 @@ var vue = new Vue({
             }
         },
         deleteUnit(oid) {
-            if (confirm("Are you sure to delete this unit?")) {
+            if (confirm(this.htmlJson.SureDeleteUnit)) {
                 var url = "/repository/deleteUnit";
                 $.ajax({
                     type: "POST",
@@ -3760,12 +3761,12 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please log in first!")
+                            alert(this.htmlJson.LoginInFirst)
                         } else {
                             if (json.data == 1) {
-                                alert("delete successfully!")
+                                alert(this.htmlJson.DeleteSuccess)
                             } else {
-                                alert("delete failed!")
+                                alert(this.htmlJson.DeleteFailed)
                             }
                         }
                         if (this.searchText.trim() != "") {
@@ -3784,7 +3785,7 @@ var vue = new Vue({
                 2: "/project/deleteByOid",
                 3: "/conference/deleteByOid",
             }
-            if (confirm("Are you sure to delete this item?")) {
+            if (confirm(this.htmlJson.SureDeleteItem)) {
                 var url = urls[this.researchIndex];
 
                 $.ajax({
@@ -3803,12 +3804,12 @@ var vue = new Vue({
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            alert("Please log in first!")
+                            alert(this.htmlJson.LoginInFirst)
                         } else {
                             if (json.data == 1) {
-                                alert("delete successfully!")
+                                alert(this.htmlJson.DeleteSuccess)
                             } else {
-                                alert("delete failed!")
+                                alert(this.htmlJson.DeleteFailed)
                             }
                         }
                         if (this.searchText.trim() != "") {
@@ -4447,7 +4448,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -4480,7 +4481,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        alert("Please login first!");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         const data = json.data;
@@ -4686,7 +4687,7 @@ var vue = new Vue({
                 .then(res=> {
                     let json=res.data;
                     if(json.code==-1){
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.sessionStorage.setItem("history", window.location.href);
                         window.location.href="/user/login"
                     }
@@ -4839,7 +4840,7 @@ var vue = new Vue({
                 contentType: "application/json",
                 success: (json) => {
                     if (json.code == -1) {
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.location.href = "/user/login"
                     } else {
                         let idList=json.data
@@ -4910,7 +4911,7 @@ var vue = new Vue({
                 contentType: "application/x-www-form-urlencoded",
                 success: (json) => {
                     if (json.code == -1) {
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.sessionStorage.setItem("history", window.location.href);
                         window.location.href = "/user/login"
                     } else {
@@ -5076,7 +5077,7 @@ var vue = new Vue({
                                 success: (json) => {
                                     let data = json.data;
                                     if (json.code == -1) {
-                                        alert("Please login first!")
+                                        alert(this.htmlJson.LoginInFirst)
                                         window.location.href = "/user/login"
                                     } else {
                                         for(let i=0;i<data.length;i++)
@@ -5153,7 +5154,7 @@ var vue = new Vue({
                                 contentType: "application/x-www-form-urlencoded",
                                 success: (json) => {
                                     if (json.code == -1) {
-                                        alert("Please login first!")
+                                        alert(this.htmlJson.LoginInFirst)
                                         window.sessionStorage.setItem("history", window.location.href);
                                         window.location.href = "/user/login"
                                     } else {
@@ -5486,7 +5487,7 @@ var vue = new Vue({
                 }).then((res)=>{
                     let json=res.data;
                     if(json.code==-1){
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.location.href="/user/login"
                     }
                     else {
@@ -5758,7 +5759,7 @@ var vue = new Vue({
                 data: data,
                 success: function (result) {
                     if (result.code == -1) {
-                        alert("Please login first!")
+                        alert(this.htmlJson.LoginInFirst)
                         window.location.href="/user/login";
                     } else {
                         let data = result.data;
@@ -5837,7 +5838,7 @@ var vue = new Vue({
                     console.log(data);
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -5888,7 +5889,7 @@ var vue = new Vue({
             async: true,
             success: (res) => {
                 if (res.code == -1) {
-                    alert("Please login first!")
+                    alert(this.htmlJson.LoginInFirst)
                     window.location.href="/user/login";
                 } else {
                     this.modelContainerList = res.data;

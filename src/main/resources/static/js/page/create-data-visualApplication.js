@@ -1,5 +1,6 @@
 var createDataVisualApplication = Vue.extend({
     template: "#createDataVisualApplication",
+    props:['htmlJson'],
     data() {
         return {
             defaultActive: '2-4',
@@ -226,7 +227,7 @@ var createDataVisualApplication = Vue.extend({
                     console.log(data);
 
                     if (data.oid == "") {
-                        alert("Please login");
+                        alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
                         this.userId = data.oid;
@@ -288,7 +289,7 @@ var createDataVisualApplication = Vue.extend({
 
             if(res.suffix!=='zip'){
                 this.$message({
-                    message: 'Please select a zip file!',
+                    message: this.htmlJson.PleaseSelectZipFile,
                     type: 'error',
                     offset: 70,
                 });
@@ -350,7 +351,7 @@ var createDataVisualApplication = Vue.extend({
             success: (data) => {
                 // data=JSON.parse(data);
                 if (data.oid == "") {
-                    alert("Please login");
+                    alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else{
@@ -510,7 +511,7 @@ var createDataVisualApplication = Vue.extend({
                 if (currentIndex === 0 && stepDirection === "forward") {
                     if (that.clsStr.length == 0) {
                         new Vue().$message({
-                            message: 'Please complete data category!',
+                            message: this.htmlJson.PleaseCompleteDataCategory,
                             type: 'warning',
                             offset: 70,
                         });
@@ -518,14 +519,14 @@ var createDataVisualApplication = Vue.extend({
                     }
                     else if (this.dataApplication.name.trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter name!',
+                            message: this.htmlJson.noNameTip,
                             type: 'warning',
                             offset: 70,
                         });
                         return false;
                     }else if (this.dataApplication.description.trim() == "") {
                         new Vue().$message({
-                            message: 'Please enter overview!',
+                            message: this.htmlJson.noOverviewTip,
                             type: 'warning',
                             offset: 70,
                         });
@@ -539,7 +540,7 @@ var createDataVisualApplication = Vue.extend({
                     if(this.dataApplication.contentType=="Package"||this.dataApplication.contentType=="Code"||this.dataApplication.contentType=="Library"){
                         if(this.fileArray.length==0&&this.resources.length==0){
                             new Vue().$message({
-                                message: 'Please select at least one file!',
+                                message: this.htmlJson.PleaseSelectAtLeastOneFile,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -549,7 +550,7 @@ var createDataVisualApplication = Vue.extend({
                     if(this.dataApplication.contentType=="Service"||this.dataApplication.contentType=="Link"){
                         if(this.dataApplication.url==""){
                             new Vue().$message({
-                                message: 'Please enter URL!',
+                                message: this.htmlJson.PleaseEnterURL,
                                 type: 'warning',
                                 offset: 70,
                             });
@@ -642,7 +643,7 @@ var createDataVisualApplication = Vue.extend({
 
                             break;
                         case -1:
-                            this.$alert('Save files error!', 'Error', {
+                            this.$alert(this.htmlJson.SaveFilesError, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -651,7 +652,7 @@ var createDataVisualApplication = Vue.extend({
                             });
                             break;
                         case -2:
-                            this.$alert('Created failed!', 'Error', {
+                            this.$alert(this.htmlJson.CreatedFailed, this.htmlJson.Error, {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -702,7 +703,7 @@ var createDataVisualApplication = Vue.extend({
                                 // that.getnoticeNum(that.dataApplication_oid);
                                 // let params = that.message_num_socket;
                                 // that.send(params);
-                                this.$alert('Changes have been submitted, please wait for the author to review.', 'Success', {
+                                this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, this.htmlJson.Success, {
                                     type:"success",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -711,10 +712,10 @@ var createDataVisualApplication = Vue.extend({
                                 });
                                 break;
                             case 1:
-                                this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateDataApplicationSuccessfully +'</div>', this.htmlJson.Tip, {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',
@@ -728,7 +729,7 @@ var createDataVisualApplication = Vue.extend({
                                 });
                                 break;
                             case -1:
-                                this.$alert('Save files error', 'Error', {
+                                this.$alert(this.htmlJson.SaveFilesError, this.htmlJson.Error, {
                                     type:"error",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -739,7 +740,7 @@ var createDataVisualApplication = Vue.extend({
 
                                 break;
                             case -2:
-                                this.$alert('Create failed!', 'Error', {
+                                this.$alert(this.htmlJson.CreatedFailed, this.htmlJson.Error, {
                                     type:"error",
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -752,7 +753,7 @@ var createDataVisualApplication = Vue.extend({
                         }
                     }
                     else{
-                        this.$alert(res.msg, 'Error', {
+                        this.$alert(res.msg, this.htmlJson.Error, {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -763,7 +764,7 @@ var createDataVisualApplication = Vue.extend({
 
                     }
                 }).fail((res) => {
-                    this.$alert('Please login first', 'Error', {
+                    this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                         type:"error",
                         confirmButtonText: 'OK',
                         callback: action => {

@@ -1,5 +1,6 @@
 new Vue({
     el: "#app",
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -602,10 +603,10 @@ new Vue({
 
             //用户未选择单位类型
             if (slct1_value == 'select the unit' || slct2_value == 'select the unit')
-                this.$alert("Please select the unit you want to convert!");
+                this.$alert(this.htmlJson.PleaseSelectUnitYouWantToConvert);
 
             else if(""===cvt_value)
-                this.$alert("Please input a correct value!");
+                this.$alert(this.htmlJson.PleaseInputACorrectValue);
             else {
                 //转换单位类型相同
                 if (slct1_value == slct2_value)
@@ -656,21 +657,21 @@ new Vue({
             this.localization.id=oid;
             if(this.localization.language==""){
                 this.$message({
-                    message: 'Please select language',
+                    message: this.htmlJson.PleaseSelectALanguage,
                     type: 'warning'
                 });
                 return;
             }
             if(this.localization.name==""){
                 this.$message({
-                    message: 'Please enter name',
+                    message: this.htmlJson.noNameTip,
                     type: 'warning'
                 });
                 return;
             }
             if(this.localization.desc==""){
                 this.$message({
-                    message: 'Please enter description',
+                    message: this.htmlJson.PleaseEnterDescription,
                     type: 'warning'
                 });
                 return;
@@ -717,7 +718,7 @@ new Vue({
                 });
             } else if (this.commentText.trim() == "") {
                 this.$message({
-                    message: 'Comment can not be empty!',
+                    message: this.htmlJson.CommentCanNotBeEmpty,
                     offset: 40,
                     showClose: true,
                 });
@@ -748,7 +749,7 @@ new Vue({
                         } else if (result.code == 0) {
                             this.commentText = "";
                             this.$message({
-                                message: 'Comment submitted successfully!',
+                                message: this.htmlJson.CommentSubmittedSuccessfully,
                                 type: 'success',
                                 offset: 40,
                                 showClose: true,
@@ -756,7 +757,7 @@ new Vue({
                             // this.getComments();
                         } else {
                             this.$message({
-                                message: 'Submit Error!',
+                                message: this.htmlJson.SubmitError,
                                 type: 'error',
                                 offset: 40,
                                 showClose: true,
@@ -784,7 +785,7 @@ new Vue({
                     } else if (result.code == 0) {
                         this.commentText = "";
                         this.$message({
-                            message: 'Comment deleted successfully!',
+                            message: this.htmlJson.CommentDeletedSuccessfully,
                             type: 'success',
                             offset: 40,
                             showClose: true,
@@ -792,7 +793,7 @@ new Vue({
                         // this.getComments();
                     } else {
                         this.$message({
-                            message: 'Delete Error!',
+                            message: this.htmlJson.DeleteError,
                             type: 'error',
                             offset: 40,
                             showClose: true,
@@ -1542,7 +1543,7 @@ new Vue({
                             this.useroid = res.data.user
 
                         }else{
-                            this.$message('Fail to transform.');
+                            this.$message(this.htmlJson.FailToTransform);
                         }
                         this.batchSpatialLoading = false
                     },
@@ -1567,7 +1568,7 @@ new Vue({
             input.select();
             if (document.execCommand('copy')) {
                 document.execCommand('copy');
-                this.$message({message:'The url has been copied to clipboard.', type: 'success'});
+                this.$message({message:this.htmlJson.UrlHasBeenCopiedToClipboard, type: 'success'});
             }else{
                  this.$alert('<p>Your brouser does not support copying to clipboard,please copy it manually:<br><strong>'+input.value+'</strong></p>',  'Tip', {
                           type:"warning",
@@ -1650,7 +1651,7 @@ new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: 'Cancel'
+                    message: this.htmlJson.Cancel
                 });
             });
 
@@ -1782,7 +1783,7 @@ new Vue({
                         window.location.href = "/user/login"
                     }else{
                         this.$message({
-                            message: 'Upload successfully!',
+                            message: this.htmlJson.UploadSuccessfully,
                             type: 'success'
                         });
                     }
@@ -1951,33 +1952,33 @@ new Vue({
             //判断输入是否合法
             if(this.inCalen==""){
                 this.$message({
-                    message: 'Please select the calendar you want to convert',
+                    message: this.htmlJson.PleaseSelectCalendarYouWantToConvert,
                     type: 'warning'
                 });
             }
             else if(this.inYear==""||typeof (parseInt(this.inYear))!="number")
             {
                 this.$message({
-                    message: 'Please enter the correct year',
+                    message: this.htmlJson.PleaseEnterTheCorrectYear,
                     type: 'warning'
                 });
             }
             else if(this.inMonth==""){
                 this.$message({
-                    message: 'Please select the month you want to convert',
+                    message: this.htmlJson.PleaseSelectTheMonthYouWantToConvert,
                     type: 'warning'
                 });
             }
             else if(this.inDay==""||typeof (parseInt(this.inDay))!="number")
             {
                 this.$message({
-                    message: 'Please enter the correct day',
+                    message: this.htmlJson.PleaseEnterTheCorrectDay,
                     type: 'warning'
                 });
             }
             else if(this.outCalen==""){
                 this.$message({
-                    message: 'Please select the calendar you want to convert',
+                    message: this.htmlJson.PleaseSelectCalendarYouWantToConvert,
                     type: 'warning'
                 });
             }
@@ -2244,33 +2245,33 @@ new Vue({
             //判断输入是否合法
             if(this.inTime==""){
                 this.$message({
-                    message: 'Please select the time you want to convert',
+                    message: this.htmlJson.PleaseSelectTheTimeYouWantToConvert,
                     type: 'warning'
                 });
             }
             else if(this.inHour==""||typeof (parseInt(this.inHour))!="number")
             {
                 this.$message({
-                    message: 'Please enter the correct hour',
+                    message: this.htmlJson.PleaseEnterTheCorrectHour,
                     type: 'warning'
                 });
             }
             else if(this.inMin==""){
                 this.$message({
-                    message: 'Please enter the correct minute',
+                    message: this.htmlJson.PleaseEnterTheCorrectMinute,
                     type: 'warning'
                 });
             }
             else if(this.inSec==""||typeof (parseInt(this.inSec))!="number")
             {
                 this.$message({
-                    message: 'Please enter the correct second',
+                    message: this.htmlJson.PleaseEnterTheCorrectSecond,
                     type: 'warning'
                 });
             }
             else if(this.outTime==""){
                 this.$message({
-                    message: 'Please select the time you want to convert',
+                    message: this.htmlJson.PleaseSelectTheTimeYouWantToConvert,
                     type: 'warning'
                 });
             }

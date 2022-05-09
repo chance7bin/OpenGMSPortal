@@ -1,5 +1,6 @@
 var vue = new Vue({
     el: "#app",
+    props:['htmlJson'],
     data: {
         htmlJSON:{
             "selectModel": "Select Computable Model",
@@ -766,19 +767,19 @@ var vue = new Vue({
         },
         submitUpload() {
             if(this.uploadName==""){
-                this.$message.error('Please enter the dataset name!');
+                this.$message.error(this.htmlJson.PleaseEnterTheDatasetName);
                 return;
             }
             if(this.selectValue==""){
-                this.$message.error('Please select a data template!');
+                this.$message.error(this.htmlJson.PleaseSelectADataTemplate);
                 return;
             }
             if (this.selectedPath.length == 0) {
-                this.$message.error('Please select a folder first!');
+                this.$message.error(this.htmlJson.PleaseSelectAFolderFirst);
                 return;
             }
             if(this.uploadFiles.length==0){
-                this.$message.error('Please select files!');
+                this.$message.error(this.htmlJson.PleaseSelectFiles);
                 return;
             }
 
@@ -848,7 +849,7 @@ var vue = new Vue({
 
 
                     }else{
-                        this.$message.error('Upload failed!');
+                        this.$message.error(this.htmlJson.UploadFailed);
                     }
 
 
@@ -857,7 +858,7 @@ var vue = new Vue({
 
                     this.uploadLoading=false;
                     this.uploadDialogVisible=false;
-                    this.$message.error('Upload failed!');
+                    this.$message.error(this.htmlJson.UploadFailed);
                 });
             });
 
@@ -897,7 +898,7 @@ var vue = new Vue({
         },
         selectFile() {
             if (this.selectedPath.length == 0) {
-                this.$message.error('Please select a folder first!');
+                this.$message.error(this.htmlJson.PleaseSelectAFolderFirst);
                 return;
             }
             $("#uploadFile").click()
@@ -916,7 +917,7 @@ var vue = new Vue({
             console.log(uploadSource)
             console.log($('.file-caption').val())
             if (uploadSource.length == 0) {
-                alert("Please upload the file into the template first")
+                alert(this.htmlJson.PleaseUploadFileIntoTheTemplateFirst)
             } else {
                 for (let i = 0; i < uploadSource.length; i++) {
                     let dataName = uploadSource[i].file_name;
@@ -1005,7 +1006,7 @@ var vue = new Vue({
                 contentType: "application/json",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1067,7 +1068,7 @@ var vue = new Vue({
                         this.uploadLoading=false;
                         this.uploadDialogVisible=false;
                         this.$message({
-                            message: 'Upload successfully!',
+                            message: this.htmlJson.UploadSuccessfully,
                             type: 'success'
                         });
 
@@ -1140,7 +1141,7 @@ var vue = new Vue({
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Error', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1184,7 +1185,7 @@ var vue = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: 'Cancel'
+                    message: this.htmlJson.Cancel
                 });
             });
 
@@ -1199,7 +1200,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1505,7 +1506,7 @@ var vue = new Vue({
                 this.eventChoosing.url = this.currentData.url;
             }
             else {
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
         },
         downloadData() {
@@ -1513,7 +1514,7 @@ var vue = new Vue({
                 window.open(this.currentData.url);
             }
             else {
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
         },
 
@@ -1585,7 +1586,7 @@ var vue = new Vue({
 
             } else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message('please select file first!!');
+                this.$message(this.htmlJson.PleaseSelectFileFirst);
             }
         },
 
@@ -1950,7 +1951,7 @@ var vue = new Vue({
                 ;
             }catch (e){
                 loading.close()
-                this.$alert('Can not load the test data, please load inputs of the model manually', 'Tip', {
+                this.$alert(this.htmlJson.CanNotLoadTestDataPleaseLoadInputsOfModelManually, 'Tip', {
                         type:"warning",
                         confirmButtonText: 'OK',
                         callback: ()=>{
@@ -1962,7 +1963,7 @@ var vue = new Vue({
 
             loading.close();
             this.$message({
-                message: 'Test data was successfully loaded',
+                message: this.htmlJson.TestDataWasSuccessfullyLoaded,
                 type: 'success'
             });
             this.$forceUpdate();
@@ -2054,7 +2055,7 @@ var vue = new Vue({
                 window.open(this.eventChoosing.url);
             }
             else {
-                this.$message.error("No data can be downloaded.");
+                this.$message.error(this.htmlJson.NoDataCanBeDownloaded);
             }
         },
         upload(event) {
@@ -2145,7 +2146,7 @@ var vue = new Vue({
                             }
                         }
                         if(!tag)
-                            this.$message.error("Please select the data in "+ this.jointFileType(fileType)+" format");
+                            this.$message.error(this.htmlJson.PleaseSelectDataInFormat+ this.jointFileType(fileType));
                     }
                     if(tag||this.eventChoosing.configInfo.constraint==undefined)
                     {
@@ -2161,7 +2162,7 @@ var vue = new Vue({
             }
             else {
                 //没选
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
 
         },
@@ -2223,7 +2224,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2317,7 +2318,7 @@ var vue = new Vue({
                 contentType: "application/x-www-form-urlencoded",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2382,7 +2383,7 @@ var vue = new Vue({
                 }).then((res) => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2424,8 +2425,8 @@ var vue = new Vue({
                                 let child = event.children[k];
                                 if (child.value == undefined || (child.value!=undefined&&child.value.toString().trim() == '')) {
                                     loading.close();
-                                    this.$message.error("Some input parameters are not set");
-                                    throw new Error("Some input parameters are not set");
+                                    this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
+                                    throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
                                     return;
                                 }
                             }
@@ -2434,8 +2435,8 @@ var vue = new Vue({
                             if(event.value == ''||event.value == undefined)
                             {
                                 loading.close();
-                                this.$message.error("Some input parameters are not set");
-                                throw new Error("Some input parameters are not set");
+                                this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
+                                throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
                                 return;
                             }
                         }
@@ -2524,8 +2525,8 @@ var vue = new Vue({
                                     } else {
                                         if (url === null || url === undefined) {
                                             this.taskRunning = false
-                                            this.$message.error("Some input data are not provided");
-                                            throw new Error("Some input data are not provided");
+                                            this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
+                                            throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
                                         }
                                         json.inputs.push({
                                             statename,
@@ -2717,7 +2718,7 @@ var vue = new Vue({
         },
         selectUserData(item, e) {
             // console.log(e)
-            this.$message("you have selected:  " + item.fileName + '.' + item.suffix);
+            this.$message(this.htmlJson.YouHaveSelected + item.fileName + '.' + item.suffix);
             if (this.selectData.length === 0) {
                 let d = {e, item}
                 this.selectData.push(d)
@@ -2780,7 +2781,7 @@ var vue = new Vue({
                 link.click();
 
             } else {
-                this.$message('please select file first!!');
+                this.$message(this.htmlJson.PleaseSelectFileFirst);
             }
 
 
@@ -2788,7 +2789,7 @@ var vue = new Vue({
         //删除
         delete_data_dataManager() {
 
-            if (confirm("Are you sure to delete?")) {
+            if (confirm(this.htmlJson.AreYouSureToDelete)) {
                 let tha = this
                 axios.delete("/dataManager/delete", {
                     params: {
@@ -3119,7 +3120,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {

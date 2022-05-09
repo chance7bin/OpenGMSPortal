@@ -74,7 +74,7 @@
                              style="max-width: 1050px;margin: 15px 10px;">
                         <div class="flexRowContainer flexColCenter" style="margin-left: 18px">
                             <img class="square_40" style="margin-top: 10px" src="../../../static/img/model/model.png">
-                            <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/data">Data </a>
+                            <h3 style="margin-left: 10px"><a class="itemTitle" href="/user/userSpace#/data">{{htmlJson.Data}} </a>
                                 <span id="subRteTitle"></span></h3>
                         </div>
                     </section>
@@ -96,13 +96,13 @@
                                             <div class="step-content">
                                                 <div class="step-tab-panel" id="step0">
                                                     <div>
-                                                        <label>Please select one or more classifications the model belongs to:</label>
+                                                        <label>{{htmlJson.modelClassificationsTip}}</label>
                                                     </div>
 
                                                     <div class="col-sm-offset-0 col-sm-7 tree" style="margin-top:10px">
                                                         <el-card shadow="never">
                                                             <div slot="header" class="clearfix text-center">
-                                                                <span style="font-size: 20px;color:#444">Model Classifications</span>
+                                                                <span style="font-size: 20px;color:#444">{{htmlJson.ModelClassifications}}</span>
                                                             </div>
                                                             <el-tree style="height: 400px;overflow: auto"
                                                                      class="col-lg-6 col-md-12 wzhScrollbar"
@@ -134,7 +134,7 @@
 
                                                         <el-card shadow="never">
                                                             <div slot="header" class="clearfix text-center">
-                                                                <span style="font-size: 20px;color:#444">Selected Classifications</span>
+                                                                <span style="font-size: 20px;color:#444">{{htmlJson.SelectedClassifications}}</span>
                                                             </div>
                                                             <el-tree style="height: 287px;overflow: auto"
                                                                      class="wzhScrollbar"
@@ -241,17 +241,17 @@
 
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label class="col-sm-2 control-label"><span class="xing">* </span>Status</label>
+                                                                    <label class="col-sm-2 control-label"><span class="xing">* </span>{{htmlJson.Status}}</label>
                                                                     <div class="col-sm-10">
                                                                         <el-radio-group v-model="dataItemAddDTO.status" size="medium">
-                                                                            <el-tooltip popper-class="fontsize-15" effect="light" content="This item can be retrieved, shared and edited." placement="top">
-                                                                                <el-radio-button label="Public"></el-radio-button>
+                                                                            <el-tooltip popper-class="fontsize-15" effect="light" :content="htmlJson.Public.content" placement="top">
+                                                                                <el-radio-button :label="htmlJson.Public.label"></el-radio-button>
                                                                             </el-tooltip>
-                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="This item can be retrieved and shared, can ONLY be edited by creator." placement="top">
-                                                                                <el-radio-button label="Discoverable"></el-radio-button>
+                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Discoverable.content" placement="top">
+                                                                                <el-radio-button :label="htmlJson.Discoverable.label"></el-radio-button>
                                                                             </el-tooltip>
-                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" content="This item can NOT be retrieved and shared, can ONLY be edited by creator." placement="top">
-                                                                                <el-radio-button label="Private"></el-radio-button>
+                                                                            <el-tooltip popper-class="fontsize-15" class="item" effect="light" :content="htmlJson.Private.content" placement="top">
+                                                                                <el-radio-button :label="htmlJson.Private.label"></el-radio-button>
                                                                             </el-tooltip>
 
                                                                         </el-radio-group>
@@ -261,11 +261,11 @@
 
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label class="col-sm-2 control-label"><span class="xing">* </span>Name</label>
+                                                                    <label class="col-sm-2 control-label"><span class="xing">* </span>{{htmlJson.Name}}</label>
                                                                     <div class="col-sm-10">
                                                                         <input type="text" class="form-control" id="dataname"
                                                                                aria-describedby="emailHelp"
-                                                                               placeholder="Please input the name of the data which you are ready to upload."
+                                                                               :placeholder="htmlJson.InputNameToUpload"
                                                                                required="required"/>
                                                                     </div>
                                                                 </div>
@@ -291,7 +291,7 @@
 <!--                                                                        </div>-->
 <!--                                                                    </div>-->
                                                                     <label for="keywords"
-                                                                           class="col-sm-2 control-label">Keywords</label>
+                                                                           class="col-sm-2 control-label">{{htmlJson.Keywords}}</label>
                                                                     <div class="col-sm-10">
                                                                                         <textarea class="form-control"
                                                                                                   id="keywords">
@@ -301,7 +301,7 @@
 
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label class="col-sm-2 control-label">Image:</label>
+                                                                    <label class="col-sm-2 control-label">{{htmlJson.Image}}:</label>
                                                                     <div class="col-sm-10">
                                                                         <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="itemInfo.image"/>
                                                                         <div id="imgMask" class="flexCenter" v-if="itemInfo.image!=undefined&&itemInfo.image!=''"
@@ -330,8 +330,7 @@
                                                     <div id="ResourcesUrl" style="margin-top: 60px;margin-bottom: 40px;">
                                                         <div class="form-group">
                                                             <label for="ResourcesUrlText"
-                                                                   class="control-label col-md-4 col-md-offset-2" style="margin-bottom: 10px;">Please
-                                                                enter data hub's URL:</label>
+                                                                   class="control-label col-md-4 col-md-offset-2" style="margin-bottom: 10px;">{{htmlJson.EnterDataHubURL}}:</label>
                                                             <div class="col-sm-8 col-md-offset-2">
                                                                     <textarea id="ResourcesUrlText" class="form-control" placeholder="( http://www.example.com/data )"></textarea>
                                                             </div>
@@ -348,13 +347,10 @@
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <!--description-->
-                                                            <label for="description"><span class="star">* </span>Overview:</label>
-                                                            <textarea class="form-control" id="description"
-                                                                      placeholder="Input description about the data here."
-                                                                      required="required"></textarea><br/>
-                                                            <label for="detail">Detail Description:</label>
-                                                            <textarea id="detail"
-                                                                      placeholder="Input detail about the data here."></textarea>
+                                                            <label for="description"><span class="star">* </span>{{htmlJson.Overview}}:</label>
+                                                            <textarea class="form-control" id="description" :placeholder="htmlJson.InputDataDescription" required="required"></textarea><br/>
+                                                            <label for="detail">{{htmlJson.DetailDescription}}:</label>
+                                                            <textarea id="detail"></textarea>
                                                         </div>
                                                     </div>
                                                     <br/>
@@ -375,7 +371,7 @@
                                                                                 style="color:white">
                                                                                 <a class="accordion-toggle"
                                                                                    data-parent="#accordion2">
-                                                                                    Authorship
+                                                                                    {{htmlJson.Authorship}}
                                                                                 </a>
                                                                             </h4>
                                                                         </div>
@@ -444,7 +440,7 @@
                                                                             <button type="button"
                                                                                     class="btn btn-success btn-lg btn-block user-add"
                                                                                     style="border-radius: 3px;border-top-left-radius: 0px;border-top-right-radius: 0px">
-                                                                                Add
+                                                                                {{htmlJson.authorshipPart.Add}}
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -458,13 +454,13 @@
                                             <div class="step-footer text-right" style="margin: 0 100px 0 0;">
                                                 <button id="next" class="btn btn-primary next pull-right"
                                                         data-direction="next">
-                                                    Next
+                                                    {{htmlJson.Next}}
                                                 </button>
                                                 <button class="btn btn-warning prev" data-direction="prev">
-                                                    Previous
+                                                    {{htmlJson.Previous}}
                                                 </button>
                                                 <button class="btn btn-info finish pull-right" data-direction="finish"
-                                                        @click="createDataHubs()"><strong>Finish</strong></button>
+                                                        @click="createDataHubs()"><strong>{{htmlJson.Finish}}</strong></button>
                                             </div>
                                         </div>
                                     </div>
@@ -480,8 +476,8 @@
                         :before-close="handleClose">
                     <user-data @com-selectfile="selectDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
                     <span slot="footer" class="dialog-footer">
-                      <el-button @click="dialogVisible = false">Cancel</el-button>
-                      <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+                      <el-button @click="dialogVisible = false">{{htmlJson.userModel.Cancel}}</el-button>
+                      <el-button type="primary" @click="dialogVisible = false">{{htmlJson.userModel.Confirm}}</el-button>
                     </span>
                 </el-dialog>
             </div>

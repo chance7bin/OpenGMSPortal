@@ -117,7 +117,7 @@ var userCommunity = Vue.extend(
                             _this.load = false;
 
                         } else {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         }
                     }

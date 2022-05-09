@@ -297,7 +297,7 @@ var userDataSpace = Vue.extend(
                         .then(res=> {
                             let json=res.data;
                             if (json.code == -1) {
-                                this.$alert('Please login first!', 'Tip', {
+                                this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -406,7 +406,7 @@ var userDataSpace = Vue.extend(
                         .then(res=> {
                             let json=res.data;
                             if(json.code==-1){
-                                this.$alert('Please login first!', 'Tip', {
+                                this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -417,7 +417,7 @@ var userDataSpace = Vue.extend(
                                 );
                             }else if(json.code == -2){
                                 this.myFileShown=[];
-                                this.$alert('Failed to get file, please try again later.', 'Tip', {
+                                this.$alert(this.htmlJson.FailedToGetFileTryAgainLater, this.htmlJson.Tip, {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -540,7 +540,7 @@ var userDataSpace = Vue.extend(
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                             this.$alert('Please login first!', 'Tip', {
+                             this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                       type:"warning",
                                       confirmButtonText: 'OK',
                                       callback: ()=>{
@@ -552,7 +552,7 @@ var userDataSpace = Vue.extend(
 
                         } else if(json.code == -2){
                             this.myFileShown=[];
-                            this.$alert('Failed to get file, please try again later.', 'Tip', {
+                            this.$alert(this.htmlJson.FailedToGetFileTryAgainLater, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -572,7 +572,7 @@ var userDataSpace = Vue.extend(
                         }
                     },
                     error:()=>{
-                        this.$message({message:'Refresh error!',type: 'warning'});
+                        this.$message({message:this.htmlJson.RefreshError,type: 'warning'});
                         setTimeout(()=>{
                             this.managerloading = false
                         },125)
@@ -639,14 +639,14 @@ var userDataSpace = Vue.extend(
                 }
 
                 if( this.newFolderName===''){
-                    this.$alert('Please input the folder name.', 'Tip', {
+                    this.$alert(this.htmlJson.PleaseInputTheFolderName, this.htmlJson.Tip, {
                         type:'warning',
                         confirmButtonText: 'comfirm',
                     })
                     this.addFolderIndex=true;
                 }
                 else if(folderName.indexOf(this.newFolderName)!=-1){
-                    this.$alert('This name is existing in this path, please input a new one.', 'Tip', {
+                    this.$alert(this.htmlJson.ThisNameIsExistingPleaseInputNewOne, this.htmlJson.Tip, {
                         type:'warning',
                         confirmButtonText: 'comfirm',
                     })
@@ -670,7 +670,7 @@ var userDataSpace = Vue.extend(
                         contentType: "application/x-www-form-urlencoded",
                         success: (json) => {
                             if (json.code == -1) {
-                                this.$alert('Please login first!', 'Tip', {
+                                this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -682,7 +682,7 @@ var userDataSpace = Vue.extend(
                                 );
 
                             } else if(json.code == -2){
-                                this.$alert('Failed to upload resource, please try again.', 'Tip', {
+                                this.$alert(this.htmlJson.FailedToUploadResourcePleaseTryAgain, this.htmlJson.Tip, {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -698,7 +698,7 @@ var userDataSpace = Vue.extend(
                                 // console.log(this.myFileShown)
                                 // this.getFilePackage();
                                 // console.log(this.myFile)
-                                this.$alert('Add folder successfully')
+                                this.$alert(this.htmlJson.AddFolderSuccessfully)
                                 this.newFolderName='';
                                 this.addFolderIndex=false;
 
@@ -714,7 +714,7 @@ var userDataSpace = Vue.extend(
                 if(pageIndex=='myData'){
                     data=this.$refs.folderTree.getCurrentNode();
                     if(data==undefined)
-                        this.$alert('Please select a file directory.', 'Tip', {
+                        this.$alert(this.htmlJson.selectDirTip, this.htmlJson.Tip, {
                             type:'warning',
                             confirmButtonText: 'comfirm',
                         })
@@ -722,7 +722,7 @@ var userDataSpace = Vue.extend(
                 }
                 else{
                     data=this.$refs.folderTree2[index].getCurrentNode();
-                    this.$alert('Please select a file directory.', 'Tip', {
+                    this.$alert(this.htmlJson.selectDirTip, this.htmlJson.Tip, {
                         type:'warning',
                         confirmButtonText: 'comfirm',
                     })
@@ -764,7 +764,7 @@ var userDataSpace = Vue.extend(
                     if(folderExited.some((item)=>{
                         return  item.name===value;
                     })==true){
-                        this.$alert('This name is existing in this path, please input a new one.', 'Tip', {
+                        this.$alert(this.htmlJson.ThisNameIsExistingPleaseInputNewOne, this.htmlJson.Tip, {
                             type:'warning',
                             confirmButtonText: 'comfirm',
                         })
@@ -779,7 +779,7 @@ var userDataSpace = Vue.extend(
                         contentType: "application/x-www-form-urlencoded",
                         success: (json) => {
                             if (json.code == -1) {
-                                this.$alert('Please login first!', 'Tip', {
+                                this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                         type:"warning",
                                         confirmButtonText: 'OK',
                                         callback: ()=>{
@@ -817,7 +817,7 @@ var userDataSpace = Vue.extend(
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: 'Cancel'
+                        message: this.htmlJson.Cancel
                     });
                 });
 
@@ -914,7 +914,7 @@ var userDataSpace = Vue.extend(
                                         contentType: "application/x-www-form-urlencoded",
                                         success: (json) => {
                                             if (json.code == -1) {
-                                                this.$alert('Please login first!', 'Tip', {
+                                                this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                                         type:"warning",
                                                         confirmButtonText: 'OK',
                                                         callback: ()=>{
@@ -944,7 +944,7 @@ var userDataSpace = Vue.extend(
                         this.rightMenuShow=false
                         this.$message({
                             type: 'success',
-                            message: 'This task can be visited by public'
+                            message: this.htmlJson.ThisPageCanBeVisitedByPublic
                         });
                     });
                 }else{
@@ -977,7 +977,7 @@ var userDataSpace = Vue.extend(
                                         contentType: "application/x-www-form-urlencoded",
                                         success: (json) => {
                                             if (json.code == -1) {
-                                                this.$alert('Please login first!', 'Tip', {
+                                                this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                                         type:"warning",
                                                         confirmButtonText: 'OK',
                                                         callback: ()=>{
@@ -1007,7 +1007,7 @@ var userDataSpace = Vue.extend(
                         this.rightMenuShow=false
                         this.$message({
                             type: 'success',
-                            message: 'This task has been set private'
+                            message: this.htmlJson.ThisTaskHasBeenSetPrivate
                         });
                     });
                 }
@@ -1152,7 +1152,7 @@ var userDataSpace = Vue.extend(
                     success: (json) => {
 
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -1297,7 +1297,7 @@ var userDataSpace = Vue.extend(
                     window.open( url);
                 }
                 else{
-                    this.$message.error("No data can be downloaded.");
+                    this.$message.error(this.htmlJson.NoDataCanBeDownloaded);
                 }
 
                 // window.location.href=url
@@ -1407,7 +1407,7 @@ var userDataSpace = Vue.extend(
                                         let data = json.data;
                                         if (json.code == -1) {
                                             if(json.data=='no login'){
-                                                this.$alert('Please login first!', 'Tip', {
+                                                this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                                         type:"warning",
                                                         confirmButtonText: 'OK',
                                                         callback: ()=>{
@@ -1417,7 +1417,7 @@ var userDataSpace = Vue.extend(
                                                     }
                                                 );
                                             }else if(json.data=='error'){
-                                                this.$alert('Error, please try again', 'Tip', {
+                                                this.$alert(this.htmlJson.ErrorPleaseTryAgain, this.htmlJson.Tip, {
                                                         type:"warning",
                                                         confirmButtonText: 'OK',
                                                     }
@@ -1448,7 +1448,7 @@ var userDataSpace = Vue.extend(
                                             // this.rightTargetItem=null;
                                             this.$message({
                                                 type: 'success',
-                                                message: 'Delete successful '
+                                                message: this.htmlJson.userModel.DeleteSuccessful
                                             });
                                         }
 
@@ -1514,7 +1514,7 @@ var userDataSpace = Vue.extend(
                                     success: (json) => {
                                         if (json.code == -1) {
                                             if(json.data=='no login'){
-                                                this.$alert('Please login first!', 'Tip', {
+                                                this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                                         type:"warning",
                                                         confirmButtonText: 'OK',
                                                         callback: ()=>{
@@ -1524,7 +1524,7 @@ var userDataSpace = Vue.extend(
                                                     }
                                                 );
                                             }else if(json.data=='error'){
-                                                this.$alert('Error, please try again', 'Tip', {
+                                                this.$alert(this.htmlJson.ErrorPleaseTryAgain, this.htmlJson.Tip, {
                                                         type:"warning",
                                                         confirmButtonText: 'OK',
                                                     }
@@ -1545,7 +1545,7 @@ var userDataSpace = Vue.extend(
                                             this.deleteSelected(ids)
                                             this.$message({
                                                 type: 'success',
-                                                message: 'Delete successful '
+                                                message: this.htmlJson.userModel.DeleteSuccessful
                                             });
                                         }
 
@@ -1617,7 +1617,7 @@ var userDataSpace = Vue.extend(
                 if(this.rightTargetItem.folder!=true)
                     newName = newName+this.rightTargetItem.suffix
                 if(fileName.indexOf(newName)!=-1)
-                    this.$alert('This name is existing in this path, please input a new one.', 'Tip', {
+                    this.$alert(this.htmlJson.ThisNameIsExistingPleaseInputNewOne, this.htmlJson.Tip, {
                         type:'warning',
                         confirmButtonText: 'comfirm',
                     })
@@ -1649,7 +1649,7 @@ var userDataSpace = Vue.extend(
                     }).then((res)=>{
                         let json=res.data;
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -1727,7 +1727,7 @@ var userDataSpace = Vue.extend(
                         this.capacityPercent = (this.usedCapacity/this.capacity)*100;
                         console.log(this.capacity,this.usedCapacity,this.capacityPercent)
                     }else{
-                        this.$alert('Please login first!', 'Tip', {
+                        this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                 type: "warning",
                                 confirmButtonText: 'OK',
                                 callback: () => {
@@ -1779,19 +1779,19 @@ var userDataSpace = Vue.extend(
 
             submitUpload() {
                 if(this.uploadName==""){
-                    this.$message.error('Please enter the dataset name!');
+                    this.$message.error(this.htmlJson.PleaseEnterTheDatasetName);
                     return;
                 }
                 if(this.selectValue==""){
-                    this.$message.error('Please select a data template!');
+                    this.$message.error(this.htmlJson.PleaseSelectADataTemplate);
                     return;
                 }
                 if (this.selectedPath.length == 0) {
-                    this.$message.error('Please select a folder first!');
+                    this.$message.error(this.htmlJson.PleaseSelectAFolderFirst);
                     return;
                 }
                 if(this.uploadFiles.length==0){
-                    this.$message.error('Please select files!');
+                    this.$message.error(this.htmlJson.PleaseSelectFiles);
                     return;
                 }
 
@@ -1885,7 +1885,7 @@ var userDataSpace = Vue.extend(
 
                                 } else {
                                     if (res.data.msg == "no login") {
-                                        this.$alert('Please login first!', 'Tip', {
+                                        this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                                 type: "warning",
                                                 confirmButtonText: 'OK',
                                                 callback: () => {
@@ -1896,7 +1896,7 @@ var userDataSpace = Vue.extend(
                                         );
                                     }
 
-                                    this.$message.error('Upload failed!');
+                                    this.$message.error(this.htmlJson.UploadFailed);
                                 }
                                 this.deleteUploadFlag(this.uploadId);
                                 this.getCapacity();
@@ -1907,15 +1907,15 @@ var userDataSpace = Vue.extend(
                                 this.getCapacity();
 
                                 this.uploadLoading = false;
-                                this.$message.error('Upload failed!');
+                                this.$message.error(this.htmlJson.UploadFailed);
                             });
                         }
                         else {
                             this.uploadLoading = false;
-                            this.$message.error('Insufficient storage capacity! Please delete some files before uploading new files.');
+                            this.$message.error(this.htmlJson.InsufficientStorageCapacityPleaseDeleteSomeFilesBeforeUploadingNewFiles);
                         }
                     }else {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2007,7 +2007,7 @@ var userDataSpace = Vue.extend(
                     .then(res=> {
                         let json=res.data;
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -2034,7 +2034,7 @@ var userDataSpace = Vue.extend(
                 this.selectedPath=[];
                 let data=this.$refs.folderTree.getCurrentNode();
                 if(data == null){
-                     this.$alert('Please select a folder', 'Tip', {
+                     this.$alert(this.htmlJson.PleaseSelectAFolderFirst, this.htmlJson.Tip, {
                               type:"warning",
                               confirmButtonText: 'OK',
                               callback: ()=>{
@@ -2068,7 +2068,7 @@ var userDataSpace = Vue.extend(
 
             selectFile(){
                 if(this.selectedPath.length==0) {
-                    alert('Please select a folder')
+                    alert(this.htmlJson.PleaseSelectAFolderFirst)
                     return;
                 }
                 $("#uploadFile").click()
@@ -2085,7 +2085,7 @@ var userDataSpace = Vue.extend(
                 this.fileNames.filter(res=>typeof (res)!="undefined")
                 // console.log(uploadSource)
                 if (uploadSource.length == 0) {
-                    alert("Please upload the file into the template first")
+                    alert(this.htmlJson.PleaseUploadFileIntoTheTemplateFirst)
                 } else {
                     for(let i=0;i<uploadSource.length;i++){
                         let dataName=uploadSource[i].file_name;
@@ -2147,7 +2147,7 @@ var userDataSpace = Vue.extend(
 
                 }else{
                     if(this.selectedPath.length==0) {
-                        alert('Please select a folder')
+                        alert(this.htmlJson.PleaseSelectAFolderFirst)
                         return
                     }
 
@@ -2175,7 +2175,7 @@ var userDataSpace = Vue.extend(
                     contentType: "application/json",
                     success: (json) => {
                         if (json.code == -1) {
-                             this.$alert('Please login first!', 'Tip', {
+                             this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                       type:"warning",
                                       confirmButtonText: 'OK',
                                       callback: ()=>{
@@ -2186,7 +2186,7 @@ var userDataSpace = Vue.extend(
                               );
 
                         } else if(json.code == -2){
-                            this.$alert('Failed to upload resource, please try again.', 'Tip', {
+                            this.$alert(this.htmlJson.FailedToUploadResourcePleaseTryAgain, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -2260,7 +2260,7 @@ var userDataSpace = Vue.extend(
                             this.addFolderIndex = false;
                             //this.selectedPath=[];
                             this.$message({
-                                message: 'Upload successfully!',
+                                message: this.htmlJson.UploadSuccessfully,
                                 type: 'success'
                             });
                         }
@@ -2296,7 +2296,7 @@ var userDataSpace = Vue.extend(
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -2308,7 +2308,7 @@ var userDataSpace = Vue.extend(
                             return 'err'
 
                         }else if(json.code == -2){
-                             this.$alert('Failed to update file, please try again', 'Tip', {
+                             this.$alert(this.htmlJson.FailedToUpdateFilePleaseTryAgain, this.htmlJson.Tip, {
                                       type:"warning",
                                       confirmButtonText: 'OK',
                                       callback: ()=>{
@@ -2754,7 +2754,7 @@ var userDataSpace = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -2833,7 +2833,7 @@ var userDataSpace = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert('Please login first!', 'Tip', {
+                            this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Tip, {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{
@@ -2934,7 +2934,7 @@ var userDataSpace = Vue.extend(
                         let data = result.data
 
                         if (data.oid == "") {
-                            alert("Please login");
+                            alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
                             this.userId = data.email;
