@@ -244,6 +244,8 @@ public class DataItemRestController {
     @RequestMapping(value="/relation",method = RequestMethod.GET)
     public JsonResult getRelation(@RequestParam(value = "id") String id){
 
+        id = genericService.formatId(id);
+
         JSONArray result=dataItemService.getRelation(id);
 
         return ResultUtils.success(result);
@@ -261,6 +263,8 @@ public class DataItemRestController {
     @RequestMapping(value="/relation",method = RequestMethod.POST)
     public JsonResult setRelation(@RequestParam(value="id") String id,
                            @RequestParam(value = "relations[]") List<String> relations){
+
+        id = genericService.formatId(id);
 
         return dataItemService.setRelation(id,relations);
 

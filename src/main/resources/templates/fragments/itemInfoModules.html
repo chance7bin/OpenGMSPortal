@@ -541,7 +541,7 @@
 <div th:if="${modularType.name} eq 'ModelItem'" v-if="contributors!=null&&contributors.length>0" th:fragment="coContributor" id="coContributor" class="detail_block">
     <div class="block_head" style="border-left-color: #00d083;">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-            <h4 translateId="CoContributor">Co-contributor(s)</h4>
+            <h4 translateId="CoContributor">{{htmlJSON.CoContributor}}</h4>
         </div>
     </div>
     <div class="block_content" style="padding-left:10px;">

@@ -278,6 +278,8 @@ public class ModelItemRestController {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
+
+        id = genericService.formatId(id);
         return ResultUtils.success(modelItemService.getRelation(id,type));
     }
 
@@ -378,6 +380,8 @@ public class ModelItemRestController {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
+
+        id = genericService.formatId(id);
 
         HttpSession session=request.getSession();
         String email=session.getAttribute("email").toString();
