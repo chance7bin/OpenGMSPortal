@@ -8,7 +8,6 @@ import njgis.opengms.portal.entity.doo.base.PortalId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.List;
 
@@ -24,9 +23,6 @@ import java.util.List;
 @Data
 public class GenericCategory extends PortalId {
 
-    // @Id
-    // @Field(targetType = FieldType.STRING)
-    // String id;
     List<String> childrenId;
     String nameCn;
     String nameEn;
