@@ -643,6 +643,8 @@ var createConceptualModel = Vue.extend({
 
                     let data = result.data
 
+                    console.log("/user/load: result.data", data);
+
                     if (data.oid == "") {
                         this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                             type:"error",

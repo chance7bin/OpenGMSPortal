@@ -699,7 +699,12 @@ public class ComputableModelService {
     }
 
     public JsonResult delete(String oid, String email) {
-        ComputableModel computableModel = computableModelDao.findFirstById(oid);
+        ComputableModel computableModel = null;
+        try {
+            computableModel = computableModelDao.findFirstById(oid);
+        } catch (Exception e) {
+            return ResultUtils.error("根据id查找模型出错");
+        }
         if (computableModel != null) {
             //删除资源
             String path = resourcePath + "/computableModel/" + computableModel.getContentType();
@@ -710,7 +715,7 @@ public class ComputableModelService {
 
             //模型条目关联删除
             List<String> relatedModelItems = computableModel.getRelatedModelItems();
-            for (int i = 0;i<relatedModelItems.size();i++) {
+            for (int i = 0; i < relatedModelItems.size(); i++) {
                 String modelItemId = relatedModelItems.get(i);
                 ModelItem modelItem = modelItemDao.findFirstById(modelItemId);
                 if (modelItem == null)
@@ -730,7 +735,7 @@ public class ComputableModelService {
 
             //计算模型删除
             computableModelDao.delete(computableModel);
-            userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel,"delete");
+            userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel, "delete");
 
             return ResultUtils.success();
         } else {

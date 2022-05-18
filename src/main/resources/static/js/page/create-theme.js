@@ -1752,9 +1752,9 @@ var createTheme = Vue.extend({
         }
 
         if (this.editType == 'create'){
-            $("#subRteTitle").text("/" + newData.CreateTheme);
+            $("#subRteTitle").text("/" + this.htmlJson.CreateTheme);
         } else {
-            $("#subRteTitle").text("/" + newData.ModifyTheme);
+            $("#subRteTitle").text("/" + this.htmlJson.ModifyTheme);
         }
 
         $("#step").steps({

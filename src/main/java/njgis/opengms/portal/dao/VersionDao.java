@@ -35,4 +35,6 @@ public interface VersionDao extends MongoRepository<Version,String>{
     Page<Version> findAllByStatusAndEditorAndTypeIn(int status, String email, List<ItemTypeEnum> type, Pageable pageable);
 
     Page<Version> findAllByStatusAndItemCreatorAndTypeIn(int status, String email, List<ItemTypeEnum> type, Pageable pageable);
+
+    Page<Version> findAllByStatusAndAuthReviewersInAndTypeIn(int status, String email, List<ItemTypeEnum> type, Pageable pageable);
 }

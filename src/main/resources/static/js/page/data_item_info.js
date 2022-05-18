@@ -417,7 +417,7 @@ var  data_item_info = new Vue({
                 },
                 crossDomain: true,
                 success: (result) => {
-                    if (result.code === -3) {
+                    if (result.code === -1) {
                         this.confirmLogin();
                     }
                     else {
@@ -448,7 +448,7 @@ var  data_item_info = new Vue({
                 },
                 crossDomain:true,
                 success: (result) => {
-                    if (result.code == -3) {
+                    if (result.code == -1) {
                         this.confirmLogin();
                     }
                     else{
@@ -1144,7 +1144,7 @@ var  data_item_info = new Vue({
                 success: (result) => {
                     // data = JSON.parse(data);
                     let data = result.data
-                    if (result.code == -3) {
+                    if (result.code == -1) {
                         this.confirmLogin()
 
                     }

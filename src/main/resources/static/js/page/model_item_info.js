@@ -1454,7 +1454,7 @@ var info=new Vue({
         openClassEditDialog(){
             axios.get("/user/load")
                 .then((res) => {
-                    if (res.data.code == -3) {
+                    if (res.code == -1) {
                         this.confirmLogin()
                     }else{
                         this.editClassification = true;
@@ -2193,7 +2193,7 @@ var info=new Vue({
         claim(){
             $.get("/user/load",{},(result)=>{
                 let json = result;
-                if (json.code == -3) {
+                if (json.code == -1) {
                     this.confirmLogin();
                 }
                 else {
@@ -2204,7 +2204,7 @@ var info=new Vue({
         feedBack(){
             $.get("/user/load",{},(result)=>{
                 let json = result;
-                if (json.code == -3) {
+                if (json.code == -1) {
                     this.confirmLogin();
                 }
                 else {
@@ -2294,7 +2294,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code == -1) {
                         this.confirmLogin()
 
                     }
@@ -2367,7 +2367,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code == -1) {
                         this.confirmLogin()
                     }
                     else {
@@ -2979,7 +2979,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code == -1) {
                         this.confirmLogin()
                     }
                     else {
@@ -3075,7 +3075,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code == -1) {
                         this.confirmLogin()
                     }
                     else {

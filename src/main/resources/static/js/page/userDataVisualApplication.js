@@ -228,10 +228,10 @@ var userDataVisualApplication = Vue.extend(
                             if (json.code == -1) {
                                 alert(this.htmlJson.LoginInFirst)
                             } else {
-                                if (json.data == 1) {
+                                if (json.code == 0) {
                                     this.$alert(this.htmlJson.DeleteSuccess)
                                     this. getDataItems();
-                                } else if(json.data == -1) {
+                                } else if(json.code == -1) {
                                     this.$alert(this.htmlJson.DeleteFailed)
                                 }else
                                     this.$alert(this.htmlJson.RefreshPage)

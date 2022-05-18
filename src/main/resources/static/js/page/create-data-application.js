@@ -863,16 +863,16 @@ var createDataApplication = Vue.extend({
                                 }
                             });
                             break;
+                        // case -1:
+                        //     this.$alert(res.msg, this.htmlJson.Error, {
+                        //         type:"error",
+                        //         confirmButtonText: 'OK',
+                        //         callback: action => {
+                        //
+                        //         }
+                        //     });
+                        //     break;
                         case -1:
-                            this.$alert(res.msg, this.htmlJson.Error, {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-
-                                }
-                            });
-                            break;
-                        case -3:
                             window.location.href = "/user/login";
                             break;
                     }

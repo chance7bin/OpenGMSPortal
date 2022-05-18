@@ -584,9 +584,9 @@ var userCommunities = Vue.extend(
                                         if (json.code == -1) {
                                             alert(this.htmlJson.LoginInFirst)
                                         } else {
-                                            if (json.data == 1) {
+                                            if (json.code == 0) {
                                                 // this.$alert("delete successfully!")
-                                            } else if (json.data == -1) {
+                                            } else if (json.code == -2) {
                                                 this.$alert(this.htmlJSon.DeleteFailed)
                                             } else
                                                 this.$alert(this.htmlJson.RefreshPage)

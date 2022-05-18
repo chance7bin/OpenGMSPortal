@@ -212,7 +212,7 @@ public class VersionController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的审核者）的未审核的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
         @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })
