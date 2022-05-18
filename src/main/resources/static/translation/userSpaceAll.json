@@ -1740,7 +1740,13 @@
     "PleaseEnterNewPassword": "Please enter new password!",
     "PleaseConfirmNewPassword": "Please confirm new password!",
     "PasswordAndConfirmPasswordAreInconsistent": "Password and Confirm Password are inconsistent!",
-    "PleaseSelectFirst": "please select first!"
+    "PleaseSelectFirst": "please select first!",
+
+
+    "Accept": "Accept",
+    "Reject": "Reject"
+
+
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3475,6 +3481,9 @@
     "PleaseEnterNewPassword": "请输入新密码!",
     "PleaseConfirmNewPassword": "请确认新密码!",
     "PasswordAndConfirmPasswordAreInconsistent": "两次输入不一致!",
-    "PleaseSelectFirst": "请先选择!"
+    "PleaseSelectFirst": "请先选择!",
+
+    "Accept": "接受",
+    "Reject": "拒绝"
   }
 }

@@ -443,9 +443,19 @@ public class ConceptualModelService {
      * @Date 21/10/14
      **/
     public JsonResult delete(String modelId, String email) {
-        ConceptualModel conceptualModel = conceptualModelDao.findFirstById(modelId);
-        if(!conceptualModel.getAuthor().equals(email))
+        ConceptualModel conceptualModel = null;
+        try {
+            conceptualModel = conceptualModelDao.findFirstById(modelId);
+        } catch (Exception e){
+            return ResultUtils.error("根据id查找模型出错");
+            // throw new RuntimeException(e);
+        }
+        if (conceptualModel == null){
             return ResultUtils.error(-2, "author not matches!");
+        }
+
+        // if(!conceptualModel.getAuthor().equals(email))
+        //     return ResultUtils.error(-2, "author not matches!");
         if (conceptualModel != null) {
             //图片删除
             List<String> images = conceptualModel.getImageList();
@@ -460,6 +470,8 @@ public class ConceptualModelService {
             for (int i = 0;i<relatedModelItems.size();i++) {
                 String modelItemId = relatedModelItems.get(i);
                 ModelItem modelItem = modelItemDao.findFirstById(modelItemId);
+                if (modelItem == null)
+                    continue;
                 List<String> conceptualModelIds = modelItem.getRelate().getConceptualModels();
                 for (String id : conceptualModelIds
                         ) {

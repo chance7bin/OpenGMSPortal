@@ -67,7 +67,7 @@ var modelItem = Vue.extend({
         modelStats(){
             let chart=echarts.init(document.getElementById('chart'));
             chart.showLoading();
-            $.get("/modelItem/dailyViewAndInvokeCount",{oid:this.currentOid},(result)=> {
+            $.get("/modelItem/dailyViewAndInvokeCount",{id:this.currentOid},(result)=> {
                 let valueList = result.data.valueList;//[0, 0, 0, 0, 0];
                 console.log(result)
                 chart.hideLoading();
@@ -631,13 +631,13 @@ var userModels = Vue.extend(
                                         if (json.code == -1) {
                                             alert(this.htmlJson.LoginInFirst)
                                         } else {
-                                            if (json.data == 1) {
+                                            if (json.code == 0) {
                                                 this.$message({
                                                     type: 'success',
                                                     message: this.htmlJson.userModel.DeleteSuccessful
                                                 });
                                                 // this.$alert("delete successfully!")
-                                            } else if (json.data == -1) {
+                                            } else if (json.code == -2) {
                                                 this.$alert(this.htmlJson.DeleteFailed)
                                             } else
                                                 this.$alert(this.htmlJson.RefreshPage)

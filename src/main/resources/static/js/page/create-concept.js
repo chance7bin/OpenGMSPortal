@@ -1865,7 +1865,7 @@ var createConcept = Vue.extend({
                     data: formData,
                     success: (result)=> {
                         loading.close();
-                        if (result.code == "0") {
+                        if (result.code == 0) {
                             this.deleteDraft()
                             this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateConceptSuccessfully +'<div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
@@ -1953,7 +1953,7 @@ var createConcept = Vue.extend({
                                 });
 
                             }
-                        } else if (result.code == -2) {
+                        } else if (result.code == -1) {
                             this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',

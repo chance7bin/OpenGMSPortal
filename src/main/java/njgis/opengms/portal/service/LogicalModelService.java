@@ -444,8 +444,14 @@ public class LogicalModelService {
      * @Date 21/10/14
      **/
     public JsonResult delete(String modelId, String email) {
-        LogicalModel logicalModel = logicalModelDao.findFirstById(modelId);
-        if(!logicalModel.getAuthor().equals(email))
+        LogicalModel logicalModel = null;
+        try {
+            logicalModel = logicalModelDao.findFirstById(modelId);
+
+        } catch (Exception e) {
+            return ResultUtils.error("根据id查找模型出错");
+        }
+        if (!logicalModel.getAuthor().equals(email))
             return ResultUtils.error(-2, "author not matches!");
         if (logicalModel != null) {
             //图片删除
@@ -457,12 +463,14 @@ public class LogicalModelService {
 
             //模型条目关联删除
             List<String> relatedModelItems = logicalModel.getRelatedModelItems();
-            for (int i = 0;i<relatedModelItems.size();i++) {
+            for (int i = 0; i < relatedModelItems.size(); i++) {
                 String modelItemId = relatedModelItems.get(i);
                 ModelItem modelItem = modelItemDao.findFirstById(modelItemId);
+                if (modelItem == null)
+                    continue;
                 List<String> logicalModelIds = modelItem.getRelate().getLogicalModels();
                 for (String id : logicalModelIds
-                        ) {
+                ) {
                     if (id.equals(logicalModel.getId())) {
                         logicalModelIds.remove(id);
                         break;

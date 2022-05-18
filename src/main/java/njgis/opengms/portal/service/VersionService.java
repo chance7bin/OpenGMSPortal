@@ -65,6 +65,14 @@ public class VersionService {
         version.setContent(item);
         version.setEditor(editor);
         version.setItemCreator(item.getAuthor());
+        //有权审核版本的用户
+        List<String> authReviewers = new ArrayList<>();
+        authReviewers.add(item.getAuthor());
+        authReviewers = noticeService.addItemAdmins(authReviewers,item.getAdmins());
+        authReviewers = noticeService.addPortalAdmins(authReviewers);
+        authReviewers = noticeService.addPortalRoot(authReviewers);
+        version.setAuthReviewers(authReviewers);
+
         version.setSubmitTime(date);
         Class<? extends PortalItem> aClass = item.getClass();
         String name = aClass.getName();
@@ -475,10 +483,11 @@ public class VersionService {
             }
             else if (op.equals("review")) {
                 // 如果登录用户是门户的话那可以得到所有对应状态的版本
-                if (email.equals("opengms@njnu.edu.cn")){
-                    return ResultUtils.success(versionDao.findAllByStatusAndTypeIn(status,findType,pageable));
-                }
-                return ResultUtils.success(versionDao.findAllByStatusAndItemCreatorAndTypeIn(status,email,findType,pageable));
+                // if (email.equals("opengms@njnu.edu.cn")){
+                //     return ResultUtils.success(versionDao.findAllByStatusAndTypeIn(status,findType,pageable));
+                // }
+                // return ResultUtils.success(versionDao.findAllByStatusAndItemCreatorAndTypeIn(status,email,findType,pageable));
+                return ResultUtils.success(versionDao.findAllByStatusAndAuthReviewersInAndTypeIn(status,email,findType,pageable));
             }
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
