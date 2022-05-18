@@ -155,20 +155,20 @@ public class ComputableModelRestController {
         return ResultUtils.success(genericService.searchItems(queryDTO, ItemTypeEnum.ComputableModel));
     }
 
-    @LoginRequired
-    @ApiOperation(value = "查询由登录用户创建的所有条目")
-    @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
-    public JsonResult queryListByAuthor(@RequestBody FindDTO queryDTO, HttpServletRequest request) {
-        String email = Utils.checkLoginStatus(request);
-        SpecificFindDTO specificFindDTO = new SpecificFindDTO();
-        specificFindDTO.setPage(queryDTO.getPage());
-        specificFindDTO.setPageSize(queryDTO.getPageSize());
-        specificFindDTO.setAsc(queryDTO.getAsc());
-        specificFindDTO.setSearchText(queryDTO.getSearchText());
-        specificFindDTO.setSortField(queryDTO.getSortField());
-        specificFindDTO.setCurQueryField("author");
-        return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.ComputableModel));
-    }
+    // @LoginRequired
+    // @ApiOperation(value = "查询由登录用户创建的所有条目")
+    // @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
+    // public JsonResult queryListByAuthor(@RequestBody FindDTO queryDTO, HttpServletRequest request) {
+    //     String email = Utils.checkLoginStatus(request);
+    //     SpecificFindDTO specificFindDTO = new SpecificFindDTO();
+    //     specificFindDTO.setPage(queryDTO.getPage());
+    //     specificFindDTO.setPageSize(queryDTO.getPageSize());
+    //     specificFindDTO.setAsc(queryDTO.getAsc());
+    //     specificFindDTO.setSearchText(queryDTO.getSearchText());
+    //     specificFindDTO.setSortField(queryDTO.getSortField());
+    //     specificFindDTO.setCurQueryField("author");
+    //     return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.ComputableModel));
+    // }
 
     @ApiOperation(value = "查找部署的模型 [ /searchDeployedModel ]")
     @RequestMapping(value="/deployedModel",method= RequestMethod.POST)

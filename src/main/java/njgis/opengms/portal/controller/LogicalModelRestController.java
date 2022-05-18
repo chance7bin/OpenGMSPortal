@@ -135,25 +135,25 @@ public class LogicalModelRestController {
         return ResultUtils.success(genericService.searchItems(queryDTO, ItemTypeEnum.LogicalModel));
     }
 
-    @LoginRequired
-    @ApiOperation(value = "查询由登录用户创建的所有条目")
-    @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
-    public JsonResult queryListByAuthor(@RequestBody FindDTO queryDTO, HttpServletRequest request) {
-        String email = Utils.checkLoginStatus(request);
-        if(email != null) {
-            SpecificFindDTO specificFindDTO = new SpecificFindDTO();
-            specificFindDTO.setPage(queryDTO.getPage());
-            specificFindDTO.setPageSize(queryDTO.getPageSize());
-            specificFindDTO.setAsc(queryDTO.getAsc());
-            specificFindDTO.setSearchText(queryDTO.getSearchText());
-            specificFindDTO.setSortField(queryDTO.getSortField());
-            specificFindDTO.setCurQueryField("author");
-            specificFindDTO.setSearchText(email);
-            return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.LogicalModel));
-        }else{
-            return ResultUtils.unauthorized();
-        }
-    }
+    // @LoginRequired
+    // @ApiOperation(value = "查询由登录用户创建的所有条目")
+    // @RequestMapping (value="/listByAuthor",method = RequestMethod.POST)
+    // public JsonResult queryListByAuthor(@RequestBody FindDTO queryDTO, HttpServletRequest request) {
+    //     String email = Utils.checkLoginStatus(request);
+    //     if(email != null) {
+    //         SpecificFindDTO specificFindDTO = new SpecificFindDTO();
+    //         specificFindDTO.setPage(queryDTO.getPage());
+    //         specificFindDTO.setPageSize(queryDTO.getPageSize());
+    //         specificFindDTO.setAsc(queryDTO.getAsc());
+    //         specificFindDTO.setSearchText(queryDTO.getSearchText());
+    //         specificFindDTO.setSortField(queryDTO.getSortField());
+    //         specificFindDTO.setCurQueryField("author");
+    //         specificFindDTO.setSearchText(email);
+    //         return ResultUtils.success(genericService.searchItems(specificFindDTO, ItemTypeEnum.LogicalModel));
+    //     }else{
+    //         return ResultUtils.unauthorized();
+    //     }
+    // }
 
     /**
      * @Description 某用户查询他人的模型条目

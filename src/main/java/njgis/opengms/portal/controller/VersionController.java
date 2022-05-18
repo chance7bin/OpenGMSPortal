@@ -50,6 +50,15 @@ public class VersionController {
         return versionService.reject(id, email);
     }
 
+    @ApiOperation(value = "回退版本")
+    @RequestMapping(value = "/fallback/{id}", method = RequestMethod.GET)
+    public JsonResult fallback(
+        @ApiParam(name = "id", value = "版本id") @PathVariable String id, HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.fallback(id, email);
+    }
+
 
 
     @ApiOperation(value = "得到所有审核信息 [ /version/getVersions ]")

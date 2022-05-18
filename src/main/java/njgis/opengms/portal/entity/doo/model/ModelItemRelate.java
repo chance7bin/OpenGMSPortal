@@ -28,7 +28,7 @@ public class ModelItemRelate {
     List<String> computableModels = new ArrayList<>();
     List<String> dataItems = new ArrayList<>();
     List<String> dataHubs = new ArrayList<>();
-    List<String> dataMethods = new ArrayList();
+    List<String> dataMethods = new ArrayList<>();
 
     List<String> concepts = new ArrayList<>();
     List<String> spatialReferences = new ArrayList<>();
