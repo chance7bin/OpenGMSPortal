@@ -362,11 +362,12 @@ Vue.component("editLogicalModelModule",
                     },
                     crossDomain: true,
                     success: (result) => {
-                        let data = result.data
-                        if (data.accessId == "") {
+
+                        if (result.code !== 0) {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data
                             this.userId = data.accessId;
                             this.userName = data.name;
                             console.log(this.userId)
@@ -441,12 +442,13 @@ Vue.component("editLogicalModelModule",
                 },
                 crossDomain: true,
                 success: (result) => {
-                    let data = result.data
-                    if (data.accessId == "") {
+
+                    if (result.code !== 0) {
                         alert("Please login");
                         window.location.href = "/user/login";
                     }
                     else {
+                        let data = result.data
                         this.userId = data.uid;
                         this.userName = data.name;
 

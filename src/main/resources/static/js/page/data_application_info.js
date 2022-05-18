@@ -193,9 +193,9 @@ var data_application_info = new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
+                success: (result) => {
                     // data = JSON.parse(data);
-                    if (data.oid == "") {
+                    if (result.code !== 0) {
                         this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
                             dangerouslyUseHTMLString: true,
                             confirmButtonText: 'Log In',
@@ -474,9 +474,9 @@ var data_application_info = new Vue({
         axios.get("/user/load")
             .then((res) => {
                 if (res.status == 200) {
-                    if (res.data.oid != '') {
-                        this.useroid = res.data.oid;
-                        this.userImg = res.data.image;
+                    if (res.data.code === 0) {
+                        this.useroid = res.data.data.accessId;
+                        this.userImg = res.data.data.avatar;
                     }
 
                 }

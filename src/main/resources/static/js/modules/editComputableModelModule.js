@@ -397,14 +397,15 @@ Vue.component("editComputableModelModule",
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-                        console.log(data);
+                    success: (result) => {
+                        // console.log(data);
 
-                        if (data.email == "") {
+                        if (result.code !== 0) {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            let data = result.data;
+                            this.userId = data.accessId;
                             this.userName = data.name;
                             console.log(this.userId)
 
@@ -522,12 +523,13 @@ Vue.component("editComputableModelModule",
                     withCredentials: true
                 },
                 crossDomain:true,
-                success: (data) => {
-                    if (data.email == "") {
+                success: (result) => {
+                    if (result.code !== 0) {
                         alert("Please login");
                         window.location.href = "/user/login";
                     }
                     else{
+                        let data = result.data;
                         this.userId=data.uid;
                         this.userName=data.name;
 

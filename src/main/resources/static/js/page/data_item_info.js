@@ -133,8 +133,8 @@ var  data_item_info = new Vue({
 
         feedBack(){
             $.get("/user/load",{},(result)=>{
-                let data = result.data
-                if (data.accessId == "") {
+
+                if (result.code !== 0) {
                     this.confirmLogin();
                 }
                 else {
@@ -417,7 +417,7 @@ var  data_item_info = new Vue({
                 },
                 crossDomain: true,
                 success: (result) => {
-                    if (result.code === -3) {
+                    if (result.code !== 0) {
                         this.confirmLogin();
                     }
                     else {
@@ -448,7 +448,7 @@ var  data_item_info = new Vue({
                 },
                 crossDomain:true,
                 success: (result) => {
-                    if (result.code == -3) {
+                    if (result.code !== 0) {
                         this.confirmLogin();
                     }
                     else{
@@ -1144,7 +1144,7 @@ var  data_item_info = new Vue({
                 success: (result) => {
                     // data = JSON.parse(data);
                     let data = result.data
-                    if (result.code == -3) {
+                    if (result.code !== 0) {
                         this.confirmLogin()
 
                     }
@@ -1523,13 +1523,13 @@ var  data_item_info = new Vue({
         that.dataItemId = dataItemId;
         axios.get("/user/load")
             .then((res) => {
-                if (res.status == 200) {
-                    if (res.data.accessId != '') {
-                        this.useroid = res.data.accessId;
-                        this.userUid = res.data.email;
-                        this.userId = res.data.accessId;
-                        this.userImg = res.data.avatar;
-                    }
+                if (res.data.code == 0) {
+
+                    this.useroid = res.data.data.accessId;
+                    this.userUid = res.data.data.email;
+                    this.userId = res.data.data.accessId;
+                    this.userImg = res.data.data.avatar;
+
 
                 }
             })

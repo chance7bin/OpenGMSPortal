@@ -843,9 +843,9 @@ var createTemplate = Vue.extend({
             data: {},
             cache: false,
             async: false,
-            success: (data) => {
-                console.log(data);
-                if (data.oid == "") {
+            success: (result) => {
+                // console.log(data);
+                if (result.code !== 0) {
                     this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type: "error",
                         confirmButtonText: 'OK',
@@ -855,7 +855,8 @@ var createTemplate = Vue.extend({
                     });
                 }
                 else {
-                    this.userId = data.oid;
+                    let data = result.data;
+                    this.userId = data.accessId;
                     this.userName = data.name;
                     this.sendUserToParent(this.userId)
                 }

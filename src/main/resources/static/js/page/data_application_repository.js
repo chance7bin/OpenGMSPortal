@@ -299,8 +299,8 @@ var data_items = new Vue({
         $('#conversion').click()
         axios.get("/user/load")
             .then((res)=>{
-                that.userName=res.data.name;
-                that.useroid=res.data.oid;
+                that.userName=res.data.data.name;
+                that.useroid=res.data.data.accessId;
             })
 
         if(document.cookie.indexOf("dataRep=1")==-1){
