@@ -16,8 +16,7 @@ import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.model.RelatedModelInfoDTO;
-import njgis.opengms.portal.entity.po.ModelItem;
-import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
@@ -293,56 +292,67 @@ public class GenericService {
             case ModelItem:{
                 daoUtils.put("itemDao",modelItemDao);
                 daoUtils.put("classificationDao",classificationDao);
+                daoUtils.put("clazz",ModelItem.class);
                 break;
             }
             case ConceptualModel:{
                 daoUtils.put("itemDao",conceptualModelDao);
                 daoUtils.put("classificationDao",classificationDao);
+                daoUtils.put("clazz", ConceptualModel.class);
                 break;
             }
             case LogicalModel:{
                 daoUtils.put("itemDao",logicalModelDao);
                 daoUtils.put("classificationDao",classificationDao);
+                daoUtils.put("clazz", LogicalModel.class);
                 break;
             }
             case ComputableModel:{
                 daoUtils.put("itemDao",computableModelDao);
                 daoUtils.put("classificationDao",classificationDao);
+                daoUtils.put("clazz", ComputableModel.class);
                 break;
             }
             case DataItem:{
                 daoUtils.put("itemDao",dataItemDao);
                 daoUtils.put("classificationDao",classificationDao);
+                daoUtils.put("clazz",DataItem.class);
                 break;
             }
             case DataHub:{
                 daoUtils.put("itemDao",dataHubDao);
                 daoUtils.put("classificationDao",classificationDao);
+                daoUtils.put("clazz",DataHub.class);
                 break;
             }
             case DataMethod:{
                 daoUtils.put("itemDao",dataMethodDao);
                 daoUtils.put("classificationDao",methodClassificationDao);
+                daoUtils.put("clazz",DataMethod.class);
                 break;
             }
             case Template:{
                 daoUtils.put("itemDao",templateDao);
                 daoUtils.put("classificationDao",templateClassificationDao);
+                daoUtils.put("clazz",Template.class);
                 break;
             }
             case Concept:{
                 daoUtils.put("itemDao",conceptDao);
                 daoUtils.put("classificationDao",conceptClassificationDao);
+                daoUtils.put("clazz",Concept.class);
                 break;
             }
             case SpatialReference:{
                 daoUtils.put("itemDao",spatialReferenceDao);
                 daoUtils.put("classificationDao",spatialReferenceClassificationDao);
+                daoUtils.put("clazz",SpatialReference.class);
                 break;
             }
             case Unit:{
                 daoUtils.put("itemDao",unitDao);
                 daoUtils.put("classificationDao",unitClassificationDao);
+                daoUtils.put("clazz",Unit.class);
                 break;
             }
             case Theme:{
