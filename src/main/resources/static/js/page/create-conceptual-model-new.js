@@ -88,13 +88,14 @@ var vue = new Vue({
                 withCredentials: true
             },
             crossDomain:true,
-            success: (data) => {
-                if (data.oid == "") {
+            success: (result) => {
+                if (result.code !== 0) {
                     alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else{
-                    this.userId=data.uid;
+                    let data = result.data;
+                    this.userId=data.accessId;
                     this.userName=data.name;
 
                     var bindOid=this.getSession("bindOid");

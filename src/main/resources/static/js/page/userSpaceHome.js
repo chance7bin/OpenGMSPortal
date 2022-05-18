@@ -132,14 +132,15 @@ var userSpaceHome = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
                         // console.log(data);
 
-                        if (data.oid == "") {
+                        if (result.code !== 0) {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            let data = result.data;
+                            this.userId = data.accessId;
                             this.userName = data.name;
                             console.log(this.userId)
                             this.sendUserToParent(this.userId)

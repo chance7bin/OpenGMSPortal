@@ -866,8 +866,8 @@ new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
-                    if (data.oid === "") {
+                success: (result) => {
+                    if (result.code !== 0) {
                         this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
                             dangerouslyUseHTMLString: true,
                             confirmButtonText: 'Log In',
@@ -2452,10 +2452,10 @@ new Vue({
         $.get("/user/load", {}, (result) => {
             let res=result;
 
-                if (res.oid != '') {
-                    this.useroid = res.oid;
-                    this.userId = res.userId;
-                    this.userImg = res.image;
+                if (res.code === 0) {
+                    // this.useroid = res.email;
+                    this.userId = res.data.accessId;
+                    this.userImg = res.data.avatar;
                 }
 
         });

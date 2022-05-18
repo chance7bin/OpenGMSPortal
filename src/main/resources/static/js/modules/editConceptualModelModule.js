@@ -380,14 +380,15 @@ Vue.component("editConceptualModelModule",
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-                        console.log(data);
+                    success: (result) => {
+                        // console.log(data);
 
-                        if (data.oid == "") {
+                        if (result.code !== 0) {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            let data = result.data;
+                            this.userId = data.accessId;
                             this.userName = data.name;
                             console.log(this.userId)
 
@@ -457,13 +458,14 @@ Vue.component("editConceptualModelModule",
                     withCredentials: true
                 },
                 crossDomain:true,
-                success: (data) => {
-                    data=JSON.parse(data);
-                    if (data.oid == "") {
+                success: (result) => {
+                    // data=JSON.parse(data);
+                    if (result.code !== 0) {
                         alert("Please login");
                         window.location.href = "/user/login";
                     }
                     else{
+                        let data = result.data;
                         this.userId=data.uid;
                         this.userName=data.name;
 

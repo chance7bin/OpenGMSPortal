@@ -368,14 +368,15 @@ var userDataItems = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
 
-                        console.log(data);
+                        // console.log(data);
 
-                        if (data.accessId == "") {
+                        if (result.code !== 0) {
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data;
                             this.countInfo = data.data
                             this.userId = data.data.accessId;
                             this.userName = data.data.name;

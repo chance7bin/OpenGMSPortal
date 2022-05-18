@@ -365,11 +365,12 @@ var userDataHubs = Vue.extend(
                     success: (result) => {
 
                         console.log(result);
-                        let data = result.data
-                        if (data.oid == "") {
+
+                        if (result.code !== 0) {
                             alert("Please login");
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data;
                             this.userEmail = data.email;
                             this.userName = data.name;
                             this.sendUserToParent(this.userEmail)
