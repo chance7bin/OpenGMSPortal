@@ -203,7 +203,6 @@
     "UnapprovedVersion": "Unapproved version",
     "AcceptedVersion": "Accepted version",
     "RejectedVersion": "Rejected version",
-    "Comment": "Comment",
     "MyEdition": "MyEdition",
     "OthersEdition": "Others Edition",
     "Reply": "Reply",
@@ -2139,7 +2138,7 @@
           "desc": "主要与遥感分析有关的模型，包括图像分析、光谱分析等。"
         }, {
           "id": 17,
-          "label": "地学统计分析",
+          "label": "地统计分析",
           "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8",
           "desc": "主要与地理统计分析有关的模型，包括模式检测、关系检测、聚类、内插等。"
         }, {
@@ -3172,7 +3171,7 @@
 
     "treeData4": [{
       "id": 1,
-      "label": "描述模板",
+      "label": "数据描述模板",
       "oid": "TRJJMYDAUJTDDU5J9GPRUWAG7QJ6PHUU",
       "children": [
         {
@@ -3219,7 +3218,7 @@
         {
           "id": 10,
           "oid": "1d573467-f1f3-440a-a827-110ac1e820bd",
-          "label": "3D模型数据格式"
+          "label": "三维模型数据格式"
         },
         {
           "id": 11,
@@ -3343,7 +3342,7 @@
 
       "Geoinformation analysis":"地理信息分析",
       "Remote sensing analysis":"遥感分析",
-      "Geostatistical analysis":"地学统计分析",
+      "Geostatistical analysis":"地统计分析",
       "Intelligent computation analysis":"智能分析计算",
 
       "Process-perspective":"过程视角",

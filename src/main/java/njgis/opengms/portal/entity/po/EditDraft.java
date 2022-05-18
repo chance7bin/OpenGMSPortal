@@ -7,7 +7,6 @@ import njgis.opengms.portal.entity.doo.base.PortalId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.Date;
 import java.util.Map;
@@ -17,6 +16,7 @@ import java.util.Map;
  * @Author bin
  * @Date 2021/08/31
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

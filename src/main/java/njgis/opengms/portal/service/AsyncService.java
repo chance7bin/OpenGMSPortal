@@ -56,7 +56,7 @@ public class AsyncService {
         resultDataDTO.setStateId(uploadDataDTO.getState());
         resultDataDTO.setChildren(uploadDataDTO.getChildren());
         String testDataPath = uploadDataDTO.getFilePath();
-        String url = "http://" + dataContainerIpAndPort + "/data";
+        String url = "https://" + dataContainerIpAndPort + "/data";
         //拼凑form表单
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("name", uploadDataDTO.getEvent());
@@ -133,7 +133,7 @@ public class AsyncService {
                 resultDataDTO.setSuffix("");
             } else {
                 JSONObject data = res.getJSONObject("data");
-                String data_url = "http://"+dataContainerIpAndPort+"/data/"+data.getString("source_store_id");
+                String data_url = "https://"+dataContainerIpAndPort+"/data/"+data.getString("source_store_id");
                 String tag = data.getString("file_name");
                 String[] paths=testDataPath.split("\\.");
                 String suffix = paths[paths.length-1];

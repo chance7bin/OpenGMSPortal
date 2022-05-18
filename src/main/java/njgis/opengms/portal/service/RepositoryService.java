@@ -125,6 +125,7 @@ public class RepositoryService {
                 GenericCategory classification = (GenericCategory) categoryDao.findFirstById(classId);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("name",classification.getNameEn());
+                jsonObject.put("name_zh",classification.getNameCn());
                 jsonObject.put("id",classification.getId());
 
                 array.add(jsonObject);
