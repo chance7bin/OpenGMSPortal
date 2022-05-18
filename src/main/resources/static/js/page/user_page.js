@@ -437,7 +437,7 @@ new Vue({
         createNew(type){
             axios.get("/user/load").then(
                 res => {
-                    if(res.data.oid==''){
+                    if(res.data.code!==0){
                         this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                 type:"warning",
                                 confirmButtonText: 'OK',

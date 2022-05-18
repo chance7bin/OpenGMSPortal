@@ -316,8 +316,8 @@ Vue.component("linkRelatedItemModule",
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-                        if (data.oid == "") {
+                    success: (result) => {
+                        if (result.code !== 0) {
                             if(this.inDialog){
                                 this.postMsg(window.module_msg.no_login)
                                 this.$emit('close-father-dialog')

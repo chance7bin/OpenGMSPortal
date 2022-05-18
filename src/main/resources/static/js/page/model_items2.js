@@ -685,8 +685,8 @@ new Vue({
                 // data对象中的属性名要和服务端控制器的参数名一致 login(name, password)
                 // dataType : 'json',
                 success: function (result) {
-                    let data = result.data
-                    if (data.accessId != '') {
+
+                    if (result.code === 0) {
                         window.location.href="/user/userSpace#/model/createModelItem";
                     }
                     else{

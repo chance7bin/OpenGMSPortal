@@ -712,13 +712,14 @@ var userModels = Vue.extend(
                     },
                     crossDomain: true,
                     success: (result) => {
-                        let data = result.data
-                        console.log(data);
 
-                        if (data.oid == "") {
+                        // console.log(data);
+
+                        if (result.code !== 0) {
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data
                             this.userId = data.email;
                             this.userName = data.name;
                             this.sendUserToParent(this.userId)

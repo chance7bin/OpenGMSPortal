@@ -667,8 +667,8 @@ var vue = new Vue({
         let that=this
         axios.get("/user/load")
             .then((res)=>{
-                if(res.status==200){
-                    that.useroid=res.data.oid
+                if(res.data.code==0){
+                    that.useroid=res.data.data.email
                 }
 
             })

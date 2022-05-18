@@ -124,12 +124,13 @@ new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
-                    if (data.oid == "") {
+                success: (result) => {
+                    if (result.code !== 0) {
                         alert("Please login first");
                         window.location.href = "/user/login";
                     }
                     else {
+                        let data = result.data;
                         let href=window.location.href;
                         let hrefs=href.split('/');
                         let oid=hrefs[hrefs.length-1];
@@ -182,8 +183,8 @@ new Vue({
                     withCredentials: true
                 },
                 crossDomain:true,
-                success: (data) => {
-                    if (data.oid == "") {
+                success: (result) => {
+                    if (result.code !== 0) {
                         alert("Please login first");
                         window.location.href = "/user/login";
                     }
@@ -605,8 +606,8 @@ new Vue({
         axios.get("/user/load")
             .then((res)=>{
                 if(res.status=200){
-                    if(res.data.oid!=''){
-                        that.useroid=res.data.oid
+                    if(res.data.data.code===0){
+                        that.useroid=res.data.data.accessId
                     }
 
                 }

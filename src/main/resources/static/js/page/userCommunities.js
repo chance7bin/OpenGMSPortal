@@ -656,14 +656,15 @@ var userCommunities = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
 
-                        console.log(data);
+                        // console.log(data);
 
-                        if (data.oid == "") {
+                        if (result.code !== 0) {
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data;
                             this.userId = data.data.accessId;
                             this.userEmail=data.data.email
                             this.userName = data.data.name;

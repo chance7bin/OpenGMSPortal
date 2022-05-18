@@ -1788,13 +1788,14 @@ var createConcept = Vue.extend({
             data: {},
             cache: false,
             async: false,
-            success: (data) => {
-                console.log(data);
-                if (data.oid == "") {
+            success: (result) => {
+                // console.log(data);
+                if (result.code !== 0) {
                     alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 } else {
-                    this.userId = data.oid;
+                    let data = result.data;
+                    this.userId = data.accessId;
                     this.userName = data.name;
 
                     this.sendUserToParent(this.userId)

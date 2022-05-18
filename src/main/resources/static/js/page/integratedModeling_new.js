@@ -4675,10 +4675,10 @@ var vue = new Vue({
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
 
-                        if (data.email == "") {
-                            this.$alert('You should log in first to use this function。', 'Tip', {
+                        if (result.code !== 0) {
+                            this.$alert('You should log in first to use this function.', 'Tip', {
                                     type:"warning",
                                     confirmButtonText: 'OK',
                                     callback: ()=>{

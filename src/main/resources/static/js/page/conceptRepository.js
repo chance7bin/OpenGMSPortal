@@ -834,7 +834,7 @@ new Vue({
                 // dataType : 'json',
                 success: function (result) {
                     var json = result;
-                    if (json.oid != '') {
+                    if (json.code === 0) {
                         window.location.href="/user/userSpace#/community/createConcept";
                     }
                     else{
