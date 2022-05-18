@@ -77,7 +77,7 @@
 
             <div id="Authorship0" class="detail_block minScreen"
                  th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
-                <div th:replace="fragments/itemInfoModules :: author"></div>
+                <div th:replace="fragments/itemInfoModules :: authorship(pos=0)"></div>
             </div>
 
             <div id="classification0" class="detail_block minScreen">
@@ -583,7 +583,7 @@
 
             <div id="Authorship" class="detail_block"
                  th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
-                <div th:replace="fragments/itemInfoModules :: author" ></div>
+                <div th:replace="fragments/itemInfoModules :: authorship(pos=1)" ></div>
             </div>
 
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>

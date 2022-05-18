@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 
 public class AuthorInfo {
-    String name;
-    String ins;
-    String email;
-    String homepage;
+    String name = "";
+    String ins = "";
+    String email = "";
+    String homepage = "";
 }

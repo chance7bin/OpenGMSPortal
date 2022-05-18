@@ -27,58 +27,58 @@ new Vue({
 
             treeData: [{
                 id: 1,
-                nameCn: "描述模板",
+                nameCn: "数据描述模板",
                 label: 'Description Templates',
                 oid: 'TRJJMYDAUJTDDU5J9GPRUWAG7QJ6PHUU',
                 children: [
                     {
                         id: 100,
-                        nameCn: "矢量数据",
+                        nameCn: "矢量数据格式",
                         "oid": "f7fbecf6-9d28-405e-b7d2-07ef9d924ca6",
                         "label": "Vector Data Format"
                     },
                     {
-                        nameCn: "栅格数据",
+                        nameCn: "栅格数据格式",
                         "oid": "9b104fd6-7949-4c3b-b277-138cd979d053",
                         "label": "Raster Data Format",
                     },
                     {
-                        nameCn: "格网数据",
+                        nameCn: "网格数据格式",
                         "oid": "316d4df0-436e-4600-a183-80abf7472a72",
                         "label": "Mesh Data Format",
                     },
                     {
-                        nameCn: "图片数据",
+                        nameCn: "图片数据格式",
                         "oid": "bc437c65-2cfe-4bde-ac31-04830f18885a",
                         "label": "Image Data Format",
                     },
                     {
-                        nameCn: "视频数据",
+                        nameCn: "视频数据格式",
                         "oid": "39c0824e-8b1a-44e5-8716-c7893afe05e8",
                         "label": "Video Data Format",
                     },
                     {
-                        nameCn: "声音数据",
+                        nameCn: "音频数据格式",
                         "oid": "82b1c2b4-4c12-441d-9d9c-09365c3c8a24",
                         "label": "Audio Data Format",
                     },
                     {
-                        nameCn: "非结构化数据",
+                        nameCn: "非结构化数据格式",
                         "oid": "df6d36e3-8f16-4b96-8d3f-cff24f7c0fd9",
                         "label": "Unstructural Data Format",
                     },
                     {
-                        nameCn: "模型相关数据",
+                        nameCn: "模型相关数据格式",
                         "oid": "26bb993b-453c-481a-a1ea-674db3e888e2",
                         "label": "Model Related Data Format",
                     },
                     {
-                        nameCn: "三维模型数据",
+                        nameCn: "三维模型数据格式",
                         "oid": "1d573467-f1f3-440a-a827-110ac1e820bd",
                         "label": "3D Model Data Format",
                     },
                     {
-                        nameCn: "表格数据",
+                        nameCn: "表格数据格式",
                         "oid": "8a189836-d563-440c-b5ea-c04778ac05f9",
                         "label": "Tabular Data Format",
                     }]
