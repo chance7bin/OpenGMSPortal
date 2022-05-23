@@ -110,7 +110,7 @@
                                         <div class="lineButton flexJustStart flexColCenter" @click="editItem(1,dataItem.id)">
                                             <i class="fa fa-edit" style="margin-right: 5px"></i>
                                             <div class="lineButton flexCol">
-                                                <p style="margin-block-end: 0">{{htmlJson.userModel.Exit}}</p>
+                                                <p style="margin-block-end: 0">{{htmlJson.userModel.Edit}}</p>
                                                 <div class="hoverLine"></div>
                                             </div>
                                         </div>
@@ -131,13 +131,13 @@
                                             <div class="content_w100" style="padding-top: 21px">
                                                 <div class="flexJustStart flexAlignStrench overviewContainer">
                                                     <div>
-                                                        <b style="margin-right: 25px;">Overview:</b>
+                                                        <b style="margin-right: 25px;">{{htmlJson.Overview}}:</b>
                                                     </div>
                                                     <div>
                                                         <p class="threeLine" style="">{{dataItem.overview}}</p>
                                                     </div>
                                                 </div>
-                                                <p><b style="margin-right: 3px">Create Time:</b> {{formatDate(dataItem.createTime)}}</p>
+                                                <p><b style="margin-right: 3px">{{htmlJson.CreateTime}}:</b> {{formatDate(dataItem.createTime)}}</p>
                                             </div>
 
                                         </div>
@@ -157,7 +157,7 @@
                                 <ul class="pagination pagination-circle pg-blue wzhPageControl flexJustAround">
                                     <li class="page-item" :class="curPage!=1?'':'disabled'" @click="changePage(1)"><a
                                             class="page-link"
-                                            style="border-radius: 10%;background-color: inherit">First</a></li>
+                                            style="border-radius: 10%;background-color: inherit">{{htmlJson.userModel.First}}</a></li>
                                     <li class="page-item " :class="curPage!=1?'':'disabled'"
                                         @click="changePage(curPage-1)">
                                         <a class="page-link" aria-label="Previous">
@@ -177,7 +177,7 @@
                                     </li>
                                     <li class="page-item" :class="curPage!=totalPage?'':'disabled'"
                                         @click="changePage(totalPage)">
-                                        <a class="page-link">Last</a></li>
+                                        <a class="page-link">{{htmlJson.userModel.Last}}</a></li>
 
                                 </ul>
 

@@ -728,7 +728,7 @@ var createLogicalModel = Vue.extend({
                 this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
             }
             // $("#title").text("Modify Logical Model")
-            $("#subRteTitle").text("/Modify Logical Model")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyLogicalModel)
             document.title="Modify Logical Model | OpenGMS"
 
             if(window.localStorage.getItem('draft')==null){

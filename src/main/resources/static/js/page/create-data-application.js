@@ -912,10 +912,10 @@ var createDataApplication = Vue.extend({
                     console.log("update data application:",res)
                     if(res.code===0){
                         if(res.data.method==="update"){
-                            this.$confirm('<div style=\'font-size: 18px\'>Update data application successfully!</div>', 'Tip', {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateDataApplicationSuccessfully +'</div>', 'Tip', {
                                 dangerouslyUseHTMLString: true,
-                                confirmButtonText: 'View',
-                                cancelButtonText: 'Go Back',
+                                confirmButtonText: this.htmlJson.confirmButtonText,
+                                cancelButtonText: this.htmlJson.cancelButtonText,
                                 cancelButtonClass: 'fontsize-15',
                                 confirmButtonClass: 'fontsize-15',
                                 type: 'success',

@@ -1748,7 +1748,21 @@
     "YouCanSubscribeYourComputableModelsReport": "You can subscribe your own computable models' report",
     "SubscribedComputableModel": "Subscribed Computable Model",
     "Submit": "Submit",
-    "DragToChangePositionAndSize": "Drag to change the position and size"
+    "DragToChangePositionAndSize": "Drag to change the position and size",
+
+    "SpatioTemporalReferenceName": "Spatiotemporal Reference Name",
+    "SubmitEdit": "SubmitEdit",
+    "ModifyComputableModel": "Modify Computable Model",
+    "ModifyConceptualModel": "Modify Conceptual Model",
+    "ModifyDataHubs": "Modify Data Hubs",
+    "ModifyUnitMetric": "Modify Unit & Metric",
+    "ModifyDataTemplate": "Modify Data Template",
+    "ModifyConceptSemantic": "Modify Concept & Semantic",
+    "UpdateConceptSuccessfully": "Update concept successfully",
+    "UpdateModelItemSuccessfully": "Update model item successfully!",
+    "ModifyLogicalModel": "Modify Logical Model",
+    "UpdateDataApplicationSuccessfully": "Update data application successfully!",
+    "UpdateUnitSuccessfully": "Update unit successfully"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3490,6 +3504,21 @@
     "YouCanSubscribeYourComputableModelsReport": "您可以订阅自己的计算模型报告",
     "SubscribedComputableModel": "已订阅的计算模型",
     "Submit": "提交",
-    "DragToChangePositionAndSize": "拖动以改变位置及大小"
+    "DragToChangePositionAndSize": "拖动以改变位置及大小",
+
+    "SpatioTemporalReferenceName": "时空参考名称",
+    "SubmitEdit": "提交修改",
+    "ModifyComputableModel": "修改计算模型",
+    "ModifyConceptualModel": "修改概念模型",
+    "ModifyDataHubs": "修改数据中心",
+    "ModifyUnitMetric": "修改单位与度量",
+    "ModifyDataTemplate": "修改数据模板",
+    "ModifyConceptSemantic": "修改概念和语义",
+    "UpdateConceptSuccessfully": "更新概念成功",
+    "UpdateModelItemSuccessfully": "更新模型条目成功",
+    "ModifyLogicalModel": "修改逻辑模型",
+    "UpdateDataApplicationSuccessfully": "更新数据应用成功",
+    "UpdateUnitSuccessfully": "更新单位成功",
+    "CreateTheme": "创建专题"
   }
 }

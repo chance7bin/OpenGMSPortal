@@ -257,8 +257,7 @@
                                                                                                 effect="light"
                                                                                                 :content="htmlJson.Public.content"
                                                                                                 placement="top">
-                                                                                            <el-radio-button
-                                                                                                    :label="htmlJson.Public.label"></el-radio-button>
+                                                                                            <el-radio-button label="Public">{{htmlJson.Public.label}}</el-radio-button>
                                                                                         </el-tooltip>
                                                                                         <el-tooltip
                                                                                                 popper-class="fontsize-15"
@@ -267,7 +266,7 @@
                                                                                                 :content="htmlJson.Private.content"
                                                                                                 placement="top">
                                                                                             <el-radio-button
-                                                                                                    :label="htmlJson.Discoverable.label"></el-radio-button>
+                                                                                                    label="Discoverable">{{htmlJson.Discoverable.label}}</el-radio-button>
                                                                                         </el-tooltip>
                                                                                         <el-tooltip
                                                                                             popper-class="fontsize-15"
@@ -276,7 +275,7 @@
                                                                                             :content="htmlJson.Private.content"
                                                                                             placement="top">
                                                                                         <el-radio-button
-                                                                                                :label="htmlJson.Private.label"></el-radio-button>
+                                                                                                label="Private">{{htmlJson.Private.label}}</el-radio-button>
                                                                                         </el-tooltip>
 
                                                                                     </el-radio-group>

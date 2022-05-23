@@ -1100,7 +1100,7 @@ var createComputableModel = Vue.extend({
             }else{
                 this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
             }
-            $("#subRteTitle").text("/Modify Computable Model")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyComputableModel)
             // document.title="Modify Computable Model | OpenGMS"
             if(window.localStorage.getItem('draft')==null){
                 $.ajax({

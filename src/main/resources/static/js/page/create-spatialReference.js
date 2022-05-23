@@ -987,7 +987,7 @@ var createSpatialReference = Vue.extend({
                         if (result.code === 0) {
                             if (result.data.method === "update") {
                                 this.deleteDraft()
-                                this.$confirm('<div style=\'font-size: 18px\'>‘+ this.htmlJson.UpdateSpatioTemporalReferenceSuccessfully +’</div>', this.htmlJson.Tip, {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateSpatioTemporalReferenceSuccessfully +'</div>', this.htmlJson.Tip, {
                                     dangerouslyUseHTMLString: true,
                                     confirmButtonText: this.htmlJson.confirmButtonText,
                                     cancelButtonText: this.htmlJson.cancelButtonText,

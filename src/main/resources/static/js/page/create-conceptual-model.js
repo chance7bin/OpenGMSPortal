@@ -815,7 +815,7 @@ var createConceptualModel = Vue.extend({
                 this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
             }
             // $("#title").text("Modify Conceptual Model")
-            $("#subRteTitle").text("/Modify Conceptual Model")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyConceptualModel)
 
             // document.title="Modify Conceptual Model | OpenGMS"
 

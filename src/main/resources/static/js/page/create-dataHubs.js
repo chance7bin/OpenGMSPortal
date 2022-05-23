@@ -957,7 +957,7 @@ var createDataHubs = Vue.extend({
         }
         else {
             // $("#title").text("Modify Model Item")
-            $("#subRteTitle").text("/Modify Data Hubs")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyDataHubs)
 
             // document.title="Modify Data Hubs | OpenGMS"
             axios.get('/dataHub/itemInfo/'+oid).then(res=>{
