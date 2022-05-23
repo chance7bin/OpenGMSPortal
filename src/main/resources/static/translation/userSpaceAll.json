@@ -203,6 +203,7 @@
     "UnapprovedVersion": "Unapproved version",
     "AcceptedVersion": "Accepted version",
     "RejectedVersion": "Rejected version",
+    "Comment": "Comment",
     "MyEdition": "MyEdition",
     "OthersEdition": "Others Edition",
     "Reply": "Reply",
@@ -1747,6 +1748,28 @@
     "Reject": "Reject"
 
 
+    "PleaseSelectFirst": "please select first!",
+    "Statistics": "Statistics",
+    "PleaseChooseCategoriesFromSidebar": "Please choose categories from sidebar",
+    "SubscribeSpecificModel": "Subscribe specific model",
+    "YouCanSubscribeYourComputableModelsReport": "You can subscribe your own computable models' report",
+    "SubscribedComputableModel": "Subscribed Computable Model",
+    "Submit": "Submit",
+    "DragToChangePositionAndSize": "Drag to change the position and size",
+
+    "SpatioTemporalReferenceName": "Spatiotemporal Reference Name",
+    "SubmitEdit": "SubmitEdit",
+    "ModifyComputableModel": "Modify Computable Model",
+    "ModifyConceptualModel": "Modify Conceptual Model",
+    "ModifyDataHubs": "Modify Data Hubs",
+    "ModifyUnitMetric": "Modify Unit & Metric",
+    "ModifyDataTemplate": "Modify Data Template",
+    "ModifyConceptSemantic": "Modify Concept & Semantic",
+    "UpdateConceptSuccessfully": "Update concept successfully",
+    "UpdateModelItemSuccessfully": "Update model item successfully!",
+    "ModifyLogicalModel": "Modify Logical Model",
+    "UpdateDataApplicationSuccessfully": "Update data application successfully!",
+    "UpdateUnitSuccessfully": "Update unit successfully"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2144,7 +2167,7 @@
           "desc": "主要与遥感分析有关的模型，包括图像分析、光谱分析等。"
         }, {
           "id": 17,
-          "label": "地统计分析",
+          "label": "地学统计分析",
           "oid": "1c876281-a032-4575-8eba-f1a8fb4560d8",
           "desc": "主要与地理统计分析有关的模型，包括模式检测、关系检测、聚类、内插等。"
         }, {
@@ -3177,7 +3200,7 @@
 
     "treeData4": [{
       "id": 1,
-      "label": "数据描述模板",
+      "label": "描述模板",
       "oid": "TRJJMYDAUJTDDU5J9GPRUWAG7QJ6PHUU",
       "children": [
         {
@@ -3224,7 +3247,7 @@
         {
           "id": 10,
           "oid": "1d573467-f1f3-440a-a827-110ac1e820bd",
-          "label": "三维模型数据格式"
+          "label": "3D模型数据格式"
         },
         {
           "id": 11,
@@ -3348,7 +3371,7 @@
 
       "Geoinformation analysis":"地理信息分析",
       "Remote sensing analysis":"遥感分析",
-      "Geostatistical analysis":"地统计分析",
+      "Geostatistical analysis":"地学统计分析",
       "Intelligent computation analysis":"智能分析计算",
 
       "Process-perspective":"过程视角",
@@ -3481,6 +3504,29 @@
     "PleaseEnterNewPassword": "请输入新密码!",
     "PleaseConfirmNewPassword": "请确认新密码!",
     "PasswordAndConfirmPasswordAreInconsistent": "两次输入不一致!",
+    "PleaseSelectFirst": "请先选择!",
+    "Statistics": "统计",
+    "PleaseChooseCategoriesFromSidebar": "请从侧边栏中选择数据",
+    "SubscribeSpecificModel": "订阅特定的模型",
+    "YouCanSubscribeYourComputableModelsReport": "您可以订阅自己的计算模型报告",
+    "SubscribedComputableModel": "已订阅的计算模型",
+    "Submit": "提交",
+    "DragToChangePositionAndSize": "拖动以改变位置及大小",
+
+    "SpatioTemporalReferenceName": "时空参考名称",
+    "SubmitEdit": "提交修改",
+    "ModifyComputableModel": "修改计算模型",
+    "ModifyConceptualModel": "修改概念模型",
+    "ModifyDataHubs": "修改数据中心",
+    "ModifyUnitMetric": "修改单位与度量",
+    "ModifyDataTemplate": "修改数据模板",
+    "ModifyConceptSemantic": "修改概念和语义",
+    "UpdateConceptSuccessfully": "更新概念成功",
+    "UpdateModelItemSuccessfully": "更新模型条目成功",
+    "ModifyLogicalModel": "修改逻辑模型",
+    "UpdateDataApplicationSuccessfully": "更新数据应用成功",
+    "UpdateUnitSuccessfully": "更新单位成功",
+    "CreateTheme": "创建专题"
     "PleaseSelectFirst": "请先选择!",
 
     "Accept": "接受",

@@ -266,13 +266,13 @@
                                         <div class="flexRowCenter">
                                             <nav v-if="searchResult.length!=0&&resourceLoad==false" class="flexCenter" style="width: 100%;position: relative"  aria-label="Page navigation example">
                                                 <div class="flexCenter totalContainer">
-                                                    <p class="noMargin">Total Num: </p>
+                                                    <p class="noMargin">{{htmlJson.userModel.TotalNum}}: </p>
                                                     <h5 style="margin: 0 0 1px 0">{{totalNum}}</h5>
                                                 </div>
                                                 <ul class="pagination pagination-circle pg-blue wzhPageControl flexJustAround">
                                                     <li class="page-item" :class="curPage!=1?'':'disabled'" @click="changePage(1)"><a
                                                             class="page-link"
-                                                            style="border-radius: 10%;background-color: inherit">First</a></li>
+                                                            style="border-radius: 10%;background-color: inherit">{{htmlJson.userModel.First}}</a></li>
                                                     <li class="page-item " :class="curPage!=1?'':'disabled'"
                                                         @click="changePage(curPage-1)">
                                                         <a class="page-link" aria-label="Previous">
@@ -292,7 +292,7 @@
                                                     </li>
                                                     <li class="page-item" :class="curPage!=totalPage?'':'disabled'"
                                                         @click="changePage(totalPage)">
-                                                        <a class="page-link">Last</a></li>
+                                                        <a class="page-link">{{htmlJson.userModel.Last}}</a></li>
 
                                                 </ul>
 
@@ -480,7 +480,7 @@
                                         <div class="flexRowCenter">
                                             <nav v-if="dataSearchResult.length!=0&&resourceLoad==false" class="flexCenter" style="width: 100%;position: relative"  aria-label="Page navigation example">
                                                 <div class="flexCenter totalContainer">
-                                                    <p class="noMargin">Total Num: </p>
+                                                    <p class="noMargin">{{htmlJson.userModel.TotalNum}}: </p>
                                                     <h5 style="margin: 0 0 1px 0">{{dataTotalNum}}</h5>
                                                 </div>
                                                 <ul class="pagination pagination-circle pg-blue wzhPageControl flexJustAround">
@@ -699,7 +699,7 @@
                                         <div class="flexRowCenter">
                                             <nav v-if="integratedTaskList.length!=0&&resourceLoad==false" class="flexCenter" style="width: 100%;position: relative"  aria-label="Page navigation example">
                                                 <div class="flexCenter totalContainer">
-                                                    <p class="noMargin">Total Num: </p>
+                                                    <p class="noMargin">{{htmlJson.userModel.TotalNum}}: </p>
                                                     <h5 style="margin: 0 0 1px 0">{{itdTotalNum}}</h5>
                                                 </div>
                                                 <ul class="pagination pagination-circle pg-blue wzhPageControl flexJustAround">

@@ -566,7 +566,7 @@ Vue.component("editConceptualModelModule",
             else{
 
                 // $("#title").text("Modify Conceptual Model")
-                $("#subRteTitle").text("/Modify Conceptual Model")
+                $("#subRteTitle").text("/"+this.htmlJson.ModifyConceptualModel)
 
                 // document.title="Modify Conceptual Model | OpenGMS"
 

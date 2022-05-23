@@ -753,7 +753,7 @@ var createUnit =Vue.extend({
             }
 
             // $("#title").text("Modify Unit & Metric")
-            $("#subRteTitle").text("/Modify Unit & Metric")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyUnitMetric)
             // document.title="Modify Unit & Metric | OpenGMS"
 
             if(window.localStorage.getItem('draft')==null) {
@@ -965,10 +965,10 @@ var createUnit =Vue.extend({
                         if (result.code === 0) {
                             this.deleteDraft()
                             if (result.data.method === "update") {
-                                this.$confirm('<div style=\'font-size: 18px\'>Update unit successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateUnitSuccessfully +'</div>', 'Tip', {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',

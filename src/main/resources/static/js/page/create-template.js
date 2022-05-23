@@ -764,7 +764,7 @@ var createTemplate = Vue.extend({
                 this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
             }
             // $("#title").text("Modify Data Template")
-            $("#subRteTitle").text("/Modify Data Template")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyDataTemplate)
             // document.title="Modify Data Template | OpenGMS"
 
             if(window.localStorage.getItem('draft')==null) {

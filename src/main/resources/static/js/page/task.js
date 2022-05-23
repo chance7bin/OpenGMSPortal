@@ -1324,7 +1324,7 @@ var vue = new Vue({
                 this.eventChoosing.url = this.currentData.url;
             }
             else {
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
         },
         downloadData() {
@@ -1332,7 +1332,7 @@ var vue = new Vue({
                 window.open(this.currentData.url);
             }
             else {
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
         },
 
@@ -1941,7 +1941,7 @@ var vue = new Vue({
                 $("#download_" + this.eventChoosing.eventId).css("display", "block");
             }
             else {
-                this.$message("Please select data first!")
+                this.$message(this.htmlJson.PleaseSelectDataFirst)
             }
 
         },

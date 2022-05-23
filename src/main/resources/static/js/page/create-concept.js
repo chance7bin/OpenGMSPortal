@@ -1698,7 +1698,7 @@ var createConcept = Vue.extend({
                 this.initDraft('edit','/user/userSpace#/models/modelitem','draft',this.draft.oid)
             }
             // $("#title").text("Modify Concept & Semantic")
-            $("#subRteTitle").text("/Modify Concept & Semantic")
+            $("#subRteTitle").text("/"+this.htmlJson.ModifyConceptSemantic)
             // document.title = "Modify Concept & Semantic | OpenGMS"
 
             if(window.localStorage.getItem('draft')==null) {

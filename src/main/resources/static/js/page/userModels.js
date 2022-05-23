@@ -120,7 +120,7 @@ var modelItem = Vue.extend({
             }else if (this.getType() == 'modelitem'){
                 this.chartDialogVisible = true;
                 this.currentOid = oid;
-                this.chartDialogTitle = name + " Statistics"
+                this.chartDialogTitle = name + this.htmlJson.Statistics
             }
 
         },

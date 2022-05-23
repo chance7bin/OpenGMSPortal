@@ -1036,7 +1036,7 @@ var createTheme = Vue.extend({
             }
         },
         handleClose(done) {
-            this.$confirm('Are you sure to close？')
+            this.$confirm(this.htmlJson.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })
@@ -1695,7 +1695,7 @@ var createTheme = Vue.extend({
         var d_attr = 0;
 
         if ((oid === "0") || (oid === "") || (oid === null)|| (oid === undefined)) {
-            $("#subRteTitle").text("/Create Theme");
+            $("#subRteTitle").text("/"+this.htmlJson.CreateTheme);
             this.editType = "create";
             initTinymce('textarea#themeText');
         }

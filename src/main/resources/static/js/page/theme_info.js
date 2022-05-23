@@ -1718,7 +1718,7 @@ var vue = new Vue({
             }
         },
         handleClose(done) {
-            this.$confirm('Are you sure to close？')
+            this.$confirm(this.htmlJson.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })

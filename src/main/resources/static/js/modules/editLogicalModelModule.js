@@ -529,7 +529,7 @@ Vue.component("editLogicalModelModule",
             else{
 
                 // $("#title").text("Modify Logical Model")
-                $("#subRteTitle").text("/Modify Logical Model")
+                $("#subRteTitle").text("/"+this.htmlJosn.ModifyLogicalModel)
                 // document.title="Modify Logical Model | OpenGMS"
 
                 $.ajax({

@@ -1,5 +1,6 @@
 var info=new Vue({
     el: '#app',
+    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar,
     },
@@ -2955,7 +2956,7 @@ var info=new Vue({
         },
 
         handleClose(done) {
-            this.$confirm('Are you sure to close？')
+            this.$confirm(this.htmlJson.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })

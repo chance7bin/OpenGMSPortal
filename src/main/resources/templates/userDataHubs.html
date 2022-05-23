@@ -157,7 +157,7 @@
                                 <ul class="pagination pagination-circle pg-blue wzhPageControl flexJustAround">
                                     <li class="page-item" :class="curPage!=1?'':'disabled'" @click="changePage(1)"><a
                                             class="page-link"
-                                            style="border-radius: 10%;background-color: inherit">First</a></li>
+                                            style="border-radius: 10%;background-color: inherit">{{htmlJson.userModel.First}}</a></li>
                                     <li class="page-item " :class="curPage!=1?'':'disabled'"
                                         @click="changePage(curPage-1)">
                                         <a class="page-link" aria-label="Previous">
@@ -177,7 +177,7 @@
                                     </li>
                                     <li class="page-item" :class="curPage!=totalPage?'':'disabled'"
                                         @click="changePage(totalPage)">
-                                        <a class="page-link">Last</a></li>
+                                        <a class="page-link">{{htmlJson.userModel.Last}}</a></li>
 
                                 </ul>
 
