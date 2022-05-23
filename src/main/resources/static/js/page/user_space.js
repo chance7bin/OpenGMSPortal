@@ -686,38 +686,38 @@ var vue = new Vue({
             switch (this.taskSharingActive) {
                 case 0:
                     if (this.multipleSelection.length+this.multipleSelectionMyData.length == 0) {
-                        this.showWaring('Please select data first!');
+                        this.showWaring(this.htmlJson.PleaseSelectDataFirst);
                         return;
                     }
                     break;
                 case 1:
                     if (this.taskDataForm.classifications.length == 0) {
-                        this.showWaring('Please choose categories from sidebar')
+                        this.showWaring(this.htmlJson.PleaseChooseCategoriesFromSidebar)
                         return;
                     }
                     if (this.taskDataForm.name.trim() == '') {
-                        this.showWaring('Please enter name');
+                        this.showWaring(this.htmlJson.noNameTip);
                         return;
                     }
                     if(this.curIndex==='6') //复用判断在哪个页面防止冲突
                         if ($("#taskDataKeywords").val().split(",")[0] == '') {
-                            this.showWaring('Please enter keywords');
+                            this.showWaring(this.htmlJson.EnterKeywords);
                             return;
                         }
                     if(this.curIndex==='3-3')
                         if ($("#taskDataKeywordsAll").val().split(",")[0] == '') {
-                            this.showWaring('Please enter keywords');
+                            this.showWaring(this.htmlJson.EnterKeywords);
                             return;
                         }
 
                     if (this.taskDataForm.description == '') {
-                        this.showWaring('Please enter overview');
+                        this.showWaring(this.htmlJson.noOverviewTip);
                         return;
                     }
                     break;
                 case 2:
                     if (tinyMCE.activeEditor.getContent().trim() == '') {
-                        this.showWaring('Please enter detailed description');
+                        this.showWaring(this.htmlJson.PleaseEnterDescription);
                         return;
                     }
                     break;
@@ -1217,7 +1217,7 @@ var vue = new Vue({
 
             }
             else{
-                alert("Please select data first!")
+                alert(this.htmlJson.PleaseSelectDataFirst)
             }
         },
 
@@ -4933,7 +4933,7 @@ var vue = new Vue({
 
         handleClose(done) {
             console.log(done)
-            this.$confirm('Are you sure to close？')
+            this.$confirm(this.htmlJson.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })

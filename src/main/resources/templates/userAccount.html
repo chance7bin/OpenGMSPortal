@@ -12,7 +12,8 @@
     <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
 
     <link rel="stylesheet" href="/static/css/font-awesome/fonts/fontawesome-webfont.woff">
-    <link rel="stylesheet" href="/static/css/font-awesome/fonts/fontawesome-webfont.ttf">
+    <link rel="styleshe
+    et" href="/static/css/font-awesome/fonts/fontawesome-webfont.ttf">
     <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
 
     <link rel="stylesheet" href="/static/css/base/fileinput.min.css">
@@ -416,11 +417,11 @@
                 <!--                    </div>-->
                 <!--                </div>-->
 
-                <el-dialog :visible.sync="dialogTableVisible" title="Subscribe specific model" width="70%"
+                <el-dialog :visible.sync="dialogTableVisible" :title=htmlJson.SubscribeSpecificModel width="70%"
                            top="40px">
 
                     <el-alert
-                            title="You can subscribe your own computable models' report."
+                            :title=htmlJson.YouCanSubscribeYourComputableModelsReport
                             type="success"
                             :closable="false"
                             style="margin-bottom:10px;">
@@ -428,7 +429,7 @@
 
                     <el-card class="box-card" shadow="never" style="width:40%;margin-right: 1%;float: left;">
                         <div slot="header" class="clearfix">
-                            <span>Subscribed Computable Model</span>
+                            <span>{{htmlJson.SubscribedComputableModel}}</span>
 
                         </div>
                         <el-table
@@ -446,18 +447,18 @@
                             <!--</template>-->
                             <!--</el-table-column>-->
                             <el-table-column
-                                    label="Name">
+                                    :label=htmlJson.Name>
                                 <template slot-scope="props">
                                     <a :href="'/computableModel/'+props.row.oid" target="_blank">{{props.row.name}}</a>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column fixed="right" label="Operation" width="100">
+                            <el-table-column fixed="right" :label=htmlJson.references.Operation width="100">
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
                                             type="danger"
-                                            @click="handleDelete(scope.$index, scope.row)">Remove
+                                            @click="handleDelete(scope.$index, scope.row)">{{htmlJson.Remove}}
                                     </el-button>
 
 
@@ -470,7 +471,7 @@
 
 
 
-                            <el-input placeholder="Please enter name..." v-model="searchText"
+                            <el-input :placeholder=htmlJson.noNameTip v-model="searchText"
                                       class="input-with-select" clearable="true">
                                 <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                             </el-input>
@@ -489,7 +490,7 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                        label="Name">
+                                        :label=htmlJson.Name>
                                     <template slot-scope="props">
                                         <a :href="'/computableModel/'+props.row.oid" target="_blank">{{props.row.name}}</a>
                                     </template>
@@ -498,11 +499,11 @@
                                 <!--label="Contributor"-->
                                 <!--prop="author">-->
                                 <!--</el-table-column>-->
-                                <el-table-column fixed="right" label="Operation" width="100">
+                                <el-table-column fixed="right" :label=htmlJson.references.Operation width="100">
                                     <template slot-scope="scope">
                                         <el-button
                                                 size="mini"
-                                                @click="handleEdit(scope.$index, scope.row)">Add
+                                                @click="handleEdit(scope.$index, scope.row)">{{htmlJson.authorshipPart.Add}}
                                         </el-button>
 
                                     </template>
@@ -518,14 +519,14 @@
 
                     </el-card>
                     <div slot="footer" class="dialog-footer">
-                        <el-button @click="dialogTableVisible = false;">Cancel</el-button>
-                        <el-button type="primary" @click="submitSubscribedList">Submit</el-button>
+                        <el-button @click="dialogTableVisible = false;">{{htmlJson.userModel.Cancel}}</el-button>
+                        <el-button type="primary" @click="submitSubscribedList">{{htmlJson.Submit}}</el-button>
                     </div>
                 </el-dialog>
 
                 <el-dialog class="top350Dialog" title="Edit Image" :visible.sync="imgClipDialog"
                            @close="closeImgUpload" center  width="30%" append-to-body>
-                    <p class="noMargin" style="text-align: center">Drag to change the position and size.</p>
+                    <p class="noMargin" style="text-align: center">{{htmlJson.DragToChangePositionAndSize}}</p>
                     <span slot="footer" class="dialog-footer">
                         <div id="editImageDialog">
                             <div class="flexJustAround flexAlignCenter editImageContainer" style="">
@@ -537,7 +538,7 @@
 <!--                                <input id="imgFile" type="file" style="display: none" accept="image/*"/>-->
                                 <!--                            <div class="innerBorderCol"></div>-->
                                 <div class="imgOverview" style="width: 40%">
-                                    <p style="text-align: center;color: #595959;font-size: 15px">overview</p>
+                                    <p style="text-align: center;color: #595959;font-size: 15px">{{htmlJson.overview}}</p>
                                     <div class="flexJustAround flexAlignCenter flexCol" style="background-color: inherit;">
                                         <div class="circlePhotoFrame flexCenter">
                                             <canvas id="clipCanvas" ref="clipCanvas"></canvas>
@@ -561,7 +562,7 @@
                                 </div>
                             </div>
                             <div style="display: flex;justify-content: center;padding:10px 15px 10px">
-                                <el-button id="saveUserImgButton" size="mini" round type="success">Comfirm</el-button>
+                                <el-button id="saveUserImgButton" size="mini" round type="success">{{htmlJson.Confirm}}</el-button>
                                 <el-button id="closeSaveUserImg" size="mini" round style="margin-left: 15px" @click="imgClipDialog=false"> Cancel </el-button>
                             </div>
                         </div>

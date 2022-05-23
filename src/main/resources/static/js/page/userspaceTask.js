@@ -1094,21 +1094,21 @@ var userTask = Vue.extend(
                 switch (this.taskSharingActive) {
                     case 0:
                         if (this.multipleSelection.length + this.multipleSelectionMyData.length == 0) {
-                            this.showWaring('Please select data first!');
+                            this.showWaring(this.htmlJson.PleaseSelectDataFirst);
                             return;
                         }
                         break;
                     case 1:
                         if (this.taskDataForm.classifications.length == 0) {
-                            this.showWaring('Please choose categories from sidebar')
+                            this.showWaring(this.htmlJson.PleaseChooseCategoriesFromSidebar)
                             return;
                         }
                         if (this.taskDataForm.name.trim() == '') {
-                            this.showWaring('Please enter name');
+                            this.showWaring(this.htmlJson.noNameTip);
                             return;
                         }
                         if ($("#taskDataKeywords").val().split(",")[0] == '') {
-                            this.showWaring('Please enter keywords');
+                            this.showWaring(this.htmlJson.EnterKeywords);
                             return;
                         }
 
@@ -1318,7 +1318,7 @@ var userTask = Vue.extend(
 
             handleClose(done) {
                 console.log(done)
-                this.$confirm('Are you sure to close？')
+                this.$confirm(this.htmlJson.AreYouSureToClose)
                     .then(_ => {
                         done();
                     })
@@ -1332,7 +1332,7 @@ var userTask = Vue.extend(
 
             handleCloseandInit(done) {
                 console.log(done)
-                this.$confirm('Are you sure to close？')
+                this.$confirm(this.htmlJson.AreYouSureToClose)
                     .then(_ => {
                         for (let i = 0; i < $('.treeLi').length; i++) {
                             $('.treeLi').eq(i).removeClass('expanded');
@@ -1477,7 +1477,7 @@ var userTask = Vue.extend(
                 let node, data
 
                 data = this.$refs.folderTree2.getCurrentNode();
-                if (data == undefined || data == null) alert('Please select a file directory')
+                if (data == undefined || data == null) alert(this.htmlJson.selectDirTip)
                 node = this.$refs.folderTree2.getNode(data);
 
                 let folderExited = data.children
@@ -1502,7 +1502,7 @@ var userTask = Vue.extend(
                     if(folderExited.some((item)=>{
                         return  item.label===value;
                     })==true){
-                        alert('this name is existing in this path, please input a new one');
+                        alert(this.htmlJson.ThisNameIsExistingPleaseInputNewOne);
                         return
                     }
 
@@ -1550,19 +1550,19 @@ var userTask = Vue.extend(
 
             submitUpload() {
                 if(this.uploadName==""){
-                    this.$message.error('Please enter the dataset name!');
+                    this.$message.error(this.htmlJson.PleaseEnterTheDatasetName);
                     return;
                 }
                 if(this.selectValue==""){
-                    this.$message.error('Please select a data template!');
+                    this.$message.error(this.htmlJson.PleaseSelectADataTemplate);
                     return;
                 }
                 if (this.selectedPath.length == 0) {
-                    this.$message.error('Please select a folder first!');
+                    this.$message.error(this.htmlJson.PleaseSelectAFolderFirst);
                     return;
                 }
                 if(this.uploadFiles.length==0){
-                    this.$message.error('Please select files!');
+                    this.$message.error(this.htmlJson.PleaseSelectFiles);
                     return;
                 }
 
@@ -1632,7 +1632,7 @@ var userTask = Vue.extend(
 
 
                         }else{
-                            this.$message.error('Upload failed!');
+                            this.$message.error(this.htmlJson.UploadFailed);
                         }
 
 
@@ -1641,7 +1641,7 @@ var userTask = Vue.extend(
 
                         this.uploadLoading=false;
                         this.uploadDialogVisible=false;
-                        this.$message.error('Upload failed!');
+                        this.$message.error(this.htmlJson.UploadFailed);
                     });
                 });
 

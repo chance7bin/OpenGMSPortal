@@ -1036,7 +1036,7 @@ var createTheme = Vue.extend({
             }
         },
         handleClose(done) {
-            this.$confirm('Are you sure to close？')
+            this.$confirm(this.htmlJson.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })

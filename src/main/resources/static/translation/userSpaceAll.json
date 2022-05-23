@@ -1741,7 +1741,14 @@
     "PleaseEnterNewPassword": "Please enter new password!",
     "PleaseConfirmNewPassword": "Please confirm new password!",
     "PasswordAndConfirmPasswordAreInconsistent": "Password and Confirm Password are inconsistent!",
-    "PleaseSelectFirst": "please select first!"
+    "PleaseSelectFirst": "please select first!",
+    "Statistics": "Statistics",
+    "PleaseChooseCategoriesFromSidebar": "Please choose categories from sidebar",
+    "SubscribeSpecificModel": "Subscribe specific model",
+    "YouCanSubscribeYourComputableModelsReport": "You can subscribe your own computable models' report",
+    "SubscribedComputableModel": "Subscribed Computable Model",
+    "Submit": "Submit",
+    "DragToChangePositionAndSize": "Drag to change the position and size"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3476,6 +3483,13 @@
     "PleaseEnterNewPassword": "请输入新密码!",
     "PleaseConfirmNewPassword": "请确认新密码!",
     "PasswordAndConfirmPasswordAreInconsistent": "两次输入不一致!",
-    "PleaseSelectFirst": "请先选择!"
+    "PleaseSelectFirst": "请先选择!",
+    "Statistics": "统计",
+    "PleaseChooseCategoriesFromSidebar": "请从侧边栏中选择数据",
+    "SubscribeSpecificModel": "订阅特定的模型",
+    "YouCanSubscribeYourComputableModelsReport": "您可以订阅自己的计算模型报告",
+    "SubscribedComputableModel": "已订阅的计算模型",
+    "Submit": "提交",
+    "DragToChangePositionAndSize": "拖动以改变位置及大小"
   }
 }

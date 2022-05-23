@@ -2485,33 +2485,33 @@ var userDataSpace = Vue.extend(
                 switch (this.taskSharingActive) {
                     case 0:
                         if (this.multipleSelection.length+this.multipleSelectionMyData.length == 0) {
-                            this.showWaring('Please select data first!');
+                            this.showWaring(this.htmlJson.PleaseSelectDataFirst);
                             return;
                         }
                         break;
                     case 1:
                         if (this.taskDataForm.classifications.length == 0) {
-                            this.showWaring('Please choose categories from sidebar')
+                            this.showWaring(this.htmlJson.PleaseChooseCategoriesFromSidebar)
                             return;
                         }
                         if (this.taskDataForm.name.trim() == '') {
-                            this.showWaring('Please enter name');
+                            this.showWaring(this.htmlJson.noNameTip);
                             return;
                         }
 
                         if ($("#taskDataKeywordsAll").val().split(",")[0] == '') {
-                            this.showWaring('Please enter keywords');
+                            this.showWaring(this.htmlJson.EnterKeywords);
                             return;
                         }
 
                         if (this.taskDataForm.description == '') {
-                            this.showWaring('Please enter overview');
+                            this.showWaring(this.htmlJson.noOverviewTip);
                             return;
                         }
                         break;
                     case 2:
                         if (tinyMCE.activeEditor.getContent().trim() == '') {
-                            this.showWaring('Please enter detailed description');
+                            this.showWaring(this.htmlJson.PleaseEnterDescription);
                             return;
                         }
                         break;
@@ -2571,7 +2571,7 @@ var userDataSpace = Vue.extend(
 
             handleCloseandInit(done) {
                 // console.log(done)
-                this.$confirm('Are you sure to close？')
+                this.$confirm(this.htmlJson.AreYouSureToClose)
                     .then(_ => {
                         for(let i=0;i<$('.treeLi').length;i++) {
                             $('.treeLi').eq(i).removeClass('expanded');
