@@ -134,6 +134,7 @@ public class TaskService {
             dxInfo.put("dxIP", dxServer.getString("ip"));
             dxInfo.put("dxPort", dxServer.getString("port"));
             dxInfo.put("dxType", dxServer.getString("type"));
+            // dxInfo.put("access_url", dxServer.getString("access_url")); //数据容器部署在内网的话要用这个url访问数据容器
             msg = "success";
         }else if(code==-2){
             msg="no service";
@@ -822,8 +823,8 @@ public class TaskService {
      **/
     public JsonResult getTasksByUserByStatus(String email, TaskFindDTO taskFindDTO) {
 
-        Sort sort = Sort.by(taskFindDTO.getAsc() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, taskFindDTO.getSortType());
-        Pageable pageable = PageRequest.of(taskFindDTO.getPage(), taskFindDTO.getPageSize(), sort);
+        Sort sort = Sort.by(taskFindDTO.getAsc() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "runTime");
+        Pageable pageable = PageRequest.of(taskFindDTO.getPage()-1, taskFindDTO.getPageSize(), sort);
         Page<Task> tasks = Page.empty();
         String status = taskFindDTO.getStatus();
         try{
@@ -853,6 +854,19 @@ public class TaskService {
                 }
 
             }
+
+            //把内网ip换成外网可以访问的地址，供外网下载(这段代码迁移到task server了)
+            // for (Task t : ts) {
+            //     List<TaskData> outputs = t.getOutputs();
+            //     for (TaskData output : outputs) {
+            //         String url = output.getUrl();
+            //         if (url != null && url.contains("172.21.213.111:8082")){
+            //             url = url.replaceFirst("172.21.213.111:8082", dataContainerIpAndPort);
+            //             // url = url.replaceFirst("221.226.60.2:8082", dataContainerIpAndPort);
+            //             output.setUrl(url);
+            //         }
+            //     }
+            // }
 
             JSONObject taskObject = new JSONObject();
             taskObject.put("count", tasks.getTotalElements());
@@ -1381,7 +1395,7 @@ public class TaskService {
         List<Future<ResultDataDTO>> futures = new ArrayList<>();
         //开启异步任务
         uploadDataDTOs.forEach((UploadDataDTO obj) -> {
-            Future<ResultDataDTO> future = uploadDataToServer(obj, testDataUploadDTO, email);
+            Future<ResultDataDTO> future = asyncService.uploadDataToServer(obj, email);
             futures.add(future);
         });
         List<ResultDataDTO> resultDataDTOs = new ArrayList<>();
@@ -1534,104 +1548,104 @@ public class TaskService {
         return dataUploadList;
     }
 
-    @Async
-    public Future<ResultDataDTO> uploadDataToServer(UploadDataDTO uploadDataDTO, TestDataUploadDTO testDataUploadDTO, String userName) {
-        ResultDataDTO resultDataDTO = new ResultDataDTO();
-        resultDataDTO.setEvent(uploadDataDTO.getEvent());
-        resultDataDTO.setStateId(uploadDataDTO.getState());
-        resultDataDTO.setChildren(uploadDataDTO.getChildren());
-        String testDataPath = uploadDataDTO.getFilePath();
-        String url = "http://" + dataContainerIpAndPort + "/data";
-        //拼凑form表单
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("name", uploadDataDTO.getEvent());
-        params.add("userId", userName);
-        params.add("serverNode", "china");
-        params.add("origination", "portal");
-
-        //拼凑file表单
-        List<String> filePaths=new ArrayList<>();
+//    @Async
+//    public Future<ResultDataDTO> uploadDataToServer(UploadDataDTO uploadDataDTO, TestDataUploadDTO testDataUploadDTO, String userName) {
+//        ResultDataDTO resultDataDTO = new ResultDataDTO();
+//        resultDataDTO.setEvent(uploadDataDTO.getEvent());
+//        resultDataDTO.setStateId(uploadDataDTO.getState());
+//        resultDataDTO.setChildren(uploadDataDTO.getChildren());
+//        String testDataPath = uploadDataDTO.getFilePath();
+//        String url = "http://" + dataContainerIpAndPort + "/data";
+//        //拼凑form表单
+//        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+//        params.add("name", uploadDataDTO.getEvent());
+//        params.add("userId", userName);
+//        params.add("serverNode", "china");
+//        params.add("origination", "portal");
 //
-        String configParentPath = resourcePath + "/configFile/" + UUID.randomUUID().toString() + "/";
-        File path = new File(configParentPath);
-        path.mkdirs();
-        String configPath = configParentPath + "config.udxcfg";
-        File configFile = new File(configPath);
-
-        ZipStreamEntity zipStreamEntity = null;
-
-        try {
-
-            configFile.createNewFile();
-//            File configFile=File.createTempFile("config",".udxcfg");
-
-            Writer out = new FileWriter(configFile);
-            String content = "<UDXZip>\n";
-            content += "\t<Name>\n";
-            String[] paths = testDataPath.split("/");
-            content += "\t\t<add value=\"" + paths[paths.length - 1] + "\" />\n";
-            content += "\t</Name>\n";
-            content += "\t<DataTemplate type=\"" + uploadDataDTO.getType() + "\">\n";
-            content += "\t\t"+uploadDataDTO.getTemplate()+"\n";
-            content += "\t</DataTemplate>\n";
-            content += "</UDXZip>";
-
-            out.write(content);
-            out.flush();
-            out.close();
-
-
-            filePaths.add(testDataPath);
-            filePaths.add(configPath);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        JSONObject result;
-
-        try {
-            for(int i=0;i<filePaths.size();i++){
-                File uploadFile = new File(filePaths.get(i));
-                FileInputStream fileInputStream = new FileInputStream(uploadFile);
-                // MockMultipartFile(String name, @Nullable String originalFilename, @Nullable String contentType, InputStream contentStream)
-                // 其中originalFilename,String contentType 旧名字，类型  可为空
-                // ContentType.APPLICATION_OCTET_STREAM.toString() 需要使用HttpClient的包
-                MultipartFile multipartFile = new MockMultipartFile(uploadFile.getName(),uploadFile.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(),fileInputStream);
-
-                params.add("datafile", multipartFile.getResource());
-            }
-            result = MyHttpUtils.uploadDataToDataServer(dataContainerIpAndPort,params);
-        } catch (Exception e) {
-            result = null;
-        }
-        if (result == null) {
-            resultDataDTO.setUrl("");
-            resultDataDTO.setTag("");
-        } else {
-            JSONObject res = result;
-            if (res.getIntValue("code") != 1) {
-                resultDataDTO.setUrl("");
-                resultDataDTO.setTag("");
-                resultDataDTO.setSuffix("");
-            } else {
-                JSONObject data = res.getJSONObject("data");
-                String data_url = "http://"+dataContainerIpAndPort+"/data/"+data.getString("source_store_id");
-                String tag = data.getString("file_name");
-                String[] paths=testDataPath.split("\\.");
-                String suffix = paths[paths.length-1];
-                resultDataDTO.setTag(tag);
-                resultDataDTO.setUrl(data_url);
-                resultDataDTO.setSuffix(suffix);
-                resultDataDTO.setVisual(uploadDataDTO.getVisual());
-            }
-        }
-        return new AsyncResult<>(resultDataDTO);
-
-
-    }
+//        //拼凑file表单
+//        List<String> filePaths=new ArrayList<>();
+////
+//        String configParentPath = resourcePath + "/configFile/" + UUID.randomUUID().toString() + "/";
+//        File path = new File(configParentPath);
+//        path.mkdirs();
+//        String configPath = configParentPath + "config.udxcfg";
+//        File configFile = new File(configPath);
+//
+//        ZipStreamEntity zipStreamEntity = null;
+//
+//        try {
+//
+//            configFile.createNewFile();
+////            File configFile=File.createTempFile("config",".udxcfg");
+//
+//            Writer out = new FileWriter(configFile);
+//            String content = "<UDXZip>\n";
+//            content += "\t<Name>\n";
+//            String[] paths = testDataPath.split("/");
+//            content += "\t\t<add value=\"" + paths[paths.length - 1] + "\" />\n";
+//            content += "\t</Name>\n";
+//            content += "\t<DataTemplate type=\"" + uploadDataDTO.getType() + "\">\n";
+//            content += "\t\t"+uploadDataDTO.getTemplate()+"\n";
+//            content += "\t</DataTemplate>\n";
+//            content += "</UDXZip>";
+//
+//            out.write(content);
+//            out.flush();
+//            out.close();
+//
+//
+//            filePaths.add(testDataPath);
+//            filePaths.add(configPath);
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        JSONObject result;
+//
+//        try {
+//            for(int i=0;i<filePaths.size();i++){
+//                File uploadFile = new File(filePaths.get(i));
+//                FileInputStream fileInputStream = new FileInputStream(uploadFile);
+//                // MockMultipartFile(String name, @Nullable String originalFilename, @Nullable String contentType, InputStream contentStream)
+//                // 其中originalFilename,String contentType 旧名字，类型  可为空
+//                // ContentType.APPLICATION_OCTET_STREAM.toString() 需要使用HttpClient的包
+//                MultipartFile multipartFile = new MockMultipartFile(uploadFile.getName(),uploadFile.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(),fileInputStream);
+//
+//                params.add("datafile", multipartFile.getResource());
+//            }
+//            result = MyHttpUtils.uploadDataToDataServer(dataContainerIpAndPort,params);
+//        } catch (Exception e) {
+//            result = null;
+//        }
+//        if (result == null) {
+//            resultDataDTO.setUrl("");
+//            resultDataDTO.setTag("");
+//        } else {
+//            JSONObject res = result;
+//            if (res.getIntValue("code") != 1) {
+//                resultDataDTO.setUrl("");
+//                resultDataDTO.setTag("");
+//                resultDataDTO.setSuffix("");
+//            } else {
+//                JSONObject data = res.getJSONObject("data");
+//                String data_url = "http://"+dataContainerIpAndPort+"/data/"+data.getString("source_store_id");
+//                String tag = data.getString("file_name");
+//                String[] paths=testDataPath.split("\\.");
+//                String suffix = paths[paths.length-1];
+//                resultDataDTO.setTag(tag);
+//                resultDataDTO.setUrl(data_url);
+//                resultDataDTO.setSuffix(suffix);
+//                resultDataDTO.setVisual(uploadDataDTO.getVisual());
+//            }
+//        }
+//        return new AsyncResult<>(resultDataDTO);
+//
+//
+//    }
 
 
     public List<ResultDataDTO> getPublishedData(String taskId) {

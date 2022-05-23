@@ -1742,6 +1742,13 @@
     "PleaseConfirmNewPassword": "Please confirm new password!",
     "PasswordAndConfirmPasswordAreInconsistent": "Password and Confirm Password are inconsistent!",
     "PleaseSelectFirst": "please select first!",
+
+
+    "Accept": "Accept",
+    "Reject": "Reject"
+
+
+    "PleaseSelectFirst": "please select first!",
     "Statistics": "Statistics",
     "PleaseChooseCategoriesFromSidebar": "Please choose categories from sidebar",
     "SubscribeSpecificModel": "Subscribe specific model",
@@ -3520,5 +3527,9 @@
     "UpdateDataApplicationSuccessfully": "更新数据应用成功",
     "UpdateUnitSuccessfully": "更新单位成功",
     "CreateTheme": "创建专题"
+    "PleaseSelectFirst": "请先选择!",
+
+    "Accept": "接受",
+    "Reject": "拒绝"
   }
 }

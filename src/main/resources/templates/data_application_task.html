@@ -125,6 +125,12 @@
             overflow-y: auto;display: block;position: relative;margin-bottom: 5%">
                 <div class="content">
                     <div class="_main">
+                        <translation-bar
+                                json-file="task"
+                                @translate-page="translatePage"
+                                initial-lang="en-us"
+                                theme="dark"
+                                style="position: absolute;top: 10px;right:15px; z-index: 999;"></translation-bar>
                         <el-row class="_title">
                             <el-row type="flex" align="middle">
                                 <i class="fa fa-database"></i>
@@ -141,12 +147,7 @@
                                     <!--                            </el-radio-group>-->
                                 </div>
 
-                                <translation-bar
-                                        json-file="task"
-                                        @translate-page="translatePage"
-                                        initial-lang="en-us"
-                                        theme="dark"
-                                        style="position: absolute;right:15px"></translation-bar>
+
                             </el-row>
                         </el-row>
                         <div class="dataContainer" style="width: 100%">

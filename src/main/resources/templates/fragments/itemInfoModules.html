@@ -75,7 +75,7 @@
             </div>
             <div class="el-col">
                 <div class="pull-left" style="display: block;margin-left: 15px;">
-                    <a :href="'/profile/'+lightenContributor.accessId"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
+                    <a :href="'/profile/'+lightenContributor.accessId"><h4 style="padding: 0;" v-text="lightenContributor.name"></h4></a>
                 </div>
             </div>
         </div>
@@ -127,7 +127,7 @@
             </div>
             <div class="el-col">
                 <div class="pull-left" style="display: block;margin-left: 15px;">
-                    <a :href="'/profile/'+lightenContributor.accessId" target="_blank"><h4 style="padding: 0;">{{lightenContributor.name}}</h4></a>
+                    <a :href="'/profile/'+lightenContributor.accessId" target="_blank"><h4 style="padding: 0;" v-text="lightenContributor.name"></h4></a>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
     </div>
 </div>
 
-<div th:fragment="author" th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
+<div th:fragment="authorship(pos)" th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
             <h4 translateId="Authorship">Authorship</h4>
@@ -161,10 +161,10 @@
              style="text-align: left;" th:each="author,key:${itemInfo.authorships}">
                         <span role="button" tabindex="0" class="ab" style="float: right;"
                               th:class="${key.index==0?'ab':'ab transform180'}"><a
-                                data-toggle="collapse" th:href="'#authorshipPhone'+${key.index}" class="detail-toggle"
+                                data-toggle="collapse" th:href="'#authorship_'+${pos}+${key.index}" class="detail-toggle"
                                 aria-expanded="true"><i class="fa fa-caret-up" style="font-size: 21px"></i></a></span>
             <li class="NavHead" style="font-size: 16px;" th:text="${author.name}"></li>
-            <div th:id="'authorshipPhone'+${key.index}" class="panel-collapse" name="authorshipContent"
+            <div th:id="'authorship_'+${pos}+${key.index}" class="panel-collapse" name="authorshipContent"
                  th:class="${key.index==0?'in':'collapse'}" aria-expanded="true"
                  style="">
                 <div class="panel-body" style="padding-left: 20px; padding-top: 7px; padding-right: 0px;">
@@ -174,8 +174,7 @@
                         <dt th:if="${author.email!=''}"><span translateId="Email"></span>: &nbsp</dt>
                         <dd th:if="${author.email!=''}" th:text="${author.email}"></dd>
                         <dt th:if="${author.homepage!=''}"><span translateId="Homepage"></span>: &nbsp</dt>
-                        <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank"></a>
-                        </dd>
+                        <dd th:if="${author.homepage!=''}"><a th:href="${author.homepage}" target="_blank" ><span translateId="View">View</span></a></dd>
                     </dl>
                 </div>
             </div>
@@ -298,15 +297,7 @@
                    th:text="${relateModelItem.name}"></a>
                 <p style="margin-top: 0px" th:text="${relateModelItem.description}"></p>
             </div>
-        </div>
-    </div>
-</div>
 
-        <div class="detail_option" th:if="${history!=true}">
-            <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
-            <!--<div th:utext="'&nbsp&nbsp'+${itemInfo.shareCount}">&nbsp&nbsp37</div>-->
-            <a class="fa fa-eye" aria-hidden="true"></a>
-            <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}"></div>
         </div>
 
     </div>
@@ -400,7 +391,7 @@
      th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
     <div class="block_head">
         <div class="head_text">
-            <h4>{{htmlJSON.Resource}}</h4>
+            <h4 v-text="htmlJSON.Resource"></h4>
         </div>
     </div>
     <div class="block_content" style="margin-right: 0;">
@@ -443,33 +434,13 @@
                         </div>
                     </div>
 
-                    <!--                                <div id="imgMask" class="flexCenter" th:if="data!=undefined"-->
-                    <!--                                     style="position: absolute;width: 100px;height: 100px">-->
-                    <!--                                    <div class="fa fa-times imgDelete" @click="deleteImg"></div>-->
-                    <!--                                    <div class="fa fa-pencil imgEditBlock flexCenter" style="" @click="imgFile"></div>-->
-                    <!--                                </div>-->
                 </a>
             </div>
-
 
         </div>
     </div>
 </div>
 
-        <!--                    <el-card class="browsermenu">-->
-        <!--                        <el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download-->
-        <!--                        </el-button>-->
-        <!--                        <br>-->
-        <!--                        <el-button id="sbtn" icon="el-icon-share" @click="share" type="text">share</el-button>-->
-        <!--                    </el-card>-->
-        <!--refresh 白板刷新和全选功能，待进一步完善-->
-
-        <!--<el-card class="browser">-->
-        <!--<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>-->
-        <!--<el-button icon="el-icon-check" type="text">selectAll</el-button>-->
-        <!--</el-card>-->
-    </div>
-</div>
 
 <!--Copyright and Disclaimer 版权及免责声明-->
 <div th:fragment="copyright" id="copyright" class="detail_block">
@@ -499,12 +470,12 @@
 
             <div class="panel-body" style="padding-left: 0px; padding-top: 7px; padding-right: 0px;">
                 <dl>
-                    <dt translateId="Lastmodifier" th:if="${lastModifier}">Last modifier : </dt>
+                    <dt th:if="${lastModifier}"><span translateId="Lastmodifier">Last modifier</span>:&nbsp</dt>
                     <dd><a th:if="${lastModifier}" th:text="${lastModifier.name}"  th:href="${'/profile/'+lastModifier.accessId}"
                            target="_blank"></a></dd>
-                    <dt translateId="Lastmodifytime" th:if="${lastModifyTime}">Last modify time :</dt>
+                    <dt th:if="${lastModifyTime}"><span translateId="Lastmodifytime" >Last modify time</span>:&nbsp</dt>
                     <dd th:if="${lastModifyTime}" th:text="${lastModifyTime}"></dd>
-                    <dt translateId="Modifytimes" th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0">Modify times :</dt>
+                    <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
                     <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
                         <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
                 </dl>
@@ -514,7 +485,7 @@
     </div>
 </div>
 
-<!--qrcode 二维码大屏-->
+<!--qrcode 网页二维码大屏-->
 <div th:if="${history!=true}" th:fragment="QR_lg" id="QR" class="detail_block">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;">
@@ -525,11 +496,11 @@
         <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>
     </div>
 </div>
-<!--qrcode 二维码小屏-->
+<!--qrcode 网页二维码小屏-->
 <div th:if="${history!=true}" th:fragment="QR_sm" id="QR0" class="detail_block minScreen">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;">
-            <h4>{{htmlJSON.QRCode}}</h4>
+            <h4 v-text="htmlJSON.QRCode"></h4>
         </div>
     </div>
     <div class="block_content">
@@ -541,7 +512,7 @@
 <div th:if="${modularType.name} eq 'ModelItem'" v-if="contributors!=null&&contributors.length>0" th:fragment="coContributor" id="coContributor" class="detail_block">
     <div class="block_head" style="border-left-color: #00d083;">
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
-            <h4 translateId="CoContributor">Co-contributor(s)</h4>
+            <h4 translateId="CoContributor">{{htmlJSON.CoContributor}}</h4>
         </div>
     </div>
     <div class="block_content" style="padding-left:10px;">

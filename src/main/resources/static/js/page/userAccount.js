@@ -673,8 +673,8 @@ var userAccount = Vue.extend(
                     },
                     crossDomain: true,
                     success: (result) => {
-                        let data = result.data
-                        if (data.accessId == "") {
+
+                        if (result.code === 0) {
                             this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                 type:"info",
                                 confirmButtonText: 'OK',
@@ -683,6 +683,7 @@ var userAccount = Vue.extend(
                                 }
                             });
                         } else {
+                            let data = result.data;
                             this.userEid = data.email;
                             this.userName = data.name;
                             console.log(this.userEid)

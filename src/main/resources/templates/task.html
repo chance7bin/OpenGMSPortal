@@ -628,7 +628,7 @@
                         <input type="file" id="uploadInputData" style="display: none;"/>
 
 
-                        <el-dialog title="Select Data"
+                        <el-dialog :title="htmlJSON.SelectData"
                                    :visible.sync="showDataChose"
                                    width="70%"
                                    class="centerDialog"
@@ -639,7 +639,8 @@
                                             @com-selectfile="selectDataspaceFile"
                                             @com-removefile="removeDataspaceFile"
                                             single-choice
-                                            ref="userDataSpace" style="height: 550px;"></user-data>
+                                            ref="userDataSpace" style="height: 550px;"
+                                            :html-Json="htmlJSON"></user-data>
                                 </el-tab-pane>
                                 <el-tab-pane :label="htmlJSON.PublicDataCenter" name="public">
                                     <public-data-center

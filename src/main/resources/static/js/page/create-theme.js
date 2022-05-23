@@ -1676,14 +1676,15 @@ var createTheme = Vue.extend({
             },
             cache: false,
             async: false,
-            success: (data) => {
-                console.log(data);
-                if (data.oid == "") {
+            success: (result) => {
+                // console.log(data);
+                if (result.code !== 0) {
                     that.$alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else {
-                    this.userId = data.oid;
+                    let data = result.data;
+                    this.userId = data.accessId;
                     this.userName = data.name;
                 }
             }
@@ -1752,9 +1753,9 @@ var createTheme = Vue.extend({
         }
 
         if (this.editType == 'create'){
-            $("#subRteTitle").text("/" + newData.CreateTheme);
+            $("#subRteTitle").text("/" + this.htmlJson.CreateTheme);
         } else {
-            $("#subRteTitle").text("/" + newData.ModifyTheme);
+            $("#subRteTitle").text("/" + this.htmlJson.ModifyTheme);
         }
 
         $("#step").steps({

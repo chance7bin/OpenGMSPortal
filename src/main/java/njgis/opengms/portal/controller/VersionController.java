@@ -50,6 +50,15 @@ public class VersionController {
         return versionService.reject(id, email);
     }
 
+    @ApiOperation(value = "回退版本")
+    @RequestMapping(value = "/fallback/{id}", method = RequestMethod.GET)
+    public JsonResult fallback(
+        @ApiParam(name = "id", value = "版本id") @PathVariable String id, HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return versionService.fallback(id, email);
+    }
+
 
 
     @ApiOperation(value = "得到所有审核信息 [ /version/getVersions ]")
@@ -203,7 +212,7 @@ public class VersionController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的创建者）的未审核的version [ /theme/getMessageData ]")
+    @ApiOperation(value = "根据条目类型得到用户审核（你是条目的审核者）的未审核的version [ /theme/getMessageData ]")
     @ApiImplicitParams({
         @ApiImplicitParam(name="type",value="条目大类: Model/Data/Community/Theme/All",required=true)
     })

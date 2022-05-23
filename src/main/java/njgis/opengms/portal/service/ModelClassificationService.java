@@ -89,6 +89,7 @@ public class ModelClassificationService {
                 Classification classification=classificationDao.findFirstById(classId);
 
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name_zh",classification.getNameCn());
                 jsonObject.put("name",classification.getNameEn());
                 jsonObject.put("id",classification.getId());
 

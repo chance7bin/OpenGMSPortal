@@ -499,9 +499,9 @@ var userspace = new Vue(
                     },
                     crossDomain: true,
                     success: (result) => {
-                        let data = result.data
-                        console.log(data);
-                        if (data.oid == "") {
+
+                        // console.log(data);
+                        if (result.code !== 0) {
                             this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                                 type:'error',
                                 confirmButtonText: 'OK',
@@ -510,6 +510,7 @@ var userspace = new Vue(
                                 }
                             });
                         } else {
+                            let data = result.data
                             this.userId = data.email;
                             this.userName = data.name;
                             // this.addAllData()

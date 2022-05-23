@@ -1186,6 +1186,7 @@ var vue = new Vue({
                             type: 'text/plain',
                         });
                         //上传文件
+                        console.log("content:",content);
                         this.uploadToDataContainer(file, event);
 
                     }
@@ -2209,7 +2210,14 @@ var vue = new Vue({
                 }
             }
 
+            // console.log("1 this.info.modelInfo.states:",states);
+
             this.createAndUploadParamFile();
+
+            // console.log("2 this.info.modelInfo.states1:",states);
+
+            // return;
+
             let prepare = setInterval(() => {
                 let prepared = true;
 
@@ -2247,7 +2255,7 @@ var vue = new Vue({
 
                 if (prepared) {
                     clearInterval(prepare);
-                    console.log(this.modelInEvent)
+                    // console.log(this.modelInEvent)
                     loading.close();
                     this.taskRunning = true
 
@@ -3341,9 +3349,9 @@ var vue = new Vue({
         let that = this
         axios.get("/user/load")
             .then((res) => {
-                if (res.status == 200) {
-                    that.useroid = res.data.oid;
-                    that.uid=res.data.uid;
+                if (res.data.code == 0) {
+                    that.useroid = res.data.data.accessId;
+                    that.uid=res.data.data.email;
                 }
 
             })

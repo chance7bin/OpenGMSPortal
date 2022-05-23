@@ -622,7 +622,7 @@ var createLogicalModel = Vue.extend({
                     let data = result.data
                     console.log(data);
 
-                    if (data.oid == "") {
+                    if (result.code !== 0) {
                         this.$alert(this.htmlJson.LoginInFirst, this.htmlJson.Error, {
                             type:"error",
                             confirmButtonText: 'OK',

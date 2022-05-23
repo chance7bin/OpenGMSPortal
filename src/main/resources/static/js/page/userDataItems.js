@@ -254,9 +254,9 @@ var userDataItems = Vue.extend(
                                         if (json.code == -1) {
                                             alert(this.htmlJson.LoginInFirst)
                                         } else {
-                                            if (json.data == 1) {
+                                            if (json.code == 0) {
                                                 // this.$alert("delete successfully!")
-                                            } else if (json.data == -1) {
+                                            } else if (json.code == -2) {
                                                 this.$alert(this.htmlJson.DeleteFailed)
                                             } else
                                                 this.$alert(this.htmlJson.RefreshPage)
@@ -368,14 +368,15 @@ var userDataItems = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
 
-                        console.log(data);
+                        // console.log(data);
 
-                        if (data.accessId == "") {
+                        if (result.code !== 0) {
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data;
                             this.countInfo = data.data
                             this.userId = data.data.accessId;
                             this.userName = data.data.name;

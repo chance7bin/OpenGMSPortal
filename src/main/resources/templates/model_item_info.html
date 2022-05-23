@@ -206,9 +206,7 @@
                 <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
             </div>
 
-            <div id="Authorship0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: author"></div>
-            </div>
+            <div id="Authorship0" class="detail_block minScreen" th:insert="fragments/itemInfoModules :: authorship(pos=0)"></div>
 
             <div th:replace="fragments/itemInfoModules :: classifications"></div>
 
@@ -1011,9 +1009,7 @@
 
             <div th:replace="fragments/itemInfoModules :: coContributor"></div>
 
-            <div id="Authorship" class="detail_block">
-                <div th:replace="fragments/itemInfoModules :: author"></div>
-            </div>
+            <div id="Authorship" class="detail_block"th:insert="fragments/itemInfoModules :: authorship(pos=1)"></div>
 
             <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph" class="detail_block">
                 <div class="block_head">
@@ -2097,9 +2093,10 @@
 
 <script th:inline="javascript">
     var itemInfo = [[${itemInfo}]];
-    var relation = [[${relation}]]
-    var author=[[${user}]];
+    var relation = [[${relation}]];
+    var author = [[${user}]];
     var modelReferences = [[${references}]];
+    var classifications = [[${classifications}]];
 </script>
 
 

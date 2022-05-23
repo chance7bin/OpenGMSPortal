@@ -8,6 +8,7 @@ import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,7 @@ public class Version extends PortalId {
     PortalItem content; //提交审核的修改的条目数据
     // String preVersion; //上一个版本的id
     String itemCreator; //条目创建者邮箱
+    List<String> authReviewers; //有权审核该版本的用户邮箱
     String editor; //修改人邮箱
     String reviewer; //审核人邮箱
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")

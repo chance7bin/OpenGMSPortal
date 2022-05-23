@@ -753,10 +753,11 @@
 <script src="/static/leaflet/leaflet.js"></script>
 <script src="/static/leaflet/proj4leaflet.js"></script>
 <script th:inline="javascript">
-    var spatialRfInPage = [[${info}]]
+    var spatialRfInPage = [[${itemInfo}]]
     var projcs = [[${itemInfo.wkt}]];
     var proj_name = [[${itemInfo.name}]];
     var author=[[${user}]];
+    var classifications = [[${classifications}]];
 </script>
 
 <!--翻译组件，本页面组件js引入位置不能靠后-->

@@ -177,8 +177,8 @@ var vue = new Vue({
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
-                        if (data.oid == "") {
+                    success: (result) => {
+                        if (result.code !== 0) {
                             this.confirmLogin()
                         }
                         else {

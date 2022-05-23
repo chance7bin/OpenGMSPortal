@@ -25,10 +25,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import sun.misc.IOUtils;
@@ -695,7 +699,12 @@ public class ComputableModelService {
     }
 
     public JsonResult delete(String oid, String email) {
-        ComputableModel computableModel = computableModelDao.findFirstById(oid);
+        ComputableModel computableModel = null;
+        try {
+            computableModel = computableModelDao.findFirstById(oid);
+        } catch (Exception e) {
+            return ResultUtils.error("根据id查找模型出错");
+        }
         if (computableModel != null) {
             //删除资源
             String path = resourcePath + "/computableModel/" + computableModel.getContentType();
@@ -706,9 +715,12 @@ public class ComputableModelService {
 
             //模型条目关联删除
             List<String> relatedModelItems = computableModel.getRelatedModelItems();
-            for (int i = 0;i<relatedModelItems.size();i++) {
+            for (int i = 0; i < relatedModelItems.size(); i++) {
                 String modelItemId = relatedModelItems.get(i);
                 ModelItem modelItem = modelItemDao.findFirstById(modelItemId);
+                if (modelItem == null)
+                    continue;
+
                 List<String> computableModelIds = modelItem.getRelate().getComputableModels();
                 for (String id : computableModelIds
                 ) {
@@ -723,7 +735,7 @@ public class ComputableModelService {
 
             //计算模型删除
             computableModelDao.delete(computableModel);
-            userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel,"delete");
+            userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel, "delete");
 
             return ResultUtils.success();
         } else {
@@ -841,6 +853,53 @@ public class ComputableModelService {
         computableModelDao.save(computableModel);
 
         FileUtil.downloadFile(path, response);
+
+    }
+
+    public String deployToGivenServer(String id,String ip,String port) {
+        ComputableModel computableModel = computableModelDao.findFirstById(id);
+        //String saveFilePath = ConceptualModelService.class.getClassLoader().getResource("").getPath() + "static/upload/computableModel/Package" + computableModel.getResources().get(0);
+        if (computableModel == null){
+            return null;
+        }
+        String saveFilePath = resourcePath + "/computableModel/Package" + computableModel.getResources().get(0).getPath();
+        String[] paths = computableModel.getResources().get(0).getPath().split("/");
+        String fileName = paths[paths.length - 1];
+        FileSystemResource deployPackage = new FileSystemResource(saveFilePath);
+        String deployUrl = "http://" + ip + ":" + port + "/modelser";
+
+        MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+        part.add("file_model", deployPackage);
+
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            String deployResultStr = restTemplate.postForObject(deployUrl, part, String.class);
+            JSONObject deployResult = JSONObject.parseObject(deployResultStr);
+
+            if (deployResult.getInteger("code") == 1) {
+                if (deployResult.getString("result").equals("suc")) {
+                    String mid = deployResult.getJSONObject("data").getString("_id");
+                    JSONObject modelInfo = deployResult.getJSONObject("data").getJSONObject("ms_model");
+                    String md5 = modelInfo.getString("p_id");
+
+                    computableModel.setDeploy(true);
+                    computableModel.setMd5(md5);
+                    // computableModel.setModelserUrl("http://" + ip + ":" + port + "/modelser/" + mid);
+                    computableModel.setLastModifyTime(new Date());
+
+                    computableModelDao.save(computableModel);
+
+                    return "suc";
+
+                }
+            }
+
+            return null;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+
 
     }
 }

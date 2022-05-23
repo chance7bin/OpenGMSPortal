@@ -20,6 +20,8 @@ new Vue({
         userId:"",
         userImg: "",
 
+        item_classifications:[],
+
         addLocalVisible:false,
         localization:{
             id:"",
@@ -475,6 +477,22 @@ new Vue({
         },
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
+            let el_breadcrumb = $(".el-breadcrumb");
+
+            for(i=0;i<el_breadcrumb.length;i++){
+                let el_breadcrumb_items = el_breadcrumb.eq(i).children(".el-breadcrumb__item");
+                let classification_path = this.item_classifications[i];
+                for(j=0;j<el_breadcrumb_items.length;j++){
+                    let cls = ''
+                    if(jsonContent.QRCode === "QR Code") {//英文页面
+                        cls = classification_path[j].name;
+                    }else{//汉化页面
+                        cls = classification_path[j].name_zh;
+                    }
+                    el_breadcrumb_items.eq(j).children(".el-breadcrumb__inner")[0].innerText = cls
+                }
+
+            }
         },
 
         select_prebase(value, loc, x, tag) {
@@ -848,8 +866,8 @@ new Vue({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
-                    if (data.oid === "") {
+                success: (result) => {
+                    if (result.code !== 0) {
                         this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
                             dangerouslyUseHTMLString: true,
                             confirmButtonText: 'Log In',
@@ -2384,6 +2402,8 @@ new Vue({
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
 
+        this.item_classifications = classifications;
+
         let that=this;
         this.getRelatedDataMethods();
 
@@ -2432,10 +2452,10 @@ new Vue({
         $.get("/user/load", {}, (result) => {
             let res=result;
 
-                if (res.oid != '') {
-                    this.useroid = res.oid;
-                    this.userId = res.userId;
-                    this.userImg = res.image;
+                if (res.code === 0) {
+                    // this.useroid = res.email;
+                    this.userId = res.data.accessId;
+                    this.userImg = res.data.avatar;
                 }
 
         });
@@ -2454,13 +2474,14 @@ new Vue({
 
         this.loadCSDetails()
 
-        this.inputCoordinate.name = window.spatialRfInPage.name
-        this.inputCoordinate.wkt = window.spatialRfInPage.wkt
-        this.wktTransfer(this.inputCoordinate,this.inputCoordinate.wkt)
-        this.outputCoordinate.name = window.spatialRfInPage.name
-        this.outputCoordinate.wkt = window.spatialRfInPage.wkt
-        this.wktTransfer(this.outputCoordinate,this.outputCoordinate.wkt)
-
+        if(window.location.href.indexOf("spatialReference") !== -1) {
+            this.inputCoordinate.name = window.spatialRfInPage.name
+            this.inputCoordinate.wkt = window.spatialRfInPage.wkt
+            this.wktTransfer(this.inputCoordinate, this.inputCoordinate.wkt)
+            this.outputCoordinate.name = window.spatialRfInPage.name
+            this.outputCoordinate.wkt = window.spatialRfInPage.wkt
+            this.wktTransfer(this.outputCoordinate, this.outputCoordinate.wkt)
+        }
 
     }
 

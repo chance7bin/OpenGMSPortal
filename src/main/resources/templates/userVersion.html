@@ -100,15 +100,15 @@
                                 <el-button
                                         type="primary"
                                         size="mini"
-                                        @click="viewVersionById(scope.row.type,scope.row.id)">View</el-button>
-                                <el-button
-                                        type="success"
-                                        size="mini"
-                                        @click="acceptVersionById(scope.row.id)">Accept</el-button>
-                                <el-button
-                                        type="warning"
-                                        size="mini"
-                                        @click="rejectVersionById(scope.row.id)">Reject</el-button>
+                                        @click="viewVersionById(scope.row.type,scope.row.id)">{{htmlJson.View}}</el-button>
+                                <!--<el-button-->
+                                <!--        type="success"-->
+                                <!--        size="mini"-->
+                                <!--        @click="acceptVersionById(scope.row.id)">{{htmlJson.Accept}}</el-button>-->
+                                <!--<el-button-->
+                                <!--        type="warning"-->
+                                <!--        size="mini"-->
+                                <!--        @click="rejectVersionById(scope.row.id)">{{htmlJson.Reject}}</el-button>-->
                               </template>
                             </el-table-column>
                           </el-table>

@@ -831,7 +831,7 @@ var createUnit =Vue.extend({
             async: false,
             success: (data) => {
                 console.log(data);
-                if (data.oid == "") {
+                if (result.code !== 0) {
                     this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',
@@ -841,7 +841,7 @@ var createUnit =Vue.extend({
                     });
                 }
                 else {
-                    this.userId = data.oid;
+                    this.userId = data.accessId;
                     this.userName = data.name;
 
                     this.sendUserToParent(this.userId)

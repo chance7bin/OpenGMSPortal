@@ -11,6 +11,7 @@ import njgis.opengms.portal.entity.dto.version.VersionDTO;
 import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
+import njgis.opengms.portal.utils.BeanMapTool;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,14 @@ public class VersionService {
         version.setContent(item);
         version.setEditor(editor);
         version.setItemCreator(item.getAuthor());
+        //有权审核版本的用户
+        List<String> authReviewers = new ArrayList<>();
+        authReviewers.add(item.getAuthor());
+        authReviewers = noticeService.addItemAdmins(authReviewers,item.getAdmins());
+        authReviewers = noticeService.addPortalAdmins(authReviewers);
+        authReviewers = noticeService.addPortalRoot(authReviewers);
+        version.setAuthReviewers(authReviewers);
+
         version.setSubmitTime(date);
         Class<? extends PortalItem> aClass = item.getClass();
         String name = aClass.getName();
@@ -177,6 +186,60 @@ public class VersionService {
             return ResultUtils.error(e.getMessage());
         }
         return ResultUtils.success();
+    }
+
+    public JsonResult fallback(String id, String email) {
+
+        Version version = versionDao.findFirstById(id);
+        if (version == null)
+            return ResultUtils.error();
+
+        PortalItem content = version.getContent();
+        String originalName = content.getName();
+        // PortalItem 转 map
+        Map<String, Object> contentMap = BeanMapTool.beanToMap(content);
+
+
+        ItemTypeEnum type = version.getType();
+        JSONObject factory = genericService.daoFactory(type);
+        GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
+        PortalItem item = (PortalItem)itemDao.findFirstById(version.getItemId());
+        Class<? extends PortalItem> clazz = (Class) factory.get("clazz");
+
+        Map<String, Object> changedField = version.getChangedField();
+
+        //遍历map
+        for (Map.Entry<String, Object> entry : changedField.entrySet()) {
+            String mapKey = entry.getKey();
+            HashMap mapValue = (HashMap)entry.getValue();
+            System.out.println(mapKey + "：" + mapValue);
+
+            //不改变的字段
+            if (mapKey.equals("versions"))
+                continue;
+
+            if (mapKey.equals("lastModifyTime")){
+                contentMap.put(mapKey, new Date());
+            }
+
+
+            contentMap.put(mapKey, mapValue.get("original"));
+
+        }
+
+        //map to bean
+        PortalItem newItem = null;
+        try {
+            newItem = BeanMapTool.mapToBean(contentMap, clazz);
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+            ResultUtils.error();
+        }
+
+
+
+        return ResultUtils.success(addVersion(newItem, email,originalName));
+
     }
 
 
@@ -420,10 +483,11 @@ public class VersionService {
             }
             else if (op.equals("review")) {
                 // 如果登录用户是门户的话那可以得到所有对应状态的版本
-                if (email.equals("opengms@njnu.edu.cn")){
-                    return ResultUtils.success(versionDao.findAllByStatusAndTypeIn(status,findType,pageable));
-                }
-                return ResultUtils.success(versionDao.findAllByStatusAndItemCreatorAndTypeIn(status,email,findType,pageable));
+                // if (email.equals("opengms@njnu.edu.cn")){
+                //     return ResultUtils.success(versionDao.findAllByStatusAndTypeIn(status,findType,pageable));
+                // }
+                // return ResultUtils.success(versionDao.findAllByStatusAndItemCreatorAndTypeIn(status,email,findType,pageable));
+                return ResultUtils.success(versionDao.findAllByStatusAndAuthReviewersInAndTypeIn(status,email,findType,pageable));
             }
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
@@ -484,5 +548,6 @@ public class VersionService {
         PortalItem item = (PortalItem) dao.findFirstById(itemId);
         return ResultUtils.success(item);
     }
+
 
 }

@@ -591,7 +591,7 @@ new Vue({
                 // dataType : 'json',
                 success: function (result) {
                     var json = result;
-                    if (json.oid != '') {
+                    if (json.code === 0) {
                         window.location.href="/user/userSpace#/model/createModelItem";
                     }
                     else{
@@ -955,7 +955,7 @@ new Vue({
         createNew(){
             axios.get("/user/load").then(
                 res => {
-                    if(res.data.oid==''){
+                    if(res.data.code!==0){
                          this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                   type:"warning",
                                   confirmButtonText: 'OK',

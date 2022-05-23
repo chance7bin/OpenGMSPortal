@@ -62,15 +62,15 @@
                                         <!--<span>-->
                                         <!--<i class="thumbs-up">Like</i>-->
                                         <!--</span>-->
-                                        <a href="#comment" class="reply hover" @click="replyComment(comment)" translateId="reply">
+                                        <a href="#comment" class="reply hover" @click="replyComment(comment)" >
                                                         <i class="el-icon-s-comment"></i>
-                                                        Reply
+                                                        <span translateId="reply">Reply</span>
                                         </a>
                                 </div>
                                 <div v-if="comment_userId==comment.author.userId" >
-                                                    <a class="delete hover" style="display: none;" @click="deleteComment(comment.oid)"  translateId="delete">
+                                                    <a class="delete hover" style="display: none;" @click="deleteComment(comment.oid)">
                                                         <i class="el-icon-delete-solid"></i>
-                                                        Delete
+                                                        <span translateId="delete">Delete</span>
                                                     </a>
                                 </div>
                             </div>

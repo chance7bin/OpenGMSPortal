@@ -336,16 +336,17 @@ var createDataApplication = Vue.extend({
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: (data) => {
+                success: (result) => {
                     // data = JSON.parse(data);
 
-                    console.log(data);
+                    // console.log(data);
 
-                    if (data.oid == "") {
+                    if (result.code !== 0) {
                         alert(this.htmlJson.LoginInFirst);
                         window.location.href = "/user/login";
                     } else {
-                        this.userId = data.oid;
+                        let data = result.data;
+                        this.userId = data.accessId;
                         this.userName = data.name;
                         console.log(this.userId)
 
@@ -463,14 +464,15 @@ var createDataApplication = Vue.extend({
                 withCredentials: true
             },
             crossDomain:true,
-            success: (data) => {
+            success: (result) => {
                 // data=JSON.parse(data);
-                if (data.oid == "") {
+                if (result.code !== 0) {
                     alert(this.htmlJson.LoginInFirst);
                     window.location.href = "/user/login";
                 }
                 else{
-                    this.userId=data.uid;
+                    let data = result.data;
+                    this.userId=data.accessId;
                     this.userName=data.name;
 
                     var bindOid=this.getSession("bindOid");
@@ -863,16 +865,16 @@ var createDataApplication = Vue.extend({
                                 }
                             });
                             break;
+                        // case -1:
+                        //     this.$alert(res.msg, this.htmlJson.Error, {
+                        //         type:"error",
+                        //         confirmButtonText: 'OK',
+                        //         callback: action => {
+                        //
+                        //         }
+                        //     });
+                        //     break;
                         case -1:
-                            this.$alert(res.msg, this.htmlJson.Error, {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-
-                                }
-                            });
-                            break;
-                        case -3:
                             window.location.href = "/user/login";
                             break;
                     }

@@ -317,8 +317,8 @@ var data_items = new Vue({
         //this.initButton();
         axios.get("/user/load")
             .then((res)=>{
-                that.userName=res.data.name;
-                that.useroid=res.data.oid;
+                that.userName=res.data.data.name;
+                that.useroid=res.data.data.accessId;
             })
         $('.manyhub').css('display','none');
         $('.el-collapse-item .el-button').on('hover',function () {

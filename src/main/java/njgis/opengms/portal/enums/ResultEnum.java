@@ -12,7 +12,7 @@ public enum ResultEnum {
     SUCCESS(0, "Success"),
     NO_OBJECT(-1, "No object"),
     ERROR(-2,"Error"),
-    UNAUTHORIZED(-3,"Unauthorized");
+    UNAUTHORIZED(-1,"Unauthorized");
 
 
     private int code;

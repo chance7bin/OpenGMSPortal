@@ -1412,6 +1412,13 @@ public class ModelItemService {
 
     }
 
+
+    private List<String> addRelation(List<String> oldRelations, List<String> newRelations){
+
+        return null;
+
+    }
+
     public JSONObject setRelation(String modelId,String type,List<String> relations,String user){
 
         ModelItem modelItem=modelItemDao.findFirstById(modelId);
@@ -1423,55 +1430,55 @@ public class ModelItemService {
         switch (type){
             case "dataItem":
 
-                for(int i=0;i<relate.getDataItems().size();i++){
-                    relationDelete.add(relate.getDataItems().get(i));
-                }
-
-                for(int i=0;i<relations.size();i++){
-                    relationAdd.add(relations.get(i));
-                }
-
-                //筛选出要删除和要添加的条目
-                for(int i=0;i<relationDelete.size();i++){
-                    for(int j=0;j<relationAdd.size();j++){
-                        if(relationDelete.get(i).equals(relationAdd.get(j))){
-                            relationDelete.set(i,"");
-                            relationAdd.set(j,"");
-                            break;
-                        }
-                    }
-                }
-                //找到对应条目，删除关联
-                for(int i=0;i<relationDelete.size();i++){
-                    String id=relationDelete.get(i);
-                    if(!id.equals("")) {
-                        DataItem dataItem = dataItemDao.findFirstById(id);
-                        if(dataItem.getStatus().equals("Private")){
-                            relations.add(dataItem.getId());
-                            continue;
-                        }
-                        if(dataItem.getRelatedModels()!=null) {
-                            dataItem.getRelatedModels().remove(modelId);
-                            dataItemDao.save(dataItem);
-                        }
-                    }
-                }
-                //找到对应条目，添加关联
-                for(int i=0;i<relationAdd.size();i++){
-                    String id=relationAdd.get(i);
-                    if(!id.equals("")) {
-                        DataItem dataItem = dataItemDao.findFirstById(id);
-                        if(dataItem.getRelatedModels()!=null) {
-                            dataItem.getRelatedModels().add(modelId);
-                        }
-                        else{
-                            List<String> relatedModels=new ArrayList<>();
-                            relatedModels.add(modelId);
-                            dataItem.setRelatedModels(relatedModels);
-                        }
-                        dataItemDao.save(dataItem);
-                    }
-                }
+                // for(int i=0;i<relate.getDataItems().size();i++){
+                //     relationDelete.add(relate.getDataItems().get(i));
+                // }
+                //
+                // for(int i=0;i<relations.size();i++){
+                //     relationAdd.add(relations.get(i));
+                // }
+                //
+                // //筛选出要删除和要添加的条目
+                // for(int i=0;i<relationDelete.size();i++){
+                //     for(int j=0;j<relationAdd.size();j++){
+                //         if(relationDelete.get(i).equals(relationAdd.get(j))){
+                //             relationDelete.set(i,"");
+                //             relationAdd.set(j,"");
+                //             break;
+                //         }
+                //     }
+                // }
+                // //找到对应条目，删除关联
+                // for(int i=0;i<relationDelete.size();i++){
+                //     String id=relationDelete.get(i);
+                //     if(!id.equals("")) {
+                //         DataItem dataItem = dataItemDao.findFirstById(id);
+                //         if(dataItem.getStatus().equals("Private")){
+                //             relations.add(dataItem.getId());
+                //             continue;
+                //         }
+                //         if(dataItem.getRelatedModels()!=null) {
+                //             dataItem.getRelatedModels().remove(modelId);
+                //             dataItemDao.save(dataItem);
+                //         }
+                //     }
+                // }
+                // //找到对应条目，添加关联
+                // for(int i=0;i<relationAdd.size();i++){
+                //     String id=relationAdd.get(i);
+                //     if(!id.equals("")) {
+                //         DataItem dataItem = dataItemDao.findFirstById(id);
+                //         if(dataItem.getRelatedModels()!=null) {
+                //             dataItem.getRelatedModels().add(modelId);
+                //         }
+                //         else{
+                //             List<String> relatedModels=new ArrayList<>();
+                //             relatedModels.add(modelId);
+                //             dataItem.setRelatedModels(relatedModels);
+                //         }
+                //         dataItemDao.save(dataItem);
+                //     }
+                // }
 
                 relate.setDataItems(relations);
 

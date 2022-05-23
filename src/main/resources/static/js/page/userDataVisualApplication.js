@@ -228,10 +228,10 @@ var userDataVisualApplication = Vue.extend(
                             if (json.code == -1) {
                                 alert(this.htmlJson.LoginInFirst)
                             } else {
-                                if (json.data == 1) {
+                                if (json.code == 0) {
                                     this.$alert(this.htmlJson.DeleteSuccess)
                                     this. getDataItems();
-                                } else if(json.data == -1) {
+                                } else if(json.code == -1) {
                                     this.$alert(this.htmlJson.DeleteFailed)
                                 }else
                                     this.$alert(this.htmlJson.RefreshPage)
@@ -310,14 +310,15 @@ var userDataVisualApplication = Vue.extend(
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: (data) => {
+                    success: (result) => {
                         // data = JSON.parse(data);
-                        console.log(data);
-                        if (data.oid == "") {
+                        // console.log(data);
+                        if (result.code !== 0) {
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
-                            this.userId = data.oid;
+                            let data = result.data;
+                            this.userId = data.accessId;
                             this.userName = data.name;
                             console.log(this.userId)
                             this.sendUserToParent(this.userId)

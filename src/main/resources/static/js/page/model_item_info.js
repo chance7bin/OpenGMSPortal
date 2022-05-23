@@ -52,9 +52,9 @@ var info=new Vue({
                 "KnowledgeGraph":"Knowledge Graph",
                 "CoContributor":"Co-contributor(s)",
                 "History":"History",
-                "Lastmodifier":"Last modifier : ",
-                "Lastmodifytime":"Last modify time :",
-                "Modifytimes":"Modify times :",
+                "Lastmodifier":"Last modifier",
+                "Lastmodifytime":"Last modify time",
+                "Modifytimes":"Modify times",
                 "ComputableModelList":"Computable Model List",
                 "ConceptualschematicModelList":"Conceptual-schematic Model List",
                 "LogicalschematicModelList":"Logical-schematic Model List",
@@ -72,7 +72,7 @@ var info=new Vue({
                 "ModelItem":"Model Item",
                 "DataItem":"Data Item",
                 "RelatedDataItem":"Edit Related Data Item",
-                "noRelatedReference.":"There is no related reference. You can link references to it.",
+                "noRelatedReference":"There is no related reference. You can link references to it.",
                 "noRelatedData":"There is no related data item. You can link data items.",
                 "NoRelatedMmaterial":"There is no related material. You can link materials to it.",
                 "NoRelatedConceptual":"There is no related conceptual model. You can link conceptual models.",
@@ -588,6 +588,8 @@ var info=new Vue({
 
             itemInfo:{},
 
+            model_classifications:[],
+
             relationPageSize:3,
 
             modelRelationGraphShow:false,
@@ -812,7 +814,24 @@ var info=new Vue({
     },
     methods: {
         translatePage(jsonContent){
-            this.htmlJSON = jsonContent
+            this.htmlJSON = jsonContent;
+            let el_breadcrumb = $(".el-breadcrumb");
+
+            for(i=0;i<el_breadcrumb.length;i++){
+                let el_breadcrumb_items = el_breadcrumb.eq(i).children(".el-breadcrumb__item");
+                let classification_path = this.model_classifications[i];
+                for(j=0;j<el_breadcrumb_items.length;j++){
+                    let cls = ''
+                    if(jsonContent.History === "History") {//英文页面
+                        cls = classification_path[j].name;
+                    }else{//汉化页面
+                        cls = classification_path[j].name_zh;
+                    }
+                    el_breadcrumb_items.eq(j).children(".el-breadcrumb__inner")[0].innerText = cls
+                }
+
+            }
+
         },
         generateGUID() {
             var s = [];
@@ -1436,7 +1455,7 @@ var info=new Vue({
         openClassEditDialog(){
             axios.get("/user/load")
                 .then((res) => {
-                    if (res.data.code == -3) {
+                    if (res.data.code !== 0) {
                         this.confirmLogin()
                     }else{
                         this.editClassification = true;
@@ -2175,7 +2194,7 @@ var info=new Vue({
         claim(){
             $.get("/user/load",{},(result)=>{
                 let json = result;
-                if (json.code == -3) {
+                if (json.code !== 0) {
                     this.confirmLogin();
                 }
                 else {
@@ -2186,7 +2205,7 @@ var info=new Vue({
         feedBack(){
             $.get("/user/load",{},(result)=>{
                 let json = result;
-                if (json.code == -3) {
+                if (json.code !== 0) {
                     this.confirmLogin();
                 }
                 else {
@@ -2276,7 +2295,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code !== 0) {
                         this.confirmLogin()
 
                     }
@@ -2349,7 +2368,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code !== 0) {
                         this.confirmLogin()
                     }
                     else {
@@ -2961,7 +2980,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code !== 0) {
                         this.confirmLogin()
                     }
                     else {
@@ -3057,7 +3076,7 @@ var info=new Vue({
                 },
                 crossDomain: true,
                 success: (data) => {
-                    if (data.code == -3) {
+                    if (data.code !== 0) {
                         this.confirmLogin()
                     }
                     else {
@@ -3285,6 +3304,8 @@ var info=new Vue({
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
 
+        this.model_classifications = classifications;
+
         // let href = window.location.href;
         // let hrefs = href.split('/');
         // let oid = hrefs[hrefs.length - 1].split("#")[0];
@@ -3315,11 +3336,11 @@ var info=new Vue({
             .then((res) => {
                 console.log(res);
                 if (res.status == 200) {
-                    if (res.data.code != -3) {
-                        this.user.email = res.data.email;
-                        this.user.accessId = res.data.accessId;
-                        this.user.name = res.data.name;
-                        this.user.avatar = res.data.avatar;
+                    if (res.data.code === 0) {
+                        this.user.email = res.data.data.email;
+                        this.user.accessId = res.data.data.accessId;
+                        this.user.name = res.data.data.name;
+                        this.user.avatar = res.data.data.avatar;
                     }
 
                 }
@@ -3347,9 +3368,6 @@ var info=new Vue({
             }
 
         });
-
-
-
 
         let descHeight = $("#description .block_content").height();
         if (descHeight > 300) {

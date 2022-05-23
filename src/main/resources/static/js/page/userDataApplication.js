@@ -393,14 +393,12 @@ var userDataApplication = Vue.extend(
                     },
                     crossDomain: true,
                     success: (result) => {
-                        // data = JSON.parse(data);
 
-                        let data = result.data
-
-                        if (data.oid == "") {
+                        if (result.code !== 0) {
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
+                            let data = result.data;
                             this.userEmail = data.email;
                             this.userName = data.name;
                             console.log(this.userEmail)

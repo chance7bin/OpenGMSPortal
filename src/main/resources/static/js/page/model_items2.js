@@ -599,7 +599,7 @@ new Vue({
 
                 let chart=echarts.init(document.getElementById('chart'+key));
                 chart.showLoading();
-                $.get("/modelItem/dailyViewAndInvokeCount",{oid:this.pageOption.searchResult[key].oid},(result)=> {
+                $.get("/modelItem/dailyViewAndInvokeCount",{id:this.pageOption.searchResult[key].oid},(result)=> {
                     let valueList = result.data.valueList;//[0, 0, 0, 0, 0];
                     console.log(result)
                     chart.hideLoading();
@@ -685,8 +685,8 @@ new Vue({
                 // data对象中的属性名要和服务端控制器的参数名一致 login(name, password)
                 // dataType : 'json',
                 success: function (result) {
-                    let data = result.data
-                    if (data.accessId != '') {
+
+                    if (result.code === 0) {
                         window.location.href="/user/userSpace#/model/createModelItem";
                     }
                     else{
