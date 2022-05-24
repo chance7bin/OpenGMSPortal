@@ -24,7 +24,23 @@
     "AuthorshipInfo4": "Is authorship not correct?",
     "AuthorshipInfo5": "Feed back",
 
-    "QRCode": "QR Code"
+    "QRCode": "QR Code",
+
+    "LoginInFirst": "Please log in first!",
+    "PleaseSelectDataFirst":"Please select data first!",
+    "EnterFolderName": "Enter Folder Name",
+    "Cancel": "Cancel",
+    "ForkSuccessfully": "Fork successfully!",
+    "Success": "Success",
+    "failed": "failed",
+    "AreYouSureToClose": "Are you sure to close？",
+    "PleaseSelectFileFirst": "please select file first!!",
+    "PleaseSelectModelFirst": "please select model first",
+    "RelatedModelsSuccessfully": "Cgts,related models successfully!",
+    "NoDataInServiceNode": "no data in service node",
+    "noAuthority": "no authority",
+    "ServiceNodeOffline": "service node offline",
+    "DistributeNodeOffline": "Distribute Node Offline"
   },
   "zh-cn": {
     "DataResourceUrl": "数据资源链接",
@@ -51,7 +67,23 @@
     "AuthorshipInfo4": "版权信息不正确？",
     "AuthorshipInfo5": "反馈",
 
-    "QRCode": "网页二维码"
+    "QRCode": "网页二维码",
+
+    "LoginInFirst": "请先登录！",
+    "PleaseSelectDataFirst": "请先选择数据！",
+    "EnterFolderName": "输入文件夹名称",
+    "Cancel": "取消",
+    "ForkSuccessfully": "分支成功",
+    "Success": "成功",
+    "failed": "失败",
+    "AreYouSureToClose": "确认关闭？",
+    "PleaseSelectFileFirst": "请先选择文件！",
+    "PleaseSelectModelFirst": "请先选择模型",
+    "RelatedModelsSuccessfully": "关联模型成功！",
+    "NoDataInServiceNode": "服务节点中没有数据",
+    "noAuthority": "没有权限",
+    "ServiceNodeOffline": "服务节点离线",
+    "DistributeNodeOffline": "分配节点已离线"
   }
 
 }

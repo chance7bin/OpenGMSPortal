@@ -545,7 +545,7 @@ new Vue({
                 class2:this.cls2,
             };
             $.post("/modelItem/updateClass",data,(result)=>{
-                this.$alert(this.htmlJson.ChangeClassificationSuccess, 'Success', {
+                this.$alert("Change classification successfully", 'Success', {
                     type: 'success',
                     confirmButtonText: 'OK',
                     callback: action => {
@@ -694,7 +694,7 @@ new Vue({
                     }
                 },
                 error: function (e) {
-                    alert(this.htmlJson.loadUserError);
+                    alert("load user error");
                 }
             });
         },

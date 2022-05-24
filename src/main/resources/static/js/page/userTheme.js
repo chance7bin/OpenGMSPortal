@@ -1,7 +1,6 @@
 var userTheme = Vue.extend(
     {
         template:'#userTheme',
-        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -201,14 +200,14 @@ var userTheme = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code == -1) {
-                                this.$alert(this.htmlJson.LoginInFirst)
+                                this.$alert('Please log in first!')
                             } else {
                                 if (json.msg == 'Success') {
-                                    this.$message({message: this.htmlJson.DeleteSuccess,
+                                    this.$message({message: 'delete successfully!',
                                                   type:"success"});
                                     this.getTheme();
                                 } else {
-                                    this.$message({message:this.htmlJson.DeleteFailed,
+                                    this.$message({message:'delete Failed!',
                                                       type:"error"})
                                 }
                             }
@@ -248,7 +247,7 @@ var userTheme = Vue.extend(
                     crossDomain: true,
                     success: (json) => {
                         if (json.code != 0) {
-                            alert(this.htmlJson.LoginInFirst);
+                            alert('Please log in first!');
                             window.location.href = "/user/login";
                         } else {
                             data = json.data;
@@ -302,7 +301,7 @@ var userTheme = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code != 0) {
-                                alert(this.htmlJson.LoginInFirst);
+                                alert('Please log in first!');
                                 window.location.href = "/user/login";
                             } else {
                                 data = json.data;
@@ -373,7 +372,7 @@ var userTheme = Vue.extend(
                     success: (result) => {
 
                         if (result.code !== 0) {
-                            alert(this.htmlJson.LoginInFirst);
+                            alert('Please log in first!');
                             window.location.href = "/user/login";
                         } else {
                             let data = result.data;
