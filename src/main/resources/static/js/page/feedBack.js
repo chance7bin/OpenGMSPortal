@@ -2,7 +2,6 @@
 var feedback = Vue.extend(
     {
         template: "#feedback",
-        props:["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -33,7 +32,7 @@ var feedback = Vue.extend(
 
             send(){
                 if(this.content===''){
-                    alert(this.htmlJson.PleaseInputAtLeaseOneWord)
+                    alert('please input at lease one word')
                     return
                 }
                 let that=this;
@@ -48,7 +47,7 @@ var feedback = Vue.extend(
 
 
                     success: (result)=> {
-                        this.$alert(this.htmlJson.SendSuggestionSuccessfully, 'Success', {
+                        this.$alert('Send suggestion successfully', 'Success', {
                             type:'success',
                             confirmButtonText: 'OK',
                             callback: action => {

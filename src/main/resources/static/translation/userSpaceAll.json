@@ -1722,7 +1722,7 @@
     "WizardCompleted": "Wizard Completed",
     "ForkSuccessfully": "Fork successfully!",
     "EnterFolderName": "Enter Folder Name",
-    "PleaseSelectModelFirst": "pleasa select model first",
+    "PleaseSelectModelFirst": "please select model first",
     "RelatedModelsSuccessfully": "Cgts,related models successfully!",
     "NoDataInServiceNode": "no data in service node",
     "noAuthority": "no authority",
@@ -1745,7 +1745,7 @@
 
 
     "Accept": "Accept",
-    "Reject": "Reject"
+    "Reject": "Reject",
 
 
     "PleaseSelectFirst": "please select first!",
@@ -3526,7 +3526,7 @@
     "ModifyLogicalModel": "修改逻辑模型",
     "UpdateDataApplicationSuccessfully": "更新数据应用成功",
     "UpdateUnitSuccessfully": "更新单位成功",
-    "CreateTheme": "创建专题"
+    "CreateTheme": "创建专题",
     "PleaseSelectFirst": "请先选择!",
 
     "Accept": "接受",

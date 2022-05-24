@@ -35,7 +35,17 @@
     "History": "History",
     "HistoryInfo": "Last modify time:&nbsp ",
 
-    "QRCode": "QR Code"
+    "QRCode": "QR Code",
+
+    "Please": "Please",
+    "login": "log in",
+    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "CommentSubmittedSuccessfully": "Comment submitted successfully!",
+    "SubmitError": "Submit Error",
+    "CommentDeletedSuccessfully": "Comment deleted successfully!",
+    "DeleteError": "Delete Error!",
+    "PleaseSelectFileFirst": "please select file first!!",
+    "ServiceOffline": "Sorry, Service Offline !"
   },
   "zh-cn": {
 
@@ -71,7 +81,17 @@
     "History": "历史",
     "HistoryInfo": "上一次修改时间 ：",
 
-    "QRCode": "网页二维码"
+    "QRCode": "网页二维码",
+
+    "Please": "请",
+    "login": "登录",
+    "CommentCanNotBeEmpty": "评论不能为空！",
+    "CommentSubmittedSuccessfully": "评论已成功提交！",
+    "SubmitError": "提交失败！",
+    "CommentDeletedSuccessfully": "评论删除成功！",
+    "DeleteError": "删除失败！",
+    "PleaseSelectFileFirst": "请先选择文件！",
+    "ServiceOffline": "抱歉，服务已下线！"
   }
 
 }

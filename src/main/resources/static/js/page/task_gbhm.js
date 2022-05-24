@@ -767,19 +767,19 @@ var vue = new Vue({
         },
         submitUpload() {
             if(this.uploadName==""){
-                this.$message.error(this.htmlJson.PleaseEnterTheDatasetName);
+                this.$message.error("Please enter the dataset name!");
                 return;
             }
             if(this.selectValue==""){
-                this.$message.error(this.htmlJson.PleaseSelectADataTemplate);
+                this.$message.error("Please select a data template!");
                 return;
             }
             if (this.selectedPath.length == 0) {
-                this.$message.error(this.htmlJson.PleaseSelectAFolderFirst);
+                this.$message.error("Please select a folder first!");
                 return;
             }
             if(this.uploadFiles.length==0){
-                this.$message.error(this.htmlJson.PleaseSelectFiles);
+                this.$message.error("Please select files!");
                 return;
             }
 
@@ -849,7 +849,7 @@ var vue = new Vue({
 
 
                     }else{
-                        this.$message.error(this.htmlJson.UploadFailed);
+                        this.$message.error("Upload failed!");
                     }
 
 
@@ -858,7 +858,7 @@ var vue = new Vue({
 
                     this.uploadLoading=false;
                     this.uploadDialogVisible=false;
-                    this.$message.error(this.htmlJson.UploadFailed);
+                    this.$message.error("Upload failed!");
                 });
             });
 
@@ -898,7 +898,7 @@ var vue = new Vue({
         },
         selectFile() {
             if (this.selectedPath.length == 0) {
-                this.$message.error(this.htmlJson.PleaseSelectAFolderFirst);
+                this.$message.error("Please select a folder first!");
                 return;
             }
             $("#uploadFile").click()
@@ -917,7 +917,7 @@ var vue = new Vue({
             console.log(uploadSource)
             console.log($('.file-caption').val())
             if (uploadSource.length == 0) {
-                alert(this.htmlJson.PleaseUploadFileIntoTheTemplateFirst)
+                alert("Please upload the file into the template first")
             } else {
                 for (let i = 0; i < uploadSource.length; i++) {
                     let dataName = uploadSource[i].file_name;
@@ -981,7 +981,7 @@ var vue = new Vue({
 
             } else {
                 if (this.selectedPath.length == 0) {
-                    alert(this.htmlJson.PleaseSelectAFolderFirst)
+                    alert("Please select a folder first!")
                     return
                 }
 
@@ -1006,7 +1006,7 @@ var vue = new Vue({
                 contentType: "application/json",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert("Please log in first!", 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1068,7 +1068,7 @@ var vue = new Vue({
                         this.uploadLoading=false;
                         this.uploadDialogVisible=false;
                         this.$message({
-                            message: this.htmlJson.UploadSuccessfully,
+                            message: 'Upload successfully!',
                             type: 'success'
                         });
 
@@ -1098,7 +1098,7 @@ var vue = new Vue({
             var node, data
             if (pageIndex == 'myData') {
                 data = this.$refs.folderTree.getCurrentNode();
-                if (data == undefined) alert(this.htmlJson.selectDirTip)
+                if (data == undefined) alert('Please select a file directory.')
                 node = this.$refs.folderTree.getNode(data);
             }
             // else {
@@ -1129,7 +1129,7 @@ var vue = new Vue({
                 if (folderExited.some((item) => {
                     return item.label === value;
                 }) == true) {
-                    alert(this.htmlJson.ThisNameIsExistingPleaseInputNewOne);
+                    alert('This name is existing in this path, please input a new one');
                     return
                 }
 
@@ -1141,7 +1141,7 @@ var vue = new Vue({
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                            this.$alert('Please log in first!', 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1185,7 +1185,7 @@ var vue = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: this.htmlJson.Cancel
+                    message: 'Cancel'
                 });
             });
 
@@ -1200,7 +1200,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert('Please log in first!', 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1506,7 +1506,7 @@ var vue = new Vue({
                 this.eventChoosing.url = this.currentData.url;
             }
             else {
-                this.$message(this.htmlJson.PleaseSelectDataFirst)
+                this.$message('Please select data first!')
             }
         },
         downloadData() {
@@ -1514,7 +1514,7 @@ var vue = new Vue({
                 window.open(this.currentData.url);
             }
             else {
-                this.$message(this.htmlJson.PleaseSelectDataFirst)
+                this.$message('Please select data first!')
             }
         },
 
@@ -1586,7 +1586,7 @@ var vue = new Vue({
 
             } else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message(this.htmlJson.PleaseSelectFileFirst);
+                this.$message('please select file first!!');
             }
         },
 
@@ -1951,7 +1951,7 @@ var vue = new Vue({
                 ;
             }catch (e){
                 loading.close()
-                this.$alert(this.htmlJson.CanNotLoadTestDataPleaseLoadInputsOfModelManually, 'Tip', {
+                this.$alert('Can not load the test data, please load inputs of the model manually', 'Tip', {
                         type:"warning",
                         confirmButtonText: 'OK',
                         callback: ()=>{
@@ -1963,7 +1963,7 @@ var vue = new Vue({
 
             loading.close();
             this.$message({
-                message: this.htmlJson.TestDataWasSuccessfullyLoaded,
+                message: 'Test data was successfully loaded',
                 type: 'success'
             });
             this.$forceUpdate();
@@ -2055,7 +2055,7 @@ var vue = new Vue({
                 window.open(this.eventChoosing.url);
             }
             else {
-                this.$message.error(this.htmlJson.NoDataCanBeDownloaded);
+                this.$message.error('No data can be downloaded.');
             }
         },
         upload(event) {
@@ -2146,7 +2146,7 @@ var vue = new Vue({
                             }
                         }
                         if(!tag)
-                            this.$message.error(this.htmlJson.PleaseSelectDataInFormat+ this.jointFileType(fileType));
+                            this.$message.error('Please select the data in format:'+ this.jointFileType(fileType));
                     }
                     if(tag||this.eventChoosing.configInfo.constraint==undefined)
                     {
@@ -2162,7 +2162,7 @@ var vue = new Vue({
             }
             else {
                 //没选
-                this.$message(this.htmlJson.PleaseSelectDataFirst)
+                this.$message('Please select data first!')
             }
 
         },
@@ -2224,7 +2224,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert('Please log in first!', 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2318,7 +2318,7 @@ var vue = new Vue({
                 contentType: "application/x-www-form-urlencoded",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert('Please log in first!', 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2383,7 +2383,7 @@ var vue = new Vue({
                 }).then((res) => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert('Please log in first!', 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2425,8 +2425,8 @@ var vue = new Vue({
                                 let child = event.children[k];
                                 if (child.value == undefined || (child.value!=undefined&&child.value.toString().trim() == '')) {
                                     loading.close();
-                                    this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
-                                    throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
+                                    this.$message.error('Some input parameters are not set');
+                                    throw new Error('Some input parameters are not set');
                                     return;
                                 }
                             }
@@ -2435,8 +2435,8 @@ var vue = new Vue({
                             if(event.value == ''||event.value == undefined)
                             {
                                 loading.close();
-                                this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
-                                throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
+                                this.$message.error('Some input parameters are not set');
+                                throw new Error('Some input parameters are not set');
                                 return;
                             }
                         }
@@ -2525,8 +2525,8 @@ var vue = new Vue({
                                     } else {
                                         if (url === null || url === undefined) {
                                             this.taskRunning = false
-                                            this.$message.error(this.htmlJson.SomeInputParametersAreNotSet);
-                                            throw new Error(this.htmlJson.SomeInputParametersAreNotSet);
+                                            this.$message.error('Some input parameters are not set');
+                                            throw new Error('Some input parameters are not set');
                                         }
                                         json.inputs.push({
                                             statename,
@@ -2718,7 +2718,7 @@ var vue = new Vue({
         },
         selectUserData(item, e) {
             // console.log(e)
-            this.$message(this.htmlJson.YouHaveSelected + item.fileName + '.' + item.suffix);
+            this.$message('you have selected:' + item.fileName + '.' + item.suffix);
             if (this.selectData.length === 0) {
                 let d = {e, item}
                 this.selectData.push(d)
@@ -2781,7 +2781,7 @@ var vue = new Vue({
                 link.click();
 
             } else {
-                this.$message(this.htmlJson.PleaseSelectFileFirst);
+                this.$message('please select file first!!');
             }
 
 
@@ -2789,7 +2789,7 @@ var vue = new Vue({
         //删除
         delete_data_dataManager() {
 
-            if (confirm(this.htmlJson.AreYouSureToDelete)) {
+            if (confirm('Are you sure to delete?')) {
                 let tha = this
                 axios.delete("/dataManager/delete", {
                     params: {
@@ -2803,7 +2803,7 @@ var vue = new Vue({
                         tha.rightMenuShow = false
                         tha.databrowser = []
                         tha.addAllData()
-                        alert(this.htmlJson.DeleteSuccessful)
+                        alert('Delete Successful!')
 
                     }
 
@@ -3120,7 +3120,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert('Please log in first!', 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -3247,7 +3247,7 @@ var vue = new Vue({
                 link.click();
 
             } else {
-                alert(this.htmlJson.PleaseSelectFirst)
+                alert('please select first!')
             }
 
 

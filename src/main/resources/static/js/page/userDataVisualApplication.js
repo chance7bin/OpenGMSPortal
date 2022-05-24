@@ -1,7 +1,6 @@
 var userDataVisualApplication = Vue.extend(
     {
         template: "#userDataVisualApplication",
-        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制
@@ -226,15 +225,15 @@ var userDataVisualApplication = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code == -1) {
-                                alert(this.htmlJson.LoginInFirst)
+                                alert("Please log in first!")
                             } else {
                                 if (json.code == 0) {
-                                    this.$alert(this.htmlJson.DeleteSuccess)
+                                    this.$alert("delete successfully!")
                                     this. getDataItems();
                                 } else if(json.code == -1) {
-                                    this.$alert(this.htmlJson.DeleteFailed)
+                                    this.$alert("delete Failed!")
                                 }else
-                                    this.$alert(this.htmlJson.RefreshPage)
+                                    this.$alert("please refresh the page!")
                             }
                         }
                     })
@@ -271,7 +270,7 @@ var userDataVisualApplication = Vue.extend(
                                     }
                                     this.await = false
                                 } else {
-                                    alert(this.htmlJson.NoFound)
+                                    alert("No Result Found ...")
                                 }
                             }
                         }, 1)
@@ -314,7 +313,7 @@ var userDataVisualApplication = Vue.extend(
                         // data = JSON.parse(data);
                         // console.log(data);
                         if (result.code !== 0) {
-                            alert(this.htmlJson.LoginInFirst);
+                            alert('Please log in first!');
                             window.location.href = "/user/login";
                         } else {
                             let data = result.data;

@@ -239,7 +239,6 @@ var router = new VueRouter({
 var userspace = new Vue(
     {
         el: "#app",
-        props:['htmlJson'],
         data(){
             return{
                 fullscreenLoading:false,
@@ -439,7 +438,7 @@ var userspace = new Vue(
 
                             this.load = false;
                         }else if (res.data.code == -1) {
-                            this.$alert(this.htmlJson.LoginInFirst)
+                            this.$alert('Please log in first!')
                             window.sessionStorage.setItem("history", window.location.href);
                             window.location.href = "/user/login"
                         }else if(res.data.code == -2){
@@ -502,7 +501,7 @@ var userspace = new Vue(
 
                         // console.log(data);
                         if (result.code !== 0) {
-                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                            this.$alert('Please log in first!', 'Error', {
                                 type:'error',
                                 confirmButtonText: 'OK',
                                 callback: action => {

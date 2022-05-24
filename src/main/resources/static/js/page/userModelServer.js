@@ -1,7 +1,6 @@
 var userModelServer = Vue.extend(
     {
         template:'#userModelServer',
-        props: ["htmlJson"],
         data(){
             return{
                 //页面样式控制
@@ -184,7 +183,7 @@ var userModelServer = Vue.extend(
 
             updateNodeAlias(){
                 if(this.nodeAlias.trim()==''){
-                     this.$alert(this.htmlJson.PleaseInputAtLeastOneLetter, 'Tip', {
+                     this.$alert('Please input at least one letter', 'Tip', {
                               type:"warning",
                               confirmButtonText: 'OK',
                               callback: ()=>{
@@ -349,7 +348,7 @@ var userModelServer = Vue.extend(
                         // console.log(data);
 
                         if (result.code !== 0) {
-                            alert(this.htmlJson.LoginInFirst);
+                            alert('Please log in first!');
                             window.location.href = "/user/login";
                         } else {
                             let data = result.data;

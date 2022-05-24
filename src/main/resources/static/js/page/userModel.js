@@ -20,7 +20,7 @@ var userModel = Vue.extend(
             }
         },
 
-        props: ['itemindexRaw',"htmlJson"],
+        props: ['itemindexRaw'],
 
         methods: {
             //公共功能
@@ -119,7 +119,7 @@ var userModel = Vue.extend(
                                 _this.load = false;
 
                             } else {
-                                alert(this.htmlJson.LoginInFirst);
+                                alert('Please log in first!');
                                 window.location.href = "/user/login";
                             }
                         }
