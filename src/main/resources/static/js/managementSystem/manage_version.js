@@ -16,15 +16,6 @@ export var VersionTemplate = Vue.extend({
                                     &nbsp;&nbsp;
                                     <el-button  type="success" icon="el-icon-search" @click="getWaitVersionList()" >搜索</el-button>
                                 </div>
-                                  <div style="    margin: 3px auto 3px 0px;">
-                                    <el-radio-group v-model="typeShown">
-                                      <el-radio-button label="All"></el-radio-button>                                    
-                                      <el-radio-button label="Model"></el-radio-button>
-                                      <el-radio-button label="Data"></el-radio-button>
-                                      <el-radio-button label="Community"></el-radio-button>
-                                      <el-radio-button label="Theme"></el-radio-button>
-                                    </el-radio-group>
-                                  </div>
                             <div>
                                 <el-table
                                         ref="waitVersionTable"
@@ -272,8 +263,6 @@ export var VersionTemplate = Vue.extend({
     data() {
         return {
 
-            typeShown:"All", //默认展示的项目 Model/Data/Community/Theme
-
             //未处理版本审核
             searchInputWaitVersion:"", //版本搜索
             waitVersionTableData:[],// 表格数据
@@ -319,7 +308,7 @@ export var VersionTemplate = Vue.extend({
         //未处理部分
         //查询未处理版本
         getWaitVersionList(){
-            axios.post('/version/versionList/uncheck', {
+            axios.post('/version/versionList/uncheck/All', {
                 "asc": false,
                 "page": this.currentPageWaitVersion,
                 "pageSize": this.PageSizeWaitVersion,
@@ -375,7 +364,7 @@ export var VersionTemplate = Vue.extend({
         //接受部分
         //查询接受版本
         getAcceptVersionList(){
-            axios.post('/version/versionList/accepted', {
+            axios.post('/version/versionList/accepted/All', {
                 "asc": false,
                 "page": this.currentPageAcceptVersion,
                 "pageSize": this.PageSizeAcceptVersion,
@@ -407,7 +396,7 @@ export var VersionTemplate = Vue.extend({
         //拒绝部分
         //查询拒绝版本
         getRejectVersionList(){
-            axios.post('/version/versionList/rejected', {
+            axios.post('/version/versionList/rejected/All', {
                 "asc": false,
                 "page": this.currentPageRejectVersion,
                 "pageSize": this.PageSizeRejectVersion,

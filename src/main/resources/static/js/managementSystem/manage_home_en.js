@@ -105,7 +105,7 @@ new Vue({
         //绘制地球
         loadEarth(){
             let myChart = echarts.init(document.getElementById('earthNodes'));
-            let ROOT_PATH ='https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
+            let ROOT_PATH ='https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
 
             myChart.setOption({
                 title: {
