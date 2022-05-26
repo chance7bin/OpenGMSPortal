@@ -5,7 +5,7 @@ export var ItemTemplate = Vue.extend({
 <!--               左侧类型选择框-->
                     <el-card class="box-card" style="min-width: 260px;  height: fit-content;">
                         <div slot="header" class="clearfix">
-                            <span>Data item classification</span>
+                            <span>条目分类</span>
                         </div>
                         <el-tree 
                             ref="itemRef"
@@ -243,6 +243,7 @@ export var ItemTemplate = Vue.extend({
             }else if(treeNodeId===10){
                 this.itemType="Unit"
             }
+            console.log(this.itemType)
             this.getGeoItemList()
         },
 
