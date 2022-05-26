@@ -8,10 +8,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Sorts;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.UserDailyViewCount;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.support.ParamInfo;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.doo.task.CheckedHistory;
@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -96,6 +97,9 @@ public class ManagementSystemService {
 
     @Resource(name="serverCollection")
     MongoCollection<Document> serverCollection;
+
+    @Autowired
+    CommentDao commentDao;
 
 
 
@@ -915,5 +919,62 @@ public class ManagementSystemService {
 
         return list;
     }
+
+    public JSONObject getCommentList(FindDTO findDTO) {
+
+        Pageable pageable = genericService.getPageable(findDTO);
+
+        Page<Comment> comments = commentDao.findAll(pageable);
+
+        JSONObject result = new JSONObject();
+
+        List<Comment> content = comments.getContent();
+        List<JSONObject> contentList = new ArrayList<>();
+        for (Comment comment : content) {
+
+            JSONObject o = (JSONObject)JSONObject.toJSON(comment);
+            JSONObject daoFactory = genericService.daoFactory(comment.getRelateItemType());
+            GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
+            PortalItem item = (PortalItem)itemDao.findFirstById(comment.getRelateItemId());
+            o.put("itemName", item.getName());
+            contentList.add(o);
+
+        }
+
+        result.put("total",comments.getTotalElements());
+        result.put("content",contentList);
+
+
+        return result;
+
+
+    }
+
+    public JsonResult deleteComment(@PathVariable("id") String id){
+
+        Comment comment = commentDao.findFirstById(id);
+
+        //删除与父评论关联
+        if (comment.getParentId() != null) {
+            Comment parentComment = commentDao.findFirstById(comment.getParentId());
+            parentComment.getSubComments().remove(id);
+            commentDao.save(parentComment);
+        }
+
+        //删除子评论
+        if (comment.getSubComments().size() != 0) {
+            for (String subOid : comment.getSubComments()) {
+                Comment subComment = commentDao.findFirstById(subOid);
+                commentDao.delete(subComment);
+            }
+        }
+
+        commentDao.delete(comment);
+
+        return ResultUtils.success();
+
+
+    }
+
 
 }
