@@ -300,4 +300,20 @@ public class ManagementSystemController {
     }
 
 
+    @ApiOperation(value = "得到评论列表")
+    @RequestMapping(value="/commentList",method= RequestMethod.POST)
+    public JsonResult getCommentList(@RequestBody FindDTO findDTO){
+        return ResultUtils.success(managementSystemService.getCommentList(findDTO));
+    }
+
+
+    @ApiOperation(value = "根据id删除评论")
+    @RequestMapping(value = "/comment/delete/{id}", method = RequestMethod.GET)
+    public JsonResult deleteComment(@PathVariable("id") String id){
+
+        return managementSystemService.deleteComment(id);
+
+
+    }
+
 }
