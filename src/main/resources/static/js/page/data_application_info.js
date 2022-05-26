@@ -1,6 +1,5 @@
 var data_application_info = new Vue({
     el: '#data_application_info',
-    props:['htmlJson'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -61,13 +60,13 @@ var data_application_info = new Vue({
             if(this.useroid==""||this.useroid==null||this.useroid==undefined){
                 this.$message({
                     dangerouslyUseHTMLString: true,
-                    message: '<strong>'+ this.htmlJson.Please +' <a href="/user/login">'+this.htmlJson.login+'</a></strong>',
+                    message: '<strong>'+ this.htmlJSON.Please +' <a href="/user/login">'+this.htmlJSON.login+'</a></strong>',
                     offset: 40,
                     showClose: true,
                 });
             }else if(this.commentText.trim()==""){
                 this.$message({
-                    message: this.htmlJson.CommentCanNotBeEmpty,
+                    message: this.htmlJSON.CommentCanNotBeEmpty,
                     offset: 40,
                     showClose: true,
                 });
@@ -98,7 +97,7 @@ var data_application_info = new Vue({
                         }else if (result.code == 0) {
                             this.commentText = "";
                             this.$message({
-                                message: this.htmlJson.CommentSubmittedSuccessfully,
+                                message: this.htmlJSON.CommentSubmittedSuccessfully,
                                 type: 'success',
                                 offset: 40,
                                 showClose: true,
@@ -106,7 +105,7 @@ var data_application_info = new Vue({
                             // this.getComments();
                         } else {
                             this.$message({
-                                message: this.htmlJson.SubmitError,
+                                message: this.htmlJSON.SubmitError,
                                 type: 'error',
                                 offset: 40,
                                 showClose: true,
@@ -134,7 +133,7 @@ var data_application_info = new Vue({
                     }else if (result.code == 0) {
                         this.commentText = "";
                         this.$message({
-                            message: this.htmlJson.CommentDeletedSuccessfully,
+                            message: this.htmlJSON.CommentDeletedSuccessfully,
                             type: 'success',
                             offset: 40,
                             showClose: true,
@@ -142,7 +141,7 @@ var data_application_info = new Vue({
                         // this.getComments();
                     } else {
                         this.$message({
-                            message: this.htmlJson.DeleteError,
+                            message: this.htmlJSON.DeleteError,
                             type: 'error',
                             offset: 40,
                             showClose: true,
@@ -254,7 +253,7 @@ var data_application_info = new Vue({
 
             }else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message(this.htmlJson.PleaseSelectFileFirst);
+                this.$message(this.htmlJSON.PleaseSelectFileFirst);
             }
         },
         //批量下载还有问题，待修改
@@ -293,7 +292,7 @@ var data_application_info = new Vue({
                 link.click();
 
             }else {
-                this.$message(this.htmlJson.PleaseSelectFileFirst);
+                this.$message(this.htmlJSON.PleaseSelectFileFirst);
             }
 
 
@@ -434,7 +433,7 @@ var data_application_info = new Vue({
                     //根据当前节点在线状态链接页面
                     if (this.methodsData[i].onlineStatus === 'offline'){
                         this.$message({
-                            message: this.htmlJson.ServiceOffline,
+                            message: this.htmlJSON.ServiceOffline,
                             type: 'error',
                         })
                     }else {
@@ -451,7 +450,7 @@ var data_application_info = new Vue({
             if(this.useroid==""||this.useroid==null||this.useroid==undefined){
                 this.$message({
                     dangerouslyUseHTMLString: true,
-                    message: '<strong>'+ this.htmlJson.Please +' <a href="/user/login">'+this.htmlJson.login+'</a></strong>',
+                    message: '<strong>'+ this.htmlJSON.Please +' <a href="/user/login">'+this.htmlJSON.login+'</a></strong>',
                     offset: 40,
                     showClose: true,
                 });

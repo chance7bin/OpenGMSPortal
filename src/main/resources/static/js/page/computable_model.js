@@ -1,6 +1,5 @@
 new Vue({
     el: '#app',
-    props:['htmlJson'],
     data: function () {
         return {
             htmlJSON:{},
@@ -221,7 +220,7 @@ new Vue({
                 success: (result) => {
 
                     if (result.code !== 0) {
-                        this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>'+ this.htmlJson.LoginInFirst +'</div>', 'Tip', {
+                        this.$confirm('<div style=\'font-size: 18px\'>This function requires an account,  <br/>please login first.</div>', 'Tip', {
                             dangerouslyUseHTMLString: true,
                             confirmButtonText: 'Log In',
                             cancelButtonClass: 'fontsize-15',
@@ -358,7 +357,7 @@ new Vue({
                 data:serverInfo,
                 success:(result)=>{
                     if(result.code == -1){
-                        alert(this.htmlJson.LoginInFirst)
+                        alert('Please login first!')
                         window.sessionStorage.setItem("history", window.location.href);
                         window.location.href = "/user/login"
                     } else{

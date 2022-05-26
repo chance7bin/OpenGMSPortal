@@ -2270,6 +2270,7 @@ var info=new Vue({
             window.sessionStorage.setItem("history", window.location.href);
             this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
                 dangerouslyUseHTMLString: true,
+                cancelButtonText: 'Cancel',
                 confirmButtonText: 'Log In',
                 cancelButtonClass: 'fontsize-15',
                 confirmButtonClass: 'fontsize-15',

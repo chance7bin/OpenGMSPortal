@@ -2,6 +2,7 @@
 var feedback = Vue.extend(
     {
         template: "#feedback",
+        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制

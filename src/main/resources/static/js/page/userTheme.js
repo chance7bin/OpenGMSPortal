@@ -1,6 +1,7 @@
 var userTheme = Vue.extend(
     {
         template:'#userTheme',
+        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制
