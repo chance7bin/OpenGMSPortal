@@ -2,7 +2,7 @@
 
 var  data_item_info = new Vue({
     el: '#data_item_info',
-    props:['htmlJson'],
+    // props:['htmlJSON'],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -144,9 +144,10 @@ var  data_item_info = new Vue({
         },
 
         confirmLogin(){
-            this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>'+ this.htmlJson.LoginInFirst +'</div>', 'Tip', {
+            this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: 'Log In',
+                cancelButtonText: 'Cancel',
                 cancelButtonClass: 'fontsize-15',
                 confirmButtonClass: 'fontsize-15',
                 type: 'info',
@@ -177,7 +178,7 @@ var  data_item_info = new Vue({
 
             }
             else{
-                alert(this.htmlJson.PleaseSelectDataFirst)
+                alert(this.htmlJSON.PleaseSelectDataFirst)
             }
         },
         addFolder(){
@@ -191,7 +192,7 @@ var  data_item_info = new Vue({
             }
             console.log(paths)
 
-            this.$prompt(null, this.htmlJson.EnterFolderName, {
+            this.$prompt(null, this.htmlJSON.EnterFolderName, {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
@@ -223,7 +224,7 @@ var  data_item_info = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: this.htmlJson.Cancel
+                    message: this.htmlJSON.Cancel
                 });
             });
         },
@@ -253,7 +254,7 @@ var  data_item_info = new Vue({
                         this.confirmLogin();
                     }
                     else {
-                        alert(this.htmlJson.ForkSuccessfully);
+                        alert(this.htmlJSON.ForkSuccessfully);
                         this.forkDialogVisible=false;
                     }
 
@@ -262,7 +263,7 @@ var  data_item_info = new Vue({
         },
         append(data) {
 
-            this.$prompt(null, this.htmlJson.EnterFolderName, {
+            this.$prompt(null, this.htmlJSON.EnterFolderName, {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
@@ -276,7 +277,7 @@ var  data_item_info = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: this.htmlJson.Cancel
+                    message: this.htmlJSON.Cancel
                 });
             });
 
@@ -377,7 +378,7 @@ var  data_item_info = new Vue({
                 data: data,
                 async: true,
                 success: (json) => {
-                    this.$alert(this.htmlJson.Success, 'Tip', {
+                    this.$alert(this.htmlJSON.Success, 'Tip', {
                     type:'success',
                     confirmButtonText: 'OK',
                     callback: action => {
@@ -387,7 +388,7 @@ var  data_item_info = new Vue({
                 });
                 },
                 error:(json)=>{
-                    this.$alert(this.htmlJson.failed, 'Error', {
+                    this.$alert(this.htmlJSON.failed, 'Error', {
                     type:'error',
                         confirmButtonText: 'OK',
                         callback: action => {
@@ -398,7 +399,7 @@ var  data_item_info = new Vue({
             })
         },
         handleClose(done) {
-            this.$confirm(this.htmlJson.AreYouSureToClose)
+            this.$confirm(this.htmlJSON.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })
@@ -522,7 +523,7 @@ var  data_item_info = new Vue({
 
             }else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message(this.htmlJson.PleaseSelectFileFirst);
+                this.$message(this.htmlJSON.PleaseSelectFileFirst);
             }
         },
         dall(){
@@ -559,7 +560,7 @@ var  data_item_info = new Vue({
                 window.open("/dispatchRequest/download?url=" + currentData);
             }
             else{
-                this.$message(this.htmlJson.PleaseSelectFileFirst);
+                this.$message(this.htmlJSON.PleaseSelectFileFirst);
             }
 
         },
@@ -711,7 +712,7 @@ var  data_item_info = new Vue({
         reply(id){
 
             if(this.useroid==''){
-                alert(this.htmlJson.LoginInFirst);
+                alert(this.htmlJSON.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 var curid=window.location.href;
@@ -758,7 +759,7 @@ var  data_item_info = new Vue({
         //对数据条目的评论
         putcomment(){
             if(this.useroid==''){
-                alert(this.htmlJson.LoginInFirst);
+                alert(this.htmlJSON.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 var curid=window.location.href;
@@ -882,7 +883,7 @@ var  data_item_info = new Vue({
         addRelatedModel(){
 
             if(this.useroid==''){
-                alert(this.htmlJson.LoginInFirst);
+                alert(this.htmlJSON.LoginInFirst);
                 window.location.href = "/user/login";
             }else{
                 this.searchAddModelPage=0
@@ -1020,7 +1021,7 @@ var  data_item_info = new Vue({
         relatedToCurrentData(){
 
             if(this.selectedModelsOid.length===0){
-                alert(this.htmlJson.PleaseSelectModelFirst)
+                alert(this.htmlJSON.PleaseSelectModelFirst)
             }else{
 
                 let curentId=document.location.href.split("/");
@@ -1035,7 +1036,7 @@ var  data_item_info = new Vue({
 
                     .then((res)=>{
                         if(res.status===200){
-                            alert(this.htmlJson.RelatedModelsSuccessfully)
+                            alert(this.htmlJSON.RelatedModelsSuccessfully)
 
                         }
 
@@ -1127,7 +1128,7 @@ var  data_item_info = new Vue({
                 })
             }
             else{
-                alert(this.htmlJson.PleaseSelectFileFirst);
+                alert(this.htmlJSON.PleaseSelectFileFirst);
             }
         },
         edit() {
@@ -1187,7 +1188,7 @@ var  data_item_info = new Vue({
                         that.mseeageByWebSocket("distributed")
 
                     }else if(json.code==-1){
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1235,7 +1236,7 @@ var  data_item_info = new Vue({
                         this.xml = json.xml;
                         this.parameters = json.parameters
                     }else if(json.code==-1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1275,7 +1276,7 @@ var  data_item_info = new Vue({
                         this.xml = json.xml;
                         this.parameters = json.parameters
                     }else if(json.code==-1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1343,7 +1344,7 @@ var  data_item_info = new Vue({
                         that.loading = false;
                     }
                     // loading = false;
-                    alert(this.htmlJson.NoDataInServiceNode)
+                    alert(this.htmlJSON.NoDataInServiceNode)
                 } else
                     //没有权限
                 if (e.data === 'no authority') {
@@ -1352,7 +1353,7 @@ var  data_item_info = new Vue({
                     }else {
                         that.loading = false;
                     }
-                    alert(this.htmlJson.noAuthority)
+                    alert(this.htmlJSON.noAuthority)
                 } else
                     //服务结点离线
                 if (e.data == 'node offline') {
@@ -1361,7 +1362,7 @@ var  data_item_info = new Vue({
                     }else {
                         that.loading = false;
                     }
-                    alert(this.htmlJson.ServiceNodeOffline)
+                    alert(this.htmlJSON.ServiceNodeOffline)
                 } else
                     //注册门户到中转服务器成功
                 if (e.data === 'success') {
@@ -1449,7 +1450,7 @@ var  data_item_info = new Vue({
                             that.loading = false;
                             this.$message({
                                 type: 'error',
-                                message: this.htmlJson.DistributeNodeOffline
+                                message: this.htmlJSON.DistributeNodeOffline
                             });
                         }
                     })
@@ -1679,7 +1680,7 @@ $(function () {
             link.click();
         }
         else{
-            alert(this.htmlJson.PleaseSelectFileFirst);
+            alert(this.htmlJSON.PleaseSelectFileFirst);
         }
 
 

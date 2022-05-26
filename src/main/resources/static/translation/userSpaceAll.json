@@ -1769,7 +1769,8 @@
     "UpdateModelItemSuccessfully": "Update model item successfully!",
     "ModifyLogicalModel": "Modify Logical Model",
     "UpdateDataApplicationSuccessfully": "Update data application successfully!",
-    "UpdateUnitSuccessfully": "Update unit successfully"
+    "UpdateUnitSuccessfully": "Update unit successfully",
+    "CreateThemeSuccessfully": "Create theme  successfully"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3530,6 +3531,7 @@
     "PleaseSelectFirst": "请先选择!",
 
     "Accept": "接受",
-    "Reject": "拒绝"
+    "Reject": "拒绝",
+    "CreateThemeSuccessfully": "创建专题成功"
   }
 }

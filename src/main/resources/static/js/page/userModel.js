@@ -1,6 +1,7 @@
 var userModel = Vue.extend(
     {
         template: "#userModel",
+        props:['htmlJson'],
         data() {
             return {
                 //页面样式控制
@@ -20,7 +21,6 @@ var userModel = Vue.extend(
             }
         },
 
-        props: ['itemindexRaw'],
 
         methods: {
             //公共功能

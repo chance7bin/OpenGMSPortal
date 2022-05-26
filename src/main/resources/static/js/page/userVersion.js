@@ -1,5 +1,6 @@
 var userVersion = Vue.extend({
     template: "#userVersion",
+    props:['htmlJson'],
     data:function (){
         return{
             ScreenMinHeight: "0px",

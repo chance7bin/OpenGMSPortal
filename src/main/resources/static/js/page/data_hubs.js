@@ -1,6 +1,5 @@
 var data_items = new Vue({
     el:"#data_items",
-    props:["htmlJson"],
     components: {
         'avatar': VueAvatar.Avatar
     },
@@ -223,7 +222,7 @@ var data_items = new Vue({
         },
         contribute(event){
             if(this.useroid==''){
-                alert(this.htmlJson.LoginInFirst);
+                alert('Please login first!');
                 window.location.href = "/user/login";
             }else{
                 console.log(event.currentTarget._prevClass.split(" ")[event.currentTarget._prevClass.split(" ").length-1]);
