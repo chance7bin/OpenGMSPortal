@@ -266,7 +266,9 @@ public class LogicalModelService {
             logicalModel.setLocalizationList(list);
 
             logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
-            logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            JSONArray re = jsonObject.getJSONArray("relatedModelItems");
+            List<String> reList = re == null ? null : re.toJavaList(String.class);
+            logicalModel.setRelatedModelItems(reList);
             // logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
             logicalModel.setOverview(jsonObject.getString("description"));
             logicalModel.setContentType(jsonObject.getString("contentType"));
@@ -395,7 +397,10 @@ public class LogicalModelService {
                 logicalModel.setLocalizationList(list);
                 logicalModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 // logicalModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
-                logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                // logicalModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                JSONArray re = jsonObject.getJSONArray("relatedModelItems");
+                List<String> reList = re == null ? null : re.toJavaList(String.class);
+                logicalModel.setRelatedModelItems(reList);
                 logicalModel.setOverview(jsonObject.getString("description"));
                 logicalModel.setContentType(jsonObject.getString("contentType"));
                 logicalModel.setCXml(jsonObject.getString("cXml"));
