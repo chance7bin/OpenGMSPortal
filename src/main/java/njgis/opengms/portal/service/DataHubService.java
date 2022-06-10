@@ -1,5 +1,6 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -7,6 +8,8 @@ import njgis.opengms.portal.entity.dto.ResultDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.DataHub;
+import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description
@@ -45,6 +50,9 @@ public class DataHubService {
 
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    UserDao userDao;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
@@ -124,6 +132,37 @@ public class DataHubService {
     public JsonResult searchByNameAndAuthor(SpecificFindDTO findDTO,String email){
 
         return ResultUtils.success(genericService.searchItemsByUser(findDTO, ItemTypeEnum.DataHub, email));
+
+    }
+
+    public JsonResult setRelation(String id, List<String> relations) {
+
+        DataHub dataHub = dataHubDao.findFirstById(id);
+        dataHub.setRelatedModels(relations);
+        dataHubDao.save(dataHub);
+        JSONObject result = new JSONObject();
+        result.put("type","suc");
+        return ResultUtils.success(result);
+
+    }
+
+    public JSONArray getRelation(String id) {
+        JSONArray result = new JSONArray();
+        DataHub dataHub = dataHubDao.findFirstById(id);
+        List<String> relatedModels = dataHub.getRelatedModels();
+
+        for (String modelId : relatedModels) {
+            ModelItem modelItem = modelItemDao.findFirstById(modelId);
+            JSONObject object = new JSONObject();
+            object.put("id", modelItem.getId());
+            object.put("name", modelItem.getName());
+            User user = userDao.findFirstByEmail(modelItem.getAuthor());
+            object.put("author", user.getName());
+            object.put("author_email", user.getEmail());
+            result.add(object);
+        }
+
+        return result;
 
     }
 }

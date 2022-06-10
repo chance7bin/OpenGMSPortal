@@ -162,13 +162,14 @@ public class SpatialReferenceController {
         return ResultUtils.success(repositoryService.getRepositoryByNameAndUser(findDTO, email, ItemTypeEnum.SpatialReference));
     }
 
-    @ApiOperation(value = "getWKT [ /spatial/listSpatialsByOid ]")
+    @ApiOperation(value = "/getWKT [ /spatial/getWKT ]")
     @RequestMapping(value="/getWKT",method= RequestMethod.GET)
-    JsonResult searchByTitle(@RequestParam(value = "id")String id){
+    JsonResult getWKT(@RequestParam(value = "id")String id){
+        id = genericService.formatId(id);
         return ResultUtils.success(spatialReferenceService.getWKT(id));
     }
 
-    @ApiOperation(value = "getSpatialReference [ /spatial/listSpatialsByOid ]")
+    @ApiOperation(value = "getSpatialReference [ /spatial/getSpatialReference ]")
     @RequestMapping(value="/getSpatialReference",method= RequestMethod.GET)
     JsonResult getSpatialReference(@RequestParam(value="asc") int asc,
                                    @RequestParam(value = "page") int page,
@@ -178,7 +179,7 @@ public class SpatialReferenceController {
     }
 
 
-    @ApiOperation(value = "searchSpatialReference [ /spatial/listSpatialsByOid ]")
+    @ApiOperation(value = "searchSpatialReference [ /spatial/searchSpatialReference ]")
     @RequestMapping(value="/searchSpatialReference",method= RequestMethod.GET)
     JsonResult searchSpatialReference(@RequestParam(value="asc") int asc,
                                       @RequestParam(value = "page") int page,
@@ -216,4 +217,10 @@ public class SpatialReferenceController {
 
     }
 
+    @ApiOperation(value = "[ /repository/getUnitConvertInfo/{oid} ]")
+    @RequestMapping(value = "/unitConvertInfo/{id}",method = RequestMethod.GET)
+    public JSONObject getUnitConvertInfo(@PathVariable("id") String id){
+
+        return repositoryService.getUnitConversionById(id);
+    }
 }

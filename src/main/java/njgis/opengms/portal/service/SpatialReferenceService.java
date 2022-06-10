@@ -99,7 +99,7 @@ public class SpatialReferenceService {
     public JSONObject getSpatialReference(int asc,int page,int size){
         Sort sort = Sort.by(asc == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
 
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         List<SpatialReferenceClassification> classifications = spatialReferenceClassificationDao.findAllByParentId("58340c92-d74f-4d81-8a80-e4fcff286008");
 
@@ -140,7 +140,7 @@ public class SpatialReferenceService {
     public JSONObject searchSpatialReference(int asc,int page,int size,String searchText){
         Sort sort = Sort.by(asc == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
 
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         List<SpatialReferenceClassification> classifications = spatialReferenceClassificationDao.findAllByParentId("58340c92-d74f-4d81-8a80-e4fcff286008");
 

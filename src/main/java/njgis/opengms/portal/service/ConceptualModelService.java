@@ -265,7 +265,10 @@ public class ConceptualModelService {
             conceptualModel.setLocalizationList(list);
 
             conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
-            conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            // conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            JSONArray re = jsonObject.getJSONArray("relatedModelItems");
+            List<String> reList = re == null ? null : re.toJavaList(String.class);
+            conceptualModel.setRelatedModelItems(reList);
             // conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
             conceptualModel.setOverview(jsonObject.getString("description"));
             conceptualModel.setContentType(jsonObject.getString("contentType"));
@@ -394,8 +397,10 @@ public class ConceptualModelService {
                 conceptualModel.setLocalizationList(list);
                 conceptualModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
                 // conceptualModel.setRelatedModelItems(Arrays.asList(jsonObject.getString("relateModelItem")));
-                conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
-
+                // conceptualModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                JSONArray re = jsonObject.getJSONArray("relatedModelItems");
+                List<String> reList = re == null ? null : re.toJavaList(String.class);
+                conceptualModel.setRelatedModelItems(reList);
                 conceptualModel.setOverview(jsonObject.getString("description"));
                 conceptualModel.setContentType(jsonObject.getString("contentType"));
                 conceptualModel.setCXml(jsonObject.getString("cXml"));
