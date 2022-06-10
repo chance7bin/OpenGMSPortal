@@ -1,6 +1,5 @@
 var vue = new Vue({
     el: "#app",
-    props:['htmlJson'],
     data: {
         htmlJSON:{
             "selectModel": "Select Computable Model",
