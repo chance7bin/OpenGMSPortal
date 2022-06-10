@@ -1,6 +1,7 @@
 var userDataItems = Vue.extend(
     {
         template: "#userDataItems",
+        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制
