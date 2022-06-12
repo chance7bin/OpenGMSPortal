@@ -664,7 +664,7 @@ var userCommunities = Vue.extend(
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href = "/user/login";
                         } else {
-                            let data = result.data;
+                            let data = result;
                             this.userId = data.data.accessId;
                             this.userEmail=data.data.email
                             this.userName = data.data.name;

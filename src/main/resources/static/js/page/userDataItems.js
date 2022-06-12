@@ -376,7 +376,9 @@ var userDataItems = Vue.extend(
                             alert('Please log in first!');
                             window.location.href = "/user/login";
                         } else {
-                            let data = result.data;
+                            // console.log("result:",result);
+
+                            let data = result;
                             this.countInfo = data.data
                             this.userId = data.data.accessId;
                             this.userName = data.data.name;
