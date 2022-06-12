@@ -3,6 +3,11 @@
 //单独使用时也包含了confirmLogin的独立功能
 //提交按钮也可以使用两种模式，一种是dialog中的自带footer按钮调用组件传值给父组件，一种是组件自带提交按钮直接提交
 
+
+// var modulesValue = require("../modules/modulesValue")
+// import {module_msg} from './modulesValue'
+// console.log("module_msg1:",module_msg);
+
 Vue.component("linkRelatedItemModule",
     {
         template: '#linkRelatedItemModule',
@@ -30,6 +35,7 @@ Vue.component("linkRelatedItemModule",
         },
         data() {
             return {
+                // modulesValue: module_msg,
                 targetItemId:'',
                 targetItemType:'',
                 relateItemType:'',
@@ -478,6 +484,9 @@ Vue.component("linkRelatedItemModule",
                                     confirmButtonText: 'OK',
                                     callback: action => {
 
+                                        // console.log("window:", window);
+                                        // console.log("window.module_msg:", window.module_msg);
+
                                         if(this.relateItemType === "modelItem"){
                                             this.relatedModelItems = result.data.data;
                                             this.setRelatedModelItemsPage();
@@ -486,6 +495,7 @@ Vue.component("linkRelatedItemModule",
                                             }
 
                                         }else {
+
                                             this.postMsg(window.module_msg.suc)
                                         }
                                     }
@@ -532,6 +542,13 @@ Vue.component("linkRelatedItemModule",
             this.relateItemType = this.relateType
             this.targetItemType = this.targetType
             this.targetItemId = this.targetId
+
+
+            //module_msg赋值给window对象
+            // console.log("modulesValue:", this.modulesValue);
+            // console.log("modulesValue");
+            // console.log("create window:",window.module_msg);
+
 
         },
         mounted() {}

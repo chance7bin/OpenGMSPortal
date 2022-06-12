@@ -226,6 +226,9 @@ public class DataItemRestController {
     @ApiOperation(value = "获取当前条目的远程数据信息 [ /dataItem/getDistributeDataInfo/{dataItemId} ]")
     @RequestMapping(value = "/distributeDataInfo/{dataItemId}", method = RequestMethod.GET)
     public JsonResult getDistributeDataInfo(@PathVariable(value = "dataItemId") String dataItemId){
+
+        dataItemId = genericService.formatId(dataItemId);
+
         List<InvokeService> invokeServices = dataItemService.getDistributeDataInfo(dataItemId);
         if(null!=invokeServices)
             return ResultUtils.success(invokeServices);
@@ -259,8 +262,8 @@ public class DataItemRestController {
      * @return njgis.opengms.portal.entity.doo.JsonResult
      **/
     @LoginRequired
-    @ApiOperation(value = "设置与数据条目相关的模型(unfinished) [ /dataItem/setRelation ]")
-    @RequestMapping(value="/relation",method = RequestMethod.POST)
+    @ApiOperation(value = "设置与数据条目相关的模型 [ /dataItem/setRelation ]")
+    @RequestMapping(value="/relation",method = RequestMethod.PUT)
     public JsonResult setRelation(@RequestParam(value="id") String id,
                            @RequestParam(value = "relations[]") List<String> relations){
 

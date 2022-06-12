@@ -216,11 +216,13 @@ public class TemplateService {
                 List<DataMethod> dataMethods = new ArrayList<>();
                 for(String relatedMethod:relatedMethods){
                     DataMethod dataMethod = dataMethodDao.findFirstById(relatedMethod);
-                    dataMethods.add(dataMethod);
+                    if (dataMethod != null){
+                        dataMethods.add(dataMethod);
+                    }
                 }
                 return ResultUtils.success(dataMethods);
             }else {
-                return ResultUtils.error();
+                return ResultUtils.success(new ArrayList<>());
             }
         }
         return ResultUtils.error();

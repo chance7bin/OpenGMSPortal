@@ -90,7 +90,7 @@ public class User extends PortalIdPlus {
     List<FileMeta> fileContainer;
 
     //用户相关资源数量统计
-    UserResourceCount resourceCount;
+    UserResourceCount resourceCount = new UserResourceCount();
 
     //通知
     int noticeNum;

@@ -1,5 +1,6 @@
 package njgis.opengms.portal.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * @Description hub controller
@@ -221,6 +223,38 @@ public class DataHubController
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
 
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataHub,findDTO, true));
+
+    }
+
+
+    /**
+     * @Description 设置与数据条目相关的模型
+     * @Param id datahub的id
+     * @Param relations :增加的相关模型
+     * @return njgis.opengms.portal.entity.doo.JsonResult
+     **/
+    @LoginRequired
+    @ApiOperation(value = "设置与数据条目相关的模型 [ /dataItem/setRelation ]")
+    @RequestMapping(value="/relation",method = RequestMethod.PUT)
+    public JsonResult setRelation(@RequestParam(value="id") String id,
+                                  @RequestParam(value = "relations[]") List<String> relations){
+
+        id = genericService.formatId(id);
+
+        return dataHubService.setRelation(id,relations);
+
+    }
+
+
+    @ApiOperation(value = "获取与数据中心相关的模型")
+    @RequestMapping(value="/relation",method = RequestMethod.GET)
+    public JsonResult getRelation(@RequestParam(value = "id") String id){
+
+        id = genericService.formatId(id);
+
+        JSONArray result=dataHubService.getRelation(id);
+
+        return ResultUtils.success(result);
 
     }
 }

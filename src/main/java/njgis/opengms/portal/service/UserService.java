@@ -736,6 +736,7 @@ public class UserService {
     public void updateAllResourceCount(String email){
         User user = userDao.findFirstByEmail(email);
         UserResourceCount resourceCount = user.getResourceCount();
+        resourceCount = resourceCount == null ? new UserResourceCount() : resourceCount;
         Class cls = resourceCount.getClass();
         Field[] fields = cls.getDeclaredFields();
         for (Field field : fields) {
