@@ -224,15 +224,11 @@ var userDataItems = Vue.extend(
                 const h = this.$createElement;
                 this.$msgbox({
                     title: ' ',
-                    message: h('p', null, [
-                        h('span', null, 'Are you sure to'),
-                        h('span', {style: 'font-weight:600'}, 'delete'),
-                        h('span', null, 'this item?'),
-                    ]),
+                    message: this.htmlJson.AreYouSureToDelete,
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.Confirm,
+                    cancelButtonText: this.htmlJson.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {
@@ -281,7 +277,7 @@ var userDataItems = Vue.extend(
                 }).then(action => {
                     this.$message({
                         type: 'success',
-                        message: 'Delete Successful!'
+                        message: this.htmlJson.userModel.DeleteSuccessful
                     });
                 });
             },

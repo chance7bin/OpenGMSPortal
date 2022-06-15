@@ -40,7 +40,15 @@
     "NoDataInServiceNode": "no data in service node",
     "noAuthority": "no authority",
     "ServiceNodeOffline": "service node offline",
-    "DistributeNodeOffline": "Distribute Node Offline"
+    "DistributeNodeOffline": "Distribute Node Offline",
+    "EditRelatedModelItem": "Edit Related Model Item",
+    "NoRelatedModelItem": "There is no related model item. You can bind model items.",
+    "RelatedVisualization": "Related Visualization",
+    "Copy": "Copy",
+    "Current": "current",
+    "DataResource": "Data Resource",
+    "DetailedDescription": "Detailed Description",
+    "ViewFullContent": "View Full Content"
   },
   "zh-cn": {
     "DataResourceUrl": "数据资源链接",
@@ -83,7 +91,15 @@
     "NoDataInServiceNode": "服务节点中没有数据",
     "noAuthority": "没有权限",
     "ServiceNodeOffline": "服务节点离线",
-    "DistributeNodeOffline": "分配节点已离线"
+    "DistributeNodeOffline": "分配节点已离线",
+    "EditRelatedModelItem": "编辑关联模型",
+    "NoRelatedModelItem": "目前没有关联模型，您可已绑定模型.",
+    "RelatedVisualization": "关联可视化",
+    "Copy": "复制",
+    "Current": "当前",
+    "DataResource": "数据资源",
+    "DetailedDescription": "详细描述",
+    "ViewFullContent": "查看完整内容"
   }
 
 }

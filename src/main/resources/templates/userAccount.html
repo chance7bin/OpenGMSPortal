@@ -326,13 +326,12 @@
                                             aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
-                                    <h4 class="modal-title" style="color: #737373;text-align: center;">Change
-                                        Password</h4>
+                                    <h4 class="modal-title" style="color: #737373;text-align: center;">{{htmlJson.ChangePassword}}</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form class="form-horizontal" role="form">
                                         <div class="wzhModalForm">
-                                            <label for="inputName">Old Password</label>
+                                            <label for="inputName">{{htmlJson.OldPassword}}</label>
                                             <div>
                                                 <input type="password" class="form-control"
                                                        id="inputOldPass"
@@ -340,7 +339,7 @@
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputPhone">New Password</label>
+                                            <label for="inputPhone">{{htmlJson.NewPassword}}</label>
                                             <div>
                                                 <input type="password" class="form-control"
                                                        id="inputPassword"
@@ -348,7 +347,7 @@
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputHomePage" >Confirm Password</label>
+                                            <label for="inputHomePage" >{{htmlJson.ConfirmPassword}}</label>
                                             <div>
                                                 <input type="password" class="form-control"
                                                        id="inputPassAgain"
@@ -361,12 +360,12 @@
                                 <div class="modal-footer" style="padding: 15px 24px">
                                     <button @click="submitPass" type="button"
                                             class="btn btn-round btn-primary"
-                                            style="text-transform: capitalize;font-size: 15px">Submit
+                                            style="text-transform: capitalize;font-size: 15px">{{htmlJson.Submit}}
                                     </button>
 
                                     <button @click="forgetPass" type="button"
                                             class="btn btn-round btn-warning"
-                                            style="text-transform: capitalize;font-size: 15px;float:left;">Forget Password
+                                            style="text-transform: capitalize;font-size: 15px;float:left;">{{htmlJson.ForgetPassword}}
                                     </button>
                                 </div>
                             </div>

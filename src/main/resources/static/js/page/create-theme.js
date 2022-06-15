@@ -584,7 +584,7 @@ var createTheme = Vue.extend({
             })
         },
         remove(node, data) {
-            this.$confirm('Are you sure to delete this item?',  {
+            this.$confirm(this.htmlJson.AreYouSureToDelete,  {
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No',
                 type: 'warning',
@@ -2086,17 +2086,17 @@ var createTheme = Vue.extend({
                     contentType: false,
                     async: true,
                     data: formData,
-                    success: function (result) {
+                    success: result => {
                         if(typeof(loading) != "undefined"){
                             loading.close();
                         }
 
                         if (result.code == "0") {
                             console.log("success");
-                                that.$confirm('<div style=\'font-size: 18px\'>Create theme  successfully!</div>', 'Tip', {
+                                that.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateThemeSuccessfully +'</div>', 'Tip', {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',
@@ -2141,7 +2141,7 @@ var createTheme = Vue.extend({
                         loading.close();
                         if (result.code === 0) {
                             if(result.data.method==="update") {
-                                alert("Update Success");
+                                alert(this.htmlJson.UpdateSuccess);
                                 $("#editModal", parent.document).remove();
                                 window.location.href = "/theme/" + result.data.oid;
                             }

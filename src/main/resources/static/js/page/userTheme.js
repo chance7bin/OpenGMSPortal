@@ -185,7 +185,7 @@ var userTheme = Vue.extend(
 
             deleteItem(oid) {
                 console.log(deleteThemeApi(oid))
-                this.$confirm("Are you sure to delete this item?",'',{
+                this.$confirm(this.htmlJson.AreYouSureToDelete,'',{
                     confirmButtonText:'Yes',
                     cancelButtonText:'No',
                     type:'warning'
@@ -201,14 +201,14 @@ var userTheme = Vue.extend(
                         crossDomain: true,
                         success: (json) => {
                             if (json.code == -1) {
-                                this.$alert('Please log in first!')
+                                this.$alert(this.htmlJson.LoginInFirst)
                             } else {
                                 if (json.msg == 'Success') {
-                                    this.$message({message: 'delete successfully!',
+                                    this.$message({message: this.htmlJson.DeleteSuccess,
                                                   type:"success"});
                                     this.getTheme();
                                 } else {
-                                    this.$message({message:'delete Failed!',
+                                    this.$message({message:this.htmlJson.DeleteFailed,
                                                       type:"error"})
                                 }
                             }

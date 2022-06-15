@@ -1,6 +1,5 @@
 var vue = new Vue({
     el: "#app",
-    props:['htmlJson'],
     data: {
         htmlJSON:{
             selectModel:"Select Computable Model",
@@ -583,19 +582,19 @@ var vue = new Vue({
 
         submitUpload() {
             if(this.uploadName==""){
-                this.$message.error('Please enter the dataset name!');
+                this.$message.error(this.htmlJSON.PleaseEnterDatasetName);
                 return;
             }
             if(this.selectValue==""){
-                this.$message.error('Please select a data template!');
+                this.$message.error(this.htmlJSON.SelectDataTemplate);
                 return;
             }
             if (this.selectedPath.length == 0) {
-                this.$message.error('Please select a folder first!');
+                this.$message.error(this.htmlJSON.selectDirTip);
                 return;
             }
             if(this.uploadFiles.length==0){
-                this.$message.error('Please select files!');
+                this.$message.error(this.htmlJSON.PleaseSelectFiles);
                 return;
             }
 
@@ -665,7 +664,7 @@ var vue = new Vue({
 
 
                     }else{
-                        this.$message.error('Upload failed!');
+                        this.$message.error(this.htmlJSON.UploadFailed);
                     }
 
 
@@ -674,7 +673,7 @@ var vue = new Vue({
 
                     this.uploadLoading=false;
                     this.uploadDialogVisible=false;
-                    this.$message.error('Upload failed!');
+                    this.$message.error(this.htmlJSON.UploadFailed);
                 });
             });
 
@@ -715,7 +714,7 @@ var vue = new Vue({
         },
         selectFile() {
             if (this.selectedPath.length == 0) {
-                this.$message.error('Please select a folder first!');
+                this.$message.error(this.htmlJSON.selectDirTip);
                 return;
             }
             $("#uploadFile").click()
@@ -734,7 +733,7 @@ var vue = new Vue({
             console.log(uploadSource)
             console.log($('.file-caption').val())
             if (uploadSource.length == 0) {
-                alert("Please upload the file into the template first")
+                alert(this.htmlJSON.UploadFileToTemplate)
             } else {
                 for (let i = 0; i < uploadSource.length; i++) {
                     let dataName = uploadSource[i].file_name;
@@ -798,7 +797,7 @@ var vue = new Vue({
 
             } else {
                 if (this.selectedPath.length == 0) {
-                    alert('Please select a folder')
+                    alert(this.htmlJSON.selectDirTip)
                     return
                 }
 
@@ -823,7 +822,7 @@ var vue = new Vue({
                 contentType: "application/json",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -885,7 +884,7 @@ var vue = new Vue({
                         this.uploadLoading=false;
                         this.uploadDialogVisible=false;
                         this.$message({
-                            message: 'Upload successfully!',
+                            message: this.htmlJSON.UploadSuccessfully,
                             type: 'success'
                         });
 
@@ -900,7 +899,7 @@ var vue = new Vue({
         },
 
         uploadBeforeClose() {
-            this.$confirm('Confirm close？')
+            this.$confirm(this.htmlJSON.ConfirmClose)
                 .then(_ => {
                     this.uploadDialogVisible = false;
                 })
@@ -915,7 +914,7 @@ var vue = new Vue({
             var node, data
             if (pageIndex == 'myData') {
                 data = this.$refs.folderTree.getCurrentNode();
-                if (data == undefined) alert('Please select a file directory')
+                if (data == undefined) alert(this.htmlJSON.selectDirTip)
                 node = this.$refs.folderTree.getNode(data);
             }
             // else {
@@ -946,7 +945,7 @@ var vue = new Vue({
                 if (folderExited.some((item) => {
                     return item.label === value;
                 }) == true) {
-                    alert('this name is existing in this path, please input a new one');
+                    alert(this.htmlJSON.NameAlreadyExisting);
                     return
                 }
 
@@ -958,7 +957,7 @@ var vue = new Vue({
                     contentType: "application/x-www-form-urlencoded",
                     success: (json) => {
                         if (json.code == -1) {
-                            this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                            this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                                 type:"error",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1017,7 +1016,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert(this.htmlJson.LoginInFirst, 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -1324,7 +1323,7 @@ var vue = new Vue({
                 this.eventChoosing.url = this.currentData.url;
             }
             else {
-                this.$message(this.htmlJson.PleaseSelectDataFirst)
+                this.$message(this.htmlJSON.PleaseSelectDataFirst)
             }
         },
         downloadData() {
@@ -1332,7 +1331,7 @@ var vue = new Vue({
                 window.open(this.currentData.url);
             }
             else {
-                this.$message(this.htmlJson.PleaseSelectDataFirst)
+                this.$message(this.htmlJSON.PleaseSelectDataFirst)
             }
         },
 
@@ -1404,7 +1403,7 @@ var vue = new Vue({
 
             } else {
                 // console.log("从后台获取数据条目数组有误")
-                this.$message('please select file first!!');
+                this.$message(this.htmlJSON.LoginInFirst);
             }
         },
 
@@ -1610,11 +1609,11 @@ var vue = new Vue({
             console.log(this.clipBoard);
             let vthis = this;
             this.clipBoard.on('success', function () {
-                vthis.$alert('Copy link successly',{type:'success',confirmButtonText: 'comfirm',})
+                vthis.$alert(this.htmlJSON.CopyLinkSuccessfully,{type:'success',confirmButtonText: 'comfirm',})
                 this.clipBoard.destroy()
             });
             this.clipBoard.on('error', function () {
-                vthis.$alert("Failed to copy link",{type:'error',confirmButtonText: 'comfirm',})
+                vthis.$alert(this.htmlJSON.FailedCopyLink,{type:'error',confirmButtonText: 'comfirm',})
                 this.clipBoard.destroy()
             });
             this.shareIndex=false
@@ -1752,7 +1751,7 @@ var vue = new Vue({
                 ;
             }catch (e){
                 loading.close()
-                this.$alert('Can not load the test data, please load inputs of the model mannually', 'Tip', {
+                this.$alert(this.htmlJSON.CantLoadTestData, 'Tip', {
                          type:"warning",
                          confirmButtonText: 'OK',
                          callback: ()=>{
@@ -1852,7 +1851,7 @@ var vue = new Vue({
                 window.open(this.eventChoosing.url);
             }
             else {
-                this.$message.error("No data can be downloaded.");
+                this.$message.error(this.htmlJSON.NoDataCanBeDownloaded);
             }
         },
         upload(event) {
@@ -1941,7 +1940,7 @@ var vue = new Vue({
                 $("#download_" + this.eventChoosing.eventId).css("display", "block");
             }
             else {
-                this.$message(this.htmlJson.PleaseSelectDataFirst)
+                this.$message(this.htmlJSON.PleaseSelectDataFirst)
             }
 
         },
@@ -2003,7 +2002,7 @@ var vue = new Vue({
                 .then(res => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type:"error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2097,7 +2096,7 @@ var vue = new Vue({
                 contentType: "application/x-www-form-urlencoded",
                 success: (json) => {
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2162,7 +2161,7 @@ var vue = new Vue({
                 }).then((res) => {
                     let json = res.data;
                     if (json.code == -1) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -2186,7 +2185,7 @@ var vue = new Vue({
             let stateContainer = document.getElementsByClassName("state-container")[0]
             let loading = this.$loading({
                 lock: true,
-                text: "Setting parameters...",
+                text: this.htmlJSON.SettingParameters,
                 spinner: "el-icon-loading",
                 target:stateContainer,
                 background: "rgba(0, 0, 0, 0.7)"
@@ -2201,8 +2200,8 @@ var vue = new Vue({
                             let child = event.children[k];
                             if (child.value == undefined || child.value.trim() == "") {
                                 loading.close();
-                                this.$message.error("Some input parameters are not set");
-                                throw new Error("Some input parameters are not set");
+                                this.$message.error(this.htmlJSON.SomeInputParametersAreNotSet);
+                                throw new Error(this.htmlJSON.SomeInputParametersAreNotSet);
                                 return;
                             }
                         }
@@ -2296,8 +2295,8 @@ var vue = new Vue({
                                     } else {
                                         if (url === null || url === undefined) {
                                             this.taskRunning = false
-                                            this.$message.error("Some input data are not provided");
-                                            throw new Error("Some input data are not provided");
+                                            this.$message.error(this.htmlJSON.SomeInputDataAreNotProvided);
+                                            throw new Error(this.htmlJSON.SomeInputDataAreNotProvided);
                                         }
                                         json.inputs.push({
                                             statename,
@@ -2328,10 +2327,10 @@ var vue = new Vue({
                             let task_info = data;
 
                             // $(".el-loading-text").text("Model is running, you can check running state and get results in \"User Space\" -> \"Task\"")
-                            this.$confirm('This task will start running soon, you can check running state and get results in "User Space" -> "Task"', 'Tip', {
+                            this.$confirm(this.htmlJSON.TaskWillStartRunning, 'Tip', {
                                     type:"success",
                                     showCancelButton:false,
-                                    confirmButtonText: 'View in userspace',
+                                    confirmButtonText: this.htmlJSON.ViewInUserspace,
                                     dangerouslyUseHTMLString: true,
                                 }
                             ).then(() => {
@@ -2391,7 +2390,7 @@ var vue = new Vue({
                                 }
                                 if (data.status === -1) {
                                     clearInterval(interval);
-                                    this.$alert("Some error occured when the model running!", 'Error', {
+                                    this.$alert(this.htmlJSON.ErrorWhenModelRunning, 'Error', {
                                         type: 'error',
                                         confirmButtonText: 'OK',
                                         callback: action => {
@@ -2402,7 +2401,7 @@ var vue = new Vue({
                                     this.taskRunning = false
                                 } else if (data.status === 2) {
                                     clearInterval(interval);
-                                    this.$alert("The model has run successfully!", 'Success', {
+                                    this.$alert(this.htmlJSON.ModelHasRunSuccessfully, 'Success', {
                                         type: 'success',
                                         confirmButtonText: 'OK',
                                         callback: action => {
@@ -2478,7 +2477,7 @@ var vue = new Vue({
         },
         selectUserData(item, e) {
             // console.log(e)
-            this.$message("you have selected:  " + item.fileName + '.' + item.suffix);
+            this.$message(this.htmlJSON.YouHaveSelected + item.fileName + '.' + item.suffix);
             if (this.selectData.length === 0) {
                 let d = {e, item}
                 this.selectData.push(d)
@@ -2541,7 +2540,7 @@ var vue = new Vue({
                 link.click();
 
             } else {
-                this.$message('please select file first!!');
+                this.$message(this.htmlJSON.SelectFileFirst);
             }
 
 
@@ -2549,7 +2548,7 @@ var vue = new Vue({
         //删除
         delete_data_dataManager() {
 
-            if (confirm("Are you sure to delete?")) {
+            if (confirm(this.htmlJSON.SureToDelete)) {
                 let tha = this
                 axios.delete("/dataManager/delete", {
                     params: {
@@ -2563,7 +2562,7 @@ var vue = new Vue({
                         tha.rightMenuShow = false
                         tha.databrowser = []
                         tha.addAllData()
-                        alert("delete successful")
+                        alert(this.htmlJSON.DeleteSuccessful)
 
                     }
 
@@ -2880,7 +2879,7 @@ var vue = new Vue({
                 success: (json) => {
 
                     if (json.code != 0) {
-                        this.$alert('Please login first!', 'Error', {
+                        this.$alert(this.htmlJSON.LoginInFirst, 'Error', {
                             type: "error",
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -3007,7 +3006,7 @@ var vue = new Vue({
                 link.click();
 
             } else {
-                alert("please select first!!")
+                alert(this.htmlJSON.LoginInFirst)
             }
 
 
@@ -3080,7 +3079,7 @@ var vue = new Vue({
                             this.modelTableLoading = false;
                         },100)
                     }else{
-                        this.$alert('Please try again','Warning', {
+                        this.$alert(this.htmlJSON.PleaseTryAgain,'Warning', {
                             confirmButtonText: 'OK',
                             callback: action => {
                                 this.modelTableLoading = false;
@@ -3123,7 +3122,7 @@ var vue = new Vue({
                         },150)
 
                     }else{
-                        this.$alert('Please try again','Warning', {
+                        this.$alert(this.htmlJSON.PleaseTryAgain,'Warning', {
                             confirmButtonText: 'OK',
                             callback: action => {
                                 this.modelTableLoading = false;
@@ -3164,11 +3163,11 @@ var vue = new Vue({
                 res = await (await fetch("/task/init/" + id).catch(
                     ()=>{
                         this.taskLoading = false
-                        this.$confirm('Initialization failure: an error occured on the server.' + '<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Error', {
+                        this.$confirm(this.htmlJSON.InitializationFailure, 'Error', {
                             dangerouslyUseHTMLString: true,
                             type:"error",
-                            cancelButtonText: 'Load other model',
-                            confirmButtonText: 'Try again',
+                            cancelButtonText: this.htmlJSON.LoadOtherModel,
+                            confirmButtonText: this.htmlJSON.TryAgain,
                         }).then(() => {
                             this.loadTask();
                         } ).catch(()=>{
@@ -3183,10 +3182,10 @@ var vue = new Vue({
             this.taskLoading = false
             let data = res.data
             if(res.code == -1){
-                 this.$confirm('You should <b>Log in</b> first before invoke a task.', 'Tip', {
+                 this.$confirm(this.htmlJSON.LogInBeforeInvoke, 'Tip', {
                                          type:"warning",
-                                         cancelButtonText: 'Close',
-                                         confirmButtonText: 'Log in',
+                                         cancelButtonText: this.htmlJSON.Close,
+                                         confirmButtonText: this.htmlJSON.LogIn,
                                          dangerouslyUseHTMLString: true,
                                      }
                                  ).then(() => {
@@ -3196,11 +3195,11 @@ var vue = new Vue({
                                  });
                  return
             } else if (data == null || data == undefined) {
-                this.$confirm('Initialization failure: an error occured on the server.' + '<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Error', {
+                this.$confirm(this.htmlJSON.InitializationFailure, 'Error', {
                     dangerouslyUseHTMLString: true,
                     type:"error",
-                    cancelButtonText: 'Load other model',
-                    confirmButtonText: 'Try again',
+                    cancelButtonText: this.htmlJSON.LoadOtherModel,
+                    confirmButtonText: this.htmlJSON.TryAgain,
                 }).then(() => {
                     this.loadTask();
                 } ).catch(()=>{
@@ -3213,10 +3212,10 @@ var vue = new Vue({
                 if(data.msg=='no service'){
                     this.invokable = false
                     this.errorMsg = 'Cannot find this model service, maybe the model container is offline or the service is hidden by the contributor.'
-                    this.$confirm('Cannot find this model service, maybe the model container is offline or the service is hidden by the contributor.', 'Tip', {
+                    this.$confirm(this.htmlJSON.ModelContainerOffline, 'Tip', {
                             type:"error",
-                            cancelButtonText: 'Load other model',
-                            confirmButtonText: 'Try again',
+                            cancelButtonText: this.htmlJSON.LoadOtherModel,
+                            confirmButtonText: this.htmlJSON.TryAgain,
 
                         }
                     ).then(() => {
@@ -3228,10 +3227,10 @@ var vue = new Vue({
                 }else if(data.msg=='create failed'){
                     this.invokable = false
                     this.errorMsg = 'Cannot create this task,<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.'
-                    this.$confirm('Cannot create this task,<br/> Please try again or <a href="mailto:opengms@njnu.edu.cn">contact us</a>.', 'Tip', {
+                    this.$confirm(this.htmlJSON.CannotCreateTask, 'Tip', {
                             type:"error",
-                            cancelButtonText: 'Load other model',
-                            confirmButtonText: 'Try again',
+                            cancelButtonText: this.htmlJSON.LoadOtherModel,
+                            confirmButtonText: this.htmlJSON.TryAgain,
                             dangerouslyUseHTMLString: true,
                         }
                     ).then(() => {
