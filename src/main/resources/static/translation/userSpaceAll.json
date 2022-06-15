@@ -1773,7 +1773,14 @@
     "UpdateUnitSuccessfully": "Update unit successfully",
     "CreateThemeSuccessfully": "Create theme  successfully",
 
-    "Operation": "Operation"
+    "Operation": "Operation",
+
+    "SendSuggestionSuccessfully": "Send suggestion successfully",
+    "OldPassword": "Old Password",
+    "NewPassword": "New Password",
+    "ConfirmPassword": "Confirm Password",
+    "ForgetPassword": "Forget Password",
+    "ViewInUserspace": "View in userspace"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3537,6 +3544,13 @@
     "Accept": "接受",
     "Reject": "拒绝",
     "CreateThemeSuccessfully": "创建专题成功",
-    "Operation": "操作"
+    "Operation": "操作",
+
+    "SendSuggestionSuccessfully": "提交建议成功!",
+    "OldPassword": "旧密码",
+    "NewPassword": "新密码",
+    "ConfirmPassword": "确认密码",
+    "ForgetPassword": "忘记密码",
+    "ViewInUserspace": "前往个人空间查看"
   }
 }

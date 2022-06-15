@@ -103,7 +103,7 @@
                     <div id="data-url" class="">
                         <a th:href="${itemInfo.url}"  target="_blank="><span
                                 style="font-size: 17px;color: #67c23a;"
-                                th:text="${itemInfo.url}">current</span>
+                                th:text="${itemInfo.url}">{{htmlJSON.Current}}</span>
                         </a>
                     </div>
 
@@ -116,7 +116,7 @@
 
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Data Resource</h4>
+                        <h4>{{htmlJSON.DataResource}}</h4>
                     </div>
                 </div>&nbsp;&nbsp;
                 <el-card>
@@ -249,7 +249,7 @@
             <div th:if="${#lists.size(itemInfo.localizationList)} lt 0" id="description" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Detailed Description</h4>
+                        <h4>{{htmlJSON.DetailedDescription}}</h4>
                     </div>
                 </div>
                 <div class="block_content">
@@ -257,7 +257,7 @@
                          style="overflow:auto"></div>
                 </div>
                 <div class="fullPaper text-center hide">
-                    <a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i
+                    <a id="fullPaper" style="cursor:pointer;font-size:16px;">{{htmlJSON.ViewFullContent}}<i
                             class="fa fa-angle-down"
                             style="margin-left: 10px;color:red;font-weight: bold"
                             aria-hidden="true"></i></a>
@@ -384,8 +384,8 @@
 
                 <span slot="footer" class="dialog-footer">
                     <el-button class="pull-left" type="primary" icon="el-icon-folder-add" @click="addFolder()">Add new folder</el-button>
-                    <el-button @click="forkDialogVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="confirmFolder()">OK</el-button>
+                    <el-button @click="forkDialogVisible = false">{{htmlJSON.Cancel}}</el-button>
+                    <el-button type="primary" @click="confirmFolder()">{{htmlJSON.OK}}</el-button>
                 </span>
 
             </el-dialog>
@@ -416,7 +416,7 @@
                         </div>
                         <el-button @click="addRelation()" type="primary" icon="el-icon-plus"
                                    style="width: 100%">
-                            Edit Related Model Item
+                            {{htmlJSON.EditRelatedModelItem}}
                         </el-button>
                     </div>
                     <div class="text-center" style="width:100%" th:if="${#lists.size(relatedModels)}==0">
@@ -470,7 +470,7 @@
                         </div>
                         <div class="text-center" th:if="${#lists.size(relatedProcessing)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related model item. You can bind model items.
+                                {{htmlJSON.NoRelatedModelItem}}
                             </h5>
                             <button class="btn btn-default" type="button"
                                     style="display: inline-block;">
@@ -484,12 +484,12 @@
             <div th:if="${relatedVisualization!=null && #lists.size(relatedVisualization)!=0}" id="related_visualization" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Related Visualization</h4>
+                        <h4>{{htmlJSON.RelatedVisualization}}</h4>
                     </div>
                 </div>
                 <el-tabs class="block_content" v-model="activeNameVisual" type="border-card" stretch="true">
                     <el-tab-pane name="Related Visualization">
-                        <div slot="label">Related Visualization
+                        <div slot="label">{{htmlJSON.RelatedVisualization}}
                             <span class="el-badge__content el-badge__content--undefined"
                                   th:text="${#lists.size(relatedVisualization)}">
                             </span>
@@ -515,7 +515,7 @@
                         </div>
                         <div class="text-center" th:if="${#lists.size(relatedVisualization)}==0">
                             <h5 style="margin-bottom: 10px;display: inline-block;">
-                                There is no related model item. You can bind model items.
+                                {{htmlJSON.NoRelatedModelItem}}
                             </h5>
                             <button class="btn btn-default" type="button"
                                     style="display: inline-block;">
@@ -544,7 +544,7 @@
                            th:text="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"></a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        Copy
+                        {{htmlJSON.Copy}}
                     </div>
                 </div>
             </div>
