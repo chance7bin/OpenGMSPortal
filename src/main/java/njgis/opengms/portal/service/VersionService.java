@@ -1,6 +1,7 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.xml.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.VersionDao;
@@ -13,11 +14,13 @@ import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.BeanMapTool;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -529,11 +532,11 @@ public class VersionService {
             VersionDTO versionDTO = new VersionDTO();
             BeanUtils.copyProperties(version,versionDTO);
             versionDTO.setOriginal(original);
+
             return ResultUtils.success(versionDTO);
         } catch (Exception e){
             return ResultUtils.error();
         }
-
     }
 
 
@@ -548,6 +551,35 @@ public class VersionService {
         PortalItem item = (PortalItem) dao.findFirstById(itemId);
         return ResultUtils.success(item);
     }
+
+    public ModelAndView getPage(String id){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("version/version_compare");
+
+        Version version = versionDao.findFirstById(id);
+        JSONObject factory = genericService.daoFactory(version.getType());
+        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+        PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
+        VersionDTO versionDTO = new VersionDTO();
+        BeanUtils.copyProperties(version,versionDTO);
+        versionDTO.setOriginal(original);
+
+        //用户信息
+        JSONObject userJson = userService.getItemUserInfoByEmail(versionDTO.getContent().getAuthor());
+
+        //model
+        if(versionDTO.getType() == ItemTypeEnum.ModelItem){
+
+        }
+        modelAndView.addObject("itemInfo", JSONObject.toJSON(versionDTO.getContent()));
+        modelAndView.addObject("modularType", versionDTO.getType());
+        modelAndView.addObject("user", userJson);
+
+        return modelAndView;
+
+    }
+
+
 
 
 }
