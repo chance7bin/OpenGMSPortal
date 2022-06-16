@@ -1568,24 +1568,29 @@ var createModelItem = Vue.extend({
 
     created(){
 
-        //首先到缓存中获取userSpaceAll
-        this.htmlJson = this.getStorage("userSpaceAll");
+        // htmlJson获取不到才要进行缓存的操作
+        if (this.htmlJson.Home == undefined){
+            //首先到缓存中获取userSpaceAll
+            this.htmlJson = this.getStorage("userSpaceAll");
 
-        //如果缓存中有userSpaceAll页面就不会报错
-        if (this.getStorage("userSpaceAll") == null){
+            //如果缓存中有userSpaceAll页面就不会报错
+            if (this.getStorage("userSpaceAll") == null){
 
-            //如果没有的话那就定时获取userSpaceAll，并放到缓存中
-            var st = setTimeout(() => {
-                console.log("get userSpaceAll...");
-                this.setStorage("userSpaceAll", this.htmlJson);
-                if (this.getStorage("userSpaceAll") != null){
-                    //一旦userSpaceAll获取到了，定时销毁并且刷新页面
-                    window.location.reload();
-                    // clearTimeout(st);
-                }
+                //如果没有的话那就定时获取userSpaceAll，并放到缓存中
+                var st = setTimeout(() => {
+                    console.log("get userSpaceAll...");
+                    this.setStorage("userSpaceAll", this.htmlJson);
+                    if (this.getStorage("userSpaceAll") != null){
+                        //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        window.location.reload();
+                        // clearTimeout(st);
+                    }
 
-            },100)
+                },100)
+            }
         }
+
+
     },
 
 
