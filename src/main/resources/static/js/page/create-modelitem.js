@@ -8,6 +8,7 @@ var createModelItem = Vue.extend({
 
     data() {
         return {
+            htmlJsonExist: false,
             defaultActive: '2-1',
             curIndex: 2,
 
@@ -1566,13 +1567,13 @@ var createModelItem = Vue.extend({
         this.socket.onclose = this.close
     },
 
+
     created(){
 
-        // htmlJson获取不到才要进行缓存的操作
-        if (this.htmlJson.Home == undefined){
-            //首先到缓存中获取userSpaceAll
-            this.htmlJson = this.getStorage("userSpaceAll");
-
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
+        console.log("this.htmlJson:",this.htmlJson);
+        if (this.htmlJson.Home == undefined) {
             //如果缓存中有userSpaceAll页面就不会报错
             if (this.getStorage("userSpaceAll") == null){
 
@@ -1582,6 +1583,7 @@ var createModelItem = Vue.extend({
                     this.setStorage("userSpaceAll", this.htmlJson);
                     if (this.getStorage("userSpaceAll") != null){
                         //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        // this.htmlJsonExist = true;
                         window.location.reload();
                         // clearTimeout(st);
                     }
@@ -1589,6 +1591,7 @@ var createModelItem = Vue.extend({
                 },100)
             }
         }
+
 
 
     },
