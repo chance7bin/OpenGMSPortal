@@ -81,8 +81,25 @@ Vue.component("translation-bar",
                 return result
             },
 
+            // 设置缓存
+            setStorage(key, value){
+                var v = value;
+                //是对象转成JSON，不是直接作为值存入内存
+                if (typeof v == 'object') {
+                    v = JSON.stringify(v);
+                    v = 'obj-' + v;
+                } else {
+                    v = 'str-' + v;
+                }
+                var localStorage = window.localStorage;
+                if (localStorage ) {
+                    localStorage .setItem(key, v);
+                }
+            },
+
             loadLangContent(content){
                 this.$emit('translate-page',content[this.currentLang])
+                this.setStorage("userSpaceAll", content[this.currentLang]);
             },
 
             getClass(lang){

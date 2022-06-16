@@ -682,6 +682,65 @@ var createTemplate = Vue.extend({
                     }
                 }
             })
+        },
+
+        // 设置缓存
+        setStorage(key, value){
+            var v = value;
+            //是对象转成JSON，不是直接作为值存入内存
+            if (typeof v == 'object') {
+                v = JSON.stringify(v);
+                v = 'obj-' + v;
+            } else {
+                v = 'str-' + v;
+            }
+            var localStorage = window.localStorage;
+            if (localStorage ) {
+                localStorage .setItem(key, v);
+            }
+        },
+
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        }
+
+
+    },
+
+    created(){
+        // htmlJson获取不到才要进行缓存的操作
+        if (this.htmlJson.Home == undefined){
+            //首先到缓存中获取userSpaceAll
+            this.htmlJson = this.getStorage("userSpaceAll");
+
+            //如果缓存中有userSpaceAll页面就不会报错
+            if (this.getStorage("userSpaceAll") == null){
+
+                //如果没有的话那就定时获取userSpaceAll，并放到缓存中
+                var st = setTimeout(() => {
+                    console.log("get userSpaceAll...");
+                    this.setStorage("userSpaceAll", this.htmlJson);
+                    if (this.getStorage("userSpaceAll") != null){
+                        //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        loading.close();
+                        window.location.reload();
+                        // clearTimeout(st);
+                    }
+
+                },100)
+            }
         }
 
 

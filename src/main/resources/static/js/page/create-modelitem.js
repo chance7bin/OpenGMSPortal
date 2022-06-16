@@ -1566,8 +1566,8 @@ var createModelItem = Vue.extend({
         this.socket.onclose = this.close
     },
 
-    created(){
 
+    created(){
         // htmlJson获取不到才要进行缓存的操作
         if (this.htmlJson.Home == undefined){
             //首先到缓存中获取userSpaceAll
@@ -1582,6 +1582,7 @@ var createModelItem = Vue.extend({
                     this.setStorage("userSpaceAll", this.htmlJson);
                     if (this.getStorage("userSpaceAll") != null){
                         //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        loading.close();
                         window.location.reload();
                         // clearTimeout(st);
                     }
