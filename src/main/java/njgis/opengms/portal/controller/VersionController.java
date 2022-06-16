@@ -1,5 +1,6 @@
 package njgis.opengms.portal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -245,6 +247,28 @@ public class VersionController {
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
+    }
+
+
+    @ApiOperation(value = "查看版本对比")
+    @RequestMapping(value = "/versionCompare/{id}", method = RequestMethod.GET)
+    public ModelAndView getComparePage(@PathVariable String id ,HttpServletRequest request) {
+
+        String email = Utils.checkLoginStatus(request);
+
+        ModelAndView modelAndView = new ModelAndView();
+        if(email==null){
+            modelAndView.setViewName("login");
+        }
+        else if(email.equals("yss123yss@126.com")||email.equals("opengms@njnu.edu.cn")||email.equals("921485453@qq.com")){
+            modelAndView = versionService.getPage(id);
+        }
+        else {
+            modelAndView.setViewName("login");
+        }
+
+        return modelAndView;
+
     }
 
 }
