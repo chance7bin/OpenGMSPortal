@@ -45,6 +45,23 @@ Vue.component("translation-bar",
         },
         computed: {},
         methods: {
+
+            // 设置缓存
+            setStorage(key, value){
+                var v = value;
+                //是对象转成JSON，不是直接作为值存入内存
+                if (typeof v == 'object') {
+                    v = JSON.stringify(v);
+                    v = 'obj-' + v;
+                } else {
+                    v = 'str-' + v;
+                }
+                var localStorage = window.localStorage;
+                if (localStorage ) {
+                    localStorage .setItem(key, v);
+                }
+            },
+
             async transLateTargetPage(){//获取页面内容对应翻译文件，不包含navbar和footer
                 if(this.currentLang !== "zh-cn"){
                     //element-ui 切换英文，勿删！
@@ -81,25 +98,11 @@ Vue.component("translation-bar",
                 return result
             },
 
-            // 设置缓存
-            setStorage(key, value){
-                var v = value;
-                //是对象转成JSON，不是直接作为值存入内存
-                if (typeof v == 'object') {
-                    v = JSON.stringify(v);
-                    v = 'obj-' + v;
-                } else {
-                    v = 'str-' + v;
-                }
-                var localStorage = window.localStorage;
-                if (localStorage ) {
-                    localStorage .setItem(key, v);
-                }
-            },
-
-            loadLangContent(content){
+            async loadLangContent(content){
                 this.$emit('translate-page',content[this.currentLang])
-                this.setStorage("userSpaceAll", content[this.currentLang]);
+                //将userSpaceAll加入缓存
+                let c = await this.getLangJson("userSpaceAll")
+                this.setStorage("userSpaceAll", c[this.currentLang]);
             },
 
             getClass(lang){
@@ -284,6 +287,14 @@ Vue.component("translation-bar",
             if(this.withItemInfoModules) {
                 this.loadItemInfoModules();
             }
+
+
+
+
+
+
+
+
         },
         mounted() {
 
