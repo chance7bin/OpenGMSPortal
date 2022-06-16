@@ -206,7 +206,7 @@ var createModelItem = Vue.extend({
 
         draftOid:'',
 
-        toCreate: 1,
+        toCreate: 0,
 
         timeOut:{},
 
@@ -434,6 +434,25 @@ var createModelItem = Vue.extend({
         //     console.log("htmlJSON:",this.htmlJSON)
         // },
 
+        changeRter(index){
+            this.curIndex = index;
+            var urls={
+                1:'/user/userSpace',
+                2:'/user/userSpace/model',
+                3:'/user/userSpace/data',
+                4:'/user/userSpace/server',
+                5:'/user/userSpace/task',
+                6:'/user/userSpace/community',
+                7:'/user/userSpace/theme',
+                8:'/user/userSpace/account',
+                9:'/user/userSpace/feedback',
+            }
+
+            this.setSession('curIndex',index)
+            window.location.href=urls[index]
+
+        },
+
         addLocalization() {
             this.languageAdd.show = true;
         },
@@ -564,10 +583,11 @@ var createModelItem = Vue.extend({
             else
                 callback(t);
         },
-        // handleSelect(index,indexPath){
-        //     this.setSession("index",index);
-        //     window.location.href="/user/userSpace"
-        // },
+        handleSelect(index,indexPath){
+            this.setSession("index",index);
+            window.location.href="/user/userSpace"
+        },
+
         // handleCheckChange(data, checked, indeterminate) {
         //     let checkedNodes = this.$refs.tree2.getCheckedNodes()
         //     let classes = [];
@@ -1497,7 +1517,47 @@ var createModelItem = Vue.extend({
             // }
 
 
+        },
+
+        // // 获取个人空间中英文切换json
+        // getUserSpaceAllJson(){
+        //     console.log("this.htmlJson:", this.htmlJson);
+        //     return this.htmlJson;
+        // },
+
+        // 设置缓存
+        setStorage(key, value){
+            var v = value;
+            //是对象转成JSON，不是直接作为值存入内存
+            if (typeof v == 'object') {
+                v = JSON.stringify(v);
+                v = 'obj-' + v;
+            } else {
+                v = 'str-' + v;
+            }
+            var localStorage = window.localStorage;
+            if (localStorage ) {
+                localStorage .setItem(key, v);
+            }
+        },
+
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
         }
+
+
 
     },
 
@@ -1507,6 +1567,29 @@ var createModelItem = Vue.extend({
     },
 
     created(){
+
+        // htmlJson获取不到才要进行缓存的操作
+        if (this.htmlJson.Home == undefined){
+            //首先到缓存中获取userSpaceAll
+            this.htmlJson = this.getStorage("userSpaceAll");
+
+            //如果缓存中有userSpaceAll页面就不会报错
+            if (this.getStorage("userSpaceAll") == null){
+
+                //如果没有的话那就定时获取userSpaceAll，并放到缓存中
+                var st = setTimeout(() => {
+                    console.log("get userSpaceAll...");
+                    this.setStorage("userSpaceAll", this.htmlJson);
+                    if (this.getStorage("userSpaceAll") != null){
+                        //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        window.location.reload();
+                        // clearTimeout(st);
+                    }
+
+                },100)
+            }
+        }
+
 
     },
 
@@ -1550,7 +1633,7 @@ var createModelItem = Vue.extend({
             this.ScreenMaxHeight = (height) + "px";
 
             window.onresize = () => {
-                console.log('come on ..');
+                // console.log('come on ..');
                 height = document.documentElement.clientHeight;
                 this.ScreenMinHeight = (height) + "px";
                 this.ScreenMaxHeight = (height) + "px";
