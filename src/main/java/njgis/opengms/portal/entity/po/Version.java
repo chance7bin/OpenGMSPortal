@@ -26,6 +26,7 @@ public class Version extends PortalId {
     String versionName; //由版本id和条目名组成
     String description; //需不需要加一个修改描述（需要审核的时候）
     PortalItem content; //提交审核的修改的条目数据
+    PortalItem original; //该版本原始条目数据
     // String preVersion; //上一个版本的id
     String itemCreator; //条目创建者邮箱
     List<String> authReviewers; //有权审核该版本的用户邮箱

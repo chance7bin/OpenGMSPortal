@@ -221,6 +221,7 @@ var data_items = new Vue({
             return da
         },
         contribute(event){
+            console.log("event:",event);
             if(this.useroid==''){
                 alert('Please login first!');
                 window.location.href = "/user/login";

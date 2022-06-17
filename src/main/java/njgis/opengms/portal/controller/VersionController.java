@@ -1,6 +1,5 @@
 package njgis.opengms.portal.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -11,11 +10,11 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.VersionService;
+import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -149,10 +148,10 @@ public class VersionController {
     }
 
 
-    @ApiOperation(value = "根据版本版本id得到原始的条目信息")
+    @ApiOperation(value = "根据版本 版本id得到原始的条目信息")
     @RequestMapping(value = "/originalItemInfo/{id}", method = RequestMethod.GET)
     public JsonResult getOriginalItemInfo(@PathVariable String id){
-        return versionService.getOriginalItemInfo(id);
+        return ResultUtils.success(versionService.getOriginalItemInfo(id));
     }
 
 
