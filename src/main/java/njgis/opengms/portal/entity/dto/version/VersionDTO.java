@@ -1,7 +1,6 @@
 package njgis.opengms.portal.entity.dto.version;
 
 import lombok.Data;
-import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.po.Version;
 
 /**
@@ -11,5 +10,5 @@ import njgis.opengms.portal.entity.po.Version;
  */
 @Data
 public class VersionDTO extends Version {
-    PortalItem original; //原始的条目信息
+    // PortalItem original; //原始的条目信息
 }

@@ -1,20 +1,17 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.dao.VersionDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.dto.version.VersionDTO;
 import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.BeanMapTool;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -83,6 +80,10 @@ public class VersionService {
         String type = nameArr[nameArr.length - 1];
         ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
         version.setType(itemType);
+
+        PortalItem original = (PortalItem) ((GenericItemDao)genericService.daoFactory(itemType).get("itemDao")).findFirstById(item.getId());
+        version.setOriginal(original);
+
         try {
             version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
         }catch (Exception e){
@@ -202,11 +203,8 @@ public class VersionService {
         // PortalItem 转 map
         Map<String, Object> contentMap = BeanMapTool.beanToMap(content);
 
-
         ItemTypeEnum type = version.getType();
         JSONObject factory = genericService.daoFactory(type);
-        GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
-        PortalItem item = (PortalItem)itemDao.findFirstById(version.getItemId());
         Class<? extends PortalItem> clazz = (Class) factory.get("clazz");
 
         Map<String, Object> changedField = version.getChangedField();
@@ -526,21 +524,36 @@ public class VersionService {
 
         try {
             Version version = versionDao.findFirstById(id);
-            JSONObject factory = genericService.daoFactory(version.getType());
-            GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
-            PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
-            VersionDTO versionDTO = new VersionDTO();
-            BeanUtils.copyProperties(version,versionDTO);
-            versionDTO.setOriginal(original);
+            // JSONObject factory = genericService.daoFactory(version.getType());
+            // GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+            // PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
+            // VersionDTO versionDTO = new VersionDTO();
+            // BeanUtils.copyProperties(version,versionDTO);
+            // versionDTO.setOriginal(original);
 
-            return ResultUtils.success(versionDTO);
+            JSONObject result = new JSONObject();
+            result = (JSONObject) JSONObject.toJSON(version);
+            JSONObject originalField = new JSONObject();
+            JSONObject newField = new JSONObject();
+            Map<String, Object> changedField = version.getChangedField();
+            for (Map.Entry<String, Object> entry : changedField.entrySet()) {
+                String mapKey = entry.getKey();
+                Object mapValue = entry.getValue();
+                JSONObject props = JSONObject.parseObject(JSONObject.toJSONString(mapValue));
+                originalField.put(mapKey, props.get("original"));
+                newField.put(mapKey, props.get("new"));
+            }
+            result.put("originalField", originalField);
+            result.put("newField", newField);
+
+            return ResultUtils.success(result);
         } catch (Exception e){
             return ResultUtils.error();
         }
     }
 
 
-    public JsonResult getOriginalItemInfo(String id){
+    public PortalItem getOriginalItemInfo(String id){
 
         Version version = versionDao.findFirstById(id);
         String itemId = version.getItemId();
@@ -549,7 +562,7 @@ public class VersionService {
         JSONObject jsonObject = genericService.daoFactory(type);
         GenericItemDao dao = (GenericItemDao) jsonObject.get("itemDao");
         PortalItem item = (PortalItem) dao.findFirstById(itemId);
-        return ResultUtils.success(item);
+        return item;
     }
 
     public ModelAndView getPage(String id){
@@ -557,22 +570,17 @@ public class VersionService {
         modelAndView.setViewName("version/version_compare");
 
         Version version = versionDao.findFirstById(id);
-        JSONObject factory = genericService.daoFactory(version.getType());
-        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
-        PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
-        VersionDTO versionDTO = new VersionDTO();
-        BeanUtils.copyProperties(version,versionDTO);
-        versionDTO.setOriginal(original);
+
 
         //用户信息
-        JSONObject userJson = userService.getItemUserInfoByEmail(versionDTO.getContent().getAuthor());
+        JSONObject userJson = userService.getItemUserInfoByEmail(version.getContent().getAuthor());
 
         //model
-        if(versionDTO.getType() == ItemTypeEnum.ModelItem){
+        if(version.getType() == ItemTypeEnum.ModelItem){
 
         }
-        modelAndView.addObject("itemInfo", JSONObject.toJSON(versionDTO.getContent()));
-        modelAndView.addObject("modularType", versionDTO.getType());
+        modelAndView.addObject("itemInfo", JSONObject.toJSON(version.getContent()));
+        modelAndView.addObject("modularType", version.getType());
         modelAndView.addObject("user", userJson);
 
         return modelAndView;

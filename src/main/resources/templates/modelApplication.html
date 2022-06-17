@@ -230,8 +230,10 @@
 
                 <div style="margin-top: 10px">
                     <el-button @click="integratedModelDialog = false" style="float:left">{{htmlJSON.Cancel}}</el-button>
+                    <!--<el-button type="primary" v-if="guideActive==2" style="float:right"-->
+                    <!--           @click="window.open('/computableModel/integratedModel')">{{htmlJSON.EnterNow}}</el-button>-->
                     <el-button type="primary" v-if="guideActive==2" style="float:right"
-                               @click="window.open('/computableModel/integratedModel')">{{htmlJSON.EnterNow}}</el-button>
+                               @click="underConstruction">{{htmlJSON.EnterNow}}</el-button>
                     <el-button v-if="guideActive<2" @click="guideActive++" type="primary" plain  style="float:right">{{htmlJSON.Next}}</el-button>
                     <el-button v-if="guideActive>0" @click="guideActive--" type="primary" plain style="float:right">{{htmlJSON.Previous}}</el-button>
                 </div>
