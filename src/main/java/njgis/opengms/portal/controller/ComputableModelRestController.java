@@ -258,7 +258,7 @@ public class ComputableModelRestController {
 
 
     //todo
-    //模型集成
+    //模型集成部分
     @RequestMapping (value="/integratingList",method = RequestMethod.GET)
     Page<ComputableModel> integratingList(int page, String sortType, int sortAsc){
         return computableModelService.integratingList(page,sortType,sortAsc);
@@ -298,12 +298,12 @@ public class ComputableModelRestController {
         List<ModelParam> modelParams = task.getModelParams();
         List<Model> models = task.getModels();
 
-
         Page<ComputableModel> computableModelList = computableModelService.integratingList(0,"default",1);
         return computableModelService.getIntegratedTask(computableModelList,xml,modelParams,models);
 
     }
 
+    //模型集成结束
 
 
 
