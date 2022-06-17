@@ -10,6 +10,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.VersionService;
+import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -147,10 +148,10 @@ public class VersionController {
     }
 
 
-    @ApiOperation(value = "根据版本版本id得到原始的条目信息")
+    @ApiOperation(value = "根据版本 版本id得到原始的条目信息")
     @RequestMapping(value = "/originalItemInfo/{id}", method = RequestMethod.GET)
     public JsonResult getOriginalItemInfo(@PathVariable String id){
-        return versionService.getOriginalItemInfo(id);
+        return ResultUtils.success(versionService.getOriginalItemInfo(id));
     }
 
 
@@ -245,6 +246,28 @@ public class VersionController {
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         return versionService.getUserVersionByStatusAndByTypeAndByOperation(-1,type,findDTO,email,"review");
+    }
+
+
+    @ApiOperation(value = "查看版本对比")
+    @RequestMapping(value = "/versionCompare/{id}", method = RequestMethod.GET)
+    public ModelAndView getComparePage(@PathVariable String id ,HttpServletRequest request) {
+
+        String email = Utils.checkLoginStatus(request);
+
+        ModelAndView modelAndView = new ModelAndView();
+        if(email==null){
+            modelAndView.setViewName("login");
+        }
+        else if(email.equals("yss123yss@126.com")||email.equals("opengms@njnu.edu.cn")||email.equals("921485453@qq.com")){
+            modelAndView = versionService.getPage(id);
+        }
+        else {
+            modelAndView.setViewName("login");
+        }
+
+        return modelAndView;
+
     }
 
 }

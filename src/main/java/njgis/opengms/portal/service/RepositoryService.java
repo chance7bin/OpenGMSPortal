@@ -92,6 +92,9 @@ public class RepositoryService {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    UnitConversionDao unitConversionDao;
+
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
@@ -872,6 +875,13 @@ public class RepositoryService {
     }
 
 
+    public JSONObject getUnitConversionById(String id) {
 
+        UnitConversion unitConversion= unitConversionDao.findFirstById(id);
+        JSONObject result = new JSONObject();
+        result.put("Units",unitConversion.getUnits());
 
+        return result;
+
+    }
 }

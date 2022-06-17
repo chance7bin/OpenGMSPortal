@@ -303,7 +303,18 @@ public class ComputableModelRestController {
 
     }
 
+//    @RequestMapping(value = "/integratedModel",method = RequestMethod.GET)
+//    ModelAndView integratedModel(HttpServletRequest request){
+//
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("/error/500");
+//
+//        return modelAndView;
+//    }
+
     //模型集成结束
+
+
 
 
 

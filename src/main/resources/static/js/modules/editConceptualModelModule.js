@@ -763,7 +763,7 @@ Vue.component("editConceptualModelModule",
                 this.formData=new FormData();
                 let loading = this.$loading({
                     lock: true,
-                    text: "Uploading...",
+                    text: this.htmlJson.Uploading,
                     spinner: "el-icon-loading",
                     background: "rgba(0, 0, 0, 0.7)"
                 });
@@ -771,6 +771,7 @@ Vue.component("editConceptualModelModule",
                 this.conceptualModel.contentType=$("input[name='ContentType']:checked").val();
                 this.conceptualModel.isAuthor=$("input[name='author_confirm']:checked").val();
                 var detail = tinyMCE.activeEditor.getContent();
+                console.log(detail)
                 this.conceptualModel.detail = detail.trim();
 
                 this.conceptualModel.authorship=[];

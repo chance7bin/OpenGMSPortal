@@ -1414,7 +1414,7 @@ var  data_item_info = new Vue({
         getDistributeDataInfo(){
             let that = this;
           $.ajax({
-              url:"/dataItem/getDistributeDataInfo/" + that.dataItemId,
+              url:"/dataItem/distributeDataInfo/" + that.dataItemId,
               type:"get",
           }).done((res)=> {
               if (res.code == 0) {

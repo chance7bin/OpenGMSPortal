@@ -323,6 +323,7 @@ var createConceptualModel = Vue.extend({
             itemObj.status = this.itemInfo.status
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
+            console.log(tinyMCE);
             var detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
@@ -1117,7 +1118,7 @@ var createConceptualModel = Vue.extend({
                             }
                         });
                     }
-                }).fail(function (res) {
+                }).fail(() => {
                     this.$alert(this.htmlJson.LoginInFirst, 'Error', {
                         type:"error",
                         confirmButtonText: 'OK',

@@ -295,7 +295,10 @@ public class ComputableModelService {
 
                 // computableModel.setLocalizationList(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("localizationList"),Localization.class));
                 computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
-                computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                // computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+                JSONArray re = jsonObject.getJSONArray("relatedModelItems");
+                List<String> reList = re == null ? null : re.toJavaList(String.class);
+                computableModel.setRelatedModelItems(reList);
                 Localization localization = new Localization();
                 localization.setLocalCode("en");
                 localization.setLocalName("English");
@@ -670,7 +673,10 @@ public class ComputableModelService {
             localizations.add(localization);
             computableModel.setLocalizationList(localizations);
             computableModel.setAuthorships(ArrayUtils.parseJSONArrayToList(jsonObject.getJSONArray("authorships"),AuthorInfo.class));
-            computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            // computableModel.setRelatedModelItems(jsonObject.getJSONArray("relatedModelItems").toJavaList(String.class));
+            JSONArray re = jsonObject.getJSONArray("relatedModelItems");
+            List<String> reList = re == null ? null : re.toJavaList(String.class);
+            computableModel.setRelatedModelItems(reList);
             computableModel.setOverview(jsonObject.getString("description"));
             computableModel.setContentType(jsonObject.getString("contentType"));
             computableModel.setUrl(jsonObject.getString("url"));

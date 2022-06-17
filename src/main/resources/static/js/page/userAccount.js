@@ -674,7 +674,7 @@ var userAccount = Vue.extend(
                     crossDomain: true,
                     success: (result) => {
 
-                        if (result.code === 0) {
+                        if (result.code === -1) {
                             this.$alert(this.htmlJson.LoginInFirst, 'Tip', {
                                 type:"info",
                                 confirmButtonText: 'OK',

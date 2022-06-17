@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link  rel="stylesheet" href="/static/css/page/version_compare.css">
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" href="/static/css/base/itemInfo.css">
+    <link rel="stylesheet" href="/static/css/base/relate_item.css">
+    <link rel="stylesheet" href="/static/css/base/userModule.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/element-ui/index.js"></script>
+</head>
+<body>
+<div id="version_compare">
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+    <div th:replace="fragments/backToTop :: backtop-down"></div>
+    <div class="pageMainContent clearfix">
+        <translation-bar
+                json-file="all_model_info"
+                @translate-page="translatePage"
+                with-comments="true"
+                with-item-info-modules="true"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 20px;right:15px">
+        </translation-bar>
+        <el-container>
+            <el-main>
+                <el-row class="main-content" :gutter="20" type="flex" justify="center">
+                    <el-col :span="11" class="old-panel">
+                        <el-card >
+                            <div slot="header" class="clearfix card_title" >Old Version</div>
+
+                            <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo})"></div>
+
+                            <div th:replace="fragments/itemInfoModules :: alias"></div>
+
+                            <div th:switch="${modularType.name}">
+                                <div th:case="ModelItem">
+                                    <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
+
+                                    <div th:insert="fragments/itemInfoModules :: authorship(pos=0)" id="Authorship0" class="detail_block minScreen" ></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: classifications"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, True)"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: model_related_models"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: model_related_data"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: model_related_resource"></div>
+
+                                    <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph0" class="detail_block minScreen">
+                                        <div class="block_head">
+                                            <div class="head_text" style="padding-left: 10px;">
+                                                <h4>{{htmlJSON.KnowledgeGraph}}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="block_content text-center">
+
+                                            <a th:href="'/knowledgeGraph/'+${itemInfo.knowledgeGraph}">
+                                                <img src="/static/img/logo/knowledgeGraph.jpg" style="text-align: center;width:50%;">
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div th:replace="fragments/itemInfoModules :: model_modifier0"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: coContributor"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: model_Knowledge_Graph"></div>
+
+                                    <div th:replace="fragments/itemInfoModules :: History"></div>
+
+
+                                </div>
+                            </div>
+
+
+                        </el-card>
+
+                    </el-col>
+                    <el-col :span="11" class="new-panel">
+                        <el-card >
+                            <div slot="header" class="clearfix card_title">New Version</div>
+
+                        </el-card>
+                    </el-col>
+                </el-row>
+
+            </el-main>
+            <el-footer class="btns-content">
+                <el-row class="main-content" :gutter="20" type="flex" justify="end" >
+                    <el-button type="primary">Accept</el-button>
+                    <el-button type="warning">Reject</el-button>
+                </el-row>
+            </el-footer>
+
+        </el-container>
+
+    </div>
+</div>
+
+</body>
+
+
+<script th:inline="javascript">
+    var itemInfo = [[${itemInfo}]];
+    var relation = [[${relation}]];
+    var author = [[${user}]];
+    var modelReferences = [[${references}]];
+    var classifications = [[${classifications}]];
+</script>
+
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
+<script src="/static/js/modules/userAvatar.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<script src="/static/js/page/version_compare.js"></script>
+<!--<script src="/static/js/page/model_item_info.js"></script>-->
+<script src="/static/js/common/navbar.js"></script>
+
+</html>

@@ -1184,9 +1184,9 @@ new Vue({
             let item = hrefs[hrefs.length - 2].split("#")[0];
             let oid = hrefs[hrefs.length - 1].split("#")[0];
             if(item=='spatialReference'){
-                axios.get('/spatial/getWKT',{
+                axios.get('/spatialReference/getWKT',{
                         params:{
-                            oid:oid,
+                            id:oid,
                         }
                     }
 
@@ -1237,7 +1237,7 @@ new Vue({
         loadSpatialReference(){
             this.inSearch = 0
             this.loading = true;
-            axios.get('/spatial/getSpatialReference',{
+            axios.get('/spatialReference/getSpatialReference',{
                 params:{
                     asc:0,
                     page:this.pageOption.currentPage-1,
@@ -1270,7 +1270,7 @@ new Vue({
             this.loading = true;
             let targetPage = page==undefined?this.pageOption.currentPage:page
             this.pageOption.currentPage=targetPage
-            axios.get('/spatial/searchSpatialReference',{
+            axios.get('/spatialReference/searchSpatialReference',{
                 params:{
                     asc:0,
                     page:targetPage-1,
@@ -1397,10 +1397,9 @@ new Vue({
 
             if(firstProjection.indexOf('GEOGCS')==-1||secondProjection.indexOf('GEOGCS')==-1){
                 this.$alert('The selected coordinates are not supported to transform.')
+                console.log(1);
                 return
             }
-
-
 
             let result
             try{
@@ -1413,7 +1412,9 @@ new Vue({
                     this.outputLat = result[1].toFixed(5)
                 }
             }catch (e) {
+                console.log("e:",e);
                 this.$alert('The selected coordinates are not supported to transform.')
+                console.log(2);
             }
 
 
@@ -2398,6 +2399,8 @@ new Vue({
     },
     mounted() {
 
+        // console.log("this.oid_cvt:",this.oid_cvt);
+
         this.lightenContributor = author
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
@@ -2411,9 +2414,10 @@ new Vue({
         if(this.oid_cvt!=null){
             $("#transform").show();
         }
-        if(this.oid_cvt!="") {
+        if(this.oid_cvt!=null) {
 
-            $.get("/repository/getUnitConvertInfo/" + this.oid_cvt, function (result) {
+            // $.get("/repository/getUnitConvertInfo/" + this.oid_cvt, function (result) {
+            $.get("/spatialReference/unitConvertInfo/" + this.oid_cvt, function (result) {
                 that.unitdata = result;
                 adddata(that.unitdata);
             });

@@ -1,6 +1,7 @@
 var userDataItems = Vue.extend(
     {
         template: "#userDataItems",
+        props:['htmlJson'],
         data(){
             return{
                 //页面样式控制
@@ -223,15 +224,11 @@ var userDataItems = Vue.extend(
                 const h = this.$createElement;
                 this.$msgbox({
                     title: ' ',
-                    message: h('p', null, [
-                        h('span', null, 'Are you sure to'),
-                        h('span', {style: 'font-weight:600'}, 'delete'),
-                        h('span', null, 'this item?'),
-                    ]),
+                    message: this.htmlJson.AreYouSureToDelete,
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Confirm',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: this.htmlJson.Confirm,
+                    cancelButtonText: this.htmlJson.Cancel,
                     beforeClose: (action, instance, done) => {
 
                         if (action === 'confirm') {
@@ -280,7 +277,7 @@ var userDataItems = Vue.extend(
                 }).then(action => {
                     this.$message({
                         type: 'success',
-                        message: 'Delete Successful!'
+                        message: this.htmlJson.userModel.DeleteSuccessful
                     });
                 });
             },
@@ -375,7 +372,9 @@ var userDataItems = Vue.extend(
                             alert('Please log in first!');
                             window.location.href = "/user/login";
                         } else {
-                            let data = result.data;
+                            // console.log("result:",result);
+
+                            let data = result;
                             this.countInfo = data.data
                             this.userId = data.data.accessId;
                             this.userName = data.data.name;

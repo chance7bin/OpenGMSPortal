@@ -1,6 +1,5 @@
 new Vue({
     el: '#app',
-    props:['htmlJson'],
     data: function () {
         var validateAccount = (rule, value, callback) => {
             if (value === '') {
@@ -85,7 +84,7 @@ new Vue({
                     } else {
                         this.$message({
                             showClose: true,
-                            message: this.htmlJson.ErrorSubmit,
+                            message: this.htmlJSON.ErrorSubmit,
                             type: 'error'
                         });
                         return false;

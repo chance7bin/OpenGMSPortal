@@ -294,7 +294,8 @@
       "getDoiTitle": "Is this article you want to add",
       "Authors": "Authors",
       "getDoiYes": "Yes, this is it",
-      "getDoiNo": "Cancel"
+      "getDoiNo": "Cancel",
+      "Operation": "Operation"
     },
     "Language": {
       "label": "Language",
@@ -1770,7 +1771,16 @@
     "ModifyLogicalModel": "Modify Logical Model",
     "UpdateDataApplicationSuccessfully": "Update data application successfully!",
     "UpdateUnitSuccessfully": "Update unit successfully",
-    "CreateThemeSuccessfully": "Create theme  successfully"
+    "CreateThemeSuccessfully": "Create theme  successfully",
+
+    "Operation": "Operation",
+
+    "SendSuggestionSuccessfully": "Send suggestion successfully",
+    "OldPassword": "Old Password",
+    "NewPassword": "New Password",
+    "ConfirmPassword": "Confirm Password",
+    "ForgetPassword": "Forget Password",
+    "ViewInUserspace": "View in userspace"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2060,7 +2070,8 @@
       "getDoiTitle": "这篇文章是你想要添加的吗",
       "Authors": "相关作者",
       "getDoiYes": "是的，就是它",
-      "getDoiNo": "取消"
+      "getDoiNo": "取消",
+      "Operation": "操作"
     },
     "Language": {
       "label": "语言",
@@ -3532,6 +3543,14 @@
 
     "Accept": "接受",
     "Reject": "拒绝",
-    "CreateThemeSuccessfully": "创建专题成功"
+    "CreateThemeSuccessfully": "创建专题成功",
+    "Operation": "操作",
+
+    "SendSuggestionSuccessfully": "提交建议成功!",
+    "OldPassword": "旧密码",
+    "NewPassword": "新密码",
+    "ConfirmPassword": "确认密码",
+    "ForgetPassword": "忘记密码",
+    "ViewInUserspace": "前往个人空间查看"
   }
 }

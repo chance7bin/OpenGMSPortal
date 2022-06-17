@@ -261,6 +261,39 @@ var createDataHubs = Vue.extend({
     },
 
     methods: {
+
+        // 设置缓存
+        setStorage(key, value){
+            var v = value;
+            //是对象转成JSON，不是直接作为值存入内存
+            if (typeof v == 'object') {
+                v = JSON.stringify(v);
+                v = 'obj-' + v;
+            } else {
+                v = 'str-' + v;
+            }
+            var localStorage = window.localStorage;
+            if (localStorage ) {
+                localStorage .setItem(key, v);
+            }
+        },
+
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         changeRter(index){
             this.curIndex = index;
             var urls={
@@ -555,7 +588,7 @@ var createDataHubs = Vue.extend({
                         if (result.status ===200){
                             if (result.data.code === 0) {
                                 if(result.data.data.method==="update") {
-                                    alert("Update Success");
+                                    alert(this.htmlJson.UpdateSuccess);
                                     $("#editModal", parent.document).remove();
                                     window.location.href = "/dataHub/" + result.data.data.id;
                                 }
@@ -687,6 +720,34 @@ var createDataHubs = Vue.extend({
         }
     },
 
+    created(){
+
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
+        console.log("this.htmlJson:",this.htmlJson);
+        if (this.htmlJson.Home == undefined) {
+            //如果缓存中有userSpaceAll页面就不会报错
+            if (this.getStorage("userSpaceAll") == null){
+
+                //如果没有的话那就定时获取userSpaceAll，并放到缓存中
+                var st = setTimeout(() => {
+                    console.log("get userSpaceAll...");
+                    this.setStorage("userSpaceAll", this.htmlJson);
+                    if (this.getStorage("userSpaceAll") != null){
+                        //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        // this.htmlJsonExist = true;
+                        window.location.reload();
+                        // clearTimeout(st);
+                    }
+
+                },100)
+            }
+        }
+
+
+
+    },
+
     mounted() {
         //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
         this.sendcurIndexToParent();
@@ -700,7 +761,8 @@ var createDataHubs = Vue.extend({
 
         axios.get("/dataItem/categoryTree")
             .then(res => {
-                tha.tObj = res.data;
+                // console.log("/dataItem/categoryTree:",res);
+                tha.tObj = res.data.data;
                 let tree = [];
                 for (let i in Object.values(tha.tObj)){
                     // console.log(grandpa);

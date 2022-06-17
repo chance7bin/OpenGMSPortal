@@ -135,7 +135,7 @@ public class DataItemService {
                     JSONObject modelItemJson = new JSONObject();
                     modelItemJson.put("name", modelItem.getName());
                     modelItemJson.put("id", modelItem.getId());
-                    modelItemJson.put("description", modelItem.getOverview());
+                    modelItemJson.put("overview", modelItem.getOverview());
                     modelItemJson.put("image", modelItem.getImage().equals("") ? null : htmlLoadPath + modelItem.getImage());
                     modelItemArray.add(modelItemJson);
                 }
@@ -252,7 +252,6 @@ public class DataItemService {
     }
 
 
-    // TODO 这个方法逻辑有问题
     /**
      * @Description 设置与数据条目相关的模型
      * @Author bin
@@ -263,60 +262,63 @@ public class DataItemService {
 
         DataItem dataItem = dataItemDao.findFirstById(id);
 
-        List<String> relationDelete = new ArrayList<>();
-        for (int i = 0; i < dataItem.getRelatedModels().size(); i++) {
-            relationDelete.add(dataItem.getRelatedModels().get(i));
-        }
-        List<String> relationAdd = new ArrayList<>();
-        for (int i = 0; i < relations.size(); i++) {
-            relationAdd.add(relations.get(i));
-        }
-
-        for (int i = 0; i < relationDelete.size(); i++) {
-            for (int j = 0; j < relationAdd.size(); j++) {
-                if (relationDelete.get(i).equals(relationAdd.get(j))) {
-                    relationDelete.set(i, "");
-                    relationAdd.set(j, "");
-                    break;
-                }
-            }
-        }
-
-        for (int i = 0; i < relationDelete.size(); i++) {
-            String model_id = relationDelete.get(i);
-            if (!model_id.equals("")) {
-                ModelItem modelItem = modelItemDao.findFirstById(model_id);
-                // TODO 为什么Private就可以加进去了
-                if(modelItem.getStatus().equals("Private")){
-                    relations.add(modelItem.getId());
-                    continue;
-                }
-                if (modelItem.getRelate().getDataItems() != null) {
-                    modelItem.getRelate().getDataItems().remove(id);
-                    modelItemDao.save(modelItem);
-                }
-            }
-        }
-
-        for (int i = 0; i < relationAdd.size(); i++) {
-            String model_id = relationAdd.get(i);
-            if (!model_id.equals("")) {
-                ModelItem modelItem = modelItemDao.findFirstById(model_id);
-                if (modelItem.getRelate().getDataItems() != null) {
-                    modelItem.getRelate().getDataItems().add(id);
-                } else {
-                    List<String> relatedData = new ArrayList<>();
-                    relatedData.add(id);
-                    modelItem.getRelate().setDataItems(relatedData);
-                }
-                modelItemDao.save(modelItem);
-            }
-        }
+        // List<String> relationDelete = new ArrayList<>();
+        // for (int i = 0; i < dataItem.getRelatedModels().size(); i++) {
+        //     relationDelete.add(dataItem.getRelatedModels().get(i));
+        // }
+        // List<String> relationAdd = new ArrayList<>();
+        // for (int i = 0; i < relations.size(); i++) {
+        //     relationAdd.add(relations.get(i));
+        // }
+        //
+        // for (int i = 0; i < relationDelete.size(); i++) {
+        //     for (int j = 0; j < relationAdd.size(); j++) {
+        //         if (relationDelete.get(i).equals(relationAdd.get(j))) {
+        //             relationDelete.set(i, "");
+        //             relationAdd.set(j, "");
+        //             break;
+        //         }
+        //     }
+        // }
+        //
+        // for (int i = 0; i < relationDelete.size(); i++) {
+        //     String model_id = relationDelete.get(i);
+        //     if (!model_id.equals("")) {
+        //         ModelItem modelItem = modelItemDao.findFirstById(model_id);
+        //         // TODO 为什么Private就可以加进去了
+        //         if(modelItem.getStatus().equals("Private")){
+        //             relations.add(modelItem.getId());
+        //             continue;
+        //         }
+        //         if (modelItem.getRelate().getDataItems() != null) {
+        //             modelItem.getRelate().getDataItems().remove(id);
+        //             modelItemDao.save(modelItem);
+        //         }
+        //     }
+        // }
+        //
+        // for (int i = 0; i < relationAdd.size(); i++) {
+        //     String model_id = relationAdd.get(i);
+        //     if (!model_id.equals("")) {
+        //         ModelItem modelItem = modelItemDao.findFirstById(model_id);
+        //         if (modelItem.getRelate().getDataItems() != null) {
+        //             modelItem.getRelate().getDataItems().add(id);
+        //         } else {
+        //             List<String> relatedData = new ArrayList<>();
+        //             relatedData.add(id);
+        //             modelItem.getRelate().setDataItems(relatedData);
+        //         }
+        //         modelItemDao.save(modelItem);
+        //     }
+        // }
 
         dataItem.setRelatedModels(relations);
         dataItemDao.save(dataItem);
 
-        return ResultUtils.success();
+        JSONObject result = new JSONObject();
+        result.put("type","suc");
+
+        return ResultUtils.success(result);
 
     }
 
