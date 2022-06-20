@@ -20,4 +20,7 @@ public interface ComputableModelDao  extends MongoRepository<ComputableModel,Str
 
     ComputableModel findFirstById(String id);
 
+    Page<ComputableModel> findByContentType(String contentType, Pageable pageable);
+
+    List<ComputableModel> findByContentType(String contentType);
 }
