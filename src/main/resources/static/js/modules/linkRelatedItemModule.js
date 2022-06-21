@@ -442,10 +442,11 @@ Vue.component("linkRelatedItemModule",
                     this.tableData_model.forEach(function (item, index) {
                         relateArr.push(item.id);
                     })
+                    console.log("relateArr:",relateArr);
                     data = {
                         id: id,
                         type: this.relateItemType,
-                        relations: relateArr
+                        relations: []
                     };
                 }else{
                     url = "/"+this.targetItemType+"/modelRelation/"+id;
@@ -458,6 +459,7 @@ Vue.component("linkRelatedItemModule",
                     });
                     data = {
                         relations: JSON.stringify(relateArr),
+                        // relations: relateArr,
                     };
                     // data = JSON.stringify(data);
                 }

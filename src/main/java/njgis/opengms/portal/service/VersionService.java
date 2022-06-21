@@ -10,7 +10,6 @@ import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
-import njgis.opengms.portal.utils.BeanMapTool;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,46 +199,54 @@ public class VersionService {
 
         PortalItem content = version.getContent();
         String originalName = content.getName();
-        // PortalItem 转 map
-        Map<String, Object> contentMap = BeanMapTool.beanToMap(content);
-
         ItemTypeEnum type = version.getType();
         JSONObject factory = genericService.daoFactory(type);
-        Class<? extends PortalItem> clazz = (Class) factory.get("clazz");
+        GenericItemDao itemDao =  (GenericItemDao) factory.get("itemDao");
+        PortalItem item = (PortalItem) itemDao.findFirstById(version.getItemId());
+        content.setVersions(item.getVersions());
+        content.setLastModifyTime(new Date());
 
-        Map<String, Object> changedField = version.getChangedField();
+        // 根据content以及changedField得到original
+        // // PortalItem 转 map
+        // Map<String, Object> contentMap = BeanMapTool.beanToMap(content);
+        //
+        // ItemTypeEnum type = version.getType();
+        // JSONObject factory = genericService.daoFactory(type);
+        // Class<? extends PortalItem> clazz = (Class) factory.get("clazz");
+        //
+        // Map<String, Object> changedField = version.getChangedField();
+        //
+        // //遍历map
+        // for (Map.Entry<String, Object> entry : changedField.entrySet()) {
+        //     String mapKey = entry.getKey();
+        //     HashMap mapValue = (HashMap)entry.getValue();
+        //     System.out.println(mapKey + "：" + mapValue);
+        //
+        //     //不改变的字段
+        //     if (mapKey.equals("versions"))
+        //         continue;
+        //
+        //     if (mapKey.equals("lastModifyTime")){
+        //         contentMap.put(mapKey, new Date());
+        //     }
+        //
+        //
+        //     contentMap.put(mapKey, mapValue.get("original"));
+        //
+        // }
+        //
+        // //map to bean
+        // PortalItem newItem = null;
+        // try {
+        //     newItem = BeanMapTool.mapToBean(contentMap, clazz);
+        // } catch (IllegalAccessException | InstantiationException e) {
+        //     e.printStackTrace();
+        //     ResultUtils.error();
+        // }
 
-        //遍历map
-        for (Map.Entry<String, Object> entry : changedField.entrySet()) {
-            String mapKey = entry.getKey();
-            HashMap mapValue = (HashMap)entry.getValue();
-            System.out.println(mapKey + "：" + mapValue);
-
-            //不改变的字段
-            if (mapKey.equals("versions"))
-                continue;
-
-            if (mapKey.equals("lastModifyTime")){
-                contentMap.put(mapKey, new Date());
-            }
 
 
-            contentMap.put(mapKey, mapValue.get("original"));
-
-        }
-
-        //map to bean
-        PortalItem newItem = null;
-        try {
-            newItem = BeanMapTool.mapToBean(contentMap, clazz);
-        } catch (IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
-            ResultUtils.error();
-        }
-
-
-
-        return ResultUtils.success(addVersion(newItem, email,originalName));
+        return ResultUtils.success(addVersion(content, email,originalName));
 
     }
 
