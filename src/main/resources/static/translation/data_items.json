@@ -5,6 +5,7 @@
     "Contribute": "+ Contribute",
 
     "DataClass": "Data Categories",
+    "anotherVersion":"There is another version haven't been reviewed, you can edit it later or contact us.",
 
     "AdvancedSearch": "Advanced Search with Multiple Query Conditions",
     "SearchHolding": "Query String...",
@@ -116,7 +117,7 @@
     "physicalProcessCalculation":"物理过程计算",
     "chemicalProcessCalculation":"化学过程计算",
     "biologicalProcessCalculation":"生物过程计算",
-    "humanActivityCalculation":"人类活动计算"
-
+    "humanActivityCalculation":"人类活动计算",
+    "anotherVersion":"还有一个版本还没有审核，您可以稍后编辑或联系我们。"
   }
 }

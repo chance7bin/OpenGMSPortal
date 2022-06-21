@@ -392,7 +392,7 @@ public class ModelItemRestController {
     @ApiOperation(value = "更新模型条目related ModelItem", notes = "@LoginRequired\n")
     @RequestMapping(value = "/modelRelation/{id}", method = RequestMethod.PUT)
     JsonResult setModelRelation(@PathVariable("id") String id,
-                                @RequestParam(value = "relations[]") JSONArray relations,
+                                @RequestParam(value = "relations") String relations,
                                 HttpServletRequest request) {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
@@ -401,8 +401,13 @@ public class ModelItemRestController {
         String email=session.getAttribute("email").toString();
         List<ModelRelation> modelRelationList = new ArrayList<>();
 
-        for (int i = 0; i < relations.size(); i++) {
-            JSONObject object = relations.getJSONObject(i);
+        //解析relations
+        JSONArray relationsArr = (JSONArray) JSONArray.parse(relations);
+
+
+        for (int i = 0; i < relationsArr.size(); i++) {
+            JSONObject object = relationsArr.getJSONObject(i);
+            // JSONObject object = (JSONObject) relations.get(i);
             ModelRelation modelRelation = new ModelRelation();
             modelRelation.setModelId(object.getString("id"));
             modelRelation.setRelation(RelationTypeEnum.getRelationTypeByText(object.getString("relation")));

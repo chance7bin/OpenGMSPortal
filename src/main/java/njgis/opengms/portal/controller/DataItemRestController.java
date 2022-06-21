@@ -265,11 +265,12 @@ public class DataItemRestController {
     @ApiOperation(value = "设置与数据条目相关的模型 [ /dataItem/setRelation ]")
     @RequestMapping(value="/relation",method = RequestMethod.PUT)
     public JsonResult setRelation(@RequestParam(value="id") String id,
-                           @RequestParam(value = "relations[]") List<String> relations){
+                           @RequestParam(value = "relations[]") List<String> relations, HttpServletRequest request){
 
         id = genericService.formatId(id);
-
-        return dataItemService.setRelation(id,relations);
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+        return dataItemService.setRelation(id,relations,email);
 
     }
 

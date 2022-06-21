@@ -196,7 +196,7 @@ public class DataItemService {
 
 
         view.setViewName("data_item_info");
-        view.addObject("datainfo", ResultUtils.success(dataItem));
+        view.addObject("datainfo", dataItem);
         view.addObject("user",userJson);
         view.addObject("classifications",classifications);
         view.addObject("relatedModels",modelItemArray);
@@ -209,6 +209,7 @@ public class DataItemService {
         view.addObject("languageList",languageList);
         view.addObject("itemInfo",dataItem);
         view.addObject("detail",detailResult);
+        view.addObject("history",false);
 
 
         return view;
@@ -223,6 +224,11 @@ public class DataItemService {
      */
     public List<InvokeService> getDistributeDataInfo(@PathVariable(value = "dataItemId") String dataItemId){
         DataItem dataItem = dataItemDao.findFirstById(dataItemId);
+        if (dataItem == null){
+            dataItem = dataHubDao.findFirstById(dataItemId);
+        }
+        if (dataItem == null)
+            return null;
         return dataItem.getInvokeServices();
     }
 
@@ -258,9 +264,9 @@ public class DataItemService {
      * @Param [id, relations]
      * @return java.lang.String
      **/
-    public JsonResult setRelation(String id, List<String> relations) {
+    public JsonResult setRelation(String id, List<String> relations,String email) {
 
-        DataItem dataItem = dataItemDao.findFirstById(id);
+        DataItem item = dataItemDao.findFirstById(id);
 
         // List<String> relationDelete = new ArrayList<>();
         // for (int i = 0; i < dataItem.getRelatedModels().size(); i++) {
@@ -312,13 +318,63 @@ public class DataItemService {
         //     }
         // }
 
-        dataItem.setRelatedModels(relations);
-        dataItemDao.save(dataItem);
-
+        List<String> versions = item.getVersions();
+        String originalItemName = item.getName();
         JSONObject result = new JSONObject();
-        result.put("type","suc");
+        if (!item.isLock()){
 
-        return ResultUtils.success(result);
+            String author = item.getAuthor();
+            Date now = new Date();
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!author.equals(email)){
+                item.setLock(true);
+                dataItemDao.save(item);
+            } else {
+                if (versions == null || versions.size() == 0) {
+                    Version version = versionService.addVersion(item, email, originalItemName);
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    item.setVersions(versions);
+                }
+            }
+
+            item.setRelatedModels(relations);
+            item.setLastModifyTime(now);
+            item.setLastModifier(email);
+
+
+            Version new_version = versionService.addVersion(item, email,originalItemName);
+            if (author.equals(email)){
+                versions.add(new_version.getId());
+                item.setVersions(versions);
+
+                dataItemDao.save(item);
+                result.put("type","suc");
+
+                return ResultUtils.success(result);
+            }else {
+
+                //发送通知
+                List<String> recipientList = new ArrayList<>();
+                recipientList.add(author);
+                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version.getId(),recipientList);
+                result.put("type","version");
+                return ResultUtils.success(result);
+            }
+
+
+        } else {
+            result.put("type","version");
+            return ResultUtils.success(result);
+        }
+
+
+
 
     }
 

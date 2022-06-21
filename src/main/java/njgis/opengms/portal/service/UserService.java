@@ -29,14 +29,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -82,6 +79,9 @@ public class UserService {
     @Autowired
     //用于发送文件
     private JavaMailSender mailSender;
+
+    @Autowired
+    AsyncService asyncService;
 
     @Autowired
     UserDao userDao;
@@ -1329,26 +1329,7 @@ public class UserService {
         mailSender.send(message);
     }
 
-    public void sendHtmlMail(String to, String subject, String content) {
 
-        // log.info("发送HTML邮件：{},{},{}", to, subject, content);
-        //使用MimeMessage，MIME协议
-        MimeMessage message = mailSender.createMimeMessage();
-
-        MimeMessageHelper helper;
-        //MimeMessageHelper帮助我们设置更丰富的内容
-        try {
-            helper = new MimeMessageHelper(message, true);
-            helper.setFrom(from);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(content, true);//true代表支持html
-            mailSender.send(message);
-            log.info("向 [{}] 发送邮件成功", to);
-        } catch (MessagingException e) {
-            log.error("向 [{}] 发送邮件失败", to);
-        }
-    }
 
     /**
      * 条目被接受发送邮件
@@ -1357,6 +1338,7 @@ public class UserService {
      * @return void
      * @Author bin
      **/
+    // @Async
     public void sendAcceptMail(String to, PortalItem item) {
 
         String url = "https://geomodeling.njnu.edu.cn/";
@@ -1374,7 +1356,7 @@ public class UserService {
                 "</body>" +
             "</html>";
 
-        sendHtmlMail(to, "Modifications are accepted", content);
+        asyncService.sendHtmlMail(to, "Modifications are accepted", content);
 
     }
 
@@ -1396,7 +1378,7 @@ public class UserService {
                 "</body>" +
             "</html>";
 
-        sendHtmlMail(to, "Modifications are rejected", content);
+        asyncService.sendHtmlMail(to, "Modifications are rejected", content);
 
     }
 

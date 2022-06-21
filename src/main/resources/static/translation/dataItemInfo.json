@@ -48,7 +48,8 @@
     "Current": "current",
     "DataResource": "Data Resource",
     "DetailedDescription": "Detailed Description",
-    "ViewFullContent": "View Full Content"
+    "ViewFullContent": "View Full Content",
+    "anotherVersion":"There is another version haven't been reviewed, you can edit it later or contact us."
   },
   "zh-cn": {
     "DataResourceUrl": "数据资源链接",
@@ -99,7 +100,8 @@
     "Current": "当前",
     "DataResource": "数据资源",
     "DetailedDescription": "详细描述",
-    "ViewFullContent": "查看完整内容"
+    "ViewFullContent": "查看完整内容",
+    "anotherVersion":"还有一个版本还没有审核，您可以稍后编辑或联系我们。"
   }
 
 }
