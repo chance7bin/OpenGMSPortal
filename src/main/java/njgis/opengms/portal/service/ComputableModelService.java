@@ -12,6 +12,8 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
+import njgis.opengms.portal.entity.doo.intergrate.Model;
+import njgis.opengms.portal.entity.doo.intergrate.ModelParam;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.dto.FindDTO;
@@ -27,7 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.LinkedMultiValueMap;
@@ -43,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static njgis.opengms.portal.utils.ModelServiceUtils.checkMdlJson;
+import static njgis.opengms.portal.utils.Utils.convertMdl;
 import static njgis.opengms.portal.utils.Utils.saveResource;
 
 /**
@@ -908,4 +913,48 @@ public class ComputableModelService {
 
 
     }
+
+    public Page<ComputableModel> integratingList(int page, String sortType, int sortAsc){
+
+        Sort sort = Sort.by(sortAsc == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
+
+        Pageable pageable = PageRequest.of(page, 8, sort);
+
+        Page<ComputableModel> comModelList = computableModelDao.findByContentType("Package",pageable);
+
+        for(int i = 0; i<comModelList.getContent().size(); i++){
+            String mdl = comModelList.getContent().get(i).getMdl();
+            if(mdl == null) continue;
+            comModelList.getContent().get(i).setMdlJson(convertMdl(mdl));
+        }
+
+        return comModelList;
+    }
+
+    public ModelAndView integrate(Page<ComputableModel> computableModelList){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("integratedModeling");
+
+//        List<ComputableModel> allComputableModel = computableModelDao.findByContentType("Package");
+//        for(int i = 0; i<allComputableModel.size(); i++){
+//            String mdl = allComputableModel.get(i).getMdl();
+//            allComputableModel.get(i).setMdlJson(convertMdl(mdl));
+//        }
+
+        mv.addObject("computableModelList", computableModelList);
+//        mv.addObject("allComputableModel", allComputableModel);
+        return mv;
+    }
+
+    public ModelAndView getIntegratedTask(Page<ComputableModel> computableModelList, String xml, List<ModelParam> modelParams, List<Model> models){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("integratedModeling");
+        mv.addObject("computableModelList", computableModelList);
+        mv.addObject("graphXml", xml);
+        mv.addObject("modelParams", modelParams);
+        mv.addObject("models", models);
+
+        return mv;
+    }
+
 }

@@ -7,105 +7,61 @@ var version_compare = new Vue({
             itemInfo:{},
             relatedModelItemsPage:[],
             currentDetailLanguage:"",
-            languageList:[
-                { value: 'af', label: 'Afrikaans' },
-                { value: 'sq', label: 'Albanian' },
-                { value: 'ar', label: 'Arabic' },
-                { value: 'hy', label: 'Armenian' },
-                { value: 'az', label: 'Azeri' },
-                { value: 'eu', label: 'Basque' },
-                { value: 'be', label: 'Belarusian' },
-                { value: 'bg', label: 'Bulgarian' },
-                { value: 'ca', label: 'Catalan' },
-                { value: 'zh', label: 'Chinese' },
-                { value: 'hr', label: 'Croatian' },
-                { value: 'cs', label: 'Czech' },
-                { value: 'da', label: 'Danish' },
-                { value: 'dv', label: 'Divehi' },
-                { value: 'nl', label: 'Dutch' },
-                { value: 'en', label: 'English' },
-                { value: 'eo', label: 'Esperanto' },
-                { value: 'et', label: 'Estonian' },
-                { value: 'mk', label: 'FYRO Macedonian' },
-                { value: 'fo', label: 'Faroese' },
-                { value: 'fa', label: 'Farsi' },
-                { value: 'fi', label: 'Finnish' },
-                { value: 'fr', label: 'French' },
-                { value: 'gl', label: 'Galician' },
-                { value: 'ka', label: 'Georgian' },
-                { value: 'de', label: 'German' },
-                { value: 'el', label: 'Greek' },
-                { value: 'gu', label: 'Gujarati' },
-                { value: 'he', label: 'Hebrew' },
-                { value: 'hi', label: 'Hindi' },
-                { value: 'hu', label: 'Hungarian' },
-                { value: 'is', label: 'Icelandic' },
-                { value: 'id', label: 'Indonesian' },
-                { value: 'it', label: 'Italian' },
-                { value: 'ja', label: 'Japanese' },
-                { value: 'kn', label: 'Kannada' },
-                { value: 'kk', label: 'Kazakh' },
-                { value: 'kok', label: 'Konkani' },
-                { value: 'ko', label: 'Korean' },
-                { value: 'ky', label: 'Kyrgyz' },
-                { value: 'lv', label: 'Latvian' },
-                { value: 'lt', label: 'Lithuanian' },
-                { value: 'ms', label: 'Malay' },
-                { value: 'mt', label: 'Maltese' },
-                { value: 'mi', label: 'Maori' },
-                { value: 'mr', label: 'Marathi' },
-                { value: 'mn', label: 'Mongolian' },
-                { value: 'ns', label: 'Northern Sotho' },
-                { value: 'nb', label: 'Norwegian' },
-                { value: 'ps', label: 'Pashto' },
-                { value: 'pl', label: 'Polish' },
-                { value: 'pt', label: 'Portuguese' },
-                { value: 'pa', label: 'Punjabi' },
-                { value: 'qu', label: 'Quechua' },
-                { value: 'ro', label: 'Romanian' },
-                { value: 'ru', label: 'Russian' },
-                { value: 'se', label: 'Sami' },
-                { value: 'sa', label: 'Sanskrit' },
-                { value: 'sr', label: 'Serbian' },
-                { value: 'sk', label: 'Slovak' },
-                { value: 'sl', label: 'Slovenian' },
-                { value: 'es', label: 'Spanish' },
-                { value: 'sw', label: 'Swahili' },
-                { value: 'sv', label: 'Swedish' },
-                { value: 'syr', label: 'Syriac' },
-                { value: 'tl', label: 'Tagalog' },
-                { value: 'ta', label: 'Tamil' },
-                { value: 'tt', label: 'Tatar' },
-                { value: 'te', label: 'Telugu' },
-                { value: 'th', label: 'Thai' },
-                { value: 'ts', label: 'Tsonga' },
-                { value: 'tn', label: 'Tswana' },
-                { value: 'tr', label: 'Turkish' },
-                { value: 'uk', label: 'Ukrainian' },
-                { value: 'ur', label: 'Urdu' },
-                { value: 'uz', label: 'Uzbek' },
-                { value: 'vi', label: 'Vietnamese' },
-                { value: 'cy', label: 'Welsh' },
-                { value: 'xh', label: 'Xhosa' },
-                { value: 'zu', label: 'Zulu' },
-            ],
+            languageList:[],
+            old_field:{},
+            new_field:{},
+            currentDetailLanguage_old:"",
+            currentDetailLanguage_new:"",
+            detail_old:"",
+            detail_new:"",
+            htmlJSON:{
+                "ModelContentService":"Model Content & Service",
+                "CategoryTags": "Category Tags",},
+            activeName: 'Computable Model',
+            activeName1: 'Model Item',
+            activeName2: 'Reference',
+            references_old:{},
+            references_new:{}
         }
     },
     methods:{
-        // setRelatedModelItemsPage(){
-        //     this.relatedModelItemsPage = [];
-        //     let relatedModelItems = this.relation.modelItems;
-        //     if(relatedModelItems!=null) {
-        //         for (i = 0; i < relatedModelItems.length; i++) {
-        //             if (i === this.relationPageSize) break;
-        //             this.relatedModelItemsPage.push(relatedModelItems[i]);
-        //         }
-        //     }
-        // },
+        handleResourceTableData(data){
+            let refs = data;
+            // refs = refs.replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}")
+            if (refs != null) {
+                let jsonArray = [];
+                for (i = 0; i < refs.length; i++) {
+                    let json = JSON.parse(refs[i].replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}"));
+                    json.authors = json.authors.join(", ");
+                    jsonArray.push(json);
+                }
+                return jsonArray;
+            }
+        },
+        getResourceTableData(){
+            this.references_old = this.handleResourceTableData(this.references_old)
+            this.references_new = this.handleResourceTableData(this.references_new)
 
+        },
+        changeDetailLanguage(command){
+            if(command.type=='old'){
+                this.currentDetailLanguage_old = command.command;
+                let result = this.old_field.localizationList.find(item => item.localName==this.currentDetailLanguage_old)
+                this.detail_old = result.description
+            }
+            else{
+                this.currentDetailLanguage_new = command.command;
+                let result = this.new_field.localizationList.find(item => item.localName==this.currentDetailLanguage_new)
+                this.detail_new = result.description
+            }
 
-        //model
-        changeDetailLanguage(){},
+        },
+        beforeCommand(cmd,type){
+            return {
+                'command':cmd,
+                'type':type
+            }
+        },
         getDescription(){},
         translatePage(jsonContent){
             this.htmlJSON = jsonContent;
@@ -137,8 +93,26 @@ var version_compare = new Vue({
                 })
         },
         makeItemInfoData(){
-            var content = this.versionData.content
-            this.itemInfo_old= JSON.parse(JSON.stringify(content))
+            var changedField = this.versionData.changedField
+
+
+            for(let i in changedField){
+
+                this.old_field[i]=changedField[i].original
+                this.new_field[i]=changedField[i].new
+            }
+
+            //处理description
+            if(this.old_field.localizationList!=null){
+                this.currentDetailLanguage_old = this.old_field.localizationList[0].localName
+                this.detail_old = this.old_field.localizationList[0].description
+                this.currentDetailLanguage_new = this.new_field.localizationList[0].localName
+                this.detail_new = this.new_field.localizationList[0].description
+                for(let i in this.old_field.localizationList){
+                    this.languageList.push({value:this.old_field.localizationList[i].localCode,label:this.old_field.localizationList[i].localName})
+                }
+
+            }
         },
         edit(){
 
@@ -149,7 +123,12 @@ var version_compare = new Vue({
         this.id = idStr[idStr.length-1]
 
         this.getData()
+        if(this.references_old!={})
+            this.getResourceTableData()
 
-
+    },
+    created(){
+        // this.references_old = references_old
+        // this.references_new = references_new
     }
 })

@@ -8,17 +8,23 @@ import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.intergrate.Model;
+import njgis.opengms.portal.entity.doo.intergrate.ModelParam;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.entity.po.Task;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.ComputableModelService;
 import njgis.opengms.portal.service.GenericService;
+import njgis.opengms.portal.service.TaskService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -48,6 +54,9 @@ public class ComputableModelRestController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TaskService taskService;
 
     /**
      * @Description 根据id获取计算模型详情页面
@@ -247,13 +256,67 @@ public class ComputableModelRestController {
         }
     }
 
-    @RequestMapping(value = "/integratedModel",method = RequestMethod.GET)
-    ModelAndView integratedModel(HttpServletRequest request){
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/error/500");
+    //todo
+    //模型集成部分
+    @RequestMapping (value="/integratingList",method = RequestMethod.GET)
+    Page<ComputableModel> integratingList(int page, String sortType, int sortAsc){
+        return computableModelService.integratingList(page,sortType,sortAsc);
+    }
+
+    @RequestMapping(value = "/integrating",method = RequestMethod.GET)
+    ModelAndView integrating(HttpServletRequest request){
+        Page<ComputableModel> computableModelList = computableModelService.integratingList(0,"default",1);
+        ModelAndView modelAndView = computableModelService.integrate(computableModelList);
 
         return modelAndView;
     }
+
+    @RequestMapping(value = "/integratedModel",method = RequestMethod.GET)
+    ModelAndView integratedModel(HttpServletRequest request){
+        Page<ComputableModel> computableModelList = computableModelService.integratingList(0,"default",1);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("integratedModeling_new");
+        modelAndView.addObject("computableModelList", computableModelList);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/integratedTest",method = RequestMethod.GET)
+    ModelAndView integratedTest(HttpServletRequest request){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("integratedTest");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/getIntegratedTask/{taskId}",method = RequestMethod.GET)
+    ModelAndView getIntegratedTask(@PathVariable("taskId") String taskId){
+
+        Task task = taskService.findByTaskId(taskId);
+        String xml = task.getGraphXml();
+        List<ModelParam> modelParams = task.getModelParams();
+        List<Model> models = task.getModels();
+
+        Page<ComputableModel> computableModelList = computableModelService.integratingList(0,"default",1);
+        return computableModelService.getIntegratedTask(computableModelList,xml,modelParams,models);
+
+    }
+
+//    @RequestMapping(value = "/integratedModel",method = RequestMethod.GET)
+//    ModelAndView integratedModel(HttpServletRequest request){
+//
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("/error/500");
+//
+//        return modelAndView;
+//    }
+
+    //模型集成结束
+
+
+
+
+
 
 }

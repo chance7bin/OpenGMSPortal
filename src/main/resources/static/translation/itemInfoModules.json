@@ -1,5 +1,6 @@
 {
   "en-us": {
+  "package": "OpenGMS Model-Service Package",
     "HowtoCite": "How to Cite",
     "detailedDescription": "Detailed Description",
     "viewFullText": "View Full Text",
@@ -38,6 +39,7 @@
      "relateModelItem":"Related Model Item"
   },
   "zh-cn": {
+      "package": "OpenGMS模型服务封装包",
     "HowtoCite": "引用格式",
     "detailedDescription": "详情描述",
     "viewFullText": "展开全文",

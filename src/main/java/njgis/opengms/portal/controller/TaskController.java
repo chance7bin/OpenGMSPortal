@@ -4,20 +4,34 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.ComputableModelDao;
+import njgis.opengms.portal.dao.IntegratedTaskDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.entity.po.IntegratedTask;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.TaskService;
 import njgis.opengms.portal.utils.ResultUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,6 +53,12 @@ public class TaskController {
 
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    IntegratedTaskDao integratedTaskDao;
+
+    @Value("${managerServerIpAndPort}")
+    private String managerServerIpAndPort;
 
     @LoginRequired
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -322,6 +342,56 @@ public class TaskController {
     }
 
 
+    @RequestMapping(value="/runIntegratedTask",method = RequestMethod.POST)
+    JsonResult runIntegratedModel(@RequestParam("file") MultipartFile file,
+                                  @RequestParam("name") String name,
+                                  @RequestParam("taskOid") String taskOid,
+                                  HttpServletRequest request) throws IOException {
+        HttpSession session = request.getSession();
+        if(session.getAttribute("uid")==null) {
+            return ResultUtils.error(-1, "no login");
+        }
+        else {
+            try{
+                String username = session.getAttribute("uid").toString();
+                RestTemplate restTemplate=new RestTemplate();
+                String url="http://" + managerServerIpAndPort + "/GeoModeling/task/runTask";//远程接口
+//                logger.info(url);
+                String suffix="."+ FilenameUtils.getExtension(file.getOriginalFilename());
+                File temp=File.createTempFile("temp",suffix);
+                file.transferTo(temp);
+                FileSystemResource resource = new FileSystemResource(temp);
+                MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+                param.add("file", resource);
+                param.add("userName",username);
+//                logger.info("param");
+                HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
+                ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
+                if (responseEntity.getStatusCode()!= HttpStatus.OK){
+                    throw new Exception("远程服务出错");
+                }
+                else{
+                    JSONObject body=responseEntity.getBody();
+                    if(body.getInteger("code")==-1){
+                        return ResultUtils.error(-2,body.getString("msg"));
+                    }
+                    else {
+                        String taskId = responseEntity.getBody().getString("data");
 
+                        IntegratedTask task = integratedTaskDao.findByOid(taskOid);
+                        task.setTaskId(taskId);
+                        task.setStatus(1);
+                        integratedTaskDao.save(task);
+                        return ResultUtils.success(taskId);
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                return ResultUtils.error(-1,"err");
+            }
+
+
+        }
+    }
 
 }

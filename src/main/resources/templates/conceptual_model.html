@@ -67,99 +67,17 @@
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
+            <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo},true)"></div>
 
-            <div id="Contributor0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
+            <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
 
-            </div>
+            <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div th:replace="fragments/itemInfoModules :: authorship(pos=0)"></div>
+            <div th:replace="fragments/itemInfoModules :: conceptual_graph"></div>
 
-            </div>
+            <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
-            <div id="graph" class="detail_block"
-                 th:if="${#lists.size(itemInfo.imageList)!=0 || itemInfo.contentType=='MxGraph'}">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.graph}}</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="margin-top:20px;">
-
-                    <el-button th:if="${itemInfo.contentType}=='MxGraph'" typ="text" style="float: right; position: relative" @click="showMxGraph()"> MxGraph </el-button>
-
-                    <el-tabs class="right-content" v-model="activeNameGraph" type="border-card" stretch="true">
-                        <el-tab-pane label="Image" name="Image"  th:if="${itemInfo.contentType}!='MxGraph'">
-                            <center th:each="image:${itemInfo.imageList}"><img th:src="${loadPath}+${image}">
-                            </center>
-                        </el-tab-pane>
-                        <el-tab-pane label="Image" name="Image"  style="position: unset"  th:if="${itemInfo.contentType}=='MxGraph'">
-                            <center>
-                                <div th:if="${#lists.size(itemInfo.imageList)}==0" th:utext="${itemInfo.svg}"></div>
-                                <div th:if="${#lists.size(itemInfo.imageList)}!=0">
-                                    <img th:src="${loadPath}+${itemInfo.imageList[0]}">
-
-                                </div>
-                            </center>
-                        </el-tab-pane>
-                    </el-tabs>
-                </div>
-
-            </div>
-
-            <div th:replace="fragments/itemInfoModules :: description"></div>
-
-            <!--<div id="description" class="detail_block" th:if="${itemInfo.detail!=null&&itemInfo.detail!=''}">-->
-                <!--<div class="block_head">-->
-                    <!--<div class="head_text">-->
-                        <!--<h4>Detailed Description</h4>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="block_content">-->
-                    <!--<div th:utext="${itemInfo.detail}" id="detail" class="detailIntroducePanel">-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="fullPaper text-center hide">-->
-                    <!--<a id="fullPaper" style="cursor:pointer;font-size:16px;">View Full Content<i-->
-                            <!--class="fa fa-angle-down"-->
-                            <!--style="margin-left: 10px;color:red;font-weight: bold"-->
-                            <!--aria-hidden="true"></i></a>-->
-                <!--</div>-->
-            <!--</div>-->
             <div th:replace="fragments/itemInfoModules :: related_models" ></div>
-
-<!--            <div id="related_models" class="detail_block">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text">-->
-<!--                        <h4>{{htmlJSON.RelateModelItem}}</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content flex">-->
-
-<!--                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">-->
-<!--                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">-->
-<!--                            <div th:switch="${relateModelItem.img}">-->
-<!--                                <img th:case="null" src="/static/img/model/model.png">-->
-<!--                                <img th:case="*" th:src="${relateModelItem.img}">-->
-<!--                            </div>-->
-
-<!--                        </a>-->
-
-<!--                        <div class="info" style="margin-top:0px;">-->
-<!--                            <a th:href="'/modelItem/'+${relateModelItem.id}"-->
-<!--                               th:text="${relateModelItem.name}">Ground Water Flow System</a>-->
-
-<!--                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial-->
-<!--                                neural network method to extract-->
-<!--                                land use change rules in the study area, and then applies the rules to-->
-<!--                                subsequent-->
-<!--                                simulations and predictions.</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
 
             <div id="cite" class="detail_block">
                 <div class="block_head">
@@ -189,7 +107,7 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
 
             </div>
 
@@ -214,7 +132,7 @@
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
 
             </div>
 
