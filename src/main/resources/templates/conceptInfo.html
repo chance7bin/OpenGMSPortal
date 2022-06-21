@@ -83,73 +83,20 @@
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
+            <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo},true)"></div>
 
             <div th:replace="fragments/itemInfoModules :: alias"></div>
-<!--            <div id="alias" class="detail_block" th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text">-->
-<!--                        <h4>Alias</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content" style="margin-bottom:10px;">-->
-<!--                    <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"-->
-<!--                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>-->
-<!--                </div>-->
-<!--            </div>-->
-
 
             <div id="Contributor0" class="detail_block minScreen">
                 <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
             </div>
-            <div th:replace="fragments/itemInfoModules :: classifications"></div>
+            <div th:replace="fragments/itemInfoModules :: classifications(${classifications}, true)"></div>
 
-            <div id="Related_Concepts0" class="detail_block minScreen" th:if="${#lists.size(related)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.RelatedConcept}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <span class="el-tag" style="margin:0 0px 10px 10px" th:each="item:${related}" >
-                        <a th:href="'/repository/concept/'+${item.id}" th:text="${item.name}" style="display: block"></a>
-                    </span>
-                </div>
+            <div id="Related_Concepts0" class="detail_block minScreen">
+                <div th:replace="fragments/itemInfoModules :: concept_Related_Concepts0"></div>
             </div>
 
-            <div id="description" th:if="${#lists.size(itemInfo.localizationList)>0}" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.DetailedDescription}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="LanguageInfoContainer" th:each="localization:${itemInfo.localizationList}" th:id="${localization.localCode}">
-                        <table class="table table-bordered" >
-                            <thead>
-                            <tr>
-                                <th class="thMain" th:text="${localization.localName}"></th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <table class="table table-bordered">
-                            <colgroup>
-                                <col width="25%">
-                                <col width="75%">
-                            </colgroup>
-                            <tr th:if="${localization.name!=''}">
-                                <td>Name</td>
-                                <td class="enName" th:text="${localization.name}"></td>
-                            </tr>
-                            <tr th:if="${localization.description!=''}">
-                                <td>Description</td>
-                                <td class="enDesc" th:utext="${localization.description}"></td>
-                            </tr>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: concept_description"></div>
 
 
             <div id="cite" class="detail_block">
@@ -179,8 +126,9 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
             </div>
+
             <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div id="comment" class="detail_block">
@@ -190,26 +138,27 @@
         </div>
 
         <div class="right-panel el-col">
-            <div id="Contributor" class="detail_block">
-                <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
-            </div>
 
-            <div id="Related_Concepts" class="detail_block" th:if="${#lists.size(related)!=0}">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>{{htmlJSON.RelatedConcept}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <span class="el-tag" style="margin:0 0px 10px 10px" th:each="item:${related}" >
-                        <a th:href="'/repository/concept/'+${item.id}" th:text="${item.name}" style="display: block"></a>
-                    </span>
-                </div>
+            <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
+            <div id="Related_Concepts0" class="detail_block">
+                <div th:replace="fragments/itemInfoModules :: concept_Related_Concepts0"></div>
             </div>
+<!--            <div id="Related_Concepts" class="detail_block" th:if="${#lists.size(related)!=0}">-->
+<!--                <div class="block_head">-->
+<!--                    <div class="head_text" style="padding-left: 10px;">-->
+<!--                        <h4>{{htmlJSON.RelatedConcept}}</h4>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="block_content">-->
+<!--                    <span class="el-tag" style="margin:0 0px 10px 10px" th:each="item:${related}" >-->
+<!--                        <a th:href="'/repository/concept/'+${item.id}" th:text="${item.name}" style="display: block"></a>-->
+<!--                    </span>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
             </div>
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
 

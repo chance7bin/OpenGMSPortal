@@ -616,7 +616,12 @@ var createDataApplication = Vue.extend({
                     // console.log("basicInfo:",basicInfo)
                     // console.log("basicInfo.localizationList:",basicInfo.localizationList)
                     //detail
-                    $("#dataApplicationText").html(basicInfo.localizationList[0].description);
+                    if(typeof(basicInfo.localizationList[0])!='undefined'){
+                        let des = basicInfo.localizationList[0].description
+                        if(des != null)
+                            $("#dataApplicationText").html(des);
+                    }
+
 
                     initTinymce('textarea#dataApplicationText')
 
