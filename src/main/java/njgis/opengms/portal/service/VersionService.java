@@ -1,11 +1,11 @@
 package njgis.opengms.portal.service;
 
-import java.text.SimpleDateFormat;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
@@ -842,6 +842,7 @@ public class VersionService {
             newField.put("name", version.getContent().getName());
             newField.put("status", null);
         }
+
         if(originalField.get("image")==null)
             originalField.put("image", null);
         if(newField.get("image")==null)
@@ -900,31 +901,96 @@ public class VersionService {
        
 
         //model
+        // if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+        //     if(version.getType() == ItemTypeEnum.ModelItem){
+        //         JSONArray classResult_old = modelClassificationService.getClassifications((List<String>) originalField.get("classifications"));
+        //         originalField.remove("classifications");
+        //         originalField.put("classifications", classResult_old);
+        //
+        //         JSONArray classResult_new = modelClassificationService.getClassifications((List<String>) newField.get("classifications"));
+        //         newField.remove("classifications");
+        //         newField.put("classifications", classResult_new);
+        //     }
+        //     else if(version.getType() == ItemTypeEnum.DataItem||version.getType() == ItemTypeEnum.DataHub){
+        //         List<String> classifications_old = new ArrayList<>();
+        //         for (String classification : (List<String>) originalField.get("classifications")) {
+        //             classifications_old.add(classificationDao.findFirstById(classification).getNameEn());
+        //         }
+        //         originalField.remove("classifications");
+        //         originalField.put("classifications", classifications_old);
+        //
+        //         List<String> classifications_new = new ArrayList<>();
+        //         for (String classification : (List<String>) newField.get("classifications")) {
+        //             classifications_new.add(classificationDao.findFirstById(classification).getNameEn());
+        //         }
+        //         newField.remove("classifications");
+        //         newField.put("classifications", classifications_new);
+        //     }
+        // }
+
+        //classifications
         if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
-            if(version.getType() == ItemTypeEnum.ModelItem){
-                JSONArray classResult_old = modelClassificationService.getClassifications((List<String>) originalField.get("classifications"));
-                originalField.remove("classifications");
-                originalField.put("classifications", classResult_old);
 
-                JSONArray classResult_new = modelClassificationService.getClassifications((List<String>) newField.get("classifications"));
-                newField.remove("classifications");
-                newField.put("classifications", classResult_new);
-            }
-            else if(version.getType() == ItemTypeEnum.DataItem||version.getType() == ItemTypeEnum.DataHub){
-                List<String> classifications_old = new ArrayList<>();
-                for (String classification : (List<String>) originalField.get("classifications")) {
-                    classifications_old.add(classificationDao.findFirstById(classification).getNameEn());
-                }
-                originalField.remove("classifications");
-                originalField.put("classifications", classifications_old);
+            //得到每个分类对应的分类dao
+            ItemTypeEnum type = version.getType();
+            JSONObject daoFactory = genericService.daoFactory(type);
+            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
 
-                List<String> classifications_new = new ArrayList<>();
-                for (String classification : (List<String>) newField.get("classifications")) {
-                    classifications_new.add(classificationDao.findFirstById(classification).getNameEn());
-                }
-                newField.remove("classifications");
-                newField.put("classifications", classifications_new);
+            List<String> originalCls = (List<String>)originalField.get("classifications");
+            List<String> newCls = (List<String>)newField.get("classifications");
+
+            List<String> oriName = new ArrayList<>();
+            List<String> newName = new ArrayList<>();
+
+            for (String o : originalCls) {
+                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+                oriName.add(cls.getNameEn());
             }
+            for (String n : newCls) {
+                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+                newName.add(cls.getNameEn());
+            }
+
+            originalField.remove("classifications");
+            originalField.put("classifications", oriName);
+            newField.remove("classifications");
+            newField.put("classifications", newName);
+
+        }
+
+
+        //dataItem的relatedModels
+        if(originalField.get("relatedModels") != null && newField.get("relatedModels") != null){
+
+            List<String> originalRelatedModels = (List<String>)originalField.get("relatedModels");
+            List<String> newRelatedModels = (List<String>)newField.get("relatedModels");
+
+            List<String> oriName = new ArrayList<>();
+            List<String> newName = new ArrayList<>();
+
+            for (String o : originalRelatedModels) {
+                ModelItem item = modelItemDao.findFirstById(o);
+                if (item == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                oriName.add(item.getName());
+            }
+            for (String n : newRelatedModels) {
+                ModelItem item = modelItemDao.findFirstById(n);
+                if (item == null){
+                    newName.add("unknown");
+                    continue;
+                }
+                newName.add(item.getName());
+            }
+
+
+            originalField.remove("relatedModels");
+            originalField.put("relatedModels", oriName);
+            newField.remove("relatedModels");
+            newField.put("relatedModels", newName);
+
         }
 
         ModelAndView modelAndView = new ModelAndView();
