@@ -88,6 +88,9 @@ public class VersionService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RepositoryService repositoryService;
+
     /**
      * 添加审核版本
      * @param item 修改的条目数据
@@ -130,7 +133,8 @@ public class VersionService {
         version.setOriginal(original);
 
         try {
-            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
+            // version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
+            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal()));
         }catch (Exception e){
             e.printStackTrace();
             log.error(e.getMessage());
@@ -555,14 +559,14 @@ public class VersionService {
     /**
      * 比较两个版本的不同
      * @param editItem 编辑后的item数据
-     * @param itemType 条目类型
+     * @param originalItem 原始条目数据
      * @return void
      * @Author bin
      **/
-    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, ItemTypeEnum itemType) throws IllegalAccessException {
-        JSONObject factory = genericService.daoFactory(itemType);
-        GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
-        PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
+    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, PortalItem originalItem) throws IllegalAccessException {
+        // JSONObject factory = genericService.daoFactory(itemType);
+        // GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
+        // PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
         return genericService.getDifferenceBetweenTwoObject(originalItem,editItem);
     }
 
@@ -843,6 +847,9 @@ public class VersionService {
             newField.put("status", null);
         }
 
+
+        //********************** 通用属性统一 **************************
+
         if(originalField.get("image")==null)
             originalField.put("image", null);
         if(newField.get("image")==null)
@@ -861,32 +868,6 @@ public class VersionService {
             newField.put("lastModifyTime", simpleDateFormat.format(newField.get("lastModifyTime")));
         }
 
-        if(originalField.get("relate")!=null){
-            //relate
-
-            if(version.getType()== ItemTypeEnum.ModelItem){
-                ModelItemRelate modelItemRelate_original= JSON.parseObject(JSON.toJSONString(originalField.get("relate")), ModelItemRelate.class);
-                JSONObject relate_original = modelGetRelate(modelItemRelate_original);
-
-                ModelItemRelate modelItemRelate_new= JSON.parseObject(JSON.toJSONString(newField.get("relate")), ModelItemRelate.class);
-                JSONObject relate_new = modelGetRelate(modelItemRelate_new);
-
-                originalField.remove("relate");
-                originalField.put("relate", relate_original);
-
-                newField.remove("relate");
-                newField.put("relate", relate_new);
-            }
-            else if(version.getType() == ItemTypeEnum.Concept){
-//                TODO originalField和newField都要处理
-            }
-            else{
-//                TODO 其他有relate的条目
-            }
-
-
-        }
-
         if(originalField.get("references")!=null){
             JSONArray  ref_original = getReferences(JSONArray.parseArray(originalField.get("references").toString()));
             originalField.remove("references");
@@ -895,44 +876,166 @@ public class VersionService {
             JSONArray  ref_new = getReferences(JSONArray.parseArray(newField.get("references").toString()));
             newField.remove("references");
             newField.put("references", ref_new);
+        }
+
+
+        //********************** 非通用属性单独处理 **************************
+        ItemTypeEnum type = version.getType();
+        switch (type){
+            case ModelItem:{
+                getModelItemChanged(originalField, newField);
+                break;
+            }
+            case DataItem:{
+                getDataItemChanged(originalField, newField, ItemTypeEnum.DataItem);
+                break;
+            }
+            case DataHub:{
+                getDataItemChanged(originalField, newField, ItemTypeEnum.DataHub);
+                break;
+            }
+            case DataMethod:{
+                getDataMethodChanged(originalField, newField);
+                break;
+            }
+            case Concept:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.Concept);
+                break;
+            }
+            case SpatialReference:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.SpatialReference);
+                break;
+            }
+            case Template:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.Template);
+                break;
+            }
+            case Unit:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.Unit);
+                break;
+            }
+            case Theme:{
+                getThemeChanged(originalField, newField);
+                break;
+            }
+            default:{
+                break;
+            }
 
         }
 
-       
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("version/version_compare");
+        modelAndView.addObject("itemInfo", JSONObject.toJSON(version.getContent()));
+        modelAndView.addObject("originalField", JSONObject.toJSON(originalField));
+        modelAndView.addObject("newField", JSONObject.toJSON(newField));
+        modelAndView.addObject("modularType", version.getType());
 
-        //model
-        // if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
-        //     if(version.getType() == ItemTypeEnum.ModelItem){
-        //         JSONArray classResult_old = modelClassificationService.getClassifications((List<String>) originalField.get("classifications"));
-        //         originalField.remove("classifications");
-        //         originalField.put("classifications", classResult_old);
-        //
-        //         JSONArray classResult_new = modelClassificationService.getClassifications((List<String>) newField.get("classifications"));
-        //         newField.remove("classifications");
-        //         newField.put("classifications", classResult_new);
-        //     }
-        //     else if(version.getType() == ItemTypeEnum.DataItem||version.getType() == ItemTypeEnum.DataHub){
-        //         List<String> classifications_old = new ArrayList<>();
-        //         for (String classification : (List<String>) originalField.get("classifications")) {
-        //             classifications_old.add(classificationDao.findFirstById(classification).getNameEn());
-        //         }
-        //         originalField.remove("classifications");
-        //         originalField.put("classifications", classifications_old);
-        //
-        //         List<String> classifications_new = new ArrayList<>();
-        //         for (String classification : (List<String>) newField.get("classifications")) {
-        //             classifications_new.add(classificationDao.findFirstById(classification).getNameEn());
-        //         }
-        //         newField.remove("classifications");
-        //         newField.put("classifications", classifications_new);
-        //     }
-        // }
+
+        return modelAndView;
+
+    }
+
+    private void getThemeChanged(JSONObject originalField, JSONObject newField) {
+
+    }
+
+    private void getRepositoryChanged(JSONObject originalField, JSONObject newField, ItemTypeEnum type) {
+        //classifications
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+
+            //得到每个分类对应的分类dao
+            JSONObject daoFactory = genericService.daoFactory(type);
+            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+
+            List<String> originalCls = (List<String>)originalField.get("classifications");
+            List<String> newCls = (List<String>)newField.get("classifications");
+
+            // List<JSONObject> oriName = new ArrayList<>();
+            // List<JSONObject> newName = new ArrayList<>();
+            //
+            // for (String o : originalCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+            //     JSONObject jsonObject = new JSONObject();
+            //     if (cls == null){
+            //         jsonObject.put("id","unknown");
+            //         jsonObject.put("name","unknown");
+            //         oriName.add(jsonObject);
+            //         continue;
+            //     }
+            //     jsonObject.put("id",cls.getId());
+            //     jsonObject.put("name",cls.getNameEn());
+            //     oriName.add(jsonObject);
+            // }
+            // for (String n : newCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+            //     JSONObject jsonObject = new JSONObject();
+            //     if (cls == null){
+            //         jsonObject.put("id","unknown");
+            //         jsonObject.put("name","unknown");
+            //         oriName.add(jsonObject);
+            //         continue;
+            //     }
+            //     jsonObject.put("id",cls.getId());
+            //     jsonObject.put("name",cls.getNameEn());
+            //     oriName.add(jsonObject);
+            // }
+
+            JSONArray oriName = repositoryService.getClassification(originalCls, classificationDao);
+            JSONArray newName = repositoryService.getClassification(newCls, classificationDao);
+
+            originalField.remove("classifications");
+            originalField.put("classifications", oriName);
+            newField.remove("classifications");
+            newField.put("classifications", newName);
+
+        }
+
+        if (type == ItemTypeEnum.Concept){
+            if(originalField.get("related") != null&&newField.get("related")!=null){
+                // List<String> related = concept.getRelated();
+                List<String> originalRelated = (List<String>)originalField.get("related");
+                List<String> newClsRelated = (List<String>)newField.get("related");
+
+                JSONArray originalRelateArray = new JSONArray();
+                JSONArray newRelateArray = new JSONArray();
+                getConceptRelated(originalRelated, originalRelateArray, conceptDao);
+                getConceptRelated(newClsRelated, newRelateArray, conceptDao);
+
+                originalField.remove("related");
+                originalField.put("related", originalRelateArray);
+                newField.remove("related");
+                newField.put("related", newRelateArray);
+            }
+
+        }
+
+    }
+
+    void getConceptRelated(List<String> newClsRelated, JSONArray newRelateArray, ConceptDao conceptDao) {
+        if (newClsRelated != null) {
+            for (String relatedId : newClsRelated) {
+                Concept relatedConcept = conceptDao.findFirstById(relatedId);
+                String name = relatedConcept.getName();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", relatedId);
+                jsonObject.put("name", name);
+                newRelateArray.add(jsonObject);
+            }
+        }
+    }
+
+    private void getDataMethodChanged(JSONObject originalField, JSONObject newField) {
+
+    }
+
+    private void getDataItemChanged(JSONObject originalField, JSONObject newField, ItemTypeEnum type) {
+
 
         //classifications
         if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
 
             //得到每个分类对应的分类dao
-            ItemTypeEnum type = version.getType();
             JSONObject daoFactory = genericService.daoFactory(type);
             GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
 
@@ -944,10 +1047,18 @@ public class VersionService {
 
             for (String o : originalCls) {
                 GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+                if (cls == null){
+                    oriName.add("unknown");
+                    continue;
+                }
                 oriName.add(cls.getNameEn());
             }
             for (String n : newCls) {
                 GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+                if (cls == null){
+                    oriName.add("unknown");
+                    continue;
+                }
                 newName.add(cls.getNameEn());
             }
 
@@ -957,7 +1068,6 @@ public class VersionService {
             newField.put("classifications", newName);
 
         }
-
 
         //dataItem的relatedModels
         if(originalField.get("relatedModels") != null && newField.get("relatedModels") != null){
@@ -992,21 +1102,38 @@ public class VersionService {
             newField.put("relatedModels", newName);
 
         }
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("version/version_compare");
-
-        modelAndView.addObject("itemInfo", JSONObject.toJSON(version.getContent()));
-        modelAndView.addObject("originalField", JSONObject.toJSON(originalField));
-        modelAndView.addObject("newField", JSONObject.toJSON(newField));
-        modelAndView.addObject("modularType", version.getType());
-
-
-        return modelAndView;
-
     }
 
+    private void getModelItemChanged(JSONObject originalField, JSONObject newField) {
 
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+            JSONArray classResult_old = modelClassificationService.getClassifications((List<String>) originalField.get("classifications"));
+            originalField.remove("classifications");
+            originalField.put("classifications", classResult_old);
+
+            JSONArray classResult_new = modelClassificationService.getClassifications((List<String>) newField.get("classifications"));
+            newField.remove("classifications");
+            newField.put("classifications", classResult_new);
+        }
+
+
+
+        if(originalField.get("relate")!=null){
+            //relate
+            ModelItemRelate modelItemRelate_original= JSON.parseObject(JSON.toJSONString(originalField.get("relate")), ModelItemRelate.class);
+            JSONObject relate_original = modelGetRelate(modelItemRelate_original);
+
+            ModelItemRelate modelItemRelate_new= JSON.parseObject(JSON.toJSONString(newField.get("relate")), ModelItemRelate.class);
+            JSONObject relate_new = modelGetRelate(modelItemRelate_new);
+
+            originalField.remove("relate");
+            originalField.put("relate", relate_original);
+
+            newField.remove("relate");
+            newField.put("relate", relate_new);
+        }
+
+    }
 
 
 }
