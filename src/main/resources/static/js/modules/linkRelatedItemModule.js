@@ -49,7 +49,7 @@ Vue.component("linkRelatedItemModule",
                     currentPage: 1,
                     pageSize: 5,
                     relateSearch: "",
-                    sortField:"default",
+                    sortField:"viewCount",
                     total: 0,
                     searchResult: [],
                 },
@@ -261,6 +261,7 @@ Vue.component("linkRelatedItemModule",
                         searchText: this.pageOption_all.relateSearch.trim(),
                         sortField: this.pageOption_all.sortField,
                         categoryId: "",
+                        authorEmail: window.localStorage.getItem("account")
                     }
                 }else {
                     // this.pageOption_my.currentPage = 1;
@@ -271,6 +272,7 @@ Vue.component("linkRelatedItemModule",
                         searchText: this.pageOption_my.relateSearch.trim(),
                         sortField: this.pageOption_my.sortField,
                         categoryId: "",
+                        authorEmail: window.localStorage.getItem("account")
                     };
                 }
                 let url, contentType;
@@ -446,7 +448,7 @@ Vue.component("linkRelatedItemModule",
                     data = {
                         id: id,
                         type: this.relateItemType,
-                        relations: []
+                        relations: relateArr
                     };
                 }else{
                     url = "/"+this.targetItemType+"/modelRelation/"+id;
