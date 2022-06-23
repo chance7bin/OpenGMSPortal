@@ -105,36 +105,66 @@ public class RepositoryService {
 
     public JSONArray getClassification(List<String> classifications, GenericCategoryDao categoryDao){
 
-        JSONArray array1 = new JSONArray();
+        // JSONArray array1 = new JSONArray();
+        //
+        // for(int i=0;i<classifications.size();i++){
+        //
+        //     JSONArray array = new JSONArray();
+        //     String classId=classifications.get(i);
+        //
+        //     do {
+        //         GenericCategory classification = (GenericCategory) categoryDao.findFirstById(classId);
+        //         JSONObject jsonObject = new JSONObject();
+        //         jsonObject.put("name",classification.getNameEn());
+        //         jsonObject.put("name_zh",classification.getNameCn());
+        //         jsonObject.put("id",classification.getId());
+        //
+        //         array.add(jsonObject);
+        //         classId=classification.getParentId();
+        //
+        //     } while (classId != null && !classId.equals("null"));
+        //
+        //     // classification= (GenericCategory) categoryDao.findFirstById(classId);
+        //     // array.add(classification.getNameEn());
+        //     // classId=classification.getParentId();
+        //     // classification= (GenericCategory) categoryDao.findFirstById(classId);
+        //     // array.add(classification.getNameEn());
+        //
+        //     for(int j=array.size()-1;j>=0;j--){
+        //         array1.add(array.get(j));
+        //     }
+        // }
+        // return array1;
+
+        JSONArray classResult=new JSONArray();
 
         for(int i=0;i<classifications.size();i++){
 
-            JSONArray array = new JSONArray();
+            JSONArray array=new JSONArray();
             String classId=classifications.get(i);
 
-            do {
+            do{
                 GenericCategory classification = (GenericCategory) categoryDao.findFirstById(classId);
+
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name",classification.getNameEn());
                 jsonObject.put("name_zh",classification.getNameCn());
+                jsonObject.put("name",classification.getNameEn());
                 jsonObject.put("id",classification.getId());
 
                 array.add(jsonObject);
                 classId=classification.getParentId();
+            }while(classId != null && !classId.equals("null"));
 
-            } while (classId != null && !classId.equals("null"));
-
-            // classification= (GenericCategory) categoryDao.findFirstById(classId);
-            // array.add(classification.getNameEn());
-            // classId=classification.getParentId();
-            // classification= (GenericCategory) categoryDao.findFirstById(classId);
-            // array.add(classification.getNameEn());
-
+            JSONArray array1=new JSONArray();
             for(int j=array.size()-1;j>=0;j--){
                 array1.add(array.get(j));
             }
+
+            classResult.add(array1);
+
         }
-        return array1;
+        // System.out.println(classResult);
+        return classResult;
     }
 
 
