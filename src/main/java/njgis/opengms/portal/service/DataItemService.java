@@ -111,39 +111,12 @@ public class DataItemService {
         JSONObject userJson = userService.getItemUserInfoByEmail(dataItem.getAuthor());
 
         //authorship
-        String authorshipString="";
-        List<AuthorInfo> authorshipList=dataItem.getAuthorships();
-        if(authorshipList!=null){
-            for (AuthorInfo author:authorshipList
-            ) {
-                if(authorshipString.equals("")){
-                    authorshipString+=author.getName();
-                }
-                else{
-                    authorshipString+=", "+author.getName();
-                }
-
-            }
-        }
+        List<AuthorInfo> authorshipList= dataItem.getAuthorships();
+        String authorshipString = getAuthorshipString(authorshipList);
+       
         //related models
-        JSONArray modelItemArray=new JSONArray();
-        List<String> relatedModels=dataItem.getRelatedModels();
-        if(relatedModels!=null) {
-            for (String mid : relatedModels) {
-                try {
-                    ModelItem modelItem = modelItemDao.findFirstById(mid);
-                    JSONObject modelItemJson = new JSONObject();
-                    modelItemJson.put("name", modelItem.getName());
-                    modelItemJson.put("id", modelItem.getId());
-                    modelItemJson.put("overview", modelItem.getOverview());
-                    modelItemJson.put("image", modelItem.getImage().equals("") ? null : htmlLoadPath + modelItem.getImage());
-                    modelItemArray.add(modelItemJson);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
+        List<String> relatedModels= dataItem.getRelatedModels();
+        JSONArray modelItemArray = getModelItemArray(relatedModels);
 
         ArrayList<String> fileName = new ArrayList<>();
         if (null!=dataItem.getDataType()&&dataItem.getDataType().equals("DistributedNode")){
@@ -155,8 +128,55 @@ public class DataItemService {
 
         //排序
         List<Localization> locals = dataItem.getLocalizationList();
-        Collections.sort(locals);
+        JSONObject localization = getLocalizationList(locals);
+        String detailResult = localization.getString("detailResult");
+        String detailLanguage = localization.getString("detailLanguage");
 
+        //语言列表
+        List<String> languageList = getLanguageList(locals);
+
+        List<String> classificationsList = dataItem.getClassifications();
+        List<String> classifications = getClassifications(classificationsList);
+
+
+        view.setViewName("data_item_info");
+        view.addObject("datainfo", dataItem);
+        view.addObject("user",userJson);
+        view.addObject("classifications",classifications);
+        view.addObject("relatedModels",modelItemArray);
+        view.addObject("authorships",authorshipString);
+        view.addObject("fileName",fileName);//后期应该是放该name下的所有数据
+        view.addObject("distributeData", invokeServices);//存放远程节点信息
+        //多语言description
+        view.addObject("detailLanguage",detailLanguage);
+        view.addObject("itemType","Data");
+        view.addObject("languageList",languageList);
+        view.addObject("itemInfo",dataItem);
+        view.addObject("detail",detailResult);
+        view.addObject("history",false);
+
+        return view;
+
+    }
+
+    public List<String> getClassifications(List<String> classificationsList) {
+        List<String> classifications = new ArrayList<>();
+        for (String classification : classificationsList) {
+            classifications.add(classificationDao.findFirstById(classification).getNameEn());
+        }
+        return classifications;
+    }
+
+    public List<String> getLanguageList(List<Localization> locals) {
+        List<String> languageList = new ArrayList<>();
+        for(Localization local: locals){
+            languageList.add(local.getLocalName());
+        }
+        return languageList;
+    }
+
+    public JSONObject getLocalizationList(List<Localization> locals){
+        Collections.sort(locals);
         String detailResult = "";
         String detailLanguage = "";
         //先找中英文描述
@@ -182,40 +202,51 @@ public class DataItemService {
                 }
             }
         }
-
-        //语言列表
-        List<String> languageList = new ArrayList<>();
-        for(Localization local:locals){
-            languageList.add(local.getLocalName());
-        }
-
-        List<String> classifications = new ArrayList<>();
-        for (String classification : dataItem.getClassifications()) {
-            classifications.add(classificationDao.findFirstById(classification).getNameEn());
-        }
-
-
-        view.setViewName("data_item_info");
-        view.addObject("datainfo", dataItem);
-        view.addObject("user",userJson);
-        view.addObject("classifications",classifications);
-        view.addObject("relatedModels",modelItemArray);
-        view.addObject("authorships",authorshipString);
-        view.addObject("fileName",fileName);//后期应该是放该name下的所有数据
-        view.addObject("distributeData", invokeServices);//存放远程节点信息
-        //多语言description
-        view.addObject("detailLanguage",detailLanguage);
-        view.addObject("itemType","Data");
-        view.addObject("languageList",languageList);
-        view.addObject("itemInfo",dataItem);
-        view.addObject("detail",detailResult);
-        view.addObject("history",false);
-
-
-        return view;
-
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("detailResult",detailResult);
+        jsonObject.put("detailLanguage",detailLanguage);
+        return jsonObject;
     }
 
+    public JSONArray getModelItemArray(List<String> relatedModels) {
+        JSONArray modelItemArray=new JSONArray();
+
+        if(relatedModels!=null) {
+            for (String mid : relatedModels) {
+                try {
+                    ModelItem modelItem = modelItemDao.findFirstById(mid);
+                    JSONObject modelItemJson = new JSONObject();
+                    modelItemJson.put("name", modelItem.getName());
+                    modelItemJson.put("id", modelItem.getId());
+                    modelItemJson.put("overview", modelItem.getOverview());
+                    modelItemJson.put("image", modelItem.getImage().equals("") ? null : htmlLoadPath + modelItem.getImage());
+                    modelItemArray.add(modelItemJson);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return modelItemArray;
+    }
+
+    public String getAuthorshipString(List<AuthorInfo> authorshipList) {
+        String authorshipString="";
+
+        if(authorshipList!=null){
+            for (AuthorInfo author:authorshipList
+            ) {
+                if(authorshipString.equals("")){
+                    authorshipString+=author.getName();
+                }
+                else{
+                    authorshipString+=", "+author.getName();
+                }
+
+            }
+        }
+        return authorshipString;
+    }
 
 
     /**

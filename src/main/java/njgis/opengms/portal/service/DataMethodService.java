@@ -134,10 +134,8 @@ public class DataMethodService {
         try {
             DataMethod dataMethod = (DataMethod)genericService.getById(id,dataMethodDao);
 
-            List<String> classifications = new ArrayList<>();
-            for (String classification : dataMethod.getClassifications()) {
-                classifications.add(methodClassificationDao.findFirstById(classification).getNameEn());
-            }
+            List<String> classificationsList = dataMethod.getClassifications();
+            List<String> classifications = getClassifications(classificationsList);
 
             //时间
             Date date = dataMethod.getCreateTime();
@@ -149,47 +147,14 @@ public class DataMethodService {
             //用户信息
             JSONObject userJson = userService.getItemUserInfoByEmail(dataMethod.getAuthor());
             //资源信息
-            JSONArray resourceArray = new JSONArray();
             List<Resource> resources = dataMethod.getResources();
-
-            if (resources != null) {
-                for (int i = 0; i < resources.size(); i++) {
-                    String path = resources.get(i).getPath();
-                    String[] arr = path.split("\\.");
-                    String suffix = arr[arr.length - 1];
-                    arr = path.split("/");
-                    String name = null;
-                    if (dataMethod.getBatch()!=null&&dataMethod.getBatch() == true){
-                        name = arr[arr.length - 1];
-                    }else {
-                        name = arr[arr.length - 1].substring(14);
-                    }
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("name", name);
-                    jsonObject.put("suffix", suffix);
-                    jsonObject.put("path", resources.get(i));
-                    resourceArray.add(jsonObject);
-                }
-            }
+            JSONArray resourceArray = getResourceArray(resources, dataMethod.getBatch());
 
             String lastModifyTime = simpleDateFormat.format(dataMethod.getLastModifyTime());
 
             //authorship
-            String authorshipString="";
             List<AuthorInfo> authorshipList=dataMethod.getAuthorships();
-            if(authorshipList!=null){
-                for (AuthorInfo author:authorshipList) {
-                    if(authorshipString.equals("")){
-                        authorshipString+=author.getName();
-                    }
-                    else{
-                        authorshipString+=", "+author.getName();
-                    }
-
-                }
-            }
-
-
+            String authorshipString = getAuthorshipString(authorshipList);
 
 
             modelAndView.setViewName("data_application_info");
@@ -222,6 +187,54 @@ public class DataMethodService {
             return modelAndView;
         }
 
+    }
+
+    public List<String> getClassifications(List<String> classificationsList) {
+        List<String> classifications = new ArrayList<>();
+        for (String classification : classificationsList) {
+            classifications.add(methodClassificationDao.findFirstById(classification).getNameEn());
+        }
+        return classifications;
+    }
+
+    public JSONArray getResourceArray(List<Resource> resources, Boolean batch) {
+        JSONArray resourceArray = new JSONArray();
+        if (resources != null) {
+            for (int i = 0; i < resources.size(); i++) {
+                String path = resources.get(i).getPath();
+                String[] arr = path.split("\\.");
+                String suffix = arr[arr.length - 1];
+                arr = path.split("/");
+                String name = null;
+                if (batch!=null&& batch == true){
+                    name = arr[arr.length - 1];
+                }else {
+                    name = arr[arr.length - 1].substring(14);
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name", name);
+                jsonObject.put("suffix", suffix);
+                jsonObject.put("path", resources.get(i));
+                resourceArray.add(jsonObject);
+            }
+        }
+        return resourceArray;
+    }
+
+    public String getAuthorshipString(List<AuthorInfo> authorshipList) {
+        String authorshipString="";
+        if(authorshipList !=null){
+            for (AuthorInfo author: authorshipList) {
+                if(authorshipString.equals("")){
+                    authorshipString+=author.getName();
+                }
+                else{
+                    authorshipString+=", "+author.getName();
+                }
+
+            }
+        }
+        return authorshipString;
     }
 
 
