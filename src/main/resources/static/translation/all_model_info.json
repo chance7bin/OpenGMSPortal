@@ -99,15 +99,19 @@
 
     "RelatedConceptual":"Edit Related Conceptual Model",
     "viewHistory":"View History",
-
+"RelatedConcept": "Related Concept",
     "Affiliation":"Affiliation",
     "Email":"Email",
     "Homepage":"Homepage",
     "DataResourceUrl": "Data Resource Url",
     "authorshipCorrect":"Is authorship not correct?",
-    "Feedback":"Feedback"
+    "Feedback":"Feedback",
+        "DetailedDescription": "Detailed Description"
   },
   "zh-cn": {
+      "DetailedDescription": "详细描述",
+
+    "RelatedConcept": "相关概念",
       "DataResourceUrl": "数据资源链接",
       "CategoryTags": "类别标签",
     "conceptualModel": "概念模型",

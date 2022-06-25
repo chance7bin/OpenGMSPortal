@@ -700,7 +700,11 @@ var createComputableModel = Vue.extend({
             $(".providers").children(".panel").remove();
 
             //detail
-            $("#computableModelText").html(basicInfo.localizationList[0].description);
+            if(typeof(basicInfo.localizationList[0])!='undefined'){
+                let des = basicInfo.localizationList[0].description
+                if(des != null)
+                    $("#computableModelText").html(des);
+            }
 
             initTinymce('textarea#computableModelText')
 
@@ -798,7 +802,9 @@ var createComputableModel = Vue.extend({
 
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
 
-            var detail = tinyMCE.activeEditor.getContent();
+            var detail = ""
+            if(tinyMCE.activeEditor!=null &&  tinyMCE.activeEditor.getContent()!=null)
+                detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
             itemObj.authorships=[];
@@ -1116,9 +1122,6 @@ var createComputableModel = Vue.extend({
                         var basicInfo = result.data;
 
                         this.insertInfo(basicInfo)
-
-
-
                     }
                 })
 

@@ -84,7 +84,7 @@
         <div class="left-panel el-col">
             <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo},true)"></div>
 
-            <div th:replace="fragments/itemInfoModules :: alias"></div>
+            <div th:replace="fragments/itemInfoModules :: alias(${itemInfo})"></div>
 
             <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
 
@@ -92,7 +92,7 @@
 
             <div th:replace="fragments/itemInfoModules :: unit_transform"></div>
 
-            <div th:replace="fragments/itemInfoModules :: concept_description"></div>
+            <div th:replace="fragments/itemInfoModules :: community_description"></div>
 
             <div id="cite" class="detail_block">
                 <div class="block_head">
@@ -108,7 +108,6 @@
                         </span>
                         <a style="word-break:break-all;" th:href="'https://geomodeling.njnu.edu.cn/repository/unit/'+${itemInfo.id}"
                            th:text="'https://geomodeling.njnu.edu.cn/repository/unit/'+${itemInfo.id}">
-                            https://geomodeling.njnu.edu.cn/modelitem/4e028983-c8c0-4d98-86cd-85fc16a00d21
                         </a>
                     </div>
                     <div id="copy" class="btn btn-info">

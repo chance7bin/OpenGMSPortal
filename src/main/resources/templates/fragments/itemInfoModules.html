@@ -212,7 +212,6 @@
                    class="el-icon-unlock discoverable fontsize-2em "></i>
                 <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em "></i>
             </el-tooltip>
-
         </div>
     </div>
     <div class="detail_overview" th:if="${itemInfo.overview!=null||itemInfo.image!=null}">
@@ -303,7 +302,7 @@
 </div>
 
 <!--相关模型条目-->
-<div th:fragment="related_models" id="related_models" class="detail_block">
+<div th:fragment="related_models(relateModelItemList)" id="related_models" class="detail_block">
     <div class="block_head">
         <div class="head_text">
             <h4 translateId="relateModelItem">Related Model Item</h4>
@@ -332,7 +331,6 @@
 </div>
 
 <div th:fragment="classifications(classifications, showTag)">
-
         <div th:if="${#lists.size(classifications)>0}" id="classification" class="detail_block">
             <div class="block_head">
                 <div class="head_text">
@@ -352,11 +350,9 @@
                         </span>
             </div>
             <div th:fragment="classificationsContent" class="block_content" style="margin-top:20px;" >
-                <div  >
                     <div   th:each="classS:${classifications}">
                         <span style="font-size:24px;margin-right: 8px">●</span>
                         <el-breadcrumb separator-class="el-icon-arrow-right" >
-
                             <el-breadcrumb-item  th:if="${modularType.name} eq'ModelItem'" th:each="class:${classS}" th:text="${class.name}"
                                                  th:onclick="window.open('/modelItem/repository?category='+[[${class.id}]])"
                                                  :to="{ path: '/' }">
@@ -380,13 +376,12 @@
 
                         </el-breadcrumb>
                     </div>
-                </div>
 
             </div>
         </div>
 </div>
 
-<div th:fragment="alias" id="alias" class="detail_block"
+<div th:fragment="alias(itemInfo)" id="alias" class="detail_block"
      th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">
     <div class="block_head">
         <div class="head_text">
@@ -395,7 +390,7 @@
         <span class="blockEdit">
                  <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
                     <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                               type="primary" icon="el-icon-edit" @click="getAlias" circle></el-button>
+                               type="primary" icon="el-icon-edit" circle></el-button>
                 </el-tooltip>
                 <el-tooltip popper-class="fontsize-15"
                             content="There is another version haven't been reviewed, you can edit it later or contact us."
@@ -409,14 +404,12 @@
 
         <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"
                 style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
-
     </div>
 
 </div>
 
 <!--resource资源-->
-<div th:fragment="Resource" id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"
-     th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
+<div th:fragment="Resource(resources)" id="Resource" class="detail_block" style="padding: 10px 20px 0 0;">
     <div class="block_head">
         <div class="head_text">
             <h4 v-text="htmlJSON.Resource"></h4>
@@ -501,8 +494,10 @@
                     <dt th:if="${lastModifier}"><span translateId="Lastmodifier">Last modifier</span>:&nbsp</dt>
                     <dd><a th:if="${lastModifier}" th:text="${lastModifier.name}"  th:href="${'/profile/'+lastModifier.accessId}"
                            target="_blank"></a></dd>
+
                     <dt th:if="${lastModifyTime}"><span translateId="Lastmodifytime" >Last modify time</span>:&nbsp</dt>
                     <dd th:if="${lastModifyTime}" th:text="${lastModifyTime}"></dd>
+
                     <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
                     <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
                         <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
@@ -1329,7 +1324,7 @@
     </div>
 </div>
 
-<div th:fragment="computable_MDL" id="MDL" class="detail_block" th:if="${mdlJson}!=null">
+<div th:fragment="computable_MDL" id="MDL" class="detail_block" >
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px; padding-right: 15px; display: inline-flex">
             <h4>{{htmlJSON.MDLDescription}}</h4>
@@ -1445,7 +1440,7 @@
 
 <!--conceptual model-->
 <div th:fragment="conceptual_graph"  id="graph" class="detail_block"
-     th:if="${#lists.size(itemInfo.imageList)!=0 || itemInfo.contentType=='MxGraph'}">
+     >
     <div class="block_head">
         <div class="head_text">
             <h4>{{htmlJSON.graph}}</h4>
@@ -1475,10 +1470,10 @@
 
 <!--data-->
 <!--data item info-->
-<div  th:fragment="data_classification0" id="classification0" class="detail_block minScreen">
+<div th:fragment="data_classification(classifications)" id="data_classification" class="detail_block">
     <div class="block_head">
         <div class="head_text">
-            <h4>Category Tags</h4>
+            <h4>{{htmlJSON.CategoryTags}}</h4>
         </div>
     </div>
     <div class="block_content" style="margin-bottom:10px;">
@@ -1739,7 +1734,7 @@
     </div>
 </div>
 
-<div  th:fragment="data_relatedmodels" id="relatedmodels" class="detail_block">
+<div  th:fragment="data_relatedmodels(relatedModels, showTag)" id="relatedmodels" class="detail_block">
     <div class="block_head">
         <div class="head_text">
             <h4>{{htmlJSON.RelatedModels}}</h4>
@@ -1758,12 +1753,12 @@
                     <p style="margin-top: 0px" th:text="${model.overview}"></p>
                 </div>
             </div>
-            <el-button th:if="${datainfo.status=='Public'&&history!=true&&datainfo.lock!=true}"
+            <el-button th:if="${showTag==true&&datainfo.status=='Public'&&history!=true&&datainfo.lock!=true}"
                 @click="addRelation()" type="primary" icon="el-icon-plus"
                        style="width: 100%">
                 {{htmlJSON.EditRelatedModelItem}}
             </el-button>
-            <el-tooltip th:if="${datainfo.status=='Public'&&history!=true&&datainfo.lock==true}"
+            <el-tooltip th:if="${showTag==true&&datainfo.status=='Public'&&history!=true&&datainfo.lock==true}"
                         popper-class="fontsize-15"
                         :content="htmlJSON.anotherVersion"
                         effect="light" placement="top">
@@ -1777,13 +1772,13 @@
             <h5 style="margin-bottom: 10px;display: inline-block;">
                 {{htmlJSON.RelatedModelsInfo}}
             </h5>
-            <button  th:if="${datainfo.status=='Public'&&history!=true&&datainfo.lock!=true}"
+            <button  th:if="${showTag==true&&datainfo.status=='Public'&&history!=true&&datainfo.lock!=true}"
                 class="btn btn-default" type="button"
                     style="display: inline-block;" @click="addRelation()">
 
                 <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
             </button>
-            <el-tooltip th:if="${datainfo.status=='Public'&&history!=true&&datainfo.lock==true}"
+            <el-tooltip th:if="${showTag==true&&datainfo.status=='Public'&&history!=true&&datainfo.lock==true}"
                         popper-class="fontsize-15"
                         :content="htmlJSON.anotherVersion"
                         effect="light" placement="top">
@@ -1890,21 +1885,7 @@
     </el-tabs>
 </div>
 
-<div th:fragment="data_classification(classifications)" id="data_classification" class="detail_block">
-    <div class="block_head">
-        <div class="head_text">
-            <h4>{{htmlJSON.CategoryTags}}</h4>
-        </div>
-    </div>
-    <div class="block_content" style="margin-bottom:10px;">
 
-        <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
-
-        <el-tag type="success" th:each="classS:${classifications}" th:text="${classS}"
-                style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
-
-    </div>
-</div>
 
 <div th:fragment="data_link" id="data_link" class="detail_block"
      th:if="${itemInfo.contentType=='Link'||(itemInfo.contentType=='Service')}">
@@ -1969,7 +1950,7 @@
 </div>
 
 <!--concetpinfo-->
-<div th:fragment="concept_Related_Concepts0"  th:if="${#lists.size(related)!=0}">
+<div th:fragment="concept_Related_Concepts0(related)"  th:if="${#lists.size(related)!=0}">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;">
             <h4>{{htmlJSON.RelatedConcept}}</h4>
@@ -1982,7 +1963,7 @@
     </div>
 </div>
 
-<div th:fragment="concept_description" id="concept_description" th:if="${#lists.size(itemInfo.localizationList)>0}" class="detail_block">
+<div th:fragment="community_description" id="community_description" th:if="${#lists.size(itemInfo.localizationList)>0}" class="detail_block">
     <div class="block_head">
         <div class="head_text">
             <h4>{{htmlJSON.DetailedDescription}}</h4>
@@ -2261,37 +2242,14 @@
 </div>
 
 <!--datatemplate-->
-<div th:fragment="template_description" id="template_description" class="detail_block">
-    <div class="block_head">
+<div th:fragment="template_xml(itemInfo)" th:if="${itemInfo.xml!=null && itemInfo.xml!=''}" id="template_xml" class="detail_block">
+    <div  th:if="${itemInfo.xml!=null && itemInfo.xml!=''}" class="block_head">
         <div class="head_text">
             <h4>{{htmlJSON.DetailedDescription}}</h4>
         </div>
     </div>
     <div class="block_content">
-        <pre th:if="${itemInfo.xml!=null && itemInfo.xml!=''}" lang="xml" th:text="${itemInfo.xml}"></pre>
-        <div class="LanguageInfoContainer" th:each="localization:${itemInfo.localizationList}" th:id="${localization.localCode}">
-            <table class="table table-bordered" >
-                <thead>
-                <tr>
-                    <th class="thMain" th:text="${localization.localName}"></th>
-                </tr>
-                </thead>
-            </table>
-            <table class="table table-bordered">
-                <colgroup>
-                    <col width="25%">
-                    <col width="75%">
-                </colgroup>
-                <tr th:if="${localization.name!=''}">
-                    <td>Name</td>
-                    <td class="enName" th:text="${localization.name}"></td>
-                </tr>
-                <tr th:if="${localization.description!=''}">
-                    <td>Description</td>
-                    <td class="enDesc" th:utext="${localization.description}"></td>
-                </tr>
-            </table>
-        </div>
+        <pre lang="xml" th:text="${itemInfo.xml}"></pre>
     </div>
 
 </div>

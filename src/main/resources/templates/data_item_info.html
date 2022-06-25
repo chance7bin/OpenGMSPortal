@@ -79,8 +79,10 @@
                 <div th:replace="fragments/itemInfoModules :: authorship(0,${itemInfo},true)"></div>
             </div>
 
+            <div id="data_classification0" class="detail_block minScreen">
+                <div th:replace="fragments/itemInfoModules :: data_classification(${classifications})"></div>
+            </div>
 
-            <div th:replace="fragments/itemInfoModules :: data_classification0"></div>
 
             <!--data resource url-->
             <div th:replace="fragments/itemInfoModules :: data_url(${itemInfo})"></div>
@@ -126,7 +128,7 @@
             </el-dialog>
 
             <!--related models-->
-            <div th:replace="fragments/itemInfoModules :: data_relatedmodels"></div>
+            <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${relatedModels}, true)"></div>
 
             <!--relatedProcessing-->
             <div th:replace="fragments/itemInfoModules :: data_related_processing"></div>
@@ -169,7 +171,9 @@
 
         <div class="right-panel el-col">
             <!--categorys-->
-            <div th:replace="fragments/itemInfoModules :: data_classification(${itemInfo.classifications})"></div>
+            <div id="data_classification" class="detail_block">
+                <div th:replace="fragments/itemInfoModules :: data_classification(${classifications})"></div>
+            </div>
 
             <div id="Contributor" class="detail_block">
                 <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
