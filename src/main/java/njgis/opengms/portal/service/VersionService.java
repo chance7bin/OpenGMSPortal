@@ -5,15 +5,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.AuthorInfo;
+import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
-import njgis.opengms.portal.entity.doo.model.Resource;
+import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.po.Article;
-import njgis.opengms.portal.entity.po.Version;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -25,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -91,13 +89,7 @@ public class VersionService {
     UserService userService;
 
     @Autowired
-    DataItemService dataItemService;
-
-    @Autowired
     RepositoryService repositoryService;
-
-    @Autowired
-    DataMethodService dataMethodService;
 
     /**
      * 添加审核版本
@@ -630,6 +622,196 @@ public class VersionService {
         return item;
     }
 
+    public JSONObject modelGetRelate(ModelItemRelate modelItemRelate){
+        List<ModelRelation> modelItems = modelItemRelate.getModelRelationList();
+        List<String> conceptual=modelItemRelate.getConceptualModels();
+        List<String> computable=modelItemRelate.getComputableModels();
+        List<String> logical=modelItemRelate.getLogicalModels();
+        List<String> concepts=modelItemRelate.getConcepts();
+        List<String> spatialReferences=modelItemRelate.getSpatialReferences();
+        List<String> templates=modelItemRelate.getTemplates();
+        List<String> units=modelItemRelate.getUnits();
+        List<Map<String,String>> dataSpaceFiles=modelItemRelate.getDataSpaceFiles();
+        List<Map<String,String>> exLinks=modelItemRelate.getExLinks();
+
+        JSONArray modelItemArray=new JSONArray();
+        if(modelItems!=null) {
+            for (int i = 0; i < modelItems.size(); i++) {
+                String idNew = modelItems.get(i).getModelId();
+                ModelItem modelItemNew = modelItemDao.findFirstById(idNew);
+                if (modelItemNew.getStatus().equals("Private")) {
+                    continue;
+                }
+                JSONObject modelItemJson = new JSONObject();
+                modelItemJson.put("name", modelItemNew.getName());
+                modelItemJson.put("id", modelItemNew.getId());
+                modelItemJson.put("relation",modelItems.get(i).getRelation().getText());
+                modelItemJson.put("overview", modelItemNew.getOverview());
+                modelItemJson.put("image", modelItemNew.getImage().equals("") ? null : htmlLoadPath + modelItemNew.getImage());
+                modelItemArray.add(modelItemJson);
+            }
+        }
+        JSONArray conceptualArray=new JSONArray();
+        for(int i=0;i<conceptual.size();i++){
+            String id=conceptual.get(i);
+            ConceptualModel conceptualModel=conceptualModelDao.findFirstById(id);
+            if(conceptualModel.getStatus().equals("Private")){
+                continue;
+            }
+            JSONObject conceptualJson = new JSONObject();
+            conceptualJson.put("name",conceptualModel.getName());
+            conceptualJson.put("id",conceptualModel.getId());
+            conceptualJson.put("overview",conceptualModel.getOverview());
+            conceptualJson.put("image", conceptualModel.getImageList().size() == 0 ? null : htmlLoadPath + conceptualModel.getImageList().get(0));
+            conceptualArray.add(conceptualJson);
+        }
+
+        JSONArray logicalArray=new JSONArray();
+        for(int i=0;i<logical.size();i++){
+            String id=logical.get(i);
+            LogicalModel logicalModel=logicalModelDao.findFirstById(id);
+            if(logicalModel.getStatus().equals("Private")){
+                continue;
+            }
+            JSONObject logicalJson = new JSONObject();
+            logicalJson.put("name",logicalModel.getName());
+            logicalJson.put("id",logicalModel.getId());
+            logicalJson.put("overview",logicalModel.getOverview());
+            logicalJson.put("image", logicalModel.getImageList().size() == 0 ? null : htmlLoadPath + logicalModel.getImageList().get(0));
+            logicalArray.add(logicalJson);
+        }
+
+        JSONArray computableArray=new JSONArray();
+        for(int i=0;i<computable.size();i++){
+            String id=computable.get(i);
+            ComputableModel computableModel=computableModelDao.findFirstById(id);
+            if(computableModel.getStatus().equals("Private")){
+                continue;
+            }
+            JSONObject computableJson = new JSONObject();
+            computableJson.put("name",computableModel.getName());
+            computableJson.put("id",computableModel.getId());
+            computableJson.put("overview",computableModel.getOverview());
+            computableJson.put("contentType",computableModel.getContentType());
+            computableArray.add(computableJson);
+        }
+
+        JSONArray conceptArray=new JSONArray();
+        if(concepts!=null) {
+            for (int i = 0; i < concepts.size(); i++) {
+                String id = concepts.get(i);
+                Concept concept = conceptDao.findFirstById(id);
+                if(concept.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", concept.getName());
+                jsonObj.put("id", concept.getId());
+//                jsonObj.put("alias", concept.getAlias());
+                String desc = "";
+                List<Localization> localizationList = concept.getLocalizationList();
+                for(int j=0;j<localizationList.size();j++){
+                    String description = localizationList.get(j).getDescription();
+                    if(description!=null&&!description.equals("")){
+                        desc = description;
+                        break;
+                    }
+                }
+                jsonObj.put("overview", desc);
+//                jsonObj.put("description_ZH", concept.getDescription_ZH());
+//                jsonObj.put("description_EN", concept.getDescription_EN());
+                conceptArray.add(jsonObj);
+            }
+        }
+
+        JSONArray spatialReferenceArray=new JSONArray();
+        if(spatialReferences!=null) {
+            for (int i = 0; i < spatialReferences.size(); i++) {
+                String id = spatialReferences.get(i);
+                SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                if(spatialReference.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", spatialReference.getName());
+                jsonObj.put("id", spatialReference.getId());
+                jsonObj.put("wkname", spatialReference.getWkname());
+                jsonObj.put("overview", spatialReference.getOverview());
+                spatialReferenceArray.add(jsonObj);
+            }
+        }
+
+        JSONArray templateArray=new JSONArray();
+        if(templates!=null) {
+            for (int i = 0; i < templates.size(); i++) {
+                String id = templates.get(i);
+                Template template = templateDao.findFirstById(id);
+                if(template.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", template.getName());
+                jsonObj.put("id", template.getId());
+                jsonObj.put("overview", template.getOverview());
+                jsonObj.put("type", template.getType());
+                templateArray.add(jsonObj);
+            }
+        }
+
+        JSONArray unitArray=new JSONArray();
+        if(units!=null) {
+            for (int i = 0; i < units.size(); i++) {
+                String id = units.get(i);
+                Unit unit = unitDao.findFirstById(id);
+                if(unit.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", unit.getName());
+                jsonObj.put("id", unit.getId());
+
+                jsonObj.put("overview", unit.getOverview());
+//                jsonObj.put("description_EN", unit.getDescription_EN());
+                unitArray.add(jsonObj);
+            }
+        }
+
+        JSONArray dataItemArray=new JSONArray();
+        List<String> dataItems=modelItemRelate.getDataItems();
+        if(dataItems!=null){
+            for(String dataId:dataItems){
+                DataItem dataItem=dataItemDao.findFirstById(dataId);
+                if(dataItem.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject dataJson=new JSONObject();
+                dataJson.put("name",dataItem.getName());
+                dataJson.put("id",dataItem.getId());
+                dataJson.put("overview",dataItem.getOverview());
+                dataItemArray.add(dataJson);
+            }
+        }
+
+        //TODO dataHubs dataMethod
+
+        JSONObject relationJson = new JSONObject();
+        relationJson.put("modelItems",modelItemArray);
+        relationJson.put("conceptualModels",conceptualArray);
+        relationJson.put("logicalModels",logicalArray);
+        relationJson.put("computableModels",computableArray);
+
+        relationJson.put("dataItems",dataItemArray);
+
+        relationJson.put("concepts",conceptArray);
+        relationJson.put("spatialReferences",spatialReferenceArray);
+        relationJson.put("templates",templateArray);
+        relationJson.put("units",unitArray);
+
+        relationJson.put("exLinks",exLinks);
+        relationJson.put("dataSpaceFiles",dataSpaceFiles);
+        return relationJson;
+
+    }
     public JSONArray getReferences(JSONArray reference_ids){
         JSONArray references = new JSONArray();
         for(int i=0;i<reference_ids.size();i++) {
@@ -652,88 +834,86 @@ public class VersionService {
 
         JSONObject originalField = new JSONObject();
         JSONObject newField = new JSONObject();
-
-        //把item所有属性都先赋值成null，不然模板引擎渲染不出来
-        PortalItem content = version.getContent();
-        //通过getDeclaredFields()方法获取对象类中的所有属性（含私有）
-        //getDeclaredFields()方法用来获取类中所有声明的字段，包括public、private和proteced
-        //但是不包括父类的申明字段，所以用getDeclaredFields获取不到当前对象的属性
-        //如果想要获取从父类继承的字段，可使用getFields()方法，但是此方法仅能获取公共（public）的字段
-        List<Field> fieldsList = new ArrayList<>();  // 保存属性对象数组到列表
-        Class clazz = content.getClass();
-        while (clazz != null) { // 遍历所有父类字节码对象
-            Field[] declaredFields = clazz.getDeclaredFields();  // 获取字节码对象的属性对象数组
-            fieldsList.addAll(new ArrayList<>(Arrays.asList(declaredFields)));  //将`Filed[]`数组转换为`List<>`然后再将其拼接至`ArrayList`上
-            clazz = clazz.getSuperclass();  // 获得父类的字节码对象
-        }
-        try {
-            for (Field field : fieldsList) {
-                //设置允许通过反射访问私有变量
-                field.setAccessible(true);
-                //获取字段的值
-                // String value = field.get(content).toString();
-                //获取字段属性名称
-                // String name = field.getName();
-                //其他自定义操作
-                originalField.put(field.getName(), null);
-                newField.put(field.getName(), null);
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         Map<String, Object> changedField = version.getChangedField();
         for (Map.Entry<String, Object> entry : changedField.entrySet()) {
             String mapKey = entry.getKey();
             Object mapValue = entry.getValue();
             JSONObject props = JSONObject.parseObject(JSONObject.toJSONString(mapValue));
             originalField.put(mapKey, props.get("original"));
-            originalField.put("name", version.getContent().getName());
-            originalField.put("status", null);
             newField.put(mapKey, props.get("new"));
-            newField.put("name", version.getContent().getName());
-            newField.put("status", null);
         }
 
 
         //********************** 通用属性统一 **************************
+        if(originalField.get("name")==null)
+            originalField.put("name", version.getContent().getName());
+        if(newField.get("name")==null)
+            newField.put("name", version.getContent().getName());
 
         if(originalField.get("image")==null)
             originalField.put("image", null);
-        else
-            originalField.put("image", htmlLoadPath + originalField.get("image"));
         if(newField.get("image")==null)
             newField.put("image", null);
-        else
-            newField.put("image", htmlLoadPath + originalField.get("image"));
+
+        if(originalField.get("status")==null)
+            originalField.put("status", null);
+        if(newField.get("status")==null)
+            newField.put("status", null);
+
+        if(originalField.get("overview")==null)
+            originalField.put("overview", null);
+        if(newField.get("overview")==null)
+            newField.put("overview", null);
+
+        if(originalField.get("keywords")==null)
+            originalField.put("keywords", null);
+        if(newField.get("keywords")==null)
+            newField.put("keywords", null);
+
+
+
 
 
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
         if(originalField.get("lastModifier")!=null){
             originalField.put("lastModifier", getLatModifier(originalField.get("lastModifier").toString()));
-            originalField.put("lastModifyTime", simpleDateFormat.format(originalField.get("lastModifyTime")));
-        } else {
-            originalField.put("lastModifier", null);
-            originalField.put("lastModifyTime", null);
         }
+        else{
+            originalField.put("lastModifier",null);
+        }
+
+        if(originalField.get("lastModifyTime")!=null){
+            originalField.put("lastModifyTime", simpleDateFormat.format(originalField.get("lastModifyTime")));
+        }
+        else{
+            originalField.put("lastModifyTime",null);
+        }
+
+
 
         if(newField.get("lastModifier")!=null ){
             newField.put("lastModifier", getLatModifier(newField.get("lastModifier").toString()));
-            newField.put("lastModifyTime", simpleDateFormat.format(newField.get("lastModifyTime")));
-        } else {
-            newField.put("lastModifier", null);
-            newField.put("lastModifyTime", null);
         }
+        else{
+            newField.put("lastModifier",null);
+        }
+
+        if(newField.get("lastModifyTime")!=null){
+            newField.put("lastModifyTime", simpleDateFormat.format(newField.get("lastModifyTime")));
+        }
+        else{
+            newField.put("lastModifyTime",null);
+        }
+
 
         if(originalField.get("references")!=null){
             JSONArray  ref_original = getReferences(JSONArray.parseArray(originalField.get("references").toString()));
-            // originalField.remove("references");
+            originalField.remove("references");
             originalField.put("references", ref_original);
 
             JSONArray  ref_new = getReferences(JSONArray.parseArray(newField.get("references").toString()));
-            // newField.remove("references");
+            newField.remove("references");
             newField.put("references", ref_new);
         }
 
@@ -745,9 +925,12 @@ public class VersionService {
                 getModelItemChanged(originalField, newField);
                 break;
             }
-            case DataItem:
+            case DataItem:{
+                getDataItemChanged(originalField, newField, ItemTypeEnum.DataItem);
+                break;
+            }
             case DataHub:{
-                getDataItemChanged(originalField, newField);
+                getDataItemChanged(originalField, newField, ItemTypeEnum.DataHub);
                 break;
             }
             case DataMethod:{
@@ -763,6 +946,7 @@ public class VersionService {
                 break;
             }
             case Template:{
+
                 getRepositoryChanged(originalField, newField, ItemTypeEnum.Template);
                 break;
             }
@@ -798,305 +982,196 @@ public class VersionService {
 
     private void getRepositoryChanged(JSONObject originalField, JSONObject newField, ItemTypeEnum type) {
         //classifications
-        //得到每个分类对应的分类dao
-        JSONObject daoFactory = genericService.daoFactory(type);
-        GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
-        if(originalField.get("classifications") != null){
-            List<String> originalCls = (List<String>)originalField.get("classifications");
-            JSONArray oriName = repositoryService.getClassification(originalCls, classificationDao);
-            // originalField.remove("classifications");
-            originalField.put("classifications", oriName);
-        }
-        if (newField.get("classifications")!=null){
-            List<String> newCls = (List<String>)newField.get("classifications");
-            JSONArray newName = repositoryService.getClassification(newCls, classificationDao);
-            // newField.remove("classifications");
-            newField.put("classifications", newName);
-        }
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
 
+            //得到每个分类对应的分类dao
+            JSONObject daoFactory = genericService.daoFactory(type);
+            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+
+            List<String> originalCls = (List<String>)originalField.get("classifications");
+            List<String> newCls = (List<String>)newField.get("classifications");
+
+            // List<JSONObject> oriName = new ArrayList<>();
+            // List<JSONObject> newName = new ArrayList<>();
+            //
+            // for (String o : originalCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+            //     JSONObject jsonObject = new JSONObject();
+            //     if (cls == null){
+            //         jsonObject.put("id","unknown");
+            //         jsonObject.put("name","unknown");
+            //         oriName.add(jsonObject);
+            //         continue;
+            //     }
+            //     jsonObject.put("id",cls.getId());
+            //     jsonObject.put("name",cls.getNameEn());
+            //     oriName.add(jsonObject);
+            // }
+            // for (String n : newCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+            //     JSONObject jsonObject = new JSONObject();
+            //     if (cls == null){
+            //         jsonObject.put("id","unknown");
+            //         jsonObject.put("name","unknown");
+            //         oriName.add(jsonObject);
+            //         continue;
+            //     }
+            //     jsonObject.put("id",cls.getId());
+            //     jsonObject.put("name",cls.getNameEn());
+            //     oriName.add(jsonObject);
+            // }
+
+            JSONArray oriName = repositoryService.getClassification(originalCls, classificationDao);
+            JSONArray newName = repositoryService.getClassification(newCls, classificationDao);
+
+            originalField.remove("classifications");
+            originalField.put("classifications", oriName);
+            newField.remove("classifications");
+            newField.put("classifications", newName);
+
+        }
 
         if (type == ItemTypeEnum.Concept){
-            if(originalField.get("related") != null){
+            if(originalField.get("related") != null&&newField.get("related")!=null){
                 // List<String> related = concept.getRelated();
                 List<String> originalRelated = (List<String>)originalField.get("related");
-                JSONArray originalRelateArray = repositoryService.getRelateArray(originalRelated);
-                // originalField.remove("related");
-                originalField.put("related", originalRelateArray);
-            }
-            if (newField.get("related")!=null){
                 List<String> newClsRelated = (List<String>)newField.get("related");
-                JSONArray newRelateArray = repositoryService.getRelateArray(newClsRelated);
-                // newField.remove("related");
+
+                JSONArray originalRelateArray = new JSONArray();
+                JSONArray newRelateArray = new JSONArray();
+                getConceptRelated(originalRelated, originalRelateArray, conceptDao);
+                getConceptRelated(newClsRelated, newRelateArray, conceptDao);
+
+                originalField.remove("related");
+                originalField.put("related", originalRelateArray);
+                newField.remove("related");
                 newField.put("related", newRelateArray);
             }
-        }
-
-        if (type == ItemTypeEnum.SpatialReference){
-            if(originalField.get("xml") != null){
-                originalField.put("localizations",
-                    repositoryService
-                        .getLocalizationArray((String) originalField.get("xml")));
-            }
-            if (newField.get("xml") != null){
-                newField.put("localizations",
-                    repositoryService
-                        .getLocalizationArray((String) newField.get("xml")));
-            }
-
-            if(originalField.get("classifications") != null){
-                originalField.put("isTemporal",
-                    repositoryService
-                        .getFlag((List<String>) originalField.get("classifications")));
-            }
-            if (newField.get("classifications") != null){
-                newField.put("isTemporal",
-                    repositoryService
-                        .getFlag((List<String>) newField.get("classifications")));
-            }
 
         }
 
-        if (type == ItemTypeEnum.Unit){
-            if(originalField.get("xml") != null){
-                originalField.put("localizations",
-                    repositoryService
-                        .getLocalizationArray((String) originalField.get("xml")));
-            }
-            if (newField.get("xml") != null){
-                newField.put("localizations",
-                    repositoryService
-                        .getLocalizationArray((String) newField.get("xml")));
-            }
+    }
 
-            if(originalField.get("xml") != null){
-                originalField.put("oid_cvt", (String) originalField.get("conversionId"));
+    void getConceptRelated(List<String> newClsRelated, JSONArray newRelateArray, ConceptDao conceptDao) {
+        if (newClsRelated != null) {
+            for (String relatedId : newClsRelated) {
+                Concept relatedConcept = conceptDao.findFirstById(relatedId);
+                String name = relatedConcept.getName();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", relatedId);
+                jsonObject.put("name", name);
+                newRelateArray.add(jsonObject);
             }
-            if (newField.get("xml") != null){
-                newField.put("oid_cvt", (String) newField.get("conversionId"));
-            }
-
         }
-
     }
 
     private void getDataMethodChanged(JSONObject originalField, JSONObject newField) {
 
-        if(originalField.get("classifications") != null){
-            // originalField.remove("classifications");
-            originalField.put("classifications",
-                dataMethodService
-                    .getClassifications((List<String>) originalField.get("classifications")));
-        }
-        if (newField.get("classifications") != null){
-            // newField.remove("classifications");
-            newField.put("classifications",
-                dataMethodService
-                    .getClassifications((List<String>) newField.get("classifications")));
-        }
-
-        if(originalField.get("resources") != null){
-            // originalField.remove("resources");
-            originalField.put("resources",
-                dataMethodService
-                    .getResourceArray((List<Resource>) originalField.get("resources"), (Boolean) originalField.get("batch")));
-        }
-        if (newField.get("resources") != null){
-            // newField.remove("resources");
-            newField.put("resources",
-                dataMethodService
-                    .getResourceArray((List<Resource>) newField.get("resources"), (Boolean) originalField.get("batch")));
-        }
-
     }
 
-    private void getDataItemChanged(JSONObject originalField, JSONObject newField) {
-
-        if(originalField.get("classifications") != null){
-            // originalField.remove("classifications");
-            originalField.put("classifications",
-                dataItemService
-                    .getClassifications((List<String>) originalField.get("classifications")));
-        }
-        if (newField.get("classifications") != null){
-            // newField.remove("classifications");
-            newField.put("classifications",
-                dataItemService
-                    .getClassifications((List<String>) newField.get("classifications")));
-        }
-
-        if(originalField.get("relatedModels") != null){
-            // originalField.remove("relatedModels");
-            originalField.put("relatedModels",
-                dataItemService
-                    .getModelItemArray((List<String>) originalField.get("relatedModels")));
-        }
-        if (newField.get("relatedModels") != null){
-            // newField.remove("relatedModels");
-            newField.put("relatedModels",
-                dataItemService
-                    .getModelItemArray((List<String>) newField.get("relatedModels")));
-        }
-
-        if(originalField.get("authorships") != null){
-            // originalField.remove("authorships");
-            originalField.put("authorships",
-                dataItemService
-                    .getAuthorshipString((List<AuthorInfo>) originalField.get("authorships")));
-        }
-        if (newField.get("authorships") != null){
-            // newField.remove("authorships");
-            newField.put("authorships",
-                dataItemService
-                    .getAuthorshipString((List<AuthorInfo>) newField.get("authorships")));
-        }
-
-        if(originalField.get("localizationList") != null){
-            // originalField.remove("detailLanguage");
-            originalField.put("detailLanguage",
-                dataItemService
-                    .getLocalizationList((List<Localization>) originalField.get("localizationList"))
-                    .getString("detailLanguage"));
-        }
-        if (newField.get("localizationList") != null){
-            // newField.remove("detailLanguage");
-            newField.put("detailLanguage",
-                dataItemService
-                    .getLocalizationList((List<Localization>) newField.get("localizationList"))
-                    .getString("detailLanguage"));
-        }
-
-        if(originalField.get("localizationList") != null){
-            // originalField.remove("detail");
-            originalField.put("detail",
-                dataItemService
-                    .getLocalizationList((List<Localization>) originalField.get("localizationList"))
-                    .getString("detailResult"));
-        }
-        if (newField.get("localizationList") != null){
-            // newField.remove("detail");
-            newField.put("detail",
-                dataItemService
-                    .getLocalizationList((List<Localization>) newField.get("localizationList"))
-                    .getString("detailResult"));
-        }
-
-        if(originalField.get("localizationList") != null){
-            // originalField.remove("languageList");
-            originalField.put("languageList",
-                dataItemService
-                    .getLanguageList((List<Localization>) originalField.get("localizationList")));
-        }
-        if (newField.get("localizationList") != null){
-            // newField.remove("languageList");
-            newField.put("languageList",
-                dataItemService
-                    .getLanguageList((List<Localization>) newField.get("localizationList")));
-        }
+    private void getDataItemChanged(JSONObject originalField, JSONObject newField, ItemTypeEnum type) {
 
 
+        //classifications
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+
+            //得到每个分类对应的分类dao
+            JSONObject daoFactory = genericService.daoFactory(type);
+            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+
+            List<String> originalCls = (List<String>)originalField.get("classifications");
+            List<String> newCls = (List<String>)newField.get("classifications");
+
+            List<String> oriName = new ArrayList<>();
+            List<String> newName = new ArrayList<>();
+
+            for (String o : originalCls) {
+                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+                if (cls == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                oriName.add(cls.getNameEn());
+            }
+            for (String n : newCls) {
+                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+                if (cls == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                newName.add(cls.getNameEn());
+            }
+
+            originalField.remove("classifications");
+            originalField.put("classifications", oriName);
+            newField.remove("classifications");
+            newField.put("classifications", newName);
+
+        }
+
+        //dataItem的relatedModels
+        if(originalField.get("relatedModels") != null && newField.get("relatedModels") != null){
+
+            List<String> originalRelatedModels = (List<String>)originalField.get("relatedModels");
+            List<String> newRelatedModels = (List<String>)newField.get("relatedModels");
+
+            List<String> oriName = new ArrayList<>();
+            List<String> newName = new ArrayList<>();
+
+            for (String o : originalRelatedModels) {
+                ModelItem item = modelItemDao.findFirstById(o);
+                if (item == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                oriName.add(item.getName());
+            }
+            for (String n : newRelatedModels) {
+                ModelItem item = modelItemDao.findFirstById(n);
+                if (item == null){
+                    newName.add("unknown");
+                    continue;
+                }
+                newName.add(item.getName());
+            }
+
+
+            originalField.remove("relatedModels");
+            originalField.put("relatedModels", oriName);
+            newField.remove("relatedModels");
+            newField.put("relatedModels", newName);
+
+        }
     }
 
     private void getModelItemChanged(JSONObject originalField, JSONObject newField) {
 
-        if(originalField.get("classifications") != null){
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
             JSONArray classResult_old = modelClassificationService.getClassifications((List<String>) originalField.get("classifications"));
-            // originalField.remove("classifications");
+            originalField.remove("classifications");
             originalField.put("classifications", classResult_old);
-        }
-        if(newField.get("classifications") != null){
+
             JSONArray classResult_new = modelClassificationService.getClassifications((List<String>) newField.get("classifications"));
-            // newField.remove("classifications");
+            newField.remove("classifications");
             newField.put("classifications", classResult_new);
         }
 
 
 
-        if(originalField.get("relate") != null && newField.get("relate") != null){
+        if(originalField.get("relate")!=null){
             //relate
             ModelItemRelate modelItemRelate_original= JSON.parseObject(JSON.toJSONString(originalField.get("relate")), ModelItemRelate.class);
-            JSONObject relate_original = modelItemService.getRelationJson(modelItemRelate_original);
-            // originalField.remove("relate");
-            originalField.put("relate", relate_original);
-        }
-        if (newField.get("relate") != null){
+            JSONObject relate_original = modelGetRelate(modelItemRelate_original);
+
             ModelItemRelate modelItemRelate_new= JSON.parseObject(JSON.toJSONString(newField.get("relate")), ModelItemRelate.class);
-            JSONObject relate_new = modelItemService.getRelationJson(modelItemRelate_new);
-            // newField.remove("relate");
+            JSONObject relate_new = modelGetRelate(modelItemRelate_new);
+
+            originalField.remove("relate");
+            originalField.put("relate", relate_original);
+
+            newField.remove("relate");
             newField.put("relate", relate_new);
         }
-
-
-        if(originalField.get("keywords") != null){
-            List<String> originalKeywords = (List<String>)originalField.get("keywords");
-            String o = modelItemService.getKeywords(originalKeywords);
-            // originalField.remove("metaKeywords");
-            originalField.put("metaKeywords", o);
-        }
-        if (newField.get("keywords") != null){
-            List<String> newKeywords = (List<String>)newField.get("keywords");
-            String n = modelItemService.getKeywords(newKeywords);
-            // newField.remove("metaKeywords");
-            newField.put("metaKeywords", n);
-        }
-
-
-        if(originalField.get("localizationList") != null){
-            // originalField.remove("detailLanguage");
-            originalField.put("detailLanguage",
-                modelItemService
-                    .getLocalizationList((List<Localization>) originalField.get("localizationList"))
-                    .getString("detailLanguage"));
-        }
-        if (newField.get("localizationList") != null){
-            // newField.remove("detailLanguage");
-            newField.put("detailLanguage",
-                modelItemService
-                    .getLocalizationList((List<Localization>) newField.get("localizationList"))
-                    .getString("detailLanguage"));
-        }
-
-        if(originalField.get("localizationList") != null){
-            // originalField.remove("detail");
-            originalField.put("detail",
-                modelItemService
-                    .getLocalizationList((List<Localization>) originalField.get("localizationList"))
-                    .getString("detailResult"));
-        }
-        if (newField.get("localizationList") != null){
-            // newField.remove("detail");
-            newField.put("detail",
-                modelItemService
-                    .getLocalizationList((List<Localization>) newField.get("localizationList"))
-                    .getString("detailResult"));
-        }
-
-        if(originalField.get("localizationList") != null){
-            // originalField.remove("languageList");
-            originalField.put("languageList",
-                modelItemService
-                    .getLanguageList((List<Localization>) originalField.get("localizationList")));
-        }
-        if (newField.get("localizationList") != null){
-            // newField.remove("languageList");
-            newField.put("languageList",
-                modelItemService
-                    .getLanguageList((List<Localization>) newField.get("localizationList")));
-        }
-
-
-        if(originalField.get("authorships") != null){
-            // originalField.remove("authorship");
-            originalField.put("authorship",
-                modelItemService
-                    .getAuthorshipString((List<AuthorInfo>) originalField.get("authorships")));
-        }
-        if (newField.get("authorships") != null){
-            // newField.remove("authorship");
-            newField.put("authorship",
-                modelItemService
-                    .getAuthorshipString((List<AuthorInfo>) newField.get("authorships")));
-        }
-
 
     }
 

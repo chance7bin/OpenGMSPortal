@@ -213,9 +213,8 @@ public class RepositoryService {
             classResult.add(array1);
         }*/
 
-        // classResult.add(getClassification(classifications, categoryDao));
+//        classResult.add(getClassification(classifications, categoryDao));
         classResult = getClassification(classifications, categoryDao);
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String lastModifyTime=sdf.format(item.getLastModifyTime());
 
@@ -473,14 +472,6 @@ public class RepositoryService {
         modelAndView = getCommonAttribute(concept, conceptClassificationDao, modelAndView);
 
         List<String> related = concept.getRelated();
-        JSONArray relateArray = getRelateArray(related);
-
-        modelAndView.addObject("related", relateArray);
-        modelAndView.addObject("modularType", ItemTypeEnum.Concept);
-        return modelAndView;
-    }
-
-    public JSONArray getRelateArray(List<String> related) {
         JSONArray relateArray = new JSONArray();
         if (related != null) {
             for (String relatedId : related) {
@@ -492,7 +483,10 @@ public class RepositoryService {
                 relateArray.add(jsonObject);
             }
         }
-        return relateArray;
+
+        modelAndView.addObject("related", relateArray);
+        modelAndView.addObject("modularType", ItemTypeEnum.Concept);
+        return modelAndView;
     }
 
     /**
@@ -502,7 +496,7 @@ public class RepositoryService {
      * @Author bin
      **/
     public ModelAndView getSpatialReferencePage(String id) {
-        // String flag="";
+        String flag="";
         ModelAndView modelAndView = new ModelAndView();
 
         SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
@@ -518,61 +512,54 @@ public class RepositoryService {
         modelAndView = getCommonAttribute(spatialReference, spatialReferenceClassificationDao, modelAndView);
 
         //兼容两种格式的数据
-        List<String> classifications = spatialReference.getClassifications();
-        String flag = getFlag(classifications);
-
-        String xml = spatialReference.getXml();
-        if(xml!=null)
-        {
-//             org.dom4j.Document d = null;
-//             JSONArray localizationArray = new JSONArray();
-//             try {
-//                 d = DocumentHelper.parseText(xml);
-//                 org.dom4j.Element root = d.getRootElement();
-// //            org.dom4j.Element Localizations = root.element("Localizations");
-//                 List<org.dom4j.Element> LocalizationList = root.elements("Localization");
-//                 for (org.dom4j.Element Localization : LocalizationList) {
-//                     String language = Localization.attributeValue("local");
-//                     String name = Localization.attributeValue("name");
-//                     String desc = Localization.attributeValue("description");
-//                     JSONObject jsonObject = new JSONObject();
-//                     jsonObject.put("language", language);
-//                     jsonObject.put("name", name);
-//                     jsonObject.put("desc", desc);
-//                     localizationArray.add(jsonObject);
-//                 }
-//             } catch (DocumentException e) {
-//                 e.printStackTrace();
-//             }
-//
-//             localizationArray.sort(new Comparator<Object>() {
-//                 @Override
-//                 public int compare(Object o1, Object o2) {
-//                     JSONObject a = (JSONObject) o1;
-//                     JSONObject b = (JSONObject) o2;
-//                     return a.getString("language").compareToIgnoreCase(b.getString("language"));
-//                 }
-//             });
-
-            modelAndView.addObject("localizations",getLocalizationArray(xml));
-        }
-
-        modelAndView.addObject("isTemporal", flag);
-        modelAndView.addObject("modularType", ItemTypeEnum.SpatialReference);
-        return modelAndView;
-    }
-
-    public String getFlag(List<String> classifications) {
-        String flag = "";
         GenericCategory classification = null;
-        for(int i = 0; i< classifications.size(); i++){
-            String classId= classifications.get(i);
+
+        List<String> classifications = spatialReference.getClassifications();
+        for(int i=0;i<classifications.size();i++){
+            String classId=classifications.get(i);
             classification=spatialReferenceClassificationDao.findFirstById(classId);
             flag = classification.getNameEn();
             if(!(flag.equals("Global") || flag.equals("Local")))
                 flag = "other";
         }
-        return flag;
+
+        if(spatialReference.getXml()!=null)
+        {
+            org.dom4j.Document d = null;
+            JSONArray localizationArray = new JSONArray();
+            try {
+                d = DocumentHelper.parseText(spatialReference.getXml());
+                org.dom4j.Element root = d.getRootElement();
+//            org.dom4j.Element Localizations = root.element("Localizations");
+                List<org.dom4j.Element> LocalizationList = root.elements("Localization");
+                for (org.dom4j.Element Localization : LocalizationList) {
+                    String language = Localization.attributeValue("local");
+                    String name = Localization.attributeValue("name");
+                    String desc = Localization.attributeValue("description");
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("language", language);
+                    jsonObject.put("name", name);
+                    jsonObject.put("desc", desc);
+                    localizationArray.add(jsonObject);
+                }
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+
+            localizationArray.sort(new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    JSONObject a = (JSONObject) o1;
+                    JSONObject b = (JSONObject) o2;
+                    return a.getString("language").compareToIgnoreCase(b.getString("language"));
+                }
+            });
+            modelAndView.addObject("localizations",localizationArray);
+        }
+
+        modelAndView.addObject("isTemporal", flag);
+        modelAndView.addObject("modularType", ItemTypeEnum.SpatialReference);
+        return modelAndView;
     }
 
     /**
@@ -595,10 +582,37 @@ public class RepositoryService {
 
         modelAndView = getCommonAttribute(unit, unitClassificationDao, modelAndView);
 
-        String xml = unit.getXml();
-        if(xml!=null)
+        if(unit.getXml()!=null)
         {
-            JSONArray localizationArray = getLocalizationArray(xml);
+            org.dom4j.Document d = null;
+            JSONArray localizationArray = new JSONArray();
+            try {
+                d = DocumentHelper.parseText(unit.getXml());
+                org.dom4j.Element root = d.getRootElement();
+                org.dom4j.Element Localizations = root.element("Localizations");
+                List<org.dom4j.Element> LocalizationList = Localizations.elements("Localization");
+                for (org.dom4j.Element Localization : LocalizationList) {
+                    String language = Localization.attributeValue("Local");
+                    String name = Localization.attributeValue("Name");
+                    String desc = Localization.attributeValue("Description");
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("language", language);
+                    jsonObject.put("name", name);
+                    jsonObject.put("desc", desc);
+                    localizationArray.add(jsonObject);
+                }
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+
+            localizationArray.sort(new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    JSONObject a = (JSONObject) o1;
+                    JSONObject b = (JSONObject) o2;
+                    return a.getString("language").compareToIgnoreCase(b.getString("language"));
+                }
+            });
             modelAndView.addObject("localizations",localizationArray);
         }
 
@@ -608,38 +622,6 @@ public class RepositoryService {
         return modelAndView;
     }
 
-    public JSONArray getLocalizationArray(String xml) {
-        org.dom4j.Document d = null;
-        JSONArray localizationArray = new JSONArray();
-        try {
-            d = DocumentHelper.parseText(xml);
-            org.dom4j.Element root = d.getRootElement();
-            org.dom4j.Element Localizations = root.element("Localizations");
-            List<org.dom4j.Element> LocalizationList = Localizations.elements("Localization");
-            for (org.dom4j.Element Localization : LocalizationList) {
-                String language = Localization.attributeValue("Local");
-                String name = Localization.attributeValue("Name");
-                String desc = Localization.attributeValue("Description");
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("language", language);
-                jsonObject.put("name", name);
-                jsonObject.put("desc", desc);
-                localizationArray.add(jsonObject);
-            }
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
-
-        localizationArray.sort(new Comparator<Object>() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                JSONObject a = (JSONObject) o1;
-                JSONObject b = (JSONObject) o2;
-                return a.getString("language").compareToIgnoreCase(b.getString("language"));
-            }
-        });
-        return localizationArray;
-    }
 
 
     /**

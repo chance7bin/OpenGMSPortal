@@ -75,11 +75,13 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div th:replace="fragments/itemInfoModules :: conceptual_graph"></div>
+            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo.imageList})"
+                 th:if="${#lists.size(itemInfo.imageList)!=0 || itemInfo.contentType=='MxGraph'}">
+            </div>
 
             <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
-            <div th:replace="fragments/itemInfoModules :: related_models"></div>
+            <div  th:replace="fragments/itemInfoModules :: related_models(${relateModelItemList})"></div>
 
             <div id="cite" class="detail_block">
                 <div class="block_head">

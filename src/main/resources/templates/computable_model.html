@@ -65,15 +65,17 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div th:replace="fragments/itemInfoModules :: Resource"></div>
+            <div th:replace="fragments/itemInfoModules :: Resource(${resources})"
+                 th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
+            </div>
 
             <div th:replace="fragments/itemInfoModules :: computable_Link"></div>
 
-            <div th:replace="fragments/itemInfoModules :: computable_MDL"></div>
+            <div th:replace="fragments/itemInfoModules :: computable_MDL" th:if="${mdlJson}!=null"></div>
 
             <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
-            <div th:replace="fragments/itemInfoModules :: related_models"></div>
+            <div  th:replace="fragments/itemInfoModules :: related_models(${relateModelItemList})"></div>
 
 
             <div id="cite" class="detail_block">
