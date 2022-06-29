@@ -141,6 +141,7 @@ public class DataItemService {
 
         view.setViewName("data_item_info");
         view.addObject("datainfo", dataItem);
+//        view.addObject("itemInfo", dataItem);
         view.addObject("user",userJson);
         view.addObject("classifications",classifications);
         view.addObject("relatedModels",modelItemArray);
