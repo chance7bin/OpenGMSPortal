@@ -77,7 +77,13 @@ var createLogicalModel = Vue.extend({
     watch:{
         // 中英文切换
         htmlJson:function(newData){
-            $("#subRteTitle").text("/" + newData.CreateLogicalModel);
+            if (this.editType == 'create'){
+                // console.log("create:",this.htmlJson.CreateModelItem);
+                $("#subRteTitle").text("/" + newData.CreateLogicalModel);
+            } else {
+                // console.log("modify:",this.htmlJson.ModifyModelItem);
+                $("#subRteTitle").text("/" + newData.ModifyLogicalModel);
+            }
         }
     },
 

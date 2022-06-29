@@ -190,7 +190,7 @@
             <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div id="comment" class="detail_block">
-                <comments></comments>
+                <comments :html-Json="htmlJSON"></comments>
             </div>
         </div>
         <div class="right-panel el-col" style="border-left: #d2d2d2 solid 1px;margin-left:-1px">
@@ -216,13 +216,13 @@
             title="Notice"
             :visible.sync="addNewDialog"
             width="30%">
-        <h5>There are two ways to create services. </h5>
-        <h5>One is to download the deployment package, create services in the personal container, and then bind them. </h5>
-        <h5>The other is to create application services in the personal center. </h5>
-        <h5>Click the confirm to jump to the personal center to create a service. </h5>
+        <h5>{{htmlJSON.TwoWaysCreateServices}}</h5>
+        <h5>{{htmlJSON.OnedownloadthenBind}}</h5>
+        <h5>{{htmlJSON.TheOtherCreateApplicationServices}} </h5>
+        <h5>{{htmlJSON.ClickConfirm}} </h5>
         <h5 slot="footer" class="dialog-footer">
-            <el-button @click="addNewDialog = false">cancel</el-button>
-            <el-button type="primary" @click="createService()">confirm</el-button>
+            <el-button @click="addNewDialog = false">{{htmlJSON.Cancel}}</el-button>
+            <el-button type="primary" @click="createService()">{{htmlJSON.Confirm}}</el-button>
         </h5>
     </el-dialog>
 

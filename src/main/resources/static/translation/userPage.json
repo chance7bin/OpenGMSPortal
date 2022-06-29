@@ -42,7 +42,12 @@
     "date": "Date",
     "pageRange": "Page Range",
     "et_al": " et al",
-    "noResult": "No result found"
+    "noResult": "No result found",
+    "AddYourIntroduction": "Add your introduction",
+    "Organization": "Organization",
+    "Location": "Location",
+    "ResearchInterests": "Research Interests",
+    "Website": "Website"
   },
   "zh-cn": {
     "noIntro": "无简介",
@@ -87,7 +92,12 @@
     "pageRange": "页数范围",
     "et_al": " 等",
 
-    "noResult": "暂无内容"
+    "noResult": "暂无内容",
+    "AddYourIntroduction": "添加你的介绍",
+    "Organization": "组织",
+    "Location": "位置",
+    "ResearchInterests": "研究领域",
+    "Website": "网页"
   }
 
 }

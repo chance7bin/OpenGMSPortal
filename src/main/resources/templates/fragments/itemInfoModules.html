@@ -33,7 +33,7 @@
                                        type="primary" icon="el-icon-edit" @click="getDescription" circle></el-button>
                         </el-tooltip>
                         <el-tooltip popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                    :content="htmlJSON.anotherVersion"
                                     effect="light" placement="top">
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                        icon="el-icon-edit" plain circle></el-button>
@@ -109,7 +109,7 @@
             <h4 th:if="${history!=true}" translateId="Contributor">Contributor(s)</h4>
             <h4 th:if="${history==true}" translateId="Modifier">Contributor(s)</h4>
             <el-tooltip popper-class="fontsize-15" effect="light"
-                        content="Contributor is the person who contributed the item to OpenGMS, may not be the author of the item."
+                        :content="htmlJSON.ContributorMayNotAuthor"
                         placement="top">
                 <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
             </el-tooltip>
@@ -149,7 +149,7 @@
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
             <h4 translateId="Authorship">Authorship</h4>
             <el-tooltip popper-class="fontsize-15" effect="light"
-                        content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
+                        :content="htmlJSON.FeedbackBelow"
                         placement="top">
                 <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
             </el-tooltip>
@@ -204,7 +204,7 @@
                    class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
             </el-tooltip>
             <el-tooltip popper-class="fontsize-15"
-                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                        :content="htmlJSON.anotherVersion"
                         effect="light" placement="top">
                 <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x'
                     style="color:#cccccc" aria-hidden='true'></li>
@@ -316,7 +316,7 @@
                                            type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
                             </el-tooltip>
                             <el-tooltip popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                        :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                            icon="el-icon-edit" plain circle></el-button>
@@ -370,7 +370,7 @@
                                type="primary" icon="el-icon-edit" @click="getAlias" circle></el-button>
                 </el-tooltip>
                 <el-tooltip popper-class="fontsize-15"
-                            content="There is another version haven't been reviewed, you can edit it later or contact us."
+                            :content="htmlJSON.anotherVersion"
                             effect="light" placement="top">
                     <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                icon="el-icon-edit" plain circle></el-button>

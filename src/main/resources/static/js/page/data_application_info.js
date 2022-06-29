@@ -165,14 +165,14 @@ var data_application_info = new Vue({
         },
         replyComment(comment){
             this.commentParentId=comment.oid;
-            this.replyTo="Reply to "+comment.author.name;
+            this.replyTo=this.htmlJSON.ReplyTo+comment.author.name;
             setTimeout(function () { $("#commentTextArea").focus();}, 1);
         },
         replySubComment(comment,subComment){
             this.commentParentId=comment.oid;
             this.replyToUserId=subComment.author.oid;
             // this.commentTextAreaPlaceHolder="Reply to "+subComment.author.name;
-            this.replyTo="Reply to "+subComment.author.name;
+            this.replyTo=this.htmlJSON.ReplyTo+subComment.author.name;
             setTimeout(function () { $("#commentTextArea").focus();}, 1);
         },
         tagClose(){

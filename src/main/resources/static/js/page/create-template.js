@@ -1032,10 +1032,10 @@ var createTemplate = Vue.extend({
                         if (result.code === 0) {
                             if (result.data.method === "update") {
                                 this.deleteDraft()
-                                this.$confirm('<div style=\'font-size: 18px\'>Update data template successfully!</div>', 'Tip', {
+                                this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.UpdateDataTemplateSuccessfully +'</div>', 'Tip', {
                                     dangerouslyUseHTMLString: true,
-                                    confirmButtonText: 'View',
-                                    cancelButtonText: 'Go Back',
+                                    confirmButtonText: this.htmlJson.confirmButtonText,
+                                    cancelButtonText: this.htmlJson.cancelButtonText,
                                     cancelButtonClass: 'fontsize-15',
                                     confirmButtonClass: 'fontsize-15',
                                     type: 'success',

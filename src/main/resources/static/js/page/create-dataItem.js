@@ -595,6 +595,11 @@ var createDataItem = Vue.extend({
             handler:function (val) {
                 treetrans = val.tree7
                 this.classificationShow()
+                if (this.editType == 'create'){
+                    $("#subRteTitle").text("/" + val.CreateDataItem1);
+                } else {
+                    $("#subRteTitle").text("/" + val.ModifyDataItem1);
+                }
                 }
             },
             immediate:true
@@ -932,11 +937,6 @@ var createDataItem = Vue.extend({
             // window.sessionStorage.setItem("editModelItem_id", "");
         }
 
-        if (this.editType == 'create'){
-            $("#subRteTitle").text("/" + this.htmlJson.CreateDataItem1);
-        } else {
-            $("#subRteTitle").text("/" + this.htmlJson.ModifyDataItem1);
-        }
 
         $("#step").steps({
             onFinish: function () {

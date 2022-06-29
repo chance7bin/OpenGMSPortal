@@ -30,7 +30,7 @@
     "AuthorshipInfo3": "Claim",
     "AuthorshipInfo4": "Is authorship not correct?",
     "AuthorshipInfo5": "Feed back",
-"Contributor":"Contributor(s)",
+    "Contributor":"Contributor(s)",
 
     "History": "History",
     "HistoryInfo": "Last modify time:&nbsp ",
@@ -39,13 +39,22 @@
 
     "Please": "Please",
     "login": "log in",
-    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "PleaseSelectFileFirst": "please select file first!!",
+    "ServiceOffline": "Sorry, Service Offline !",
+    "ReplyTo": "Reply to ",
     "CommentSubmittedSuccessfully": "Comment submitted successfully!",
-    "SubmitError": "Submit Error",
+    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "SubmitError": "Submit Error!",
+    "PermanentlyDelete": "This will permanently delete the comment. Continue?",
     "CommentDeletedSuccessfully": "Comment deleted successfully!",
     "DeleteError": "Delete Error!",
-    "PleaseSelectFileFirst": "please select file first!!",
-    "ServiceOffline": "Sorry, Service Offline !"
+    "Delete": "Delete",
+    "TwoWaysCreateServices.": "There are two ways to create services.",
+    "OnedownloadthenBind.": "One is to download the deployment package, create services in the personal container, and then bind them.",
+    "TheOtherCreateApplicationServices": "The other is to create application services in the personal center.",
+    "ClickConfirm": "Click the confirm to jump to the personal center to create a service.",
+    "Cancel": "Cancel",
+    "Confirm": "Confirm"
   },
   "zh-cn": {
 
@@ -85,13 +94,22 @@
 
     "Please": "请",
     "login": "登录",
-    "CommentCanNotBeEmpty": "评论不能为空！",
-    "CommentSubmittedSuccessfully": "评论已成功提交！",
-    "SubmitError": "提交失败！",
-    "CommentDeletedSuccessfully": "评论删除成功！",
-    "DeleteError": "删除失败！",
     "PleaseSelectFileFirst": "请先选择文件！",
-    "ServiceOffline": "抱歉，服务已下线！"
+    "ServiceOffline": "抱歉，服务已下线！",
+    "ReplyTo": "回复 ",
+    "CommentSubmittedSuccessfully": "评论已成功提交！",
+    "CommentCanNotBeEmpty": "评论不能为空！",
+    "SubmitError": "提交失败",
+    "PermanentlyDelete": "这将会永久删除评论，是否继续？",
+    "CommentDeletedSuccessfully": "评论删除成功",
+    "DeleteError": "删除失败",
+    "Delete": "删除",
+    "TwoWaysCreateServices": "有两种创建服务的方法。",
+    "OnedownloadthenBind": "一种是下载部署包，在个人容器中创建服务，然后绑定它们。",
+    "TheOtherCreateApplicationServices": "另一个是在个人中心创建应用程序服务。",
+    "ClickConfirm": "单击确认跳转到个人中心以创建服务。",
+    "Cancel": "取消",
+    "Confirm": "确认"
   }
 
 }

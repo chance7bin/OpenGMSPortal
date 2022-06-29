@@ -1762,7 +1762,7 @@
     "SubmitEdit": "SubmitEdit",
     "ModifyComputableModel": "Modify Computable Model",
     "ModifyConceptualModel": "Modify Conceptual Model",
-    "ModifyDataHubs": "Modify Data Hubs",
+    "ModifyDataHubs": "Modify Data Item Hubs",
     "ModifyUnitMetric": "Modify Unit & Metric",
     "ModifyDataTemplate": "Modify Data Template",
     "ModifyConceptSemantic": "Modify Concept & Semantic",
@@ -1780,7 +1780,18 @@
     "NewPassword": "New Password",
     "ConfirmPassword": "Confirm Password",
     "ForgetPassword": "Forget Password",
-    "ViewInUserspace": "View in userspace"
+    "ViewInUserspace": "View in userspace",
+
+    "UpdateDataTemplateSuccessfully": "Update data template successfully!",
+    "viewCount": "View Count",
+    "createTime": "Create Time",
+    "LinkRelatedFromRepositoryOrCreate": "You can provide an relation to the item from the repository or create a new item",
+    "RelatedItems": "Related Items",
+    "MyRepository": "My Repository",
+    "AllRepository": "All Repository",
+    "BindDataMethodItem": "Bind Data Method Item",
+    "SubmittedFailed": "Submitted failed!",
+    "EditSubmitWait": "Your edit has been submit, please wait for the contributor to handle it."
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -1870,7 +1881,7 @@
     "TaskWaitingInvoke": "这个任务正在等待执行，请稍后",
     "TaskPrivate": "私有",
     "TaskPublic": "公开",
-    "ShareDataItem": "作为数据项分享",
+    "ShareDataItem": "作为数据条目分享",
     "CheckTaskInfo": "查看任务信息",
     "TaskStatusSelect": {
       "All": "所有",
@@ -2042,15 +2053,15 @@
     "References": "引用",
     "AddReference": "添加引用",
     "Public": {
-      "label": "共有的",
+      "label": "公开",
       "content": "这个项目可以被检索、分享和编辑。"
     },
     "Discoverable": {
-      "label": "可发现的",
+      "label": "可发现",
       "content": "这个项目可以被检索和分享，只能由创建者编辑。"
     },
     "Private": {
-      "label": "私有的",
+      "label": "私有",
       "content": "这个项目不能被检索和分享，只能由创造者编辑。"
     },
     "noCLSTip": "请至少选择一种分类!",
@@ -2232,6 +2243,7 @@
       "createNew": "创建",
       "Edit": "编辑",
       "Delete": "删除",
+      "Delete": "删除",
       "First": "首页",
       "Previous": "前一页",
       "Next": "后一页",
@@ -2248,8 +2260,8 @@
     "CreateConceptualModel": "创建概念模型",
     "CreateLogicalModel": "创建逻辑模型",
     "CreateComputableModel":"创建计算模型",
-    "CreateDataItem1": "创建数据项",
-    "ModifyDataItem1": "修改数据项",
+    "CreateDataItem1": "创建数据条目",
+    "ModifyDataItem1": "修改数据条目",
     "Resource": "资源",
     "BindModelItem": "绑定模型项",
     "Select": "选择",
@@ -2270,12 +2282,12 @@
     "UpdateLogicalModelSuccess": "修改逻辑模型成功",
     "CreateComputableModelSuccess": "创建计算模型成功",
     "UpdateComputableModelSuccess": "修改计算模型成功",
-    "CreateDataItemSuccessfully": "创建数据项成功！",
+    "CreateDataItemSuccessfully": "创建数据条目成功！",
     "CreateConceptSuccessfully": "创建概念成功！",
     "CreateSpatioTemporalReferenceSuccessfully": "创建时空参考成功！",
     "CreateDataTemplateSuccessfully": "创建数据模板成功！",
     "CreateUnitMetricSuccessfully": "创建单位和度量成功！",
-    "CreateDataHubsSuccessfully": "创建数据中心成功！",
+    "CreateDataHubsSuccessfully": "创建数据条目中心成功！",
     "UpdateSpatioTemporalReferenceSuccessfully": "更新时空参考成功！",
     "CreateDataApplicationSuccessfully": "创建数据应用成功！",
 
@@ -3352,7 +3364,7 @@
     "CreateDataHubs": "创建数据中心",
     "UpdateDataHubs": "更新数据中心",
     "DataHubs": "数据中心",
-    "DataItem": "数据项",
+    "DataItem": "数据条目",
 
     "DataProcessingApplication": "数据处理应用",
 
@@ -3529,7 +3541,7 @@
     "SubmitEdit": "提交修改",
     "ModifyComputableModel": "修改计算模型",
     "ModifyConceptualModel": "修改概念模型",
-    "ModifyDataHubs": "修改数据中心",
+    "ModifyDataHubs": "修改数据条目中心",
     "ModifyUnitMetric": "修改单位与度量",
     "ModifyDataTemplate": "修改数据模板",
     "ModifyConceptSemantic": "修改概念和语义",
@@ -3551,6 +3563,17 @@
     "NewPassword": "新密码",
     "ConfirmPassword": "确认密码",
     "ForgetPassword": "忘记密码",
-    "ViewInUserspace": "前往个人空间查看"
+    "ViewInUserspace": "前往个人空间查看",
+
+    "UpdateDataTemplateSuccessfully": "更新数据模板成功!",
+    "viewCount": "点击量",
+    "createTime": "创建时间",
+    "LinkRelatedFromRepositoryOrCreate": "您可以从仓库中向该项提供关联，或者创建一个新的项",
+    "RelatedItems": "关联项",
+    "MyRepository": "我的仓库",
+    "AllRepository": "所有仓库",
+    "BindDataMethodItem": "绑定数据方法项",
+    "SubmittedFailed": "提交失败",
+    "EditSubmitWait": "您的编辑已提交，请等待贡献者处理。"
   }
 }

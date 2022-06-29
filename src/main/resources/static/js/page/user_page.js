@@ -353,6 +353,23 @@ new Vue({
     },
 
     methods: {
+
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
         },
@@ -2188,9 +2205,9 @@ new Vue({
         selectSortEle(command){
             this.resourcesortField = command
             let text={
-                'viewCount':'View Count',
-                'name':'Name',
-                'createTime':'Create Time',
+                'viewCount': this.htmlJSON.viewCount,
+                'name':this.htmlJSON.name,
+                'createTime':this.htmlJSON.createTime,
             }
             this.resourceSortEleText = text[command]
             this.pageOption.currentPage=1;
@@ -3319,12 +3336,24 @@ new Vue({
         this.projectHandleCurrentChange(1);
         this.conferenceHandleCurrentChange(1);
         this.articleNewestLoad();
+        this.selectSortEle("viewCount");
+
         // this.awardandHonorLoad(1);
         // this.educationExperienceLoad(1);
         this.labLoad();
-
     },
+
+    watch: {
+        htmlJSON:function(newData){
+            this.selectSortEle("viewCount");
+        }
+    },
+
     mounted() {
+
+
+        // console.log("userSpaceAll:",this.getStorage("userSpaceAll"))
+        // this.resourceSortEleText = this.htmlJson.viewCount
 
         let that=this;
         $('#userEduStartTime').dcalendarpicker({
@@ -3355,10 +3384,6 @@ new Vue({
             format:'yyyy/mm/dd'
         });
 
-        $("#researchInterestInput").tagEditor({
-            forceLowercase: false,
-            placeholder:"Press enter after import one item.",
-        })
 
         $("#userRIS").tagEditor({
             forceLowercase: false,

@@ -190,7 +190,7 @@
                         <el-input
                                 type="textarea"
                                 :rows="3"
-                                placeholder="Add your introduction"
+                                :placeholder="htmlJSON.AddYourIntroduction"
                                 v-model="introductionInput">
                         </el-input>
                     </div>
@@ -202,31 +202,31 @@
                     <!--                        </el-input>-->
                     <!--                    </div>-->
                     <div class="organizationEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
-                        <el-tooltip class="item" effect="dark" content="Organization" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Organization" placement="top-start" >
                             <i class="el-icon-s-custom"></i>
                         </el-tooltip>
-                        <el-input size="mini" v-model="organizationInput" placeholder="Organization" style="margin-left: 5px">
+                        <el-input size="mini" v-model="organizationInput" :placeholder="htmlJSON.Organization" style="margin-left: 5px">
                         </el-input>
                     </div>
                     <div class="locationEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
-                        <el-tooltip class="item" effect="dark" content="location" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Location" placement="top-start" >
                             <i class="el-icon-location-information"></i>
                         </el-tooltip>
-                        <el-input size="mini" v-model="locationInput" placeholder="Location" style="margin-left: 5px">
+                        <el-input size="mini" v-model="locationInput" :placeholder="htmlJSON.Location" style="margin-left: 5px">
                         </el-input>
                     </div>
                     <div class="researchInterestsEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
-                        <el-tooltip class="item" effect="dark" content="Research Interests" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.ResearchInterests" placement="top-start" >
                             <i class="el-icon-star-on"></i>
                         </el-tooltip>
-                        <el-input id="researchInterestInput" size="mini"  placeholder="Research Interests"  style="margin-left: 5px">
+                        <el-input id="researchInterestInput" size="mini" :placeholder="htmlJSON.ResearchInterests" style="margin-left: 5px">
                         </el-input>
                     </div>
                     <div class="websiteEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
                         <el-tooltip class="item" effect="dark" content="Website" placement="top-start" >
                             <i class="el-icon-link"></i>
                         </el-tooltip>
-                        <el-input size="mini" v-model="externalLinkInput" placeholder="Website" style="margin-left: 5px">
+                        <el-input size="mini" v-model="externalLinkInput" :placeholder="htmlJSON.Website" style="margin-left: 5px">
                         </el-input>
                     </div>
                     <div class="edit_btnGroups flex-rowDirect edit_col" style="margin-top: 15px" >

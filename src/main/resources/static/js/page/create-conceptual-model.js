@@ -79,7 +79,11 @@ var createConceptualModel = Vue.extend({
     watch:{
         // 中英文切换
         htmlJson:function(newData){
-            $("#subRteTitle").text("/" + newData.CreateConceptualModel);
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateConceptualModel);
+            } else {
+                $("#subRteTitle").text("/" + newData.ModifyConceptualModel);
+            }
         }
     },
 

@@ -35,7 +35,18 @@
      "logicalModel":"Logical Model",
      "computableModel":"Computable Model",
      "conceptualModel":"Conceptual Model",
-     "relateModelItem":"Related Model Item"
+     "relateModelItem":"Related Model Item",
+     "ContributorMayNotAuthor": "Contributor is the person who contributed the item to OpenGMS, may not be the author of the item.",
+     "anotherVersion":"There is another version haven't been reviewed, you can edit it later or contact us.",
+     "CommentSubmittedSuccessfully": "Comment submitted successfully!",
+    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "SubmitError": "Submit Error!",
+    "PermanentlyDelete": "This will permanently delete the comment. Continue?",
+    "CommentDeletedSuccessfully": "Comment deleted successfully!",
+    "DeleteError": "Delete Error!",
+    "ReplyTo": "Reply to ",
+    "Delete": "Delete"
+
   },
   "zh-cn": {
     "HowtoCite": "引用格式",
@@ -73,11 +84,17 @@
       "logicalModel":"逻辑模型",
        "computableModel":"计算模型",
        "conceptualModel":"概念模型",
-        "relateModelItem":"相关模型条目"
-
-
-
-
+        "relateModelItem":"相关模型条目",
+    "ContributorMayNotAuthor": "贡献者是向OpenGMS贡献项目的人，可能不是项目的作者。",
+    "anotherVersion":"还有一个版本还没有审核，您可以稍后编辑或联系我们。",
+    "CommentSubmittedSuccessfully": "评论已成功提交！",
+    "CommentCanNotBeEmpty": "评论不能为空！",
+    "SubmitError": "提交失败",
+    "PermanentlyDelete": "这将会永久删除评论，是否继续？",
+    "CommentDeletedSuccessfully": "评论删除成功",
+    "DeleteError": "删除失败",
+    "ReplyTo": "回复 ",
+    "Delete": "删除"
   }
 
 }

@@ -554,7 +554,7 @@
             <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div id="comment" class="detail_block">
-                <comments></comments>
+                <comments :html-Json="htmlJSON"></comments>
             </div>
 
         </div>
@@ -594,7 +594,7 @@
              style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
 
         <!--Relation 弹出框-->
-        <el-dialog style="float:left" :visible.sync="dialogTableVisible" title="Add Related Model Item"
+        <el-dialog style="float:left" :visible.sync="dialogTableVisible" :title="htmlJSON.AddRelatedModelItem"
                    width="70%" top="40px">
 
             <link-related-item-module

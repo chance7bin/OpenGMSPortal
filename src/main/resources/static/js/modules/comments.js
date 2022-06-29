@@ -1,13 +1,7 @@
 Vue.component("comments",
     {
         template: '#comments',
-        props: {
-
-            // email: {
-            //     type: String,
-            //     default: 'default'
-            // }
-        },
+        props: ["htmlJson"],
         data() {
             return {
                 comment_userId: "",
@@ -20,11 +14,13 @@ Vue.component("comments",
                 replyToUserEmail:"",
                 commentTextAreaPlaceHolder:"Write your comment...",
                 replyTo:"",
-                htmlJSON:{},
+                // htmlJSON:{},
             }
         },
         watch:{
-
+            htmlJson:function (newval){
+                console.log("newval",newval)
+            }
         },
         computed: {
         },
@@ -52,7 +48,7 @@ Vue.component("comments",
                     });
                 }else if(this.commentText.trim()==""){
                     this.$message({
-                        message: 'Comment can not be empty!',
+                        message: this.htmlJson.CommentCanNotBeEmpty,
                         offset: 40,
                         showClose: true,
                     });
@@ -83,7 +79,7 @@ Vue.component("comments",
                             }else if (result.code == 0) {
                                 this.commentText = "";
                                 this.$message({
-                                    message: 'Comment submitted successfully!',
+                                    message: this.htmlJson.CommentSubmittedSuccessfully,
                                     type: 'success',
                                     offset: 40,
                                     showClose: true,
@@ -91,7 +87,7 @@ Vue.component("comments",
                                 this.getComments();
                             } else {
                                 this.$message({
-                                    message: 'Submit Error!',
+                                    message: this.htmlJson.SubmitError,
                                     type: 'error',
                                     offset: 40,
                                     showClose: true,
@@ -103,7 +99,7 @@ Vue.component("comments",
 
             },
             deleteComment(oid){
-                this.$confirm('This will permanently delete the comment. Continue?', 'Waring', {
+                this.$confirm(this.htmlJson.PermanentlyDelete, 'Waring', {
                     confirmButtonText: 'OK',
                     cancelButtonText: 'Cancel',
                     type: 'warning'
@@ -122,7 +118,7 @@ Vue.component("comments",
                             }else if (result.code == 0) {
                                 this.commentText = "";
                                 this.$message({
-                                    message: 'Comment deleted successfully!',
+                                    message: this.htmlJson.CommentDeletedSuccessfully,
                                     type: 'success',
                                     offset: 40,
                                     showClose: true,
@@ -130,7 +126,7 @@ Vue.component("comments",
                                 this.getComments();
                             } else {
                                 this.$message({
-                                    message: 'Delete Error!',
+                                    message: this.htmlJson.DeleteError,
                                     type: 'error',
                                     offset: 40,
                                     showClose: true,
@@ -159,14 +155,14 @@ Vue.component("comments",
             replyComment(comment){
                 this.commentParentId=comment.id;
                 this.replyToUserEmail=comment.author.userId;
-                this.replyTo="Reply to "+comment.author.name;
+                this.replyTo=this.htmlJson.ReplyTo+comment.author.name;
                 setTimeout(function () { $("#commentTextArea").focus();}, 1);
             },
             replySubComment(comment,subComment){
                 this.commentParentId=comment.id;
                 this.replyToUserEmail=subComment.author.userId;
                 // this.commentTextAreaPlaceHolder="Reply to "+subComment.author.name;
-                this.replyTo="Reply to "+subComment.author.name;
+                this.replyTo=this.htmlJson.ReplyTo+subComment.author.name;
                 setTimeout(function () { $("#commentTextArea").focus();}, 1);
             },
             tagClose(){

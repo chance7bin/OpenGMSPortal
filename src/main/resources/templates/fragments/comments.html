@@ -64,13 +64,13 @@
                                         <!--</span>-->
                                         <a href="#comment" class="reply hover" @click="replyComment(comment)" >
                                                         <i class="el-icon-s-comment"></i>
-                                                        <span translateId="reply">Reply</span>
+                                                        <span translateId="reply">{{htmlJson.ReplyTo}}</span>
                                         </a>
                                 </div>
                                 <div v-if="comment_userId==comment.author.userId" >
                                                     <a class="delete hover" style="display: none;" @click="deleteComment(comment.oid)">
                                                         <i class="el-icon-delete-solid"></i>
-                                                        <span translateId="delete">Delete</span>
+                                                        <span translateId="delete">{{htmlJson.Delete}}</span>
                                                     </a>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                         <div class="com-sub-name-time" style="margin-left:15px">
                                             <div class="com-author-name">
                                                 <a :href="'/profile/'+subComm.author.userId" target="_blank" style="font-size: 18px;">{{subComm.author.name}}</a>
-                                                <span v-if="subComm.replyTo!=null" style="margin:0 5px;font-weight: bold">reply</span>
+                                                <span v-if="subComm.replyTo!=null" style="margin:0 5px;font-weight: bold">{{htmlJson.ReplyTo}}</span>
                                                 <span v-if="subComm.replyTo!=null">
                                                     <a :href="'/profile/'+subComm.replyTo.userId" target="_blank" style="font-size: 18px;font-weight: normal">{{subComm.replyTo.name}}</a>
                                                 </span>
@@ -101,13 +101,13 @@
                                             <!--</span>-->
                                             <a href="#comment" class="reply hover" @click="replySubComment(comment,subComm)">
                                                     <i class="el-icon-s-comment"></i>
-                                                    Reply
+                                                {{htmlJson.ReplyTo}}
                                                 </a>
                                         </div>
                                         <div v-if="comment_userId==subComm.author.userId" >
                                                 <a class="delete hover" style="display: none;" @click="deleteComment(subComm.oid)">
                                                     <i class="el-icon-delete-solid"></i>
-                                                    Delete
+                                                    {{htmlJson.Delete}}
                                                 </a>
                                         </div>
                                     </div>

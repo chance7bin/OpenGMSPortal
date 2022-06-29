@@ -676,11 +676,10 @@ var createDataHubs = Vue.extend({
             // this.htmlJSON = newData;
             // this.treeData_part1 = newData.treeData_part1;
             // this.treeData_part2 = newData.treeData_part2;
-            console.log(this.editType)
-            if (this.editType != 'modify'){
+            if (this.editType == 'create'){
                 $("#subRteTitle").text("/" + newData.CreateDataHubs);
             } else {
-                $("#subRteTitle").text("/" + newData.UpdateDataHubs);
+                $("#subRteTitle").text("/" + newData.ModifyDataHubs);
             }
             // $("#title").text("Create Model Item")
 

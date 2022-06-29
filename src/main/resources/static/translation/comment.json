@@ -1,19 +1,32 @@
-{
+ {
   "en-us": {
 
     "comment": "Comment(s)",
     "submit": "Submit",
     "reply": "Reply",
     "delete": "Delete",
-    "writeYourComment": "Write your comment..."
-
+    "writeYourComment": "Write your comment...",
+    "CommentSubmittedSuccessfully": "Comment submitted successfully!",
+    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "SubmitError": "Submit Error!",
+    "PermanentlyDelete": "This will permanently delete the comment. Continue?",
+    "CommentDeletedSuccessfully": "Comment deleted successfully!",
+    "DeleteError": "Delete Error!",
+    "ReplyTo": "Reply to "
   },
   "zh-cn": {
     "comment": "评论区",
     "submit": "提交",
     "reply": "回复",
     "delete": "删除",
-    "writeYourComment": "写下你的评论..."
+    "writeYourComment": "写下你的评论...",
+    "CommentSubmittedSuccessfully": "评论已成功提交！",
+    "CommentCanNotBeEmpty": "评论不能为空！",
+    "SubmitError": "提交失败",
+    "PermanentlyDelete": "这将会永久删除评论，是否继续？",
+    "CommentDeletedSuccessfully": "评论删除成功",
+    "DeleteError": "删除失败",
+    "ReplyTo": "回复 "
   }
 
 }

@@ -998,7 +998,7 @@
             <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
 
             <div th:if="${history!=true}" id="comment" class="detail_block">
-                <comments></comments>
+                <comments :html-Json="htmlJSON"></comments>
             </div>
 
         </div>
@@ -1788,19 +1788,19 @@
             </el-tab-pane>
         </el-tabs>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="editMetadata = false">Cancel</el-button>
+            <el-button @click="editMetadata = false">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
   confirm-button-text='Yes'
   cancel-button-text='No'
                     title="Are you sure to submit changes?"
                     @confirm="submitMetadata"
             >
-                <el-button type="primary" slot="reference">Submit</el-button>
+                <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
             </el-popconfirm>
         </span>
     </el-dialog>
 
-    <el-dialog  v-cloak title="Edit Reference" :visible.sync="editReference" width="75%">
+    <el-dialog  v-cloak :title="htmlJSON.EditReference" :visible.sync="editReference" width="75%">
         <table class="display table table-bordered table-striped dataTable"
                id="dynamic-table"
                aria-describedby="dynamic-table_info">
@@ -1906,11 +1906,11 @@
                 data-toggle="modal"
                 data-target="#refinfo"
                 @click="addArticleClick"
-                type="button">Add Reference
+                type="button">{{htmlJSON.AddReference}}
         </button>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="editReference = false">Cancel</el-button>
-            <el-button type="primary" @click="submitReference">Submit</el-button>
+            <el-button @click="editReference = false">{{htmlJSON.Cancel}}</el-button>
+            <el-button type="primary" @click="submitReference">{{htmlJSON.Submit}}</el-button>
         </span>
     </el-dialog>
 

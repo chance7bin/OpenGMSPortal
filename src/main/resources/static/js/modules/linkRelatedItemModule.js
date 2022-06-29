@@ -39,6 +39,7 @@ Vue.component("linkRelatedItemModule",
                 targetItemId:'',
                 targetItemType:'',
                 relateItemType:'',
+                htmlJson:{},
 
                 relateItemType_trim:'',//data和model页面中关于modelitem的关系不同，前端页面展示也不同
 
@@ -104,6 +105,22 @@ Vue.component("linkRelatedItemModule",
         },
         computed: {},
         methods: {
+            // 获取缓存
+            getStorage(key){
+                var localStorage = window.localStorage;
+                if (localStorage )
+                    var v = localStorage.getItem(key);
+                if (!v) {
+                    return;
+                }
+                if (v.indexOf('obj-') === 0) {
+                    v = v.slice(4);
+                    return JSON.parse(v);
+                } else if (v.indexOf('str-') === 0) {
+                    return v.slice(4);
+                }
+            },
+
             postMsg(msg){
                 this.$emit('receive-msg',msg)
             },
@@ -479,7 +496,7 @@ Vue.component("linkRelatedItemModule",
                         }else{
                             let info = result.data.type;
                             if(info === 'suc'){
-                                this.$alert('Success!', 'Tip', {
+                                this.$alert(this.htmlJson.Success, 'Tip', {
                                     type:'success',
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -501,7 +518,7 @@ Vue.component("linkRelatedItemModule",
                                     }
                                 });
                             }else if(info==='version'){
-                                this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
+                                this.$alert(this.htmlJson.EditSubmitWait, {
                                     type: 'success',
                                     confirmButtonText: 'OK',
                                     callback: action => {
@@ -516,7 +533,7 @@ Vue.component("linkRelatedItemModule",
 
                     },
                     error: (json) => {
-                        this.$alert('Submitted failed!', 'Error', {
+                        this.$alert(this.htmlJson.SubmittedFailed, 'Error', {
                             type:'error',
                             confirmButtonText: 'OK',
                             callback: action => {
@@ -542,7 +559,7 @@ Vue.component("linkRelatedItemModule",
             this.relateItemType = this.relateType
             this.targetItemType = this.targetType
             this.targetItemId = this.targetId
-
+            this.htmlJson = this.getStorage("userSpaceAll")
 
             //module_msg赋值给window对象
             // console.log("modulesValue:", this.modulesValue);

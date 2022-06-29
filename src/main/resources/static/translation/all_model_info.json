@@ -105,7 +105,25 @@
     "Homepage":"Homepage",
 
     "authorshipCorrect":"Is authorship not correct?",
-    "Feedback":"Feedback"
+    "Feedback":"Feedback",
+    "ContributorMayNotAuthor": "Contributor is the person who contributed the item to OpenGMS, may not be the author of the item.",
+    "FeedbackBelow.": "We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below.",
+    "CommentSubmittedSuccessfully": "Comment submitted successfully!",
+    "CommentCanNotBeEmpty": "Comment can not be empty!",
+    "SubmitError": "Submit Error!",
+    "PermanentlyDelete": "This will permanently delete the comment. Continue?",
+    "CommentDeletedSuccessfully": "Comment deleted successfully!",
+    "DeleteError": "Delete Error!",
+    "ReplyTo": "Reply to ",
+    "Delete": "Delete",
+    "EditReference": "Edit Reference",
+    "Submit": "Submit",
+    "Cancel": "Cancel",
+    "AddReference": "AddReference",
+    "NoDataAvailable": "NoDataAvailable",
+    "Show": "Show",
+    "entries": "entries",
+    "Search": "Search"
   },
   "zh-cn": {
     "conceptualModel": "概念模型",
@@ -211,7 +229,25 @@
     "Email":"邮箱",
     "Homepage":"主页",
     "authorshipCorrect":"作者身份不正确?",
-    "Feedback":"反馈"
+    "Feedback":"反馈",
+    "ContributorMayNotAuthor": "贡献者是向OpenGMS贡献项目的人，可能不是项目的作者。",
+    "FeedbackBelow": "我们深刻地理解一个模型可以归因于一个团队的努力。如果没有列出所有的作者信息，请点击下面的反馈。",
+    "CommentSubmittedSuccessfully": "评论已成功提交！",
+    "CommentCanNotBeEmpty": "评论不能为空！",
+    "SubmitError": "提交失败",
+    "PermanentlyDelete": "这将会永久删除评论，是否继续？",
+    "CommentDeletedSuccessfully": "评论删除成功",
+    "DeleteError": "删除失败",
+    "ReplyTo": "回复 ",
+    "Delete": "删除",
+    "EditReference": "编辑参考",
+    "Submit": "提交",
+    "Cancel": "取消",
+    "AddReference": "添加参考",
+    "NoDataAvailable": "表中没有数据",
+    "Show": "展示",
+    "entries": "项",
+    "Search": "查找"
   }
 
 }

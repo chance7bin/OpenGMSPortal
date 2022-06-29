@@ -183,7 +183,11 @@ var createComputableModel = Vue.extend({
     watch:{
         // 中英文切换
         htmlJson:function(newData){
-            $("#subRteTitle").text("/" + newData.CreateComputableModel);
+            if (this.editType == 'create'){
+                $("#subRteTitle").text("/" + newData.CreateComputableModel);
+            } else {
+                $("#subRteTitle").text("/" + newData.ModifyComputableModel);
+            }
         }
     },
 
