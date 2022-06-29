@@ -64,7 +64,12 @@
                             </div>
                             <!--                              分类-->
                             <div th:if="${originalField?.get('classifications')!=null}">
-                                <div th:replace="fragments/itemInfoModules :: classifications(${originalField.classifications}, false)"></div>
+                                <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
+                                    <div th:replace="fragments/itemInfoModules :: data_classification(${originalField.classifications})"></div>
+                                </div>
+                                <div th:if="${modularType.name!='DataHub' and modularType.name!='DataItem'}">
+                                    <div th:replace="fragments/itemInfoModules :: classifications(${originalField.classifications}, false)"></div>
+                                </div>
                             </div>
                             <!--                                    Detailed Description-->
                             <div th:if="${originalField?.get('localizationList')!=null}" class="detail_block">
@@ -242,11 +247,7 @@
                                     <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${originalField.relatedModels}, false)"></div>
                                 </div>
 
-                                    <!--                                    分类-->
-                                    <div th:if="${originalField?.get('classifications')!=null}">
-                                        <div th:replace="fragments/itemInfoModules :: data_classification(${originalField.classifications})"></div>
-                                    </div>
-                                    <div th:if="${originalField?.get('url')!=null}">
+                                <div th:if="${originalField?.get('url')!=null}">
                                         <div th:replace="fragments/itemInfoModules :: data_url(${originalField})"></div>
                                     </div>
 
@@ -309,7 +310,12 @@
                             </div>
                             <!--                              分类-->
                             <div th:if="${newField?.get('classifications')!=null}">
-                                <div th:replace="fragments/itemInfoModules :: classifications(${newField.classifications}, false)"></div>
+                                <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
+                                    <div th:replace="fragments/itemInfoModules :: data_classification(${newField.classifications})"></div>
+                                </div>
+                                <div th:if="${modularType.name!='DataHub' and modularType.name!='DataItem'}">
+                                    <div th:replace="fragments/itemInfoModules :: classifications(${newField.classifications}, false)"></div>
+                                </div>
                             </div>
                             <!--                                    Detailed Description-->
                             <div th:if="${newField?.get('localizationList')!=null}" class="detail_block">
@@ -481,6 +487,7 @@
                                 </div>
 
                             </div>
+
                             <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
                                 <!--related models-->
                                 <div th:if="${newField?.get('relatedModels')!=null&&#lists.size(newField.relatedModels)!=0}">
@@ -488,10 +495,6 @@
                                     <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${newField.relatedModels}, false)"></div>
                                 </div>
 
-                                <!--                                    分类-->
-                                <div th:if="${newField?.get('classifications')!=null}">
-                                    <div th:replace="fragments/itemInfoModules :: data_classification(${newField.classifications})"></div>
-                                </div>
                                 <div th:if="${newField?.get('url')!=null}">
                                     <div th:replace="fragments/itemInfoModules :: data_url(${newField})"></div>
                                 </div>
@@ -523,6 +526,7 @@
                                 <div th:if="${newField?.get('relateModelItemList')!=null}" th:replace="fragments/itemInfoModules :: related_models(${newField.relateModelItemList})"></div>
 
                             </div>
+
                             <div th:if="${modularType.name} eq 'LogicalModel'">
                                 <div th:if="${newField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${newField.imageList})"></div>
                             </div>
