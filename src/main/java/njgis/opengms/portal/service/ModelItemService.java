@@ -122,54 +122,102 @@ public class ModelItemService {
 //        String model_detailDesc=modelInfo.getDetail();
 //        detailResult = commonService.getDetail(model_detailDesc);
 
-        //排序
         List<Localization> locals = modelInfo.getLocalizationList();
-        Collections.sort(locals);
-
-        String detailResult = "";
-        String detailLanguage = "";
-        //先找中英文描述
-        for(Localization localization:locals){
-            String local = localization.getLocalCode();
-            if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
-                String localDesc = localization.getDescription();
-                if(localDesc!=null&&!localDesc.equals("")) {
-                    detailLanguage = localization.getLocalName();
-                    detailResult = localization.getDescription();
-                    break;
-                }
-            }
-        }
-        //如果没有中英文，则使用其他语言描述
-        if(detailResult.equals("")){
-            for(Localization localization:locals){
-                String localDesc = localization.getDescription();
-                if(localDesc!=null&&!localDesc.equals("")) {
-                    detailLanguage = localization.getLocalName();
-                    detailResult = localization.getDescription();
-                    break;
-                }
-            }
-        }
+        JSONObject localization = getLocalizationList(locals);
+        String detailResult = localization.getString("detailResult");
+        String detailLanguage = localization.getString("detailLanguage");
 
         //语言列表
-        List<String> languageList = new ArrayList<>();
-        for(Localization local:locals){
-            languageList.add(local.getLocalName());
-        }
-
+        List<String> languageList = getLanguageList(locals);
 
         //时间
         Date date=modelInfo.getCreateTime();
+        String dateResult=getDateResult(date);
+
+        //relate
+        ModelItemRelate modelItemRelate= modelInfo.getRelate();
+        JSONObject relationJson = getRelationJson(modelItemRelate);
+
+        //用户信息
+        JSONObject userJson = userService.getItemUserInfoByEmail(modelInfo.getAuthor());
+
+        //修改者信息
+        String lastModifier=modelInfo.getLastModifier();
+        JSONObject modifierJson=null;
+        if(lastModifier!=null){
+            modifierJson = userService.getItemUserInfoByEmail(lastModifier);
+        }
+
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-        String dateResult=simpleDateFormat.format(date);
+        String lastModifyTime=simpleDateFormat.format(modelInfo.getLastModifyTime());
 
 
-        //relate
-        ModelItemRelate modelItemRelate=modelInfo.getRelate();
-        List<ModelRelation> modelItems = modelInfo.getRelate().getModelRelationList();
+        //图片路径
+        String image=modelInfo.getImage();
+        if(!image.equals("")){
+            modelInfo.setImage(htmlLoadPath+image);
+        }
+
+        //meta keywords
+        List<String> keywords=modelInfo.getKeywords();
+        String meta_keywords = getKeywords(keywords);
+
+        //authorship
+        List<AuthorInfo> authorshipList=modelInfo.getAuthorships();
+        String authorshipString = getAuthorshipString(authorshipList);
+
+        modelAndView.setViewName("model_item_info");
+        modelAndView.addObject("itemInfo",modelInfo);
+        modelAndView.addObject("itemType","Model");
+        modelAndView.addObject("metaKeywords",meta_keywords);
+        modelAndView.addObject("classifications",classResult);
+        modelAndView.addObject("detailLanguage",detailLanguage);
+        modelAndView.addObject("languageList", languageList);
+//        modelAndView.addObject("description",modelInfo.getOverview());
+        modelAndView.addObject("detail",detailResult);
+        modelAndView.addObject("date",dateResult);
+        modelAndView.addObject("year",calendar.get(Calendar.YEAR));
+        modelAndView.addObject("relation",relationJson);
+        modelAndView.addObject("user", userJson);
+        modelAndView.addObject("authorship", authorshipString);
+        modelAndView.addObject("lastModifier", modifierJson);
+        modelAndView.addObject("lastModifyTime", lastModifyTime);
+        modelAndView.addObject("references", getReferences(modelInfo.getReferences()));
+
+        modelAndView.addObject("modularType", ItemTypeEnum.ModelItem);
+
+        return modelAndView;
+    }
+
+    public String getAuthorshipString(List<AuthorInfo> authorshipList) {
+        String authorshipString = "";
+        if(authorshipList !=null){
+            for (AuthorInfo author: authorshipList
+                    ) {
+                if(authorshipString.equals("")){
+                    authorshipString +=author.getName();
+                }
+                else{
+                    authorshipString +=", "+author.getName();
+                }
+
+            }
+        }
+        return authorshipString;
+    }
+
+    public String getKeywords(List<String> keywords) {
+        String meta_keywords="";
+        if(keywords.size()!=0) {
+            meta_keywords = keywords.toString().replace("[", ", ").replace("]", "");
+        }
+        return meta_keywords;
+    }
+
+    public JSONObject getRelationJson(ModelItemRelate modelItemRelate) {
+        List<ModelRelation> modelItems = modelItemRelate.getModelRelationList();
         List<String> conceptual=modelItemRelate.getConceptualModels();
         List<String> computable=modelItemRelate.getComputableModels();
         List<String> logical=modelItemRelate.getLogicalModels();
@@ -323,7 +371,7 @@ public class ModelItemService {
         }
 
         JSONArray dataItemArray=new JSONArray();
-        List<String> dataItems=modelInfo.getRelate().getDataItems();
+        List<String> dataItems= modelItemRelate.getDataItems();
         if(dataItems!=null){
             for(String dataId:dataItems){
                 DataItem dataItem=dataItemDao.findFirstById(dataId);
@@ -355,71 +403,57 @@ public class ModelItemService {
 
         relationJson.put("exLinks",exLinks);
         relationJson.put("dataSpaceFiles",dataSpaceFiles);
+        return relationJson;
+    }
 
-
-        //用户信息
-        JSONObject userJson = userService.getItemUserInfoByEmail(modelInfo.getAuthor());
-
-        //修改者信息
-        String lastModifier=modelInfo.getLastModifier();
-        JSONObject modifierJson=null;
-        if(lastModifier!=null){
-            modifierJson = userService.getItemUserInfoByEmail(lastModifier);
+    public String getDateResult(Date date){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        String dateResult=simpleDateFormat.format(date);
+        return dateResult;
+    }
+    
+    public List<String> getLanguageList(List<Localization> locals) {
+        List<String> languageList = new ArrayList<>();
+        for(Localization local: locals){
+            languageList.add(local.getLocalName());
         }
+        return languageList;
+    }
 
-        String lastModifyTime=simpleDateFormat.format(modelInfo.getLastModifyTime());
-
-
-        //图片路径
-        String image=modelInfo.getImage();
-        if(!image.equals("")){
-            modelInfo.setImage(htmlLoadPath+image);
-        }
-
-        //meta keywords
-        List<String> keywords=modelInfo.getKeywords();
-        String meta_keywords="";
-        if(keywords.size()!=0) {
-            meta_keywords = keywords.toString().replace("[", ", ").replace("]", "");
-        }
-
-        //authorship
-        String authorshipString="";
-        List<AuthorInfo> authorshipList=modelInfo.getAuthorships();
-        if(authorshipList!=null){
-            for (AuthorInfo author:authorshipList
-                    ) {
-                if(authorshipString.equals("")){
-                    authorshipString+=author.getName();
+    public JSONObject getLocalizationList(List<Localization> locals){
+        Collections.sort(locals);
+        String detailResult = "";
+        String detailLanguage = "";
+        //先找中英文描述
+        for(Localization localization:locals){
+            String local = localization.getLocalCode();
+            if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
                 }
-                else{
-                    authorshipString+=", "+author.getName();
+            }
+        }
+        //如果没有中英文，则使用其他语言描述
+        if(detailResult.equals("")){
+            for(Localization localization:locals){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
                 }
-
             }
         }
 
-        modelAndView.setViewName("model_item_info");
-        modelAndView.addObject("itemInfo",modelInfo);
-        modelAndView.addObject("itemType","Model");
-        modelAndView.addObject("metaKeywords",meta_keywords);
-        modelAndView.addObject("classifications",classResult);
-        modelAndView.addObject("detailLanguage",detailLanguage);
-        modelAndView.addObject("languageList", languageList);
-//        modelAndView.addObject("description",modelInfo.getOverview());
-        modelAndView.addObject("detail",detailResult);
-        modelAndView.addObject("date",dateResult);
-        modelAndView.addObject("year",calendar.get(Calendar.YEAR));
-        modelAndView.addObject("relation",relationJson);
-        modelAndView.addObject("user", userJson);
-        modelAndView.addObject("authorship", authorshipString);
-        modelAndView.addObject("lastModifier", modifierJson);
-        modelAndView.addObject("lastModifyTime", lastModifyTime);
-        modelAndView.addObject("references", getReferences(modelInfo.getId()));
-
-        modelAndView.addObject("modularType", ItemTypeEnum.ModelItem);
-
-        return modelAndView;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("detailResult",detailResult);
+        jsonObject.put("detailLanguage",detailLanguage);
+        return jsonObject;
     }
 
     /**
@@ -799,6 +833,10 @@ public class ModelItemService {
     public JSONArray getReferences(String id){
         ModelItem modelItem = modelItemDao.findFirstById(id);
         List<String> reference_ids = modelItem.getReferences();
+        return getReferences(reference_ids);
+    }
+
+    public JSONArray getReferences(List<String> reference_ids){
         JSONArray references = new JSONArray();
         for(int i=0;i<reference_ids.size();i++) {
             Article article = articleDao.findFirstById(reference_ids.get(i));

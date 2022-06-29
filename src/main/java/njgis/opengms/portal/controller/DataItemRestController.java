@@ -37,10 +37,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description
@@ -265,11 +262,17 @@ public class DataItemRestController {
     @ApiOperation(value = "设置与数据条目相关的模型 [ /dataItem/setRelation ]")
     @RequestMapping(value="/relation",method = RequestMethod.PUT)
     public JsonResult setRelation(@RequestParam(value="id") String id,
-                           @RequestParam(value = "relations[]") List<String> relations){
+                           @RequestParam(value = "relations[]" , required=false) List<String> relations, HttpServletRequest request){
 
         id = genericService.formatId(id);
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
 
-        return dataItemService.setRelation(id,relations);
+        if (relations == null){
+            relations = new ArrayList<>();
+        }
+
+        return dataItemService.setRelation(id,relations,email);
 
     }
 

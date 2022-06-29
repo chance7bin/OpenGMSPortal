@@ -1,22 +1,24 @@
 package njgis.opengms.portal.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
-import njgis.opengms.portal.dao.GenericItemDao;
-import njgis.opengms.portal.dao.VersionDao;
+import njgis.opengms.portal.dao.*;
+import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
+import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
+import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.FindDTO;
-import njgis.opengms.portal.entity.dto.version.VersionDTO;
-import njgis.opengms.portal.entity.po.Version;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
-import njgis.opengms.portal.utils.BeanMapTool;
 import njgis.opengms.portal.utils.ResultUtils;
-import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,46 @@ import java.util.*;
 @Slf4j
 @Service
 public class VersionService {
+    @Autowired
+    ClassificationDao classificationDao;
+
+    @Autowired
+     ModelClassificationService modelClassificationService;
+    @Autowired
+    ArticleDao articleDao;
+
+    @Autowired
+    ModelItemService modelItemService;
+
+    @Autowired
+    SpatialReferenceDao spatialReferenceDao;
+
+    @Autowired
+    TemplateDao templateDao;
+
+    @Autowired
+    UnitDao unitDao;
+
+    @Autowired
+    ConceptDao conceptDao;
+
+    @Autowired
+    ComputableModelDao computableModelDao;
+
+    @Autowired
+    LogicalModelDao logicalModelDao;
+
+    @Autowired
+    DataItemDao dataItemDao;
+
+    @Autowired
+    ConceptualModelDao conceptualModelDao;
+
+    @Value("${htmlLoadPath}")
+    private String htmlLoadPath;
+
+    @Autowired
+    ModelItemDao modelItemDao;
 
     @Autowired
     VersionDao versionDao;
@@ -45,6 +87,9 @@ public class VersionService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     /**
      * 添加审核版本
@@ -83,8 +128,13 @@ public class VersionService {
         String type = nameArr[nameArr.length - 1];
         ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
         version.setType(itemType);
+
+        PortalItem original = (PortalItem) ((GenericItemDao)genericService.daoFactory(itemType).get("itemDao")).findFirstById(item.getId());
+        version.setOriginal(original);
+
         try {
-            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
+            // version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
+            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal()));
         }catch (Exception e){
             e.printStackTrace();
             log.error(e.getMessage());
@@ -199,49 +249,54 @@ public class VersionService {
 
         PortalItem content = version.getContent();
         String originalName = content.getName();
-        // PortalItem 转 map
-        Map<String, Object> contentMap = BeanMapTool.beanToMap(content);
-
-
         ItemTypeEnum type = version.getType();
         JSONObject factory = genericService.daoFactory(type);
-        GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
-        PortalItem item = (PortalItem)itemDao.findFirstById(version.getItemId());
-        Class<? extends PortalItem> clazz = (Class) factory.get("clazz");
+        GenericItemDao itemDao =  (GenericItemDao) factory.get("itemDao");
+        PortalItem item = (PortalItem) itemDao.findFirstById(version.getItemId());
+        content.setVersions(item.getVersions());
+        content.setLastModifyTime(new Date());
 
-        Map<String, Object> changedField = version.getChangedField();
+        // 根据content以及changedField得到original
+        // // PortalItem 转 map
+        // Map<String, Object> contentMap = BeanMapTool.beanToMap(content);
+        //
+        // ItemTypeEnum type = version.getType();
+        // JSONObject factory = genericService.daoFactory(type);
+        // Class<? extends PortalItem> clazz = (Class) factory.get("clazz");
+        //
+        // Map<String, Object> changedField = version.getChangedField();
+        //
+        // //遍历map
+        // for (Map.Entry<String, Object> entry : changedField.entrySet()) {
+        //     String mapKey = entry.getKey();
+        //     HashMap mapValue = (HashMap)entry.getValue();
+        //     System.out.println(mapKey + "：" + mapValue);
+        //
+        //     //不改变的字段
+        //     if (mapKey.equals("versions"))
+        //         continue;
+        //
+        //     if (mapKey.equals("lastModifyTime")){
+        //         contentMap.put(mapKey, new Date());
+        //     }
+        //
+        //
+        //     contentMap.put(mapKey, mapValue.get("original"));
+        //
+        // }
+        //
+        // //map to bean
+        // PortalItem newItem = null;
+        // try {
+        //     newItem = BeanMapTool.mapToBean(contentMap, clazz);
+        // } catch (IllegalAccessException | InstantiationException e) {
+        //     e.printStackTrace();
+        //     ResultUtils.error();
+        // }
 
-        //遍历map
-        for (Map.Entry<String, Object> entry : changedField.entrySet()) {
-            String mapKey = entry.getKey();
-            HashMap mapValue = (HashMap)entry.getValue();
-            System.out.println(mapKey + "：" + mapValue);
-
-            //不改变的字段
-            if (mapKey.equals("versions"))
-                continue;
-
-            if (mapKey.equals("lastModifyTime")){
-                contentMap.put(mapKey, new Date());
-            }
 
 
-            contentMap.put(mapKey, mapValue.get("original"));
-
-        }
-
-        //map to bean
-        PortalItem newItem = null;
-        try {
-            newItem = BeanMapTool.mapToBean(contentMap, clazz);
-        } catch (IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
-            ResultUtils.error();
-        }
-
-
-
-        return ResultUtils.success(addVersion(newItem, email,originalName));
+        return ResultUtils.success(addVersion(content, email,originalName));
 
     }
 
@@ -504,14 +559,14 @@ public class VersionService {
     /**
      * 比较两个版本的不同
      * @param editItem 编辑后的item数据
-     * @param itemType 条目类型
+     * @param originalItem 原始条目数据
      * @return void
      * @Author bin
      **/
-    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, ItemTypeEnum itemType) throws IllegalAccessException {
-        JSONObject factory = genericService.daoFactory(itemType);
-        GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
-        PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
+    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, PortalItem originalItem) throws IllegalAccessException {
+        // JSONObject factory = genericService.daoFactory(itemType);
+        // GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
+        // PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
         return genericService.getDifferenceBetweenTwoObject(originalItem,editItem);
     }
 
@@ -526,21 +581,36 @@ public class VersionService {
 
         try {
             Version version = versionDao.findFirstById(id);
-            JSONObject factory = genericService.daoFactory(version.getType());
-            GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
-            PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
-            VersionDTO versionDTO = new VersionDTO();
-            BeanUtils.copyProperties(version,versionDTO);
-            versionDTO.setOriginal(original);
+            // JSONObject factory = genericService.daoFactory(version.getType());
+            // GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
+            // PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
+            // VersionDTO versionDTO = new VersionDTO();
+            // BeanUtils.copyProperties(version,versionDTO);
+            // versionDTO.setOriginal(original);
 
-            return ResultUtils.success(versionDTO);
+            JSONObject result = new JSONObject();
+            result = (JSONObject) JSONObject.toJSON(version);
+            JSONObject originalField = new JSONObject();
+            JSONObject newField = new JSONObject();
+            Map<String, Object> changedField = version.getChangedField();
+            for (Map.Entry<String, Object> entry : changedField.entrySet()) {
+                String mapKey = entry.getKey();
+                Object mapValue = entry.getValue();
+                JSONObject props = JSONObject.parseObject(JSONObject.toJSONString(mapValue));
+                originalField.put(mapKey, props.get("original"));
+                newField.put(mapKey, props.get("new"));
+            }
+            result.put("originalField", originalField);
+            result.put("newField", newField);
+
+            return ResultUtils.success(result);
         } catch (Exception e){
             return ResultUtils.error();
         }
     }
 
 
-    public JsonResult getOriginalItemInfo(String id){
+    public PortalItem getOriginalItemInfo(String id){
 
         Version version = versionDao.findFirstById(id);
         String itemId = version.getItemId();
@@ -549,37 +619,561 @@ public class VersionService {
         JSONObject jsonObject = genericService.daoFactory(type);
         GenericItemDao dao = (GenericItemDao) jsonObject.get("itemDao");
         PortalItem item = (PortalItem) dao.findFirstById(itemId);
-        return ResultUtils.success(item);
+        return item;
     }
 
-    public ModelAndView getPage(String id){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("version/version_compare");
+    public JSONObject modelGetRelate(ModelItemRelate modelItemRelate){
+        List<ModelRelation> modelItems = modelItemRelate.getModelRelationList();
+        List<String> conceptual=modelItemRelate.getConceptualModels();
+        List<String> computable=modelItemRelate.getComputableModels();
+        List<String> logical=modelItemRelate.getLogicalModels();
+        List<String> concepts=modelItemRelate.getConcepts();
+        List<String> spatialReferences=modelItemRelate.getSpatialReferences();
+        List<String> templates=modelItemRelate.getTemplates();
+        List<String> units=modelItemRelate.getUnits();
+        List<Map<String,String>> dataSpaceFiles=modelItemRelate.getDataSpaceFiles();
+        List<Map<String,String>> exLinks=modelItemRelate.getExLinks();
 
-        Version version = versionDao.findFirstById(id);
-        JSONObject factory = genericService.daoFactory(version.getType());
-        GenericItemDao itemDao = (GenericItemDao)factory.get("itemDao");
-        PortalItem original = (PortalItem)itemDao.findFirstById(version.getItemId());
-        VersionDTO versionDTO = new VersionDTO();
-        BeanUtils.copyProperties(version,versionDTO);
-        versionDTO.setOriginal(original);
+        JSONArray modelItemArray=new JSONArray();
+        if(modelItems!=null) {
+            for (int i = 0; i < modelItems.size(); i++) {
+                String idNew = modelItems.get(i).getModelId();
+                ModelItem modelItemNew = modelItemDao.findFirstById(idNew);
+                if (modelItemNew.getStatus().equals("Private")) {
+                    continue;
+                }
+                JSONObject modelItemJson = new JSONObject();
+                modelItemJson.put("name", modelItemNew.getName());
+                modelItemJson.put("id", modelItemNew.getId());
+                modelItemJson.put("relation",modelItems.get(i).getRelation().getText());
+                modelItemJson.put("overview", modelItemNew.getOverview());
+                modelItemJson.put("image", modelItemNew.getImage().equals("") ? null : htmlLoadPath + modelItemNew.getImage());
+                modelItemArray.add(modelItemJson);
+            }
+        }
+        JSONArray conceptualArray=new JSONArray();
+        for(int i=0;i<conceptual.size();i++){
+            String id=conceptual.get(i);
+            ConceptualModel conceptualModel=conceptualModelDao.findFirstById(id);
+            if(conceptualModel.getStatus().equals("Private")){
+                continue;
+            }
+            JSONObject conceptualJson = new JSONObject();
+            conceptualJson.put("name",conceptualModel.getName());
+            conceptualJson.put("id",conceptualModel.getId());
+            conceptualJson.put("overview",conceptualModel.getOverview());
+            conceptualJson.put("image", conceptualModel.getImageList().size() == 0 ? null : htmlLoadPath + conceptualModel.getImageList().get(0));
+            conceptualArray.add(conceptualJson);
+        }
 
-        //用户信息
-        JSONObject userJson = userService.getItemUserInfoByEmail(versionDTO.getContent().getAuthor());
+        JSONArray logicalArray=new JSONArray();
+        for(int i=0;i<logical.size();i++){
+            String id=logical.get(i);
+            LogicalModel logicalModel=logicalModelDao.findFirstById(id);
+            if(logicalModel.getStatus().equals("Private")){
+                continue;
+            }
+            JSONObject logicalJson = new JSONObject();
+            logicalJson.put("name",logicalModel.getName());
+            logicalJson.put("id",logicalModel.getId());
+            logicalJson.put("overview",logicalModel.getOverview());
+            logicalJson.put("image", logicalModel.getImageList().size() == 0 ? null : htmlLoadPath + logicalModel.getImageList().get(0));
+            logicalArray.add(logicalJson);
+        }
 
-        //model
-        if(versionDTO.getType() == ItemTypeEnum.ModelItem){
+        JSONArray computableArray=new JSONArray();
+        for(int i=0;i<computable.size();i++){
+            String id=computable.get(i);
+            ComputableModel computableModel=computableModelDao.findFirstById(id);
+            if(computableModel.getStatus().equals("Private")){
+                continue;
+            }
+            JSONObject computableJson = new JSONObject();
+            computableJson.put("name",computableModel.getName());
+            computableJson.put("id",computableModel.getId());
+            computableJson.put("overview",computableModel.getOverview());
+            computableJson.put("contentType",computableModel.getContentType());
+            computableArray.add(computableJson);
+        }
+
+        JSONArray conceptArray=new JSONArray();
+        if(concepts!=null) {
+            for (int i = 0; i < concepts.size(); i++) {
+                String id = concepts.get(i);
+                Concept concept = conceptDao.findFirstById(id);
+                if(concept.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", concept.getName());
+                jsonObj.put("id", concept.getId());
+//                jsonObj.put("alias", concept.getAlias());
+                String desc = "";
+                List<Localization> localizationList = concept.getLocalizationList();
+                for(int j=0;j<localizationList.size();j++){
+                    String description = localizationList.get(j).getDescription();
+                    if(description!=null&&!description.equals("")){
+                        desc = description;
+                        break;
+                    }
+                }
+                jsonObj.put("overview", desc);
+//                jsonObj.put("description_ZH", concept.getDescription_ZH());
+//                jsonObj.put("description_EN", concept.getDescription_EN());
+                conceptArray.add(jsonObj);
+            }
+        }
+
+        JSONArray spatialReferenceArray=new JSONArray();
+        if(spatialReferences!=null) {
+            for (int i = 0; i < spatialReferences.size(); i++) {
+                String id = spatialReferences.get(i);
+                SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                if(spatialReference.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", spatialReference.getName());
+                jsonObj.put("id", spatialReference.getId());
+                jsonObj.put("wkname", spatialReference.getWkname());
+                jsonObj.put("overview", spatialReference.getOverview());
+                spatialReferenceArray.add(jsonObj);
+            }
+        }
+
+        JSONArray templateArray=new JSONArray();
+        if(templates!=null) {
+            for (int i = 0; i < templates.size(); i++) {
+                String id = templates.get(i);
+                Template template = templateDao.findFirstById(id);
+                if(template.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", template.getName());
+                jsonObj.put("id", template.getId());
+                jsonObj.put("overview", template.getOverview());
+                jsonObj.put("type", template.getType());
+                templateArray.add(jsonObj);
+            }
+        }
+
+        JSONArray unitArray=new JSONArray();
+        if(units!=null) {
+            for (int i = 0; i < units.size(); i++) {
+                String id = units.get(i);
+                Unit unit = unitDao.findFirstById(id);
+                if(unit.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", unit.getName());
+                jsonObj.put("id", unit.getId());
+
+                jsonObj.put("overview", unit.getOverview());
+//                jsonObj.put("description_EN", unit.getDescription_EN());
+                unitArray.add(jsonObj);
+            }
+        }
+
+        JSONArray dataItemArray=new JSONArray();
+        List<String> dataItems=modelItemRelate.getDataItems();
+        if(dataItems!=null){
+            for(String dataId:dataItems){
+                DataItem dataItem=dataItemDao.findFirstById(dataId);
+                if(dataItem.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject dataJson=new JSONObject();
+                dataJson.put("name",dataItem.getName());
+                dataJson.put("id",dataItem.getId());
+                dataJson.put("overview",dataItem.getOverview());
+                dataItemArray.add(dataJson);
+            }
+        }
+
+        //TODO dataHubs dataMethod
+
+        JSONObject relationJson = new JSONObject();
+        relationJson.put("modelItems",modelItemArray);
+        relationJson.put("conceptualModels",conceptualArray);
+        relationJson.put("logicalModels",logicalArray);
+        relationJson.put("computableModels",computableArray);
+
+        relationJson.put("dataItems",dataItemArray);
+
+        relationJson.put("concepts",conceptArray);
+        relationJson.put("spatialReferences",spatialReferenceArray);
+        relationJson.put("templates",templateArray);
+        relationJson.put("units",unitArray);
+
+        relationJson.put("exLinks",exLinks);
+        relationJson.put("dataSpaceFiles",dataSpaceFiles);
+        return relationJson;
+
+    }
+    public JSONArray getReferences(JSONArray reference_ids){
+        JSONArray references = new JSONArray();
+        for(int i=0;i<reference_ids.size();i++) {
+            Article article = articleDao.findFirstById((String) reference_ids.get(i));
+            references.add(JSONArray.toJSONString(article));
+//            System.out.println(references.get(i));
+        }
+        return references;
+    }
+
+    public JSONObject getLatModifier(String email){
+        JSONObject modifierJson = userService.getItemUserInfoByEmail(email);
+        return modifierJson;
+    }
+
+    public ModelAndView getPage(String version_id){
+
+
+        Version version = versionDao.findFirstById(version_id);
+
+        JSONObject originalField = new JSONObject();
+        JSONObject newField = new JSONObject();
+        Map<String, Object> changedField = version.getChangedField();
+        for (Map.Entry<String, Object> entry : changedField.entrySet()) {
+            String mapKey = entry.getKey();
+            Object mapValue = entry.getValue();
+            JSONObject props = JSONObject.parseObject(JSONObject.toJSONString(mapValue));
+            originalField.put(mapKey, props.get("original"));
+            newField.put(mapKey, props.get("new"));
+        }
+
+
+        //********************** 通用属性统一 **************************
+        if(originalField.get("name")==null)
+            originalField.put("name", version.getContent().getName());
+        if(newField.get("name")==null)
+            newField.put("name", version.getContent().getName());
+
+        if(originalField.get("image")==null)
+            originalField.put("image", null);
+        if(newField.get("image")==null)
+            newField.put("image", null);
+
+        if(originalField.get("status")==null)
+            originalField.put("status", null);
+        if(newField.get("status")==null)
+            newField.put("status", null);
+
+        if(originalField.get("overview")==null)
+            originalField.put("overview", null);
+        if(newField.get("overview")==null)
+            newField.put("overview", null);
+
+        if(originalField.get("keywords")==null)
+            originalField.put("keywords", null);
+        if(newField.get("keywords")==null)
+            newField.put("keywords", null);
+
+
+
+
+
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+
+        if(originalField.get("lastModifier")!=null){
+            originalField.put("lastModifier", getLatModifier(originalField.get("lastModifier").toString()));
+        }
+        else{
+            originalField.put("lastModifier",null);
+        }
+
+        if(originalField.get("lastModifyTime")!=null){
+            originalField.put("lastModifyTime", simpleDateFormat.format(originalField.get("lastModifyTime")));
+        }
+        else{
+            originalField.put("lastModifyTime",null);
+        }
+
+
+
+        if(newField.get("lastModifier")!=null ){
+            newField.put("lastModifier", getLatModifier(newField.get("lastModifier").toString()));
+        }
+        else{
+            newField.put("lastModifier",null);
+        }
+
+        if(newField.get("lastModifyTime")!=null){
+            newField.put("lastModifyTime", simpleDateFormat.format(newField.get("lastModifyTime")));
+        }
+        else{
+            newField.put("lastModifyTime",null);
+        }
+
+
+        if(originalField.get("references")!=null){
+            JSONArray  ref_original = getReferences(JSONArray.parseArray(originalField.get("references").toString()));
+            originalField.remove("references");
+            originalField.put("references", ref_original);
+
+            JSONArray  ref_new = getReferences(JSONArray.parseArray(newField.get("references").toString()));
+            newField.remove("references");
+            newField.put("references", ref_new);
+        }
+
+
+        //********************** 非通用属性单独处理 **************************
+        ItemTypeEnum type = version.getType();
+        switch (type){
+            case ModelItem:{
+                getModelItemChanged(originalField, newField);
+                break;
+            }
+            case DataItem:{
+                getDataItemChanged(originalField, newField, ItemTypeEnum.DataItem);
+                break;
+            }
+            case DataHub:{
+                getDataItemChanged(originalField, newField, ItemTypeEnum.DataHub);
+                break;
+            }
+            case DataMethod:{
+                getDataMethodChanged(originalField, newField);
+                break;
+            }
+            case Concept:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.Concept);
+                break;
+            }
+            case SpatialReference:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.SpatialReference);
+                break;
+            }
+            case Template:{
+
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.Template);
+                break;
+            }
+            case Unit:{
+                getRepositoryChanged(originalField, newField, ItemTypeEnum.Unit);
+                break;
+            }
+            case Theme:{
+                getThemeChanged(originalField, newField);
+                break;
+            }
+            default:{
+                break;
+            }
 
         }
-        modelAndView.addObject("itemInfo", JSONObject.toJSON(versionDTO.getContent()));
-        modelAndView.addObject("modularType", versionDTO.getType());
-        modelAndView.addObject("user", userJson);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("version/version_compare");
+        modelAndView.addObject("itemInfo", JSONObject.toJSON(version.getContent()));
+        modelAndView.addObject("originalField", JSONObject.toJSON(originalField));
+        modelAndView.addObject("newField", JSONObject.toJSON(newField));
+        modelAndView.addObject("modularType", version.getType());
+
 
         return modelAndView;
 
     }
 
+    private void getThemeChanged(JSONObject originalField, JSONObject newField) {
 
+    }
+
+    private void getRepositoryChanged(JSONObject originalField, JSONObject newField, ItemTypeEnum type) {
+        //classifications
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+
+            //得到每个分类对应的分类dao
+            JSONObject daoFactory = genericService.daoFactory(type);
+            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+
+            List<String> originalCls = (List<String>)originalField.get("classifications");
+            List<String> newCls = (List<String>)newField.get("classifications");
+
+            // List<JSONObject> oriName = new ArrayList<>();
+            // List<JSONObject> newName = new ArrayList<>();
+            //
+            // for (String o : originalCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+            //     JSONObject jsonObject = new JSONObject();
+            //     if (cls == null){
+            //         jsonObject.put("id","unknown");
+            //         jsonObject.put("name","unknown");
+            //         oriName.add(jsonObject);
+            //         continue;
+            //     }
+            //     jsonObject.put("id",cls.getId());
+            //     jsonObject.put("name",cls.getNameEn());
+            //     oriName.add(jsonObject);
+            // }
+            // for (String n : newCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+            //     JSONObject jsonObject = new JSONObject();
+            //     if (cls == null){
+            //         jsonObject.put("id","unknown");
+            //         jsonObject.put("name","unknown");
+            //         oriName.add(jsonObject);
+            //         continue;
+            //     }
+            //     jsonObject.put("id",cls.getId());
+            //     jsonObject.put("name",cls.getNameEn());
+            //     oriName.add(jsonObject);
+            // }
+
+            JSONArray oriName = repositoryService.getClassification(originalCls, classificationDao);
+            JSONArray newName = repositoryService.getClassification(newCls, classificationDao);
+
+            originalField.remove("classifications");
+            originalField.put("classifications", oriName);
+            newField.remove("classifications");
+            newField.put("classifications", newName);
+
+        }
+
+        if (type == ItemTypeEnum.Concept){
+            if(originalField.get("related") != null&&newField.get("related")!=null){
+                // List<String> related = concept.getRelated();
+                List<String> originalRelated = (List<String>)originalField.get("related");
+                List<String> newClsRelated = (List<String>)newField.get("related");
+
+                JSONArray originalRelateArray = new JSONArray();
+                JSONArray newRelateArray = new JSONArray();
+                getConceptRelated(originalRelated, originalRelateArray, conceptDao);
+                getConceptRelated(newClsRelated, newRelateArray, conceptDao);
+
+                originalField.remove("related");
+                originalField.put("related", originalRelateArray);
+                newField.remove("related");
+                newField.put("related", newRelateArray);
+            }
+
+        }
+
+    }
+
+    void getConceptRelated(List<String> newClsRelated, JSONArray newRelateArray, ConceptDao conceptDao) {
+        if (newClsRelated != null) {
+            for (String relatedId : newClsRelated) {
+                Concept relatedConcept = conceptDao.findFirstById(relatedId);
+                String name = relatedConcept.getName();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", relatedId);
+                jsonObject.put("name", name);
+                newRelateArray.add(jsonObject);
+            }
+        }
+    }
+
+    private void getDataMethodChanged(JSONObject originalField, JSONObject newField) {
+
+    }
+
+    private void getDataItemChanged(JSONObject originalField, JSONObject newField, ItemTypeEnum type) {
+
+
+        //classifications
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+
+            //得到每个分类对应的分类dao
+            JSONObject daoFactory = genericService.daoFactory(type);
+            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+
+            List<String> originalCls = (List<String>)originalField.get("classifications");
+            List<String> newCls = (List<String>)newField.get("classifications");
+
+            List<String> oriName = new ArrayList<>();
+            List<String> newName = new ArrayList<>();
+
+            for (String o : originalCls) {
+                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+                if (cls == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                oriName.add(cls.getNameEn());
+            }
+            for (String n : newCls) {
+                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+                if (cls == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                newName.add(cls.getNameEn());
+            }
+
+            originalField.remove("classifications");
+            originalField.put("classifications", oriName);
+            newField.remove("classifications");
+            newField.put("classifications", newName);
+
+        }
+
+        //dataItem的relatedModels
+        if(originalField.get("relatedModels") != null && newField.get("relatedModels") != null){
+
+            List<String> originalRelatedModels = (List<String>)originalField.get("relatedModels");
+            List<String> newRelatedModels = (List<String>)newField.get("relatedModels");
+
+            List<String> oriName = new ArrayList<>();
+            List<String> newName = new ArrayList<>();
+
+            for (String o : originalRelatedModels) {
+                ModelItem item = modelItemDao.findFirstById(o);
+                if (item == null){
+                    oriName.add("unknown");
+                    continue;
+                }
+                oriName.add(item.getName());
+            }
+            for (String n : newRelatedModels) {
+                ModelItem item = modelItemDao.findFirstById(n);
+                if (item == null){
+                    newName.add("unknown");
+                    continue;
+                }
+                newName.add(item.getName());
+            }
+
+
+            originalField.remove("relatedModels");
+            originalField.put("relatedModels", oriName);
+            newField.remove("relatedModels");
+            newField.put("relatedModels", newName);
+
+        }
+    }
+
+    private void getModelItemChanged(JSONObject originalField, JSONObject newField) {
+
+        if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
+            JSONArray classResult_old = modelClassificationService.getClassifications((List<String>) originalField.get("classifications"));
+            originalField.remove("classifications");
+            originalField.put("classifications", classResult_old);
+
+            JSONArray classResult_new = modelClassificationService.getClassifications((List<String>) newField.get("classifications"));
+            newField.remove("classifications");
+            newField.put("classifications", classResult_new);
+        }
+
+
+
+        if(originalField.get("relate")!=null){
+            //relate
+            ModelItemRelate modelItemRelate_original= JSON.parseObject(JSON.toJSONString(originalField.get("relate")), ModelItemRelate.class);
+            JSONObject relate_original = modelGetRelate(modelItemRelate_original);
+
+            ModelItemRelate modelItemRelate_new= JSON.parseObject(JSON.toJSONString(newField.get("relate")), ModelItemRelate.class);
+            JSONObject relate_new = modelGetRelate(modelItemRelate_new);
+
+            originalField.remove("relate");
+            originalField.put("relate", relate_original);
+
+            newField.remove("relate");
+            newField.put("relate", relate_new);
+        }
+
+    }
 
 
 }

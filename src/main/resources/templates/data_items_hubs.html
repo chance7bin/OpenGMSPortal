@@ -65,7 +65,7 @@
                 <div class="data-top">
                     <h2 class="main-title">{{htmlJSON.PageName}}</h2>
                     <h4 class="sub-title">{{htmlJSON.PageIntro}}</h4>
-                    <button id="contributeBtn"  class="btn btn-success btn-lg contributeHubBtn" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute()">{{htmlJSON.Contribute}}</button>
+                    <button id="contributeBtn"  class="btn btn-success btn-lg contributeHubBtn" style="font-size: 15px;margin-left:10px;vertical-align: baseline;" @click="contribute($event)">{{htmlJSON.Contribute}}</button>
                 </div>
                 <translation-bar
                         json-file="data_items_hubs"

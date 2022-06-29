@@ -1,0 +1,21 @@
+.main-content{
+    height: 100%;
+    width: 100%;
+}
+.btns-content{
+    height: 10%!important;
+}
+.left-panel{
+    height: 100%;
+}
+.right-panel{
+    height: 100%;
+}
+.pageMainContent{
+    height: auto;
+    position:relative;
+}
+.card_title{
+    font-size: 20px;
+    font-weight: bold;
+}

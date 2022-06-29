@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/page/version_compare.css">
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/base/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
+    <link rel="stylesheet" href="/static/css/base/universal.css">
+    <link rel="stylesheet" href="/static/css/base/itemInfo.css">
+    <link rel="stylesheet" href="/static/css/base/relate_item.css">
+    <link rel="stylesheet" href="/static/css/base/userModule.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/element-ui/index.js"></script>
+</head>
+<body>
+<div id="version_compare">
+    <div th:replace="fragments/navbar :: unlog"></div>
+
+    <div th:replace="fragments/backToTop :: backtop-down"></div>
+    <div class="pageMainContent clearfix">
+        <translation-bar
+                json-file="all_model_info"
+                @translate-page="translatePage"
+                with-comments="true"
+                with-item-info-modules="true"
+                initial-lang="en-us"
+                theme="dark"
+                style="position: absolute;top: 20px;right:15px;z-index:100">
+        </translation-bar>
+        <el-container>
+            <el-main>
+                <el-row class="main-content" :gutter="20" type="flex" justify="center">
+                    <el-col :span="11" class="old-panel">
+                        <el-card>
+                            <div slot="header" class="clearfix card_title">Old Version</div>
+<!--*******************************************************通用**********************************************-->
+<!--*******************************************************通用**********************************************-->
+<!--*******************************************************通用**********************************************-->
+                            <div th:replace="fragments/itemInfoModules :: itemTitle(${originalField},false)"></div>
+                            <!--                             alias-->
+                            <div th:if="${originalField?.get('alias')!=null}" >
+                                <div th:replace="fragments/itemInfoModules :: alias(${originalField})"></div>
+                            </div>
+
+                            <!--                             history-->
+                            <div th:if="${originalField?.get('lastModifyTime')!=null} or ${originalField?.get('lastModifier')!=null}">
+                                <div th:replace="fragments/itemInfoModules :: History(${originalField.lastModifier}, ${originalField.lastModifyTime})"></div>
+                            </div>
+
+                            <!--                             author-->
+                            <div id="Authorship" class="detail_block"
+                                 th:if="${originalField?.get('authorships')!=null&&originalField.authorships!=null&&#lists.size(originalField.authorships)!=0}">
+                                <div th:replace="fragments/itemInfoModules :: authorship(1,${originalField},false)"></div>
+                            </div>
+                            <!--                              分类-->
+                            <div th:if="${originalField?.get('classifications')!=null}">
+                                <div th:replace="fragments/itemInfoModules :: classifications(${originalField.classifications}, false)"></div>
+                            </div>
+                            <!--                                    Detailed Description-->
+                            <div th:if="${originalField?.get('localizationList')!=null}" class="detail_block">
+                                <div class="block_head">
+                                    <div class="head_text">
+                                        <h4 translateId="detailedDescription">Detailed Description</h4>
+                                    </div>
+                                    <el-dropdown v-cloak style="float:right;padding:0 10px;background-color: white;cursor:pointer;" trigger="click" @command="changeDetailLanguage" >
+
+                                        <span  class="el-dropdown-link" >{{currentDetailLanguage_old}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item v-for="item in languageList" :key="item.label" :command="beforeCommand(item.label,'old')" >{{item.label}}</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                    <span class="fa fa-language" style="background-color:white;padding-left:10px;float:right;font-size:23px;"></span>
+                                </div>
+                                <div th:fragment="descriptionContent" class="block_content">
+                                    <div v-html="detail_old" id="detail" class="detailIntroducePanel">
+                                    </div>
+                                </div>
+                                <div class="fullPaper text-center hide">
+                                    <a id="fullPaper" style="cursor:pointer;font-size:16px;" ><span translateId="viewFullText">View Full Text</span><i class="fa fa-angle-down"
+                                                                                                                                                       style="margin-left: 10px;color:red;font-weight: bold"
+                                                                                                                                                       aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+<!--*******************************************************类型判断**********************************************-->
+<!--*******************************************************类型判断**********************************************-->
+<!--*******************************************************类型判断**********************************************-->
+                            <div th:if="${modularType.name=='ModelItem'}" >
+<!--                                    relate模型、relate model data-->
+                                    <div th:if="${originalField?.get('relate')!=null}">
+                                        <div th:replace="fragments/itemInfoModules :: model_related_models(${originalField.relate}, false)"></div>
+                                        <div th:if="${originalField.relate.modelItems!=newField.relate.modelItems ||originalField.relate.dataItems!=newField.relate.dataItems}" id="model_related_data" class="detail_block">
+                                            <div class="block_head">
+                                                <div class="head_text">
+                                                    <h4>{{htmlJSON.RelatedModelsData}}</h4>
+                                                </div>
+                                            </div>
+                                            <el-tabs class="block_content" v-model="activeName1" type="border-card" stretch="true">
+                                                <el-tab-pane name="Model Item">
+                                                    <div slot="label">{{htmlJSON.ModelItem}}
+                                                        <span class="el-badge__content el-badge__content--undefined"  th:text="${#lists.size(originalField.relate.modelItems)}" th:style="@{(${#lists.size(originalField.relate.modelItems)==0} ? 'background-color: #bbbbbb' : '')}"></span>
+                                                    </div>
+                                                    <div  th:if="${#lists.size(originalField.relate.modelItems)}!=0">
+                                                            <div class="list_panel clearfix" th:each="model:${originalField.relate.modelItems}">
+                                                                <!--<div th:text="${model.image}"></div>-->
+                                                                <a class="img" th:href="'/modelItem/'+${model.id}" th:switch="${model.image}" >
+                                                                    <img th:case="''" src="/static/img/model/model.png"  >
+                                                                    <img v-else th:src="${model.image}">
+                                                                </a>
+                                                                <div class="info" style="margin-top:0px;">
+                                                                    <a th:href="'/modelItem/'+${model.id}" th:text="${model.name}"></a>
+                                                                    <p style="margin-top: 0px" th:text="${model.overview}"></p>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="text-center" th:if="${#lists.size(originalField.relate.modelItems)}==0">
+                                                        <h5 style="margin-bottom: 10px;display: inline-block;">
+                                                            {{htmlJSON.NoRelatedModel}}
+                                                        </h5>
+                                                    </div>
+                                                </el-tab-pane>
+                                                <el-tab-pane name="Data Item">
+                                                    <div slot="label">{{htmlJSON.DataItem}}
+                                                        <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(originalField.relate.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
+                                                              th:text="${#lists.size(originalField.relate.dataItems)}"></span>
+                                                    </div>
+                                                    <div th:if="${#lists.size(originalField.relate.dataItems)}!=0">
+                                                        <div class="list_panel clearfix" th:each="data:${originalField.relate.dataItems}">
+                                                            <!--<div th:text="${model.image}"></div>-->
+                                                            <a class="img" th:href="'/dataItem/'+${data.id}" th:switch="${data.image}" >
+                                                                <img th:case="''" src="/static/img/model/data.png"  >
+                                                                <img v-else th:src="${data.image}">
+                                                            </a>
+
+                                                            <div class="info" style="margin-top:0px;">
+                                                                <a th:href="'/dataItem/'+${data.id}"
+                                                                   th:text="${data.name}"></a>
+                                                                <p style="margin-top: 0px" th:text="${data.overview}"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-center" th:if="${#lists.size(originalField.relate.dataItems)}==0">
+                                                        <h5 style="margin-bottom: 10px;display: inline-block;">
+                                                            {{htmlJSON.noRelatedData}}
+                                                        </h5>
+                                                    </div>
+                                                </el-tab-pane>
+                                            </el-tabs>
+                                        </div>
+                                    </div >
+<!--                                    relate resource-->
+                                    <div th:if="${originalField?.get('references')!=null}">
+                                        <div id="model_related_resource_old" class="detail_block">
+                                            <div class="block_head">
+                                                <div class="head_text">
+                                                    <h4>{{htmlJSON.RelatedKnowledge}}</h4>
+                                                </div>
+                                            </div>
+                                            <el-tabs class="block_content" v-model="activeName2" type="border-card" stretch="true">
+                                                <el-tab-pane name="Reference">
+                                                    <div slot="label">
+                                                        {{htmlJSON.Reference}}
+                                                        <span class="el-badge__content el-badge__content--undefined"
+                                                              th:style="@{(${#lists.size(originalField.references)==0} ? 'background-color: #bbbbbb' : '')}"
+                                                              th:text="${#lists.size(originalField.references)}"></span>
+
+                                                    </div>
+                                                    <div class="block_content" th:if="${#lists.size(originalField.references)}!=0">
+                                                        <el-table
+                                                                :data="references_old"
+                                                                max-height="400"
+                                                                border
+                                                                stripe
+                                                                style="width: 100%">
+                                                            <el-table-column
+                                                                    prop="title"
+                                                                    sortable
+                                                                    label="Title"
+                                                                    width="200">
+                                                            </el-table-column>
+                                                            <el-table-column
+                                                                    prop="authors"
+                                                                    sortable
+                                                                    label="Author(s)"
+                                                                    width="200">
+                                                            </el-table-column>
+                                                            <el-table-column
+                                                                    prop="date"
+                                                                    label="Date">
+                                                            </el-table-column>
+                                                            <el-table-column
+                                                                    prop="journal"
+                                                                    label="Journal">
+                                                            </el-table-column>
+                                                            <el-table-column
+                                                                    prop="volume"
+                                                                    label="Volume">
+                                                            </el-table-column>
+                                                            <el-table-column
+                                                                    prop="pageRange"
+                                                                    label="Page Range">
+                                                            </el-table-column>
+                                                            <el-table-column
+                                                                    label="Link">
+                                                                <template slot-scope="scope">
+                                                                    <el-button v-if="scope.row.link!=''"
+                                                                               class="refLink"
+                                                                               size="mini"
+                                                                               type="danger"
+                                                                               @click="link(scope.row.link)">View
+                                                                    </el-button>
+                                                                    <div v-if="scope.row.link==''">No link</div>
+                                                                </template>
+                                                            </el-table-column>
+                                                        </el-table>
+                                                    </div>
+                                                    <div class="text-center" th:if="${#lists.size(originalField.references)}==0">
+                                                        <h5 style="margin-bottom: 10px;display: inline-block;">
+                                                            {{htmlJSON.noRelatedReference}}
+                                                        </h5>
+                                                    </div>
+
+                                                </el-tab-pane>
+                                            </el-tabs>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
+                                    <!--related models-->
+                                <div th:if="${originalField?.get('relatedModels')!=null&&#lists.size(originalField.relatedModels)!=0}">
+                                    <p th:text="${relatedModels}"></p>
+                                    <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${originalField.relatedModels}, false)"></div>
+                                </div>
+
+                                    <!--                                    分类-->
+                                    <div th:if="${originalField?.get('classifications')!=null}">
+                                        <div th:replace="fragments/itemInfoModules :: data_classification(${originalField.classifications})"></div>
+                                    </div>
+                                    <div th:if="${originalField?.get('url')!=null}">
+                                        <div th:replace="fragments/itemInfoModules :: data_url(${originalField})"></div>
+                                    </div>
+
+                            </div>
+
+                            <div th:if="${modularType.name=='DataMethod' or modularType.name=='ComputableModel'}">
+                                <div th:if="${originalField?.get('resources')!=null}">
+                                    <div th:replace="fragments/itemInfoModules :: Resource(${originalField.resources})"></div>
+                                </div>
+                            </div>
+
+                            <div  th:if="${modularType.name=='Concept' or modularType.name=='SpatialReference' or modularType.name=='Template' or modularType.name=='Unit'}">
+
+<!--                                related-->
+                                    <div th:if="${originalField?.get('related')!=null}" id="Related_Concepts0" class="detail_block" >
+                                        <div th:replace="fragments/itemInfoModules :: concept_Related_Concepts0(${originalField.related})"></div>
+                                    </div>
+<!--                                   template的xml描述-->
+                                    <div th:if="${modularType.name=='Template'}">
+                                        <div th:if="${originalField?.get('xml')!=null}">
+                                            <div th:replace="fragments/itemInfoModules :: template_xml(${originalField})"></div>
+                                        </div>
+                                    </div>
+
+                            </div>
+
+                            <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel' or (${modularType.name} eq'LogicalModel'))">
+                                <div th:if="${originalField?.get('relateModelItemList')!=null}" th:replace="fragments/itemInfoModules :: related_models(${originalField.relateModelItemList})"></div>
+
+                            </div>
+                            <div th:if="${modularType.name} eq 'LogicalModel'">
+                                <div th:if="${originalField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${originalField.imageList})"></div>
+                            </div>
+
+
+                        </el-card>
+
+                    </el-col>
+                    <el-col :span="11" class="new-panel">
+                        <el-card>
+                            <div slot="header" class="clearfix card_title">New Version</div>
+                            <!--*******************************************************通用**********************************************-->
+                            <!--*******************************************************通用**********************************************-->
+                            <!--*******************************************************通用**********************************************-->
+                            <div th:replace="fragments/itemInfoModules :: itemTitle(${newField},false)"></div>
+                            <!--                             alias-->
+                            <div th:if="${newField?.get('alias')!=null}" >
+                                <div th:replace="fragments/itemInfoModules :: alias(${newField})"></div>
+                            </div>
+
+                            <!--                             history-->
+                            <div th:if="${newField?.get('lastModifyTime')!=null} or ${newField?.get('lastModifier')!=null}">
+                                <div th:replace="fragments/itemInfoModules :: History(${newField.lastModifier}, ${newField.lastModifyTime})"></div>
+                            </div>
+
+                            <!--                             author-->
+                            <div id="Authorship" class="detail_block"
+                                 th:if="${newField?.get('authorships')!=null&&newField.authorships!=null&&#lists.size(newField.authorships)!=0}">
+                                <div th:replace="fragments/itemInfoModules :: authorship(1,${newField},false)"></div>
+                            </div>
+                            <!--                              分类-->
+                            <div th:if="${newField?.get('classifications')!=null}">
+                                <div th:replace="fragments/itemInfoModules :: classifications(${newField.classifications}, false)"></div>
+                            </div>
+                            <!--                                    Detailed Description-->
+                            <div th:if="${newField?.get('localizationList')!=null}" class="detail_block">
+                                <div class="block_head">
+                                    <div class="head_text">
+                                        <h4 translateId="detailedDescription">Detailed Description</h4>
+                                    </div>
+                                    <el-dropdown v-cloak style="float:right;padding:0 10px;background-color: white;cursor:pointer;" trigger="click" @command="changeDetailLanguage" >
+
+                                        <span  class="el-dropdown-link" >{{currentDetailLanguage_old}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item v-for="item in languageList" :key="item.label" :command="beforeCommand(item.label,'old')" >{{item.label}}</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                    <span class="fa fa-language" style="background-color:white;padding-left:10px;float:right;font-size:23px;"></span>
+                                </div>
+                                <div th:fragment="descriptionContent" class="block_content">
+                                    <div v-html="detail_old" id="detail" class="detailIntroducePanel">
+                                    </div>
+                                </div>
+                                <div class="fullPaper text-center hide">
+                                    <a id="fullPaper" style="cursor:pointer;font-size:16px;" ><span translateId="viewFullText">View Full Text</span><i class="fa fa-angle-down"
+                                                                                                                                                       style="margin-left: 10px;color:red;font-weight: bold"
+                                                                                                                                                       aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+
+                            <!--*******************************************************类型判断**********************************************-->
+                            <!--*******************************************************类型判断**********************************************-->
+                            <!--*******************************************************类型判断**********************************************-->
+                            <div th:if="${modularType.name=='ModelItem'}" >
+                                <!--                                    relate模型、relate model data-->
+                                <div th:if="${newField?.get('relate')!=null}">
+                                    <div th:replace="fragments/itemInfoModules :: model_related_models(${newField.relate}, false)"></div>
+                                    <div th:if="${newField.relate.modelItems!=newField.relate.modelItems ||newField.relate.dataItems!=newField.relate.dataItems}" id="model_related_data" class="detail_block">
+                                        <div class="block_head">
+                                            <div class="head_text">
+                                                <h4>{{htmlJSON.RelatedModelsData}}</h4>
+                                            </div>
+                                        </div>
+                                        <el-tabs class="block_content" v-model="activeName1" type="border-card" stretch="true">
+                                            <el-tab-pane name="Model Item">
+                                                <div slot="label">{{htmlJSON.ModelItem}}
+                                                    <span class="el-badge__content el-badge__content--undefined"  th:text="${#lists.size(newField.relate.modelItems)}" th:style="@{(${#lists.size(newField.relate.modelItems)==0} ? 'background-color: #bbbbbb' : '')}"></span>
+                                                </div>
+                                                <div  th:if="${#lists.size(newField.relate.modelItems)}!=0">
+                                                    <div class="list_panel clearfix" th:each="model:${newField.relate.modelItems}">
+                                                        <!--<div th:text="${model.image}"></div>-->
+                                                        <a class="img" th:href="'/modelItem/'+${model.id}" th:switch="${model.image}" >
+                                                            <img th:case="''" src="/static/img/model/model.png"  >
+                                                            <img v-else th:src="${model.image}">
+                                                        </a>
+                                                        <div class="info" style="margin-top:0px;">
+                                                            <a th:href="'/modelItem/'+${model.id}" th:text="${model.name}"></a>
+                                                            <p style="margin-top: 0px" th:text="${model.overview}"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-center" th:if="${#lists.size(newField.relate.modelItems)}==0">
+                                                    <h5 style="margin-bottom: 10px;display: inline-block;">
+                                                        {{htmlJSON.NoRelatedModel}}
+                                                    </h5>
+                                                </div>
+                                            </el-tab-pane>
+                                            <el-tab-pane name="Data Item">
+                                                <div slot="label">{{htmlJSON.DataItem}}
+                                                    <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(newField.relate.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
+                                                          th:text="${#lists.size(newField.relate.dataItems)}"></span>
+                                                </div>
+                                                <div th:if="${#lists.size(newField.relate.dataItems)}!=0">
+                                                    <div class="list_panel clearfix" th:each="data:${newField.relate.dataItems}">
+                                                        <!--<div th:text="${model.image}"></div>-->
+                                                        <a class="img" th:href="'/dataItem/'+${data.id}" th:switch="${data.image}" >
+                                                            <img th:case="''" src="/static/img/model/data.png"  >
+                                                            <img v-else th:src="${data.image}">
+                                                        </a>
+
+                                                        <div class="info" style="margin-top:0px;">
+                                                            <a th:href="'/dataItem/'+${data.id}"
+                                                               th:text="${data.name}"></a>
+                                                            <p style="margin-top: 0px" th:text="${data.overview}"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-center" th:if="${#lists.size(newField.relate.dataItems)}==0">
+                                                    <h5 style="margin-bottom: 10px;display: inline-block;">
+                                                        {{htmlJSON.noRelatedData}}
+                                                    </h5>
+                                                </div>
+                                            </el-tab-pane>
+                                        </el-tabs>
+                                    </div>
+                                </div >
+                                <!--                                    relate resource-->
+                                <div th:if="${newField?.get('references')!=null}">
+                                    <div id="model_related_resource_old" class="detail_block">
+                                        <div class="block_head">
+                                            <div class="head_text">
+                                                <h4>{{htmlJSON.RelatedKnowledge}}</h4>
+                                            </div>
+                                        </div>
+                                        <el-tabs class="block_content" v-model="activeName2" type="border-card" stretch="true">
+                                            <el-tab-pane name="Reference">
+                                                <div slot="label">
+                                                    {{htmlJSON.Reference}}
+                                                    <span class="el-badge__content el-badge__content--undefined"
+                                                          th:style="@{(${#lists.size(newField.references)==0} ? 'background-color: #bbbbbb' : '')}"
+                                                          th:text="${#lists.size(newField.references)}"></span>
+
+                                                </div>
+                                                <div class="block_content" th:if="${#lists.size(newField.references)}!=0">
+                                                    <el-table
+                                                            :data="references_old"
+                                                            max-height="400"
+                                                            border
+                                                            stripe
+                                                            style="width: 100%">
+                                                        <el-table-column
+                                                                prop="title"
+                                                                sortable
+                                                                label="Title"
+                                                                width="200">
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                prop="authors"
+                                                                sortable
+                                                                label="Author(s)"
+                                                                width="200">
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                prop="date"
+                                                                label="Date">
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                prop="journal"
+                                                                label="Journal">
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                prop="volume"
+                                                                label="Volume">
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                prop="pageRange"
+                                                                label="Page Range">
+                                                        </el-table-column>
+                                                        <el-table-column
+                                                                label="Link">
+                                                            <template slot-scope="scope">
+                                                                <el-button v-if="scope.row.link!=''"
+                                                                           class="refLink"
+                                                                           size="mini"
+                                                                           type="danger"
+                                                                           @click="link(scope.row.link)">View
+                                                                </el-button>
+                                                                <div v-if="scope.row.link==''">No link</div>
+                                                            </template>
+                                                        </el-table-column>
+                                                    </el-table>
+                                                </div>
+                                                <div class="text-center" th:if="${#lists.size(newField.references)}==0">
+                                                    <h5 style="margin-bottom: 10px;display: inline-block;">
+                                                        {{htmlJSON.noRelatedReference}}
+                                                    </h5>
+                                                </div>
+
+                                            </el-tab-pane>
+                                        </el-tabs>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
+                                <!--related models-->
+                                <div th:if="${newField?.get('relatedModels')!=null&&#lists.size(newField.relatedModels)!=0}">
+                                    <p th:text="${relatedModels}"></p>
+                                    <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${newField.relatedModels}, false)"></div>
+                                </div>
+
+                                <!--                                    分类-->
+                                <div th:if="${newField?.get('classifications')!=null}">
+                                    <div th:replace="fragments/itemInfoModules :: data_classification(${newField.classifications})"></div>
+                                </div>
+                                <div th:if="${newField?.get('url')!=null}">
+                                    <div th:replace="fragments/itemInfoModules :: data_url(${newField})"></div>
+                                </div>
+
+                            </div>
+
+                            <div th:if="${modularType.name=='DataMethod' or modularType.name=='ComputableModel'}">
+                                <div th:if="${newField?.get('resources')!=null}">
+                                    <div th:replace="fragments/itemInfoModules :: Resource(${newField.resources})"></div>
+                                </div>
+                            </div>
+
+                            <div  th:if="${modularType.name=='Concept' or modularType.name=='SpatialReference' or modularType.name=='Template' or modularType.name=='Unit'}">
+
+                                <!--                                related-->
+                                <div th:if="${newField?.get('related')!=null}" id="Related_Concepts0" class="detail_block" >
+                                    <div th:replace="fragments/itemInfoModules :: concept_Related_Concepts0(${newField.related})"></div>
+                                </div>
+                                <!--                                   template的xml描述-->
+                                <div th:if="${modularType.name=='Template'}">
+                                    <div th:if="${newField?.get('xml')!=null}">
+                                        <div th:replace="fragments/itemInfoModules :: template_xml(${newField})"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel' or (${modularType.name} eq'LogicalModel'))">
+                                <div th:if="${newField?.get('relateModelItemList')!=null}" th:replace="fragments/itemInfoModules :: related_models(${newField.relateModelItemList})"></div>
+
+                            </div>
+                            <div th:if="${modularType.name} eq 'LogicalModel'">
+                                <div th:if="${newField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${newField.imageList})"></div>
+                            </div>
+
+                        </el-card>
+                    </el-col>
+                </el-row>
+
+            </el-main>
+            <el-footer class="btns-content">
+                <el-row class="main-content" :gutter="20" type="flex" justify="end">
+                    <el-button type="primary">Accept</el-button>
+                    <el-button type="warning">Reject</el-button>
+                </el-row>
+            </el-footer>
+
+        </el-container>
+
+    </div>
+</div>
+
+</body>
+
+
+
+<script src="/static/js/common/jquery-3.3.1.min.js"></script>
+<script src="/static/js/common/axios.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
+<script src="/static/js/modules/userAvatar.js"></script>
+<script src="/static/js/common/vue-avatar.min.js"></script>
+<script src="/static/js/page/version_compare.js"></script>
+<!--<script src="/static/js/page/model_item_info.js"></script>-->
+<script src="/static/js/common/navbar.js"></script>
+
+<script th:inline="javascript">
+    var itemInfo = [[${itemInfo}]];
+    // var relation = [[${relate}]];
+    // var author = [[${user}]];
+    // var modelReferences = [[${references}]];
+
+    var references_old = [[${originalField.references}]];
+    var references_new = [[${newField.references}]];
+
+</script>
+</html>

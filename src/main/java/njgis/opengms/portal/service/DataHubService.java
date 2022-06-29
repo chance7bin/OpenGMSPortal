@@ -10,7 +10,9 @@ import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.po.DataHub;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.entity.po.Version;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,6 +57,12 @@ public class DataHubService {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    NoticeService noticeService;
+
+    @Autowired
+    VersionService versionService;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
@@ -135,14 +145,64 @@ public class DataHubService {
 
     }
 
-    public JsonResult setRelation(String id, List<String> relations) {
+    public JsonResult setRelation(String id, List<String> relations, String email) {
 
-        DataHub dataHub = dataHubDao.findFirstById(id);
-        dataHub.setRelatedModels(relations);
-        dataHubDao.save(dataHub);
+        DataHub item = dataHubDao.findFirstById(id);
+
+        List<String> versions = item.getVersions();
+        String originalItemName = item.getName();
         JSONObject result = new JSONObject();
-        result.put("type","suc");
-        return ResultUtils.success(result);
+        if (!item.isLock()){
+
+            String author = item.getAuthor();
+            Date now = new Date();
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!author.equals(email)){
+                item.setLock(true);
+                dataHubDao.save(item);
+            } else {
+                if (versions == null || versions.size() == 0) {
+                    Version version = versionService.addVersion(item, email, originalItemName);
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    item.setVersions(versions);
+                }
+            }
+
+            item.setRelatedModels(relations);
+            item.setLastModifyTime(now);
+            item.setLastModifier(email);
+
+
+            Version new_version = versionService.addVersion(item, email,originalItemName);
+            if (author.equals(email)){
+                versions.add(new_version.getId());
+                item.setVersions(versions);
+
+                dataHubDao.save(item);
+                result.put("type","suc");
+
+                return ResultUtils.success(result);
+            }else {
+
+                //发送通知
+                List<String> recipientList = new ArrayList<>();
+                recipientList.add(author);
+                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version.getId(),recipientList);
+                result.put("type","version");
+                return ResultUtils.success(result);
+            }
+
+
+        } else {
+            result.put("type","version");
+            return ResultUtils.success(result);
+        }
 
     }
 

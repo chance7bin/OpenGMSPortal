@@ -117,313 +117,19 @@
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
-            <div th:replace="fragments/itemInfoModules :: alias"></div>
+            <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo},true)"></div>
+            <div th:replace="fragments/itemInfoModules :: alias(${itemInfo})"></div>
 
-<!--            <div id="alias" class="detail_block" th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text">-->
-<!--                        <h4>Alias</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content" style="margin-bottom:10px;">-->
+            <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
 
-<!--                    <el-tag th:each="alias:${itemInfo.alias}" th:text="${alias}"-->
-<!--                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>-->
+            <div th:replace="fragments/itemInfoModules :: spatial_Knowledge_Graph0" ></div>
 
-<!--                </div>-->
-<!--            </div>-->
+            <div th:replace="fragments/itemInfoModules :: classifications(${classifications}, true)"></div>
 
-            <div id="Contributor0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
-
-            </div>
-
-            <div id="Knowledge_Graph0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px;">
-                        <h4>Map</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="height: 200px" id="map">
-
-                </div>
-            </div>
-            <div th:replace="fragments/itemInfoModules :: classifications"></div>
-
-            <div id="transform" class="detail_block" v-cloak>
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.Transform}}</h4>
-                    </div>
-                </div>
-                <div class="block_content transformContainer " th:if="${isTemporal} eq 'other'">
-                    <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">{{htmlJSON.InputCoordinate}}</h5>
-                        <div class="flexJustBetween flexAlignCenter inputForm">
-                            <h5><span style="color: #7d7d7d">Name: </span> {{inputCoordinate.name}}</h5>
-                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(0)">{{htmlJSON.Select}}</el-button>
-                        </div>
-                        <div v-if="judgeUnit(inputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>X: </p>
-                            <el-input size="mini" type="primary" v-model="inputX" plain ></el-input>
-                        </div>
-                        <div v-if="judgeUnit(inputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>Y: </p>
-                            <el-input size="mini" type="primary" v-model="inputY" plain ></el-input>
-                        </div>
-                        <div v-if="judgeUnit(inputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>Longtitude: </p>
-                            <el-input size="mini" type="primary" v-model="inputLong" plain placeholder="e.g. 22.53°"></el-input>
-                            <p>&deg</p>
-                        </div>
-                        <div v-if="judgeUnit(inputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>Latitude: </p>
-                            <el-input size="mini" type="primary" v-model="inputLat" plain placeholder="e.g. 22.53°" style="margin-left: 20.5px;"></el-input>
-                            <p>&deg</p>
-                        </div>
-                    </div>
-                    <div class="flexCol flexCenter positionRelative" style="height: 150px">
-                        <el-button type="primary" size="medium" style="margin: 0 20px" @click="transformClick">
-                            {{htmlJSON.Transform}}
-                        </el-button>
-                        <i class="el-icon-sort cursorPointer exchangeButton" @click="exchangeIO" style="color: #0069ba;font-size: 18px;margin-top: 5px"></i>
-                        <p class="cursorPointer batchInputButton" role="button" style="" @click="batchInput"> {{htmlJSON.BatchInput}}</p>
-                    </div>
-                    <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">{{htmlJSON.OutputCoordinate}}</h5>
-                        <div class="flexJustBetween flexAlignCenter inputForm">
-                            <h5><span style="color: #7d7d7d">Name: </span> {{outputCoordinate.name}}</h5>
-                            <el-button size="mini" round type="primary" plain @click="loadSpatialReferenceClick(1)">{{htmlJSON.Select}}</el-button>
-                        </div>
-                        <div v-if="judgeUnit(outputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>X: </p>
-                            <el-input size="mini" type="primary" v-model="outputX" plain disabled></el-input>
-                        </div>
-                        <div v-if="judgeUnit(outputCoordinate)=='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>Y: </p>
-                            <el-input size="mini" type="primary" v-model="outputY" plain disabled></el-input>
-                        </div>
-                        <div v-if="judgeUnit(outputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>Longtitude: </p>
-                            <el-input size="mini" type="primary" v-model="outputLong" plain disabled></el-input>
-                            <p>&deg</p>
-                        </div>
-                        <div v-if="judgeUnit(outputCoordinate)!='metre'" class="flexJustBetween flexAlignCenter inputForm">
-                            <p>Latitude: </p>
-                            <el-input size="mini" type="primary" v-model="outputLat" plain style="margin-left: 20.5px;" disabled></el-input>
-                            <p>&deg</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="block_content transformContainer " th:if="${isTemporal} eq 'Global'">
-                    <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">Input Calendar</h5>
-                        <div class="flexAlignCenter inputForm">
-                            <p style="width: 15%">Calender : </p>
-                                <el-select size="small" type="primary" :data="CalendarValue" placeholder="请选择"  style="width: 84%;float: right" v-model="inCalen" @change="CalenChange(1)">
-                                    <el-option
-                                            v-for="item in CalendarValue"
-                                            :key="item.label"
-                                            :label="item.label"
-                                            :value="item.label">
-                                    </el-option>
-                                </el-select>
-                        </div>
-                        <div class="flexAlignCenter inputForm">
-                            <p style="width: 15%">Year : </p>
-                            <el-input size="small" style="width: 85%" v-model="inYear"></el-input>
-
-                        </div>
-                        <div class="flexAlignCenter inputForm">
-
-                            <p style="width: 15%">Month : </p>
-
-                                <el-select  size="small" type="primary" :data="inMonth" placeholder="请选择" v-model="inMonth" style="width: 84%;">
-                                    <el-option
-                                            v-for="item in inMonthOptions"
-                                            :key="item.id"
-                                            :label="item.label"
-                                            :value="item.id">
-                                    </el-option>
-                                </el-select>
-                        </div>
-
-
-                        <div class="flexAlignCenter inputForm">
-
-                            <p style="width: 15%">Day : </p> <el-input size="small" style="width: 85%;float: right" v-model="inDay"></el-input>
-                        </div>
-
-                    </div>
-                    <div class="flexCol flexCenter positionRelative" style="height: 150px">
-                        <el-button type="primary" size="medium" style="margin: 0 20px" @click="CalendarTransform" >
-                            Transform
-                        </el-button>
-                    </div>
-                    <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">Output Calendar</h5>
-                        <div class="flexAlignCenter inputForm">
-                            <p style="width: 15%">Calender : </p>
-                            <el-select size="small" type="primary" :data="CalendarValue" placeholder="请选择" v-model="outCalen" style="width: 84%;float: right" @change="CalenChange(2)">
-                                <el-option
-                                        v-for="item in CalendarValue"
-                                        :key="item.label"
-                                        :label="item.label"
-                                        :value="item.label">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="flexAlignCenter inputForm">
-                            <p style="width: 15%">Year : </p>
-                            <el-input size="small" style="width: 85%" :disabled="true" v-model="outYear"></el-input>
-
-                        </div>
-                        <div class="flexAlignCenter inputForm">
-
-                            <p style="width: 15%">Month : </p>
-
-                            <el-select size="small" v-model="outMonth" type="primary" disabled  :data="GregorianMonth" placeholder="请选择" id="slct1" style="width: 84%;">
-                                <el-option
-                                        v-for="item in outMonthOptions"
-                                        :key="item.id"
-                                        :label="item.label"
-                                        :value="item.id">
-                                </el-option>
-                            </el-select>
-
-
-
-                        </div>
-
-
-                        <div class="flexAlignCenter inputForm">
-
-                            <p style="width: 15%">Day : </p> <el-input size="small" :disabled="true" v-model="outDay"  style="width: 85%;float: right"></el-input>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="block_content transformContainer" th:if="${isTemporal} eq 'Local'">
-                    <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">Input Time</h5>
-                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
-                            <p style="width: 15%;margin: 5px 0">Time System: </p>
-                            <el-select size="small" type="primary" :data="TimeSystemOptions" placeholder="请选择"  style="width: 84%;float: right" v-model="inTime" @change="TimeChange(1)">
-                                <el-option
-                                        v-for="item in TimeSystemOptions"
-                                        :key="item.label"
-                                        :label="item.label"
-                                        :value="item.label">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
-                            <p style="width: 15%;margin: 5px 0">Hour : </p>
-                            <el-input-number v-model="inHour" size="small" controls-position="right"  :min="0" :max="23" style="width: 84%" @change="intimeChange"></el-input-number>
-
-                        </div>
-                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
-
-                            <p style="width: 15%;margin: 5px 0">Minute : </p>
-
-                            <el-input-number v-model="inMin" size="small"  controls-position="right"  :min="0" :max="59" style="width: 84%;" @change="intimeChange"></el-input-number>
-                        </div>
-                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
-
-                            <p style="width: 15%;margin: 5px 0">Second : </p>
-                            <el-input-number v-model="inSec"  size="small" controls-position="right"  :min="0" :max="59" style="width: 84%;font-size: large" @change="intimeChange"></el-input-number>
-                        </div>
-                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
-
-                            <p style="width: 15%;margin: 5px 0">Time : </p>
-                            <el-input v-model="intime" size="small" style="width: 84%;text-align: center" >{{intime}}</el-input>
-                        </div>
-                    </div>
-                    <div class="flexCol flexCenter positionRelative" style="height: 150px">
-                        <el-button type="primary" size="medium" style="margin: 0 20px" @click="TimeTransform" >
-                            Transform
-                        </el-button>
-                    </div>
-                    <div class="flexCol flexAlignCenter" style="flex: 1;">
-                        <h5 style="font-size: 16px;">Output Time</h5>
-                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
-                            <p style="width: 15%;margin: 5px 0">Time System : </p>
-                            <el-select size="small" type="primary" :data="TimeSystemOptions" placeholder="请选择"  style="width: 84%;float: right" v-model="outTime" @change="TimeChange(2)">
-                                <el-option
-                                        v-for="item in TimeSystemOptions"
-                                        :key="item.label"
-                                        :label="item.label"
-                                        :value="item.label">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="flexAlignCenter " style="width: 100%;margin: 5px 0">
-                            <p style="width: 15%;margin: 5px 0">Hour : </p>
-                            <el-input-number v-model="outHour" size="small" controls-position="right" :disabled="true" :min="0" :max="23"  style="width: 84%"></el-input-number>
-
-                        </div>
-                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
-
-                            <p style="width: 15%;margin: 5px 0">Minute : </p>
-
-                            <el-input-number v-model="outMin" size="small"  controls-position="right" :disabled="true" :min="0" :max="59" style="width: 84%;"></el-input-number>
-                        </div>
-                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
-
-                            <p style="width: 15%;margin: 5px 0">Second : </p>
-                            <el-input-number v-model="outSec"  size="small" controls-position="right"  :disabled="true" :min="0" :max="59" style="width: 84%;"></el-input-number>
-                        </div>
-                        <div class="flexAlignCenter "  style="width: 100%;margin: 5px 0">
-
-                            <p style="width: 15%;margin: 5px 0">Time : </p>
-                            <el-input v-model="outtime" size="small" style="width: 84%;text-align: center" :disabled="true" >{{outtime}}</el-input>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: spatial_transform"></div>
 
 <!--            description-->
-            <div id="description" th:if="${#lists.size(itemInfo.localizationList)>0}" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Detailed Description</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div class="LanguageInfoContainer" th:each="localization:${itemInfo.localizationList}" th:id="${localization.localCode}">
-                        <table class="table table-bordered" >
-                            <thead>
-                            <tr>
-                                <th class="thMain" th:text="${localization.localName}"></th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <table class="table table-bordered">
-                            <colgroup>
-                                <col width="25%">
-                                <col width="75%">
-                            </colgroup>
-                            <tr th:if="${localization.name!=''}">
-                                <td>Name</td>
-                                <td class="enName" th:text="${localization.name}"></td>
-                            </tr>
-                            <tr th:if="${localization.description!=''}">
-                                <td>Description</td>
-                                <td class="enDesc" th:utext="${localization.description}"></td>
-                            </tr>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
-
-            <!--<div th:if="${info.detail==null}"  class="text-center" >-->
-            <!--<a id="addLocalization" style="cursor:pointer;font-size:16px;" data-toggle="modal" data-target="#myModal">Add Localization<i class="fa fa-plus" style="margin-left: 10px;color:#339fff;font-weight: bold" aria-hidden="true"></i></a>-->
-            <!--</div>-->
-
-
+            <div th:replace="fragments/itemInfoModules :: community_description"></div>
 
             <div id="cite" class="detail_block">
                 <div class="block_head">
@@ -449,27 +155,13 @@
 
             <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
-
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
 
             </div>
 
             <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
-
-<!--            <div id="QR0" class="detail_block minScreen">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text" style="padding-left: 10px;">-->
-<!--                        <h4>QR Code</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content">-->
-
-<!--                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>-->
-
-<!--                </div>-->
-<!--            </div>-->
 
             <div id="comment" class="detail_block">
                 <comments :html-Json="htmlJSON"></comments>
@@ -479,36 +171,7 @@
 
         <div class="right-panel el-col">
 
-            <div id="Contributor" class="detail_block">
-                <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
-            </div>
-
-<!--            <div id="Contributor" class="detail_block">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text" style="padding-left: 10px;">-->
-<!--                        <h4 th:if="${history!=true}">{{htmlJSON.Contributor}}</h4>-->
-<!--                        <h4 th:if="${history==true}">{{htmlJSON.Modifier}}</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content">-->
-<!--                    <div class="el-row"-->
-<!--                         style="margin-bottom: 3px;height: 40px; display: flex; justify-content: center; align-items: center;">-->
-<!--                        <user-avatar ref="mainContributorAvatar1" style="width:40px;height: 40px;float:left;"></user-avatar>-->
-<!--                        <div class="el-col">-->
-<!--                            <div class="pull-left" style="display: block;margin-left: 15px;">-->
-<!--                                <a th:href="'/profile/'+${user.accessId}"><h4 th:text="${user.name}" style="padding: 0;">Tom Marvolo Riddle</h4></a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="el-row">-->
-<!--                        <div class="text-center">-->
-<!--                            <h5 th:if="${history!=true}" th:text="'contributed at '+${date}">contributed at 2018-7-13 14:32:18 </h5>-->
-<!--                            <h5 th:if="${history==true}" th:text="'modified at '+${date}">modified at 2018-7-13 14:32:18 </h5>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--            </div>-->
+            <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
 
             <div id="Knowledge_Graph" class="detail_block" style="display: none">
                 <div class="block_head">
@@ -523,22 +186,11 @@
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
 
             </div>
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
-<!--            <div id="QR" class="detail_block">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text" style="padding-left: 10px;">-->
-<!--                        <h4>{{htmlJSON.QRCode}}</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content">-->
 
-<!--                    <div class="qrcode" style="width:200px;height:200px;margin:0 auto"></div>-->
-
-<!--                </div>-->
-<!--            </div>-->
 
         </div>
 

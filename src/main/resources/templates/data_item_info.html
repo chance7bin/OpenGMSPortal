@@ -70,286 +70,37 @@
         </translation-bar>
 
         <div class="left-panel el-col">
-            <div th:replace="fragments/itemInfoModules :: itemTitle"></div>
-            <div id="Owner0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo},true)"></div>
+
+            <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
 
             <div id="Authorship0" class="detail_block minScreen"
                  th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
-                <div th:replace="fragments/itemInfoModules :: authorship(pos=0)"></div>
+                <div th:replace="fragments/itemInfoModules :: authorship(0,${itemInfo},true)"></div>
             </div>
 
-            <div id="classification0" class="detail_block minScreen">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Category Tags</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="margin-bottom:10px;">
-                    <el-tag type="success" th:each="classS:${classifications}" th:text="${classS}"
-                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
-                </div>
+            <div id="data_classification0" class="detail_block minScreen">
+                <div th:replace="fragments/itemInfoModules :: data_classification(${classifications})"></div>
             </div>
+
 
             <!--data resource url-->
-            <div th:if="(${itemInfo.url!=null}) and (${itemInfo.url!=''})" id="data_url" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.DataResourceUrl}}</h4>
-                    </div>
-                </div>
-                <div class="block_content flex">
-                    <div id="data-url" class="">
-                        <a th:href="${itemInfo.url}"  target="_blank="><span
-                                style="font-size: 17px;color: #67c23a;"
-                                th:text="${itemInfo.url}">{{htmlJSON.Current}}</span>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
+            <div th:replace="fragments/itemInfoModules :: data_url(${itemInfo})"></div>
 
             <!--Data Resource-->
-            <div th:if="(${userDataList}) and (${#arrays.length(userDataList)})" id="userDataList" class="detail_block">
-
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.DataResource}}</h4>
-                    </div>
-                </div>&nbsp;&nbsp;
-                <el-card>
-                <div class="el-card dataitemisol is-never-shadow"
-                     th:each="data,key:${userDataList}"
-                     th:title="${data.label}" shadow="never" th:id="${key.index}"
-                     style="width: 150px;"><!---->
-                    <a target="_blank"
-                       th:href="${data.url}"
-                       style="color:black">
-                        <div class="el-card__body">
-                            <div class="el-row">
-                                <div class="el-col el-col-6">&nbsp;</div>
-                                <div class="el-col el-col-12">
-                                    <img
-                                            th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"
-                                            onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
-                                            style="width: 100%;">
-                                </div>
-                                <div class="el-col el-col-6">&nbsp;</div>
-                            </div>
-                            <div class="el-row" style="height: 45px;">
-                                <div class="el-col el-col-2">&nbsp;</div>
-                                <div class="el-col el-col-20"><p th:text="${data.label}+'.'+${data.suffix}"
-                                                                 style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
-                                </p></div>
-                                <div class="el-col el-col-2">&nbsp;</div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                </el-card>
-            </div>&nbsp;&nbsp;
+            <div th:replace="fragments/itemInfoModules :: data_userDataList"></div>
 
             <!--Distributed Node Data-->
-            <div  v-loading="loading" th:if="${#arrays.length(fileName)}" id="distributedNodeData" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Distributed Node Data</h4>
-                    </div>
-                </div>&nbsp;&nbsp;
-                <div>
-                    <el-card>
-                        <div class="el-card dataitemisol is-never-shadow"
-                             v-for="data"
-                             style="width: 150px;"><!---->
-                            <!--<a target="_blank"-->
-                               <!--th:href="${data.url}"-->
-                               <!--style="color:black">-->
-                                <div class="el-card__body">
-                                    <div class="el-row">
-                                        <div class="el-col el-col-6">&nbsp;</div>
-                                        <div class="el-col el-col-12">
-                                            <img
-                                                    src="/static/img/filebrowser/undefine.svg"
-                                                    onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
-                                                    style="width: 100%;">
-                                        </div>
-                                        <div class="el-col el-col-6">&nbsp;</div>
-                                    </div>
-                                    <div class="el-row" style="height: 45px;">
-                                        <div class="el-col el-col-2">&nbsp;</div>
-                                        <div class="el-col el-col-20"><p th:text="${data}"
-                                                                         style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
-                                        </p></div>
-                                        <div class="el-col el-col-2">&nbsp;</div>
-                                    </div>
-                                </div>
-                            <!--</a>-->
-                        </div>
-                    </el-card>
-
-                </div>&nbsp;&nbsp;
-                <div>
-                    <p style="display: inline-block">You can apply to download this data:</p>
-                    <el-button class="value" type="success" round style="display: inline-block" @click="downLoadDistributedNodeData">DownLoad</el-button>
-                    <!--<p class="connect" style="display: none;color: mediumblue;font-size: larger;font-weight: 600;">Connecting Distributed Node...</p>-->
-                </div>
-            </div>&nbsp;&nbsp;
-
+            <div th:replace="fragments/itemInfoModules :: data_distributedNodeData"></div>
 
             <!--Distributed Node Data2-->
-            <div  v-loading="loading" th:if="${not #strings.isEmpty(distributeData)}" id="distributedNodeData2" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Distributed Node Data</h4>
-                    </div>
-                </div>&nbsp;&nbsp;
-                <div>
-                    <el-card>
-                        <div class="el-card dataitemisol is-never-shadow"
-                             v-for="(data, index) in invokeServices"
-                             :title="data.name" shadow="never"
-                             style="width: 150px;"><!---->
-                            <!--<a target="_blank"-->
-                               <!--th:href="${data.url}"-->
-                               <!--style="color:black">-->
-                                <div class="el-card__body downloadBtn" @click="downloadDisData($event)">
-                                    <div class="el-row">
-                                        <div class="el-col el-col-6">&nbsp;</div>
-                                        <div class="el-col el-col-12">
-                                            <img
-                                                    src="/static/img/filebrowser/undefine.svg"
-                                                    onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
-                                                    style="width: 100%;">
-                                        </div>
-                                        <div class="el-col el-col-6">&nbsp;</div>
-                                    </div>
-                                    <div class="el-row" style="height: 45px;">
-                                        <div class="el-col el-col-2">&nbsp;</div>
-                                        <div class="el-col el-col-20">
-                                            <p
-                                                                         style="overflow: hidden;overflow-wrap: break-word;
-                                                                         word-break: break-all; text-align: center;display:
-                                                                         -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;
-                                                                         line-height: 1.5">{{data.name}}
-                                            </p>
-                                        </div>
-                                        <div class="el-col el-col-2">&nbsp;</div>
-                                    </div>
-                                </div>
-                            <!--</a>-->
-                        </div>
-                    </el-card>
-
-                </div>
-            </div>&nbsp;&nbsp;
+            <div th:replace="fragments/itemInfoModules :: data_distributedNodeData2"></div>
 
             <!--description-->
-            <div th:if="${#lists.size(itemInfo.localizationList)} lt 0" id="description" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.DetailedDescription}}</h4>
-                    </div>
-                </div>
-                <div class="block_content">
-                    <div id="detail" class="detailIntroducePanel" th:utext="${itemInfo.localizationList[0].description}"
-                         style="overflow:auto"></div>
-                </div>
-                <div class="fullPaper text-center hide">
-                    <a id="fullPaper" style="cursor:pointer;font-size:16px;">{{htmlJSON.ViewFullContent}}<i
-                            class="fa fa-angle-down"
-                            style="margin-left: 10px;color:red;font-weight: bold"
-                            aria-hidden="true"></i></a>
-                </div>
+            <div th:replace="fragments/itemInfoModules :: data_description"></div>
 
-            </div>
-
-            <div th:if="${itemInfo.dataList!=null && #lists.size(itemInfo.dataList)!=0}" id="resources" class="detail_block" ref="browser">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Resources</h4>
-                    </div>
-                </div>
-
-                <div class="block_content">
-                    <div class="el-card filebrowserfunction is-always-shadow"><!---->
-                        <div class="el-card__body">
-                            <div class="filebrowser el-row">
-                                <div class="el-col">
-                                    <!--<button type="button" class="el-button dwload el-button&#45;&#45;default">&lt;!&ndash;&ndash;&gt;<i-->
-                                            <!--class="el-icon-download"></i><span>-->
-                                    <!--Download-->
-                                <!--</span></button>-->
-                                    <!--<button type="button" class="el-button shareData el-button&#45;&#45;default" @click="shareData()">&lt;!&ndash;&ndash;&gt;<i-->
-                                            <!--class="el-icon-share"></i><span>Share</span></button>-->
-
-                                    <!--<button type="button" class="el-button downloadAll el-button&#45;&#45;default">&lt;!&ndash;&ndash;&gt;<i-->
-                                            <!--class="el-icon-sold-out"></i><span>Download all files-->
-                                    <!--</span></button>-->
-
-                                    <button type="button" class="el-button fork el-button--default" @click="forkData()"><!----><i
-                                            class="el-icon-star-off"></i><span>Fork selected data
-                                    </span></button>
-                                </div>
-
-
-                                <!--<div class="el-input el-input&#45;&#45;suffix">&lt;!&ndash;&ndash;&gt;<input type="text" autocomplete="off"-->
-                                <!--id="searchinput"-->
-                                <!--placeholder="search input "-->
-                                <!--class="el-input__inner">&lt;!&ndash;&ndash;&gt;<span-->
-                                <!--class="el-input__suffix"><span class="el-input__suffix-inner"><i-->
-                                <!--class="el-input__icon el-icon-search"></i>&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;</span>-->
-                                <!--&lt;!&ndash;&ndash;&gt;</span>&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;</div>-->
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="el-card filecontent is-always-shadow" id="browsercont"
-                         style="height: 300px; overflow-y: auto;"><!---->
-                        <el-card th:each="item,key:${itemInfo.dataList}"
-                                 th:title="${item.name}" class="dataitemisol" shadow="never" th:id="${item.url}"
-                                 th:key="${key}" style="width: 150px;">
-
-                            <el-row>
-                                <el-col :span="6">&nbsp</el-col>
-                                <el-col :span="12"><img th:src="'/static/img/filebrowser/'+${item.suffix}+'.svg'"
-                                                        onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
-                                                        style="height: 60%;width:100%"></el-col>
-                                <el-col :span="6">&nbsp</el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="2">&nbsp</el-col>
-                                <el-col  :span="20" style="display: flex;justify-content: center">
-
-                                    <p style="text-align: center;word-break: break-all;" th:text="${item.name}"></p>
-                                    <p th:if="${item.suffix}!='unknow'">.</p>
-                                    <p th:text="${item.suffix}!='unknow'?${item.suffix}:''"></p>
-
-                                </el-col>
-                                <el-col :span="2">&nbsp</el-col>
-
-                            </el-row>
-
-                            <!--menu item -->
-
-
-                        </el-card>
-                    </div>
-
-                    <div class="el-card browsermenu is-always-shadow"><!---->
-                        <div class="el-card__body">
-                            <button type="button" class="el-button el-button--text" id="dbtn"><!----><i
-                                    class="el-icon-download"></i><span>download
-                        </span></button>
-                            <br>
-                            <button type="button" class="el-button el-button--text" id="sbtn"><!----><i
-                                    class="el-icon-share"></i><span>share</span></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!--resources-->
+            <div th:replace="fragments/itemInfoModules :: data_resources"></div>
 
             <el-dialog :visible.sync="forkDialogVisible" title="Select Folder" width="35%">
 
@@ -364,167 +115,26 @@
                             >
                       <span class="custom-tree-node" slot-scope="{ node, data }">
                         <span>{{ node.label }}</span>
-                        <!--<span>-->
-                          <!--<el-button-->
-                                  <!--type="text"-->
-                                  <!--size="mini"-->
-                                  <!--@click="() => append(data)">-->
-                            <!--Append-->
-                          <!--</el-button>-->
-                          <!--<el-button-->
-                                  <!--type="text"-->
-                                  <!--size="mini"-->
-                                  <!--@click="() => remove(node, data)">-->
-                            <!--Delete-->
-                          <!--</el-button>-->
-                        <!--</span>-->
                       </span>
                     </el-tree>
                 </el-card>
 
                 <span slot="footer" class="dialog-footer">
                     <el-button class="pull-left" type="primary" icon="el-icon-folder-add" @click="addFolder()">Add new folder</el-button>
-                    <el-button @click="forkDialogVisible = false">{{htmlJSON.Cancel}}</el-button>
-                    <el-button type="primary" @click="confirmFolder()">{{htmlJSON.OK}}</el-button>
+                    <el-button @click="forkDialogVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="confirmFolder()">OK</el-button>
                 </span>
 
             </el-dialog>
 
             <!--related models-->
-            <div id="relatedmodels" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.RelatedModels}}</h4>
-                    </div>
-                </div>
-                <div class="block_content flex">
-
-                    <div th:if="${#lists.size(relatedModels)}!=0" style="width:100%">
-                        <div class="list_panel clearfix" th:each="model:${relatedModels}">
-                            <a th:href="'/modelItem/'+${model.id}" class="img">
-                                <img src="/static/img/model/model.png">
-                            </a>
-                            <div class="info" style="margin-top:0px;">
-                                <a th:href="'/modelItem/'+${model.id}" target="_blank"
-                                   th:text="${model.name}">Ground Water Flow System</a>
-                                <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
-                                    neural network method to extract
-                                    land use change rules in the study area, and then applies the rules to
-                                    subsequent
-                                    simulations and predictions.</p>
-                            </div>
-                        </div>
-                        <el-button @click="addRelation()" type="primary" icon="el-icon-plus"
-                                   style="width: 100%">
-                            {{htmlJSON.EditRelatedModelItem}}
-                        </el-button>
-                    </div>
-                    <div class="text-center" style="width:100%" th:if="${#lists.size(relatedModels)}==0">
-                        <h5 style="margin-bottom: 10px;display: inline-block;">
-                            {{htmlJSON.RelatedModelsInfo}}
-                        </h5>
-                        <button class="btn btn-default" type="button"
-                                style="display: inline-block;" @click="addRelation()">
-
-                            <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
-                        </button>
-                    </div>
-
-
-                </div>
-
-            </div>
+            <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${relatedModels}, true)"></div>
 
             <!--relatedProcessing-->
-            <div th:if="${relatedProcessing!=null && #lists.size(relatedProcessing)!=0}" id="related_processing" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Related Processing</h4>
-                    </div>
-                </div>
-                <el-tabs class="block_content" v-model="activeNameProcessing" type="border-card" stretch="true">
-                    <el-tab-pane name="Related Processing">
-                        <div slot="label">Related Processing
-                            <span class="el-badge__content el-badge__content--undefined"
-                                  th:text="${#lists.size(relatedProcessing)}">
-                            </span>
-                        </div>
-                        <div th:if="${#lists.size(relatedProcessing)}!=0">
-                            <div class="list_panel" th:each="pro:${relatedProcessing}">
-                                <el-card>
-                                    <a class="img">
-                                        <img src="/static/img/data/Related%20Processing.jpg">
-                                    </a>
-                                    <div class="info" style="margin-top:0px;">
-                                        <a th:text="${pro.proName}">Ground Water Flow System</a>
-                                        <p style="margin-top: 0px" th:text="${pro.proDescription}">ANN-CA uses the artificial
-                                            neural network method to extract
-                                            land use change rules in the study area, and then applies the rules to
-                                            subsequent
-                                            simulations and predictions.</p>
-                                    </div>
-                                    <el-button type="success" round  th:id="${pro.proId}" class="processingInvoke" style="margin-top: 10px;float: right;margin-bottom: 8px" @click="invokeProcessing($event);dialogVisible = true">Invoke</el-button>
-                                </el-card>
-                            </div>
+            <div th:replace="fragments/itemInfoModules :: data_related_processing"></div>
 
-                        </div>
-                        <div class="text-center" th:if="${#lists.size(relatedProcessing)}==0">
-                            <h5 style="margin-bottom: 10px;display: inline-block;">
-                                {{htmlJSON.NoRelatedModelItem}}
-                            </h5>
-                            <button class="btn btn-default" type="button"
-                                    style="display: inline-block;">
-                                <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
-                            </button>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
-            </div>
             <!--relatedVisualization-->
-            <div th:if="${relatedVisualization!=null && #lists.size(relatedVisualization)!=0}" id="related_visualization" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.RelatedVisualization}}</h4>
-                    </div>
-                </div>
-                <el-tabs class="block_content" v-model="activeNameVisual" type="border-card" stretch="true">
-                    <el-tab-pane name="Related Visualization">
-                        <div slot="label">{{htmlJSON.RelatedVisualization}}
-                            <span class="el-badge__content el-badge__content--undefined"
-                                  th:text="${#lists.size(relatedVisualization)}">
-                            </span>
-                        </div>
-                        <div th:if="${#lists.size(relatedVisualization)}!=0">
-                            <div class="list_panel" th:each="pro:${relatedVisualization}">
-                                <el-card>
-                                    <a class="img">
-                                        <img src="/static/img/data/Related%20Processing.jpg">
-                                    </a>
-                                    <div class="info" style="margin-top:0px;">
-                                        <a th:text="${pro.proName}">Ground Water Flow System</a>
-                                        <p style="margin-top: 0px" th:text="${pro.proDescription}">ANN-CA uses the artificial
-                                            neural network method to extract
-                                            land use change rules in the study area, and then applies the rules to
-                                            subsequent
-                                            simulations and predictions.</p>
-                                    </div>
-                                    <el-button type="success" round  th:id="${pro.proId}" class="processingInvokeVisual" style="margin-top: 10px;float: right;margin-bottom: 8px" @click="invokeProcessingVisual($event);dialogVisible = true">Invoke</el-button>
-                                </el-card>
-                            </div>
-
-                        </div>
-                        <div class="text-center" th:if="${#lists.size(relatedVisualization)}==0">
-                            <h5 style="margin-bottom: 10px;display: inline-block;">
-                                {{htmlJSON.NoRelatedModelItem}}
-                            </h5>
-                            <button class="btn btn-default" type="button"
-                                    style="display: inline-block;">
-                                <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
-                            </button>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
-            </div>
+            <div th:replace="fragments/itemInfoModules :: data_related_processing"></div>
 
             <!--how to Cite-->
             <div id="cite" class="detail_block">
@@ -544,7 +154,7 @@
                            th:text="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"></a>
                     </div>
                     <div id="copy" class="btn btn-info">
-                        {{htmlJSON.Copy}}
+                        Copy
                     </div>
                 </div>
             </div>
@@ -561,20 +171,8 @@
 
         <div class="right-panel el-col">
             <!--categorys-->
-            <div id="classification" class="detail_block">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>{{htmlJSON.CategoryTags}}</h4>
-                    </div>
-                </div>
-                <div class="block_content" style="margin-bottom:10px;">
-
-                    <!--<el-tag type="success"  v-for="iter in dataCategory" @click="clickDataItemInfo(iter.id)" style="margin-left: 10px;font-weight: bold;color: #3396ef"> {{iter.cateContent}}</el-tag>-->
-
-                    <el-tag type="success" th:each="classS:${classifications}" th:text="${classS}"
-                            style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
-
-                </div>
+            <div id="data_classification" class="detail_block">
+                <div th:replace="fragments/itemInfoModules :: data_classification(${classifications})"></div>
             </div>
 
             <div id="Contributor" class="detail_block">
@@ -583,7 +181,7 @@
 
             <div id="Authorship" class="detail_block"
                  th:if="${itemInfo.authorships!=null&&#lists.size(itemInfo.authorships)!=0}">
-                <div th:replace="fragments/itemInfoModules :: authorship(pos=1)" ></div>
+                <div th:replace="fragments/itemInfoModules :: authorship(1,${itemInfo},true)" ></div>
             </div>
 
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
@@ -670,6 +268,5 @@
 
 
 <script src="/static/js/common/navbar.js"></script>
-<script src="/static/js/modules/modulesValue.js"></script>
 
 </html>

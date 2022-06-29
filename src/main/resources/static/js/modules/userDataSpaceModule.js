@@ -265,7 +265,7 @@ Vue.component("user-data",
                                 window.sessionStorage.setItem("history", window.location.href);
                                 window.location.href = "/user/login"
                             } else {
-                                this.folderTree = res.data.data ;
+                                this.folderTree = res.data ;
                                 this.addLabel(this.folderTree)
                                 this.selectPathDialog=true;
                             }

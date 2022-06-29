@@ -50,7 +50,7 @@ Vue.component("linkRelatedItemModule",
                     currentPage: 1,
                     pageSize: 5,
                     relateSearch: "",
-                    sortField:"default",
+                    sortField:"viewCount",
                     total: 0,
                     searchResult: [],
                 },
@@ -278,6 +278,7 @@ Vue.component("linkRelatedItemModule",
                         searchText: this.pageOption_all.relateSearch.trim(),
                         sortField: this.pageOption_all.sortField,
                         categoryId: "",
+                        authorEmail: window.localStorage.getItem("account")
                     }
                 }else {
                     // this.pageOption_my.currentPage = 1;
@@ -288,6 +289,7 @@ Vue.component("linkRelatedItemModule",
                         searchText: this.pageOption_my.relateSearch.trim(),
                         sortField: this.pageOption_my.sortField,
                         categoryId: "",
+                        authorEmail: window.localStorage.getItem("account")
                     };
                 }
                 let url, contentType;
@@ -459,6 +461,7 @@ Vue.component("linkRelatedItemModule",
                     this.tableData_model.forEach(function (item, index) {
                         relateArr.push(item.id);
                     })
+                    console.log("relateArr:",relateArr);
                     data = {
                         id: id,
                         type: this.relateItemType,
@@ -475,6 +478,7 @@ Vue.component("linkRelatedItemModule",
                     });
                     data = {
                         relations: JSON.stringify(relateArr),
+                        // relations: relateArr,
                     };
                     // data = JSON.stringify(data);
                 }

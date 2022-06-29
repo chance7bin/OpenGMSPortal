@@ -58,353 +58,25 @@
                 style="position: absolute;top: 10px;right:15px">
         </translation-bar>
         <div class="left-panel el-col">
-            <div class="detail">
-                <div class="detail_title">
-                    <!--<a th:if="${history!=true}"-->
-                       <!--th:href="${itemInfo.relateModelItem}==null?'/modelItem/repository':'/modelItem/'+${itemInfo.relateModelItem}"-->
-                       <!--class="el-icon-arrow-left" style="font-size: 20px"></a>-->
 
-                    <h2 th:utext="${itemInfo.name}"
-                        style="display: inline-block;margin:0px 10px;word-wrap:break-word; word-break:break-all;"></h2>
-                    <div class="pull-right">
-                        <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
-                            <a href="javascript:void(0);" th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" class='fa fa-pencil fa-2x' aria-hidden='true'
-                               @click="edit"></a>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15" content="There is another version haven't been reviewed, you can edit it later or contact us." effect="light" placement="top">
-                            <li th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x' style="color:#cccccc" aria-hidden='true'></li>
-                        </el-tooltip>
+            <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo},true)"></div>
 
-                        <el-tooltip th:if="${itemInfo.verify}"
-                                    popper-class="fontsize-15"
-                                    effect="light"
-                                    content="This model is maintained by OpenGMS."
-                                    placement="top">
-                            <div style="cursor: help;display: inline-block;vertical-align: super;"><img style="width:36px;height:36px;" src="/static/img/logo/logo_check.png"/></div>
-                        </el-tooltip>
+            <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
 
-                        <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light" placement="top">
-                            <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em"></i>
-                            <i th:if="${itemInfo.status=='Discoverable'}" class="el-icon-unlock discoverable fontsize-2em"></i>
-                            <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em"></i>
-                        </el-tooltip>
-                        <!--<a href="javascript:void(0)" class='fa fa-star-o fa-2x pull-right' aria-hidden='true'></a>-->
-                    </div>
-                </div>
-                <div class="detail_overview">
+            <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-                    <div th:switch="${itemInfo.image}" class="img">
-                        <img th:case="''" src="/static/img/model/calcModel.png">
-                        <img th:case="null" src="/static/img/model/calcModel.png">
-                        <img th:case="*" th:src="'/static'+${itemInfo.image}">
-                    </div>
-
-                    <div class="info" style="padding-top:0px">
-                        <p th:text="${itemInfo.overview}"></p>
-                        <div class="tags">
-                            <span class="label label-warning" style="margin-right: 10px;">
-                                {{htmlJSON.computableModel}}
-                            </span>
-                            <span th:if="${itemInfo.contentType=='Package'}" class="label label-info"
-                                  >{{htmlJSON.package}}</span>
-                            <span th:if="${itemInfo.contentType=='Code'}" class="label label-info"
-                                  >{{htmlJSON.sourceCode}}</span>
-                            <span th:if="${itemInfo.contentType=='Library'}" class="label label-info"
-                                  >{{htmlJSON.library}}</span>
-                            <span th:if="${itemInfo.contentType=='Service URL'}" class="label label-info"
-                                  >{{htmlJSON.webLink}}</span>
-                            <span th:if="${itemInfo.contentType=='Link'}" class="label label-info"
-                                  >{{htmlJSON.downloadLink}}</span>
-                        </div>
-                    </div>
-
-                    <div th:if="${history!=true}" class="detail_option">
-                        <!--<a href="javascript:void(0)" class="fa fa-share-square-o" aria-hidden="true"></a>-->
-                        <!--<div th:utext="'&nbsp&nbsp'+${itemInfo.shareCount}">&nbsp&nbsp37</div>-->
-                        <!--门户备用服务器不给调用-->
-
-                            <span th:if="${itemInfo.contentType=='Package'}">
-                                <button th:unless="${itemInfo.deploy==true}" class="btn btn-lg btn-info" type="button"
-                                        @click="dialogVisible = true">Deploy
-                                </button>
-                            </span>
-
-
-
-                            <button th:if="${itemInfo.deploy==true||itemInfo.contentType=='MD5'}" class="btn btn-lg btn-success" type="button" style="font-size: 18px;vertical-align: initial;margin-right:10px;"
-                                    @click="invoke()">{{htmlJSON.Invoke}}
-                            </button>
-
-
-                        <!--<el-tooltip th:if="${itemInfo.verify}"-->
-                                    <!--popper-class="fontsize-15"-->
-                                    <!--effect="light"-->
-                                    <!--content="This model has been verified, it can be invoked successfully."-->
-                                    <!--placement="top">-->
-                            <!--<span style="font-size: 16px;cursor: help;"><li class="fa fa-check-square-o" style="color:forestgreen"></li> verified</span>-->
-                        <!--</el-tooltip>-->
-                        <!--<el-tooltip th:if="${!itemInfo.verify}"-->
-                                    <!--popper-class="fontsize-15"-->
-                                    <!--effect="light"-->
-                                    <!--content="This model is contributed by users, we're not sure if it works."-->
-                                    <!--placement="top">-->
-                            <!--<span style="font-size: 16px;cursor: help;"><li class="fa fa-users" style="color:#339fff"></li> volunteer</span>-->
-                        <!--</el-tooltip>-->
-
-                        <a class="fa fa-eye " aria-hidden="true"></a>
-                        <div th:utext="'&nbsp&nbsp'+${itemInfo.viewCount}">&nbsp&nbsp341</div>
-
-                    </div>
-
-                </div>
-                <p th:if="${itemInfo.contentType=='MD5'}" style="color: #A8A8A8;font-style: italic;font-size: 12px;margin-left: 20px">This model is deployed on a personal server node.</p>
-
-            </div>
-            <div id="Contributor0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
-
-
+            <div th:replace="fragments/itemInfoModules :: Resource(${resources})"
+                 th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
             </div>
 
-            <div id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div th:replace="fragments/itemInfoModules :: authorship(pos=0)"></div>
+            <div th:replace="fragments/itemInfoModules :: computable_Link"></div>
 
-            </div>
-            <div th:replace="fragments/itemInfoModules :: Resource"></div>
+            <div th:replace="fragments/itemInfoModules :: computable_MDL" th:if="${mdlJson}!=null"></div>
 
-<!--            <div id="Resource" class="detail_block" style="padding: 10px 20px 0 0;"-->
-<!--                 th:if="${(itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text">-->
-<!--                        <h4>{{htmlJSON.Resource}}</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content" style="margin-right: 0;">-->
+            <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
-<!--                    &lt;!&ndash;<div class="el-card is-always-shadow">&lt;!&ndash;&ndash;&gt;&ndash;&gt;-->
-<!--                        &lt;!&ndash;<div class="el-card__body" style="padding: 9px;"><span><i class="el-icon-document"></i>&nbsp;&nbsp; contents</span>&ndash;&gt;-->
-<!--                        &lt;!&ndash;</div>&ndash;&gt;-->
-<!--                    &lt;!&ndash;</div>&ndash;&gt;-->
+            <div  th:replace="fragments/itemInfoModules :: related_models(${relateModelItemList})"></div>
 
-<!--                    <div class="el-card filecontent is-always-shadow" id="browsercont"-->
-<!--                         style=" overflow-y: auto;">-->
-
-<!--                        &lt;!&ndash;</el-row>&ndash;&gt;-->
-<!--                        <div class="el-card dataitemisol is-never-shadow"-->
-<!--                             th:each="data,key:${resources}"-->
-<!--                             th:title="${data.name}" shadow="never" th:id="${key.index}"-->
-<!--                             th:key="${key.index}" @click.native="getid(id)" @contextmenu.prevent="openMenu($event,id)"-->
-<!--                             style="width: 150px;">&lt;!&ndash;&ndash;&gt;-->
-<!--                            <a target="_blank"-->
-<!--                               th:href="${loadPath}+'/computableModel/'+${itemInfo.contentType}+${data.path}"-->
-<!--                                style="color:black">-->
-<!--                                <div class="el-card__body">-->
-<!--                                    <div class="el-row">-->
-<!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
-<!--                                        <div class="el-col el-col-12">-->
-<!--                                            <img-->
-<!--                                                    th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"-->
-<!--                                                    onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"-->
-<!--                                                    style="width: 100%;">-->
-<!--                                        </div>-->
-<!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
-<!--                                    </div>-->
-<!--                                    <div class="el-row" style="height: 45px;">-->
-<!--                                        <div class="el-col el-col-2">&nbsp;</div>-->
-<!--                                        <div class="el-col el-col-20"><p th:text="${data.name}"-->
-<!--                                                                         style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">-->
-<!--                                        </p></div>-->
-<!--                                        <div class="el-col el-col-2">&nbsp;</div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </a>-->
-<!--                        </div>-->
-
-
-<!--                    </div>-->
-
-
-<!--                    &lt;!&ndash;<el-card v-if="rightMenuShow" class="browsermenu" ref="rightMenu">&ndash;&gt;-->
-<!--                        &lt;!&ndash;<el-button id="dbtn" icon="el-icon-download" @click="downloaddata()" type="text">download&ndash;&gt;-->
-<!--                        &lt;!&ndash;</el-button>&ndash;&gt;-->
-<!--                        &lt;!&ndash;<br>&ndash;&gt;-->
-<!--                        &lt;!&ndash;<el-button id="sbtn" icon="el-icon-share" @click="share" type="text">share</el-button>&ndash;&gt;-->
-<!--                    &lt;!&ndash;</el-card>&ndash;&gt;-->
-<!--                    &lt;!&ndash;refresh 白板刷新和全选功能，待进一步完善&ndash;&gt;-->
-
-<!--                    &lt;!&ndash;<el-card class="browser">&ndash;&gt;-->
-<!--                    &lt;!&ndash;<el-button icon="el-icon-refresh" type="text">refresh</el-button><br>&ndash;&gt;-->
-<!--                    &lt;!&ndash;<el-button icon="el-icon-check" type="text">selectAll</el-button>&ndash;&gt;-->
-<!--                    &lt;!&ndash;</el-card>&ndash;&gt;-->
-
-
-<!--                </div>-->
-<!--            </div>-->
-
-            <div id="link" class="detail_block"
-                 th:if="${itemInfo.contentType=='Link'||(itemInfo.contentType=='Service' && itemInfo.mdl == null)}">
-                <div class="block_head">
-                    <div class="head_text">
-                        <h4>Link</h4>
-                    </div>
-                </div>
-                <div class="block_content flex">
-                    <div id="link-text" style="word-wrap:break-word; word-break:break-all;">
-                        <a th:href="${itemInfo.url}" th:text="${itemInfo.url}" target="_blank">
-                            https://geomodeling.njnu.edu.cn/conceptualmodel/4e028983-c8c0-4d98-86cd-85fc16a00d21
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div id="MDL" class="detail_block" th:if="${mdlJson}!=null">
-                <div class="block_head">
-                    <div class="head_text" style="padding-left: 10px; padding-right: 15px; display: inline-flex">
-                        <h4>{{htmlJSON.MDLDescription}}</h4>
-                        <el-tooltip popper-class="fontsize-15" effect="light" content="Supported by Model Description Language (MDL)" placement="top">
-                            <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <el-tabs class="block_content" v-model="activeName" type="border-card" stretch="true">
-                    <el-tab-pane :label="htmlJSON.AttributeSet" name="AttributeSet">
-                        <table class="table table-bordered text-center">
-                            <colgroup>
-                                <col class="col1" style="width: 30%">
-                                <col class="col2">
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <td style="font-weight: bold;">{{htmlJSON.Style}}</td>
-                                <td th:text="${itemInfo.mdlJson.ModelClass[0].style}"></td>
-                            </tr>
-                            <tr th:each="category,key:${itemInfo.mdlJson.ModelClass[0].AttributeSet[0].Categories[0].Category}">
-                                <td style="font-weight: bold;" th:if="${key.index}==0"
-                                    th:attr="rowspan=${#lists.size(itemInfo.mdlJson.ModelClass[0].AttributeSet[0].Categories[0].Category)}">
-                                    {{htmlJSON.Categories}}
-                                </td>
-                                <td th:text="${category.principle}+' / '+${category.path}"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered text-center"
-                               th:each="local,key:${itemInfo.mdlJson.ModelClass[0].AttributeSet[0].LocalAttributes[0].LocalAttribute}">
-                            <colgroup>
-                                <col class="col1" style="width: 30%">
-                                <col class="col2">
-                                <col class="col3">
-                            </colgroup>
-                            <tbody>
-                            <tr th:if="${local.local!=''}">
-                                <td style="font-weight: bold;">{{htmlJSON.Language}}</td>
-                                <td colspan="2" th:text="${local.local}"></td>
-                            </tr>
-                            <tr th:if="${local.localName!=''}">
-                                <td style="font-weight: bold;">{{htmlJSON.Name}}</td>
-                                <td colspan="2" th:text="${local.localName}"></td>
-                            </tr>
-                            <tr th:if="${local.Keywords!=''}">
-                                <td style="font-weight: bold;">{{htmlJSON.Keywords}}</td>
-                                <td colspan="2" th:text="${local.Keywords}"></td>
-                            </tr>
-                            <tr th:if="${local.Abstract!=''}">
-                                <td style="font-weight: bold;">{{htmlJSON.Abstract}}</td>
-                                <td colspan="2" th:text="${local.Abstract}"></td>
-                            </tr>
-                            <tr th:if="${local.wiki!=''}">
-                                <td style="font-weight: bold;">{{htmlJSON.Wiki}}</td>
-                                <td colspan="2" th:text="${local.wiki}"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </el-tab-pane>
-                    <el-tab-pane :label="htmlJSON.Behavior" name="Behavior">
-                        <el-button style="position: absolute; z-index: 900" @click="showMxGraph()"> {{htmlJSON.ShowDetail}}
-                        </el-button>
-                        <div id="mxGraphContainer"></div>
-                    </el-tab-pane>
-                    <el-tab-pane :label="htmlJSON.Runtime" name="Runtime">
-                        <table id="runtime_table" class="table table-bordered text-center">
-                            <thead>
-                            <tr>
-                                <th class="text-center">{{htmlJSON.Type}}</th>
-                                <th class="text-center">{{htmlJSON.Property}}</th>
-                                <th class="text-center">{{htmlJSON.Value}}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].HardwareConfigures}!=''">
-                                <tr th:each="hardware,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].HardwareConfigures[0].Add}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.HardwareConfigures}}</td>
-
-                                    <td th:text="${hardware.key}"></td>
-                                    <td th:text="${hardware.value}"></td>
-                                </tr>
-                            </div>
-                            <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].SoftwareConfigures}!=''">
-                                <tr th:each="software,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].SoftwareConfigures[0].Add}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.SoftwareConfigures}}</td>
-                                    <td th:text="${software.key}"></td>
-                                    <td th:text="${software.value}"></td>
-                                </tr>
-                            </div>
-                            <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].Assemblies}!=''">
-                                <tr th:each="assembly,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].Assemblies[0].Assembly}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.Assemblies}}</td>
-                                    <td th:text="${assembly.name}"></td>
-                                    <td th:text="${assembly.path}"></td>
-                                </tr>
-                            </div>
-                            <div th:if="${itemInfo.mdlJson.ModelClass[0].Runtime[0].SupportiveResources}!=''">
-                                <tr th:each="support,key:${itemInfo.mdlJson.ModelClass[0].Runtime[0].SupportiveResources[0].Add}">
-                                    <td th:if="${key.index}==0" th:attr="rowspan=${key.size}">{{htmlJSON.SupportiveResources}}</td>
-                                    <td th:text="${support.type}"></td>
-                                    <td th:text="${support.name}"></td>
-                                </tr>
-                            </div>
-
-
-                            </tbody>
-                        </table>
-                    </el-tab-pane>
-                </el-tabs>
-            </div>
-
-            <div th:replace="fragments/itemInfoModules :: description"></div>
-
-            <div th:replace="fragments/itemInfoModules :: related_models"></div>
-
-            <!--            <div id="related_models" class="detail_block">-->
-<!--                <div class="block_head">-->
-<!--                    <div class="head_text">-->
-<!--                        <h4>{{htmlJSON.RelatedModelItem}}</h4>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block_content flex">-->
-
-<!--                    <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">-->
-<!--                        <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">-->
-<!--                            <div th:switch="${relateModelItem.img}">-->
-<!--                                <img th:case="null" src="/static/img/model/model.png">-->
-<!--                                <img th:case="*" th:src="${relateModelItem.img}">-->
-<!--                            </div>-->
-
-<!--                        </a>-->
-
-<!--                        <div class="info" style="margin-top:0px;">-->
-<!--                            <a th:href="'/modelItem/'+${relateModelItem.id}"-->
-<!--                               th:text="${relateModelItem.name}">{{htmlJSON.GroundWaterFlowSystem}}</a>-->
-
-<!--                            <p style="margin-top: 0px" th:text="${relateModelItem.description}">ANN-CA uses the artificial-->
-<!--                                neural network method to extract-->
-<!--                                land use change rules in the study area, and then applies the rules to-->
-<!--                                subsequent-->
-<!--                                simulations and predictions.</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
 
             <div id="cite" class="detail_block">
                 <div class="block_head">
@@ -437,7 +109,7 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
 
             </div>
 
@@ -449,11 +121,7 @@
             </div>
         </div>
         <div class="right-panel el-col" style="border-left: #d2d2d2 solid 1px;margin-left:-1px">
-            <div id="Contributor" class="detail_block">
-                <div th:replace="fragments/itemInfoModules :: contributor_lg"></div>
-
-
-            </div>
+            <div th:replace="fragments/itemInfoModules :: contributor_lg"></div>
 
             <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
                 <div th:replace="fragments/itemInfoModules :: authorship(pos=1)"></div>
@@ -462,7 +130,7 @@
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
 
             </div>
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
@@ -474,12 +142,14 @@
              style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
 
     </div>
+
     <div v-cloak id="ModelShow" style="display: none;">
         <iframe src="/common/ModelShow"
                 style="width: 100%; height: 100%;z-index: 990; position:absolute;  top:0px;"></iframe>
         <el-button style="z-index: 999; position: absolute;left: 20px;top: 10px;" @click="hideMxGraph"> Close
         </el-button>
     </div>
+
     <el-dialog v-cloak
                title=""
                :visible.sync="dialogVisible"
@@ -589,7 +259,6 @@
 <script th:inline="javascript">
     var Behavior = [[${behavior}]];
     var author=[[${user}]];
-    console.log([[${mdlJson}]])
 </script>
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>

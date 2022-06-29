@@ -100,7 +100,7 @@ var userVersion = Vue.extend({
         },
 
         viewVersionById(type,versionId){
-            let versionViewUrl="/version/history/"+type+"/"+versionId
+            let versionViewUrl="/version/versionCompare/"+versionId
             window.open(versionViewUrl, '_blank')
         },
         acceptVersionById(versionId){
