@@ -994,7 +994,7 @@ public class DataMethodService {
             } else {
 
                 //发送通知
-                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), ItemTypeEnum.Version,new_version.getId(), OperationEnum.Edit);
+                noticeService.sendNoticeContainsAllAdmin(email, dataMethod.getAuthor(), dataMethod.getAdmins(), ItemTypeEnum.Version,new_version, OperationEnum.Edit);
 //                List<String> recipientList = Arrays.asList(dataMethod.getAuthor());
 //                recipientList = noticeService.addItemAdmins(recipientList,dataMethod.getAdmins());
 //                recipientList = noticeService.addPortalAdmins(recipientList);

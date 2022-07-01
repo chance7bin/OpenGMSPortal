@@ -316,24 +316,30 @@ var userDataApplication = Vue.extend(
                 this.await = true
                 var that = this;
                 let targetPage = page==undefined?this.page:page
-                var da = {
-                    userOid: this.userEmail,
-                    page: targetPage - 1,
-                    pageSize: this.pageSize,
-                    asc:-1,
+                // var da = {
+                //     userOid: this.userEmail,
+                //     page: targetPage - 1,
+                //     pageSize: this.pageSize,
+                //     asc:-1,
+                //     searchText: this.searchText,
+                //     type:this.type
+                // }
+                let reqData = {
                     searchText: this.searchText,
-                    type:this.type
+                    page: targetPage,
+                    pagesize: this.pageSize,
+                    sortType: "createTime",
+                    asc: false,
+                    authorEmail: window.localStorage.getItem("account")
                 }
-                axios.get("/dataMethod/searchDataByUserId/", {
-                    params: da
-                })
+                axios.get("/dataMethod/queryListOfAuthorSelf/", reqData)
                     .then((res) => {
                         setTimeout(() => {
                             if (res.status == 200) {
                                 if (res.data.data != null) {
                                     that.resourceLoad = false;
-                                    that.totalNum = res.data.data.totalElements;
-                                    that.searchResult = res.data.data.content;
+                                    that.totalNum = res.data.data.count;
+                                    that.searchResult = res.data.data.list;
                                     if (targetPage == 1) {
                                         this.pageInit();
                                     }

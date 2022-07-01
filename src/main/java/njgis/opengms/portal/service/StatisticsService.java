@@ -17,6 +17,7 @@ import njgis.opengms.portal.entity.po.Task;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.entity.po.ViewRecord;
 
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.ChartUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -277,7 +278,7 @@ public class StatisticsService {
         c.add(Calendar.DATE,-days);
         Date startTime = c.getTime();
 
-        List<ViewRecord> viewRecordList = viewRecordDao.findAllByItemTypeAndItemOidAndDateGreaterThanEqual("ComputableModel", id, startTime);
+        List<ViewRecord> viewRecordList = viewRecordDao.findAllByItemTypeAndItemIdAndDateGreaterThanEqual(ItemTypeEnum.ComputableModel, id, startTime);
         List<Task> taskList = taskDao.findAllByComputableIdAndRunTimeGreaterThanEqual(id, startTime);
 
         List<ComputableModel> computableModelList = new ArrayList<>();
@@ -498,7 +499,7 @@ public class StatisticsService {
 
         for (int i = 0; i < viewRecordList.size(); i++) {
             ViewRecord viewRecord = viewRecordList.get(i);
-            String userOid = viewRecord.getUserOid();
+            String userOid = viewRecord.getEmail();
 
             boolean userExist = false;
             if(userOid!=null) {

@@ -527,8 +527,6 @@ public class UserService {
         JSONObject commonInfo = getInfoFromUserServer(email);
         JSONObject j_result = new JSONObject();
         if (commonInfo.getString("msg").equals("suc")){
-            j_result.putAll(commonInfo);
-
             User user = userDao.findFirstByEmail(email);
 
             List<String> exLinks = new ArrayList<>();
@@ -545,6 +543,10 @@ public class UserService {
             j_result.put("runTask", user.getRunTask());
             j_result.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
             j_result.put("subscribe", user.getSubscribe());
+            j_result.put("location", user.getCity());
+            j_result.put("researchInterests", user.getDomain());
+            //最后把userserver的数据更新上去
+            j_result.putAll(commonInfo);
 
         }else {
             j_result = commonInfo;
@@ -1224,7 +1226,10 @@ public class UserService {
 
         //更新用户服务器的信息
         userShuttleDTO.setIntroduction(userInfoUpdateDTO.getIntroduction());
-        userShuttleDTO.setOrganizations((ArrayList<String>) userInfoUpdateDTO.getOrganizations());
+        userShuttleDTO.setOrganizations(userInfoUpdateDTO.getOrganizations());
+        userShuttleDTO.setHomepage(userInfoUpdateDTO.getExternalLinks().get(0));
+        userShuttleDTO.setDomain(userInfoUpdateDTO.getResearchInterests());
+        userShuttleDTO.setCity(userInfoUpdateDTO.getLocation());
         try {
             updateUsertoServer(userShuttleDTO);
         }catch (Exception e){
@@ -1235,6 +1240,7 @@ public class UserService {
         user.setDomain(userInfoUpdateDTO.getResearchInterests());
         user.setIntroduction(userInfoUpdateDTO.getIntroduction());
         user.setOrganizations(userInfoUpdateDTO.getOrganizations());
+        user.setCity(userInfoUpdateDTO.getLocation());
         userDao.save(user);
 
         return user;

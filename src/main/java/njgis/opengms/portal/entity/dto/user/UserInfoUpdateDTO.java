@@ -14,7 +14,7 @@ import java.util.List;
 public class UserInfoUpdateDTO {
     String introduction; //userServer的信息
     List<String> organizations = new ArrayList<>(); //userServer的信息
-    // String location;
+    String location;
     List<String> externalLinks = new ArrayList<>();//存放用户的外部网站个人页面
     List<String> researchInterests = new ArrayList<>(); //researchInterests
 }

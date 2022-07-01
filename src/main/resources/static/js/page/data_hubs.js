@@ -49,7 +49,7 @@ var data_items = new Vue({
 
             curQueryField:"Name",
             showCategoryName:'Land regions',
-
+            currentCategory:'landRegions',
             htmlJSON:{
                 "ViewCount": ["View Count", "viewCount"],
                 "Name": ["Name","name"],
@@ -61,7 +61,42 @@ var data_items = new Vue({
         }
     },
     methods: {
+        // 设置缓存
+        setStorage(key, value){
+            var v = value;
+            //是对象转成JSON，不是直接作为值存入内存
+            if (typeof v == 'object') {
+                v = JSON.stringify(v);
+                v = 'obj-' + v;
+            } else {
+                v = 'str-' + v;
+            }
+            var localStorage = window.localStorage;
+            if (localStorage ) {
+                localStorage .setItem(key, v);
+            }
+        },
+
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+            return v;
+        },
+
         translatePage(jsonContent){
+
+            this.showCategoryName = jsonContent[this.currentCategory];
 
             //切换列表中标签选择情况
             if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
@@ -164,8 +199,8 @@ var data_items = new Vue({
             this.classlist=val;
         },
         // 切换类别
-        chooseCate(item, event) {
-            console.log("here")
+        chooseCate(item, event, currentCategory) {
+            // console.log("here")
             let all_button=$('.cateButton')
             for (let i = 0; i < all_button.length; i++) {
                 all_button[i].style.color="";
@@ -180,6 +215,7 @@ var data_items = new Vue({
             this.currentPage = 1
             this.categoryName = item;
             this.showCategoryName = event.currentTarget.children[0].outerText;
+            this.currentCategory = currentCategory;
             this.datacount=-1
             this.loading=true
             this.progressBar=true;
@@ -310,11 +346,23 @@ var data_items = new Vue({
         }
     },
     mounted(){
+
+        let language = this.getStorage("language");
+        if (language == "zh-cn"){
+            this.showCategoryName = "陆地圈"
+        } else {
+            this.showCategoryName = "Land regions"
+        }
+
+
+
         let that=this;
         let u=window.location.href
         let f=u.split("/");
         this.getData()
-        //this.initButton();
+
+        this.initButton();
+
         axios.get("/user/load")
             .then((res)=>{
                 that.userName=res.data.data.name;

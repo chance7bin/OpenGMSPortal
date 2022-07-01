@@ -394,4 +394,39 @@ public class TaskController {
         }
     }
 
+    @LoginRequired
+    @RequestMapping(value="/pageIntegrateTaskByUserByStatus",method = RequestMethod.GET )
+    JsonResult pageIntegrateTaskByUserByStatus(HttpServletRequest request,
+                                               @RequestParam(value="status") String status,
+                                               @RequestParam(value="page") int page,
+                                               @RequestParam(value="sortType") String sortType,
+                                               @RequestParam(value="asc") int sortAsc,
+                                               @RequestParam(value="searchText") String searchText
+    ) {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        JSONObject result = taskService.pageIntegrateTaskByUserByStatus(email,status,page,sortType,sortAsc,searchText);
+
+        if(result == null){
+            return ResultUtils.error(-1, "error");
+        }else{
+            return ResultUtils.success(result);
+        }
+
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/pageIntegrateTaskByUser",method = RequestMethod.GET)
+    JsonResult pageIntegrateTaskByUser(@RequestParam(value = "pageNum") int pageNum,
+                                       @RequestParam(value = "pageSize") int pageSize,
+                                       @RequestParam(value = "asc") int asc,
+                                       @RequestParam(value = "sortElement") String sortElement,
+                                       HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return ResultUtils.success(taskService.PageIntegrateTaskByUser(email,pageNum,pageSize,asc,sortElement));
+
+    }
+
 }

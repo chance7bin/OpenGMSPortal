@@ -420,7 +420,7 @@ public class LogicalModelService {
                 } else {
 
                     // 发送通知
-                    noticeService.sendNoticeContainsAllAdmin(email, logicalModel.getAuthor(), logicalModel.getAdmins() ,ItemTypeEnum.Version,version_new.getId(), OperationEnum.Edit);
+                    noticeService.sendNoticeContainsAllAdmin(email, logicalModel.getAuthor(), logicalModel.getAdmins() ,ItemTypeEnum.Version,version_new, OperationEnum.Edit);
 
                     result.put("method", "version");
                     result.put("versionId", version_new.getId());

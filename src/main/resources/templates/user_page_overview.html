@@ -140,21 +140,21 @@
                 <div class="userInfo infoEdit  flex-colDirect text-center" :class="{editDisplay:editDisplayIndex==1}">
 
                     <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.email!=''&&userPersonalInfo.email!=undefined">
-                        <el-tooltip class="item" effect="dark" content="Email" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Email" placement="top-start" >
                             <i class="el-icon-message"></i>
                         </el-tooltip>
                         <span>{{userPersonalInfo.email}}</span>
                     </div>
 
                     <div class="organization flex-rowDirect edit_col1" v-if="userPersonalInfo.organizations!=null && userPersonalInfo.organizations.length!=0 && userPersonalInfo.organizations[0] != ''">
-                        <el-tooltip class="item" effect="dark" content="Organization" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Organization" placement="top-start" >
                             <i class="el-icon-s-custom"></i>
                         </el-tooltip>
                         <span>{{userPersonalInfo.organizations[0]}}</span>
                     </div>
 
                     <div class="location flex-rowDirect edit_col1" v-if="userPersonalInfo.location!='' && userPersonalInfo.location!=null" >
-                        <el-tooltip class="item" effect="dark" content="Location" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Location" placement="top-start" >
                             <i class="el-icon-location-information"></i>
                         </el-tooltip>
                         <span >{{userPersonalInfo.location}}</span>
@@ -162,7 +162,7 @@
 
 
                     <div class="researchInterests flex-rowDirect edit_col1" v-if="userPersonalInfo.researchInterests!=null && userPersonalInfo.researchInterests.length!=0" >
-                        <el-tooltip class="item" effect="dark" content="Research Interests" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.ResearchInterests" placement="top-start" >
                             <i class="el-icon-star-on"></i>
                         </el-tooltip>
                         <div class="tags tagsFlex" style="margin-left: 0">
@@ -171,7 +171,7 @@
                     </div>
 
                     <div class="website flex-rowDirect edit_col1" v-if="userPersonalInfo.externalLinks!=null && userPersonalInfo.externalLinks.length!=0 && userPersonalInfo.externalLinks[0]!=''" >
-                        <el-tooltip class="item" effect="dark" content="Website" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Website" placement="top-start" >
                             <i class="el-icon-link"></i>
                         </el-tooltip>
 
@@ -223,7 +223,7 @@
                         </el-input>
                     </div>
                     <div class="websiteEdit flex-rowDirect edit_col" style="margin-bottom: 8px">
-                        <el-tooltip class="item" effect="dark" content="Website" placement="top-start" >
+                        <el-tooltip class="item" effect="dark" :content="htmlJSON.Website" placement="top-start" >
                             <i class="el-icon-link"></i>
                         </el-tooltip>
                         <el-input size="mini" v-model="externalLinkInput" :placeholder="htmlJSON.Website" style="margin-left: 5px">

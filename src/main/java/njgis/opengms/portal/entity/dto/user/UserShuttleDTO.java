@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import njgis.opengms.portal.entity.doo.user.UserServerResource;
 import njgis.opengms.portal.enums.UserTitleEnum;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName userShuttleDTO.java
@@ -34,9 +34,9 @@ public class UserShuttleDTO {
     private String city;
     private String homepage;
     //动态数组，只需要对应String[]即可
-    private ArrayList<String> organizations;
+    private List<String> organizations;
     //研究领域
-    private ArrayList<String> domain;
+    private List<String> domain;
     private String introduction;
     private String avatar;
 
@@ -46,11 +46,11 @@ public class UserShuttleDTO {
     UID,Name,Address,Type,Privacy,Thumbnail,EditToolInfo,FileSize
     Parent,MD5,Suffix,Description,Template,UploadTime,Children
      */
-    private ArrayList<UserServerResource> resource;
+    private List<UserServerResource> resource;
 
     //用户无法自行修改部分
     private String createdTime;
-    private ArrayList<String> loginIp;
+    private List<String> loginIp;
 
 }
 

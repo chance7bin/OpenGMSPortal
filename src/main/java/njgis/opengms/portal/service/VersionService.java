@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
@@ -90,6 +89,9 @@ public class VersionService {
 
     @Autowired
     RepositoryService repositoryService;
+
+    @Autowired
+    DataItemService dataItemService;
 
     /**
      * 添加审核版本
@@ -193,7 +195,7 @@ public class VersionService {
             recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
             recipientList = noticeService.addPortalAdmins(recipientList);
             recipientList = noticeService.addPortalRoot(recipientList);
-            noticeService.sendNoticeContains(reviewer, OperationEnum.Accept,ItemTypeEnum.Version,version.getId(),recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Accept,ItemTypeEnum.Version,version,recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
@@ -234,7 +236,7 @@ public class VersionService {
             recipientList = noticeService.addItemAdmins(recipientList,content.getAdmins());
             recipientList = noticeService.addPortalAdmins(recipientList);
             recipientList = noticeService.addPortalRoot(recipientList);
-            noticeService.sendNoticeContains(reviewer, OperationEnum.Reject,ItemTypeEnum.Version,version.getId(),recipientList);
+            noticeService.sendNoticeContains(reviewer, OperationEnum.Reject,ItemTypeEnum.Version,version,recipientList);
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
@@ -1076,31 +1078,31 @@ public class VersionService {
         if(originalField.get("classifications") != null&&newField.get("classifications")!=null){
 
             //得到每个分类对应的分类dao
-            JSONObject daoFactory = genericService.daoFactory(type);
-            GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
+            // JSONObject daoFactory = genericService.daoFactory(type);
+            // GenericCategoryDao classificationDao = (GenericCategoryDao)daoFactory.get("classificationDao");
 
             List<String> originalCls = (List<String>)originalField.get("classifications");
             List<String> newCls = (List<String>)newField.get("classifications");
 
-            List<String> oriName = new ArrayList<>();
-            List<String> newName = new ArrayList<>();
+            List<Classification> oriName = dataItemService.getClassifications(originalCls);
+            List<Classification> newName = dataItemService.getClassifications(newCls);
 
-            for (String o : originalCls) {
-                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
-                if (cls == null){
-                    oriName.add("unknown");
-                    continue;
-                }
-                oriName.add(cls.getNameEn());
-            }
-            for (String n : newCls) {
-                GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
-                if (cls == null){
-                    oriName.add("unknown");
-                    continue;
-                }
-                newName.add(cls.getNameEn());
-            }
+            // for (String o : originalCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(o);
+            //     if (cls == null){
+            //         oriName.add("unknown");
+            //         continue;
+            //     }
+            //     oriName.add(cls.getNameEn());
+            // }
+            // for (String n : newCls) {
+            //     GenericCategory cls = (GenericCategory)classificationDao.findFirstById(n);
+            //     if (cls == null){
+            //         oriName.add("unknown");
+            //         continue;
+            //     }
+            //     newName.add(cls.getNameEn());
+            // }
 
             originalField.remove("classifications");
             originalField.put("classifications", oriName);

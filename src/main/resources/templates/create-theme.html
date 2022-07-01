@@ -137,7 +137,7 @@
 <!--                                                                                    <input id="imgFile" type="file"-->
 <!--                                                                                           style="display: none"-->
 <!--                                                                                           accept="image/*"/>-->
-                                                                                    <img id="imgShow" style="display: inline" v-show="themeImg!=undefined&&themeImg!=''" :src="themeImg"/>
+                                                                                    <img id="imgShow" style="display: inline" v-show="themeImg!=undefined&&themeImg!=''" :src="+ themeImg"/>
                                                                                     <div id="imgMask" class="flexCenter" v-if="themeImg!=undefined&&themeImg!=''"
                                                                                          style="position: absolute;width: 100px;height: 100px">
                                                                                         <div class="fa fa-times imgDelete" @click="deleteImg"></div>

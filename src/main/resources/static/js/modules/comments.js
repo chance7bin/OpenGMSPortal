@@ -31,9 +31,9 @@ Vue.component("comments",
                     if(result.code == 0) {
                         let data = result.data
                         if (data.email != "") {
-                            this.comment_userId = data.accessId;
+                            this.comment_userId = data.email;
                             this.comment_userImg = data.avatar;
-                            this.comment_userOid = data.accessId;
+                            this.comment_userOid = data.email;
                         }
                     }
                 })
@@ -98,19 +98,16 @@ Vue.component("comments",
                 }
 
             },
-            deleteComment(oid){
-                this.$confirm(this.htmlJson.PermanentlyDelete, 'Waring', {
+            deleteComment(id){
+                this.$confirm(this.htmlJson.PermanentlyDelete, 'Warning', {
                     confirmButtonText: 'OK',
                     cancelButtonText: 'Cancel',
                     type: 'warning'
                 }).then(() => {
                     $.ajax({
-                        url: "/comment/delete",
+                        url: "/comment/delete/" + id,
                         async: true,
-                        type: "POST",
-                        data: {
-                            oid:oid,
-                        },
+                        type: "GET",
                         success: (result) => {
                             console.log(result)
                             if(result.code==-1){
@@ -150,6 +147,7 @@ Vue.component("comments",
                 };
                 $.get("/comment/commentsByTypeAndId",data,(result)=>{
                     this.commentList=result.data.commentList;
+                    console.log("this.commentList:",this.commentList);
                 })
             },
             replyComment(comment){

@@ -15,7 +15,7 @@
             <div class="block_content">
                 <div class="comment-box flex" style="flex-grow: 1">
                     <a :href="comment_userId==''?'/user/login':'/profile/'+comment_userId" class="round_icon">
-                        <img :src="comment_userImg!=''?comment_userImg:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon pull-left" style="border: 1px solid #eee">
+                        <img :src="comment_userImg!=''&&comment_userImg!=null?comment_userImg:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon pull-left" style="border: 1px solid #eee">
                     </a>
                     <div class="flex "
                          style="flex-direction:row;justify-content:space-between;flex-wrap: wrap;flex-grow:1;margin-left:15px">
@@ -45,7 +45,7 @@
                 <div class="comment-list">
                     <div class="comment flex" style="margin-top:15px" v-for="(comment,i) in commentList">
                         <a :href="'/profile/'+comment.author.userId" target="_blank" class="round_icon">
-                            <img :src="comment.author.img!=''?comment.author.img:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon"
+                            <img :src="comment.author.img!=''&&comment.author.img!=null?comment.author.img:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon"
                             />
                         </a>
 
@@ -68,7 +68,7 @@
                                         </a>
                                 </div>
                                 <div v-if="comment_userId==comment.author.userId" >
-                                                    <a class="delete hover" style="display: none;" @click="deleteComment(comment.oid)">
+                                                    <a class="delete hover" style="display: none;" @click="deleteComment(comment.id)">
                                                         <i class="el-icon-delete-solid"></i>
                                                         <span translateId="delete">{{htmlJson.Delete}}</span>
                                                     </a>
@@ -78,7 +78,8 @@
                                 <div class="com-sub" v-for="(subComm,j) in comment.subCommentList" style="border-top: 1px solid #eee;margin-top:15px;padding-top: 15px;">
                                     <div class="com-sub-author flex">
                                         <a :href="'/profile/'+subComm.author.userId" target="_blank" class="com-sub-icon">
-                                            <img :src="subComm.author.img!=''?subComm.author.img:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon">
+                                            <!--<img :src="subComm.author.img!=''?subComm.author.img:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon">-->
+                                            <img :src="subComm.author.img != '' && subComm.author.img != null ? subComm.author.img : '/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';" class="round_icon">
                                         </a>
                                         <div class="com-sub-name-time" style="margin-left:15px">
                                             <div class="com-author-name">
@@ -105,7 +106,7 @@
                                                 </a>
                                         </div>
                                         <div v-if="comment_userId==subComm.author.userId" >
-                                                <a class="delete hover" style="display: none;" @click="deleteComment(subComm.oid)">
+                                                <a class="delete hover" style="display: none;" @click="deleteComment(subComm.id)">
                                                     <i class="el-icon-delete-solid"></i>
                                                     {{htmlJson.Delete}}
                                                 </a>

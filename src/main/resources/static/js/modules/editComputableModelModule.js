@@ -87,7 +87,7 @@ Vue.component("editComputableModelModule",
                     page: this.pageOption.currentPage-1,
                     pageSize: this.pageOption.pageSize,
                     searchText: this.pageOption.searchText,
-                    sortType: "default",
+                    sortType: "viewCount",
                     classifications: ["all"],
                 };
                 let url = "/modelItem/items";

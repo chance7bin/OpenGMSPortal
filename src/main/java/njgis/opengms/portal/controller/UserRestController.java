@@ -164,8 +164,8 @@ public class UserRestController {
             jsonObject.put("email", email);
             jsonObject.put("name", name);
 
-            // 记录用户访问的数量
-            managementSystemService.recordUserViewCount(ip);
+            // 记录用户访问的数量 -> 迁移到ItemViewRecordInterceptor
+            // managementSystemService.recordUserViewCount(ip);
 
             // return ResultUtils.success(jsonObject);
             return ResultUtils.success(jsonObject);

@@ -287,30 +287,36 @@ new Vue({
         },
         addSearchFromUser() {
 
-            let data={
-                searchText:this.addModelsSearchText,
-                page:this.searchAddModelPage,
-                asc:false,
-                pageSize:5,
-                userOid:this.useroid
+            // let data={
+            //     searchText:this.addModelsSearchText,
+            //     page:this.searchAddModelPage,
+            //     asc:false,
+            //     pageSize:5,
+            //     userOid:this.useroid
+            // }
 
-
+            let reqData = {
+                searchText: this.addModelsSearchText,
+                page: this.searchAddModelPage,
+                pagesize: 5,
+                sortType: "createTime",
+                asc: false,
+                authorEmail: this.useroid
             }
+
             let that=this
             this.loading=true
             if(this.nomore===''){
-                axios.get("/dataItem/searchDataByUserId/",{
-                    params:data
-                })
+                axios.get("/dataItem/queryListOfAuthorSelf/", reqData)
                     .then((res)=>{
 
                         if(res.status===200){
-                            if(res.data.data.content.length===0){
+                            if(res.data.data.list.length===0){
                                 that.nomore="nomore"
                                 that.loading=false
                             }else{
                                 that.loading=false
-                                that.searchAddRelatedModels=that.searchAddRelatedModels.concat(res.data.data.content)
+                                that.searchAddRelatedModels=that.searchAddRelatedModels.concat(res.data.data.list)
                             }
 
                         }
@@ -607,7 +613,7 @@ new Vue({
             .then((res)=>{
                 if(res.status=200){
                     if(res.data.data.code===0){
-                        that.useroid=res.data.data.accessId
+                        that.useroid=res.data.data.email
                     }
 
                 }

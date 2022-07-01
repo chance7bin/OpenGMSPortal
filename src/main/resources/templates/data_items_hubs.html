@@ -86,39 +86,39 @@
                         <el-collapse-item :title="htmlJSON.applicationFocusedCategories" name="1">
                             <el-collapse v-model="activeNames1" @change="handleChange1">
                                 <el-collapse-item :title="htmlJSON.naturalPerspective" style="margin-left: 10%;" name="11">
-                                    <el-button class="cateButton" type="text" id="a24cba2b-9ce1-44de-ac68-8ec36a535d0e" @click="chooseCate('a24cba2b-9ce1-44de-ac68-8ec36a535d0e', $event)">{{htmlJSON.landRegions}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="75aee2b7-b39a-4cd0-9223-3b7ce755e457" @click="chooseCate('75aee2b7-b39a-4cd0-9223-3b7ce755e457', $event)">{{htmlJSON.oceanRegions}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="1bf4f381-6bd8-4716-91ab-5a56e51bd2f9" @click="chooseCate('1bf4f381-6bd8-4716-91ab-5a56e51bd2f9', $event)">{{htmlJSON.frozenRegions}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5" @click="chooseCate('8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5', $event)">{{htmlJSON.atmosphericRegions}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee" @click="chooseCate('d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee', $event)">{{htmlJSON.spaceEarthRegions}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e" @click="chooseCate('d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e', $event)">{{htmlJSON.solidEarthRegions}}</el-button>
+                                    <el-button class="cateButton" type="text" id="a24cba2b-9ce1-44de-ac68-8ec36a535d0e" @click="chooseCate('a24cba2b-9ce1-44de-ac68-8ec36a535d0e', $event, 'landRegions')">{{htmlJSON.landRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="75aee2b7-b39a-4cd0-9223-3b7ce755e457" @click="chooseCate('75aee2b7-b39a-4cd0-9223-3b7ce755e457', $event, 'oceanRegions')">{{htmlJSON.oceanRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="1bf4f381-6bd8-4716-91ab-5a56e51bd2f9" @click="chooseCate('1bf4f381-6bd8-4716-91ab-5a56e51bd2f9', $event, 'frozenRegions')">{{htmlJSON.frozenRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5" @click="chooseCate('8f4d4fca-4d09-49b4-b6f7-5021bc57d0e5', $event, 'atmosphericRegions')">{{htmlJSON.atmosphericRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee" @click="chooseCate('d33a1ebe-b2f5-4ed3-9c76-78cfb61c23ee', $event, 'spaceEarthRegions')">{{htmlJSON.spaceEarthRegions}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e" @click="chooseCate('d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e', $event, 'solidEarthRegions')">{{htmlJSON.solidEarthRegions}}</el-button>
                                     <!--                                    <el-button type="text" id="5f3e42610e989714e8364ea6" @click="chooseCate('5f3e42610e989714e8364ea6')" style="font-size: x-small">Integrated Perspective</el-button>-->
                                 </el-collapse-item>
                                 <el-collapse-item :title="htmlJSON.humanPerspective" style="margin-left: 10%;" name="12">
-                                    <el-button  class="cateButton" type="text" id="808e74a4-41c6-4558-a850-4daec1f199df" @click="chooseCate('808e74a4-41c6-4558-a850-4daec1f199df', $event)">{{htmlJSON.developmentActivities}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="40534cf8-039a-4a0a-8db9-7c9bff484190" @click="chooseCate('40534cf8-039a-4a0a-8db9-7c9bff484190', $event)">{{htmlJSON.socialActivities}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="cf9cd106-b873-4a8a-9336-dd72398fc769" @click="chooseCate('cf9cd106-b873-4a8a-9336-dd72398fc769', $event)">{{htmlJSON.economicActivities}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="808e74a4-41c6-4558-a850-4daec1f199df" @click="chooseCate('808e74a4-41c6-4558-a850-4daec1f199df', $event, 'developmentActivities')">{{htmlJSON.developmentActivities}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="40534cf8-039a-4a0a-8db9-7c9bff484190" @click="chooseCate('40534cf8-039a-4a0a-8db9-7c9bff484190', $event, 'socialActivities')">{{htmlJSON.socialActivities}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="cf9cd106-b873-4a8a-9336-dd72398fc769" @click="chooseCate('cf9cd106-b873-4a8a-9336-dd72398fc769', $event, 'economicActivities')">{{htmlJSON.economicActivities}}</el-button>
                                     <!--                                    <el-button type="text" id="5f3e42940e989714e8364eae" @click="chooseCate('5f3e42940e989714e8364eae')" style="font-size: x-small">Integrated Perspective</el-button>-->
                                 </el-collapse-item>
                                 <el-collapse-item :title="htmlJSON.integratedPerspective" style="margin-left: 10%;" name="13">
-                                    <el-button  class="cateButton" type="text" id="14130969-fda6-41ea-aa32-0af43104840b" @click="chooseCate('14130969-fda6-41ea-aa32-0af43104840b', $event)">{{htmlJSON.globalScale}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="e56c1254-70b8-4ff4-b461-b8fa3039944e" @click="chooseCate('e56c1254-70b8-4ff4-b461-b8fa3039944e', $event)">{{htmlJSON.regionalScale}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="14130969-fda6-41ea-aa32-0af43104840b" @click="chooseCate('14130969-fda6-41ea-aa32-0af43104840b', $event, 'globalScale')">{{htmlJSON.globalScale}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="e56c1254-70b8-4ff4-b461-b8fa3039944e" @click="chooseCate('e56c1254-70b8-4ff4-b461-b8fa3039944e', $event, 'regionalScale')">{{htmlJSON.regionalScale}}</el-button>
                                 </el-collapse-item>
                             </el-collapse>
                         </el-collapse-item>
                         <el-collapse-item :title="htmlJSON.methodFocusedCategories" style="font-size: 14px;" name="2">
                             <el-collapse v-model="activeNames2" @change="handleChange1">
                                 <el-collapse-item :title="htmlJSON.dataPerspective" style="margin-left: 10%;font-size: 14px;" name="21">
-                                    <el-button  class="cateButton" type="text" id="afa99af9-4224-4fac-a81f-47a7fb663dba" @click="chooseCate('afa99af9-4224-4fac-a81f-47a7fb663dba', $event)">{{htmlJSON.geoinformationAnalysis}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="f20411a5-2f55-4ee9-9590-c2ec826b8bd5" @click="chooseCate('f20411a5-2f55-4ee9-9590-c2ec826b8bd5', $event)">{{htmlJSON.remoteSensingAnalysis}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="1c876281-a032-4575-8eba-f1a8fb4560d8" @click="chooseCate('1c876281-a032-4575-8eba-f1a8fb4560d8', $event)">{{htmlJSON.geostatisticalAnalysis}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="c6fcc899-8ca4-4269-a21e-a39d38c034a6" @click="chooseCate('c6fcc899-8ca4-4269-a21e-a39d38c034a6', $event)">{{htmlJSON.intelligentComputationAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="afa99af9-4224-4fac-a81f-47a7fb663dba" @click="chooseCate('afa99af9-4224-4fac-a81f-47a7fb663dba', $event, 'geoinformationAnalysis')">{{htmlJSON.geoinformationAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="f20411a5-2f55-4ee9-9590-c2ec826b8bd5" @click="chooseCate('f20411a5-2f55-4ee9-9590-c2ec826b8bd5', $event, 'remoteSensingAnalysis')">{{htmlJSON.remoteSensingAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="1c876281-a032-4575-8eba-f1a8fb4560d8" @click="chooseCate('1c876281-a032-4575-8eba-f1a8fb4560d8', $event, 'geostatisticalAnalysis')">{{htmlJSON.geostatisticalAnalysis}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="c6fcc899-8ca4-4269-a21e-a39d38c034a6" @click="chooseCate('c6fcc899-8ca4-4269-a21e-a39d38c034a6', $event, 'intelligentComputationAnalysis')">{{htmlJSON.intelligentComputationAnalysis}}</el-button>
                                 </el-collapse-item>
                                 <el-collapse-item :title="htmlJSON.processPerspective" style="margin-left: 10%;font-size: 14px;" name="22">
-                                    <el-button  class="cateButton" type="text" id="1d564d0f-51c6-40ca-bd75-3f9489ccf1d6" @click="chooseCate('1d564d0f-51c6-40ca-bd75-3f9489ccf1d6', $event)">{{htmlJSON.physicalProcessCalculation}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="63266a14-d7f9-44cb-8204-c877eaddcaa1" @click="chooseCate('63266a14-d7f9-44cb-8204-c877eaddcaa1', $event)">{{htmlJSON.chemicalProcessCalculation}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="6d1efa2c-830d-4546-b759-c66806c4facc" @click="chooseCate('6d1efa2c-830d-4546-b759-c66806c4facc', $event)">{{htmlJSON.biologicalProcessCalculation}}</el-button>
-                                    <el-button  class="cateButton" type="text" id="6952d5b2-cb0f-4ba7-96fd-5761dd566344" @click="chooseCate('6952d5b2-cb0f-4ba7-96fd-5761dd566344', $event)">{{htmlJSON.humanActivityCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="1d564d0f-51c6-40ca-bd75-3f9489ccf1d6" @click="chooseCate('1d564d0f-51c6-40ca-bd75-3f9489ccf1d6', $event, 'physicalProcessCalculation')">{{htmlJSON.physicalProcessCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="63266a14-d7f9-44cb-8204-c877eaddcaa1" @click="chooseCate('63266a14-d7f9-44cb-8204-c877eaddcaa1', $event, 'chemicalProcessCalculation')">{{htmlJSON.chemicalProcessCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="6d1efa2c-830d-4546-b759-c66806c4facc" @click="chooseCate('6d1efa2c-830d-4546-b759-c66806c4facc', $event, 'biologicalProcessCalculation')">{{htmlJSON.biologicalProcessCalculation}}</el-button>
+                                    <el-button  class="cateButton" type="text" id="6952d5b2-cb0f-4ba7-96fd-5761dd566344" @click="chooseCate('6952d5b2-cb0f-4ba7-96fd-5761dd566344', $event, 'humanActivityCalculation')">{{htmlJSON.humanActivityCalculation}}</el-button>
                                 </el-collapse-item>
                             </el-collapse>
                         </el-collapse-item>
