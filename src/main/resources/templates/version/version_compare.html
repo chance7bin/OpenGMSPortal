@@ -65,7 +65,7 @@
                             <!--                              分类-->
                             <div th:if="${originalField?.get('classifications')!=null}">
                                 <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
-                                    <div th:replace="fragments/itemInfoModules :: data_classification(${originalField.classifications})"></div>
+                                    <div th:replace="fragments/itemInfoModules :: data_classification(${originalField.classifications},'nameCn')"></div>
                                 </div>
                                 <div th:if="${modularType.name!='DataHub' and modularType.name!='DataItem'}">
                                     <div th:replace="fragments/itemInfoModules :: classifications(${originalField.classifications}, false)"></div>
@@ -279,7 +279,7 @@
 
                             </div>
                             <div th:if="${modularType.name} eq 'LogicalModel'">
-                                <div th:if="${originalField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${originalField.imageList})"></div>
+                                <div th:if="${originalField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${originalField})"></div>
                             </div>
 
 
@@ -311,7 +311,7 @@
                             <!--                              分类-->
                             <div th:if="${newField?.get('classifications')!=null}">
                                 <div th:if="${modularType.name=='DataHub' or modularType.name=='DataItem'}">
-                                    <div th:replace="fragments/itemInfoModules :: data_classification(${newField.classifications})"></div>
+                                    <div th:replace="fragments/itemInfoModules :: data_classification(${newField.classifications},'nameCn')"></div>
                                 </div>
                                 <div th:if="${modularType.name!='DataHub' and modularType.name!='DataItem'}">
                                     <div th:replace="fragments/itemInfoModules :: classifications(${newField.classifications}, false)"></div>
@@ -528,7 +528,7 @@
                             </div>
 
                             <div th:if="${modularType.name} eq 'LogicalModel'">
-                                <div th:if="${newField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${newField.imageList})"></div>
+                                <div th:if="${newField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${newField})"></div>
                             </div>
 
                         </el-card>
