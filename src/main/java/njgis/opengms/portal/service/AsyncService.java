@@ -2,9 +2,14 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.dao.GenericItemDao;
+import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.support.ZipStreamEntity;
+import njgis.opengms.portal.entity.doo.user.UserResourceCount;
 import njgis.opengms.portal.entity.dto.task.ResultDataDTO;
 import njgis.opengms.portal.entity.dto.task.UploadDataDTO;
+import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.MyHttpUtils;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +60,12 @@ public class AsyncService {
     @Value("${spring.mail.username}")
     //使用@Value注入application.properties中指定的用户名
     private String from;
+
+    @Autowired
+    UserDao userDao;
+
+    @Autowired
+    GenericService genericService;
 
     /**
      * 上传数据到数据容器
@@ -183,5 +195,60 @@ public class AsyncService {
             log.error("向 [{}] 发送邮件失败", to);
         }
     }
+
+    @Async
+    public void updateAllResourceCount(String email){
+        User user = userDao.findFirstByEmail(email);
+        UserResourceCount resourceCount = user.getResourceCount();
+        resourceCount = resourceCount == null ? new UserResourceCount() : resourceCount;
+        Class cls = resourceCount.getClass();
+        Field[] fields = cls.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            // System.out.println(field.getName() + ":" + field.get(resourceCount) );
+            ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(field.getName());
+
+            //会出现circular reference问题
+            // userService.updateUserResourceCount(email,itemType);
+            updateUserResourceCount(email,itemType,null);
+
+        }
+    }
+
+
+    public void updateUserResourceCount(String email, ItemTypeEnum itemType, String op){
+        User user = userDao.findFirstByEmail(email);
+        UserResourceCount userResourceCount = user.getResourceCount();
+        if (userResourceCount == null){
+            userResourceCount = new UserResourceCount();
+        }
+        try {
+            Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
+            Field field = aClass.getDeclaredField(itemType.getText());
+            field.setAccessible(true);
+
+            // 直接加减偶尔会出现问题，直接查数据库的表(传了op的话就是单纯的加减)
+            int count = (int)field.get(userResourceCount);
+            if (op != null){
+                if (op.equals("add")) {
+                    ++count;
+                } else {
+                    --count;
+                }
+            }
+            else {
+                JSONObject daoFactory = genericService.daoFactory(itemType);
+                GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
+                count = itemDao.countByAuthor(email);
+            }
+
+            field.set(userResourceCount,count);
+            user.setResourceCount(userResourceCount);
+            userDao.save(user);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 }

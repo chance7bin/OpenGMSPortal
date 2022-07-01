@@ -304,7 +304,7 @@ public class UserService {
 
             // TODO: 2022/5/4 这边很慢，怎么加速
             //更新该用户的资源数量
-            updateAllResourceCount(j_userShuttleDTO.getString("email"));
+            asyncService.updateAllResourceCount(j_userShuttleDTO.getString("email"));
 
             return j_userShuttleDTO;
         }catch (Exception e){
@@ -701,17 +701,21 @@ public class UserService {
             Class<? extends UserResourceCount> aClass = userResourceCount.getClass();
             Field field = aClass.getDeclaredField(itemType.getText());
             field.setAccessible(true);
-            // 直接加减偶尔会出现问题，直接查数据库的表
-            // int count = (int)field.get(userResourceCount);
-            // if (op.equals("add")) {
-            //     ++count;
-            // } else {
-            //     --count;
-            // }
 
-            JSONObject daoFactory = genericService.daoFactory(itemType);
-            GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
-            int count = itemDao.countByAuthor(email);
+            // 直接加减偶尔会出现问题，直接查数据库的表(传了op的话就是单纯的加减)
+            int count = (int)field.get(userResourceCount);
+            if (op != null){
+                if (op.equals("add")) {
+                    ++count;
+                } else {
+                    --count;
+                }
+            }
+            else {
+                JSONObject daoFactory = genericService.daoFactory(itemType);
+                GenericItemDao itemDao = (GenericItemDao)daoFactory.get("itemDao");
+                count = itemDao.countByAuthor(email);
+            }
 
             field.set(userResourceCount,count);
             user.setResourceCount(userResourceCount);
