@@ -309,7 +309,7 @@
 </div>
 
 <!--相关模型条目-->
-<div th:fragment="related_models(relateModelItemList)" id="related_models" class="detail_block">
+<div th:fragment="related_models(relateModelItemList)" th:if="${relateModelItemList!=null and #lists.size(relateModelItemList)!=0}" id="related_models" class="detail_block">
     <div class="block_head">
         <div class="head_text">
             <h4 translateId="relateModelItem">Related Model Item</h4>
@@ -1446,7 +1446,7 @@
 </div>
 
 <!--conceptual model-->
-<div th:fragment="conceptual_graph(${itemInfo})"  id="graph" class="detail_block"
+<div th:fragment="conceptual_graph(itemInfo)" th:if="${itemInfo.imageList!=null and #lists.size(itemInfo.imageList)!=0}" id="graph" class="detail_block"
 >
     <div class="block_head">
         <div class="head_text">
