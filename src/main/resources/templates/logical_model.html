@@ -75,7 +75,7 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo.imageList})"
+            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo})"
                  th:if="${#lists.size(itemInfo.imageList)!=0 || itemInfo.contentType=='MxGraph'}">
             </div>
 
@@ -125,10 +125,10 @@
             <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
 
             <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div th:replace="fragments/itemInfoModules :: authorship(pos=1)" ></div>
+                <div th:replace="fragments/itemInfoModules :: authorship(1,${itemInfo},true)" ></div>
             </div>
 
-            <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
+            <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
 
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
         </div>
