@@ -71,7 +71,9 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Link"></div>
 
-            <div th:replace="fragments/itemInfoModules :: computable_MDL" th:if="${mdlJson}!=null"></div>
+            <div  th:if="${itemInfo.mdlJson}!=null">
+                <div th:replace="fragments/itemInfoModules :: computable_MDL"></div>
+            </div>
 
             <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
@@ -109,7 +111,7 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
 
             </div>
 
@@ -124,13 +126,13 @@
             <div th:replace="fragments/itemInfoModules :: contributor_lg"></div>
 
             <div id="Authorship" class="detail_block" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-                <div th:replace="fragments/itemInfoModules :: authorship(pos=1)"></div>
+                <div th:replace="fragments/itemInfoModules :: authorship(1,${itemInfo},true)"></div>
 
             </div>
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})(${itemInfo.lastModifier}, ${itemInfo.lastModifyTime})"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
 
             </div>
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>

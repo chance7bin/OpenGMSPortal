@@ -176,9 +176,9 @@
         </div>
         <div th:if="${itemInfo.authorships==null||#lists.size(itemInfo.authorships)==0}">
             <el-tag type="info">
-                <span translateId="authorshipUnclear1">Authorship is unclear, you can</span>
-                <a href="javascript:void(0)" translateId="claim" @click="claim" style="text-decoration: underline">claim</a>
-                <span translateId="authorshipUnclear2">the item.</span>
+                <span translateId="authorshipUnclear1"></span>
+                <a href="javascript:void(0)" translateId="claim" @click="claim" style="text-decoration: underline"></a>
+                <span translateId="authorshipUnclear2"></span>
             </el-tag>
         </div>
         <div th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
@@ -1312,7 +1312,7 @@
 
 <!--computable_model-->
 <div th:fragment="computable_Authorship0" id="Authorship0" class="detail_block minScreen" th:if="${history!=true && #lists.size(itemInfo.authorships)>0}">
-    <div th:replace="fragments/itemInfoModules :: authorship(pos=0)"></div>
+    <div th:replace="fragments/itemInfoModules :: authorship(0,${itemInfo},true)"></div>
 
 </div>
 
@@ -1446,7 +1446,7 @@
 </div>
 
 <!--conceptual model-->
-<div th:fragment="conceptual_graph"  id="graph" class="detail_block"
+<div th:fragment="conceptual_graph(${itemInfo})"  id="graph" class="detail_block"
 >
     <div class="block_head">
         <div class="head_text">
