@@ -638,7 +638,7 @@ public class ManagementSystemService {
         // notice的附加信息 通知类型为Information时构造msg时使用
         String remark = "edited " + item.getName() + "'s status to " + item.getStatus();
 
-        noticeService.sendNoticeContains(email, OperationEnum.Inform,ItemTypeEnum.Information,item.getId(),recipientList, remark);
+        noticeService.sendNoticeContains(email, OperationEnum.Inform,ItemTypeEnum.Information,item,recipientList, remark);
         return ResultUtils.success();
     }
 
@@ -730,7 +730,7 @@ public class ManagementSystemService {
         List<UserDailyViewCount> dailyViewCountList = dashboard.getUserDailyViewCount();
 
         Date now = new Date();
-        UserDailyViewCount newViewCount = new UserDailyViewCount(now, 1, Arrays.asList(ip));
+        UserDailyViewCount newViewCount = new UserDailyViewCount(now, 1, new ArrayList<>(Arrays.asList(ip)));
         if (dailyViewCountList == null) {
             List<UserDailyViewCount> newList = new ArrayList<>();
             newList.add(newViewCount);

@@ -133,7 +133,7 @@ public class GenericService {
     public JSONObject searchItems(SpecificFindDTO findDTO, ItemTypeEnum type){
 
         if(findDTO.getSortField().equals("default")){
-            findDTO.setSortField("name");
+            findDTO.setSortField("viewCount");
         }
         //页码前端从1开始，后端需要减一
         findDTO.setPage(findDTO.getPage()-1);
@@ -413,14 +413,14 @@ public class GenericService {
         List<String> classifications = new ArrayList<>();
 
         // 构建classifications集合,如果没有childrenId则表示只查询一个分类条目，有的话表示有多个分类条目
-        if (categoryName != null && !categoryName.equals("ALL") && !categoryName.equals(""))
+        if (categoryName != null && !categoryName.equals("ALL") && !categoryName.equals("all") && !categoryName.equals("All") && !categoryName.equals(""))
             classifications = buildClassifications(categoryName, genericCategoryDao);
 
         Page result;
         try {
             // Object categoryById = genericCategoryDao.findFirstById(categoryName);
             // categoryName = categoryById == null ? "" : ((GenericCatalog)categoryById).getNameEn();
-            if(categoryName == null || categoryName.equals("ALL") || categoryName.equals("")) {          // 不分类的情况
+            if(categoryName == null || categoryName.equals("ALL") || categoryName.equals("all") || categoryName.equals("All") || categoryName.equals("")) {          // 不分类的情况
                 if(searchText.equals("")){
                     result = genericItemDao.findAllByStatusIn(visible,pageable);
                     // result = genericItemDao.findAll(pageable);
@@ -854,6 +854,10 @@ public class GenericService {
     // 根据查询条件查询符合条件的模型条目(主要用于根据user查询)
     public JSONObject queryByUser(ItemTypeEnum itemType,UserFindDTO userFindDTO, Boolean containPrivate) {
         JSONObject queryResult = new JSONObject();
+
+        if ("default".equals(userFindDTO.getSortField())){
+            userFindDTO.setSortField("createTime");
+        }
 
         //查询条件梳理
         String searchText = userFindDTO.getSearchText();

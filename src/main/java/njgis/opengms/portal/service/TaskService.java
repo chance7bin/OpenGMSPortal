@@ -6,17 +6,18 @@ import com.alibaba.fastjson.JSONObject;
 import njgis.opengms.portal.component.AbstractTask.AsyncTask;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.intergrate.Action;
+import njgis.opengms.portal.entity.doo.intergrate.DataProcessing;
 import njgis.opengms.portal.entity.doo.intergrate.Model;
+import njgis.opengms.portal.entity.doo.intergrate.ModelAction;
 import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.support.ParamInfo;
 import njgis.opengms.portal.entity.doo.support.TaskData;
-import njgis.opengms.portal.entity.doo.support.ZipStreamEntity;
 import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.utils.*;
-import org.apache.http.entity.ContentType;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -28,13 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -81,6 +76,9 @@ public class TaskService {
 
     @Autowired
     DataItemDao dataItemDao;
+
+    @Autowired
+    IntegratedTaskDao integratedTaskDao;
 
     @Value("${managerServerIpAndPort}")
     private String managerServerIpAndPort;
@@ -1736,6 +1734,242 @@ public class TaskService {
         task.setPermission("public");
         taskDao.save(task);
         return ResultUtils.success(task.getPermission());
+    }
+
+
+    public JSONObject pageIntegrateTaskByUserByStatus(String email, String status, int page, String sortType, int sortAsc,String searchText) {
+
+        User user = userDao.findFirstByEmail(email);
+        String userName = user.getAccessId();
+        if (userName == null){
+            return null;
+        }
+
+
+        Sort sort = Sort.by(sortAsc == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "lastModifiedTime");
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<IntegratedTask> integratedTaskPage = Page.empty();
+
+        if (status.equals("calculating")) {
+            integratedTaskPage = integratedTaskDao.findByUserIdAndIntegrateAndStatusAndTaskNameContainsIgnoreCase(userName, true, 1,searchText ,pageable);
+        } else if (status.equals("successful")) {
+            integratedTaskPage = integratedTaskDao.findByUserIdAndIntegrateAndStatusAndTaskNameContainsIgnoreCase(userName, true, 2,searchText , pageable);
+        } else if (status.equals("failed"))
+            integratedTaskPage = integratedTaskDao.findByUserIdAndIntegrateAndStatusAndTaskNameContainsIgnoreCase(userName, true, -1,searchText , pageable);
+        else if (status.equals("builded"))
+            integratedTaskPage = integratedTaskDao.findByUserIdAndIntegrateAndStatusAndTaskNameContainsIgnoreCase(userName, true, 0,searchText , pageable);
+        else
+            integratedTaskPage = integratedTaskDao.findByUserIdAndIntegrateAndTaskNameContainsIgnoreCase(userName, true, searchText,pageable);
+        List<IntegratedTask> ts = integratedTaskPage.getContent();
+
+        List<IntegratedTask> newTasks = updateUserItdTasks(userName,ts);//先利用这个函数更新一下数据库
+
+        for(IntegratedTask newTask : newTasks){
+            for(IntegratedTask task:ts){
+                if(newTask.getOid().equals(task.getOid())){
+                    task.setModelActions(newTask.getModelActions());
+                    task.setDataProcessings(newTask.getDataProcessings());
+                }
+            }
+
+        }
+
+        JSONObject taskObject = new JSONObject();
+        taskObject.put("count", integratedTaskPage.getTotalElements());
+        taskObject.put("tasks", ts);
+
+        return taskObject;
+    }
+
+    public List<IntegratedTask> updateUserItdTasks(String userName,List<IntegratedTask> itdTaskList) {//多线程通过managerserver更新数据库
+        AsyncTask asyncTask = new AsyncTask();
+        List<Future> futures = new ArrayList<>();
+
+//        Sort sort = new Sort(Sort.Direction.DESC, "runTime");
+//        List<Task> ts = taskDao.findByUserId(userName);
+        List<IntegratedTask> taskList = new ArrayList<>();
+        try {
+            for (int i = 0; i < itdTaskList.size(); i++) {
+                IntegratedTask task = itdTaskList.get(i);
+                if (task.getStatus() == 1) {
+                    JSONObject param = new JSONObject();
+                    param.put("tid", task.getTaskId());
+                    param.put("integrate", task.getIntegrate());
+
+                    futures.add(asyncTask.getRecordCallback(param, managerServerIpAndPort));
+                }
+            }
+
+
+            for (Future<?> future : futures) {
+                while (true) {//CPU高速轮询：每个future都并发轮循，判断完成状态然后获取结果，这一行，是本实现方案的精髓所在。即有10个future在高速轮询，完成一个future的获取结果，就关闭一个轮询
+                    if (future.isDone() && !future.isCancelled()) {//获取future成功完成状态，如果想要限制每个任务的超时时间，取消本行的状态判断+future.get(1000*1, TimeUnit.MILLISECONDS)+catch超时异常使用即可。
+                        String result = (String) future.get();//获取结果
+                        if(!result.equals("{}")){
+                            JSONObject jsonResult = JSON.parseObject(result);
+                            JSONObject taskInfo = jsonResult.getJSONObject("taskInfo");
+                            String taskId = jsonResult.getString("taskId");
+                            updateIntegratedTaskInfo(taskId,jsonResult);
+
+                            break;//当前future获取结果完毕，跳出while
+                        }else{
+
+                        }
+                        break;
+
+                    } else {
+                        Thread.sleep(1);//每次轮询休息1毫秒（CPU纳秒级），避免CPU高速轮循耗空CPU---》新手别忘记这个
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+//            System.out.println(e.getMessage());
+        }
+        return taskList;
+    }
+
+    public JSONObject updateIntegratedTaskInfo(String taskId,JSONObject data) {
+        IntegratedTask task = integratedTaskDao.findByTaskId(taskId);
+        int status = data.getInteger("status");
+        JSONObject taskInfo = data.getJSONObject("taskInfo");
+
+        //更新output
+        JSONObject j_modelActionList = taskInfo.getJSONObject("modelActionList");
+        JSONObject j_dataProcessingList = taskInfo.getJSONObject("dataProcessingList");
+        List<Action> finishedModelActions = converseOutputModelAction(j_modelActionList.getJSONArray("completed"));
+        List<Action> failedModelActions = converseOutputModelAction(j_modelActionList.getJSONArray("failed"));
+        List<Action> finishedDataProcessings = converseOutputModelAction(j_dataProcessingList.getJSONArray("completed"));
+        List<Action> failedDataProcessings = converseOutputModelAction(j_dataProcessingList.getJSONArray("failed"));
+
+        finishedModelActions.addAll(finishedDataProcessings);
+        failedModelActions.addAll(failedDataProcessings);
+        updateIntegratedTaskOutput(task, finishedModelActions, failedModelActions);
+
+        //todo common task 与 integrated task的合并
+        Task comTask = taskDao.findFirstByTaskId(task.getOid());
+        switch (status) {
+            case 0:
+                task.setStatus(1);
+//                comTask = taskDao.findFirstByTaskId(task.getTaskId());
+//                comTask.setStatus(-1);
+                integratedTaskDao.save(task);
+//                taskDao.save(comTask);
+                break;
+            case -1:
+                task.setStatus(-1);
+                integratedTaskDao.save(task);
+                break;
+            case 1:
+                task.setStatus(2);
+                integratedTaskDao.save(task);
+                break;
+        }
+        return data;
+
+    }
+
+    public List<Action> converseOutputModelAction(JSONArray actionArray) {
+        List<Action> actionList = new ArrayList<>();
+        for (int i = 0; i < actionArray.size(); i++) {
+            JSONObject fromAction = actionArray.getJSONObject(i);
+            Action action = new ModelAction();
+            action.setId(fromAction.getString("id"));
+            JSONArray output = fromAction.getJSONObject("outputData").getJSONArray("outputs");
+            List<Map<String,Object>> outputDatas = new ArrayList<>();
+            for(int j=0;j<output.size();j++){
+                Map<String,Object> outputData = new HashMap<>();
+                Map<String,Object> dataContent = new HashMap<>();
+                JSONObject j_dataContent = ((JSONObject)output.get(j)).getJSONObject("dataContent");
+                outputData.put("value",j_dataContent.getString("value"));
+                outputData.put("type",j_dataContent.getString("type"));
+                outputData.put("fileName",j_dataContent.getString("fileName"));
+                outputData.put("suffix",j_dataContent.getString("suffix"));
+                outputDatas.add(outputData);
+            }
+            action.setOutputData(outputDatas);
+            actionList.add(action);
+        }
+
+        return actionList;
+    }
+
+
+    public String updateIntegratedTaskOutput(IntegratedTask integratedTask, List<Action> finishedModelActions,List<Action> failedModelActions ){
+        List<ModelAction> modelActions = integratedTask.getModelActions();
+        List<DataProcessing> dataProcessings = integratedTask.getDataProcessings();
+
+        for(ModelAction modelAction:modelActions){
+            for(Action finishedAction:finishedModelActions){
+                if(modelAction.getId().equals(finishedAction.getId())){
+                    modelAction.setStatus(finishedAction.getStatus());
+                    modelAction.setPort(finishedAction.getPort());
+                    modelAction.setTaskIp(finishedAction.getTaskIp());
+                    for(Map<String,Object> output:modelAction.getOutputData()){
+                        for(Map<String,Object> newOutput:finishedAction.getOutputData()){
+                            output.put("value",newOutput.get("value"));
+                            output.put("fileName",newOutput.get("fileName"));
+                            output.put("suffix",newOutput.get("suffix"));
+                        }
+                    }
+                }
+            }
+            for(Action failedAction:failedModelActions){
+                if(modelAction.getId().equals(failedAction.getId())){
+                    modelAction.setStatus(-1);
+                }
+            }
+        }
+
+        for(DataProcessing dataProcessing:dataProcessings){
+            for(Action finishedAction:finishedModelActions){
+                if(dataProcessing.getId().equals(finishedAction.getId())){
+                    dataProcessing.setStatus(finishedAction.getStatus());
+                    dataProcessing.setPort(finishedAction.getPort());
+                    dataProcessing.setTaskIp(finishedAction.getTaskIp());
+                    for(Map<String,Object> output:dataProcessing.getOutputData()){
+                        for(Map<String,Object> newOutput:finishedAction.getOutputData()){
+                            output.put("value",newOutput.get("value"));
+//                            output.put("fileName",newOutput.get("fileName"));
+                            output.put("fileName","result");
+//                            output.put("suffix",newOutput.get("suffix"));
+                            output.put("suffix","");
+                        }
+                    }
+                }
+            }
+            for(Action failedAction:failedModelActions){
+                if(dataProcessing.getId().equals(failedAction.getId())){
+                    dataProcessing.setStatus(-1);
+                }
+            }
+        }
+        integratedTask.setModelActions(modelActions);
+        integratedTask.setDataProcessings(dataProcessings);
+
+        Date now = new Date();
+        integratedTask.setLastModifiedTime(now);
+
+        return integratedTaskDao.save(integratedTask).getOid();
+    }
+
+    public JSONObject PageIntegrateTaskByUser(String email, int pageNum, int pageSize, int asc, String sortElement){
+        User user = userDao.findFirstByEmail(email);
+        String userName = user.getAccessId();
+        if (userName == null){
+            return null;
+        }
+
+        Sort sort = Sort.by(asc==1? Sort.Direction.ASC:Sort.Direction.DESC,sortElement);
+        Pageable pageable = PageRequest.of(pageNum,pageSize,sort);
+        Page<IntegratedTask> integratedTaskPage = integratedTaskDao.findByUserIdAndIntegrate(userName,true,pageable);
+
+        JSONObject result = new JSONObject();
+        result.put("total",integratedTaskPage.getTotalElements());
+        result.put("content",integratedTaskPage.getContent());
+
+        return result;
     }
 
 }

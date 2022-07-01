@@ -550,10 +550,11 @@ new Vue({
 
         saveUpdateUserInfo() {
             var researchInterests = $('#researchInterestInput').tagEditor('getTags')[0].tags;
+            this.researchInterests = researchInterests;
             if(!researchInterests && typeof(researchInterests) != 'undefined')
                 this.researchInterests = JSON.parse(JSON.stringify(researchInterests));
-            console.log(this.researchInterests)
-            console.log(this.userPersonalInfo)
+            // console.log(this.researchInterests)
+            // console.log(this.userPersonalInfo)
             if(this.introductionInput!=this.userPersonalInfo.introduction
                 ||this.organizationInput!=this.userPersonalInfo.organizations[0]
                 ||this.locationInput != this.userPersonalInfo.location
@@ -638,47 +639,6 @@ new Vue({
                 // $('#imgShow').show();
             }
         },
-
-        // editIntro7RIS(){
-        //     this.Intro7RISdialog = true
-        //     this.introduction = this.userPersonalInfo.introduction
-        //     if ($("#researchInterestInput").nextAll().length == 0) {//如果不存在tageditor,则创建一个
-        //         Vue.nextTick(() => {
-        //             $("#researchInterestInput").tagEditor({
-        //                 forceLowercase: false
-        //             })
-        //             $('#researchInterestInput').tagEditor('destroy');
-        //             $('#researchInterestInput').tagEditor({
-        //                 initialTags: this.userPersonalInfo.researchInterests,
-        //                 forceLowercase: false,
-        //             });
-        //
-        //         })
-        //     } else {
-        //         Vue.nextTick(() => {
-        //             $('#researchInterestInput').tagEditor('destroy');
-        //             $('#researchInterestInput').tagEditor({
-        //                 initialTags: this.userPersonalInfo.researchInterests,
-        //                 forceLowercase: false,
-        //             });
-        //         })
-        //     }
-        //
-        //     $('#researchInterestInput').tagEditor('destroy');
-        //     $('#researchInterestInput').tagEditor({
-        //         initialTags:  [''],
-        //         forceLowercase: false,
-        //     });
-        // },
-
-        // uploadIntro7RISConfirm(){
-        //     this.Intro7RISdialog=false
-        //     this.descriptionAddToBack();
-        //     var tags = $('#researchInterestInput').tagEditor('getTags')[0].tags;
-        //     for (i = 0; i < tags.length; i++) { $('#researchInterestInput').tagEditor('removeTag', tags[i]); }
-        //     this.researchInterests=tags;
-        //     this.researchInterestAddToBack();
-        // },
 
         editExLink(){
             this.externalLinkDialog = true
@@ -1156,21 +1116,21 @@ new Vue({
                                          _this.organizationInput = _this.userPersonalInfo.organizations[0];
                                          if (!_this.userPersonalInfo.location || typeof (_this.userPersonalInfo.location) == "undefined") {
                                              _this.userPersonalInfo.location = ''
-                                             _this.locationInput = _this.userPersonalInfo.location;
                                          }
+                                         _this.locationInput = _this.userPersonalInfo.location;
                                          if (!_this.userPersonalInfo.externalLinks[0] || typeof (_this.userPersonalInfo.externalLinks[0]) == "undefined") {
                                              _this.userPersonalInfo.externalLinks[0] = ''
-                                             _this.externalLinkInput = _this.userPersonalInfo.externalLinks[0];
                                          }
+                                         _this.externalLinkInput = _this.userPersonalInfo.externalLinks[0];
                                          if (!_this.userPersonalInfo.introduction || typeof (_this.userPersonalInfo.introduction) == 'undefined') {
                                              _this.userPersonalInfo.introduction = ''
-                                             _this.introductionInput = _this.userPersonalInfo.introduction;
                                          }
+                                         _this.introductionInput = _this.userPersonalInfo.introduction;
                                          _this.emailInput = _this.userPersonalInfo.email;
                                          if (!_this.userPersonalInfo.researchInterests || typeof (_this.userPersonalInfo.researchInterests) == 'undefined') {
                                              _this.userPersonalInfo.researchInterests = [];
-                                             _this.researchInterests = _this.userPersonalInfo.researchInterests;
                                          }
+                                         _this.researchInterests = _this.userPersonalInfo.researchInterests;
                                      }, 0);
                                  } else {
                                      console.log("UserInfo get wrong.")
@@ -3351,6 +3311,7 @@ new Vue({
 
     mounted() {
 
+        // this.getUserInfo();
 
         // console.log("userSpaceAll:",this.getStorage("userSpaceAll"))
         // this.resourceSortEleText = this.htmlJson.viewCount
@@ -3863,8 +3824,8 @@ new Vue({
         }
         setTimeout(() => {
             this.selectFirstActive();
-            console.log($("#researchInterestInput"))
-            console.log(that.researchInterests)
+            // console.log($("#researchInterestInput"))
+            // console.log(that.researchInterests)
             $("#researchInterestInput").tagEditor({
                 initialTags: that.researchInterests,
                 forceLowercase: false

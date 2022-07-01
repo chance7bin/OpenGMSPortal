@@ -80,7 +80,8 @@
             </div>
 
             <div id="data_classification0" class="detail_block minScreen">
-                <div th:replace="fragments/itemInfoModules :: data_classification(${classifications})"></div>
+                <div v-if="currentLng=='nameCn'" th:replace="fragments/itemInfoModules :: data_classification(${classifications},nameCn)"></div>
+                <div v-if="currentLng=='nameEn'"  th:replace="fragments/itemInfoModules :: data_classification(${classifications},nameEn)"></div>
             </div>
 
 
@@ -172,7 +173,8 @@
         <div class="right-panel el-col">
             <!--categorys-->
             <div id="data_classification" class="detail_block">
-                <div th:replace="fragments/itemInfoModules :: data_classification(${classifications})"></div>
+                <div v-if="currentLng=='nameCn'"><div th:replace="fragments/itemInfoModules :: data_classification(${classifications},nameCn)"></div></div>
+                <div v-if="currentLng=='nameEn'"><div th:replace="fragments/itemInfoModules :: data_classification(${classifications},nameEn)"></div></div>
             </div>
 
             <div id="Contributor" class="detail_block">

@@ -203,7 +203,7 @@
                                                                                            class="col-sm-2 control-label">{{htmlJson.Image}}</label>
                                                                                     <div class="col-sm-10">
 
-                                                                                        <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="'/static' + itemInfo.image"/>
+                                                                                        <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="itemInfo.image"/>
                                                                                         <div id="imgMask" class="flexCenter" v-if="itemInfo.image!=undefined&&itemInfo.image!=''"
                                                                                              style="position: absolute;width: 100px;height: 100px">
                                                                                             <div class="fa fa-times imgDelete" @click="deleteImg"></div>

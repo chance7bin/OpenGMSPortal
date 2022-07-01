@@ -26,7 +26,8 @@ public class Notice extends PortalId {
     String dispatcher; //发送者email
     OperationEnum action; //对资源的操作 ["comment","edit","rejected","accepted"]
     ItemTypeEnum objectType; //作用的对象所属类型 ["version","comment",...]
-    String objectId; //被作用的对象 如：versionId , commentId等
+    // String objectId; //被作用的对象 如：versionId , commentId等 (废弃，考虑到如果之后这个删除的话那就找不到这个对象了)
+    Object objectContent; //被作用的对象内容 如：version , comment等
     // String objectAuthor; //资源作者，用于消息内容生成，区别超级用户和普通用户
     // String objectName; //资源名
     String recipient; //接收者email

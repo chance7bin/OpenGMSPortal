@@ -122,13 +122,25 @@ var  data_item_info = new Vue({
             authorshipFormVisible:false,
             invokeServices:[],
 
-            htmlJSON:{}
+            htmlJSON:{},
+            currentLng:"nameEn" //用户控制分类的中英文切换 nameCn/nameEn
         }
 
     } ,
     methods: {
         translatePage(jsonContent){
-            this.htmlJSON = jsonContent
+            this.htmlJSON = jsonContent;
+            this.changeCLSLng();
+        },
+
+        //修改分类的中英文展示标识
+        changeCLSLng(){
+            let language = window.localStorage.getItem("language");
+            if (language == "zh-cn"){
+                this.currentLng = "nameCn";
+            } else {
+                this.currentLng = "nameEn";
+            }
         },
 
         feedBack(){
@@ -976,7 +988,7 @@ var  data_item_info = new Vue({
             let data=new FormData()
             data.append('searchText',this.addModelsSearchText)
             data.append('page',this.searchAddModelPage)
-            data.append('sortType','default')
+            data.append('sortType','viewCount')
             data.append('asc',false)
             data.append('pageSize',10)
             data.append('classifications[]','all')
@@ -1484,7 +1496,7 @@ var  data_item_info = new Vue({
 
     mounted(){
 
-
+        this.changeCLSLng();
 
         this.lightenContributor = author
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)

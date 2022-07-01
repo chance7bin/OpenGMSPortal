@@ -214,6 +214,7 @@
             </el-tooltip>
         </div>
     </div>
+    <!--<div class="detail_overview" th:if="${itemInfo.overview!=null||itemInfo.image!=null}">-->
     <div class="detail_overview" th:if="${itemInfo.overview!=null||itemInfo.image!=null}">
         <div th:if="${itemInfo.image!=null}">
             <div th:if="${modularType.name} eq 'ModelItem'"  th:switch="${itemInfo.image}" class="img">
@@ -238,10 +239,10 @@
             </div>
 
             <div th:if="${itemType} eq'Data'" class="img" th:object="${itemInfo}">
-                <div th:if="${#strings.isEmpty(itemInfo.image)}">
+                <div th:if="${#strings.isEmpty(itemInfo.image)">
                     <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
                 </div>
-                <div th:unless="${#strings.isEmpty(itemInfo.image)}">
+                <div th:unless="${#strings.isEmpty(itemInfo.image)">
                     <img th:src="${itemInfo.image}" class="image">
                 </div>
             </div>
@@ -264,7 +265,13 @@
                 </div>
             </div>
         </div>
-
+        <div th:unless="${itemInfo.image!=null}">
+            <div class="img">
+                <div>
+                    <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
+                </div>
+            </div>
+        </div>
 
         <div class="info" th:if="${itemInfo.overview!=null}">
             <p th:text="${itemInfo.overview}"></p>
@@ -1470,15 +1477,17 @@
 
 <!--data-->
 <!--data item info-->
-<div th:fragment="data_classification(classifications)" id="data_classification" class="detail_block">
+<div th:fragment="data_classification(classifications, currentLng)" id="data_classification" class="detail_block">
     <div class="block_head">
         <div class="head_text">
             <h4>{{htmlJSON.CategoryTags}}</h4>
         </div>
     </div>
     <div class="block_content" style="margin-bottom:10px;">
-        <el-tag type="success" th:each="classS:${classifications}" th:text="${classS}"
+        <el-tag type="success" th:each="classS:${classifications}" th:text="${currentLng=='nameCn'?classS.nameCn:classS.nameEn}"
                 style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>
+        <!--<el-tag type="success" th:each="classS:${classifications}" th:text="${currentLng}"-->
+        <!--        style="margin: 0 10px 10px 0;font-weight: bold;color: #3396ef"></el-tag>-->
     </div>
 </div>
 

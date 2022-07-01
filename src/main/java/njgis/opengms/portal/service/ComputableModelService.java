@@ -3,10 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import njgis.opengms.portal.dao.ComputableModelDao;
-import njgis.opengms.portal.dao.DataItemDao;
-import njgis.opengms.portal.dao.ModelItemDao;
-import njgis.opengms.portal.dao.UserDao;
+import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
@@ -86,6 +83,9 @@ public class ComputableModelService {
     @Autowired
     NoticeService noticeService;
 
+    @Autowired
+    IntegratedTaskDao integratedTaskDao;
+
     @Value("${htmlLoadPath}")
     String htmlLoadPath;
 
@@ -94,6 +94,9 @@ public class ComputableModelService {
 
     @Value(value = "Public,Discoverable")
     private List<String> itemStatusVisible;
+
+    @Value("${managerServerIpAndPort}")
+    private String managerServerIpAndPort;
 
     /**
      * @Description 计算模型详情页面
@@ -697,7 +700,7 @@ public class ComputableModelService {
                 result.put("id", computableModel.getId());
             } else {
                 // 发送通知
-                noticeService.sendNoticeContainsAllAdmin(email, computableModel.getAuthor(), computableModel.getAdmins() ,ItemTypeEnum.Version,version_new.getId(), OperationEnum.Edit);
+                noticeService.sendNoticeContainsAllAdmin(email, computableModel.getAuthor(), computableModel.getAdmins() ,ItemTypeEnum.Version,version_new, OperationEnum.Edit);
 
                 result.put("method", "version");
                 result.put("versionId", version_new.getId());
@@ -956,5 +959,51 @@ public class ComputableModelService {
 
         return mv;
     }
+
+
+    public JSONObject pageByClassi(int asc, int page, int pageSize, String sortEle, String searchText, String classification){
+        Sort sort = Sort.by(asc==1?Sort.Direction.ASC:Sort.Direction.DESC,sortEle);
+
+        Pageable pageable = PageRequest.of(page,pageSize,sort);
+
+        Page<ComputableModel> computableModelPage = Page.empty();
+        if(classification.equals("all")){
+            computableModelPage = computableModelDao.findByNameContainsIgnoreCaseAndDeploy(searchText,true,pageable);
+        }else{
+            List<String> classifications = new ArrayList<>();
+            classifications.add(classification);
+            computableModelPage = computableModelDao.findAllByClassificationsInAndNameLikeIgnoreCaseAndDeploy(classifications,searchText,true,pageable);
+        }
+
+        List<ComputableModel> computableModelResult = computableModelPage.getContent();
+        JSONArray j_comptblModelArray = new JSONArray();
+        if(computableModelPage.getTotalElements()>0){
+            for(ComputableModel computableModel:computableModelResult){
+                if(computableModel.getMdl()!=null){
+                    try {
+                        computableModel.setMdlJson(convertMdl(computableModel.getMdl()));
+                    }catch (Exception e){
+
+                    }
+                }
+                String userName = computableModel.getAuthor();
+                User user = userDao.findFirstByEmail(userName);
+                JSONObject j_comptblModel = (JSONObject) JSONObject.toJSON(computableModel);
+                j_comptblModel.put("authorName",user.getName());
+                j_comptblModel.put("authorId",user.getAccessId());
+                j_comptblModelArray.add(j_comptblModel);
+            }
+        }
+
+
+        JSONObject result = new JSONObject();
+        result.put("content",j_comptblModelArray);
+        result.put("total",computableModelPage.getTotalElements());
+
+        return result;
+
+    }
+
+
 
 }
