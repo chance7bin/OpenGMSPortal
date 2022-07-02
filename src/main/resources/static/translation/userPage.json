@@ -47,7 +47,8 @@
     "Organization": "Organization",
     "Location": "Location",
     "ResearchInterests": "Research Interests",
-    "Website": "Website"
+    "Website": "Website",
+    "Email": "Email"
   },
   "zh-cn": {
     "noIntro": "无简介",
@@ -97,7 +98,8 @@
     "Organization": "组织",
     "Location": "位置",
     "ResearchInterests": "研究领域",
-    "Website": "网页"
+    "Website": "网页",
+    "Email": "邮箱"
   }
 
 }

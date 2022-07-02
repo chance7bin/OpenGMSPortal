@@ -1459,7 +1459,7 @@ var createModelItem = Vue.extend({
         },
 
         preImg() {
-
+            console.log("preImg");
             var file = $('#imgOne').get(0).files[0];
             //创建用来读取此文件的对象
             var reader = new FileReader();
@@ -1611,8 +1611,28 @@ var createModelItem = Vue.extend({
             }
             // $("#title").text("Create Model Item")
 
+        },
+
+
+        itemInfo:{
+            handler(newVal) {
+                // console.log('oldVal:', oldVal);
+                console.log('newVal:', newVal);
+                if (newVal !== undefined){
+                    if (newVal.image.indexOf("data:image/png") !== -1){
+                        // 不对url进行操作
+                    } else {
+                        if (newVal.image.indexOf("/static") === -1 && newVal.image !== ""){
+                            this.itemInfo.image = "/static" + newVal.image;
+                        }
+                    }
+                }
+            },
+            immediate: true,
+            deep: true
         }
     },
+
 
     mounted() {
 

@@ -136,7 +136,7 @@ public class DataItemService {
         List<String> languageList = getLanguageList(locals);
 
         List<String> classificationsList = dataItem.getClassifications();
-        List<String> classifications = getClassifications(classificationsList);
+        List<Classification> classifications = getClassifications(classificationsList);
 
 
         view.setViewName("data_item_info");
@@ -160,13 +160,21 @@ public class DataItemService {
 
     }
 
-    public List<String> getClassifications(List<String> classificationsList) {
-        List<String> classifications = new ArrayList<>();
+    // public List<String> getClassifications(List<String> classificationsList) {
+    //     List<String> classifications = new ArrayList<>();
+    //     for (String classification : classificationsList) {
+    //         classifications.add(classificationDao.findFirstById(classification).getNameEn());
+    //     }
+    //     return classifications;
+    // }
+    public List<Classification> getClassifications(List<String> classificationsList) {
+        List<Classification> classifications = new ArrayList<>();
         for (String classification : classificationsList) {
-            classifications.add(classificationDao.findFirstById(classification).getNameEn());
+            classifications.add(classificationDao.findFirstById(classification));
         }
         return classifications;
     }
+
 
     public List<String> getLanguageList(List<Localization> locals) {
         List<String> languageList = new ArrayList<>();
@@ -394,7 +402,7 @@ public class DataItemService {
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version.getId(),recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version,recipientList);
                 result.put("type","version");
                 return ResultUtils.success(result);
             }
@@ -646,7 +654,7 @@ public class DataItemService {
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version.getId(),recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version,recipientList);
                 result.put("method", "version");
                 result.put("versionId", new_version.getId());
                 return result;

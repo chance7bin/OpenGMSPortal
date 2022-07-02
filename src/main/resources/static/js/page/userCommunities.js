@@ -474,10 +474,10 @@ var userCommunities = Vue.extend(
                 this.await = true
                 let a=this.$route.params.communityKind
                 let urls={
-                    'concept&semantic':'/repository/searchConceptsByUserId',
-                    'spatialReference':'/repository/searchSpatialsByUserId',
-                    'dataTemplate':    '/repository/searchTemplatesByUserId',
-                    'unit&metric':     '/repository/searchUnitsByUserId',
+                    'concept&semantic':'/concept/queryListOfAuthorSelf',
+                    'spatialReference':'/spatialReference/queryListOfAuthorSelf',
+                    'dataTemplate':    '/template/queryListOfAuthorSelf',
+                    'unit&metric':     '/unit/queryListOfAuthorSelf',
                 }
                 let names = {
                     'concept&semantic': 'concepts',
@@ -488,19 +488,33 @@ var userCommunities = Vue.extend(
                 let url=urls[a];
                 let name=names[a];
                 let targetPage = page==undefined?this.page:page
+
+                let reqData = {
+                    searchText: this.searchText,
+                    page: targetPage,
+                    pagesize: this.pageSize,
+                    sortType: this.sortType,
+                    asc: this.sortAsc === 1,
+                    authorEmail: window.localStorage.getItem("account")
+                }
+
+
+
                 $.ajax({
-                    type: "Get",
+                    type: "Post",
                     url: url,
-                    data: {
-                        searchText: this.searchText,
-                        page: targetPage - 1,
-                        pagesize: this.pageSize,
-                        sortType: this.sortType,
-                        asc: this.sortAsc
-                    },
+                    // data: {
+                    //     searchText: this.searchText,
+                    //     page: targetPage - 1,
+                    //     pagesize: this.pageSize,
+                    //     sortType: this.sortType,
+                    //     asc: this.sortAsc
+                    // },
                     cache: false,
                     async: true,
-                    dataType: "json",
+                    // dataType: "json",
+                    data: JSON.stringify(reqData),
+                    contentType: "application/json",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -512,9 +526,9 @@ var userCommunities = Vue.extend(
                         } else {
                             data = json.data;
                             this.resourceLoad = false;
-                            this.totalNum = data.count;
-                            this.searchCount = Number.parseInt(data["count"]);
-                            this.$set(this, "searchResult", data[name]);
+                            this.totalNum = data.total;
+                            this.searchCount = Number.parseInt(data["total"]);
+                            this.$set(this, "searchResult", data["list"]);
 
                             if (targetPage == 1) {
                                 this.pageInit();

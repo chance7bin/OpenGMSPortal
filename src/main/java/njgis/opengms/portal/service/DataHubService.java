@@ -193,7 +193,7 @@ public class DataHubService {
                 recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version.getId(),recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version,recipientList);
                 result.put("type","version");
                 return ResultUtils.success(result);
             }

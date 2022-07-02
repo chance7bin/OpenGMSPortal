@@ -192,7 +192,9 @@ Vue.component("translation-bar",
                 let content = await this.getLangJson('comment')
                 let scopeDom = document.getElementById("comment")
                 this.defautTrans(content,scopeDom)
-                document.getElementById("commentTextArea").setAttribute("placeholder",content[this.currentLang]["writeYourComment"]);
+                let commentTextArea = document.getElementById("commentTextArea")
+                if (commentTextArea != null)
+                    document.getElementById("commentTextArea").setAttribute("placeholder",content[this.currentLang]["writeYourComment"]);
             },
 
             async loadItemInfoModules(){

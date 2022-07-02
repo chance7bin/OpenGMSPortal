@@ -2477,30 +2477,35 @@ var info=new Vue({
         },
         addSearchFromUser() {
 
-            let data = {
+            // let data = {
+            //     searchText: this.addModelsSearchText,
+            //     page: this.searchAddModelPage,
+            //     asc: false,
+            //     pageSize: 5,
+            //     email: this.user.email
+            // }
+
+            let reqData = {
                 searchText: this.addModelsSearchText,
                 page: this.searchAddModelPage,
+                pagesize: 5,
                 asc: false,
-                pageSize: 5,
-                email: this.user.email
-
-
+                authorEmail: this.user.email
             }
+
             let that = this
             this.loading = true
             if (this.nomore === '') {
-                axios.get("/dataItem/searchDataByUserId/", {
-                    params: data
-                })
+                axios.get("/dataItem/queryListOfAuthorSelf/", reqData)
                     .then((res) => {
 
                         if (res.status === 200) {
-                            if (res.data.data.content.length === 0) {
+                            if (res.data.data.list.length === 0) {
                                 that.nomore = "nomore"
                                 that.loading = false
                             } else {
                                 that.loading = false
-                                that.searchAddRelatedModels = that.searchAddRelatedModels.concat(res.data.data.content)
+                                that.searchAddRelatedModels = that.searchAddRelatedModels.concat(res.data.data.list)
                             }
 
                         }

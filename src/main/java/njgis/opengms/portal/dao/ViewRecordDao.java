@@ -13,16 +13,16 @@ public interface ViewRecordDao extends MongoRepository<ViewRecord,String> {
 
     List<ViewRecord> findAllByItemType(ItemTypeEnum itemTypeEnum);
 
-    List<ViewRecord> findAllByItemTypeAndItemOid(String type, String oid);
+    List<ViewRecord> findAllByItemTypeAndItemId(ItemTypeEnum type, String id);
 
-    List<ViewRecord> findAllByItemTypeAndItemOidAndDateGreaterThanEqual(String type, String oid, Date date);
+    List<ViewRecord> findAllByItemTypeAndItemIdAndDateGreaterThanEqual(ItemTypeEnum type, String id, Date date);
 
-    List<ViewRecord> findAllByItemOidInAndDateGreaterThanEqual(List<String> oids, Date date);
+    List<ViewRecord> findAllByItemIdInAndDateGreaterThanEqual(List<String> ids, Date date);
 
-    List<ViewRecord> findAllByItemOidAndItemTypeAndDateGreaterThanEqual(String oid, ItemTypeEnum type, Date date);
+    List<ViewRecord> findAllByItemIdAndItemTypeAndDateGreaterThanEqual(String id, ItemTypeEnum type, Date date);
 
-    List<ViewRecord> findAllByItemOidAndFlag(String oid, boolean flag);
+    List<ViewRecord> findAllByItemIdAndFlag(String id, boolean flag);
 
-    List<ViewRecord> findAllByItemOidAndFlagAndDateAfter(String oid, boolean flag, Date date);
+    List<ViewRecord> findAllByItemIdAndFlagAndDateAfter(String id, boolean flag, Date date);
 
 }

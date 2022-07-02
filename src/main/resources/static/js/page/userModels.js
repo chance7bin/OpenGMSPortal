@@ -512,10 +512,10 @@ var userModels = Vue.extend(
                 let a=this.$route.params.modelitemKind
                 this.await = true
                 let urls={
-                    'modelitem':      '/modelItem/searchModelItemsByUserId',
-                    'conceptualmodel':'/conceptualModel/searchConceptualModelsByUserId',
-                    'logicalmodel':   '/logicalModel/searchLogicalModelsByUserId',
-                    'computablemodel':'/computableModel/searchComputableModelsByUserId',
+                    'modelitem':      '/modelItem/queryListOfAuthorSelf',
+                    'conceptualmodel':'/conceptualModel/queryListOfAuthorSelf',
+                    'logicalmodel':   '/logicalModel/queryListOfAuthorSelf',
+                    'computablemodel':'/computableModel/queryListOfAuthorSelf',
                 }
                 let names={
                     'modelitem':      'modelItems',
@@ -530,19 +530,22 @@ var userModels = Vue.extend(
                     this.searchComputerModelsForDeploy();
                 } else {
                     let targetPage = page==undefined?this.page:page
+                    let reqData = {
+                        searchText: this.searchText,
+                        page: targetPage,
+                        pagesize: this.pageSize,
+                        sortType: this.sortType,
+                        asc: this.sortAsc === 1,
+                        authorEmail: window.localStorage.getItem("account")
+                    }
                     $.ajax({
-                        type: "Get",
+                        type: "Post",
                         url: url,
-                        data: {
-                            searchText: this.searchText,
-                            page: targetPage - 1,
-                            pagesize: this.pageSize,
-                            sortType: this.sortType,
-                            asc: this.sortAsc
-                        },
+                        data: JSON.stringify(reqData),
                         cache: false,
                         async: true,
-                        dataType: "json",
+                        // dataType: "json",
+                        contentType: "application/json",
                         xhrFields: {
                             withCredentials: true
                         },
@@ -553,15 +556,15 @@ var userModels = Vue.extend(
                                 window.location.href = "/user/login";
                             } else {
                                 let data = json.data;
-                                if(data[name].length==0&&this.page>1){
+                                if(data["list"].length==0&&this.page>1){
                                     this.searchItems(--this.page)
                                     return
                                 }
                                 this.resourceLoad = false;
-                                this.totalNum = data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.$set(this,"searchResult",data[name]);
-                                console.log(this.searchResult)
+                                this.totalNum = data.total;
+                                this.searchCount = Number.parseInt(data["total"]);
+                                this.$set(this,"searchResult",data["list"]);
+                                // console.log(this.searchResult)
                                 if (targetPage == 1) {
                                     this.pageInit();
                                 }

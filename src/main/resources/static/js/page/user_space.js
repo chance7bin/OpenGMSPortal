@@ -2763,16 +2763,16 @@ var vue = new Vue({
             var url = "";
             var name = "";
             if (this.curIndex == '2-1') {
-                url = "/modelItem/searchModelItemsByUserId";
+                url = "/modelItem/queryListOfAuthorSelf";
                 name = "modelItems";
             } else if (this.curIndex == '2-2') {
-                url = "/conceptualModel/searchConceptualModelsByUserId";
+                url = "/conceptualModel/queryListOfAuthorSelf";
                 name = "conceptualModels";
             } else if (this.curIndex == '2-3') {
-                url = "/logicalModel/searchLogicalModelsByUserId";
+                url = "/logicalModel/queryListOfAuthorSelf";
                 name = "logicalModels";
             } else if (this.curIndex == '2-4') {
-                url = "/computableModel/searchComputableModelsByUserId";
+                url = "/computableModel/queryListOfAuthorSelf";
                 name = "computableModels";
             } else if (this.curIndex == '6') {
                 url = "/task/searchTasksByUserId";
@@ -2783,19 +2783,29 @@ var vue = new Vue({
             if (this.deploys_show) {
                 this.searchComputerModelsForDeploy();
             } else {
+
+                let reqData = {
+                    searchText: this.searchText,
+                    page: this.page,
+                    pagesize: this.pageSize,
+                    sortType: this.sortType,
+                    asc: this.sortAsc === 1,
+                    authorEmail: window.localStorage.getItem("account")
+                }
                 $.ajax({
-                    type: "Get",
+                    type: "Post",
                     url: url,
-                    data: {
-                        searchText: this.searchText,
-                        page: this.page - 1,
-                        pagesize: this.pageSize,
-                        sortType: this.sortType,
-                        asc: this.sortAsc
-                    },
+                    // data: {
+                    //     searchText: this.searchText,
+                    //     page: this.page - 1,
+                    //     pagesize: this.pageSize,
+                    //     sortType: this.sortType,
+                    //     asc: this.sortAsc
+                    // },
                     cache: false,
                     async: true,
-                    dataType: "json",
+                    data: JSON.stringify(reqData),
+                    contentType: "application/json",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -2807,9 +2817,9 @@ var vue = new Vue({
                         } else {
                             data = json.data;
                             this.resourceLoad = false;
-                            this.totalNum = data.count;
-                            this.searchCount = Number.parseInt(data["count"]);
-                            this.searchResult = data[name];
+                            this.totalNum = data.total;
+                            this.searchCount = Number.parseInt(data["total"]);
+                            this.searchResult = data["list"];
                             if (this.page == 1) {
                                 this.pageInit();
                             }
@@ -2824,21 +2834,28 @@ var vue = new Vue({
             this.pageSize = 10;
             this.isInSearch = 1;
             var that = this;
-            var da = {
-                userOid: this.userId,
+            // var da = {
+            //     userOid: this.userId,
+            //     page: this.page,
+            //     pageSize: this.pageSize,
+            //     asc: false,
+            //     searchText: this.searchText
+            // }
+            let reqData = {
+                searchText: this.searchText,
                 page: this.page,
-                pageSize: this.pageSize,
+                pagesize: this.pageSize,
                 asc: false,
-                searchText: this.searchText
+                authorEmail: this.userId
             }
-            axios.get("/dataItem/searchDataByUserId", {
-                params: da
-            })
+
+
+            axios.get("/dataItem/queryListOfAuthorSelf", reqData)
                 .then((res) => {
                     setTimeout(() => {
                         if (res.status == 200) {
                             if (res.data.data != null) {
-                                that.searchResult = res.data.data.content;
+                                that.searchResult = res.data.data.list;
                                 if (this.page == 1) {
                                     this.pageInit();
                                 }
@@ -2855,21 +2872,25 @@ var vue = new Vue({
         searchConcepts() {
             this.pageSize = 10;
             this.isInSearch = 1;
-            var url = "/repository/searchConceptsByUserId";
+            var url = "/concept/queryListOfAuthorSelf";
             var name = "concepts";
+
+            let reqData = {
+                searchText: this.searchText,
+                page: this.page,
+                pagesize: this.pageSize,
+                sortType: this.sortType,
+                asc: this.sortAsc === 1,
+                authorEmail: window.localStorage.getItem("account")
+            }
+
             $.ajax({
-                type: "Get",
+                type: "Post",
                 url: url,
-                data: {
-                    searchText: this.searchText,
-                    page: this.page - 1,
-                    pageSize: this.pageSize,
-                    sortType: this.sortType,
-                    asc: this.sortAsc
-                },
                 cache: false,
                 async: true,
-                dataType: "json",
+                data: JSON.stringify(reqData),
+                contentType: "application/json",
                 xhrFields: {
                     withCredentials: true
                 },
@@ -2881,9 +2902,9 @@ var vue = new Vue({
                     } else {
                         data = json.data;
                         this.resourceLoad = false;
-                        this.totalNum = data.count;
-                        this.searchCount = Number.parseInt(data["count"]);
-                        this.searchResult = data[name];
+                        this.totalNum = data.total;
+                        this.searchCount = Number.parseInt(data["total"]);
+                        this.searchResult = data["list"];
                         if (this.page == 1) {
                             this.pageInit();
                         }
@@ -5842,7 +5863,7 @@ var vue = new Vue({
                         window.location.href = "/user/login";
                     } else {
                         let data = result.data;
-                        this.userId = data.accessId;
+                        this.userId = data.email;
                         this.userName = data.name;
                         console.log(this.userId)
                         // this.addAllData()

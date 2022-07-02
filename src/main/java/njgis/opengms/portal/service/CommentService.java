@@ -71,7 +71,7 @@ public class CommentService {
         }
 
         // 给条目条目创建者、管理员发送通知
-        noticeService.sendNoticeContainsAllAdmin(commentEmail,item.getAuthor(),item.getAdmins(), ItemTypeEnum.Comment,comment.getId(), OperationEnum.Comment);
+        noticeService.sendNoticeContainsAllAdmin(commentEmail,item.getAuthor(),item.getAdmins(), ItemTypeEnum.Comment,comment, OperationEnum.Comment);
 
 
 
