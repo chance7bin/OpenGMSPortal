@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserShuttleDTO {
-    private String userId; //uuid 对应id
+    // private String userId; //uuid 对应id
     private String email;
     /*
     用户可修改信息

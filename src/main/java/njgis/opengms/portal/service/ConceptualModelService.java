@@ -177,6 +177,9 @@ public class ConceptualModelService {
 
         //relateModelItemList
         List<String> modelItemIdList = conceptualModelInfo.getRelatedModelItems();
+
+
+
         JSONArray modelItemInfoList = ArrayUtils.parseListToJSONArray(genericService.getRelatedModelInfoList(modelItemIdList));
 
         ModelAndView modelAndView = new ModelAndView();

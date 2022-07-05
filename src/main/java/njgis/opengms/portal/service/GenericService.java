@@ -241,6 +241,7 @@ public class GenericService {
             userObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath + user.getAvatar());
             userObject.put("name",user.getName());
             userObject.put("userId",user.getAccessId());
+            userObject.put("accessId",user.getAccessId());
             userObject.put("email", user.getEmail());
             users.add(userObject);
 
@@ -267,6 +268,11 @@ public class GenericService {
             // jsonObject.put("invokeServices",portalItem.getInvokeServices());
             // jsonObject.put("authorName",user.getName());
             // jsonObject.put("authorId",user.getAccessId());
+
+            // /modelItem/items
+            jsonObject.put("author_name",user.getName());
+
+
             lists.add(jsonObject);
         }
 
@@ -678,7 +684,8 @@ public class GenericService {
             RelatedModelInfoDTO relatedModelInfoDTO = new RelatedModelInfoDTO();
             relatedModelInfoDTO.setName(modelItem.getName());
             relatedModelInfoDTO.setId(modelItem.getId());
-            relatedModelInfoDTO.setImg(htmlLoadPath+modelItem.getImage());
+            String image = modelItem.getImage();
+            relatedModelInfoDTO.setImg((image == null || "".equals(image)) ? "/static/img/model/model.png" : htmlLoadPath+modelItem.getImage());
             relatedModelInfoDTO.setDescription(modelItem.getOverview());
 
             relatedModelInfoDTOList.add(relatedModelInfoDTO);
