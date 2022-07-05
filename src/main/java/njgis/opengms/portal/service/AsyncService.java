@@ -198,6 +198,7 @@ public class AsyncService {
 
     @Async
     public void updateAllResourceCount(String email){
+        log.info("updateAllResourceCount");
         User user = userDao.findFirstByEmail(email);
         UserResourceCount resourceCount = user.getResourceCount();
         resourceCount = resourceCount == null ? new UserResourceCount() : resourceCount;

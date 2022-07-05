@@ -271,293 +271,293 @@
                                                         </div>
 
                                                     </div>
-<!--                                                    <div class="step-tab-panel" id="step2">-->
-<!--                                                        <div id="URL" class="clearfix"-->
-<!--                                                             style="margin-top:50px"-->
-<!--                                                             v-if="itemInfo.contentType=='Link'||itemInfo.contentType=='Service'">-->
-<!--                                                            <div class="form-group">-->
-<!--                                                                <label for="URL_text"-->
-<!--                                                                       class="control-label col-md-4 col-md-offset-2">Please-->
-<!--                                                                    enter computable model's URL:</label>-->
-<!--                                                                <div class="col-sm-8 col-md-offset-2">-->
-<!--                                                                    <textarea id="URL_text" class="form-control"-->
-<!--                                                                              placeholder="( http://www.example.com/model )"-->
-<!--                                                                              v-model="itemInfo.url"></textarea>-->
-<!--                                                                </div>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                        <div id="MD5" class="clearfix" style="margin-top:50px"-->
-<!--                                                             v-if="itemInfo.contentType=='MD5'">-->
-<!--                                                            <div class="form-group">-->
-<!--                                                                <label class="control-label col-md-8 col-md-offset-2"-->
-<!--                                                                       style="padding: 10px 15px;">-->
-<!--                                                                    Please enter the MD5 of the openGMS wrapper-->
-<!--                                                                    package:</label>-->
-<!--                                                                <div class="col-sm-8 col-md-offset-2">-->
-<!--                                                                    <el-input id="MD5_text"-->
-<!--                                                                              v-model="itemInfo.md5"-->
-<!--                                                                              @change="inputMd5"-->
-<!--                                                                              @keyup.enter="getServiceByMd5">-->
-<!--                                                                        <el-button slot="append"-->
-<!--                                                                                   @click="checkMd5Deployed">Check-->
-<!--                                                                            Deployed-->
-<!--                                                                        </el-button>-->
-<!--                                                                    </el-input>-->
-<!--                                                                </div>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="form-group">-->
-<!--                                                                <label class="control-label col-md-8 col-md-offset-2"-->
-<!--                                                                       style="padding: 10px 15px;">-->
-<!--                                                                    Please enter the MDL of the openGMS wrapper-->
-<!--                                                                    package:</label>-->
-<!--                                                                <div class="col-sm-8 col-md-offset-2">-->
-<!--                                                                    <el-input id="MD5_text" type="textarea" :rows="3"-->
-<!--                                                                              v-model="itemInfo.mdl"-->
-<!--                                                                              @change="inputMd5"-->
-<!--                                                                              @keyup.enter="getServiceByMd5">-->
-<!--                                                                    </el-input>-->
-<!--                                                                </div>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="form-group">-->
-<!--                                                                <label class="control-label col-md-8 col-md-offset-2"-->
-<!--                                                                       style="padding: 10px 15px;">-->
-<!--                                                                    Please enter the Page Config of the openGMS wrapper-->
-<!--                                                                    package:</label>-->
-<!--                                                                <div class="col-sm-8 col-md-offset-2">-->
-<!--                                                                    <el-input id="MD5_text" type="textarea" :rows="3"-->
-<!--                                                                              v-model="itemInfo.pageConfig"-->
-<!--                                                                              >-->
-<!--                                                                    </el-input>-->
-<!--                                                                </div>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                        <div id="Files" style="" class="flexRow flexWrap"-->
-<!--                                                             v-if="itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library'">-->
-<!--                                                            <div style="flex: 1;margin-left: 5px">-->
-<!--                                                                <h5 style="font-weight: 500;flex: 1;min-width: 400px">-->
-<!--                                                                    {{htmlJson.UploadYourPackage}}:</h5>-->
-<!--                                                                <el-button-->
-<!--                                                                        v-if="(resources.length==0&&itemInfo.contentType=='Package')||itemInfo.contentType!='Package'"-->
-<!--                                                                        type="primary"-->
-<!--                                                                        @click="addFile()">+ {{htmlJson.authorshipPart.Add}}-->
-<!--                                                                </el-button>-->
-<!--                                                                <el-button v-if="resources.length!=0" type="danger"-->
-<!--                                                                           @click="removeFile()">- {{htmlJson.Remove}}-->
-<!--                                                                </el-button>-->
-<!--                                                                <el-button-->
-<!--                                                                        v-if="resources.length!=0&&itemInfo.contentType=='Package'"-->
-<!--                                                                        type="success"-->
-<!--                                                                        @click="replaceFile()">{{htmlJson.Replace}}-->
-<!--                                                                </el-button>-->
+                                                    <div class="step-tab-panel" id="step2">
+                                                        <div id="URL" class="clearfix"
+                                                             style="margin-top:50px"
+                                                             v-if="itemInfo.contentType=='Link'||itemInfo.contentType=='Service'">
+                                                            <div class="form-group">
+                                                                <label for="URL_text"
+                                                                       class="control-label col-md-4 col-md-offset-2">Please
+                                                                    enter computable model's URL:</label>
+                                                                <div class="col-sm-8 col-md-offset-2">
+                                                                    <textarea id="URL_text" class="form-control"
+                                                                              placeholder="( http://www.example.com/model )"
+                                                                              v-model="itemInfo.url"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="MD5" class="clearfix" style="margin-top:50px"
+                                                             v-if="itemInfo.contentType=='MD5'">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-8 col-md-offset-2"
+                                                                       style="padding: 10px 15px;">
+                                                                    Please enter the MD5 of the openGMS wrapper
+                                                                    package:</label>
+                                                                <div class="col-sm-8 col-md-offset-2">
+                                                                    <el-input id="MD5_text"
+                                                                              v-model="itemInfo.md5"
+                                                                              @change="inputMd5"
+                                                                              @keyup.enter="getServiceByMd5">
+                                                                        <el-button slot="append"
+                                                                                   @click="checkMd5Deployed">Check
+                                                                            Deployed
+                                                                        </el-button>
+                                                                    </el-input>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-8 col-md-offset-2"
+                                                                       style="padding: 10px 15px;">
+                                                                    Please enter the MDL of the openGMS wrapper
+                                                                    package:</label>
+                                                                <div class="col-sm-8 col-md-offset-2">
+                                                                    <el-input id="MD5_text" type="textarea" :rows="3"
+                                                                              v-model="itemInfo.mdl"
+                                                                              @change="inputMd5"
+                                                                              @keyup.enter="getServiceByMd5">
+                                                                    </el-input>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-8 col-md-offset-2"
+                                                                       style="padding: 10px 15px;">
+                                                                    Please enter the Page Config of the openGMS wrapper
+                                                                    package:</label>
+                                                                <div class="col-sm-8 col-md-offset-2">
+                                                                    <el-input id="MD5_text" type="textarea" :rows="3"
+                                                                              v-model="itemInfo.pageConfig"
+                                                                              >
+                                                                    </el-input>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="Files" style="" class="flexRow flexWrap"
+                                                             v-if="itemInfo.contentType=='Package'||itemInfo.contentType=='Code'||itemInfo.contentType=='Library'">
+                                                            <div style="flex: 1;margin-left: 5px">
+                                                                <h5 style="font-weight: 500;flex: 1;min-width: 400px">
+                                                                    {{htmlJson.UploadYourPackage}}:</h5>
+                                                                <el-button
+                                                                        v-if="(resources.length==0&&itemInfo.contentType=='Package')||itemInfo.contentType!='Package'"
+                                                                        type="primary"
+                                                                        @click="addFile()">+ {{htmlJson.authorshipPart.Add}}
+                                                                </el-button>
+                                                                <el-button v-if="resources.length!=0" type="danger"
+                                                                           @click="removeFile()">- {{htmlJson.Remove}}
+                                                                </el-button>
+                                                                <el-button
+                                                                        v-if="resources.length!=0&&itemInfo.contentType=='Package'"
+                                                                        type="success"
+                                                                        @click="replaceFile()">{{htmlJson.Replace}}
+                                                                </el-button>
 
-<!--                                                                <el-card :body-style="{ padding:'9px'}"-->
-<!--                                                                         style="margin-top: 10px">-->
-<!--                                                                    <span><i class="el-icon-document"></i>&nbsp&nbsp {{htmlJson.Content}}</span>-->
-<!--                                                                </el-card>-->
-
-
-<!--                                                                <el-card style="height: 300px;overflow-y:auto"-->
-<!--                                                                         id="browsercont" class="filecontent">-->
-
-<!--                                                                    <div @click="resClick"-->
-<!--                                                                         v-for="(resource, index) in resources">-->
-<!--                                                                        &lt;!&ndash;</el-row>&ndash;&gt;-->
-<!--                                                                        <el-card style="width:10%;cursor:pointer;"-->
-<!--                                                                                 :key="index"-->
-<!--                                                                                 :align="index"-->
-<!--                                                                                 :title="resource.name"-->
-<!--                                                                                 class="dataitemisol"-->
-<!--                                                                                 shadow="never">-->
-
-<!--                                                                            <el-row>-->
-<!--                                                                                <el-col :span="6">&nbsp</el-col>-->
-<!--                                                                                <el-col :span="12"><a><img-->
-<!--                                                                                        :src="'/static/img/filebrowser/'+resource.suffix+'.svg'"-->
-<!--                                                                                        onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"-->
-<!--                                                                                        style="height: 60%;width:100%"></a>-->
-<!--                                                                                </el-col>-->
-<!--                                                                                <el-col :span="6">&nbsp</el-col>-->
-<!--                                                                            </el-row>-->
-<!--                                                                            <el-row style="height: 45px;">-->
-<!--                                                                                <el-col :span="20">-->
-
-<!--                                                                                    <p style="overflow: hidden;word-wrap: break-word;word-break: break-all;text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5"-->
-<!--                                                                                    >{{resource.name}}</p>-->
-<!--                                                                                </el-col>-->
-<!--                                                                                <el-col :span="2">&nbsp</el-col>-->
-
-<!--                                                                            </el-row>-->
-
-<!--                                                                            &lt;!&ndash;menu item &ndash;&gt;-->
+                                                                <el-card :body-style="{ padding:'9px'}"
+                                                                         style="margin-top: 10px">
+                                                                    <span><i class="el-icon-document"></i>&nbsp&nbsp {{htmlJson.Content}}</span>
+                                                                </el-card>
 
 
-<!--                                                                        </el-card>-->
+                                                                <el-card style="height: 300px;overflow-y:auto"
+                                                                         id="browsercont" class="filecontent">
 
-<!--                                                                    </div>-->
-<!--                                                                </el-card>-->
+                                                                    <div @click="resClick"
+                                                                         v-for="(resource, index) in resources">
+                                                                        <!--</el-row>-->
+                                                                        <el-card style="width:10%;cursor:pointer;"
+                                                                                 :key="index"
+                                                                                 :align="index"
+                                                                                 :title="resource.name"
+                                                                                 class="dataitemisol"
+                                                                                 shadow="never">
 
-<!--                                                                <input id="file" type="file" style="display: none;"-->
-<!--                                                                       accept="application/x-zip-compressed"/>-->
+                                                                            <el-row>
+                                                                                <el-col :span="6">&nbsp</el-col>
+                                                                                <el-col :span="12"><a><img
+                                                                                        :src="'/static/img/filebrowser/'+resource.suffix+'.svg'"
+                                                                                        onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
+                                                                                        style="height: 60%;width:100%"></a>
+                                                                                </el-col>
+                                                                                <el-col :span="6">&nbsp</el-col>
+                                                                            </el-row>
+                                                                            <el-row style="height: 45px;">
+                                                                                <el-col :span="20">
 
-<!--                                                                <input id="file_multi" type="file"-->
-<!--                                                                       style="display: none;" multiple="multiple"/>-->
-<!--                                                            </div>-->
-<!--                                                            &lt;!&ndash;                                                            <div style="flex: 1.5;margin-left: 5px">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                <el-card class="wzhScrollbar"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                         style="margin-top: 60px;height: 340px;min-width: 400px">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                    <div class="col-sm-12 col-md-6 col-lg-6"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                         v-if="publicModelContainerList.length!=0"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                         v-for="(container,index) in publicModelContainerList">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                        <el-card class="box-card serverCard"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                 :class="container.status?'cursorPointer':''"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                 :style="container.ip==itemInfo.modelserUrl.split(':')[0]?'border-top:8px solid #36c94f':''"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                 @click.native="selectModelServer(container)"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                        >&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                            <div class="content">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                <div class="clearfix">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                    <div class="pull-left">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        <h4>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            {{container.hardware.hostName}}&ndash;&gt;-->
+                                                                                    <p style="overflow: hidden;word-wrap: break-word;word-break: break-all;text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5"
+                                                                                    >{{resource.name}}</p>
+                                                                                </el-col>
+                                                                                <el-col :span="2">&nbsp</el-col>
 
-<!--                                                            &lt;!&ndash;                                                                                        </h4>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        <p style="margin-bottom:5px">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            {{container.hardware.system}}&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            {{container.hardware.version}}</p>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        <p>{{container.hardware.cpu_Core}}&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            Core - &ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            {{container.hardware.totalMemory}}&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            RAM - &ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            {{container.hardware.diskAll}}&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                            Hard Disk</p>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                    </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                <div class="clearfix"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                     style="margin-top:10px">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                    <div class="serverStatus pull-left"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                         v-if="container.status">&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        <span style="background: #6FCE7F;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        Running&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                    </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                    <div class="serverStatus pull-left"&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                         v-else>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        <span style="background: #929994;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                        Offline&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                    </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                                </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                            </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                        </el-card>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                    </div>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                                </el-card>&ndash;&gt;-->
-<!--                                                            &lt;!&ndash;                                                            </div>&ndash;&gt;-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="step-tab-panel" id="step3">-->
-<!--                                                        <textarea id="computableModelText"></textarea>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="step-tab-panel" id="step4">-->
-<!--                                                        <div class="panel panel-success" style="border:none">-->
+                                                                            </el-row>
 
-<!--                                                            <div class="panel-body">-->
-<!--                                                                <div class="col-md-10 col-md-offset-1">-->
+                                                                            <!--menu item -->
 
-<!--                                                                    <div class="panel-group " id="accordion2">-->
-<!--                                                                        <div id="providersPanel" class="panel"-->
-<!--                                                                             style="border-color:#424f63">-->
-<!--                                                                            <div class="panel-heading"-->
-<!--                                                                                 style="background-color: #424f63">-->
-<!--                                                                                <h4 class="panel-title"-->
-<!--                                                                                    style="color:white">-->
-<!--                                                                                    <a class="accordion-toggle"-->
-<!--                                                                                       data-parent="#accordion2">-->
-<!--                                                                                        {{htmlJson.Authorship}}-->
-<!--                                                                                    </a>-->
-<!--                                                                                </h4>-->
-<!--                                                                            </div>-->
-<!--                                                                            <div id="provider_body"-->
-<!--                                                                                 class="panel-collapse collapse in"-->
-<!--                                                                                 style="height: auto;">-->
-<!--                                                                                <div class="panel-body providers"-->
-<!--                                                                                     style="border-top: #424f63; padding:0px">-->
-<!--                                                                                    <div class='panel panel-primary'>-->
-<!--                                                                                        <div class='panel-heading info-head newAuthorHeader'>-->
-<!--                                                                                            <h4 class='panel-title'>-->
-<!--                                                                                                <a class='accordion-toggle collapsed'-->
-<!--                                                                                                   style="color:white"-->
-<!--                                                                                                   data-toggle='collapse'-->
-<!--                                                                                                   data-target='#user1'-->
-<!--                                                                                                   href="javascript:;">-->
-<!--                                                                                                    {{htmlJson.authorshipPart.NEW}}-->
-<!--                                                                                                </a>-->
-<!--                                                                                            </h4>-->
-<!--                                                                                            <a href="javascript:;"-->
-<!--                                                                                               class="fa fa-times author_close"-->
-<!--                                                                                               style="float:right;margin-top:8px;color:white"></a>-->
-<!--                                                                                        </div>-->
-<!--                                                                                        <div id='user1'-->
-<!--                                                                                             class='panel-collapse collapse in'>-->
-<!--                                                                                            <div class='panel-body user-contents'>-->
-<!--                                                                                                <div class='user-attr'>-->
-<!--                                                                                                    <div>-->
-<!--                                                                                                        <lable class='control-label col-sm-2 text-center'-->
-<!--                                                                                                               style='font-weight: bold;'>-->
-<!--                                                                                                            {{htmlJson.Name}}:-->
-<!--                                                                                                        </lable>-->
-<!--                                                                                                        <div class='input-group col-sm-10'>-->
-<!--                                                                                                            <input type='text'-->
-<!--                                                                                                                   name="name"-->
-<!--                                                                                                                   class='form-control'>-->
-<!--                                                                                                        </div>-->
-<!--                                                                                                    </div>-->
-<!--                                                                                                    <div style="margin-top:10px">-->
-<!--                                                                                                        <lable class='control-label col-sm-2 text-center'-->
-<!--                                                                                                               style='font-weight: bold;'>-->
-<!--                                                                                                            {{htmlJson.authorshipPart.Affiliation}}:-->
-<!--                                                                                                        </lable>-->
-<!--                                                                                                        <div class='input-group col-sm-10'>-->
-<!--                                                                                                            <input type='text'-->
-<!--                                                                                                                   name="ins"-->
-<!--                                                                                                                   class='form-control'>-->
-<!--                                                                                                        </div>-->
-<!--                                                                                                    </div>-->
-<!--                                                                                                    <div style="margin-top:10px">-->
-<!--                                                                                                        <lable class='control-label col-sm-2 text-center'-->
-<!--                                                                                                               style='font-weight: bold;'>-->
-<!--                                                                                                            {{htmlJson.authorshipPart.Email}}:-->
-<!--                                                                                                        </lable>-->
-<!--                                                                                                        <div class='input-group col-sm-10'>-->
-<!--                                                                                                            <input type='text'-->
-<!--                                                                                                                   name="email"-->
-<!--                                                                                                                   class='form-control'>-->
-<!--                                                                                                        </div>-->
-<!--                                                                                                    </div>-->
-<!--                                                                                                    <div style="margin-top:10px">-->
-<!--                                                                                                        <lable class='control-label col-sm-2 text-center'-->
-<!--                                                                                                               style='font-weight: bold;'>-->
-<!--                                                                                                            {{htmlJson.authorshipPart.Homepage}}:-->
-<!--                                                                                                        </lable>-->
-<!--                                                                                                        <div class='input-group col-sm-10'>-->
-<!--                                                                                                            <input type='text'-->
-<!--                                                                                                                   name="homepage"-->
-<!--                                                                                                                   class='form-control'>-->
-<!--                                                                                                        </div>-->
-<!--                                                                                                    </div>-->
-<!--                                                                                                </div>-->
-<!--                                                                                            </div>-->
-<!--                                                                                        </div>-->
-<!--                                                                                    </div>-->
-<!--                                                                                </div>-->
-<!--                                                                                <button type="button"-->
-<!--                                                                                        class="btn btn-success btn-lg btn-block user-add"-->
-<!--                                                                                        style="border-radius: 3px;border-top-left-radius: 0px;border-top-right-radius: 0px">-->
-<!--                                                                                    {{htmlJson.authorshipPart.Add}}-->
-<!--                                                                                </button>-->
-<!--                                                                            </div>-->
-<!--                                                                        </div>-->
-<!--                                                                    </div>-->
-<!--                                                                </div>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
+
+                                                                        </el-card>
+
+                                                                    </div>
+                                                                </el-card>
+
+                                                                <input id="file" type="file" style="display: none;"
+                                                                       accept="application/x-zip-compressed"/>
+
+                                                                <input id="file_multi" type="file"
+                                                                       style="display: none;" multiple="multiple"/>
+                                                            </div>
+                                                            <!--                                                            <div style="flex: 1.5;margin-left: 5px">-->
+                                                            <!--                                                                <el-card class="wzhScrollbar"-->
+                                                            <!--                                                                         style="margin-top: 60px;height: 340px;min-width: 400px">-->
+                                                            <!--                                                                    <div class="col-sm-12 col-md-6 col-lg-6"-->
+                                                            <!--                                                                         v-if="publicModelContainerList.length!=0"-->
+                                                            <!--                                                                         v-for="(container,index) in publicModelContainerList">-->
+                                                            <!--                                                                        <el-card class="box-card serverCard"-->
+                                                            <!--                                                                                 :class="container.status?'cursorPointer':''"-->
+                                                            <!--                                                                                 :style="container.ip==itemInfo.modelserUrl.split(':')[0]?'border-top:8px solid #36c94f':''"-->
+                                                            <!--                                                                                 @click.native="selectModelServer(container)"-->
+                                                            <!--                                                                        >-->
+                                                            <!--                                                                            <div class="content">-->
+                                                            <!--                                                                                <div class="clearfix">-->
+                                                            <!--                                                                                    <div class="pull-left">-->
+                                                            <!--                                                                                        <h4>-->
+                                                            <!--                                                                                            {{container.hardware.hostName}}-->
+
+                                                            <!--                                                                                        </h4>-->
+                                                            <!--                                                                                        <p style="margin-bottom:5px">-->
+                                                            <!--                                                                                            {{container.hardware.system}}-->
+                                                            <!--                                                                                            {{container.hardware.version}}</p>-->
+                                                            <!--                                                                                        <p>{{container.hardware.cpu_Core}}-->
+                                                            <!--                                                                                            Core - -->
+                                                            <!--                                                                                            {{container.hardware.totalMemory}}-->
+                                                            <!--                                                                                            RAM - -->
+                                                            <!--                                                                                            {{container.hardware.diskAll}}-->
+                                                            <!--                                                                                            Hard Disk</p>-->
+                                                            <!--                                                                                    </div>-->
+                                                            <!--                                                                                </div>-->
+                                                            <!--                                                                                <div class="clearfix"-->
+                                                            <!--                                                                                     style="margin-top:10px">-->
+                                                            <!--                                                                                    <div class="serverStatus pull-left"-->
+                                                            <!--                                                                                         v-if="container.status">-->
+                                                            <!--                                                                                        <span style="background: #6FCE7F;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>-->
+                                                            <!--                                                                                        Running-->
+                                                            <!--                                                                                    </div>-->
+                                                            <!--                                                                                    <div class="serverStatus pull-left"-->
+                                                            <!--                                                                                         v-else>-->
+                                                            <!--                                                                                        <span style="background: #929994;display:inline-block;width:10px;height:10px;border-radius: 50%;"></span>-->
+                                                            <!--                                                                                        Offline-->
+                                                            <!--                                                                                    </div>-->
+                                                            <!--                                                                                </div>-->
+                                                            <!--                                                                            </div>-->
+                                                            <!--                                                                        </el-card>-->
+                                                            <!--                                                                    </div>-->
+                                                            <!--                                                                </el-card>-->
+                                                            <!--                                                            </div>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="step-tab-panel" id="step3">
+                                                        <textarea id="computableModelText"></textarea>
+                                                    </div>
+                                                    <div class="step-tab-panel" id="step4">
+                                                        <div class="panel panel-success" style="border:none">
+
+                                                            <div class="panel-body">
+                                                                <div class="col-md-10 col-md-offset-1">
+
+                                                                    <div class="panel-group " id="accordion2">
+                                                                        <div id="providersPanel" class="panel"
+                                                                             style="border-color:#424f63">
+                                                                            <div class="panel-heading"
+                                                                                 style="background-color: #424f63">
+                                                                                <h4 class="panel-title"
+                                                                                    style="color:white">
+                                                                                    <a class="accordion-toggle"
+                                                                                       data-parent="#accordion2">
+                                                                                        {{htmlJson.Authorship}}
+                                                                                    </a>
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div id="provider_body"
+                                                                                 class="panel-collapse collapse in"
+                                                                                 style="height: auto;">
+                                                                                <div class="panel-body providers"
+                                                                                     style="border-top: #424f63; padding:0px">
+                                                                                    <div class='panel panel-primary'>
+                                                                                        <div class='panel-heading info-head newAuthorHeader'>
+                                                                                            <h4 class='panel-title'>
+                                                                                                <a class='accordion-toggle collapsed'
+                                                                                                   style="color:white"
+                                                                                                   data-toggle='collapse'
+                                                                                                   data-target='#user1'
+                                                                                                   href="javascript:;">
+                                                                                                    {{htmlJson.authorshipPart.NEW}}
+                                                                                                </a>
+                                                                                            </h4>
+                                                                                            <a href="javascript:;"
+                                                                                               class="fa fa-times author_close"
+                                                                                               style="float:right;margin-top:8px;color:white"></a>
+                                                                                        </div>
+                                                                                        <div id='user1'
+                                                                                             class='panel-collapse collapse in'>
+                                                                                            <div class='panel-body user-contents'>
+                                                                                                <div class='user-attr'>
+                                                                                                    <div>
+                                                                                                        <lable class='control-label col-sm-2 text-center'
+                                                                                                               style='font-weight: bold;'>
+                                                                                                            {{htmlJson.Name}}:
+                                                                                                        </lable>
+                                                                                                        <div class='input-group col-sm-10'>
+                                                                                                            <input type='text'
+                                                                                                                   name="name"
+                                                                                                                   class='form-control'>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div style="margin-top:10px">
+                                                                                                        <lable class='control-label col-sm-2 text-center'
+                                                                                                               style='font-weight: bold;'>
+                                                                                                            {{htmlJson.authorshipPart.Affiliation}}:
+                                                                                                        </lable>
+                                                                                                        <div class='input-group col-sm-10'>
+                                                                                                            <input type='text'
+                                                                                                                   name="ins"
+                                                                                                                   class='form-control'>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div style="margin-top:10px">
+                                                                                                        <lable class='control-label col-sm-2 text-center'
+                                                                                                               style='font-weight: bold;'>
+                                                                                                            {{htmlJson.authorshipPart.Email}}:
+                                                                                                        </lable>
+                                                                                                        <div class='input-group col-sm-10'>
+                                                                                                            <input type='text'
+                                                                                                                   name="email"
+                                                                                                                   class='form-control'>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div style="margin-top:10px">
+                                                                                                        <lable class='control-label col-sm-2 text-center'
+                                                                                                               style='font-weight: bold;'>
+                                                                                                            {{htmlJson.authorshipPart.Homepage}}:
+                                                                                                        </lable>
+                                                                                                        <div class='input-group col-sm-10'>
+                                                                                                            <input type='text'
+                                                                                                                   name="homepage"
+                                                                                                                   class='form-control'>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <button type="button"
+                                                                                        class="btn btn-success btn-lg btn-block user-add"
+                                                                                        style="border-radius: 3px;border-top-left-radius: 0px;border-top-right-radius: 0px">
+                                                                                    {{htmlJson.authorshipPart.Add}}
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="step-footer text-right">
                                                     <!--                                                    <button class="btn btn-danger prev" @click="cancelEditClick()" style="">-->

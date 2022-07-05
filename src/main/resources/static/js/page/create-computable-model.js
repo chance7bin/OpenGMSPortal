@@ -1097,12 +1097,12 @@ var createComputableModel = Vue.extend({
 
             initTinymce('textarea#computableModelText')
 
-            if(this.draft.oid!=''&&this.draft.oid!=null&&typeof (this.draft.oid)!="undefined"){
-                // this.loadDraftByOid()
-                this.initDraft('create','/user/userSpace#/models/modelitem','draft',this.draft.oid)
-            }else{
-                this.loadMatchedCreateDraft();
-            }
+            // if(this.draft.oid!=''&&this.draft.oid!=null&&typeof (this.draft.oid)!="undefined"){
+            //     // this.loadDraftByOid()
+            //     this.initDraft('create','/user/userSpace#/models/modelitem','draft',this.draft.oid)
+            // }else{
+            //     this.loadMatchedCreateDraft();
+            // }
         }
         else {
 

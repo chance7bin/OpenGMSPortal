@@ -223,7 +223,7 @@
                 <img th:case="*" th:src="${itemInfo.image}">
             </div>
 
-            <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel')" >
+            <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel') or (${modularType.name} eq 'LogicalModel')" >
 
                 <div th:switch="${itemInfo.image}" class="img">
                     <img th:case="''" src="/static/img/model/calcModel.png">
@@ -267,7 +267,17 @@
         </div>
         <div th:unless="${itemInfo.image!=null}">
             <div class="img">
-                <div>
+                <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel') or (${modularType.name} eq 'LogicalModel')" >
+
+                    <div th:switch="${itemInfo.image}" class="img">
+                        <img th:case="''" src="/static/img/model/calcModel.png">
+                        <img th:case="null" src="/static/img/model/calcModel.png">
+                        <img th:case="*" th:src="'/static'+${itemInfo.image}">
+                    </div>
+
+                </div>
+
+                <div th:unless="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel') or (${modularType.name} eq 'LogicalModel')">
                     <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
                 </div>
             </div>

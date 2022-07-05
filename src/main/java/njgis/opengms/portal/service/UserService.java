@@ -274,7 +274,7 @@ public class UserService {
             if(user==null){
                 User newUser = new User();
                 String name = userShuttleDTO.getName();
-                newUser.setId(userShuttleDTO.getUserId());
+                // newUser.setId(userShuttleDTO.getUserId());
                 newUser.setEmail(userShuttleDTO.getEmail());
                 newUser.setAccessId(Utils.generateAccessId(name, userDao.findAllByAccessIdContains(name), true));
                 userDao.insert(newUser);
@@ -529,10 +529,14 @@ public class UserService {
         if (commonInfo.getString("msg").equals("suc")){
             User user = userDao.findFirstByEmail(email);
 
+            //最后把userserver的数据更新上去(要提到前面来，门户数据库优先级高)
+            j_result.putAll(commonInfo);
+
             List<String> exLinks = new ArrayList<>();
             exLinks.add(user.getHomepage());
             j_result.put("id",user.getId());
-            j_result.put("userId", user.getAccessId());
+            // j_result.put("userId", user.getAccessId());
+            j_result.put("accessId", user.getAccessId());
             j_result.put("email", user.getEmail());
             j_result.put("phone", user.getPhone());
             j_result.put("lab", user.getLab());
@@ -545,8 +549,7 @@ public class UserService {
             j_result.put("subscribe", user.getSubscribe());
             j_result.put("location", user.getCity());
             j_result.put("researchInterests", user.getDomain());
-            //最后把userserver的数据更新上去
-            j_result.putAll(commonInfo);
+
 
         }else {
             j_result = commonInfo;
