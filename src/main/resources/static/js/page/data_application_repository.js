@@ -87,12 +87,24 @@ var data_items = new Vue({
         },
 
         transFormCate(categoryName){
-            if (categoryName === '6117767e61ce444130b1a276')
-                return 'Conversion'
-            else if (categoryName === '6117767e61ce444130b1a277')
-                return 'Processing'
-            else
-                return 'Visualization'
+            location_href = window.location.href
+            lang = location_href.split("=")[1]
+            if (lang === "zh-cn"){
+                if (categoryName === '6117767e61ce444130b1a276')
+                    return '格式转换'
+                else if (categoryName === '6117767e61ce444130b1a277')
+                    return '数据处理'
+                else
+                    return '可视化'
+            }else {
+                if (categoryName === '6117767e61ce444130b1a276')
+                    return 'Conversion'
+                else if (categoryName === '6117767e61ce444130b1a277')
+                    return 'Processing'
+                else
+                    return 'Visualization'
+            }
+
         },
         //显示功能引导框
         showDriver(){

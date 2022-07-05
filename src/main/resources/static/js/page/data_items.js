@@ -63,6 +63,18 @@ var data_items = new Vue({
         }
     },
     methods: {
+        categoryInit(){
+        // 获取url截取languages
+            location_href = window.location.href
+            lang = location_href.split("=")[1]
+
+            if (lang == "zh-cn"){
+                this.showCategoryName = "陆地圈"
+            }else {
+                this.showCategoryName = "Land Regions"
+            }
+        },
+
         translatePage(jsonContent){
 
             //切换列表中标签选择情况
@@ -313,6 +325,7 @@ var data_items = new Vue({
     }
     ,
     mounted(){
+        this.categoryInit();
         let that=this;
         let u=window.location.href
         let f=u.split("/");
