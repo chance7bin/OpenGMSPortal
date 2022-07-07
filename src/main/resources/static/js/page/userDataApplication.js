@@ -332,7 +332,7 @@ var userDataApplication = Vue.extend(
                     asc: false,
                     authorEmail: window.localStorage.getItem("account")
                 }
-                axios.get("/dataMethod/queryListOfAuthorSelf/", reqData)
+                axios.post("/dataMethod/queryListOfAuthorSelf/", reqData)
                     .then((res) => {
                         setTimeout(() => {
                             if (res.status == 200) {

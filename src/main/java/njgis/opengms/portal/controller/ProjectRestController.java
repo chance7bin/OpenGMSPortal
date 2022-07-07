@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Description
  * @Author bin
@@ -45,8 +47,11 @@ public class ProjectRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目,传page,pageSize,searchText就行了", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
-
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO, HttpServletRequest request) {
+        if ("".equals(findDTO.getAuthorEmail()) || findDTO.getAuthorEmail() == null){
+            String email= request.getSession().getAttribute("email").toString();
+            findDTO.setAuthorEmail(email);
+        }
         return ResultUtils.success(projectService.queryByUser(findDTO));
 
     }

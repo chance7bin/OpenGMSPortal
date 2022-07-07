@@ -140,17 +140,38 @@ new Vue({
     },
     methods: {
 
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+            return v;
+        },
+
         translatePage(jsonContent){
+
+            let treeData = this.treeData;
+
+
             //切换列表中标签选择情况
             if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
-                let treeData = this.treeData;
 
-                for (i = 0; i < treeData.length; i++) {
+
+                for(i = 0;i<treeData.length;i++){
                     let treeData1 = treeData[i];
                     let temp = treeData1.label;
                     treeData1.label = treeData1.nameCn;
                     treeData1.nameCn = temp;
-                    for (j = 0; j < treeData1.children.length; j++) {
+                    for(j = 0;j<treeData1.children.length;j++){
                         let treeData2 = treeData1.children[j];
                         temp = treeData2.label;
                         treeData2.label = treeData2.nameCn;
@@ -159,21 +180,45 @@ new Vue({
                 }
                 this.treeData = treeData;
 
-                if (this.sortOrder == this.htmlJSON.Asc[0]) {
+                if(this.sortOrder == this.htmlJSON.Asc[0]){
                     this.sortOrder = jsonContent.Asc[0];
-                } else if (this.sortOrder == this.htmlJSON.Desc[0]) {
+                }else if(this.sortOrder == this.htmlJSON.Desc[0]){
                     this.sortOrder = jsonContent.Desc[0];
                 }
 
-                if (this.sortTypeName == this.htmlJSON.ViewCount[0]) {
+                if(this.sortTypeName == this.htmlJSON.ViewCount[0]){
                     this.sortTypeName = jsonContent.ViewCount[0];
-                } else if (this.sortTypeName == this.htmlJSON.Name[0]) {
+                }else if(this.sortTypeName == this.htmlJSON.Name[0]){
                     this.sortTypeName = jsonContent.Name[0];
-                } else if (this.sortTypeName == this.htmlJSON.CreateTime[0]) {
+                }else if(this.sortTypeName == this.htmlJSON.CreateTime[0]){
                     this.sortTypeName = jsonContent.CreateTime[0];
                 }
             }
             this.htmlJSON = jsonContent
+
+
+            //当前类别中英文切换
+            let language = this.getStorage("language")
+            let flag = 0;
+            for(i = 0;i<treeData.length;i++){
+                let treeData1 = treeData[i];
+                if (treeData1.oid == this.categoryName){
+                    this.currentClass = treeData1.label
+                    break;
+                }
+                for(j = 0;j<treeData1.children.length;j++){
+                    let treeData2 = treeData1.children[j];
+                    if (treeData2.oid == this.categoryName){
+                        this.currentClass = treeData2.label
+                        flag = 1;
+                        break;
+                    }
+
+                }
+                if (flag == 1)
+                    break;
+            }
+
         },
 
         //显示功能引导框

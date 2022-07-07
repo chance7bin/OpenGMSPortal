@@ -74,6 +74,30 @@ var createLogicalModel = Vue.extend({
         }
     },
 
+    created(){
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
+        console.log("this.htmlJson:",this.htmlJson);
+        if (this.htmlJson.Home == undefined) {
+            //如果缓存中有userSpaceAll页面就不会报错
+            if (this.getStorage("userSpaceAll") == null){
+
+                //如果没有的话那就定时获取userSpaceAll，并放到缓存中
+                var st = setTimeout(() => {
+                    console.log("get userSpaceAll...");
+                    this.setStorage("userSpaceAll", this.htmlJson);
+                    if (this.getStorage("userSpaceAll") != null){
+                        //一旦userSpaceAll获取到了，定时销毁并且刷新页面
+                        // this.htmlJsonExist = true;
+                        window.location.reload();
+                        // clearTimeout(st);
+                    }
+
+                },100)
+            }
+        }
+    },
+
     watch:{
         // 中英文切换
         htmlJson:function(newData){
@@ -88,6 +112,22 @@ var createLogicalModel = Vue.extend({
     },
 
     methods: {
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         selectModelItem(index,info){
             this.itemInfo.relateModelItemName = info.name;
             this.itemInfo.relateModelItem = info.id;

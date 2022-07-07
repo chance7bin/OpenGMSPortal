@@ -191,7 +191,7 @@
                                                                 <el-radio-group v-model="itemInfo.contentType"
                                                                                 @change="contentTypeChange">
                                                                     <el-tooltip class="item" effect="light"
-                                                                                content="Using a OpenGMS Model-Service Package to create model service."
+                                                                                :content="htmlJson.UsingOpenGMSModelServicePackageToCreateModelService"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
                                                                                   label="Package">{{htmlJson.OpenGMSModelServicePackage}}
@@ -199,7 +199,7 @@
                                                                     </el-tooltip>
                                                                     <br/>
                                                                     <el-tooltip class="item" effect="light"
-                                                                                content="Using a deployed OpenGMS Model-Service Package's MD5 to create model service"
+                                                                                :content="htmlJson.UsingDeployedOpenGMSPackageCreateModelService"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
                                                                                   label="MD5">{{htmlJson.OpenGMSPackageTag}}
@@ -207,7 +207,7 @@
                                                                     </el-tooltip>
                                                                     <br/>
                                                                     <el-tooltip class="item" effect="light"
-                                                                                content="I have the model's source code."
+                                                                                :content="htmlJson.HaveModelSourceCode"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
                                                                                   label="Code">{{htmlJson.SourceCode}}
@@ -215,7 +215,7 @@
                                                                     </el-tooltip>
                                                                     <br/>
                                                                     <el-tooltip class="item" effect="light"
-                                                                                content="I have the model's executable library."
+                                                                                :content="htmlJson.HaveModelExecutableLibrary"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
                                                                                   label="Library">{{htmlJson.ExecutableLibrary}}
@@ -223,7 +223,7 @@
                                                                     </el-tooltip>
                                                                     <br/>
                                                                     <el-tooltip class="item" effect="light"
-                                                                                content="The model have been deployed at third-party website as a service."
+                                                                                :content="htmlJson.HaveBeenDeployedAtThirdPartyWebsite"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
                                                                                   label="Service">{{htmlJson.ThirdPartyWebServiceLink}}
@@ -231,7 +231,7 @@
                                                                     </el-tooltip>
                                                                     <br/>
                                                                     <el-tooltip class="item" effect="light"
-                                                                                content="The model can be downloaded at third-party website."
+                                                                                :content="htmlJson.ModelCanBeDownloadedAtThirdPartyWebsite"
                                                                                 placement="right">
                                                                         <el-radio style="margin-bottom:10px;"
                                                                                   label="Link">{{htmlJson.DownloadableLink}}
