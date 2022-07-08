@@ -177,7 +177,7 @@
                                                     </el-col>
                                                     <el-col  v-if="info.taskInfo.status==2" :span="6" :offset="1" v-for="output in info.taskInfo.outputs">
                                                         <el-input id="dataNameInput" disabled v-if="output.event==modelOutEvent.eventName&&!output.multiple" class="model-input"
-                                                                  :value="output.tag==undefined?'':(output.tag+'.'+output.suffix)" readonly>
+                                                                  :value="output.tag==undefined?'':(output.tag+ (output.suffix==''?'':('.'+output.suffix)) )" readonly>
                                                         </el-input>
                                                         <el-tag v-if="output.event==modelOutEvent.eventName&&output.multiple" @click="checkMultiContent(output)"
                                                                 style="margin-top: 7px;width: 100%">

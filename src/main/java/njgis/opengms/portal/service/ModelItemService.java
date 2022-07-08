@@ -6,7 +6,6 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
-import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
@@ -109,9 +108,13 @@ public class ModelItemService {
     NoticeService noticeService;
 
 
-    public ModelAndView getPage(PortalItem portalItem) {
-        ModelAndView modelAndView=new ModelAndView();
+    public ModelAndView getPage(String id) {
+        ModelItem portalItem = modelItemDao.findFirstById(id);
+        return getPage(portalItem);
+    }
 
+    public ModelAndView getPage(ModelItem portalItem){
+        ModelAndView modelAndView=new ModelAndView();
         ModelItem modelInfo = (ModelItem) genericService.recordViewCount(portalItem);
 
         modelItemDao.save(modelInfo);
@@ -233,6 +236,7 @@ public class ModelItemService {
             for (int i = 0; i < modelItems.size(); i++) {
                 String idNew = modelItems.get(i).getModelId();
                 ModelItem modelItemNew = modelItemDao.findFirstById(idNew);
+                if (modelItemNew == null){continue;}
                 if (modelItemNew.getStatus().equals("Private")) {
                     continue;
                 }
@@ -249,6 +253,7 @@ public class ModelItemService {
         for(int i=0;i<conceptual.size();i++){
             String id=conceptual.get(i);
             ConceptualModel conceptualModel=conceptualModelDao.findFirstById(id);
+            if (conceptualModel == null){continue;}
             if(conceptualModel.getStatus().equals("Private")){
                 continue;
             }
@@ -264,6 +269,7 @@ public class ModelItemService {
         for(int i=0;i<logical.size();i++){
             String id=logical.get(i);
             LogicalModel logicalModel=logicalModelDao.findFirstById(id);
+            if (logicalModel == null){continue;}
             if(logicalModel.getStatus().equals("Private")){
                 continue;
             }
@@ -279,6 +285,7 @@ public class ModelItemService {
         for(int i=0;i<computable.size();i++){
             String id=computable.get(i);
             ComputableModel computableModel=computableModelDao.findFirstById(id);
+            if (computableModel == null){continue;}
             if(computableModel.getStatus().equals("Private")){
                 continue;
             }
@@ -295,6 +302,7 @@ public class ModelItemService {
             for (int i = 0; i < concepts.size(); i++) {
                 String id = concepts.get(i);
                 Concept concept = conceptDao.findFirstById(id);
+                if (concept == null){continue;}
                 if(concept.getStatus().equals("Private")){
                     continue;
                 }
@@ -323,6 +331,7 @@ public class ModelItemService {
             for (int i = 0; i < spatialReferences.size(); i++) {
                 String id = spatialReferences.get(i);
                 SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                if (spatialReference == null){continue;}
                 if(spatialReference.getStatus().equals("Private")){
                     continue;
                 }
@@ -340,6 +349,7 @@ public class ModelItemService {
             for (int i = 0; i < templates.size(); i++) {
                 String id = templates.get(i);
                 Template template = templateDao.findFirstById(id);
+                if (template == null){continue;}
                 if(template.getStatus().equals("Private")){
                     continue;
                 }
@@ -357,6 +367,7 @@ public class ModelItemService {
             for (int i = 0; i < units.size(); i++) {
                 String id = units.get(i);
                 Unit unit = unitDao.findFirstById(id);
+                if (unit == null){continue;}
                 if(unit.getStatus().equals("Private")){
                     continue;
                 }
@@ -375,6 +386,7 @@ public class ModelItemService {
         if(dataItems!=null){
             for(String dataId:dataItems){
                 DataItem dataItem=dataItemDao.findFirstById(dataId);
+                if (dataItem == null){continue;}
                 if(dataItem.getStatus().equals("Private")){
                     continue;
                 }

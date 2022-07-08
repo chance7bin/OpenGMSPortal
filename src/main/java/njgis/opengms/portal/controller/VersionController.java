@@ -33,6 +33,8 @@ public class VersionController {
     VersionService versionService;
 
 
+
+
 //    @LoginRequired
     @ApiOperation(value = "接受版本")
     @RequestMapping(value = "/accept/{id}", method = RequestMethod.GET)
@@ -269,5 +271,23 @@ public class VersionController {
         return modelAndView;
 
     }
+
+
+
+    @RequestMapping(value = "/historyList/{type}/{id}", method = RequestMethod.GET)
+    public ModelAndView getHistoryList(@PathVariable("type") String type, @PathVariable("id") String id) {
+
+
+        return versionService.getHistoryList(type, id);
+
+    }
+
+
+    @RequestMapping(value = "/history/{type}/{id}", method = RequestMethod.GET)
+    public ModelAndView getItemHistory(@PathVariable("type") String type, @PathVariable("id") String id) {
+        return versionService.getItemHistory(type, id);
+    }
+
+
 
 }

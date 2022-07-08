@@ -424,18 +424,10 @@ public class RepositoryService {
 
     }
 
-
-    /**
-     * 得到template详情页面
-     * @param id 
-     * @return org.springframework.web.servlet.ModelAndView 
-     * @Author bin
-     **/
-    public ModelAndView getTemplatePage(String id) {
+    public ModelAndView getTemplatePage(Template template) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("templateInfo");
 
-        Template template = templateDao.findFirstById(id);
         if(template==null){
             modelAndView.setViewName("error/404");
             return modelAndView;
@@ -450,15 +442,19 @@ public class RepositoryService {
     }
 
     /**
-     * 得到concept详情页面
-     * @param id
-     * @return org.springframework.web.servlet.ModelAndView
+     * 得到template详情页面
+     * @param id 
+     * @return org.springframework.web.servlet.ModelAndView 
      * @Author bin
      **/
-    public ModelAndView getConceptPage(String id) {
+    public ModelAndView getTemplatePage(String id) {
+        Template template = templateDao.findFirstById(id);
 
+        return getTemplatePage(template);
+    }
+
+    public ModelAndView getConceptPage(Concept concept) {
         ModelAndView modelAndView = new ModelAndView();
-        Concept concept = conceptDao.findFirstById(id);
         if(concept==null){
             modelAndView.setViewName("error/404");
             return modelAndView;
@@ -490,16 +486,21 @@ public class RepositoryService {
     }
 
     /**
-     * 得到spatialReference详情页面
+     * 得到concept详情页面
      * @param id
      * @return org.springframework.web.servlet.ModelAndView
      * @Author bin
      **/
-    public ModelAndView getSpatialReferencePage(String id) {
+    public ModelAndView getConceptPage(String id) {
+
+        Concept concept = conceptDao.findFirstById(id);
+        return getConceptPage(concept);
+    }
+
+    public ModelAndView getSpatialReferencePage(SpatialReference spatialReference) {
         String flag="";
         ModelAndView modelAndView = new ModelAndView();
 
-        SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
         if(spatialReference==null){
             modelAndView.setViewName("error/404");
             return modelAndView;
@@ -563,16 +564,21 @@ public class RepositoryService {
     }
 
     /**
-     * 得到unit详情页面
+     * 得到spatialReference详情页面
      * @param id
      * @return org.springframework.web.servlet.ModelAndView
      * @Author bin
      **/
-    public ModelAndView getUnitPage(String id) {
+    public ModelAndView getSpatialReferencePage(String id) {
+        SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+        return getSpatialReferencePage(spatialReference);
+
+    }
+
+    public ModelAndView getUnitPage(Unit unit) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("unitInfo");
 
-        Unit unit = unitDao.findFirstById(id);
         if(unit==null){
             modelAndView.setViewName("error/404");
             return modelAndView;
@@ -620,6 +626,18 @@ public class RepositoryService {
         modelAndView.addObject("oid_cvt",unit.getConversionId());
         modelAndView.addObject("modularType", ItemTypeEnum.Unit);
         return modelAndView;
+    }
+
+    /**
+     * 得到unit详情页面
+     * @param id
+     * @return org.springframework.web.servlet.ModelAndView
+     * @Author bin
+     **/
+    public ModelAndView getUnitPage(String id) {
+        Unit unit = unitDao.findFirstById(id);
+        return getUnitPage(unit);
+
     }
 
 

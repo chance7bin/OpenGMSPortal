@@ -64,11 +64,11 @@ export var ModelTemplate = Vue.extend({
                                         <el-button
                                                 size="mini"
                                                 type="primary"
-                                                @click.stop="checkHistoryModels(item.modelList)">Check</el-button>
+                                                @click.stop="checkHistoryModels(item.historyList)">Check</el-button>
                                         <el-button
                                                 size="mini"
                                                 type="success"
-                                                @click.stop="loadCheckedModel(item.modelList)">Load</el-button>
+                                                @click.stop="loadCheckedModel(item.historyList)">Load</el-button>
                                         <el-button
                                                 size="mini"
                                                 type="warning"
@@ -234,7 +234,8 @@ export var ModelTemplate = Vue.extend({
             waitCheckModels:[], //选中的待检测模型
 
 
-            computableModelUrl:"https://geomodeling.njnu.edu.cn/computableModel/", //门户计算模型的网址前缀
+            // computableModelUrl:"https://geomodeling.njnu.edu.cn/computableModel/", //门户计算模型的网址前缀
+            computableModelUrl:"/computableModel/", //门户计算模型的网址前缀
             mscUrl:"http://172.21.212.85:8060/modelserrun/61b88bfffb1ee50774d2683d",
 
         }
@@ -382,6 +383,39 @@ export var ModelTemplate = Vue.extend({
             })
         },
 
+        //检测历史模型
+        checkHistoryModels(historyList){
+            this.$confirm('是否开始检测所选模型?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '开始检测!!!'
+                });
+                let selectedModelIds=historyList.map(item=>{
+                    return item.modelId
+                })
+                axios.post('/managementSystem/model/invoke/batch',
+                    selectedModelIds
+                ).then(response=>{
+                    this.getModelList()
+                }).catch(function (error) {
+                    console.log(error);
+                })
+                this.waitCheckModels=[]
+                this.$refs.modelTable.clearSelection();
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消检测！！！'
+                });
+            });
+        },
+
+
         //检测所选模型（多选）
         checkSelectedModels() {
             this.$confirm('是否开始检测所选全部模型?', '提示', {
@@ -467,23 +501,24 @@ export var ModelTemplate = Vue.extend({
         },
 
         //从历史记录加载所选模型
-        loadCheckedModel(CheckedList){
-            for (let k=0,len0=CheckedList.length;k<len0;k++){
+        loadCheckedModel(historyList){
+            for (let k=0,len0=historyList.length;k<len0;k++){
                 for (let i=0,len1=this.waitCheckModels.length;i<=len1;i++){
                     if(len1===0||i===len1){
                         let tempItem={
-                            modelName:CheckedList[k].name,
-                            modelId:CheckedList[k].id
+                            modelName:historyList[k].modelName,
+                            modelId:historyList[k].modelId
                         }
                         this.waitCheckModels.push(tempItem)
-                        this.updateCheck(CheckedList[k].id)
+                        this.updateCheck(historyList[k].modelId)
                         break
                     }
-                    if(this.waitCheckModels[i].modelId===CheckedList[k].id){
+                    if(this.waitCheckModels[i].modelId===historyList[k].modelId){
                         break
                     }
                 }
             }
+            this.$message('添加成功');
         },
 
         //删除检测历史记录
@@ -491,8 +526,10 @@ export var ModelTemplate = Vue.extend({
             axios.delete('/managementSystem/checkList/delete/'+historyId)
                 .then(response=> {
                     this.getHistoryList()
+                    this.$message('删除成功');
                 })
                 .catch(function (error) {
+                    this.$message.error('删除失败');
                     console.log(error);
                 });
         },

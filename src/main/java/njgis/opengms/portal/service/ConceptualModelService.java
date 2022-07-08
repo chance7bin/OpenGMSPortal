@@ -89,17 +89,7 @@ public class ConceptualModelService {
         return conceptualModelResultDTO;
     }
 
-    /**
-     * @Description 根据id获取概念模型详情页面
-     * @param id
-     * @Return org.springframework.web.servlet.ModelAndView
-     * @Author kx
-     * @Date 21/10/12
-     **/
-    public ModelAndView getPage(String id) {
-        //条目信息
-        ConceptualModel conceptualModelInfo = conceptualModelDao.findFirstById(id);
-
+    public ModelAndView getPage(ConceptualModel conceptualModelInfo) {
         conceptualModelInfo=(ConceptualModel)genericService.recordViewCount(conceptualModelInfo);
 
         conceptualModelDao.save(conceptualModelInfo);
@@ -164,7 +154,7 @@ public class ConceptualModelService {
         List<AuthorInfo> authorshipList=conceptualModelInfo.getAuthorships();
         if(authorshipList!=null){
             for (AuthorInfo author:authorshipList
-                    ) {
+            ) {
                 if(authorshipString.equals("")){
                     authorshipString+=author.getName();
                 }
@@ -198,6 +188,19 @@ public class ConceptualModelService {
         modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
         modelAndView.addObject("modularType", ItemTypeEnum.ConceptualModel);
         return modelAndView;
+    }
+
+    /**
+     * @Description 根据id获取概念模型详情页面
+     * @param id
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author kx
+     * @Date 21/10/12
+     **/
+    public ModelAndView getPage(String id) {
+        //条目信息
+        ConceptualModel conceptualModelInfo = conceptualModelDao.findFirstById(id);
+        return getPage(conceptualModelInfo);
     }
 
     /**
@@ -300,7 +303,7 @@ public class ConceptualModelService {
                 if (modelItemRelate == null){
                     modelItemRelate = new ModelItemRelate();
                 }
-                modelItemRelate.getLogicalModels().add(conceptualModel.getId());
+                modelItemRelate.getConceptualModels().add(conceptualModel.getId());
                 modelItem.setRelate(modelItemRelate);
                 modelItemDao.save(modelItem);
             }

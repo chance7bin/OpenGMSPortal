@@ -1467,7 +1467,7 @@ var createTheme = Vue.extend({
             this.ScreenMaxHeight = (height) + "px";
 
             window.onresize = () => {
-                console.log('come on ..');
+                // console.log('come on ..');
                 height = document.documentElement.clientHeight;
                 this.ScreenMinHeight = (height) + "px";
                 this.ScreenMaxHeight = (height) + "px";
@@ -1969,7 +1969,7 @@ var createTheme = Vue.extend({
         this.IframeHeight = (height - 20) + "px";
 
         window.onresize = () => {
-            console.log('come on ..');
+            // console.log('come on ..');
             height = document.documentElement.clientHeight;
             this.ScreenMaxHeight = (height) + "px";
             this.IframeHeight = (height - 20) + "px";

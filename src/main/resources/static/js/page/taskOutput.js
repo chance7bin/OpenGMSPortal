@@ -267,6 +267,10 @@ var vue = new Vue({
         },
 
         share(url){
+            if (url == "" || url == undefined){
+                this.$message.error("No Data Can Be Shared");
+                return;
+            }
             this.shareIndex=true;
             this.downloadUrl=url;
 
@@ -474,12 +478,12 @@ var vue = new Vue({
 
         download(event) {
             //下载接口
-            if(event.url!=undefined) {
+            if(event.url!=undefined && event.url!="") {
                 this.eventChoosing = event;
                 window.open(this.eventChoosing.url);
             }
             else{
-                this.$message.error(this.htmlJson.NoDataCanBeDownloaded);
+                this.$message.error("No Data Can Be Downloaded");
             }
         },
         upload(event) {

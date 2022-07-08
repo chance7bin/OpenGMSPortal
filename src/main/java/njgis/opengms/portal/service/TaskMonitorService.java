@@ -28,7 +28,7 @@ public class TaskMonitorService {
     public JSONObject getTasks(Map<String,String> searchInfo){
 
         String taskServerIp = searchInfo.get("ip");
-        int page = Integer.parseInt(searchInfo.get("page")==null?"0":searchInfo.get("page"));
+        int page = Integer.parseInt(searchInfo.get("page")==null?"0":String.valueOf((Integer.parseInt(searchInfo.get("page")) - 1)));
         String searchText = searchInfo.get("searchText");
 
         String MONGO_HOST = taskServerIp;

@@ -1329,7 +1329,7 @@ var createComputableModel = Vue.extend({
                     switch (res.data.code) {
                         case 1:
                             this.deleteDraft()
-                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateConceptualModelSuccess +'</div>', this.htmlJson.Tip, {
+                            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.CreateComputableModelSuccess +'</div>', this.htmlJson.Tip, {
                                 dangerouslyUseHTMLString: true,
                                 confirmButtonText: this.htmlJson.confirmButtonText,
                                 cancelButtonText: this.htmlJson.cancelButtonText,
