@@ -21,10 +21,26 @@ var version_compare = new Vue({
             activeName1: 'Model Item',
             activeName2: 'Reference',
             references_old:{},
-            references_new:{}
+            references_new:{},
+            oldVerBackground:"",
+            newVerBackground:""
         }
     },
     methods:{
+        addWaterMark(text) {
+            let ctx = document.createElement("canvas");
+        // :style="{backgroundImage: `url(${oldVerBackground})`}"
+            ctx.style.display = "none";
+            let cans = ctx.getContext("2d");
+            cans.rotate((-20 * Math.PI) / 180);
+            cans.fillStyle = "rgba(17, 17, 17, 0.08)";
+            cans.textAlign = "left";
+            cans.textBaseline = "Middle";
+            cans.font = "30pt Calibri";
+            cans.fillText(text, 0, 100);
+            cans.save();
+            return ctx.toDataURL();
+        },
         handleResourceTableData(data){
             let refs = data;
             // refs = refs.replaceAll(/\\/g,"").replaceAll(/\"\{/g,"{").replaceAll(/\}\"/g,"}")
@@ -125,6 +141,10 @@ var version_compare = new Vue({
         this.getData()
         if(this.references_old!={})
             this.getResourceTableData()
+
+    //    水印背景
+        this.oldVerBackground = this.addWaterMark('Old Version')
+        this.newVerBackground = this.addWaterMark('New Version')
 
     },
     created(){
