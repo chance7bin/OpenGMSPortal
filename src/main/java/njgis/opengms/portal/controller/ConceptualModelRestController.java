@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
-import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -181,4 +180,6 @@ public class ConceptualModelRestController {
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ConceptualModel,findDTO, true));
 
     }
+
+
 }

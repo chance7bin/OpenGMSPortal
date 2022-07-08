@@ -330,7 +330,13 @@ public class ComputableModelRestController {
 
 
 
-
+    //检查md5是否有对应部署的模型
+    @LoginRequired
+    @RequestMapping (value = "/checkDeployed", method = RequestMethod.GET)
+    public JsonResult checkDeployed(@RequestParam(value="md5") String md5,HttpServletRequest request){
+        Boolean deployed = computableModelService.checkDeployed(md5);
+        return ResultUtils.success(deployed);
+    }
 
 
 

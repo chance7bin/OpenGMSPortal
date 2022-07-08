@@ -123,6 +123,52 @@ public class DataMethodService {
         return ResultUtils.success(genericService.searchItems(dataMethodsFindDTO, ItemTypeEnum.DataMethod));
     }
 
+    public ModelAndView getPage(DataMethod dataMethod){
+        ModelAndView modelAndView = new ModelAndView();
+        List<String> classificationsList = dataMethod.getClassifications();
+        List<String> classifications = getClassifications(classificationsList);
+
+        //时间
+        Date date = dataMethod.getCreateTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateResult = simpleDateFormat.format(date);
+
+        //用户信息
+        JSONObject userJson = userService.getItemUserInfoByEmail(dataMethod.getAuthor());
+        //资源信息
+        List<Resource> resources = dataMethod.getResources();
+        JSONArray resourceArray = getResourceArray(resources, dataMethod.getBatch());
+
+        String lastModifyTime = simpleDateFormat.format(dataMethod.getLastModifyTime());
+
+        //authorship
+        List<AuthorInfo> authorshipList=dataMethod.getAuthorships();
+        String authorshipString = getAuthorshipString(authorshipList);
+
+
+        modelAndView.setViewName("data_application_info");
+
+        // 重新改分类了
+        // for (String category: categories){
+        //     DataCategorys categorys = dataCategorysDao.findFirstById(category);
+        //     String name = categorys.getCategory();
+        //     classificationName.add(name);
+        // }
+
+        modelAndView.addObject("itemInfo", dataMethod);
+        modelAndView.addObject("classifications", classifications);
+        modelAndView.addObject("date", dateResult);
+        modelAndView.addObject("year", calendar.get(Calendar.YEAR));
+        modelAndView.addObject("user", userJson);
+        modelAndView.addObject("authorship", authorshipString);
+        modelAndView.addObject("resources", resourceArray);
+        modelAndView.addObject("lastModifyTime", lastModifyTime);
+
+        modelAndView.addObject("modularType", ItemTypeEnum.DataMethod);
+        return modelAndView;
+    }
 
     /**
      * @Description 根据id得到页面
@@ -130,62 +176,9 @@ public class DataMethodService {
      * @return org.springframework.web.servlet.ModelAndView
      **/
     public ModelAndView getPage(String id){
-        ModelAndView modelAndView = new ModelAndView();
-        try {
-            DataMethod dataMethod = (DataMethod)genericService.getById(id,dataMethodDao);
+        DataMethod dataMethod = (DataMethod)genericService.getById(id,dataMethodDao);
 
-            List<String> classificationsList = dataMethod.getClassifications();
-            List<String> classifications = getClassifications(classificationsList);
-
-            //时间
-            Date date = dataMethod.getCreateTime();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String dateResult = simpleDateFormat.format(date);
-
-            //用户信息
-            JSONObject userJson = userService.getItemUserInfoByEmail(dataMethod.getAuthor());
-            //资源信息
-            List<Resource> resources = dataMethod.getResources();
-            JSONArray resourceArray = getResourceArray(resources, dataMethod.getBatch());
-
-            String lastModifyTime = simpleDateFormat.format(dataMethod.getLastModifyTime());
-
-            //authorship
-            List<AuthorInfo> authorshipList=dataMethod.getAuthorships();
-            String authorshipString = getAuthorshipString(authorshipList);
-
-
-            modelAndView.setViewName("data_application_info");
-
-            // 重新改分类了
-            // for (String category: categories){
-            //     DataCategorys categorys = dataCategorysDao.findFirstById(category);
-            //     String name = categorys.getCategory();
-            //     classificationName.add(name);
-            // }
-
-            modelAndView.addObject("itemInfo", dataMethod);
-            modelAndView.addObject("classifications", classifications);
-            modelAndView.addObject("date", dateResult);
-            modelAndView.addObject("year", calendar.get(Calendar.YEAR));
-            modelAndView.addObject("user", userJson);
-            modelAndView.addObject("authorship", authorshipString);
-            modelAndView.addObject("resources", resourceArray);
-            modelAndView.addObject("lastModifyTime", lastModifyTime);
-
-            modelAndView.addObject("modularType", ItemTypeEnum.DataMethod);
-            return modelAndView;
-
-
-
-        } catch (Exception e) {
-            // System.out.println(e.getMessage());
-            // throw new MyException(e.getMessage());
-            modelAndView.setViewName("error/404");
-            return modelAndView;
-        }
+        return getPage(dataMethod);
 
     }
 

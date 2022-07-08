@@ -89,7 +89,7 @@
                     label="Modifier"
                     >
                 <template slot-scope="scope">
-                    <a :href="'/profile/'+scope.row.userId" target="_blank">{{scope.row.userName}}</a>
+                    <a :href="'/profile/'+scope.row.accessId" target="_blank">{{scope.row.userName}}</a>
                 </template>
             </el-table-column>
 
@@ -121,7 +121,7 @@
         el: "#app",
         data: {
 
-            oid:[[${oid}]],
+            id:[[${id}]],
             name:[[${name}]],
             type:[[${type}]],
             tableData: [[${list}]],
@@ -133,7 +133,7 @@
                 let refLink=$(".viewBtn");
                 for(i=0;i<refLink.length;i++){
                     if(event.currentTarget==refLink[i]){
-                        window.open("/version/history/"+this.type+"/"+this.tableData[i].oid);
+                        window.open("/version/history/"+this.type+"/"+this.tableData[i].id);
                     }
                 }
                 //console.log(event.currentTarget);
@@ -142,10 +142,10 @@
             {
                 if(this.type==="modelItem"||this.type==="conceptualModel"||this.type==="logicalModel"||this.type==="computableModel")
                 {
-                    window.location.href="/"+this.type+"/"+this.oid;
+                    window.location.href="/"+this.type+"/"+this.id;
                 }
                 else{
-                    window.location.href="/repository/"+this.type+"/"+this.oid;
+                    window.location.href="/repository/"+this.type+"/"+this.id;
                 }
 
             }

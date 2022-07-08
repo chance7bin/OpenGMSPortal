@@ -93,6 +93,26 @@ public class VersionService {
     @Autowired
     DataItemService dataItemService;
 
+
+    @Autowired
+    LogicalModelService logicalModelService;
+
+    @Autowired
+    ConceptualModelService conceptualModelService;
+
+    @Autowired
+    ComputableModelService computableModelService;
+
+    @Autowired
+    DataHubService dataHubService;
+
+    @Autowired
+    DataMethodService dataMethodService;
+
+
+    @Autowired
+    DataHubDao dataHubDao;
+
     /**
      * 添加审核版本
      * @param item 修改的条目数据
@@ -1178,4 +1198,112 @@ public class VersionService {
     }
 
 
+    public ModelAndView getHistoryList(String type, String id) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("version/historyList");
+
+        ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
+        if (itemType == null){
+            modelAndView.setViewName("error");
+            return modelAndView;
+        }
+
+        JSONObject daoFactory = genericService.daoFactory(itemType);
+        GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
+
+        PortalItem item = (PortalItem)itemDao.findFirstById(id);
+
+        JSONArray resultList = new JSONArray();
+        List<String> versions = item.getVersions();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (String versionId : versions) {
+            Version version = versionDao.findFirstById(versionId);
+            if (version == null) {continue;}
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("date", sdf.format(version.getSubmitTime()));
+            jsonObject.put("id", version.getId());
+            User user = userService.getByEmail(version.getEditor());
+            jsonObject.put("userName", user.getName());
+            jsonObject.put("accessId", user.getAccessId());
+            resultList.add(jsonObject);
+        }
+
+        modelAndView.addObject("id", item.getId());
+        modelAndView.addObject("name", item.getName());
+        modelAndView.addObject("type", type);
+        modelAndView.addObject("list", resultList);
+
+
+        return modelAndView;
+
+    }
+
+
+    // TODO: 2022/7/7 只能通过id拿到最新的，这种方式拿不到指定版本的 (先copy一个最新的，数据渲染完成之后再更新回去)
+    public ModelAndView getItemHistory(String type, String id) {
+        ModelAndView modelAndView=new ModelAndView();
+        Version version = versionDao.findFirstById(id);
+        if (version == null){
+            modelAndView.setViewName("error");
+            return modelAndView;
+        }
+
+        ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
+        if (itemType == null){
+            modelAndView.setViewName("error");
+            return modelAndView;
+        }
+
+        String itemId = version.getItemId();
+
+        //copy最新版，数据渲染完成之后再更新回去
+        GenericItemDao itemDao = (GenericItemDao) genericService.daoFactory(itemType).get("itemDao");
+        PortalItem latestVersion = (PortalItem) itemDao.findFirstById(itemId);
+
+        PortalItem content = version.getContent();
+        switch (itemType) {
+            case ModelItem:
+                modelAndView= modelItemService.getPage((ModelItem) content);
+                break;
+            case ConceptualModel:
+                modelAndView= conceptualModelService.getPage((ConceptualModel) content);
+                break;
+            case LogicalModel:
+                modelAndView= logicalModelService.getPage((LogicalModel) content);
+                break;
+            case ComputableModel:
+                modelAndView= computableModelService.getPage((ComputableModel) content);
+                break;
+            case Concept:
+                modelAndView= repositoryService.getConceptPage((Concept) content);
+                break;
+            case SpatialReference:
+                modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content);
+                break;
+            case Template:
+                modelAndView= repositoryService.getTemplatePage((Template) content);
+                break;
+            case Unit:
+                modelAndView= repositoryService.getUnitPage((Unit) content);
+                break;
+            case DataItem:
+                modelAndView = dataItemService.getPage((DataItem) content, dataItemDao);
+                break;
+            case DataHub:
+                modelAndView = dataItemService.getPage((DataItem) content, dataHubDao);
+                break;
+            case DataMethod:
+                modelAndView = dataMethodService.getPage((DataMethod) content);
+                break;
+
+        }
+
+        //更新回去
+        itemDao.save(latestVersion);
+
+        modelAndView.addObject("history",true);
+        return modelAndView;
+
+    }
 }

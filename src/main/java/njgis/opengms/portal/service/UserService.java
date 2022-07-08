@@ -624,8 +624,14 @@ public class UserService {
 
 
     public JSONObject getItemUserInfoByEmail(String email) {
-        User user = userDao.findFirstByEmail(email);
-        JSONObject userInfo = getInfoFromUserServer(user.getEmail());
+        User user = null;
+        if (email.contains("@")){
+            user = userDao.findFirstByEmail(email);
+        } else {
+            user = userDao.findFirstByAccessId(email);
+            email = user.getEmail();
+        }
+        JSONObject userInfo = getInfoFromUserServer(email);
         JSONObject userJson = new JSONObject();
         userJson.put("name", userInfo.getString("name"));
         // userJson.put("id", user.getId());
@@ -1412,13 +1418,16 @@ public class UserService {
                 String fileName = files.get(i).get("file_name").toString();
                 String address = "/data/" + files.get(i).get("source_store_id").toString();
                 String[] a = fileName.split("\\.");
-                String name = files.get(i).get("name").toString();
+                String name = files.get(i).get("file_name").toString();
                 String suffix = files.get(i).get("suffix").toString();
                 String uid = UUID.randomUUID().toString();
                 Boolean folder = false;
                 String type = "data";
                 String privacy = "private";
-                long fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;
+                long fileSize = 0;
+                if (files.get(i).get("file_size") != null){
+                    fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;
+                }
                 Date uploadTime = new Date();
 
                 JSONObject j_resourceInfo = new JSONObject();
@@ -1895,9 +1904,18 @@ public class UserService {
                 }
                 JSONArray content = new JSONArray();
                 JSONObject obj = new JSONObject();
+                // obj.put("uid", "0");
+                // obj.put("name", "All Folder");
+                // obj.put("children", result.getJSONArray("data"));
+
+                // 文件树用id和label做标识
+                JSONArray data = result.getJSONArray("data");
+                formatFolder(data);
                 obj.put("uid", "0");
                 obj.put("name", "All Folder");
-                obj.put("children", result.getJSONArray("data"));
+                obj.put("id","0");
+                obj.put("label","All Folder");
+                obj.put("children", data);
 
                 content.add(obj);
 
@@ -1908,6 +1926,22 @@ public class UserService {
 
         }
     }
+
+    private void formatFolder(JSONArray folder){
+
+        for (Object datum : folder) {
+
+            JSONObject o = (JSONObject) datum;
+            o.put("id",o.getString("uid"));
+            o.put("label",o.getString("name"));
+            JSONArray children = o.getJSONArray("children");
+            if (children != null && children.size() != 0){
+                formatFolder(children);
+            }
+        }
+
+    }
+
 
     public JSONArray getFolder7File(String email) {
         User user = userDao.findFirstByEmail(email);

@@ -89,27 +89,16 @@ public class LogicalModelService {
         return logicalModelResultDTO;
     }
 
-    /**
-     * @Description 根据id获取逻辑模型详情页面
-     * @param id
-     * @Return org.springframework.web.servlet.ModelAndView
-     * @Author kx
-     * @Date 21/10/12
-     **/
-    public ModelAndView getPage(String id) {
-        //条目信息
-        LogicalModel logicalModelInfo = logicalModelDao.findFirstById(id);
-
+    public ModelAndView getPage(LogicalModel logicalModelInfo) {
         logicalModelInfo=(LogicalModel)genericService.recordViewCount(logicalModelInfo);
 
         logicalModelDao.save(logicalModelInfo);
 
         //排序
         List<Localization> locals = logicalModelInfo.getLocalizationList();
-        Collections.sort(locals);
-
         String detailResult = "";
         String detailLanguage = "";
+        Collections.sort(locals);
         //先找中英文描述
         for(Localization localization:locals){
             String local = localization.getLocalCode();
@@ -164,7 +153,7 @@ public class LogicalModelService {
         List<AuthorInfo> authorshipList=logicalModelInfo.getAuthorships();
         if(authorshipList!=null){
             for (AuthorInfo author:authorshipList
-                    ) {
+            ) {
                 if(authorshipString.equals("")){
                     authorshipString+=author.getName();
                 }
@@ -196,6 +185,20 @@ public class LogicalModelService {
         modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
         modelAndView.addObject("modularType", ItemTypeEnum.LogicalModel);
         return modelAndView;
+    }
+
+    /**
+     * @Description 根据id获取逻辑模型详情页面
+     * @param id
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author kx
+     * @Date 21/10/12
+     **/
+    public ModelAndView getPage(String id) {
+        //条目信息
+        LogicalModel logicalModelInfo = logicalModelDao.findFirstById(id);
+
+        return getPage(logicalModelInfo);
     }
 
     /**

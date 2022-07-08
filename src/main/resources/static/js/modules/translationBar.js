@@ -58,7 +58,7 @@ Vue.component("translation-bar",
                 }
                 var localStorage = window.localStorage;
                 if (localStorage ) {
-                    localStorage .setItem(key, v);
+                    localStorage.setItem(key, v);
                 }
             },
 
@@ -128,7 +128,7 @@ Vue.component("translation-bar",
                 }else{
                     window.localStorage.setItem("language", lang);
                     this.currentLang = lang
-                    this.changeUrl();
+                    // this.changeUrl();
                     this.transLateTargetPage()
                     this.loadNavBar()
                     this.loadFooter()
@@ -257,20 +257,30 @@ Vue.component("translation-bar",
         },
         created() {
 
-            let url = decodeURIComponent(window.location.search);
-            let urlLanguage = this.GetQueryString(url, "language");
+            //旧版本，截取url获取当前语言
+            // let url = decodeURIComponent(window.location.search);
+            // let urlLanguage = this.GetQueryString(url, "language");
+            // let language = window.localStorage.getItem("language");
+            //
+            // if(this.LanguageIsValid(urlLanguage)){
+            //     this.currentLang = urlLanguage;
+            // }else {
+            //     if (this.LanguageIsValid(language)) {
+            //         this.currentLang = language;
+            //     } else {
+            //         this.currentLang = this.initialLang
+            //     }
+            //
+            //     this.changeUrl();
+            // }
+
+            //新版本
             let language = window.localStorage.getItem("language");
 
-            if(this.LanguageIsValid(urlLanguage)){
-                this.currentLang = urlLanguage;
-            }else {
-                if (this.LanguageIsValid(language)) {
-                    this.currentLang = language;
-                } else {
-                    this.currentLang = this.initialLang
-                }
-
-                this.changeUrl();
+            if (this.LanguageIsValid(language)) {
+                this.currentLang = language;
+            } else {
+                this.currentLang = this.initialLang
             }
 
             if(this.currentLang !== "zh-cn"){

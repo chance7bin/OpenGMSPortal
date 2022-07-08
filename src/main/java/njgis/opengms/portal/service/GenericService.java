@@ -562,7 +562,6 @@ public class GenericService {
             return ResultUtils.success(item);
         }catch (Exception e){
             log.error(e.getMessage());
-            e.printStackTrace();
             return ResultUtils.error();
         }
         

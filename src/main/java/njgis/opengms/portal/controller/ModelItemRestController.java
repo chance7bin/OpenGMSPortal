@@ -110,7 +110,7 @@ public class ModelItemRestController {
         if(modelAndView != null){
             return modelAndView;
         }else {
-            return modelItemService.getPage(portalItem);
+            return modelItemService.getPage(id);
         }
     }
 

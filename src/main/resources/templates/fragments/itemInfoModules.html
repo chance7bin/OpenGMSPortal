@@ -515,9 +515,9 @@
                     <dt th:if="${lastModifyTime}"><span translateId="Lastmodifytime" >Last modify time</span>:&nbsp</dt>
                     <dd th:if="${lastModifyTime}" th:text="${lastModifyTime}"></dd>
 
-                    <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
-                    <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
-                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} lt 0"th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
+                    <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
+                    <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
+                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
                 </dl>
             </div>
 

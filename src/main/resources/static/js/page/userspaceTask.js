@@ -883,6 +883,14 @@ var userTask = Vue.extend(
             },
 
             addOutputToMyData(output,index) {
+                if (output.url == undefined || output.url == ""){
+                    this.$message({
+                        message: this.htmlJson.noData,
+                        type: 'warning'
+                    });
+                    return;
+                }
+
                 console.log(output)
                 this.outputToMyData = output
                 this.addOutputToMyDataVisible = true
@@ -1354,7 +1362,14 @@ var userTask = Vue.extend(
             },
 
             downloadSingle(url) {
-                window.open(url);
+                if (url == undefined || url == ""){
+                    this.$message({
+                        message: this.htmlJson.noDownloadLink,
+                        type: 'warning'
+                    });
+                } else {
+                    window.open(url);
+                }
             },
 
             downloadAll(recordId, name, time) {

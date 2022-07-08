@@ -7,7 +7,6 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
-import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.data.SimpleFileInfo;
 import njgis.opengms.portal.entity.doo.intergrate.Model;
 import njgis.opengms.portal.entity.doo.intergrate.ModelParam;
@@ -98,6 +97,145 @@ public class ComputableModelService {
     @Value("${managerServerIpAndPort}")
     private String managerServerIpAndPort;
 
+    public ModelAndView getPage(ComputableModel computableModel) {
+        //条目信息
+        ModelAndView modelAndView = new ModelAndView();
+
+        computableModel=(ComputableModel)genericService.recordViewCount(computableModel);
+        computableModelDao.save(computableModel);
+
+        //时间
+        Date date = computableModel.getCreateTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateResult = simpleDateFormat.format(date);
+
+        //用户信息
+        JSONObject userJson = userService.getItemUserInfoByEmail(computableModel.getAuthor());
+        //资源信息
+        JSONArray resourceArray = new JSONArray();
+        List<Resource> resources = computableModel.getResources();
+
+        if (resources != null) {
+            for (int i = 0; i < resources.size(); i++) {
+
+                String path = resources.get(i).getPath();
+
+                String[] arr = path.split("\\.");
+                String suffix = arr[arr.length - 1];
+
+                arr = path.split("/");
+                String name = arr[arr.length - 1].substring(14);
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name", name);
+                jsonObject.put("suffix", suffix);
+                jsonObject.put("path", resources.get(i));
+                resourceArray.add(jsonObject);
+
+            }
+
+        }
+
+        //排序
+        List<Localization> locals = computableModel.getLocalizationList();
+        Collections.sort(locals);
+
+        String detailResult = "";
+        String detailLanguage = "";
+        //先找中英文描述
+        for(Localization localization:locals){
+            String local = localization.getLocalCode();
+            if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
+                }
+            }
+        }
+        //如果没有中英文，则使用其他语言描述
+        if(detailResult.equals("")){
+            for(Localization localization:locals){
+                String localDesc = localization.getDescription();
+                if(localDesc!=null&&!localDesc.equals("")) {
+                    detailLanguage = localization.getLocalName();
+                    detailResult = localization.getDescription();
+                    break;
+                }
+            }
+        }
+
+        //语言列表
+        List<String> languageList = new ArrayList<>();
+        for(Localization local:locals){
+            languageList.add(local.getLocalName());
+        }
+
+
+        String lastModifyTime = simpleDateFormat.format(computableModel.getLastModifyTime());
+
+        //修改者信息
+        String lastModifier = computableModel.getLastModifier();
+        JSONObject modifierJson = null;
+        if (lastModifier != null) {
+            modifierJson = userService.getItemUserInfoByEmail(lastModifier);
+        }
+
+        //authorship
+        String authorshipString="";
+        List<AuthorInfo> authorshipList=computableModel.getAuthorships();
+        if(authorshipList!=null){
+            for (AuthorInfo author:authorshipList
+            ) {
+                if(authorshipString.equals("")){
+                    authorshipString+=author.getName();
+                }
+                else{
+                    authorshipString+=", "+author.getName();
+                }
+
+            }
+        }
+
+        //relateModelItemList
+        List<String> modelItemIdList = computableModel.getRelatedModelItems();
+        JSONArray modelItemInfoList = ArrayUtils.parseListToJSONArray(genericService.getRelatedModelInfoList(modelItemIdList));
+
+        modelAndView.setViewName("computable_model");
+
+        modelAndView.addObject("itemInfo", computableModel);
+//            modelAndView.addObject("classifications", classResult);
+        modelAndView.addObject("date", dateResult);
+        modelAndView.addObject("year", calendar.get(Calendar.YEAR));
+        modelAndView.addObject("user", userJson);
+        modelAndView.addObject("authorship", authorshipString);
+        modelAndView.addObject("resources", resourceArray);
+        modelAndView.addObject("detailLanguage",detailLanguage);
+        modelAndView.addObject("languageList", languageList);
+//        modelAndView.addObject("description",modelInfo.getOverview());
+        modelAndView.addObject("detail",detailResult);
+        if(computableModel.getMdl()!=null) {
+            modelAndView.addObject("mdlJson", ModelServiceUtils.convertMdl(computableModel.getMdl()).getJSONObject("mdl"));
+        }
+        JSONObject mdlJson = (JSONObject) JSONObject.toJSON(computableModel.getMdlJson());
+        if (mdlJson != null) {
+            JSONObject modelClass = (JSONObject) mdlJson.getJSONArray("ModelClass").get(0);
+            JSONObject behavior = (JSONObject) modelClass.getJSONArray("Behavior").get(0);
+            modelAndView.addObject("behavior", behavior);
+        }
+        modelAndView.addObject("loadPath", htmlLoadPath);
+        modelAndView.addObject("lastModifier", modifierJson);
+        modelAndView.addObject("lastModifyTime", lastModifyTime);
+//            modelAndView.addObject("relateModelItem", modelItemInfo);
+        modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
+
+        modelAndView.addObject("modularType", ItemTypeEnum.ComputableModel);
+        return modelAndView;
+    }
+
     /**
      * @Description 计算模型详情页面
      * @param id
@@ -106,153 +244,9 @@ public class ComputableModelService {
      * @Date 21/11/11
      **/
     public ModelAndView getPage(String id) {
-        //条目信息
-        try {
+        ComputableModel computableModel = computableModelDao.findFirstById(id);
 
-            ModelAndView modelAndView = new ModelAndView();
-
-            ComputableModel computableModel = computableModelDao.findFirstById(id);
-
-            computableModel=(ComputableModel)genericService.recordViewCount(computableModel);
-            computableModelDao.save(computableModel);
-
-            //时间
-            Date date = computableModel.getCreateTime();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String dateResult = simpleDateFormat.format(date);
-
-            //用户信息
-            JSONObject userJson = userService.getItemUserInfoByEmail(computableModel.getAuthor());
-            //资源信息
-            JSONArray resourceArray = new JSONArray();
-            List<Resource> resources = computableModel.getResources();
-
-            if (resources != null) {
-                for (int i = 0; i < resources.size(); i++) {
-
-                    String path = resources.get(i).getPath();
-
-                    String[] arr = path.split("\\.");
-                    String suffix = arr[arr.length - 1];
-
-                    arr = path.split("/");
-                    String name = arr[arr.length - 1].substring(14);
-
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("name", name);
-                    jsonObject.put("suffix", suffix);
-                    jsonObject.put("path", resources.get(i));
-                    resourceArray.add(jsonObject);
-
-                }
-
-            }
-
-            //排序
-            List<Localization> locals = computableModel.getLocalizationList();
-            Collections.sort(locals);
-
-            String detailResult = "";
-            String detailLanguage = "";
-            //先找中英文描述
-            for(Localization localization:locals){
-                String local = localization.getLocalCode();
-                if(local.equals("en")||local.equals("zh")||local.contains("en-")||local.contains("zh-")){
-                    String localDesc = localization.getDescription();
-                    if(localDesc!=null&&!localDesc.equals("")) {
-                        detailLanguage = localization.getLocalName();
-                        detailResult = localization.getDescription();
-                        break;
-                    }
-                }
-            }
-            //如果没有中英文，则使用其他语言描述
-            if(detailResult.equals("")){
-                for(Localization localization:locals){
-                    String localDesc = localization.getDescription();
-                    if(localDesc!=null&&!localDesc.equals("")) {
-                        detailLanguage = localization.getLocalName();
-                        detailResult = localization.getDescription();
-                        break;
-                    }
-                }
-            }
-
-            //语言列表
-            List<String> languageList = new ArrayList<>();
-            for(Localization local:locals){
-                languageList.add(local.getLocalName());
-            }
-
-
-            String lastModifyTime = simpleDateFormat.format(computableModel.getLastModifyTime());
-
-            //修改者信息
-            String lastModifier = computableModel.getLastModifier();
-            JSONObject modifierJson = null;
-            if (lastModifier != null) {
-                modifierJson = userService.getItemUserInfoByEmail(lastModifier);
-            }
-
-            //authorship
-            String authorshipString="";
-            List<AuthorInfo> authorshipList=computableModel.getAuthorships();
-            if(authorshipList!=null){
-                for (AuthorInfo author:authorshipList
-                        ) {
-                    if(authorshipString.equals("")){
-                        authorshipString+=author.getName();
-                    }
-                    else{
-                        authorshipString+=", "+author.getName();
-                    }
-
-                }
-            }
-
-            //relateModelItemList
-            List<String> modelItemIdList = computableModel.getRelatedModelItems();
-            JSONArray modelItemInfoList = ArrayUtils.parseListToJSONArray(genericService.getRelatedModelInfoList(modelItemIdList));
-
-            modelAndView.setViewName("computable_model");
-
-            modelAndView.addObject("itemInfo", computableModel);
-//            modelAndView.addObject("classifications", classResult);
-            modelAndView.addObject("date", dateResult);
-            modelAndView.addObject("year", calendar.get(Calendar.YEAR));
-            modelAndView.addObject("user", userJson);
-            modelAndView.addObject("authorship", authorshipString);
-            modelAndView.addObject("resources", resourceArray);
-            modelAndView.addObject("detailLanguage",detailLanguage);
-            modelAndView.addObject("languageList", languageList);
-//        modelAndView.addObject("description",modelInfo.getOverview());
-            modelAndView.addObject("detail",detailResult);
-            if(computableModel.getMdl()!=null) {
-                modelAndView.addObject("mdlJson", ModelServiceUtils.convertMdl(computableModel.getMdl()).getJSONObject("mdl"));
-            }
-            JSONObject mdlJson = (JSONObject) JSONObject.toJSON(computableModel.getMdlJson());
-            if (mdlJson != null) {
-                JSONObject modelClass = (JSONObject) mdlJson.getJSONArray("ModelClass").get(0);
-                JSONObject behavior = (JSONObject) modelClass.getJSONArray("Behavior").get(0);
-                modelAndView.addObject("behavior", behavior);
-            }
-            modelAndView.addObject("loadPath", htmlLoadPath);
-            modelAndView.addObject("lastModifier", modifierJson);
-            modelAndView.addObject("lastModifyTime", lastModifyTime);
-//            modelAndView.addObject("relateModelItem", modelItemInfo);
-            modelAndView.addObject("relateModelItemList",modelItemInfoList);//之前只关联一个modelitem,现在改为多个
-
-            modelAndView.addObject("modularType", ItemTypeEnum.ComputableModel);
-            return modelAndView;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-            throw new MyException(e.getMessage());
-        }
-
+        return getPage(computableModel);
     }
 
     public ComputableModel getInfo(String id){
@@ -487,7 +481,7 @@ public class ComputableModelService {
                     String id = relatedModelItems.get(i);
                     ModelItem modelItem = modelItemDao.findFirstById(id);
                     ModelItemRelate modelItemRelate = modelItem.getRelate();
-                    modelItemRelate.getConceptualModels().add(computableModel.getId());
+                    modelItemRelate.getComputableModels().add(computableModel.getId());
                     modelItem.setRelate(modelItemRelate);
                     modelItemDao.save(modelItem);
                 }
@@ -1004,6 +998,20 @@ public class ComputableModelService {
 
     }
 
+    public boolean checkDeployed(String md5){
+        String url ="http://" + managerServerIpAndPort + "/GeoModeling/taskNode/getServiceTask/" + md5;
 
+        RestTemplate restTemplate = new RestTemplate();
+        JSONObject result = restTemplate.getForObject(url,JSONObject.class);
+        if(result.getIntValue("code")==-1){
+            return false;
+        }
+        if(result.getJSONObject("data")!=null){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
 
 }

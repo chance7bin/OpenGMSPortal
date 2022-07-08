@@ -1206,7 +1206,7 @@ public class TaskService {
         result.put("modelInfo", model_Info);
         result.put("taskInfo", taskInfo);
 //        result.put("dxInfo", dxInfo);
-        System.out.println(result);
+//         System.out.println(result);
 
         return result;
     }

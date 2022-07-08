@@ -87,21 +87,8 @@ public class DataItemService {
         return ResultUtils.success(genericService.searchItems(dataItemFindDTO, ItemTypeEnum.DataItem));
     }
 
-    /**
-     * @Description 根据传入的id返回dataItem的详情界面
-     * @Param [id]
-     * @return org.springframework.web.servlet.ModelAndView
-     **/
-    public ModelAndView getPage(String id, GenericItemDao genericItemDao){
+    public ModelAndView getPage(DataItem dataItem, GenericItemDao genericItemDao){
         ModelAndView view = new ModelAndView();
-
-        DataItem dataItem;
-        try {
-            dataItem =  (DataItem) genericService.getById(id,genericItemDao);
-        }catch (MyException e){
-            view.setViewName("error/404");
-            return view;
-        }
 
         dataItem = (DataItem)genericService.recordViewCount(dataItem);
         genericItemDao.save(dataItem);
@@ -113,7 +100,7 @@ public class DataItemService {
         //authorship
         List<AuthorInfo> authorshipList= dataItem.getAuthorships();
         String authorshipString = getAuthorshipString(authorshipList);
-       
+
         //related models
         List<String> relatedModels= dataItem.getRelatedModels();
         JSONArray modelItemArray = getModelItemArray(relatedModels);
@@ -157,6 +144,27 @@ public class DataItemService {
         view.addObject("history",false);
 
         return view;
+    }
+
+    /**
+     * @Description 根据传入的id返回dataItem的详情界面
+     * @Param [id]
+     * @return org.springframework.web.servlet.ModelAndView
+     **/
+    public ModelAndView getPage(String id, GenericItemDao genericItemDao){
+
+
+        // DataItem dataItem;
+        // try {
+        //     dataItem =  (DataItem) genericService.getById(id,genericItemDao);
+        // }catch (MyException e){
+        //     view.setViewName("error/404");
+        //     return view;
+        // }
+
+        DataItem dataItem =  (DataItem) genericService.getById(id,genericItemDao);
+
+        return getPage(dataItem, genericItemDao);
 
     }
 
