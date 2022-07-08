@@ -40,8 +40,9 @@
         <el-container>
             <el-main>
                 <el-row class="main-content" :gutter="20" type="flex" justify="center">
-                    <el-col :span="11" class="old-panel">
-                        <el-card>
+
+                    <el-col  :span="11" class="old-panel">
+                        <el-card :style="{backgroundImage: `url(${oldVerBackground})`}">
                             <div slot="header" class="clearfix card_title">Old Version</div>
 <!--*******************************************************通用**********************************************-->
 <!--*******************************************************通用**********************************************-->
@@ -287,7 +288,7 @@
 
                     </el-col>
                     <el-col :span="11" class="new-panel">
-                        <el-card>
+                        <el-card :style="{backgroundImage: `url(${newVerBackground})`}">
                             <div slot="header" class="clearfix card_title">New Version</div>
                             <!--*******************************************************通用**********************************************-->
                             <!--*******************************************************通用**********************************************-->
@@ -538,8 +539,8 @@
             </el-main>
             <el-footer class="btns-content">
                 <el-row class="main-content" :gutter="20" type="flex" justify="end">
-                    <el-button type="primary">Accept</el-button>
-                    <el-button type="warning">Reject</el-button>
+                    <el-button style="margin: 0 10px" type="primary">Accept</el-button>
+                    <el-button style="margin: 0 10px" type="warning">Reject</el-button>
                 </el-row>
             </el-footer>
 
