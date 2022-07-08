@@ -276,26 +276,38 @@ var userTheme = Vue.extend(
                 this.isInSearch = 1;
                 // let a=this.$route.params.modelitemKind
                 this.await = true;
-                let url = '/theme/searchThemeByUserId';
+                let url = '/theme/queryListOfAuthorSelf';
                 let name = 'theme';
+
+                // data: {
+                //     searchText: this.searchText,
+                //         page: targetPage - 1,
+                //         pagesize: this.pageSize,
+                //         sortType: this.sortType,
+                //         asc: this.sortAsc
+                // },
+                let targetPage = page==undefined?this.page:page
+                let reqData = {
+                    searchText: this.searchText,
+                    page: targetPage,
+                    pagesize: this.pageSize,
+                    sortType: this.sortType,
+                    asc: this.sortAsc === 1,
+                    authorEmail: window.localStorage.getItem("account")
+                }
 
                 if (this.deploys_show) {
                     this.searchComputerModelsForDeploy();
                 } else {
-                    let targetPage = page==undefined?this.page:page
+
                     $.ajax({
-                        type: "Get",
+                        type: "Post",
                         url: url,
-                        data: {
-                            searchText: this.searchText,
-                            page: targetPage - 1,
-                            pagesize: this.pageSize,
-                            sortType: this.sortType,
-                            asc: this.sortAsc
-                        },
+                        data: JSON.stringify(reqData),
+                        contentType: "application/json",
                         cache: false,
                         async: true,
-                        dataType: "json",
+                        // dataType: "json",
                         xhrFields: {
                             withCredentials: true
                         },
@@ -307,9 +319,9 @@ var userTheme = Vue.extend(
                             } else {
                                 data = json.data;
                                 this.resourceLoad = false;
-                                this.totalNum = data.count;
-                                this.searchCount = Number.parseInt(data["count"]);
-                                this.$set(this,"searchResult",data.content);
+                                this.totalNum = data.total;
+                                this.searchCount = Number.parseInt(data["total"]);
+                                this.$set(this,"searchResult",data.list);
                                 console.log(this.searchResult);
                                 if (targetPage == 1) {
                                     this.pageInit();

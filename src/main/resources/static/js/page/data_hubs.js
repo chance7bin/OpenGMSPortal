@@ -42,7 +42,6 @@ var data_items = new Vue({
             dataType:"hubs",
             stretch:true,
             dataApplication: [],
-            // categoryId:"5cb83fd0ea3cba3224b6e24e",
             sortField:"View Count",
             sortOrder:"Desc.",
             asc:false,
@@ -73,7 +72,7 @@ var data_items = new Vue({
             }
             var localStorage = window.localStorage;
             if (localStorage ) {
-                localStorage .setItem(key, v);
+                localStorage.setItem(key, v);
             }
         },
 
@@ -354,15 +353,11 @@ var data_items = new Vue({
             this.showCategoryName = "Land regions"
         }
 
-
-
         let that=this;
         let u=window.location.href
         let f=u.split("/");
         this.getData()
-
         this.initButton();
-
         axios.get("/user/load")
             .then((res)=>{
                 that.userName=res.data.data.name;

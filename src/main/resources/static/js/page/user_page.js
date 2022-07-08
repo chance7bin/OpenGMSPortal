@@ -373,6 +373,7 @@ new Vue({
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
         },
+
         selectFirstActive(){
             if(this.modelItems.total!=0){
                 this.mainActiveName = 'Model';
@@ -2159,7 +2160,6 @@ new Vue({
             this.pageOption.sortAsc=this.pageOption.sortAsc?false:true
             this.pageOption.currentPage=1;
             this.searchResource()
-
         },
 
         selectSortEle(command){
@@ -3305,7 +3305,8 @@ new Vue({
 
     watch: {
         htmlJSON:function(newData){
-            this.selectSortEle("viewCount");
+            // this.selectSortEle("viewCount");
+            this.selectSortEle(this.resourcesortField)
         }
     },
 

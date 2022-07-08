@@ -1619,7 +1619,7 @@ var createModelItem = Vue.extend({
                 // console.log('oldVal:', oldVal);
                 console.log('newVal:', newVal);
                 if (newVal !== undefined){
-                    if (newVal.image.indexOf("data:image/png") !== -1){
+                    if (newVal.image.indexOf("data:image") !== -1){
                         // 不对url进行操作
                     } else {
                         if (newVal.image.indexOf("/static") === -1 && newVal.image !== ""){

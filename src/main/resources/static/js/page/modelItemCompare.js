@@ -307,7 +307,7 @@ new Vue({
             let that=this
             this.loading=true
             if(this.nomore===''){
-                axios.get("/dataItem/queryListOfAuthorSelf/", reqData)
+                axios.post("/dataItem/queryListOfAuthorSelf/", reqData)
                     .then((res)=>{
 
                         if(res.status===200){

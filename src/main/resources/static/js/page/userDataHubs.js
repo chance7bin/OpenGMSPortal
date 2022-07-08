@@ -302,7 +302,7 @@ var userDataHubs = Vue.extend(
                     asc: false,
                     authorEmail: window.localStorage.getItem("account")
                 }
-                axios.get("/dataHub/queryListOfAuthorSelf/", reqData)
+                axios.post("/dataHub/queryListOfAuthorSelf/", reqData)
                     .then((res) => {
                         setTimeout(() => {
                             if (res.status == 200) {

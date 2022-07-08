@@ -106,7 +106,7 @@
             <h4 th:if="${history!=true}" translateId="Contributor">Contributor(s)</h4>
             <h4 th:if="${history==true}" translateId="Modifier">Contributor(s)</h4>
             <el-tooltip popper-class="fontsize-15" effect="light"
-                        content="Contributor is the person who contributed the item to OpenGMS, may not be the author of the item."
+                        :content="htmlJSON.ContributorMayNotAuthor"
                         placement="top">
                 <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
             </el-tooltip>
@@ -144,7 +144,7 @@
         <div class="head_text" style="padding-left: 10px;padding-right: 15px;display: inline-flex">
             <h4 translateId="Authorship">Authorship</h4>
             <el-tooltip popper-class="fontsize-15" effect="light"
-                        content="We deeply understand that a model may be attributed to the efforts of a team. If all author information is not listed here, please click the feedback below."
+                        :content="htmlJSON.AuthorshipInfo"
                         placement="top">
                 <i class="fa fa-question-circle-o" aria-hidden="true" style="margin-top:4px;cursor:help;"></i>
             </el-tooltip>
@@ -238,11 +238,13 @@
                 <img th:case="*" th:src="${loadPath}+${itemInfo.imageList[0]}">
             </div>
 
-            <div th:if="${itemType} eq'Data'" class="img" th:object="${itemInfo}">
-                <div th:if="${#strings.isEmpty(itemInfo.image)">
+            <div th:if="${itemType} eq'Data'" class="img" >
+<!--                <div th:if="${#strings.isEmpty(itemInfo.image)">-->
+                <div th:if="itemInfo.image==''">
                     <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
                 </div>
-                <div th:unless="${#strings.isEmpty(itemInfo.image)">
+<!--                <div th:unless="${#strings.isEmpty(itemInfo.image)">-->
+                <div th:unless="itemInfo.image==''">
                     <img th:src="${itemInfo.image}" class="image">
                 </div>
             </div>

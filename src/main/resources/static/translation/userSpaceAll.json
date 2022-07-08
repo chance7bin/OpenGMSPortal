@@ -1792,7 +1792,13 @@
     "BindDataMethodItem": "Bind Data Method Item",
     "SubmittedFailed": "Submitted failed!",
     "EditSubmitWait": "Your edit has been submit, please wait for the contributor to handle it.",
-    "noDownloadLink": "no download link..."
+    "noDownloadLink": "no download link...",
+    "UsingOpenGMSModelServicePackageToCreateModelService": "Using a OpenGMS Model-Service Package to create model service.",
+    "UsingDeployedOpenGMSPackageCreateModelService": "Using a deployed OpenGMS Model-Service Package's MD5 to create model service.",
+    "HaveModelSourceCode": "I have the model's source code.",
+    "HaveModelExecutableLibrary": "I have the model's executable library.",
+    "HaveBeenDeployedAtThirdPartyWebsite": "The model have been deployed at third-party website as a service.",
+    "ModelCanBeDownloadedAtThirdPartyWebsite": "The model can be downloaded at third-party website."
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2295,7 +2301,7 @@
 
     "ContentType": "内容类型",
     "OpenGMSModelServicePackage": "OpenGMS模型服务包",
-    "OpenGMSPackageTag": "OpenGMS部署包MD5",
+    "OpenGMSPackageTag": "OpenGMS包标签",
     "SourceCode": "源码",
     "ExecutableLibrary": "可执行库",
     "ThirdPartyWebServiceLink": "第三方网络服务链接",
@@ -3576,6 +3582,12 @@
     "BindDataMethodItem": "绑定数据方法项",
     "SubmittedFailed": "提交失败",
     "EditSubmitWait": "您的编辑已提交，请等待贡献者处理。",
-    "noDownloadLink": "暂无下载链接"
+    "noDownloadLink": "暂无下载链接",
+    "UsingOpenGMSModelServicePackageToCreateModelService": "使用OpenGMS模型服务包创建模型服务。",
+    "UsingDeployedOpenGMSPackageCreateModelService": "使用已部署的OpenGMS模型服务包的MD5创建模型服务。",
+    "HaveModelSourceCode": "我有模型的源代码。",
+    "HaveModelExecutableLibrary": "我有模型的可执行库。",
+    "HaveBeenDeployedAtThirdPartyWebsite": "该模型已作为一项服务部署在第三方网站上。",
+    "ModelCanBeDownloadedAtThirdPartyWebsite": "该模型可以在第三方网站上下载。"
   }
 }
