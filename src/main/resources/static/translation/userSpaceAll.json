@@ -1798,7 +1798,9 @@
     "HaveModelSourceCode": "I have the model's source code.",
     "HaveModelExecutableLibrary": "I have the model's executable library.",
     "HaveBeenDeployedAtThirdPartyWebsite": "The model have been deployed at third-party website as a service.",
-    "ModelCanBeDownloadedAtThirdPartyWebsite": "The model can be downloaded at third-party website."
+    "ModelCanBeDownloadedAtThirdPartyWebsite": "The model can be downloaded at third-party website.",
+    "SureSetPublic": "All of the users will have permission to this task. Are you sure to set the task public?",
+    "CanVisitedPublic": "This task can be visited by public"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3588,6 +3590,8 @@
     "HaveModelSourceCode": "我有模型的源代码。",
     "HaveModelExecutableLibrary": "我有模型的可执行库。",
     "HaveBeenDeployedAtThirdPartyWebsite": "该模型已作为一项服务部署在第三方网站上。",
-    "ModelCanBeDownloadedAtThirdPartyWebsite": "该模型可以在第三方网站上下载。"
+    "ModelCanBeDownloadedAtThirdPartyWebsite": "该模型可以在第三方网站上下载。",
+    "SureSetPublic": "所有用户都将有权执行此任务。您确定将任务设为公开吗？",
+    "CanVisitedPublic": "公众可以访问此任务"
   }
 }
