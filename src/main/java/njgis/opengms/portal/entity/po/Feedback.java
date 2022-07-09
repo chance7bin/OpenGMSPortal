@@ -1,6 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
 import lombok.Data;
+import njgis.opengms.portal.entity.doo.base.PortalId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @Document
 @Data
-public class Feedback {
+public class Feedback extends PortalId {
     String content;
     String email;
     Date time;
