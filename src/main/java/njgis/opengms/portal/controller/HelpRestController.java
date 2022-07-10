@@ -26,7 +26,7 @@ public class HelpRestController {
 
     @RequestMapping(value = "/demo", method = RequestMethod.GET)
     public ModelAndView getDemo(HttpServletRequest req) {
-        System.out.println("demo");
+        // System.out.println("demo");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("demoNew");
         modelAndView.addObject("name","OpenGMS");
@@ -46,7 +46,7 @@ public class HelpRestController {
 
     @RequestMapping(value = "/manual", method = RequestMethod.GET)
     public ModelAndView getManual(HttpServletRequest req) {
-        System.out.println("manual");
+        // System.out.println("manual");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("manual");
         modelAndView.addObject("name","OpenGMS");
@@ -56,7 +56,7 @@ public class HelpRestController {
 
     @RequestMapping(value = "/document", method = RequestMethod.GET)
     public ModelAndView getDocument(HttpServletRequest req) {
-        System.out.println("document");
+        // System.out.println("document");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("document");
         modelAndView.addObject("name","OpenGMS");

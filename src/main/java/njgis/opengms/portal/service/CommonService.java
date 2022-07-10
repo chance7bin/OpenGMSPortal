@@ -78,7 +78,8 @@ public class CommonService {
             try {
                 filePath = java.net.URLDecoder.decode(filePath, "utf-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
             if (model_detailDesc.length() > 0) {
                 File file = new File(filePath);
@@ -100,11 +101,14 @@ public class CommonService {
                         inputStreamReader.close();
                         fileInputStream.close();
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        // e.printStackTrace();
+                        log.error(e.getMessage());
                     } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                        // e.printStackTrace();
+                        log.error(e.getMessage());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        // e.printStackTrace();
+                        log.error(e.getMessage());
                     }
                     detailResult = detail.toString();
                 } else {
@@ -179,7 +183,7 @@ public class CommonService {
 
         List<ModelItem> modelItems=modelItemDao.findAll();
         for(int i=0;i<modelItems.size();i++){
-            System.out.println(i);
+            // System.out.println(i);
             String oid=modelItems.get(i).getId();
             String content=getHTML("modelItem",oid);
             String path=basePath+"modelItem/"+oid+".html";
@@ -197,7 +201,8 @@ public class CommonService {
                 }
             }
             catch (Exception e){
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
 
@@ -259,7 +264,7 @@ public class CommonService {
 
 
         }
-        System.out.println("static data item html ");
+        // System.out.println("static data item html ");
     }
 
     public DataItem getById(String id) {

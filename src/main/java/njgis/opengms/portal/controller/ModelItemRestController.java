@@ -323,7 +323,7 @@ public class ModelItemRestController {
     @ApiOperation(value = "获取模型相关资源", notes = "@LoginRequired\n")
     @RequestMapping(value = "/relatedResources/{id}", method = RequestMethod.GET)
     JsonResult getRelatedResources(@PathVariable("id") String id, HttpServletRequest request){
-        System.out.println("test");
+        // System.out.println("test");
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }

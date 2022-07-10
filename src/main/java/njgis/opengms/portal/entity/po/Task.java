@@ -17,7 +17,7 @@ public class Task extends PortalId {
     String taskId;
     String computableId;
     String computableName;
-    String email;  //原来的userId
+    String email;  //原来的userId -> 用userId到user表找email
     String ip;
     String description;
     int port;

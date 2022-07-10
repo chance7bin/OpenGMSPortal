@@ -16,9 +16,7 @@ import com.github.abel533.echarts.style.itemstyle.Normal;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.support.ChartOption;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-
 
 import java.io.*;
 import java.util.*;
@@ -57,7 +55,8 @@ public class ChartUtils {
             }
 
             String cmd = phantomjs + " " + JSpath + " -infile " + dataPath + " -outfile " + path + " -width " + width + " -height " + height;
-            System.out.println(cmd);
+            // System.out.println(cmd);
+            log.info(cmd);
             Process process = Runtime.getRuntime().exec(cmd);
             BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = "";
@@ -68,7 +67,8 @@ public class ChartUtils {
 //            System.out.println(ClassUtils.getDefaultClassLoader().getResource("").getPath());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }finally{
             return path;
         }
@@ -88,7 +88,8 @@ public class ChartUtils {
             }
 
             String cmd = phantomjs + " " + JSpath_China + " -infile " + dataPath + " -outfile " + path + " -width " + width + " -height " + height;
-            System.out.println(cmd);
+            // System.out.println(cmd);
+            log.info(cmd);
             Process process = Runtime.getRuntime().exec(cmd);
             BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = "";
@@ -99,7 +100,8 @@ public class ChartUtils {
 //            System.out.println(ClassUtils.getDefaultClassLoader().getResource("").getPath());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }finally{
             return path;
         }
@@ -120,7 +122,8 @@ public class ChartUtils {
             out.flush(); // 把缓存区内容压入文件
             out.close(); // 最后记得关闭文件
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         return dataPath;
     }

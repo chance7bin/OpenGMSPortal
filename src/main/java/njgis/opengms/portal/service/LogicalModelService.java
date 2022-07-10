@@ -2,6 +2,7 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.LogicalModelDao;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
@@ -38,6 +39,7 @@ import static njgis.opengms.portal.utils.Utils.saveFiles;
  * @Date 21/10/12
  * @Version 1.0.0
  */
+@Slf4j
 @Service
 public class LogicalModelService {
 
@@ -237,7 +239,8 @@ public class LogicalModelService {
                         images.add("/logicalModel" + "/" + email + "/" + name);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                     result.put("code", -2);
                 }
 
@@ -316,7 +319,8 @@ public class LogicalModelService {
             result.put("code", 1);
             result.put("id", logicalModel.getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             result.put("code", -2);
         }
         return result;
@@ -433,7 +437,8 @@ public class LogicalModelService {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
                 result.put("code", -2);
             }
 

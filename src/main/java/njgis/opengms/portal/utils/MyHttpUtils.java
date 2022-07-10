@@ -1,6 +1,7 @@
 package njgis.opengms.portal.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.MyException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -37,6 +38,7 @@ import java.util.Map;
 /**
  * Created by wang ming on 2019/2/18.
  */
+@Slf4j
 public class MyHttpUtils {
 
     //设置连接超时时间，单位毫秒
@@ -545,7 +547,8 @@ public class MyHttpUtils {
                 return file;
             }
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }

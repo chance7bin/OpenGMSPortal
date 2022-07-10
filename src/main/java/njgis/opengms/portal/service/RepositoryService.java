@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -38,6 +39,7 @@ import java.util.*;
  * @Author bin
  * @Date 2021/08/30
  */
+@Slf4j
 @Service
 public class RepositoryService {
 
@@ -544,7 +546,8 @@ public class RepositoryService {
                     localizationArray.add(jsonObject);
                 }
             } catch (DocumentException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
 
             localizationArray.sort(new Comparator<Object>() {
@@ -608,7 +611,8 @@ public class RepositoryService {
                     localizationArray.add(jsonObject);
                 }
             } catch (DocumentException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
 
             localizationArray.sort(new Comparator<Object>() {

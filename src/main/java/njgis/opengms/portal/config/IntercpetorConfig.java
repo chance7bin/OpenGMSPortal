@@ -1,5 +1,6 @@
 package njgis.opengms.portal.config;
 
+import njgis.opengms.portal.component.interceptor.AdminInterceptor;
 import njgis.opengms.portal.component.interceptor.AuthorityInterceptor;
 import njgis.opengms.portal.component.interceptor.ItemViewRecordInterceptor;
 import njgis.opengms.portal.component.interceptor.ModelAndViewInterceptor;
@@ -21,12 +22,16 @@ public class IntercpetorConfig implements WebMvcConfigurer {
     @Autowired
     private ItemViewRecordInterceptor itemViewRecordInterceptor;
 
+    @Autowired
+    private AdminInterceptor adminInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(modelAndViewInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**");
         registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**");
-        // registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**", "/error");
-        registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/modelItem/**","/conceptualModel/**","/logicalModel/**","/computableModel/**","/dataItem/**","/repository/**").excludePathPatterns("/static/**");
+        registry.addInterceptor(adminInterceptor).addPathPatterns("/managementSystem/**").excludePathPatterns("/static/**");
+        registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**", "/userServer/**","/error");
+        // registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/modelItem/**","/conceptualModel/**","/logicalModel/**","/computableModel/**","/dataItem/**","/repository/**").excludePathPatterns("/static/**");
     }
 }
 

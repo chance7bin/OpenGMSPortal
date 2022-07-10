@@ -1,6 +1,7 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.dao.ThemeDao;
 import njgis.opengms.portal.dao.UserDao;
@@ -34,6 +35,7 @@ import java.util.UUID;
  * @Date 2021/12/02
  */
 @Service
+@Slf4j
 public class ThemeService {
 
     @Autowired
@@ -114,7 +116,8 @@ public class ThemeService {
                 try {
                     filePath = java.net.URLDecoder.decode(filePath, "utf-8");
                 } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                 }
                 if (theme_detailDesc.length() > 0) {
                     File file = new File(filePath);
@@ -136,11 +139,14 @@ public class ThemeService {
                             inputStreamReader.close();
                             fileInputStream.close();
                         } catch (FileNotFoundException e) {
-                            e.printStackTrace();
+                            // e.printStackTrace();
+                            log.error(e.getMessage());
                         } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            // e.printStackTrace();
+                            log.error(e.getMessage());
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            // e.printStackTrace();
+                            log.error(e.getMessage());
                         }
                         detailResult = detail.toString();
                     } else {
@@ -155,7 +161,8 @@ public class ThemeService {
             theme.setImage(theme.getImage().equals("")?"":htmlLoadPath+theme.getImage());
             return theme;
         } catch (Exception e) {
-            System.out.println("有人乱查数据库！！该ID不存在Model Item对象");
+            // System.out.println("有人乱查数据库！！该ID不存在Model Item对象");
+            log.warn("有人乱查数据库！！该ID不存在Model Item对象");
             throw new MyException(ResultEnum.NO_OBJECT);
         }
 

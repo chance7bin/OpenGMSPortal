@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
  * @Date 2021/08/31
  */
 @RestController
-@RequestMapping(value = "/draft")
+@RequestMapping(value = "/draft1")  //原先的路由是draft，因为暂时不用这个功能，所以把这个路由先改掉，防止后端出错
 public class EditDraftController {
 
     @Autowired

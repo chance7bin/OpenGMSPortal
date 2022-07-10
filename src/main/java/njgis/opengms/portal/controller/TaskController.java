@@ -2,6 +2,7 @@ package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.ComputableModelDao;
 import njgis.opengms.portal.dao.IntegratedTaskDao;
@@ -41,6 +42,7 @@ import java.util.List;
  * @Author bin
  * @Date 2021/11/08
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/task")
 public class TaskController {
@@ -386,7 +388,8 @@ public class TaskController {
                     }
                 }
             }catch (Exception e){
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
                 return ResultUtils.error(-1,"err");
             }
 

@@ -2,6 +2,7 @@ package njgis.opengms.portal.utils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -9,11 +10,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import java.io.*;
-import java.math.BigInteger;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.security.MessageDigest;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +22,7 @@ import java.util.UUID;
  * @Date 21/11/11
  * @Version 1.0.0
  */
+@Slf4j
 public class ModelServiceUtils {
 
     /**
@@ -205,8 +205,10 @@ public class ModelServiceUtils {
             mdlObj.put("states", states);
             //State结束
         } catch (DocumentException e) {
-            System.out.println(mdl);
-            e.printStackTrace();
+            // System.out.println(mdl);
+            // e.printStackTrace();
+            log.error(e.getMessage());
+
         }
         JSONObject result = new JSONObject();
         result.put("mdl", mdlObj);
@@ -362,7 +364,8 @@ public class ModelServiceUtils {
         try {
             result = reader.read(configFile);
         } catch (DocumentException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         Element rootElement = result.getRootElement();
         List<Element> items = rootElement.elements();

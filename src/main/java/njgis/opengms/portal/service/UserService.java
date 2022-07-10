@@ -215,7 +215,7 @@ public class UserService {
      * @Author kx
      * @Date 2021/7/6
      **/
-    public void setUserSession(HttpServletRequest request, String email, String name, String role){
+    public void setUserSession(HttpServletRequest request, String email, String name, UserRoleEnum role){
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(120*60);//设置session过期时间 为120分钟
 //            session.setAttribute("uid", result.getString("userName"));
@@ -300,13 +300,13 @@ public class UserService {
             result.put("email",j_userShuttleDTO.getString("email"));
             result.put("name",j_userShuttleDTO.getString("name"));
             // role暂时没有，先注释调
-            // result.put("role",user.getUserRole().getRole());
+            result.put("role",user.getUserRole());
 
             // TODO: 2022/5/4 这边很慢，怎么加速
             //更新该用户的资源数量
             asyncService.updateAllResourceCount(j_userShuttleDTO.getString("email"));
 
-            return j_userShuttleDTO;
+            return result;
         }catch (Exception e){
             log.error(e.getMessage());
             // System.out.println(e.getMessage());
@@ -730,7 +730,8 @@ public class UserService {
             user.setResourceCount(userResourceCount);
             userDao.save(user);
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -839,7 +840,8 @@ public class UserService {
             User updatedUser = userDao.save(user);
             return ResultUtils.success(updatedUser);
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return ResultUtils.error();
         }
 

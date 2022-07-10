@@ -11,6 +11,7 @@ import njgis.opengms.portal.entity.doo.user.UserServerResource;
 import njgis.opengms.portal.entity.doo.user.UserSubscribeItem;
 import njgis.opengms.portal.entity.dto.user.*;
 import njgis.opengms.portal.entity.po.User;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.IpUtil;
 import njgis.opengms.portal.utils.MyHttpUtils;
@@ -154,8 +155,8 @@ public class UserRestController {
             // 密码验证成功，将用户数据放入到Session中
             String email = result.getString("email");
             String name = result.getString("name");
-            // String role = result.getString("role");
-            userService.setUserSession(request, email, name, null);
+            UserRoleEnum role = (UserRoleEnum)result.get("role");
+            userService.setUserSession(request, email, name, role);
 
 //            WebSocketTest webSocketTest = new WebSocketTest(); //发送websocket信息
 //            webSocketTest.sendMessageToAll("user change");
