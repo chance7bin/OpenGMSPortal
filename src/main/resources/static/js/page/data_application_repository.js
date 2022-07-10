@@ -64,6 +64,23 @@ var data_items = new Vue({
         }
     },
     methods: {
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+            return v;
+        },
+
         translatePage(jsonContent){
             //切换列表中标签选择情况
             if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
@@ -87,8 +104,8 @@ var data_items = new Vue({
         },
 
         transFormCate(categoryName){
-            location_href = window.location.href
-            lang = location_href.split("=")[1]
+            let lang = this.getStorage("language");
+
             if (lang === "zh-cn"){
                 if (categoryName === '6117767e61ce444130b1a276')
                     return '格式转换'

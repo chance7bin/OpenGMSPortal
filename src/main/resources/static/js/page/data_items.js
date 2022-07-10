@@ -63,16 +63,21 @@ var data_items = new Vue({
         }
     },
     methods: {
-        categoryInit(){
-        // 获取url截取languages
-            location_href = window.location.href
-            lang = location_href.split("=")[1]
-
-            if (lang == "zh-cn"){
-                this.showCategoryName = "陆地圈"
-            }else {
-                this.showCategoryName = "Land Regions"
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
             }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+            return v;
         },
 
         translatePage(jsonContent){
@@ -325,7 +330,12 @@ var data_items = new Vue({
     }
     ,
     mounted(){
-        this.categoryInit();
+        let language = this.getStorage("language");
+        if (language == "zh-cn"){
+            this.showCategoryName = "陆地圈"
+        } else {
+            this.showCategoryName = "Land regions"
+        }
         let that=this;
         let u=window.location.href
         let f=u.split("/");
