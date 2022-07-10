@@ -158,7 +158,7 @@ public class VersionService {
             // version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
             version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal()));
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
             log.error(e.getMessage());
         }
         return versionDao.insert(version);

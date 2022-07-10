@@ -127,7 +127,8 @@ public class AsyncService {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
 
 
@@ -247,7 +248,8 @@ public class AsyncService {
             user.setResourceCount(userResourceCount);
             userDao.save(user);
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

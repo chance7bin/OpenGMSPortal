@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -205,7 +206,8 @@ public class ManagementSystemService {
                 taskInvokeDTO = buildInvokeParams(modelId,initTaskData,loadTestDataData);
             }catch (Exception e){
                 // log.error(e.getMessage());
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
                 checkedModel.setStatus(-1);
                 saveComputableModel(computableModel,checkedModel,"构造输入数据出错");
                 return ResultUtils.error("构造输入数据出错");
@@ -725,7 +727,9 @@ public class ManagementSystemService {
 
 
     // 记录用户访问的数量
+    @Async
     public void recordUserViewCount(String ip){
+        // log.info("recordUserViewCount");
         DashBoard dashboard = dashboardDao.findFirstByName("dashboard");
         List<UserDailyViewCount> dailyViewCountList = dashboard.getUserDailyViewCount();
 

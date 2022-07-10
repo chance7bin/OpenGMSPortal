@@ -2,6 +2,7 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.ModelContainerDao;
 import njgis.opengms.portal.entity.po.ModelContainer;
 import njgis.opengms.portal.entity.po.User;
@@ -20,6 +21,7 @@ import java.util.List;
  * @Author bin
  * @Date 2021/12/27
  */
+@Slf4j
 @Service
 public class ServerService {
 
@@ -63,7 +65,8 @@ public class ServerService {
             try {
                 xml = restTemplate.getForObject(url, String.class);
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
 
             if (xml.equals("err")) {
@@ -96,7 +99,8 @@ public class ServerService {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
 

@@ -4,6 +4,7 @@ import com.mxgraph.canvas.mxGraphicsCanvas2D;
 import com.mxgraph.canvas.mxICanvas2D;
 import com.mxgraph.reader.mxSaxOutputHandler;
 import com.mxgraph.util.mxUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -15,7 +16,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.StringReader;
-
+@Slf4j
 public class MxGraphUtils {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -83,7 +84,8 @@ public class MxGraphUtils {
             // Renders XML data into image
             reader.parse(new InputSource(new StringReader(xml)));
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

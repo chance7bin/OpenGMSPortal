@@ -105,7 +105,7 @@ public class CommonRestController {
             catch (ConversionFailedException e){
                 modelItemDao.delete(modelItem);
                 deleteCount++;
-                System.out.println(deleteCount);
+                // System.out.println(deleteCount);
             }
 
 
@@ -125,7 +125,7 @@ public class CommonRestController {
             modelItemRelate.setComputableModels(new ArrayList<String>());
             modelItem.setRelate(modelItemRelate);
             modelItemDao.save(modelItem);
-            System.out.println(++count);
+            // System.out.println(++count);
         }
 
         return ResultUtils.success();

@@ -1,5 +1,7 @@
 package njgis.opengms.portal.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -11,6 +13,7 @@ import java.net.UnknownHostException;
  * @Date 2021/7/5
  * @Version 1.0.0
  */
+@Slf4j
 public class IpUtil {
     /**
      * @Description 获取访问者IP
@@ -37,7 +40,8 @@ public class IpUtil {
                     try {
                         inet = InetAddress.getLocalHost();
                     } catch (UnknownHostException e) {
-                        e.printStackTrace();
+                        // e.printStackTrace();
+                        log.error(e.getMessage());
                     }
                     ipAddress = inet.getHostAddress();
                 }

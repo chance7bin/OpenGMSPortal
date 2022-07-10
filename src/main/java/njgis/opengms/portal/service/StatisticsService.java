@@ -2,6 +2,7 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.ComputableModelDao;
 import njgis.opengms.portal.dao.TaskDao;
 import njgis.opengms.portal.dao.UserDao;
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@Slf4j
 public class StatisticsService {
 
     @Autowired
@@ -446,7 +448,8 @@ public class StatisticsService {
             Date date=sdf.parse(startTime);
             calendar.setTime(date);
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
 //        ComputableModel computableModel = computableModelList.get(i);
         List<DailyViewCount> dailyInvokeCounts = computableModel.getDailyInvokeCount();
@@ -681,8 +684,9 @@ public class StatisticsService {
             renderer.layout();
             renderer.createPDF(out, false);
             renderer.finishPDF();
-            System.out.println("==pdf created successfully==");
-            System.out.println(outputFile.getAbsolutePath());
+            // System.out.println("==pdf created successfully==");
+            log.info("==pdf created successfully==");
+            // System.out.println(outputFile.getAbsolutePath());
 
             return filePath;
         }catch (Exception e){

@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.AbstractTask.AsyncTask;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -50,6 +51,7 @@ import static njgis.opengms.portal.utils.Utils.postJSON;
  * @Author bin
  * @Date 2021/11/08
  */
+@Slf4j
 @Service
 public class TaskService {
 
@@ -336,9 +338,11 @@ public class TaskService {
                     ResultDataDTO resultDatadto = (ResultDataDTO) future.get();
                     resultDataDTOs.add(resultDatadto);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                 }
 
             });
@@ -428,7 +432,8 @@ public class TaskService {
         try {
             result = reader.read(configPath);
         } catch (DocumentException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
         ComputableModel computableModel = computableModelDao.findFirstById(id);
@@ -946,7 +951,8 @@ public class TaskService {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
 //            System.out.println(e.getMessage());
         }
         return taskList;
@@ -1403,9 +1409,11 @@ public class TaskService {
                 ResultDataDTO resultDatadto = (ResultDataDTO) future.get();
                 resultDataDTOs.add(resultDatadto);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
 
         });
@@ -1458,9 +1466,11 @@ public class TaskService {
             inputStream.close();
 
         } catch (FileNotFoundException e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             try {
                 if (fileOutputStream != null) {
@@ -1470,7 +1480,8 @@ public class TaskService {
                     inputStream.close();
                 }
             }catch (IOException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
 //                logger.error("InputStream or OutputStream close error : {}", e);
             }
         }
@@ -1824,7 +1835,8 @@ public class TaskService {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
 //            System.out.println(e.getMessage());
         }
         return taskList;

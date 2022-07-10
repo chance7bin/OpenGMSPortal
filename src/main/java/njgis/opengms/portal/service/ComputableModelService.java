@@ -354,7 +354,7 @@ public class ComputableModelService {
                                     mdlPath = file2.getAbsolutePath();
                                     break;
                                 }
-                                System.out.println("文件:" + file2.getAbsolutePath());
+                                // System.out.println("文件:" + file2.getAbsolutePath());
                             }
                         }
                         File temp_file;
@@ -370,12 +370,13 @@ public class ComputableModelService {
                                         mdlPath = file2.getAbsolutePath();
                                         break;
                                     }
-                                    System.out.println("文件:" + file2.getAbsolutePath());
+                                    // System.out.println("文件:" + file2.getAbsolutePath());
                                 }
                             }
                         }
                     } else {
-                        System.out.println("文件不存在!");
+                        // System.out.println("文件不存在!");
+                        log.warn("文件不存在!");
                     }
 
                     //获取测试数据，并进行存储
@@ -398,9 +399,11 @@ public class ComputableModelService {
                                 content += str;
                             }
                             in.close();
-                            System.out.println(content);
+                            // System.out.println(content);
                         } catch (IOException e) {
-                            System.out.println(e);
+                            // System.out.println(e);
+                            // e.printStackTrace();
+                            log.error(e.getMessage());
                         }
 
                         computableModel.setMdl(content);
@@ -444,7 +447,8 @@ public class ComputableModelService {
                         //End
                         computableModel.setMdlJson(mdlJson);
                     } else {
-                        System.out.println("mdl文件未找到!");
+                        // System.out.println("mdl文件未找到!");
+                        log.warn("mdl文件未找到!");
                     }
 
                     Utils.deleteDirectory(destDirPath);
@@ -561,7 +565,7 @@ public class ComputableModelService {
                                         mdlPath = file2.getAbsolutePath();
                                         break;
                                     }
-                                    System.out.println("文件:" + file2.getAbsolutePath());
+                                    // System.out.println("文件:" + file2.getAbsolutePath());
                                 }
                             }
                             File temp_file;
@@ -577,12 +581,13 @@ public class ComputableModelService {
                                             mdlPath = file2.getAbsolutePath();
                                             break;
                                         }
-                                        System.out.println("文件:" + file2.getAbsolutePath());
+                                        // System.out.println("文件:" + file2.getAbsolutePath());
                                     }
                                 }
                             }
                         } else {
-                            System.out.println("文件不存在!");
+                            // System.out.println("文件不存在!");
+                            log.warn("文件不存在!");
                         }
 
                         //获取测试数据，并进行存储
@@ -605,16 +610,18 @@ public class ComputableModelService {
                                     content += str;
                                 }
                                 in.close();
-                                System.out.println(content);
+                                // System.out.println(content);
                             } catch (IOException e) {
-                                System.out.println(e);
+                                // System.out.println(e);
+                                log.error(e.getMessage());
                             }
 
                             computableModel.setMdl(content);
                             JSONObject mdlJson = XmlTool.documentToJSONObject(content);
                             computableModel.setMdlJson(mdlJson);
                         } else {
-                            System.out.println("mdl文件未找到!");
+                            // System.out.println("mdl文件未找到!");
+                            log.warn("mdl文件未找到!");
                         }
 
                         Utils.deleteDirectory(destDirPath);
@@ -624,7 +631,8 @@ public class ComputableModelService {
                     computableModel.setDeploy(false);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                     result.put("code", -2);
                 }
             }else if(contentType.toLowerCase().equals("md5")){
@@ -904,7 +912,8 @@ public class ComputableModelService {
 
             return null;
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            // System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return null;
         }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.dao.DataMethodDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -43,6 +44,7 @@ import java.util.List;
  * @Author bin
  * @Date 2021/08/27
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/template")
 public class TemplateController {
@@ -228,7 +230,8 @@ public class TemplateController {
             try {
                 parts = request.getParts();
             } catch (ServletException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
             }
             for (Part part: parts){
                 String oldName = part.getSubmittedFileName();
@@ -239,7 +242,8 @@ public class TemplateController {
                 return ResultUtils.success();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            // e.printStackTrace();
         }
         return ResultUtils.error("fail");
     }
@@ -256,7 +260,8 @@ public class TemplateController {
             file.delete();
             return  ResultUtils.success();
         } catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         return ResultUtils.error("fail");
     }

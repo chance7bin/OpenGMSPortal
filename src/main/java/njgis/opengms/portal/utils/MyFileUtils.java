@@ -1,5 +1,6 @@
 package njgis.opengms.portal.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
@@ -13,13 +14,15 @@ import java.nio.file.Files;
 /**
  * Created by wang ming on 2019/5/14.
  */
+@Slf4j
 public class MyFileUtils {
 
     public static InputStream getInputStream(File file) {
         try {
             return FileUtils.openInputStream(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -28,9 +31,11 @@ public class MyFileUtils {
     {
         //获取源文件的名称
         String newFileName = srcPathStr.substring(srcPathStr.lastIndexOf("\\")+1); //目标文件地址
-        System.out.println("源文件:"+newFileName);
+        // System.out.println("源文件:"+newFileName);
+        log.info("源文件:"+newFileName);
         desPathStr = desPathStr + newFileName; //源文件地址
-        System.out.println("目标文件地址:"+desPathStr);
+        // System.out.println("目标文件地址:"+desPathStr);
+        log.info("目标文件地址:"+desPathStr);
         try
         {
             FileInputStream fis = new FileInputStream(srcPathStr);//创建输入流对象
@@ -46,7 +51,8 @@ public class MyFileUtils {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            // e.printStackTrace();
         }
     }
 
@@ -64,9 +70,10 @@ public class MyFileUtils {
             }
             //也可以用IOUtils.copy(inputStream,os);
             multipartFile = new CommonsMultipartFile(fileItem);
-            System.out.println(multipartFile.getName());
+            // System.out.println(multipartFile.getName());
         }catch (IOException e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         return multipartFile;
     }
@@ -103,7 +110,8 @@ public class MyFileUtils {
             os.close();
             ins.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -120,7 +128,8 @@ public class MyFileUtils {
             fileOutputStream.flush();
             fileOutputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -134,15 +143,18 @@ public class MyFileUtils {
             in.read(filecontent);
             in.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         try {
             return new String(filecontent, encoding);
         } catch (UnsupportedEncodingException e) {
             System.err.println("The OS does not support " + encoding);
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }

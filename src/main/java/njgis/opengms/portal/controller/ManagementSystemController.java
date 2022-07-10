@@ -3,6 +3,7 @@ package njgis.opengms.portal.controller;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import njgis.opengms.portal.component.AdminRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -56,6 +59,8 @@ public class ManagementSystemController {
         return modelAndView;
     }
 
+
+    @AdminRequired
     @GetMapping("/system")
     public ModelAndView getSystemPage(){
         ModelAndView modelAndView = new ModelAndView();
@@ -86,22 +91,24 @@ public class ManagementSystemController {
     }
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "模型调用")
     @RequestMapping(value="/model/invoke/{modelId}",method= RequestMethod.GET)
-    public JsonResult invokeModel(@PathVariable String modelId) {
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+    public JsonResult invokeModel(@PathVariable String modelId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        // String email = "782807969@qq.com";
         return managementSystemService.invokeModel(modelId, email);
     }
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "批量模型调用")
     @RequestMapping(value="/model/invoke/batch",method= RequestMethod.POST)
-    public JsonResult invokeModelBatch(@RequestBody List<String> modelIdList) {
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+    public JsonResult invokeModelBatch(@RequestBody List<String> modelIdList, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        // String email = "782807969@qq.com";
 
         return managementSystemService.invokeModelBatch(modelIdList, email);
     }
@@ -137,25 +144,27 @@ public class ManagementSystemController {
     // }
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "查找检查的模型列表")
     @RequestMapping(value="/checkList/search",method= RequestMethod.POST)
     public JsonResult searchCheckedList(@RequestBody FindDTO findDTO){
 
         // HttpSession session = request.getSession();
         // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+        // String email = "782807969@qq.com";
         return managementSystemService.searchCheckedList(findDTO);
 
     }
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "删除检查的模型列表")
     @RequestMapping(value="/checkList/delete/{id}",method= RequestMethod.DELETE)
     public JsonResult deleteCheckedList(@PathVariable String id){
 
         // HttpSession session = request.getSession();
         // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+        // String email = "782807969@qq.com";
         return managementSystemService.deleteCheckedList(id);
 
     }
@@ -170,6 +179,7 @@ public class ManagementSystemController {
 
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "设置用户权限")
     @RequestMapping(value="/user/role/{id}/{role}",method= RequestMethod.POST)
     public JsonResult setUserRole(@PathVariable String id, @PathVariable UserRoleEnum role){
@@ -194,6 +204,7 @@ public class ManagementSystemController {
 
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "给条目添加管理者")
     @RequestMapping(value="/item/admin/{itemType}/{itemId}",method= RequestMethod.POST)
     public JsonResult addAdmin(
@@ -208,12 +219,13 @@ public class ManagementSystemController {
     }
 
     // @LoginRequired
+    @AdminRequired
     @ApiOperation(value = "设置条目的访问状态 status: Public/Discoverable/Private")
     @RequestMapping(value="/item/status/{itemType}/{itemId}/{status}",method= RequestMethod.POST)
-    public JsonResult setItemStatus(@PathVariable ItemTypeEnum itemType, @PathVariable String itemId, @PathVariable String status){
-        // HttpSession session = request.getSession();
-        // String email = session.getAttribute("email").toString();
-        String email = "782807969@qq.com";
+    public JsonResult setItemStatus(@PathVariable ItemTypeEnum itemType, @PathVariable String itemId, @PathVariable String status, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        // String email = "782807969@qq.com";
         return managementSystemService.setItemStatus(itemType, itemId, status,email);
 
     }

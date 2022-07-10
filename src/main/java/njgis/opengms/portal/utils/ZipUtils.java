@@ -1,5 +1,6 @@
 package njgis.opengms.portal.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.support.ZipStreamEntity;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -19,6 +20,7 @@ import java.util.zip.ZipOutputStream;
  * @Date 2019/5/16
  * @Version 1.0.0
  */
+@Slf4j
 public class ZipUtils {
 
 
@@ -81,7 +83,8 @@ public class ZipUtils {
                 }
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             IOUtils.closeQuietly(is);
         }
@@ -128,10 +131,12 @@ public class ZipUtils {
 
             inputStream = new FileInputStream(zip);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         } finally {
             // 关闭流
@@ -142,7 +147,8 @@ public class ZipUtils {
                     zos.close();
 
             } catch (IOException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                log.error(e.getMessage());
                 throw new RuntimeException(e);
             }
         }

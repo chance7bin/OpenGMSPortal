@@ -99,8 +99,8 @@ public class StatisticsRestController {
             renderer.layout();
             renderer.createPDF(out, false);
             renderer.finishPDF();
-            System.out.println("==pdf created successfully==");
-            System.out.println(outputFile.getAbsolutePath());
+            // System.out.println("==pdf created successfully==");
+            // System.out.println(outputFile.getAbsolutePath());
         }catch (Exception e){
 
         }

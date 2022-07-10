@@ -2,6 +2,7 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -40,7 +41,7 @@ import java.util.*;
  * @Date 2019/2/21
  * @Version 1.0.0
  */
-
+@Slf4j
 @Service
 public class ModelItemService {
 
@@ -1113,7 +1114,8 @@ public class ModelItemService {
             result.put("nodes", nodes);
             result.put("links", links);
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
 
         return result;
@@ -1131,7 +1133,8 @@ public class ModelItemService {
             out.write(jsonResult.toString());
             out.close();
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         }
         return jsonResult;
     }
@@ -1152,7 +1155,8 @@ public class ModelItemService {
                         break;
                     }
                 }catch (NullPointerException e){
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                 }
             }
 

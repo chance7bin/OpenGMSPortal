@@ -295,7 +295,8 @@ public class Utils {
                 try {
                     file.transferTo(dest);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                     return null;
                 }
             }
@@ -324,7 +325,8 @@ public class Utils {
                 try {
                     file.transferTo(dest);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                     return null;
                 }
             }
@@ -558,13 +560,15 @@ public class Utils {
             BigInteger bi = new BigInteger(1, md5.digest());
             value = bi.toString(16);
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             if(null != in) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
+                    log.error(e.getMessage());
                 }
             }
         }
@@ -599,10 +603,12 @@ public class Utils {
 
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
 
@@ -862,7 +868,8 @@ public class Utils {
             //State结束
         } catch (DocumentException e) {
             // System.out.println(mdl);
-            e.printStackTrace();
+            log.error(e.getMessage());
+            // e.printStackTrace();
         }
         JSONObject result = new JSONObject();
         result.put("mdl", mdlObj);

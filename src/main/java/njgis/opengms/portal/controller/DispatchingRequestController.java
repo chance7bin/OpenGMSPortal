@@ -1,6 +1,7 @@
 package njgis.opengms.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.utils.MyHttpUtils;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @Date 2019/5/15
  * @Version 1.0.0
  */
+@Slf4j
 @RestController
 @RequestMapping (value = "/dispatchRequest")
 public class DispatchingRequestController {
@@ -228,7 +230,8 @@ public class DispatchingRequestController {
         try{
             delete = myHttpUtils.DELETE(url, "UTF-8", a);
         }catch (IOException e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return ResultUtils.error(-1,"delete failed");
         }
 
@@ -255,7 +258,8 @@ public class DispatchingRequestController {
                 return ResultUtils.success(json.getString("message"));
             }
         }catch (IOException e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.error(e.getMessage());
             return ResultUtils.error(-1,"delete failed");
         }
 
