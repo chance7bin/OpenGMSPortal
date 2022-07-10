@@ -50,6 +50,7 @@ var data_items = new Vue({
             queryFields:["Name","Keyword","Content","Contributor"],
             curQueryField:"Name",
             showCategoryName:'Land regions',
+            currentCategory:'landRegions',
 
             htmlJSON:{
                 "ViewCount": ["View Count", "viewCount"],
@@ -81,6 +82,10 @@ var data_items = new Vue({
         },
 
         translatePage(jsonContent){
+
+            console.log(this.showCategoryName)
+            console.log(this.currentCategory)
+            this.showCategoryName = jsonContent[this.currentCategory];
 
             //切换列表中标签选择情况
             if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
@@ -186,7 +191,8 @@ var data_items = new Vue({
             this.classlist=val;
         },
         // 切换类别
-        chooseCate(item, event) {
+        chooseCate(item, event, currentCategory) {
+            // console.log("here")
             let all_button=$('.cateButton')
             for (let i = 0; i < all_button.length; i++) {
                 all_button[i].style.color="";
@@ -201,6 +207,9 @@ var data_items = new Vue({
             this.currentPage = 1
             this.categoryName = item;
             this.showCategoryName = event.currentTarget.children[0].outerText;
+            this.currentCategory = currentCategory;
+            console.log(this.currentCategory)
+
             this.datacount=-1
             this.loading=true
             this.progressBar=true;

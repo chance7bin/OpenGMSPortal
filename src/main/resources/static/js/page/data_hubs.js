@@ -215,6 +215,7 @@ var data_items = new Vue({
             this.categoryName = item;
             this.showCategoryName = event.currentTarget.children[0].outerText;
             this.currentCategory = currentCategory;
+            console.log(this.currentCategory)
             this.datacount=-1
             this.loading=true
             this.progressBar=true;
