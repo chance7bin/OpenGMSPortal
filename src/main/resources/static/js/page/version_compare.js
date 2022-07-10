@@ -23,10 +23,27 @@ var version_compare = new Vue({
             references_old:{},
             references_new:{},
             oldVerBackground:"",
-            newVerBackground:""
+            newVerBackground: "",
+            htmlJSON: {}
         }
     },
     methods:{
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         addWaterMark(text) {
             let ctx = document.createElement("canvas");
         // :style="{backgroundImage: `url(${oldVerBackground})`}"
@@ -148,6 +165,8 @@ var version_compare = new Vue({
 
     },
     created(){
+        //首先到缓存中获取userSpaceAll
+        this.htmlJSON = this.getStorage("userSpaceAll");
         // this.references_old = references_old
         // this.references_new = references_new
     }
