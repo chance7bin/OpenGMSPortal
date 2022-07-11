@@ -699,7 +699,8 @@ new Vue({
                 CreateTime: ["Create Time","createTime"],
                 Asc: ["Asc.","Asc."],
                 Desc: ["Desc.","Desc."],
-            }
+            },
+            htmlJson:{}
         }
     },
     methods: {
@@ -787,44 +788,46 @@ new Vue({
 
         //显示功能引导框
         showDriver(){
-            if(!this.driver){
+            if(true){
                 this.driver = new Driver({
                     "className": "scope-class",
                     "allowClose": false,
                     "opacity" : 0.1,
-                    "prevBtnText": "Previous",
-                    "nextBtnText": "Next"
+                    "prevBtnText": this.htmlJson.Previous,
+                    "nextBtnText": this.htmlJson.Next,
+                    "closeBtnText": this.htmlJson.Close,
+                    "doneBtnText": this.htmlJson.Done
                 });
                 this.stepsConfig = [
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : "Repository Collections",
-                            "description" : "You can query concepts & semantics by choosing a collection.",
-                            "position" : "right-center",
+                            "title" : this.htmlJson.ModelClassifications,
+                            "description" : this.htmlJson.QueryConceptsSemanticsByChoosingCollection,
+                            "position" : "right-top",
                         }
                     },
                     {
                         "element": ".searcherInputPanel",
                         "popover": {
-                            "title": "Search",
-                            "description": "You can also search concepts & semantics by name.",
+                            "title": this.htmlJson.Search,
+                            "description": this.htmlJson.SearchConceptsByModelName,
                             "position": "bottom-right",
                         }
                     },
                     {
                         "element": ".modelPanel",
                         "popover": {
-                            "title": "Overview",
-                            "description": "Here is query result, you can browse concepts & semantics' overview. Click name to check detail.",
+                            "title": this.htmlJson.Overview,
+                            "description": this.htmlJson.BrowseConceptOverview,
                             "position": "top",
                         }
                     },
                     {
                         "element" : "#contributeBtn",
                         "popover" : {
-                            "title" : "Contribute",
-                            "description" : "You can share concepts & semantics on OpenGMS, and get an OpenGMS unique identifier!",
+                            "title" : this.htmlJson.Contribute,
+                            "description" : this.htmlJson.ShareYourConceptOnOpenGMS,
                             "position" : "bottom",
                         }
                     }
@@ -1008,6 +1011,8 @@ new Vue({
         },
     },
     mounted() {
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
 
         this.getModels();
 
