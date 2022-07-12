@@ -30,7 +30,7 @@ public class IntercpetorConfig implements WebMvcConfigurer {
         registry.addInterceptor(modelAndViewInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**");
         registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**");
         registry.addInterceptor(adminInterceptor).addPathPatterns("/managementSystem/**").excludePathPatterns("/static/**");
-        registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**", "/userServer/**","/error");
+        registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/","/home","/modelItem/**","/conceptualModel/**","/logicalModel/**","/computableModel/**","/dataItem/**","/dataMethod/**","/dataHub/**","/repository/**").excludePathPatterns("/static/**", "/userServer/**","/error");
         // registry.addInterceptor(itemViewRecordInterceptor).addPathPatterns("/modelItem/**","/conceptualModel/**","/logicalModel/**","/computableModel/**","/dataItem/**","/repository/**").excludePathPatterns("/static/**");
     }
 }

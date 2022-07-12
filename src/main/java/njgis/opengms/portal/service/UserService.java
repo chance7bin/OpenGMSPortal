@@ -1420,7 +1420,7 @@ public class UserService {
                 String fileName = files.get(i).get("file_name").toString();
                 String address = "/data/" + files.get(i).get("source_store_id").toString();
                 String[] a = fileName.split("\\.");
-                String name = files.get(i).get("file_name").toString();
+                String name = files.get(i).get("name").toString();
                 String suffix = files.get(i).get("suffix").toString();
                 String uid = UUID.randomUUID().toString();
                 Boolean folder = false;

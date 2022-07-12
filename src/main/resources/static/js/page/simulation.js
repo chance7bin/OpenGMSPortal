@@ -122,13 +122,11 @@ var vue = new Vue({
             this.loading = true;
             let targetPage = page == undefined ? this.pageOption.currentPage : page
             this.pageOption.currentPage = targetPage
-            axios.get('/computableModel/searchDeployedModel', {
-                params: {
-                    asc: 0,
-                    page: targetPage - 1,
-                    size: 6,
-                    searchText: this.searchText,
-                }
+            axios.post('/computableModel/deployedModel', {
+                asc: false,
+                page: targetPage,
+                size: 6,
+                searchText: this.searchText,
             }).then(
                 (res) => {
                     if (res.data.code == 0) {

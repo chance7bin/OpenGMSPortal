@@ -155,6 +155,9 @@ public class ManagementSystemService {
     public JsonResult invokeModel(String modelId, String email) {
 
         ComputableModel computableModel = computableModelDao.findFirstById(modelId);
+        if (computableModel == null){
+            return ResultUtils.error("未找到相应计算模型");
+        }
         CheckedModel checkedModel = computableModel.getCheckedModel();
         checkedModel = checkedModel == null ? new CheckedModel() : checkedModel;
         //重置任务状态
@@ -451,6 +454,9 @@ public class ManagementSystemService {
                     if(newTask.getTaskId().equals(taskIdList.get(size - 1))){
                         // 更新model中checkedModel属性的状态，并保存
                         model.setStatus(newTask.getStatus());
+                        model.setMsg(changeTaskMsgByStatus(newTask.getStatus()));
+                        //status = -1 时有两种显示情况，未找到测试数据要单独判断（是否需要）
+
                         computableModel.setCheckedModel(model);
                         computableModelDao.save(computableModel);
                         break;
@@ -461,6 +467,36 @@ public class ManagementSystemService {
 
 
         return content;
+
+    }
+
+    private String changeTaskMsgByStatus(int status){
+
+        String msg = "";
+        switch (status){
+            case -1:{
+                msg = "模型执行失败";
+                break;
+            }
+            case 0:{
+                msg = "正在排队检测";
+                break;
+            }
+            case 1:{
+                msg = "正在检测";
+                break;
+            }
+            case 2:{
+                msg = "正常";
+                break;
+            }
+            default:{
+                msg = "未知状态";
+                break;
+            }
+        }
+        return msg;
+
 
     }
 
@@ -489,15 +525,49 @@ public class ManagementSystemService {
             Page<CheckModelList> allByDraftName = checkModelListDao.findAllByDraftNameContainsIgnoreCase(findDTO.getSearchText(), pageable);
             List<CheckModelList> content = allByDraftName.getContent();
             List<CheckModelList> resultList = new ArrayList<>();
+
+            //废弃 没考虑到task已经在查询computableModel的时候就更新完状态了
+            // for (CheckModelList checkModelList : content) {
+            //     // 更新历史记录的模型运行状态
+            //     CheckModelList cml = updateHistoryStatus(checkModelList);
+            //     resultList.add(cml);
+            // }
+
+            //所以更新history的状态都要走更新computableModel状态的方法，通过返回的model信息更新history
+            List<String> modelNameList = new ArrayList<>();
             for (CheckModelList checkModelList : content) {
-                // 更新历史记录的模型运行状态
-                CheckModelList cml = updateHistoryStatus(checkModelList);
-                resultList.add(cml);
+                List<CheckedHistory> historyList = checkModelList.getHistoryList();
+                for (CheckedHistory history : historyList) {
+                    modelNameList.add(history.getModelName());
+                }
             }
+            //主键不能进行in查询
+            List<ComputableModel> computableModels = computableModelDao.findAllByNameIn(modelNameList);
+            //得到查到的结果并更新计算模型的运行状态
+            computableModels = updateTaskStatus(computableModels);
+
+            //更新history的运行状态
+            for (CheckModelList checkModelList : content) {
+                List<CheckedHistory> historyList = checkModelList.getHistoryList();
+                for (CheckedHistory history : historyList) {
+                    String modelId = history.getModelId();
+                    for (ComputableModel model : computableModels) {
+                        if (model.getId().equals(modelId)){
+                            // 更新model中checkedModel属性的状态，并保存
+                            history.setStatus(model.getCheckedModel().getStatus());
+                            history.setMsg(model.getCheckedModel().getMsg());
+                            break;
+                        }
+                    }
+                }
+                checkModelList.setHistoryList(historyList);
+                checkModelListDao.save(checkModelList);
+            }
+            // return ResultUtils.success();
 
             JSONObject result = new JSONObject();
             result.put("total",allByDraftName.getTotalElements());
-            result.put("content",resultList);
+            result.put("content",content);
 
             return ResultUtils.success(result);
         }catch (Exception e){
@@ -528,6 +598,7 @@ public class ManagementSystemService {
                 if(newTask.getTaskId().equals(h.getTaskId())){
                     // 更新model中checkedModel属性的状态，并保存
                     h.setStatus(newTask.getStatus());
+                    h.setMsg(changeTaskMsgByStatus(newTask.getStatus()));
                     break;
                 }
             }
@@ -535,6 +606,9 @@ public class ManagementSystemService {
 
         checkModelList.setHistoryList(historyList);
         checkModelListDao.save(checkModelList);
+
+
+        //
 
 
         return checkModelList;
@@ -940,7 +1014,11 @@ public class ManagementSystemService {
             JSONObject daoFactory = genericService.daoFactory(comment.getRelateItemType());
             GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
             PortalItem item = (PortalItem)itemDao.findFirstById(comment.getRelateItemId());
-            o.put("itemName", item.getName());
+            if (item == null){
+                o.put("itemName", "条目已删除");
+            } else {
+                o.put("itemName", item.getName());
+            }
             contentList.add(o);
 
         }

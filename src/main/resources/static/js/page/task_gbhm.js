@@ -3342,10 +3342,10 @@ var vue = new Vue({
                 return
             }
 
-            axios.get('/computableModel/searchDeployedModel',{
+            axios.post('/computableModel/deployedModel',{
                 params:{
-                    asc:0,
-                    page:targetPage-1,
+                    asc:false,
+                    page:targetPage,
                     size:6,
                     searchText: this.searchText,
                 }

@@ -8,7 +8,6 @@ import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,35 +38,40 @@ public class AuthorityInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession();
         Object userOid_obj = session.getAttribute("email");//userserver接入后统一使用email
-        // ①:START 方法注解级拦截器
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        Method method = handlerMethod.getMethod();
-        // 判断接口是否需要登录
-        LoginRequired methodAnnotation = method.getAnnotation(LoginRequired.class);
-        String[] arr = method.getReturnType().getName().split("\\.");
-        String name = arr[arr.length - 1];
-        // 有 @LoginRequired 注解，需要认证
-        if (methodAnnotation != null) {
-            // 这写你拦截需要干的事儿，比如取缓存，SESSION，权限判断等
-            if (userOid_obj==null){
 
-                // 判断拦截的方法返回值是什么，如果是JsonResult返回JSON，如果是ModelAndView跳转到login页面
-                if (name.equals("JsonResult")){
-                    JsonResult unauthorized = ResultUtils.unauthorized();
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("code",unauthorized.getCode());
-                    jsonObject.put("msg",unauthorized.getMsg());
-                    returnJson(response,jsonObject.toJSONString());
+        try {
+            // ①:START 方法注解级拦截器
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod();
+            // 判断接口是否需要登录
+            LoginRequired methodAnnotation = method.getAnnotation(LoginRequired.class);
+            String[] arr = method.getReturnType().getName().split("\\.");
+            String name = arr[arr.length - 1];
+            // 有 @LoginRequired 注解，需要认证
+            if (methodAnnotation != null) {
+                // 这写你拦截需要干的事儿，比如取缓存，SESSION，权限判断等
+                if (userOid_obj==null){
+
+                    // 判断拦截的方法返回值是什么，如果是JsonResult返回JSON，如果是ModelAndView跳转到login页面
+                    if (name.equals("JsonResult")){
+                        JsonResult unauthorized = ResultUtils.unauthorized();
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("code",unauthorized.getCode());
+                        jsonObject.put("msg",unauthorized.getMsg());
+                        returnJson(response,jsonObject.toJSONString());
+                    }
+                    else {
+                        //若未登录，则记录用户试图访问的接口，在登录后自动请求
+                        session.setAttribute("preUrl",request.getRequestURI());
+                        response.sendRedirect("/user/login");
+                    }
+                    return false;
                 }
-                else {
-                    //若未登录，则记录用户试图访问的接口，在登录后自动请求
-                    session.setAttribute("preUrl",request.getRequestURI());
-                    response.sendRedirect("/user/login");
-                }
-                return false;
+
+                return true;
             }
-
-            return true;
+        } catch (Exception e){
+            log.error(e.getMessage());
         }
 
         return true;

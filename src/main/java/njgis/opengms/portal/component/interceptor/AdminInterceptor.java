@@ -43,38 +43,42 @@ public class AdminInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         UserRoleEnum role = (UserRoleEnum) session.getAttribute("role");//userserver接入后统一使用email
         Object email = session.getAttribute("email");//userserver接入后统一使用email
-        // ①:START 方法注解级拦截器
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        Method method = handlerMethod.getMethod();
-        // 判断接口是否需要管理员权限
-        AdminRequired methodAnnotation = method.getAnnotation(AdminRequired.class);
-        // 有 @AdminRequired 注解，需要认证
-        if (methodAnnotation != null) {
-            // 这写你拦截需要干的事儿，比如取缓存，SESSION，权限判断等
-            if (email == null){ //未登录，直接拦截至登录页面
-                session.setAttribute("preUrl",request.getRequestURI());
-                response.sendRedirect("/user/login");
-                return false;
-            }else { // 判断用户权限
-                // User user = userDao.findFirstByEmail(email);
-                // UserRoleEnum userRole = user.getUserRole();
-                JsonResult unauthorized = ResultUtils.unauthorized();
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("code",unauthorized.getCode());
-                jsonObject.put("msg",unauthorized.getMsg());
-                if (role == null){
+        try {
+            // ①:START 方法注解级拦截器
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod();
+            // 判断接口是否需要管理员权限
+            AdminRequired methodAnnotation = method.getAnnotation(AdminRequired.class);
+            // 有 @AdminRequired 注解，需要认证
+            if (methodAnnotation != null) {
+                // 这写你拦截需要干的事儿，比如取缓存，SESSION，权限判断等
+                if (email == null){ //未登录，直接拦截至登录页面
+                    session.setAttribute("preUrl",request.getRequestURI());
+                    response.sendRedirect("/user/login");
+                    return false;
+                }else { // 判断用户权限
+                    // User user = userDao.findFirstByEmail(email);
+                    // UserRoleEnum userRole = user.getUserRole();
+                    JsonResult unauthorized = ResultUtils.unauthorized();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("code",unauthorized.getCode());
+                    jsonObject.put("msg",unauthorized.getMsg());
+                    if (role == null){
+                        returnJson(response,jsonObject.toJSONString());
+                        // return false;
+                    }
+                    if(role.isAdmin()){
+                        return true;
+                    }
+
+                    //TODO 是否要返回无权限提示?
                     returnJson(response,jsonObject.toJSONString());
                     // return false;
                 }
-                if(role.isAdmin()){
-                    return true;
-                }
 
-                //TODO 是否要返回无权限提示?
-                returnJson(response,jsonObject.toJSONString());
-                // return false;
             }
-
+        } catch (Exception e){
+            log.error(e.getMessage());
         }
 
         return true;

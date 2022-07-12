@@ -1189,7 +1189,7 @@ var userDataSpace = Vue.extend(
                 if (this.selectedDataSet.length > 0) {
                     let ids = []
                     for(let i=0;i<this.selectedDataSet.length;i++){
-                        let urls = this.selectedDataSet[i].url.split("/")
+                        let urls = this.selectedDataSet[i].address.split("/")
                         ids.push(urls[urls.length-1])
                     }
                     let idstr = ids.toString();
