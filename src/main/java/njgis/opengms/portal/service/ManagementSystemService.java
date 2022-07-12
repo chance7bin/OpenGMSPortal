@@ -1014,7 +1014,11 @@ public class ManagementSystemService {
             JSONObject daoFactory = genericService.daoFactory(comment.getRelateItemType());
             GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
             PortalItem item = (PortalItem)itemDao.findFirstById(comment.getRelateItemId());
-            o.put("itemName", item.getName());
+            if (item == null){
+                o.put("itemName", "条目已删除");
+            } else {
+                o.put("itemName", item.getName());
+            }
             contentList.add(o);
 
         }
