@@ -5,6 +5,7 @@ new Vue({
     },
     data: function () {
         return {
+            htmlJson: {},
             categoryId: "a24cba2b-9ce1-44de-ac68-8ec36a535d0e",
             statistic:['Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview','Overview'],
             activeIndex: '2',
@@ -153,6 +154,22 @@ new Vue({
         }
     },
     methods: {
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         translatePage(jsonContent){
             //切换当前分类名称及分类树的选中情况
             let currentTreeDataId = "";
@@ -784,44 +801,46 @@ new Vue({
         },
         //显示功能引导框
         showDriver(){
-            if(!this.driver){
+            if(true){
                 this.driver = new Driver({
                     "className": "scope-class",
                     "allowClose": false,
                     "opacity" : 0.1,
-                    "prevBtnText": "Previous",
-                    "nextBtnText": "Next"
+                    "prevBtnText": this.htmlJson.Previous,
+                    "nextBtnText": this.htmlJson.Next,
+                    "closeBtnText": this.htmlJson.Close,
+                    "doneBtnText": this.htmlJson.Done
                 });
                 this.stepsConfig = [
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : "Model Classifications",
-                            "description" : "You can query models by choosing a classification.",
+                            "title" : this.htmlJson.ModelClassifications,
+                            "description" : this.htmlJson.QueryModelsByClassification,
                             "position" : "right-top",
                         }
                     },
                     {
                         "element": ".searcherInputPanel",
                         "popover": {
-                            "title": "Search",
-                            "description": "You can also search models by model name.",
+                            "title": this.htmlJson.Search,
+                            "description": this.htmlJson.SearchModelsByModelName,
                             "position": "bottom-right",
                         }
                     },
                     {
                         "element": ".modelPanel",
                         "popover": {
-                            "title": "Overview",
-                            "description": "Here is query result, you can browse models' overview. Click model name to check model detail.",
+                            "title": this.htmlJson.Overview,
+                            "description": this.htmlJson.BrowseModelsOverview,
                             "position": "top",
                         }
                     },
                     {
                         "element" : "#contributeBtn",
                         "popover" : {
-                            "title" : "Contribute",
-                            "description" : "You can share your models on OpenGMS, and get an OpenGMS unique identifier!",
+                            "title" : this.htmlJson.Contribute,
+                            "description" : this.htmlJson.ShareYourModelsOnOpenGMS,
                             "position" : "bottom",
                         }
                     }
@@ -975,11 +994,19 @@ new Vue({
             window.location.href="mailto:opengms@njnu.edu.cn"
         },
     },
-    mounted() {
+    watch:{
+        htmlJSON:function (){
+            this.htmlJson = this.getStorage("userSpaceAll");
+            console.log(this.htmlJson.QueryModelsByClassification)
+            console.log(this.stepsConfig)
+        }
+    },
 
+    mounted() {
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
 
         this.urlSearch(decodeURIComponent(window.location.search));
-
 
         //expend
         $("#expend").click(() => {

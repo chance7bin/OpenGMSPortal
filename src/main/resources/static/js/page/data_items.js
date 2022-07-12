@@ -50,6 +50,7 @@ var data_items = new Vue({
             queryFields:["Name","Keyword","Content","Contributor"],
             curQueryField:"Name",
             showCategoryName:'Land regions',
+            currentCategory:'landRegions',
 
             htmlJSON:{
                 "ViewCount": ["View Count", "viewCount"],
@@ -59,7 +60,8 @@ var data_items = new Vue({
                 "Desc": ["Desc.","Desc."],
                 "queryFields":[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
 
-            }
+            },
+        htmlJson:{}
         }
     },
     methods: {
@@ -81,6 +83,10 @@ var data_items = new Vue({
         },
 
         translatePage(jsonContent){
+
+            console.log(this.showCategoryName)
+            console.log(this.currentCategory)
+            this.showCategoryName = jsonContent[this.currentCategory];
 
             //切换列表中标签选择情况
             if(this.htmlJSON.Name[0]!=jsonContent.Name[0]) {
@@ -105,44 +111,46 @@ var data_items = new Vue({
 
         //显示功能引导框
         showDriver(){
-            if(!this.driver){
+            if(true){
                 this.driver = new Driver({
                     "className": "scope-class",
                     "allowClose": false,
                     "opacity" : 0.1,
-                    "prevBtnText": "Previous",
-                    "nextBtnText": "Next"
+                    "prevBtnText": this.htmlJson.Previous,
+                    "nextBtnText": this.htmlJson.Next,
+                    "closeBtnText": this.htmlJson.Close,
+                    "doneBtnText": this.htmlJson.Done
                 });
                 this.stepsConfig = [
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : "Data Categories",
-                            "description" : "You can query data by choosing a category.",
+                            "title" : this.htmlJson.ModelClassifications,
+                            "description" : this.htmlJson.QueryDataByChoosingCategory,
                             "position" : "right-top",
                         }
                     },
                     {
                         "element": ".searcherInputPanel",
                         "popover": {
-                            "title": "Search",
-                            "description": "You can also search data by name.",
+                            "title": this.htmlJson.Search,
+                            "description": this.htmlJson.SearchDataByName,
                             "position": "bottom-right",
                         }
                     },
                     {
                         "element": ".modelPanel",
                         "popover": {
-                            "title": "Overview",
-                            "description": "Here is query result, you can browse data's overview. Click data name to check detail.",
+                            "title": this.htmlJson.Overview,
+                            "description": this.htmlJson.BrowseDataOverview,
                             "position": "top",
                         }
                     },
                     {
                         "element" : "#contributeBtn",
                         "popover" : {
-                            "title" : "Contribute",
-                            "description" : "You can share your data on OpenGMS, and get an OpenGMS unique identifier!",
+                            "title" : this.htmlJson.Contribute,
+                            "description" : this.htmlJson.ShareYourDataOnOpenGMS,
                             "position" : "bottom",
                         }
                     }
@@ -186,7 +194,8 @@ var data_items = new Vue({
             this.classlist=val;
         },
         // 切换类别
-        chooseCate(item, event) {
+        chooseCate(item, event, currentCategory) {
+            // console.log("here")
             let all_button=$('.cateButton')
             for (let i = 0; i < all_button.length; i++) {
                 all_button[i].style.color="";
@@ -201,6 +210,9 @@ var data_items = new Vue({
             this.currentPage = 1
             this.categoryName = item;
             this.showCategoryName = event.currentTarget.children[0].outerText;
+            this.currentCategory = currentCategory;
+            console.log(this.currentCategory)
+
             this.datacount=-1
             this.loading=true
             this.progressBar=true;
@@ -330,6 +342,9 @@ var data_items = new Vue({
     }
     ,
     mounted(){
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
+
         let language = this.getStorage("language");
         if (language == "zh-cn"){
             this.showCategoryName = "陆地圈"

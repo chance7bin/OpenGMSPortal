@@ -135,7 +135,8 @@ new Vue({
                 CreateTime: ["Create Time","createTime"],
                 Asc: ["Asc.","Asc."],
                 Desc: ["Desc.","Desc."],
-            }
+            },
+        htmlJson:{}
         }
     },
     methods: {
@@ -223,44 +224,46 @@ new Vue({
 
         //显示功能引导框
         showDriver(){
-            if(!this.driver){
+            if(true){
                 this.driver = new Driver({
                     "className": "scope-class",
                     "allowClose": false,
                     "opacity" : 0.1,
-                    "prevBtnText": "Previous",
-                    "nextBtnText": "Next"
+                    "prevBtnText": this.htmlJson.Previous,
+                    "nextBtnText": this.htmlJson.Next,
+                    "closeBtnText": this.htmlJson.Close,
+                    "doneBtnText": this.htmlJson.Done
                 });
                 this.stepsConfig = [
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : "Repository Collections",
-                            "description" : "You can query unit & metrics by choosing a collection.",
-                            "position" : "right",
+                            "title" : this.htmlJson.ModelClassifications,
+                            "description" : this.htmlJson.QueryUnitByChoosingCollection,
+                            "position" : "right-top",
                         }
                     },
                     {
                         "element": ".searcherInputPanel",
                         "popover": {
-                            "title": "Search",
-                            "description": "You can also search unit & metrics by name.",
+                            "title": this.htmlJson.Search,
+                            "description": this.htmlJson.SearchUnitByModelName,
                             "position": "bottom-right",
                         }
                     },
                     {
                         "element": ".modelPanel",
                         "popover": {
-                            "title": "Overview",
-                            "description": "Here is query result, you can browse unit & metrics' overview. Click name to check detail.",
+                            "title": this.htmlJson.Overview,
+                            "description": this.htmlJson.BrowseUnitOverview,
                             "position": "top",
                         }
                     },
                     {
                         "element" : "#contributeBtn",
                         "popover" : {
-                            "title" : "Contribute",
-                            "description" : "You can share unit & metrics on OpenGMS, and get an OpenGMS unique identifier!",
+                            "title" : this.htmlJson.Contribute,
+                            "description" : this.htmlJson.ShareYourUnitOnOpenGMS,
                             "position" : "bottom",
                         }
                     }
@@ -447,6 +450,8 @@ new Vue({
 
     },
     mounted() {
+        //首先到缓存中获取userSpaceAll
+        this.htmlJson = this.getStorage("userSpaceAll");
 
         this.getModels();
 
