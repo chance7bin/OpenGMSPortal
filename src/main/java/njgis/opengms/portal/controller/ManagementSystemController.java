@@ -4,19 +4,28 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import njgis.opengms.portal.component.AdminRequired;
+import njgis.opengms.portal.dao.ComputableModelDao;
+import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.task.CheckedHistory;
+import njgis.opengms.portal.entity.doo.task.CheckedModel;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +53,12 @@ public class ManagementSystemController {
     @Autowired
     ServerService serverService;
 
+
+    @Autowired
+    ComputableModelDao computableModelDao;
+
+    @Autowired
+    UserDao userDao;
 
     @GetMapping("/home")
     public ModelAndView getHomePage(){
@@ -98,7 +113,33 @@ public class ManagementSystemController {
         HttpSession session = request.getSession();
         String email = session.getAttribute("email").toString();
         // String email = "782807969@qq.com";
-        return managementSystemService.invokeModel(modelId, email);
+
+
+        JsonResult invokeResult = managementSystemService.invokeModel(modelId, email);
+
+
+        //单次调用模型也要加到记录中，这之前没考虑到，为了不修改之前的代码就在这里加了
+        CheckedHistory checkedHistory = new CheckedHistory();
+        List<CheckedHistory> checkedHistoryList = new ArrayList<>();
+        ComputableModel model = computableModelDao.findFirstById(modelId);
+        CheckedModel checkedModel = model.getCheckedModel();
+        BeanUtils.copyProperties(checkedModel,checkedHistory,"taskIdList");
+        checkedHistory.setModelId(modelId);
+        checkedHistory.setModelName(model.getName());
+        User user = userDao.findFirstByEmail(model.getAuthor());
+        checkedHistory.setAuthor(user.getName());
+        if (invokeResult.getCode() == ResultEnum.SUCCESS.getCode()){
+            List<String> taskIdList = checkedModel.getTaskIdList();
+            int size = taskIdList.size();
+            checkedHistory.setTaskId(taskIdList.get(size - 1));
+        }
+
+        checkedHistoryList.add(checkedHistory);
+        managementSystemService.saveCheckedList(checkedHistoryList, email);
+
+
+        return invokeResult;
+
     }
 
     // @LoginRequired
