@@ -142,8 +142,36 @@
                 <div id="resourceCount" style="width: 90% ;height: 35%;"></div>
             </el-main>
 
-            <el-main class="right_content flexColumnAroundCenter" >
-                <div id="pageView" style="width: 85% ;height: 25%;"> </div>
+            <el-main class="right_content flexColumnAroundCenter" style="position: relative">
+<!--                <div style="position: absolute; top: 0; left: 20%;  color: rgb(12, 211, 96);">-->
+<!--                    <el-select v-model="timeSelected" placeholder="请选择" size="small">-->
+<!--                        <el-option-->
+<!--                                v-for="item in timeSelectList"-->
+<!--                                :key="item.value"-->
+<!--                                :label="item.label"-->
+<!--                                :value="item.value">-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
+<!--                </div>-->
+                <div style="width: 85% ;height: 25%; position:relative;">
+                    <h4 style="color: white; position:absolute; left: 10%; top: -8%;">总数:{{pageViewTotal}}</h4>
+
+                    <el-dropdown style="color: white; position:absolute; right: 15%; top: 1%; z-index: 500;" @command="handleTimeSelect">
+                        <span class="el-dropdown-link">
+                            {{timeSelected}}<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="halfYear">近半年</el-dropdown-item>
+                            <el-dropdown-item command="oneYear">近一年</el-dropdown-item>
+                            <el-dropdown-item command="threeYear">近三年</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+
+                    <div id="pageView" style="width: 100% ;height: 100%;"> </div>
+
+                </div>
+<!--                <div id="pageView" style="width: 85% ;height: 25%;"> </div>-->
+
                 <div id="userView" style="width: 85%;height: 25%;"></div>
                 <div id="itemView" style="width: 85%;height: 50%;"></div>
             </el-main>
