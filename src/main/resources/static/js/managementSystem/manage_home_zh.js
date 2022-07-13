@@ -7,7 +7,10 @@ new Vue({
 
         resourceCount:[], //资源数量
 
-        pageViewCount:[],//页面访问数量
+        pageViewCount:[],//页面访问数量总列表
+        pageViewCountTotal:[], //页面访问数量绘图
+        timeSelected:"近半年",
+        pageViewTotal:0,
         userViewCount:[], //用户访问数量
         itemViewCount:[], //条目访问数量
 
@@ -21,6 +24,8 @@ new Vue({
         serviceUseCount:[], //服务调用数量
 
         userCount:0, //用户数量
+
+
     },
     mounted() {
 
@@ -275,8 +280,10 @@ new Vue({
         getPageViewCount(){
             axios.get("/managementSystem/view/page/count")
                 .then(response=> {
-                    this.pageViewCount=response.data.data
+                    this.pageViewCountTotal=response.data.data
+                    this.pageViewCount=this.pageViewCountTotal.slice(-160,-1)
                     this.drawPageViewCount()
+                    this.getPageViewCountTotal()
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -337,6 +344,33 @@ new Vue({
                 ]
             })
 
+        },
+        handleTimeSelect(command){
+            if(command=="halfYear"){
+                this.timeSelected="近半年"
+                this.pageViewCount=this.pageViewCountTotal.slice(-160,-1)
+                this.drawPageViewCount()
+                this.getPageViewCountTotal()
+
+            }else if (command=="oneYear"){
+                this.timeSelected="近一年"
+                this.pageViewCount=this.pageViewCountTotal.slice(-365,-1)
+                this.drawPageViewCount()
+                this.getPageViewCountTotal()
+
+            }else {
+                this.timeSelected="近三年"
+                this.pageViewCount=this.pageViewCountTotal
+                this.drawPageViewCount()
+                this.getPageViewCountTotal()
+            }
+
+        },
+        getPageViewCountTotal(){
+            this.pageViewTotal=0
+            this.pageViewCount.forEach((item)=>{
+                this.pageViewTotal+=item.count
+            })
         },
 
         //获取用户访问数量

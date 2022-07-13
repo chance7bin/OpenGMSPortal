@@ -142,7 +142,25 @@
             </el-main>
 
             <el-main class="right_content flexColumnAroundCenter" >
-                <div id="pageView" style="width: 95% ;height: 25%;"> </div>
+                <div style="width: 85% ;height: 25%; position:relative;">
+                    <h4 style="color: white; position:absolute; left: 10%; top: -8%;">Total:{{pageViewTotal}}</h4>
+
+                    <el-dropdown style="color: white; position:absolute; right: 10%; top: 1%; z-index: 500;" @command="handleTimeSelect">
+                        <span class="el-dropdown-link">
+                            {{timeSelected}}<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="halfYear">last half year</el-dropdown-item>
+                            <el-dropdown-item command="oneYear">last year</el-dropdown-item>
+                            <el-dropdown-item command="threeYear">last three years</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+
+                    <div id="pageView" style="width: 100% ;height: 100%;"> </div>
+
+                </div>
+
+<!--                <div id="pageView" style="width: 95% ;height: 25%;"> </div>-->
                 <div id="userView" style="width: 95%;height: 25%;"></div>
                 <div id="itemView" style="width: 95%;height: 50%;"></div>
             </el-main>

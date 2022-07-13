@@ -40,16 +40,16 @@ export var VersionTemplate = Vue.extend({
                                             <el-button
                                                     size="mini"
                                                     type="primary"
-                                                    @click="viewWaitVersion(scope.row.id)">查看</el-button>
+                                                    @click="viewVersionById(scope.row.type,scope.row.id)">查看</el-button>
                                             <el-button
                                                     size="mini"
                                                     type="success"
-                                                    @click="acceptVersion(scope.row.id)">接受</el-button>
+                                                    @click="acceptVersionById(scope.row.id)">接受</el-button>
                                             &nbsp;
                                             <el-button
                                                     size="mini"
                                                     type="danger"
-                                                    @click="rejectVersion(scope.row.id)">拒绝</el-button>
+                                                    @click="rejectVersionById(scope.row.id)">拒绝</el-button>
                                         </template>
 
                                     </el-table-column>
@@ -171,7 +171,7 @@ export var VersionTemplate = Vue.extend({
                                             <el-button
                                                     size="mini"
                                                     type="primary"
-                                                    @click="viewAcceptVersion(scope.row.id)">查看</el-button>
+                                                    @click="viewVersionById(scope.row.type,scope.row.id)">查看</el-button>
                                         </template>
 
                                     </el-table-column>
@@ -234,7 +234,7 @@ export var VersionTemplate = Vue.extend({
                                             <el-button
                                                     size="mini"
                                                     type="primary"
-                                                    @click="viewRejectVersion(scope.row.id)">查看</el-button>
+                                                    @click="viewVersionById(scope.row.type, scope.row.id)">查看</el-button>
                                         </template>
 
                                     </el-table-column>
@@ -326,25 +326,83 @@ export var VersionTemplate = Vue.extend({
         },
 
 
-        //查看某次审核，对比
-        viewWaitVersion(versionId){
-            this.dialogVersionComp=true
-            axios.get("/version/detail/"+versionId)
-                .then(response=> {
-                    this.versionCompData=response.data.data
-                    this.versionCompChangedField=this.versionCompData.changedField
-                    console.log(this.versionCompChangedField);
-                })
-                .catch(function (error) {
-                    console.log(error);
+        // //查看某次审核，对比 旧
+        // viewWaitVersion(versionId){
+        //     this.dialogVersionComp=true
+        //     axios.get("/version/detail/"+versionId)
+        //         .then(response=> {
+        //             this.versionCompData=response.data.data
+        //             this.versionCompChangedField=this.versionCompData.changedField
+        //             console.log(this.versionCompChangedField);
+        //         })
+        //         .catch(function (error) {
+        //             console.log(error);
+        //         });
+        //     console.log(versionId)
+        //
+        // },
+        // acceptVersion(){
+        //
+        // },
+        // rejectVersion(){
+        //
+        // },
+
+
+        viewVersionById(type,versionId){
+            let versionViewUrl="/version/versionCompare/"+versionId
+            window.open(versionViewUrl, '_blank')
+        },
+
+        acceptVersionById(versionId){
+            this.$confirm('接受该版本, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                axios.get("/version/accept/"+versionId)
+                    .then(res=> {
+                        this.$message({
+                            type: 'success',
+                            message: '接受成功!'
+                        });
+                        this.getWaitVersionList()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
-            console.log(versionId)
+            });
 
         },
-        acceptVersion(){
 
-        },
-        rejectVersion(){
+        rejectVersionById(versionId){
+            this.$confirm('拒接该版本, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                axios.get("/version/reject/"+versionId)
+                    .then(res=> {
+                        this.$message({
+                            type: 'success',
+                            message: '拒绝成功!'
+                        });
+                        this.getVersionList(this.versionUrl)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
 
         },
         versionCompareShow(){
