@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                             <!--                                    Detailed Description-->
-                            <div th:if="${originalField?.get('localizationList')!=null}" class="detail_block">
+                            <div th:if="${originalField?.get('localizationList')!=null and #lists.size(originalField.localizationList)!=0}" class="detail_block">
                                 <div class="block_head">
                                     <div class="head_text">
                                         <h4 translateId="detailedDescription">Detailed Description</h4>
@@ -276,11 +276,12 @@
                             </div>
 
                             <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel' or (${modularType.name} eq'LogicalModel'))">
-                                <div th:if="${originalField?.get('relateModelItemList')!=null}" th:replace="fragments/itemInfoModules :: related_models(${originalField.relateModelItemList})"></div>
-
+                                <div th:if="${originalField?.get('relateModelItemList')!=null}">
+                                    <div  th:replace="fragments/itemInfoModules :: related_models(${originalField.relateModelItemList})"></div>
+                                </div>
                             </div>
-                            <div th:if="${modularType.name} eq 'LogicalModel'">
-                                <div th:if="${originalField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${originalField})"></div>
+                            <div th:if="${modularType.name} eq 'LogicalModel' or ${modularType.name} eq 'ConceptualModel'">
+                                <div th:if="${originalField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${originalField},'MxGraph','/static',fasle)"></div>
                             </div>
 
 
@@ -319,7 +320,7 @@
                                 </div>
                             </div>
                             <!--                                    Detailed Description-->
-                            <div th:if="${newField?.get('localizationList')!=null}" class="detail_block">
+                            <div th:if="${newField?.get('localizationList')!=null and #lists.size(newField.localizationList)!=0}" class="detail_block">
                                 <div class="block_head">
                                     <div class="head_text">
                                         <h4 translateId="detailedDescription">Detailed Description</h4>
@@ -524,12 +525,14 @@
                             </div>
 
                             <div th:if="(${modularType.name} eq 'ComputableModel') or (${modularType.name} eq 'ConceptualModel' or (${modularType.name} eq'LogicalModel'))">
-                                <div th:if="${newField?.get('relateModelItemList')!=null}" th:replace="fragments/itemInfoModules :: related_models(${newField.relateModelItemList})"></div>
+                                <div th:if="${newField?.get('relateModelItemList')!=null}">
+                                    <div  th:replace="fragments/itemInfoModules :: related_models(${newField.relateModelItemList})"></div>
+                                </div>
 
                             </div>
 
-                            <div th:if="${modularTy`pe.name} eq 'LogicalModel'">
-                                <div th:if="${newField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${newField})"></div>
+                            <div th:if="${modularType.name} eq 'LogicalModel' or ${modularType.name} eq 'ConceptualModel'">
+                                <div th:if="${newField?.get('imageList')!=null" th:replace="fragments/itemInfoModules :: conceptual_graph(${newField},'MxGraph','/static',false)"></div>
                             </div>
 
                         </el-card>
@@ -537,14 +540,15 @@
                 </el-row>
 
             </el-main>
-            <el-footer class="btns-content">
-                <el-row class="main-content" :gutter="20" type="flex" justify="end">
-                    <el-button style="margin: 0 10px" type="primary">Accept</el-button>
-                    <el-button style="margin: 0 10px" type="warning">Reject</el-button>
-                </el-row>
-            </el-footer>
+<!--            <el-footer class="btns-content">-->
+<!--                <el-row class="main-content" :gutter="20" type="flex" justify="end">-->
+<!--                    <el-button style="margin: 0 10px" type="primary">Accept</el-button>-->
+<!--                    <el-button style="margin: 0 10px" type="warning">Reject</el-button>-->
+<!--                </el-row>-->
+<!--            </el-footer>-->
 
         </el-container>
+
 
     </div>
 </div>
@@ -565,6 +569,7 @@
 <script src="/static/js/modules/userAvatar.js"></script>
 <script src="/static/js/common/vue-avatar.min.js"></script>
 <script src="/static/js/page/version_compare.js"></script>
+
 <!--<script src="/static/js/page/model_item_info.js"></script>-->
 <script src="/static/js/common/navbar.js"></script>
 

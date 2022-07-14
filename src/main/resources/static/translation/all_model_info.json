@@ -96,7 +96,7 @@
     "NoRelatedConceptual":"There is no related conceptual model. You can link conceptual models.",
     "NoRelatedLogical":"There is no related logical model. You can link logical models.",
     "NoRelatedModel":"There is no related model item. You can link model items.",
-
+    "RelatedConcept": "Related Concept",
     "RelatedConceptual":"Edit Related Conceptual Model",
     "viewHistory":"View History",
 
@@ -152,13 +152,17 @@
     "continue": "continue",
     "Back": "Back",
     "allDeleteInfo": "All of the selected files will be deleted.",
-    "selectDirTip": "Please select a file directory."
+    "selectDirTip": "Please select a file directory.",
+    "DataResourceUrl": "Data Resource Url",
+    "CategoryTags": "Category Tags"
   },
   "zh-cn": {
+      "DataResourceUrl": "数据资源链接",
+    "RelatedConcept": "相关概念",
     "conceptualModel": "概念模型",
     "logicalModel": "逻辑模型",
     "computableModel": "计算模型",
-
+    "CategoryTags": "类别标签",
     "package": "OpenGMS模型服务封装包",
     "sourceCode": "源代码",
     "library": "可执行链接库",

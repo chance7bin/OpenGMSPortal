@@ -2045,7 +2045,7 @@ var vue = new Vue({
             };
             $.ajax({
                 type: "GET",
-                url: "/modelItem/getRelation",
+                url: "/modelItem/relation",
                 data: data,
                 async: true,
                 success: (json) => {

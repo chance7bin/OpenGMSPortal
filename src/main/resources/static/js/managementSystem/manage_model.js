@@ -321,12 +321,14 @@ export var ModelTemplate = Vue.extend({
 
         //响应模型列表选择(全选)
         handelAllCheck(selection){
+            console.log(selection)
             if(selection.length!==0){  //全选中时
                 for (let i=0,len=selection.length;i<len;i++){
                     let tempModelItem={
-                        modelName:selection[i].accessId,
+                        modelName:selection[i].name,
                         modelId:selection[i].id
                     }
+                    console.log(tempModelItem)
                     let findIndex=-1
                     for(let j = 0,len1=this.waitCheckModels.length; j < len1; j++) {
                         if(this.waitCheckModels[j].modelId===tempModelItem.modelId){

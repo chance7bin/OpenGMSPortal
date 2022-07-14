@@ -74,7 +74,7 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo})"></div>
+            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo},${itemInfo.contentType},${loadPath},true)"></div>
 
             <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
