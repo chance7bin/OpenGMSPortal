@@ -947,6 +947,12 @@ public class VersionService {
                 getModelItemChanged(originalField, newField);
                 break;
             }
+            case LogicalModel:
+            case ConceptualModel:
+            {
+                getLogicalModelItemChanged(originalField, newField);
+                break;
+            }
             case DataItem:{
                 getDataItemChanged(originalField, newField, ItemTypeEnum.DataItem);
                 break;
@@ -1165,7 +1171,15 @@ public class VersionService {
 
         }
     }
+    private void getLogicalModelItemChanged(JSONObject originalField, JSONObject newField) {
+        if(originalField.get("imageList") == null){
+            originalField.put("imageList", null);
+        }
+        if(newField.get("imageList") == null){
+            newField.put("imageList", null);
+        }
 
+    }
     private void getModelItemChanged(JSONObject originalField, JSONObject newField) {
 
         if(originalField.get("classifications") != null&&newField.get("classifications")!=null){

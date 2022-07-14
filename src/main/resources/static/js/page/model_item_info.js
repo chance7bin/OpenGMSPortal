@@ -525,7 +525,7 @@ var info=new Vue({
                         }, {"id": 7, "label": "Solid earth", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e"}, {
                             "id": 8,
                             "label": "Integrated perspective",
-                            "oid": "eb1d8ddc-6be1-41ef-bab6-a8d940d46499"
+                            "oid": "396cc739-ef33-4332-8d5d-9a67c89567c7"
                         }], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0"
                     }, {
                         "children": [{
@@ -536,7 +536,7 @@ var info=new Vue({
                             "id": 12,
                             "label": "Economic regions",
                             "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769"
-                        }, {"id": 13, "label": "Integrated perspective", "oid": "65dbe5a9-ada9-4c02-8353-5029a84d7628"}],
+                        }],
                         "id": 9,
                         "label": "Human-perspective",
                         "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da"
