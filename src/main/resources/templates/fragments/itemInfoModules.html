@@ -327,7 +327,7 @@
             <h4 translateId="relateModelItem">Related Model Item</h4>
         </div>
     </div>
-    <div class="block_content flex">
+    <div class="block_content">
         <div class="list_panel clearfix" th:each="relateModelItem:${relateModelItemList}">
             <a th:href="'/modelItem/'+${relateModelItem.id}" class="img">
                 <div th:switch="${relateModelItem.img}">
@@ -988,7 +988,8 @@
                 <div class="list_panel clearfix" th:each="model:${relation.dataItems}">
                     <!--<div th:text="${model.image}"></div>-->
                     <a class="img" th:href="'/dataItem/'+${model.id}">
-                        <img src="/static/img/model/data.png">
+                        <!--<img src="/static/img/model/data.png">-->
+                        <avatar th:username="${model.name}" :size="90" :rounded="false"></avatar>
                     </a>
                     <div class="info" style="margin-top:0px;">
                         <a th:href="'/dataItem/'+${model.id}"

@@ -21,7 +21,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class ModelItemRelate {
 
-   List<ModelRelation> modelRelationList = new ArrayList<>();
+    List<ModelRelation> modelRelationList = new ArrayList<>();
 
     List<String> conceptualModels = new ArrayList<>();
     List<String> logicalModels = new ArrayList<>();

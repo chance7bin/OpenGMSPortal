@@ -15,6 +15,7 @@ import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -194,6 +195,12 @@ public class VersionService {
         }
         content.setContributors(contributors);
 
+        //模型条目需要更新关联信息
+        if (version.getType() == ItemTypeEnum.ModelItem){
+            // 因为不知道更改的是哪个条目的关联，所以要先判断下
+            updateModelItemRelation(version);
+        }
+
         JSONObject factory = genericService.daoFactory(version.getType());
         GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         try {
@@ -222,6 +229,35 @@ public class VersionService {
         return ResultUtils.success();
     }
 
+    private void updateModelItemRelation(Version version){
+        ModelItem oriVersion = (ModelItem)version.getOriginal();
+        ModelItem newVersion = (ModelItem)version.getContent();
+        ModelItemRelate oriRelate = oriVersion.getRelate();
+        ModelItemRelate newRelate = newVersion.getRelate();
+        String updateRelateItemType = null;
+        List<String> updateRelations = null;
+
+        if (!Utils.equalLists(oriRelate.getDataItems(), newRelate.getDataItems())){
+            updateRelateItemType = ItemTypeEnum.DataItem.getText();
+            updateRelations = newRelate.getDataItems();
+        }
+        if (!Utils.equalLists(oriRelate.getComputableModels(), newRelate.getComputableModels())){
+            updateRelateItemType = ItemTypeEnum.ComputableModel.getText();
+            updateRelations = newRelate.getComputableModels();
+        }
+        if (!Utils.equalLists(oriRelate.getConceptualModels(), newRelate.getConceptualModels())){
+            updateRelateItemType = ItemTypeEnum.ConceptualModel.getText();
+            updateRelations = newRelate.getConceptualModels();
+        }
+        if (!Utils.equalLists(oriRelate.getLogicalModels(), newRelate.getLogicalModels())){
+            updateRelateItemType = ItemTypeEnum.LogicalModel.getText();
+            updateRelations = newRelate.getLogicalModels();
+        }
+
+        if (updateRelations != null && updateRelateItemType != null){
+            modelItemService.updateModelItemRelation(updateRelations, updateRelateItemType, oriVersion);
+        }
+    }
 
     /**
      * 审核未通过

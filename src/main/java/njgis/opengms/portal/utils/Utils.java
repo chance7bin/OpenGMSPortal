@@ -1103,4 +1103,46 @@ public class Utils {
         return sdf.format(date);
     }
 
+
+    /**
+     * 利用反射将父类转为子类（向下转型）
+     * @param clazz
+     * @return T
+     * @Author bin
+     **/
+    public static <T, U> T safeCast(Class<T> clazz, U obj) {
+        if (clazz.isInstance(obj)) {
+            return (T)obj;
+        }
+        // throw ...;  //或者 return null ，看你想要的用法
+        return null;
+    }
+
+    /**
+     * 判断两个列表是否相等，顺序不重要
+     * @param one
+     * @param two
+     * @return boolean 
+     * @Author bin
+     **/
+    public static boolean equalLists(List<String> one, List<String> two){
+        if (one == null && two == null){
+            return true;
+        }
+
+        if((one == null && two != null)
+            || one != null && two == null
+            || one.size() != two.size()){
+            return false;
+        }
+
+        //to avoid messing the order of the lists we will use a copy
+        //as noted in comments by A. R. S.
+        one = new ArrayList<String>(one);
+        two = new ArrayList<String>(two);
+
+        Collections.sort(one);
+        Collections.sort(two);
+        return one.equals(two);
+    }
 }

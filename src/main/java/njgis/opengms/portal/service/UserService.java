@@ -625,14 +625,23 @@ public class UserService {
 
     public JSONObject getItemUserInfoByEmail(String email) {
         User user = null;
+        JSONObject userJson = new JSONObject();
         if (email.contains("@")){
             user = userDao.findFirstByEmail(email);
         } else {
             user = userDao.findFirstByAccessId(email);
-            email = user.getEmail();
+            if (user != null){
+                email = user.getEmail();
+            } else {
+                userJson.put("name", email);
+                userJson.put("email", null);
+                userJson.put("accessId", null);
+                userJson.put("image", null);
+                return userJson;
+            }
+
         }
         JSONObject userInfo = getInfoFromUserServer(email);
-        JSONObject userJson = new JSONObject();
         userJson.put("name", userInfo.getString("name"));
         // userJson.put("id", user.getId());
         userJson.put("email", user.getEmail());

@@ -11,7 +11,7 @@
     <link rel="stylesheet" th:href="@{/static/css/base/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/static/css/base/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{/static/css/base/style.css}">
-    <link rel="stylesheet" th:href="@{/static/css/base/universal.css}">
+    <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" th:href="@{/static/css/base/itemInfo.css}">
     <link rel="stylesheet" th:href="@{/static/css/components/file-manager.css}">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery-steps.css"/>
@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
+    <link rel="stylesheet" href="/static/css/base/relate_item.css">
 
     <style>
         .img img {
@@ -42,7 +43,7 @@
     </style>
 </head>
 <body>
-<div id="app">
+<div id="app" v-cloak>
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div th:replace="fragments/backToTop :: backtop-down"></div>

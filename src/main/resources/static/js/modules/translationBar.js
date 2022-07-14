@@ -41,6 +41,7 @@ Vue.component("translation-bar",
                 themeStyle:'lightness',
                 currentLang:'en-us',
                 langList:['en-us','zh-cn'],
+                userSpaceAllJson:{}
             }
         },
         computed: {},
@@ -252,6 +253,10 @@ Vue.component("translation-bar",
                     }
                 }
                 return false;
+            },
+
+            async loadUserSpaceAllJson(){
+                return await this.getLangJson("userSpaceAll");
             }
 
         },
@@ -302,7 +307,9 @@ Vue.component("translation-bar",
 
 
 
-
+            //优先读取userSpaceAll
+            //将userSpaceAll加入缓存
+            // this.userSpaceAllJson = this.loadUserSpaceAllJson();
 
 
 
