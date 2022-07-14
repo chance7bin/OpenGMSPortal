@@ -1827,7 +1827,7 @@
     "QueryProcessByChoosingCollection": "You can query data process methods by choosing a category.",
     "SearchProcessByModelName": "You can also search data process methods by name.",
     "BrowseProcessOverview": "Here is query result, you can browse data process methods' overview. Click name to check detail.",
-    "ShareYourProcessOnOpenGMS": "You can share your data process methods on OpenGMS, and get an OpenGMS unique identifier!"
+    "ShareYourProcessOnOpenGMS": "You can share your data process methods on OpenGMS, and get an OpenGMS unique identifier!",
     "ModelCanBeDownloadedAtThirdPartyWebsite": "The model can be downloaded at third-party website.",
     "curClassDesc":"Move your mouse to a classification to learn more."
   },
@@ -3654,8 +3654,7 @@
     "QueryProcessByChoosingCollection": "您可以通过选择类别来查询数据处理方法。",
     "SearchProcessByModelName": "您还可以按名称搜索数据处理方法。",
     "BrowseProcessOverview": "这是查询结果，您可以浏览数据处理方法的概述。 单击名称以查看详细信息。",
-    "ShareYourProcessOnOpenGMS": "您可以在 OpenGMS 上分享您的数据处理方法，并获得一个 OpenGMS 唯一标识符！"
-    "ModelCanBeDownloadedAtThirdPartyWebsite": "该模型可以在第三方网站上下载。",
+    "ShareYourProcessOnOpenGMS": "您可以在 OpenGMS 上分享您的数据处理方法，并获得一个 OpenGMS 唯一标识符！",
     "curClassDesc":"将鼠标移动到一个分类以了解更多信息。"
   }
 }
