@@ -1827,7 +1827,7 @@
     "QueryProcessByChoosingCollection": "You can query data process methods by choosing a category.",
     "SearchProcessByModelName": "You can also search data process methods by name.",
     "BrowseProcessOverview": "Here is query result, you can browse data process methods' overview. Click name to check detail.",
-    "ShareYourProcessOnOpenGMS": "You can share your data process methods on OpenGMS, and get an OpenGMS unique identifier!"
+    "ShareYourProcessOnOpenGMS": "You can share your data process methods on OpenGMS, and get an OpenGMS unique identifier!",
     "ModelCanBeDownloadedAtThirdPartyWebsite": "The model can be downloaded at third-party website.",
     "curClassDesc":"Move your mouse to a classification to learn more."
   },
