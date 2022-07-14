@@ -75,7 +75,7 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo})"
+            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo},${itemInfo.contentType},${loadPath},true)"
                  th:if="${#lists.size(itemInfo.imageList)!=0 || itemInfo.contentType=='MxGraph'}">
             </div>
 
