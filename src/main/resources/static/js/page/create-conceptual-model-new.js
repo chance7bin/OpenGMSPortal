@@ -100,9 +100,10 @@ var vue = new Vue({
 
                     var bindOid=this.getSession("bindOid");
                     this.conceptualModel.bindOid=bindOid;
+                    if (bindOid == null) {return;}
                     $.ajax({
                         data: "Get",
-                        url: "/modelItem/getInfo/"+bindOid,
+                        url: "/modelItem/info/"+bindOid,
                         data: { },
                         cache: false,
                         async: true,

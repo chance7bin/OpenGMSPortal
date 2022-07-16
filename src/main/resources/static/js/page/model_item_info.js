@@ -618,7 +618,7 @@ var info=new Vue({
                 content:'',
             },
 
-            targetFile:{},
+            targetFile:[],
 
             showDataChose:false,
 
@@ -2686,6 +2686,11 @@ var info=new Vue({
             }
             let url, contentType;
 
+            if (this.relateType == "exLink" || this.relateType == "dataSpaceFile"){
+                return;
+            }
+
+
             if(scope=="all") {
                 url = "/" + this.relateType + "/list";
             }else{
@@ -2753,8 +2758,8 @@ var info=new Vue({
             };
             $.ajax({
                 type: "GET",
-                url: "/modelItem/relatedResources",
-                data: data,
+                url: "/modelItem/relatedResources/" + id,
+                // data: data,
                 async: true,
                 success: (json) => {
                     if (json.code == 0) {
@@ -2800,25 +2805,7 @@ var info=new Vue({
         },
 
         handleDelete(index, row) {
-            console.log(index, row);
-            let table = new Array();
-            for (i = 0; i < this.tableData.length; i++) {
-                let data = this.tableData[i];
-                let oid1,oid2;
-                if(data.oid!=undefined){
-                    oid1 = data.oid;
-                    oid2 = row.oid;
-                }else{
-                    oid1 = data.id;
-                    oid2 = row.id;
-                }
-                if(oid1!=oid2) {
-                    table.push(this.tableData[i]);
-                }
-            }
-            // table.splice(index, 1);
-            this.tableData = table;
-
+            this.tableData.splice(index, 1);
         },
 
         handleEdit(index, row) {
@@ -2848,7 +2835,7 @@ var info=new Vue({
             let stringInfo = []
             this.tableData.forEach(function (item, index) {
                 let relateItem={}
-                relateItem.oid = item.oid
+                relateItem.id = item.id
                 relateItem.type = item.type
                 if(item.type=='localFile'){
                     formData.append("resources",item.raw);
@@ -2858,7 +2845,7 @@ var info=new Vue({
                     relateItem.name = item.name
                 }
                 if(item.type=='dataSpaceFile'){
-                    relateItem.oid = item.oid
+                    // relateItem.oid = item.oid
                     relateItem.url = item.url
                     relateItem.name = item.name
                 }
@@ -2872,13 +2859,13 @@ var info=new Vue({
 
 
             let arr = window.location.href.split("/");
-            let oid = arr[arr.length - 1].split("#")[0];
+            let id = arr[arr.length - 1].split("#")[0];
 
             let url = '';
 
             $.ajax({
                 type: "POST",
-                url: "/modelItem/addRelateResources/"+oid,
+                url: "/modelItem/addRelateResources/"+id,
                 data: formData,
                 cache: false,
                 processData: false,
@@ -2919,7 +2906,7 @@ var info=new Vue({
             })
         },
 
-        async checkPersonData() {
+        checkPersonData() {
             this.showDataChose = true;
             this.$nextTick(()=>{
                 this.$refs.userDataSpace.getFilePackage();
@@ -2927,36 +2914,63 @@ var info=new Vue({
 
         },
 
-        selectDataspaceFile(file) {
-            this.targetFile = file
+        selectDataspaceFile(file){
+            if (this.targetFile.indexOf(file) > -1) {
+                // for (var i = 0; i < this.targetFile.length; i++) {
+                //     if (this.targetFile[i] === file) {
+                //         //删除
+                //         this.targetFile.splice(i, 1);
+                //         // this.downloadDataSetName.splice(i, 1)
+                //         break
+                //     }
+                // }
+            } else {
+                this.targetFile.push(file);
+            }
         },
 
+        // selectDataspaceFile(file) {
+        //     this.targetFile = file
+        // },
+
         removeDataspaceFile(file) {
-            this.targetFile = {}
+            // this.targetFile = []
+            if (this.targetFile.indexOf(file) > -1) {
+                for (var i = 0; i < this.targetFile.length; i++) {
+                    if (this.targetFile[i] === file) {
+                        //删除
+                        this.targetFile.splice(i, 1);
+                        // this.downloadDataSetName.splice(i, 1)
+                        break
+                    }
+                }
+            }
         },
 
         selectDataFromPersonal(){
-            let file = {
-                name:this.targetFile.label+this.targetFile.suffix,
-                oid:this.targetFile.id,
-                url:this.targetFile.url,
-                type:"dataSpaceFile"
-            }
-            for(let tableEle of this.tableData){
-                if(tableEle.oid == file.oid){
-                    this.$alert('You have select this file.', 'Tip', {
-                            type:"warning",
-                            confirmButtonText: 'OK',
-                            callback: ()=>{
-                                return
-                            }
-                        }
-                    );
-                    return
+            for (let i = 0; i < this.targetFile.length; i++) {
+                let file = {
+                    name:this.targetFile[i].name + "." + this.targetFile[i].suffix,
+                    url:this.targetFile[i].address,
+                    type:"dataSpaceFile"
                 }
-            }
+                for(let tableEle of this.tableData){
+                    if(tableEle.url == file.url){
+                        this.$alert('You have selected ' + file.name, 'Tip', {
+                                type:"warning",
+                                confirmButtonText: 'OK',
+                                callback: ()=>{
+                                    return
+                                }
+                            }
+                        );
+                        return
+                    }
+                }
 
-            this.tableData.push(file)
+                this.tableData.push(file)
+
+            }
 
             this.showDataChose = false
         },
@@ -3161,7 +3175,7 @@ var info=new Vue({
             }else if(row.type=='link'){
                 window.open(row.content)
             }else {
-                window.open('/repository/'+row.type+'/'+row.oid)
+                window.open('/repository/'+row.type+'/'+row.id)
             }
         },
 

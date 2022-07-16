@@ -1228,11 +1228,14 @@ new Vue({
 
         handlePageChange(val) {
             this.pageOption.currentPage = val;
+            this.pageOption1.currentPage = val;
+            // if(this.inSearch==0)
+            //     this.loadSpatialReference();
+            // else
+            //     this.searchSpatialReference()
 
-            if(this.inSearch==0)
-                this.loadSpatialReference();
-            else
-                this.searchSpatialReference()
+            this.searchMethod();
+
         },
         loadSpatialReference(){
             this.inSearch = 0
@@ -1881,7 +1884,7 @@ new Vue({
             //获取所有的template
             let pageData = {
                 asc: this.pageOption1.sortAsc,
-                page: this.pageOption1.currentPage-1,
+                page: this.pageOption1.currentPage,
                 pageSize: this.pageOption1.pageSize,
                 searchText: this.pageOption1.searchText,
                 sortElement: "default",
@@ -1895,7 +1898,7 @@ new Vue({
                 async: true,
                 contentType: contentType,
                 success:(json)=>{
-                    console.log(json);
+                    // console.log(json);
                     // that.dataApplication.bindTemplates = result.data;
 
                     if (json.code === 0) {

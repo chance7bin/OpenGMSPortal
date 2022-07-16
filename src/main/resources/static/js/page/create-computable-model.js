@@ -1107,9 +1107,10 @@ var createComputableModel = Vue.extend({
 
                     var relateModelItem=this.getSession("relateModelItem");
                     this.itemInfo.relateModelItem=relateModelItem;
+                    if (relateModelItem == null) {return;}
                     $.ajax({
                         type: "Get",
-                        url: "/modelItem/getInfo/"+relateModelItem,
+                        url: "/modelItem/info/"+relateModelItem,
                         data: { },
                         cache: false,
                         async: true,

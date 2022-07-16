@@ -3572,7 +3572,7 @@ var vue = new Vue({
 
         axios.get("/dataItem/categoryTree")
             .then(res => {
-                tha.tObj = res.data;
+                tha.tObj = res.data.data;
                 for (var e in tha.tObj) {
                     var a = {
                         key: e,

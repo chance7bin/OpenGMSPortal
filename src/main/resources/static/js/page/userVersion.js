@@ -66,7 +66,7 @@ var userVersion = Vue.extend({
     },
     methods:{
         handleParentTabChange(val){
-            console.log(val)
+            // console.log(val)
             if(val.index==="0"){
                 this.activeName="0"
             }else{
@@ -87,7 +87,7 @@ var userVersion = Vue.extend({
                 "page": this.currentPage,
                 "pageSize": this.pageSize,
                 "searchText": "",
-                "sortField": "createTime"
+                "sortField": "submitTime"
             })
                 .then(res=> {
                     // console.log(url+" :",res.data)

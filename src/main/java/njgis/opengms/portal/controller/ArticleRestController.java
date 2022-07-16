@@ -30,6 +30,15 @@ public class ArticleRestController {
     @Autowired
     ArticleService articleService;
 
+    @RequestMapping(value = "/testException", method = RequestMethod.GET)
+    public JsonResult testException() {
+
+        int i = 1 / 0;
+
+        return ResultUtils.success();
+
+    }
+
     /**
      * @Description 某用户查询他人的模型条目
      * @param findDTO

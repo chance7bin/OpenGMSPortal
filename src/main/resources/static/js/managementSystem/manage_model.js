@@ -103,8 +103,8 @@ export var ModelTemplate = Vue.extend({
                                         <el-table-column >
                                             <template slot-scope="scope">
                                                 <el-tag type='info' disable-transitions>
-                                                    <el-link v-if="scope.row.msrAddress!==null" :href="'http://'+scope.row.msrAddress+'/modelserrun/'+scope.row.taskId" target="_blank">{{scope.row.msrAddress}}</el-link>
-                                                    <div v-else>未分配模型容器 </div>
+                                                    <el-link v-if="scope.row.msrid!==null && scope.row.msrid!==''" :href="'http://'+scope.row.msrAddress+'/modelserrun/'+scope.row.msrid" target="_blank">{{scope.row.msrAddress}}</el-link>
+                                                    <div v-else>未分配模型容器</div>
                                                 </el-tag>
                                             </template>
                                         </el-table-column>  
@@ -137,16 +137,19 @@ export var ModelTemplate = Vue.extend({
                         >
                             <el-table-column type="selection">
                             </el-table-column>
-                            <el-table-column sortable label="名称" show-overflow-tooltip min-width="250px">
+                            <el-table-column sortable label="名称" show-overflow-tooltip min-width="200px">
                                 <template slot-scope="scope" >
                                     <el-link :href="computableModelUrl+scope.row.id" target="_blank" >{{scope.row.name}}</el-link>
                                 </template>
                             </el-table-column>
 
+                            <el-table-column sortable prop="md5" label="md5" show-overflow-tooltip min-width="180px">
+                            </el-table-column>
+
                             <el-table-column sortable prop="author" label="作者" show-overflow-tooltip min-width="100px">
                             </el-table-column>
 
-                            <el-table-column sortable prop="viewCount" label="访问量" min-width="100px"></el-table-column>
+                            <el-table-column sortable prop="viewCount" label="访问量" min-width="80px"></el-table-column>
                             <el-table-column sortable label="模型容器IP" min-width="120px">
                                 <template slot-scope="scope" >
                                   <el-popover

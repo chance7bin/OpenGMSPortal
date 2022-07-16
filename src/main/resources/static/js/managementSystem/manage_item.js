@@ -95,7 +95,7 @@ export var ItemTemplate = Vue.extend({
                              <div style="width: 70%" >
                                  <div class="flexRowBetween">
                                     <el-input
-                                        placeholder="请输入名字"
+                                        placeholder="请输入邮箱"
                                         prefix-icon="el-icon-search"
                                         v-model="searchUserInput"
                                         @keyup.enter.native="getUserList()"

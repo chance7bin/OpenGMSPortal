@@ -416,7 +416,7 @@
                                                                                 <div v-cloak class="list-item"
                                                                                      v-for="(concept,key) in pageOption.searchResult">
                                                                                     <div class="detail_title">
-                                                                                        <span :oid="concept.oid"
+                                                                                        <span :id="concept.id"
                                                                                               id="conceptName"
                                                                                               style="font-size: 18px">{{concept.description_EN==''?concept.alias:concept.name}}&nbsp&nbsp</span>
                                                                                         <button v-show="!concept.exist"
@@ -434,7 +434,7 @@
                                                                                     </div>
                                                                                     <div class="detail_overview">
                                                                                         <a class="img"
-                                                                                           :href="'/repository/concept/'+ concept.oid"
+                                                                                           :href="'/repository/concept/'+ concept.id"
                                                                                            target="_blank">
                                                                                             <avatar :username="concept.description_EN==''?concept.alias:concept.name"
                                                                                                     :size="90"

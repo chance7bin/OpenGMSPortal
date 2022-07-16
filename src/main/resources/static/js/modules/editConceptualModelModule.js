@@ -471,9 +471,10 @@ Vue.component("editConceptualModelModule",
 
                         var bindOid=this.getSession("bindOid");
                         this.conceptualModel.bindOid=bindOid;
+                        if (bindOid == null) {return;}
                         $.ajax({
                             type: "Get",
-                            url: "/modelItem/getInfo/"+bindOid,
+                            url: "/modelItem/info/"+bindOid,
                             data: { },
                             cache: false,
                             async: true,
@@ -571,7 +572,7 @@ Vue.component("editConceptualModelModule",
                 // document.title="Modify Conceptual Model | OpenGMS"
 
                 $.ajax({
-                    url: "/conceptualModel/getInfo/" + oid,
+                    url: "/conceptualModel/info/" + oid,
                     type: "get",
                     data: {},
 

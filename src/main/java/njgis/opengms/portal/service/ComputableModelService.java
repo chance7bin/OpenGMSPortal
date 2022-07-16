@@ -491,7 +491,7 @@ public class ComputableModelService {
                 }
 
                 computableModelDao.insert(computableModel);
-                userService.updateUserResourceCount(uid , ItemTypeEnum.ModelItem, "add");
+                userService.updateUserResourceCount(uid , ItemTypeEnum.ComputableModel, "add");
 
                 result.put("code", 1);
                 result.put("id", computableModel.getId());

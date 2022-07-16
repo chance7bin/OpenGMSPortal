@@ -808,7 +808,7 @@ public class ModelItemService {
                 JSONObject jsonObject = new JSONObject();
                 User user = userDao.findFirstByEmail(contributor);
                 jsonObject.put("name",user.getName());
-                jsonObject.put("userId",user.getAccessId());
+                jsonObject.put("accessId",user.getAccessId());
                 jsonObject.put("email",user.getEmail());
                 jsonObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath+user.getAvatar());
 
@@ -1476,10 +1476,16 @@ public class ModelItemService {
     public JSONObject setRelation(String modelId,String type,List<String> relations,String user){
 
         ModelItem modelItem=modelItemDao.findFirstById(modelId);
+
+        JSONObject copyObj = Utils.deepCopyByJson(modelItem);
+        ModelItem oriModelItem = JSONObject.toJavaObject(copyObj,ModelItem.class);
+
         ModelItemRelate relate=modelItem.getRelate();
 
         List<String> relationDelete=new ArrayList<>();//要被删除的关系
         List<String> relationAdd=new ArrayList<>();//要添加的关系
+
+        relations = relations == null ? new ArrayList<>() : relations;
 
         switch (type){
             case "dataItem":
@@ -1534,8 +1540,6 @@ public class ModelItemService {
                 //     }
                 // }
 
-                relate.setDataItems(relations);
-
                 break;
             case "conceptualModel":
                 relate.setConceptualModels(relations);
@@ -1547,6 +1551,7 @@ public class ModelItemService {
                 relate.setComputableModels(relations);
                 break;
             case "concept":
+
                 relate.setConcepts(relations);
                 break;
             case "spatialReference":
@@ -1560,26 +1565,177 @@ public class ModelItemService {
                 break;
         }
 
-        if(!user.equals(modelItem.getAuthor())){
-            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
-            modelItemUpdateDTO.setOriginId(modelItem.getId());
-            modelItemUpdateDTO.setRelate(relate);
 
-            update(modelItemUpdateDTO,user);
+        ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+        modelItemUpdateDTO.setOriginId(modelItem.getId());
+        modelItemUpdateDTO.setRelate(relate);
+        update(modelItemUpdateDTO,user);
+
+        if(!user.equals(modelItem.getAuthor())){
 
             JSONObject result = new JSONObject();
             result.put("type","version");
             return result;
         }else{
 
-            modelItem.setRelate(relate);
-
-            modelItemDao.save(modelItem);
-
+            updateModelItemRelation(relations, type, oriModelItem);
             JSONObject result = new JSONObject();
             result.put("type","suc");
             return result;
         }
+    }
+
+    //模型条目的关联更新后，同时更新关联对象的关联关系
+    public void updateModelItemRelation(List<String> relations, String type ,ModelItem modelItem){
+
+        ModelItemRelate relate = modelItem.getRelate();
+        String modelId = modelItem.getId();
+
+        switch (type){
+            case "dataItem":
+
+
+                //获取原始关联条目
+                List<String> dataItems = relate.getDataItems();
+
+                //添加关联
+                for (String relation : relations) {
+
+                    if (!dataItems.contains(relation)){
+                        DataItem item = dataItemDao.findFirstById(relation);
+                        List<String> relatedModels = item.getRelatedModels();
+                        if (!relatedModels.contains(modelId)){
+                            relatedModels.add(modelId);
+                            dataItemDao.save(item);
+                        }
+                    }
+
+                }
+
+                //删除关联
+                for (String dataItem : dataItems) {
+
+                    if (!relations.contains(dataItem)){
+                        DataItem item = dataItemDao.findFirstById(dataItem);
+                        List<String> relatedModels = item.getRelatedModels();
+                        if (relatedModels.contains(modelId)){
+                            relatedModels.remove(modelId);
+                            dataItemDao.save(item);
+                        }
+                    }
+
+                }
+
+                relate.setDataItems(relations);
+
+                break;
+            case "conceptualModel":
+
+                //获取原始关联条目
+                List<String> conceptualModels = relate.getConceptualModels();
+
+                //添加关联
+                for (String relation : relations) {
+
+                    if (!conceptualModels.contains(relation)){
+                        ConceptualModel item = conceptualModelDao.findFirstById(relation);
+                        List<String> relatedModels = item.getRelatedModelItems();
+                        if (!relatedModels.contains(modelId)){
+                            relatedModels.add(modelId);
+                            conceptualModelDao.save(item);
+                        }
+                    }
+
+                }
+
+                //删除关联
+                for (String conceptualModel : conceptualModels) {
+
+                    if (!relations.contains(conceptualModel)){
+                        ConceptualModel item = conceptualModelDao.findFirstById(conceptualModel);
+                        List<String> relatedModels = item.getRelatedModelItems();
+                        if (relatedModels.contains(modelId)){
+                            relatedModels.remove(modelId);
+                            conceptualModelDao.save(item);
+                        }
+                    }
+
+                }
+
+                relate.setConceptualModels(relations);
+                break;
+            case "logicalModel":
+
+                //获取原始关联条目
+                List<String> logicalModels = relate.getLogicalModels();
+
+                //添加关联
+                for (String relation : relations) {
+
+                    if (!logicalModels.contains(relation)){
+                        LogicalModel item = logicalModelDao.findFirstById(relation);
+                        List<String> relatedModels = item.getRelatedModelItems();
+                        if (!relatedModels.contains(modelId)){
+                            relatedModels.add(modelId);
+                            logicalModelDao.save(item);
+                        }
+                    }
+
+                }
+
+                //删除关联
+                for (String logicalModel : logicalModels) {
+
+                    if (!relations.contains(logicalModel)){
+                        LogicalModel item = logicalModelDao.findFirstById(logicalModel);
+                        List<String> relatedModels = item.getRelatedModelItems();
+                        if (relatedModels.contains(modelId)){
+                            relatedModels.remove(modelId);
+                            logicalModelDao.save(item);
+                        }
+                    }
+
+                }
+
+                relate.setLogicalModels(relations);
+                break;
+            case "computableModel":
+
+                //获取原始关联条目
+                List<String> computableModels = relate.getComputableModels();
+
+                //添加关联
+                for (String relation : relations) {
+
+                    if (!computableModels.contains(relation)){
+                        ComputableModel item = computableModelDao.findFirstById(relation);
+                        List<String> relatedModels = item.getRelatedModelItems();
+                        if (!relatedModels.contains(modelId)){
+                            relatedModels.add(modelId);
+                            computableModelDao.save(item);
+                        }
+                    }
+
+                }
+
+                //删除关联
+                for (String computableModel : computableModels) {
+
+                    if (!relations.contains(computableModel)){
+                        ComputableModel item = computableModelDao.findFirstById(computableModel);
+                        List<String> relatedModels = item.getRelatedModelItems();
+                        if (relatedModels.contains(modelId)){
+                            relatedModels.remove(modelId);
+                            computableModelDao.save(item);
+                        }
+                    }
+
+                }
+
+                relate.setComputableModels(relations);
+                break;
+        }
+
     }
 
     public JSONObject setModelRelation(String id, List<ModelRelation> modelRelationListNew,String user) {
@@ -1840,4 +1996,80 @@ public class ModelItemService {
         }
     }
 
+    public String addRelateResources(String id, List<Map<String,String>> stringRelations, String email){
+        ModelItem modelItem=modelItemDao.findFirstById(id);
+        ModelItemRelate relate=modelItem.getRelate();
+
+        List<String> relateConcept = new ArrayList<>();
+        List<String> relateSpatial = new ArrayList<>();
+        List<String> relateTemplate = new ArrayList<>();
+        List<String> relateUnit = new ArrayList<>();
+        List<Map<String,String>> relateExlinks = new ArrayList<Map<String,String>>();
+        List<Map<String,String>> relateLocalFiles = new ArrayList<Map<String,String>>();
+        List<Map<String,String>> relateDataSpaceFiles = new ArrayList<Map<String,String>>();
+
+        Map<String,String> stringRelation = new HashMap<>();
+        for(int x=0;x<stringRelations.size();x++){
+
+            stringRelation = stringRelations.get(x);
+            String type = stringRelations.get(x).get("type");
+
+            switch (type){
+                case "concept":
+                    relateConcept.add(stringRelation.get("id"));
+                    break;
+                case "spatialReference":
+                    relateSpatial.add(stringRelation.get("id"));
+                    break;
+                case "template":
+                    relateTemplate.add(stringRelation.get("id"));
+                    break;
+                case "unit":
+                    relateUnit.add(stringRelation.get("id"));
+                    break;
+                case "exLink":
+                    Map<String,String> relateExlink = new HashMap<>();
+                    // relateExlink.put("oid",stringRelation.get("oid"));
+                    relateExlink.put("name",stringRelation.get("name"));
+                    relateExlink.put("content",stringRelation.get("content"));
+                    relateExlinks.add(relateExlink);
+                    break;
+                case "dataSpaceFile":
+                    Map<String,String> relateDataSpaceFile = new HashMap<>();
+                    // relateDataSpaceFile.put("oid",stringRelation.get("oid"));
+                    relateDataSpaceFile.put("name",stringRelation.get("name"));
+                    relateDataSpaceFile.put("url",stringRelation.get("url"));
+                    relateDataSpaceFiles.add(relateDataSpaceFile);
+                    break;
+
+            }
+        }
+
+//        for(int i=0;i < files.size();i++){
+//            String path = resourcePath + "/modelItem/" + oid + "/relatedFile";
+//
+//        }
+
+        relate.setConcepts(relateConcept);
+        relate.setSpatialReferences(relateSpatial);
+        relate.setTemplates(relateTemplate);
+        relate.setUnits(relateUnit);
+        relate.setExLinks(relateExlinks);
+//        relate.setLocalFiles(relateLocalFiles);
+        relate.setDataSpaceFiles(relateDataSpaceFiles);
+
+        if(email.equals(modelItem.getAuthor())) {
+            modelItem.setRelate(relate);
+            modelItemDao.save(modelItem);
+
+            return "suc";
+        }else{
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemUpdateDTO.setRelate(relate);
+            modelItemService.update(modelItemUpdateDTO,email);
+            return "version";
+        }
+
+    }
 }

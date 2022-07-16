@@ -23,9 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -285,8 +283,9 @@ public class TemplateController {
     @ApiOperation(value = "获取所有的methods数据")
     @RequestMapping(value = "/getMethods", method = RequestMethod.POST)
     JsonResult getMethods(FindDTO findDTO){
-        Sort sort = Sort.by(findDTO.getAsc() == false ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
-        Pageable pageable = PageRequest.of(findDTO.getPage() - 1, 5, sort);
+
+        Pageable pageable = genericService.getPageable(findDTO);
+
         Page<DataMethod> dataMethods =
             dataMethodDao.findByNameLike(pageable, findDTO.getSearchText());
 

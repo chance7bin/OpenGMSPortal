@@ -15,6 +15,7 @@ import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -194,6 +195,22 @@ public class VersionService {
         }
         content.setContributors(contributors);
 
+        //模型条目需要更新关联信息
+        if (version.getType() == ItemTypeEnum.ModelItem){
+            // 因为不知道更改的是哪个条目的关联，所以要先判断下
+            updateModelItemRelation(version);
+        }
+
+        //数据条目需要更新关联信息
+        if (version.getType() == ItemTypeEnum.DataItem || version.getType() == ItemTypeEnum.DataHub){
+
+            List<String> newRelations = ((DataItem)version.getContent()).getRelatedModels();
+            List<String> oriRelations = ((DataItem)version.getOriginal()).getRelatedModels();
+
+            dataItemService.updateModelRelate(newRelations, oriRelations,version.getType(),version.getItemId());
+        }
+
+
         JSONObject factory = genericService.daoFactory(version.getType());
         GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         try {
@@ -222,6 +239,35 @@ public class VersionService {
         return ResultUtils.success();
     }
 
+    private void updateModelItemRelation(Version version){
+        ModelItem oriVersion = (ModelItem)version.getOriginal();
+        ModelItem newVersion = (ModelItem)version.getContent();
+        ModelItemRelate oriRelate = oriVersion.getRelate();
+        ModelItemRelate newRelate = newVersion.getRelate();
+        String updateRelateItemType = null;
+        List<String> updateRelations = null;
+
+        if (!Utils.equalLists(oriRelate.getDataItems(), newRelate.getDataItems())){
+            updateRelateItemType = ItemTypeEnum.DataItem.getText();
+            updateRelations = newRelate.getDataItems();
+        }
+        if (!Utils.equalLists(oriRelate.getComputableModels(), newRelate.getComputableModels())){
+            updateRelateItemType = ItemTypeEnum.ComputableModel.getText();
+            updateRelations = newRelate.getComputableModels();
+        }
+        if (!Utils.equalLists(oriRelate.getConceptualModels(), newRelate.getConceptualModels())){
+            updateRelateItemType = ItemTypeEnum.ConceptualModel.getText();
+            updateRelations = newRelate.getConceptualModels();
+        }
+        if (!Utils.equalLists(oriRelate.getLogicalModels(), newRelate.getLogicalModels())){
+            updateRelateItemType = ItemTypeEnum.LogicalModel.getText();
+            updateRelations = newRelate.getLogicalModels();
+        }
+
+        if (updateRelations != null && updateRelateItemType != null){
+            modelItemService.updateModelItemRelation(updateRelations, updateRelateItemType, oriVersion);
+        }
+    }
 
     /**
      * 审核未通过
@@ -1230,6 +1276,7 @@ public class VersionService {
 
         JSONArray resultList = new JSONArray();
         List<String> versions = item.getVersions();
+        Collections.reverse(versions);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (String versionId : versions) {
             Version version = versionDao.findFirstById(versionId);

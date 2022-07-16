@@ -454,9 +454,10 @@ Vue.component("editLogicalModelModule",
 
                         var bindOid = this.getSession("bindOid");
                         this.logicalModel.bindOid = bindOid;
+                        if (bindOid == null) {return;}
                         $.ajax({
                             type: "Get",
-                            url: "/modelItem/getInfo/" + bindOid,
+                            url: "/modelItem/info/" + bindOid,
                             data: {},
                             cache: false,
                             async: true,
@@ -533,7 +534,7 @@ Vue.component("editLogicalModelModule",
                 // document.title="Modify Logical Model | OpenGMS"
 
                 $.ajax({
-                    url: "/logicalModel/getInfo/" + oid,
+                    url: "/logicalModel/info/" + oid,
                     type: "get",
                     data: {},
 

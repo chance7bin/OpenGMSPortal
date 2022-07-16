@@ -1433,7 +1433,7 @@
     ],
 
     "DataTemplateClassification": "Data Template Classifications",
-
+    "Related": "Related",
     "treeData4": [{
       "id": 1,
       "label": "Description Templates",
@@ -3259,7 +3259,7 @@
     ],
 
     "DataTemplateClassification": "数据模板分类",
-
+    "Related": "相关",
     "treeData4": [{
       "id": 1,
       "label": "描述模板",

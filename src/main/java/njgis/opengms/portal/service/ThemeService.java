@@ -2,18 +2,13 @@ package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import njgis.opengms.portal.dao.ModelItemDao;
-import njgis.opengms.portal.dao.ThemeDao;
-import njgis.opengms.portal.dao.UserDao;
+import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.theme.Application;
 import njgis.opengms.portal.entity.doo.theme.Maintainer;
 import njgis.opengms.portal.entity.dto.community.theme.ThemeDTO;
-import njgis.opengms.portal.entity.po.ModelItem;
-import njgis.opengms.portal.entity.po.Theme;
-import njgis.opengms.portal.entity.po.User;
-import njgis.opengms.portal.entity.po.Version;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.enums.ResultEnum;
@@ -46,6 +41,12 @@ public class ThemeService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    DataItemDao dataItemDao;
+
+    @Autowired
+    DataMethodDao dataMethodDao;
 
     @Autowired
     RepositoryService repositoryService;
@@ -169,16 +170,47 @@ public class ThemeService {
 
     }
 
+    // public JSONObject getModelItem(String id){
+    //     ModelItem modelItem = modelItemDao.findFirstById(id);
+    //     JSONObject item = new JSONObject();
+    //     item.put("oid", modelItem.getId());
+    //     item.put("name", modelItem.getName());
+    //     item.put("image", modelItem.getImage());
+    //     item.put("author",userService.getByEmail(modelItem.getAuthor()).getName());
+    //
+    //     return item;
+    // }
+
     public JSONObject getModelItem(String id){
         ModelItem modelItem = modelItemDao.findFirstById(id);
         JSONObject item = new JSONObject();
-        item.put("oid", modelItem.getId());
+        item.put("id", modelItem.getId());
         item.put("name", modelItem.getName());
         item.put("image", modelItem.getImage());
         item.put("author",userService.getByEmail(modelItem.getAuthor()).getName());
 
         return item;
     }
+
+    public JSONObject getDataItem(String id){
+        DataItem dataItem = dataItemDao.findFirstById(id);
+        JSONObject item = new JSONObject();
+        item.put("id",dataItem.getId());
+        item.put("name",dataItem.getName());
+        item.put("author",userService.getByEmail(dataItem.getAuthor()).getName());
+        return item;
+    }
+
+    public JSONObject getDataMethod(String id){
+        DataMethod dataApplication = dataMethodDao.findFirstById(id);
+        JSONObject item = new JSONObject();
+        item.put("id",dataApplication.getId());
+        item.put("name",dataApplication.getName());
+        item.put("author",userService.getByEmail(dataApplication.getAuthor()).getName());
+        return item;
+    }
+
+
 
     public Theme insertTheme(ThemeDTO themeAddDTO, String email){
 

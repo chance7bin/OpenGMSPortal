@@ -1,13 +1,11 @@
 package njgis.opengms.portal.component;
 
-import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
-import njgis.opengms.portal.utils.ResultUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import njgis.opengms.portal.enums.ResultEnum;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @ClassName ExceptionControllerAdvice
@@ -19,14 +17,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 @ResponseBody
 public class ExceptionControllerAdvice {
+    // @ExceptionHandler(value = Exception.class)
+    // public ResponseEntity<JsonResult> defaultErrorHandler(Exception e) {
+    //     //自定义的异常
+    //     if (e instanceof MyException) {
+    //         MyException myException = (MyException) e;
+    //         return ResponseEntity.status(HttpStatus.OK).body(ResultUtils.error(myException.getCode(), myException.getMessage()));
+    //     } else {//未定义的其他 服务器内部的异常
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultUtils.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+    //     }
+    // }
+
+
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<JsonResult> defaultErrorHandler(Exception e) {
+    public ModelAndView defaultErrorHandler(Exception e) {
+        ModelAndView mv = new ModelAndView();
+        // mv.setViewName("error/500");
+
         //自定义的异常
         if (e instanceof MyException) {
             MyException myException = (MyException) e;
-            return ResponseEntity.status(HttpStatus.OK).body(ResultUtils.error(myException.getCode(), myException.getMessage()));
-        } else {//未定义的其他 服务器内部的异常
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultUtils.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+            if (myException.getCode() == ResultEnum.UNAUTHORIZED.getCode()){
+                mv.setViewName("error/404");
+                return mv;
+            }
         }
+        mv.setViewName("error/500");
+        return mv;
     }
 }

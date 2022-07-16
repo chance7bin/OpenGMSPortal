@@ -240,7 +240,7 @@
                                                                                 :key="item.name"
                                                                                 closable
                                                                                 :disable-transitions="false"
-                                                                                @close="handleCloseSelectedFile(item)">{{item.name}}.{{item.suffix}}</el-tag>
+                                                                                @close="handleCloseSelectedFile(item)">{{item.label}}.{{item.suffix}}</el-tag>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -469,7 +469,7 @@
                         :visible.sync="dialogVisible"
                         width="80%"
                         :before-close="handleClose">
-                    <user-data :html-Json="htmlJson" @com-selectfile="selectDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
+                    <user-data :html-Json="htmlJson" @com-selectfile="selectDataspaceFile" @com-removefile="removeDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
                     <span slot="footer" class="dialog-footer">
                       <el-button @click="dialogVisible = false">{{htmlJson.Cancel}}</el-button>
                       <el-button type="primary" @click="dialogVisible = false">{{htmlJson.Confirm}}</el-button>

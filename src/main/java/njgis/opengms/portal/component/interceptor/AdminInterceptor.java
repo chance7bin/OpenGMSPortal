@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.AdminRequired;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.MyException;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +65,12 @@ public class AdminInterceptor implements HandlerInterceptor {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("code",unauthorized.getCode());
                     jsonObject.put("msg",unauthorized.getMsg());
+
                     if (role == null){
-                        returnJson(response,jsonObject.toJSONString());
+                        throw new MyException(ResultEnum.UNAUTHORIZED);
+                        // returnJson(response,jsonObject.toJSONString());
+
+                        // return mv;
                         // return false;
                     }
                     if(role.isAdmin()){
@@ -72,13 +78,15 @@ public class AdminInterceptor implements HandlerInterceptor {
                     }
 
                     //TODO 是否要返回无权限提示?
-                    returnJson(response,jsonObject.toJSONString());
+                    throw new MyException(ResultEnum.UNAUTHORIZED);
+                    // returnJson(response,jsonObject.toJSONString());
                     // return false;
                 }
 
             }
         } catch (Exception e){
             log.error(e.getMessage());
+            throw new MyException(ResultEnum.UNAUTHORIZED);
         }
 
         return true;

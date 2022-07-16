@@ -133,7 +133,7 @@
           graph = ui.editor.graph;
           if (uid != null && uid != "" && uid != "0") {
             $.ajax({
-              url: "/conceptualModel/getInfo/" + uid,
+              url: "/conceptualModel/info/" + uid,
               type: "get",
               data: {"mid": uid},
               success: function (result) {

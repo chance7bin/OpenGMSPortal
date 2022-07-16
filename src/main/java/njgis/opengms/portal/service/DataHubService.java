@@ -171,6 +171,7 @@ public class DataHubService {
                 }
             }
 
+            List<String> oriRelatedModels = item.getRelatedModels();
             item.setRelatedModels(relations);
             item.setLastModifyTime(now);
             item.setLastModifier(email);
@@ -180,7 +181,8 @@ public class DataHubService {
             if (author.equals(email)){
                 versions.add(new_version.getId());
                 item.setVersions(versions);
-
+                dataItemService.updateModelRelate(relations, oriRelatedModels, ItemTypeEnum.DataHub,id);
+                item.setRelatedModels(relations);
                 dataHubDao.save(item);
                 result.put("type","suc");
 

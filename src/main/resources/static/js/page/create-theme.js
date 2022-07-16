@@ -1705,7 +1705,7 @@ var createTheme = Vue.extend({
             this.editType = "modify"
             // document.title="Modify Theme | OpenGMS"
             $.ajax({
-                url: "/theme/getInfo/" + oid,
+                url: "/theme/info/" + oid,
                 type: "get",
                 data: {},
 
@@ -2141,7 +2141,11 @@ var createTheme = Vue.extend({
                         loading.close();
                         if (result.code === 0) {
                             if(result.data.method==="update") {
-                                alert(this.htmlJson.UpdateSuccess);
+                                this.$message({
+                                    message: this.htmlJson.UpdateSuccess,
+                                    type: 'success'
+                                });
+                                // alert(this.htmlJson.UpdateSuccess);
                                 $("#editModal", parent.document).remove();
                                 window.location.href = "/theme/" + result.data.oid;
                             }

@@ -540,10 +540,10 @@
                         <div  class="headProgressContainer" v-show="progressFlag">
                             <el-progress class="headProgress" type="circle" :percentage="uploadProgress"></el-progress>
                         </div>
-                        <div class="form-group flexColContainer">
-                            <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.Name}} :</label>
-                            <el-input v-model="uploadName" :placeholder="htmlJson.DatasetName"></el-input>
-                        </div>
+                        <!--<div class="form-group flexColContainer">-->
+                        <!--    <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.Name}} :</label>-->
+                        <!--    <el-input v-model="uploadName" :placeholder="htmlJson.DatasetName"></el-input>-->
+                        <!--</div>-->
 
                         <div class="form-group flexColContainer">
                             <label style="margin-right:5px;font-size: 1.4rem">{{htmlJson.DataTemplate}} :</label>
@@ -557,9 +557,9 @@
                                     :loading="selectLoading">
                                 <el-option
                                         v-for="item in options"
-                                        :key="item.oid"
+                                        :key="item.id"
                                         :label="item.name"
-                                        :value="item.oid">
+                                        :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>

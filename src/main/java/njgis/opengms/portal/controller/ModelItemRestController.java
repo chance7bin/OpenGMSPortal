@@ -36,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName ModelItemRestController
@@ -380,7 +381,7 @@ public class ModelItemRestController {
     @RequestMapping(value = "/relation", method = RequestMethod.PUT)
     public JsonResult updateRelation(@RequestParam(value = "id") String id,
                                      @RequestParam(value="type") String type,
-                                    @RequestParam(value = "relations[]") List<String> relations,
+                                    @RequestParam(value = "relations[]", required=false) List<String> relations,
                                     HttpServletRequest request){
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
@@ -397,7 +398,7 @@ public class ModelItemRestController {
     @ApiOperation(value = "更新模型条目related ModelItem", notes = "@LoginRequired\n")
     @RequestMapping(value = "/modelRelation/{id}", method = RequestMethod.PUT)
     JsonResult setModelRelation(@PathVariable("id") String id,
-                                @RequestParam(value = "relations") String relations,
+                                @RequestParam(value = "relations",required=false) String relations,
                                 HttpServletRequest request) {
         if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
@@ -473,5 +474,23 @@ public class ModelItemRestController {
 
 
 
+    @LoginRequired
+    @RequestMapping(value = "/addRelateResources/{id}", method = RequestMethod.POST)
+    JsonResult addRelateResources(@PathVariable(value="id") String id,
+                                  HttpServletRequest request) throws IOException {
 
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        // List<MultipartFile> files=multipartRequest.getFiles("resources");
+
+        String info=multipartRequest.getParameter("stringInfo");
+
+        List<Map<String,String>> infoArray = (List<Map<String,String>>) JSONArray.parse(info);
+
+        return ResultUtils.success(modelItemService.addRelateResources(id,infoArray,email));
+
+
+    }
 }
