@@ -1435,6 +1435,96 @@ public class UserService {
                 Boolean folder = false;
                 String type = "data";
                 String privacy = "private";
+                long fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;
+                Date uploadTime = new Date();
+
+                JSONObject j_resourceInfo = new JSONObject();
+                j_resourceInfo.put("address",address);
+                j_resourceInfo.put("name",name);
+                j_resourceInfo.put("suffix",suffix);
+                j_resourceInfo.put("uid",uid);
+                j_resourceInfo.put("folder",folder);
+                j_resourceInfo.put("type",type);
+                j_resourceInfo.put("privacy",privacy);
+                j_resourceInfo.put("fileSize",fileSize);
+                j_resourceInfo.put("uploadTime",uploadTime);
+                j_resourceInfo.put("description","");
+                j_resourceInfo.put("md5","");
+                j_resourceInfo.put("userUpload",true);
+
+                String templateId = "";
+                if(files.get(i).get("template")!=null){
+                    templateId = files.get(i).get("template").toString();
+                }
+
+                String pathStr = StringUtils.join(paths.toArray(),",");
+
+                String url = null;
+                RestTemplate restTemplate = new RestTemplate();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authorization","Bearer " + token);
+                headers.set("user-agent","portal_backend");
+                HttpEntity<JSONObject> httpEntity = new HttpEntity<>(j_resourceInfo,headers);
+
+                JSONObject response = new JSONObject();
+                try {
+                    if(method.toLowerCase().equals("post")){
+                        url = "http://" + userServer + "/auth/res/" + pathStr;
+                        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
+                        response = responseEntity.getBody();
+                    }else{
+                        url = "http://" + userServer + "/auth/res/" ;
+                        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url,HttpMethod.PUT, httpEntity, JSONObject.class);
+                        response = responseEntity.getBody();
+                    }
+                    if(response.getInteger("code")!=0){
+                        return null;
+                    }
+                    sucCount++;
+                    idList.add(j_resourceInfo.getString("uid"));
+                }catch (Exception e){
+                    errCount++;
+                    errList.add(j_resourceInfo);
+                }
+
+
+
+            }
+
+            result.put("sucCount",sucCount);
+            result.put("sucList",idList);
+            result.put("errCount",errCount);
+            result.put("errList",errList);
+
+            return result;
+        }
+
+    }
+
+
+    public JSONObject addFileToUserServer2(List<String> paths, List<Map> files, String email, String method) throws Exception {
+        String token = tokenService.checkToken(email);
+        if(token.equals("out")){
+            return null;
+        }else{
+            JSONObject result = new JSONObject();
+            JSONArray idList = new JSONArray();
+            JSONArray errList = new JSONArray();
+            int sucCount = 0;
+            int errCount = 0;
+            List<String> pathsCopy = new ArrayList<>();
+            for (int i = 0; i < files.size(); i++) {
+
+                String fileName = files.get(i).get("file_name").toString();
+                String address = "/data/" + files.get(i).get("source_store_id").toString();
+                String[] a = fileName.split("\\.");
+                String name = files.get(i).get("name").toString();
+                String suffix = files.get(i).get("suffix").toString();
+                String uid = UUID.randomUUID().toString();
+                Boolean folder = false;
+                String type = "data";
+                String privacy = "private";
                 long fileSize = 0;
                 if (files.get(i).get("file_size") != null){
                     fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;

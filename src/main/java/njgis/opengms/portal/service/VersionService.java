@@ -201,6 +201,16 @@ public class VersionService {
             updateModelItemRelation(version);
         }
 
+        //数据条目需要更新关联信息
+        if (version.getType() == ItemTypeEnum.DataItem || version.getType() == ItemTypeEnum.DataHub){
+
+            List<String> newRelations = ((DataItem)version.getContent()).getRelatedModels();
+            List<String> oriRelations = ((DataItem)version.getOriginal()).getRelatedModels();
+
+            dataItemService.updateModelRelate(newRelations, oriRelations,version.getType(),version.getItemId());
+        }
+
+
         JSONObject factory = genericService.daoFactory(version.getType());
         GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         try {
@@ -1266,6 +1276,7 @@ public class VersionService {
 
         JSONArray resultList = new JSONArray();
         List<String> versions = item.getVersions();
+        Collections.reverse(versions);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (String versionId : versions) {
             Version version = versionDao.findFirstById(versionId);

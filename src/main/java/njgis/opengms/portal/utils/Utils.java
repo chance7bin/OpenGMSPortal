@@ -1145,4 +1145,16 @@ public class Utils {
         Collections.sort(two);
         return one.equals(two);
     }
+
+
+    /**
+     * 深拷贝
+     * @param obj 
+     * @return java.lang.Object 
+     * @Author bin
+     **/
+    public static JSONObject deepCopyByJson(Object obj) {
+        String json = JSONObject.toJSONString(obj);
+        return JSONObject.parseObject(json, JSONObject.class);
+    }
 }

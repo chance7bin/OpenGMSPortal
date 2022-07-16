@@ -808,7 +808,7 @@ public class ModelItemService {
                 JSONObject jsonObject = new JSONObject();
                 User user = userDao.findFirstByEmail(contributor);
                 jsonObject.put("name",user.getName());
-                jsonObject.put("userId",user.getAccessId());
+                jsonObject.put("accessId",user.getAccessId());
                 jsonObject.put("email",user.getEmail());
                 jsonObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath+user.getAvatar());
 
@@ -1476,6 +1476,10 @@ public class ModelItemService {
     public JSONObject setRelation(String modelId,String type,List<String> relations,String user){
 
         ModelItem modelItem=modelItemDao.findFirstById(modelId);
+
+        JSONObject copyObj = Utils.deepCopyByJson(modelItem);
+        ModelItem oriModelItem = JSONObject.toJavaObject(copyObj,ModelItem.class);
+
         ModelItemRelate relate=modelItem.getRelate();
 
         List<String> relationDelete=new ArrayList<>();//要被删除的关系
@@ -1561,30 +1565,27 @@ public class ModelItemService {
                 break;
         }
 
+
+        ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+        modelItemUpdateDTO.setOriginId(modelItem.getId());
+        modelItemUpdateDTO.setRelate(relate);
+        update(modelItemUpdateDTO,user);
+
         if(!user.equals(modelItem.getAuthor())){
-
-            updateModelItemRelation(relations, type, modelItem);
-
-            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
-            modelItemUpdateDTO.setOriginId(modelItem.getId());
-            modelItemUpdateDTO.setRelate(relate);
-            update(modelItemUpdateDTO,user);
 
             JSONObject result = new JSONObject();
             result.put("type","version");
             return result;
         }else{
 
-            modelItem.setRelate(relate);
-
-            modelItemDao.save(modelItem);
-
+            updateModelItemRelation(relations, type, oriModelItem);
             JSONObject result = new JSONObject();
             result.put("type","suc");
             return result;
         }
     }
 
+    //模型条目的关联更新后，同时更新关联对象的关联关系
     public void updateModelItemRelation(List<String> relations, String type ,ModelItem modelItem){
 
         ModelItemRelate relate = modelItem.getRelate();
