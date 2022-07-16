@@ -67,10 +67,10 @@
                                 <h4>{{htmlJson.Welcome}}, <a :href="'/profile/'+userInfo.userId">{{userInfo.name}}</a></h4>
                             </section>
                             <section class="flexRowContainer flexWrap contentSection">
-                                <div class="contentCard flexCol flexColCenter" style="height: 450px">
+                                <div class="contentCard flexCol flexColCenter" style="height: 390px">
                                     <div v-cloak class="col-md-12">
 
-                                        <div class="panel-body ">
+                                        <div class="panel-body">
                                             <h4 style="margin-left: -5px">{{htmlJson.PersonalInformation}}</h4>
                                             <ul class="p-info wzhScrollbar" style="overflow: auto;height: 250px;">
                                                 <li>
@@ -109,17 +109,18 @@
                                             </ul>
                                         </div>
 
+
                                     </div>
                                     <div class="innerBorderGrey89"></div>
 
                                     <div class="col-md-12">
                                         <div class="panel-body">
-                                            <button id="edit"
-                                                    class="btn btn-noShadow btn-info btn-round btn-block btn-lg"
-                                                    style="text-transform: capitalize;font-size: 16px"
-                                                    @click="editUserInfo">{{htmlJson.EditInformation}}
-                                            </button>
-                                            <br/>
+<!--                                            <button id="edit"-->
+<!--                                                    class="btn btn-noShadow btn-info btn-round btn-block btn-lg"-->
+<!--                                                    style="text-transform: capitalize;font-size: 16px"-->
+<!--                                                    @click="editUserInfo">{{htmlJson.EditInformation}}-->
+<!--                                            </button>-->
+<!--                                            <br/>-->
                                             <button id="changePass"
                                                     class="btn btn-noShadow btn-default btn-round btn-block btn-lg"
                                                     @click="changePassword"
@@ -130,7 +131,7 @@
                                     </div>
 
                                 </div>
-                                <div class="contentCard flexCol flexColCenter" style="height: 450px">
+                                <div class="contentCard flexCol flexColCenter" style="height: 390px">
                                     <div v-cloak class="col-md-12" style="width:100%">
 
                                         <div class="panel-body">
@@ -217,103 +218,103 @@
                     </div>
 
                     <!--Edit Information modal-->
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header " style="color:white;margin-top: 110px;border: 0">
-                                    <button id="modal-close" type="button" class="close"
-                                            data-dismiss="modal"
-                                            aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <img id="userPhoto"
-                                         :src="userInfo.avatar"
-                                         onerror=src="/static/img/icon/default.png"
-                                         width="120px"
-                                         height="120px"
-                                         style=""/>
-                                    <input type="file" name="imgOne" id="imgFile" style="display: none" accept="image/*"/>
-<!--                                    <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="itemInfo.image"/>-->
-                                    <div class=" selectImg flexCenter " style="" @click="selectUserImg">
-                                        <i class="fa fa-camera hoverIcon"
-                                           style=" color: #ebebeb;font-size: 28px"></i>
-                                    </div>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="form-horizontal wzhScrollBar" role="form" style="margin-top: 20px;height: 80vh;max-height: 490px;">
-                                        <div class="wzhModalForm">
-                                            <label for="inputName">Name</label>
-                                            <div class="">
-                                                <input type="text" class="form-control" id="inputName"
-                                                       placeholder="Name" v-model="userInfo.name">
-                                            </div>
-                                        </div>
-                                         <div class="wzhModalForm">
-                                            <label for="inputName">Title</label>
-                                            <div class="">
-                                                <el-select v-model="userInfo.title" placeholder="Click to select" style="width: 100%">
-                                                    <el-option
-                                                            v-for="item in titleOptions"
-                                                            :key="item.value"
-                                                            :label="item.label"
-                                                            :value="item.value">
-                                                    </el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="wzhModalForm">
-                                            <label for="inputPhone">Phone</label>
-                                            <div class="">
-                                                <input type="text" class="form-control" id="inputPhone"
-                                                       placeholder="Phone" v-model="userInfo.phone">
-                                            </div>
-                                        </div>
-                                        <div class="wzhModalForm">
-                                            <label for="inputHomePage">Home Page</label>
-                                            <div class="">
-                                                <input type="text" class="form-control" id="inputHomePage"
-                                                       v-model="userInfo.homepage"
-                                                       placeholder="Home Page">
-                                            </div>
-                                        </div>
-                                        <div class="wzhModalForm">
-                                            <label for="inputOrganizations">Organizations</label>
-                                            <div class="">
-                                                <input type="text" class="form-control"
-                                                       id="inputOrganizations"
-                                                       placeholder="Organizations">
-                                            </div>
-                                        </div>
-                                        <div class="wzhModalForm">
-                                            <label for="inputSubjectAreas">Domain</label>
-                                            <div class="">
-                                                <input type="text" class="form-control"
-                                                       id="inputSubjectAreas"
-                                                       placeholder="Study Areas">
-                                            </div>
-                                        </div>
-                                        <div class="wzhModalForm">
-                                            <label for="inputDescription">Introduction</label>
-                                            <div class="">
-                                                <textarea type="text" class="form-control" id="inputDescription"
-                                                  v-model="userInfo.introduction"
-                                                  placeholder="Introduction"></textarea>
-                                            </div>
-                                        </div>
-                                    </form>
+<!--                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"-->
+<!--                         aria-labelledby="myModalLabel"-->
+<!--                         aria-hidden="true">-->
+<!--                        <div class="modal-dialog" role="document">-->
+<!--                            <div class="modal-content">-->
+<!--                                <div class="modal-header " style="color:white;margin-top: 110px;border: 0">-->
+<!--                                    <button id="modal-close" type="button" class="close"-->
+<!--                                            data-dismiss="modal"-->
+<!--                                            aria-label="Close">-->
+<!--                                        <span aria-hidden="true">×</span>-->
+<!--                                    </button>-->
+<!--                                    <img id="userPhoto"-->
+<!--                                         :src="userInfo.avatar"-->
+<!--                                         onerror=src="/static/img/icon/default.png"-->
+<!--                                         width="120px"-->
+<!--                                         height="120px"-->
+<!--                                         style=""/>-->
+<!--                                    <input type="file" name="imgOne" id="imgFile" style="display: none" accept="image/*"/>-->
+<!--&lt;!&ndash;                                    <img id="imgShow" style="display: inline" v-show="itemInfo.image!=undefined&&itemInfo.image!=''" :src="itemInfo.image"/>&ndash;&gt;-->
+<!--                                    <div class=" selectImg flexCenter " style="" @click="selectUserImg">-->
+<!--                                        <i class="fa fa-camera hoverIcon"-->
+<!--                                           style=" color: #ebebeb;font-size: 28px"></i>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="modal-body">-->
+<!--                                    <form class="form-horizontal wzhScrollBar" role="form" style="margin-top: 20px;height: 80vh;max-height: 490px;">-->
+<!--                                        <div class="wzhModalForm">-->
+<!--                                            <label for="inputName">Name</label>-->
+<!--                                            <div class="">-->
+<!--                                                <input type="text" class="form-control" id="inputName"-->
+<!--                                                       placeholder="Name" v-model="userInfo.name">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                         <div class="wzhModalForm">-->
+<!--                                            <label for="inputName">Title</label>-->
+<!--                                            <div class="">-->
+<!--                                                <el-select v-model="userInfo.title" placeholder="Click to select" style="width: 100%">-->
+<!--                                                    <el-option-->
+<!--                                                            v-for="item in titleOptions"-->
+<!--                                                            :key="item.value"-->
+<!--                                                            :label="item.label"-->
+<!--                                                            :value="item.value">-->
+<!--                                                    </el-option>-->
+<!--                                                </el-select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="wzhModalForm">-->
+<!--                                            <label for="inputPhone">Phone</label>-->
+<!--                                            <div class="">-->
+<!--                                                <input type="text" class="form-control" id="inputPhone"-->
+<!--                                                       placeholder="Phone" v-model="userInfo.phone">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="wzhModalForm">-->
+<!--                                            <label for="inputHomePage">Home Page</label>-->
+<!--                                            <div class="">-->
+<!--                                                <input type="text" class="form-control" id="inputHomePage"-->
+<!--                                                       v-model="userInfo.homepage"-->
+<!--                                                       placeholder="Home Page">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="wzhModalForm">-->
+<!--                                            <label for="inputOrganizations">Organizations</label>-->
+<!--                                            <div class="">-->
+<!--                                                <input type="text" class="form-control"-->
+<!--                                                       id="inputOrganizations"-->
+<!--                                                       placeholder="Organizations">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="wzhModalForm">-->
+<!--                                            <label for="inputSubjectAreas">Domain</label>-->
+<!--                                            <div class="">-->
+<!--                                                <input type="text" class="form-control"-->
+<!--                                                       id="inputSubjectAreas"-->
+<!--                                                       placeholder="Study Areas">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="wzhModalForm">-->
+<!--                                            <label for="inputDescription">Introduction</label>-->
+<!--                                            <div class="">-->
+<!--                                                <textarea type="text" class="form-control" id="inputDescription"-->
+<!--                                                  v-model="userInfo.introduction"-->
+<!--                                                  placeholder="Introduction"></textarea>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </form>-->
 
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="saveUser" type="button" class="btn btn-round btn-primary "
-                                            style="text-transform: capitalize;font-size: 15px;    margin-right: 15px;"
-                                            @click="saveEditInfo">Save
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                                </div>-->
+<!--                                <div class="modal-footer">-->
+<!--                                    <button id="saveUser" type="button" class="btn btn-round btn-primary "-->
+<!--                                            style="text-transform: capitalize;font-size: 15px;    margin-right: 15px;"-->
+<!--                                            @click="saveEditInfo">Save-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <!--Change Password modal-->
                     <div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
                          aria-labelledby="myModalLabel"
