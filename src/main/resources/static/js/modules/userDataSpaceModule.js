@@ -1624,7 +1624,7 @@ Vue.component("user-data",
                 });
                 formData.append("ogmsdata", configFile);
                 formData.append("name", this.uploadName);
-                formData.append("userId", this.userInfo.userName);
+                formData.append("userId", this.userInfo.accessId);
                 formData.append("serverNode", "china");
                 formData.append("origination", "portal");
 

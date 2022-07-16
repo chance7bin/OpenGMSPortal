@@ -360,9 +360,10 @@ var createDataVisualApplication = Vue.extend({
 
                     var bindOid=this.getSession("bindOid");
                     this.dataApplication.bindOid=bindOid;
+                    if (bindOid == null) {return;}
                     $.ajax({
                         type: "Get",
-                        url: "/modelItem/getInfo/"+bindOid,
+                        url: "/modelItem/info/"+bindOid,
                         data: { },
                         cache: false,
                         async: true,
@@ -397,7 +398,7 @@ var createDataVisualApplication = Vue.extend({
             $("#subRteTitle").text("/Modify Data Application")
             // document.title="Modify Data Application | OpenGMS"
             $.ajax({
-                url: "/dataMethod/getInfo/" + oid,
+                url: "/dataMethod/info/" + oid,
                 type: "get",
                 data: {},
 
@@ -894,7 +895,7 @@ var createDataVisualApplication = Vue.extend({
 
         axios.get("/dataItem/categoryTree")
             .then(res => {
-                that.tObj = res.data;
+                that.tObj = res.data.data;
                 let tree = [];
                 for (let i in Object.values(that.tObj)){
                     // console.log(grandpa);

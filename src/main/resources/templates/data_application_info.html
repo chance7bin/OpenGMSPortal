@@ -43,7 +43,7 @@
     </style>
 </head>
 <body>
-<div id="data_application_info">
+<div id="data_application_info" v-cloak>
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div class="clearfix" style="padding:40px 0px;height: auto;position: relative;">
@@ -70,7 +70,7 @@
             <!--description-->
             <div th:replace="fragments/itemInfoModules :: data_description"></div>
 
-            <div th:replace="fragments/itemInfoModules :: Resource(${resources})"
+            <div th:replace="fragments/itemInfoModules :: Resource(${resources},'DataApplication')"
                  th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
             </div>
 

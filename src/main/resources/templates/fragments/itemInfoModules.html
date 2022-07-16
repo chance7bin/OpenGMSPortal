@@ -240,11 +240,11 @@
 
             <div th:if="${itemType} eq'Data'" class="img" >
 <!--                <div th:if="${#strings.isEmpty(itemInfo.image)">-->
-                <div th:if="itemInfo.image==''">
+                <div th:if="${itemInfo.image==''}">
                     <avatar th:username="${itemInfo.name}" :size="90" :rounded="false"></avatar>
                 </div>
 <!--                <div th:unless="${#strings.isEmpty(itemInfo.image)">-->
-                <div th:unless="itemInfo.image==''">
+                <div th:unless="${itemInfo.image==''}">
                     <img th:src="${itemInfo.image}" class="image">
                 </div>
             </div>
@@ -428,7 +428,7 @@
 </div>
 
 <!--resource资源-->
-<div th:fragment="Resource(resources)" id="Resource" class="detail_block" style="padding: 10px 20px 0 0;">
+<div th:fragment="Resource(resources,type)" id="Resource" class="detail_block" style="padding: 10px 20px 0 0;">
     <div class="block_head">
         <div class="head_text">
             <h4 v-text="htmlJSON.Resource"></h4>
@@ -444,7 +444,7 @@
                  style="width: 150px;">
                 <i class="fas fa-file-download"></i>
                 <a target="_blank"
-                   th:href="'/static'+'/dataMethod/'+${itemInfo.contentType}+${data.path}"
+                   th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"
                    style="color:black">
                     <div class="resouceFile el-card__body">
                         <div class="el-row">
@@ -1933,7 +1933,7 @@
             <el-table-column prop="name" :label="htmlJSON.TableName"></el-table-column>
             <el-table-column prop="method" :label="htmlJSON.TableMethodType"></el-table-column>
             <!--                            <el-table-column prop="serviceId" label = "suiyi" style="display: none"></el-table-column>-->
-            <el-table-column :label="htmlJSON.Operation">
+            <el-table-column :label="htmlJSON.TableOperation">
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="light" content="You can try to invoke the service" placement="top-start">
                         <el-button @click = "gotoTask($event)" type="success" class="invokeBtn">

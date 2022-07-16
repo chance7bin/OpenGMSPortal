@@ -38,6 +38,7 @@ var createConcept = Vue.extend({
             classifications1: "34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP",
             classifications2: ["13b822a2-fecd-4af7-aeb8-0503244abe8f"],
             currentClass: "Sedris",
+            currentClassId:"34WEEZ1426Y0IGXWKS8SFXOSXC7D8ZLP",
             pageOption: {
                 paginationShow: false,
                 progressBar: true,
@@ -1106,8 +1107,9 @@ var createConcept = Vue.extend({
             this.pageOption.total = 0;
             this.pageOption.paginationShow = false;
             this.currentClass = data.label;
+            this.currentClassId = data.oid;
             this.classifications1 = data.oid;
-            this.getChildren(data.children)
+            // this.getChildren(data.children)
             this.pageOption.currentPage = 1;
             this.searchText = "";
             this.getConcepts();
@@ -1133,7 +1135,8 @@ var createConcept = Vue.extend({
                 page: this.pageOption.currentPage,
                 pageSize: this.pageOption.pageSize,
                 searchText: this.searchText,
-                classifications: this.classifications1
+                // classifications: this.classifications1
+                classifications: this.currentClassId
 
             };
             this.Query(data, this.queryType);
@@ -1144,11 +1147,11 @@ var createConcept = Vue.extend({
             query.page = data.page;
             query.sortType = this.pageOption.sortType;
             query.categoryName = data.classifications
-            if (data.asc) {
-                query.asc = 0;
-            } else {
-                query.asc = 1;
-            }
+            // if (data.asc) {
+            //     query.asc = 0;
+            // } else {
+            //     query.asc = 1;
+            // }
             query.searchText = data.searchText;
 
             let url = getConceptList();
@@ -1643,7 +1646,29 @@ var createConcept = Vue.extend({
             } else if (v.indexOf('str-') === 0) {
                 return v.slice(4);
             }
+        },
+
+
+        // 切换currentClass
+        changeCurrentClass(treeData, currentClassId){
+
+            for (let i = 0; i < treeData.length; i++) {
+                let data = treeData[i];
+                if (data.oid == currentClassId){
+                    this.currentClass = data.label;
+                } else {
+                    let children = data.children;
+                    for (let j = 0; j < children.length; j++) {
+                        if (children[j].oid == currentClassId){
+                            this.currentClass = children[j].label;
+                            return;
+                        }
+                    }
+                }
+            }
+
         }
+
     },
 
     destroyed() {
@@ -1654,7 +1679,11 @@ var createConcept = Vue.extend({
     created(){
         //首先到缓存中获取userSpaceAll
         this.htmlJson = this.getStorage("userSpaceAll");
-        console.log("this.htmlJson:",this.htmlJson);
+        // console.log("this.htmlJson:",this.htmlJson);
+
+        this.changeCurrentClass(this.htmlJson.treeData3, this.currentClassId);
+
+
         if (this.htmlJson.Home == undefined) {
             //如果缓存中有userSpaceAll页面就不会报错
             if (this.getStorage("userSpaceAll") == null){
@@ -1687,6 +1716,8 @@ var createConcept = Vue.extend({
             } else {
                 $("#subRteTitle").text("/" + newData.UpdateConceptSemantic);
             }
+
+            this.changeCurrentClass(newData.treeData3, this.currentClassId);
             // $("#title").text("Create Model Item")
 
         }

@@ -1803,6 +1803,7 @@ var createModelItem = Vue.extend({
 
             // document.title="Modify Model Item | OpenGMS"
             if(window.localStorage.getItem('draft')==null){
+                if (oid == null) {return;}
                 $.ajax({
                     url: "/modelItem/info/" + oid,
                     type: "get",

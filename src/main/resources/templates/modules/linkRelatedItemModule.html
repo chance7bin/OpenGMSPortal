@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script>
+        // import {module_msg} from '/modulesValue'
+    </script>
+
 </head>
 <body>
 <template id="linkRelatedItemModule" th:fragment="linkRelatedItemModule">
@@ -64,7 +68,9 @@
                     <el-table-column
                             label="Name">
                         <template slot-scope="props">
-                            <a :href="'/'+relateItemType+'/'+props.row.oid" target="_blank">{{props.row.name}}</a>
+                            <!--<a :href="'/'+relateItemType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>-->
+                            <a v-if="relateItemType=='modelItem-D'" :href="'/'+'modelItem'+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
+                            <a v-else :href="'/'+relateItemType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
                         </template>
                     </el-table-column>
 
@@ -123,8 +129,10 @@
                         <el-table-column sortable='custom'
                                          label="Name">
                             <template slot-scope="props">
-                                <a :href="'/repository/'+relateItemType+'/'+props.row.oid"
-                                   target="_blank">{{props.row.name}}</a>
+                                <!--<a :href="'/'+relateItemType+'/'+props.row.id"-->
+                                <!--   target="_blank">{{props.row.name}}</a>-->
+                                <a v-if="relateItemType=='modelItem-D'" :href="'/'+'modelItem'+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
+                                <a v-else :href="'/'+relateItemType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
                             </template>
                         </el-table-column>
                         <!--<el-table-column-->
@@ -186,8 +194,10 @@
                         <el-table-column sortable='custom'
                                          label="Name">
                             <template slot-scope="props">
-                                <a :href="'/repository/'+relateItemType+'/'+props.row.oid"
-                                   target="_blank">{{props.row.name}}</a>
+                                <!--<a :href="'/'+relateItemType+'/'+props.row.id"-->
+                                <!--   target="_blank">{{props.row.name}}</a>-->
+                                <a v-if="relateItemType=='modelItem-D'" :href="'/'+'modelItem'+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
+                                <a v-else :href="'/'+relateItemType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
                             </template>
                         </el-table-column>
                         <!--<el-table-column-->

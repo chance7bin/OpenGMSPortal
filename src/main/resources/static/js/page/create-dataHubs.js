@@ -588,7 +588,11 @@ var createDataHubs = Vue.extend({
                         if (result.status ===200){
                             if (result.data.code === 0) {
                                 if(result.data.data.method==="update") {
-                                    alert(this.htmlJson.UpdateSuccess);
+                                    this.$message({
+                                        message: this.htmlJson.UpdateSuccess,
+                                        type: 'success'
+                                    });
+                                    // alert(this.htmlJson.UpdateSuccess);
                                     $("#editModal", parent.document).remove();
                                     window.location.href = "/dataHub/" + result.data.data.id;
                                 }

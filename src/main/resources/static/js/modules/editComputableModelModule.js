@@ -535,9 +535,10 @@ Vue.component("editComputableModelModule",
 
                         var bindOid=this.getSession("bindOid");
                         this.computableModel.bindOid=bindOid;
+                        if (bindOid == null) {return;}
                         $.ajax({
                             type: "Get",
-                            url: "/modelItem/getInfo/"+bindOid,
+                            url: "/modelItem/info/"+bindOid,
                             data: { },
                             cache: false,
                             async: true,
@@ -604,7 +605,7 @@ Vue.component("editComputableModelModule",
                 $("#subRteTitle").text("/Modify Computable Model")
                 // document.title="Modify Computable Model | OpenGMS"
                 $.ajax({
-                    url: "/computableModel/getInfo/" + oid,
+                    url: "/computableModel/info/" + oid,
                     type: "get",
                     data: {},
 

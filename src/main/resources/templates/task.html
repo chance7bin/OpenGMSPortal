@@ -672,10 +672,10 @@
                                 :before-close="uploadBeforeClose"
                         >
                             <div class="uploaded" v-loading="uploadLoading">
-                                <div class="form-group flexColCenter">
-                                    <label style="margin-right:5px;">{{htmlJSON.name}}</label>
-                                    <el-input v-model="uploadName" placeholder="Dataset name"></el-input>
-                                </div>
+                                <!--<div class="form-group flexColCenter">-->
+                                <!--    <label style="margin-right:5px;">{{htmlJSON.name}}</label>-->
+                                <!--    <el-input v-model="uploadName" placeholder="Dataset name"></el-input>-->
+                                <!--</div>-->
 
                                 <div class="form-group flexColCenter">
                                     <label style="margin-right:5px;">{{htmlJSON.Datatemplate}}</label>
@@ -689,9 +689,9 @@
                                             :loading="selectLoading">
                                         <el-option
                                                 v-for="item in options"
-                                                :key="item.oid"
+                                                :key="item.id"
                                                 :label="item.name"
-                                                :value="item.oid">
+                                                :value="item.id">
                                         </el-option>
                                     </el-select>
                                 </div>

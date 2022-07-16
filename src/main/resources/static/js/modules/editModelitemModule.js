@@ -821,7 +821,7 @@ Vue.component("edit-modelitem-module",
 
                 // document.title="Modify Model Item | OpenGMS"
                 $.ajax({
-                    url: "/modelItem/getInfo/" + oid,
+                    url: "/modelItem/info/" + oid,
                     type: "get",
                     data: {},
 

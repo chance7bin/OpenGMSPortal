@@ -1820,7 +1820,7 @@ var userDataSpace = Vue.extend(
                 });
                 formData.append("ogmsdata", configFile);
                 formData.append("name", this.uploadName);
-                formData.append("userId", this.userInfo.userName);
+                formData.append("userId", this.userInfo.accessId);
                 formData.append("serverNode", "china");
                 formData.append("origination", "portal");
 
@@ -1947,7 +1947,7 @@ var userDataSpace = Vue.extend(
                     success: (result) => {
 
                         this.options = [];
-                        this.options.push({"name": "None", "oid": "none"})
+                        this.options.push({"name": "None", "id": "none"})
                         for (let index in result.data.list) {
                             this.options.push(result.data.list[index]);
                         }
@@ -2974,7 +2974,7 @@ var userDataSpace = Vue.extend(
                 //获取data item分类树
                 axios.get("/dataItem/categoryTree")
                     .then(res => {
-                        that.tObj = res.data;
+                        that.tObj = res.data.data;
                         for (var e in that.tObj) {
                             var a = {
                                 key: e,

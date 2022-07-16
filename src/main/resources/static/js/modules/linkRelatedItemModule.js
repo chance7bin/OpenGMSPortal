@@ -36,6 +36,7 @@ Vue.component("linkRelatedItemModule",
         data() {
             return {
                 // modulesValue: module_msg,
+                // modulesValue: module_msg,
                 targetItemId:'',
                 targetItemType:'',
                 relateItemType:'',
@@ -557,6 +558,22 @@ Vue.component("linkRelatedItemModule",
                 }
             },
 
+            loadJs(src){
+                return new Promise((resolve,reject)=>{
+                    let script = document.createElement('script');
+                    script.type = "text/javascript";
+                    script.src= src;
+                    document.body.appendChild(script);
+
+                    script.onload = ()=>{
+                        resolve();
+                    }
+                    script.onerror = ()=>{
+                        reject();
+                    }
+            })
+}
+
         },
         created() {
 
@@ -569,9 +586,17 @@ Vue.component("linkRelatedItemModule",
             // console.log("modulesValue:", this.modulesValue);
             // console.log("modulesValue");
             // console.log("create window:",window.module_msg);
+            // var modulesValue = require("../modules/modulesValue")
+            // console.log("modulesValue:", modulesValue);
+
 
 
         },
-        mounted() {}
+        mounted() {
+
+            this.loadJs("/static/js/modules/modulesValue.js").then(() => {
+                console.log("modulesValue:", window.module_msg);
+            })
+        }
     }
 )
