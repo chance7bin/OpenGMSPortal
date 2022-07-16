@@ -479,12 +479,12 @@ var vue = new Vue({
                     console.log(this.themeModelData[0],this.edit_themeObj)
                     this.$message({
                         type: 'success',
-                        message: this.htmlJson.RemovedSuccessfully
+                        message: this.htmlJSON.RemovedSuccessfully
                     });
                 }).catch(()=>{
                     this.$message({
                         type: 'info',
-                        message: this.htmlJson.RemoveCancel
+                        message: this.htmlJSON.RemoveCancel
                     });
 
                 })
@@ -522,12 +522,12 @@ var vue = new Vue({
                     console.log(this.themeData[0],this.edit_themeObj)
                     this.$message({
                         type: 'success',
-                        message: this.htmlJson.RemovedSuccessfully
+                        message: this.htmlJSON.RemovedSuccessfully
                     });
                 }).catch(()=>{
                     this.$message({
                         type: 'info',
-                        message: this.htmlJson.RemoveCancel
+                        message: this.htmlJSON.RemoveCancel
                     });
 
                 })
@@ -565,12 +565,12 @@ var vue = new Vue({
                     console.log(this.themeDataMethod[0],this.edit_themeObj)
                     this.$message({
                         type: 'success',
-                        message: this.htmlJson.RemovedSuccessfully
+                        message: this.htmlJSON.RemovedSuccessfully
                     });
                 }).catch(()=>{
                     this.$message({
                         type: 'info',
-                        message: this.htmlJson.RemoveCancel
+                        message: this.htmlJSON.RemoveCancel
                     });
 
                 })
@@ -935,7 +935,7 @@ var vue = new Vue({
             if(this.editThemeName.replace(/\s+/g,"")==""){
                 this.$message(
                     {
-                        message:this.htmlJson.PleaseEnterAnAvailableName,
+                        message:this.htmlJSON.PleaseEnterAnAvailableName,
                         type:"warning"
                     })
             }
@@ -1032,7 +1032,7 @@ var vue = new Vue({
                         if(result.data.method==="update") {
                             // alert("Update Success");
                             that.$message({
-                                message : this.htmlJson.UpdateSuccess,
+                                message : that.htmlJSON.UpdateSuccess,
                                 type: 'success'});
                             $("#editModal", parent.document).remove();
                             that.dialogVisible3 = false;
@@ -1043,7 +1043,7 @@ var vue = new Vue({
                             // window.location.href = "/repository/theme/" + result.data.id;
                         }
                         else{
-                            this.$alert(this.htmlJson.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
+                            this.$alert(this.htmlJSON.ChangesHaveBeenSubmittedPleaseWaitForTheAuthorToReview, 'Success', {
                                 type:"success",
                                 confirmButtonText: 'OK',
                                 callback: action => {
@@ -1058,7 +1058,7 @@ var vue = new Vue({
                         }
                     }
                     else if(result.code==-2){
-                        alert(this.htmlJson.LoginInFirst);
+                        alert(this.htmlJSON.LoginInFirst);
                         // window.location.href="/user/login";
                     }
                     else{
@@ -1068,7 +1068,7 @@ var vue = new Vue({
                 error:function(){
 
                     _this.$message({
-                        message: this.htmlJson.LoginInFirst,
+                        message: this.htmlJSON.LoginInFirst,
                         type: 'warning'
                     });
                     setTimeout(() => {
@@ -1494,8 +1494,6 @@ var vue = new Vue({
 
         // model的两个事件
         addModel(index, row) {
-            console.log(this.selectedModelTableData)
-            console.log(this.currentModelNode)
 
             // 往数组中添加新模型
             var flag = false
@@ -1718,7 +1716,7 @@ var vue = new Vue({
             }
         },
         handleClose(done) {
-            this.$confirm(this.htmlJson.AreYouSureToClose)
+            this.$confirm(this.htmlJSON.AreYouSureToClose)
                 .then(_ => {
                     done();
                 })
@@ -1773,29 +1771,6 @@ var vue = new Vue({
                     }
 
                 })
-            // $.ajax({
-            //     type: "POST",
-            //     url: url,
-            //     data: data,
-            //     async: true,
-            //     contentType: contentType,
-            //     success: (json) => {
-            //         if (json.code == 0) {
-            //             let data = json.data;
-            //
-            //             this.pageOption1.total = data.total;
-            //             this.pageOption1.pages = data.pages;
-            //             this.pageOption1.searchResult = data.list;
-            //             this.pageOption1.users = data.users;
-            //             this.pageOption1.progressBar = false;
-            //             this.pageOption1.paginationShow = true;
-            //
-            //         }
-            //         else {
-            //             console.log("query error!")
-            //         }
-            //     }
-            // })
         },
         // aaa(item){
         //     window.location.href='/profile/'+item.name
@@ -2043,24 +2018,24 @@ var vue = new Vue({
                 id: oid,
                 type: this.relateType
             };
-            $.ajax({
-                type: "GET",
-                url: "/modelItem/relation",
-                data: data,
-                async: true,
-                success: (json) => {
-                    if (json.code == 0) {
-                        let data = json.data;
-                        console.log(data)
-
-                        this.tableData = data;
-
-                    }
-                    else {
-                        console.log("query error!")
-                    }
-                }
-            })
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/modelItem/relation",
+            //     data: data,
+            //     async: true,
+            //     success: (json) => {
+            //         if (json.code == 0) {
+            //             let data = json.data;
+            //             console.log(data)
+            //
+            //             this.tableData = data;
+            //
+            //         }
+            //         else {
+            //             console.log("query error!")
+            //         }
+            //     }
+            // })
         },
         handleSelect(index, indexPath) {
             this.setSession("index", index);
@@ -2216,10 +2191,11 @@ var vue = new Vue({
         },
         send_message() {
             this.dialogVisible = false;
-            alert(this.htmlJson.SendMessageSuccess)
+            alert(this.htmlJSON.SendMessageSuccess)
         },
         handleClose(done) {
-            this.$confirm(this.htmlJson.ConfirmClosing)
+            console.log(this.htmlJSON)
+            this.$confirm(this.htmlJSON.ConfirmClosing)
                 .then(_ => {
                     done();
                 })
