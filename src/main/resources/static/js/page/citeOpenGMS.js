@@ -182,7 +182,6 @@ var vue = new Vue({
                     this.sectionData.push(obj);
                 }
 
-                console.log(this.sectionData)
             },
 
         },
@@ -205,7 +204,6 @@ var vue = new Vue({
             this.ScreenWidth = document.documentElement.clientWidth;
             window.addEventListener("resize", () => {
                 return (() => {
-                    console.log('come on ..');
                     let height = document.documentElement.clientHeight;
                     let width = document.documentElement.clientWidth;
                     this.ScreenMinHeight = (height - 400) + "px";
