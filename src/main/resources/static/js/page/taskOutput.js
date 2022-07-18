@@ -87,9 +87,26 @@ var vue = new Vue({
         //数据可视化
         visualVisible:false,
         visualSrc:'',
+        htmlJSON:{}
     },
     computed: {},
     methods: {
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage)
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+            return v;
+        },
 
         initSize(){
             this.$nextTick(() =>{
@@ -623,6 +640,8 @@ var vue = new Vue({
     },
 
     async mounted() {
+        this.htmlJSON = this.getStorage("userSpaceAll");
+        console.log("111111",this.htmlJSON);
 
         console.log(this.info);
         if(info==null||info==undefined){
