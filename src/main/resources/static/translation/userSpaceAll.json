@@ -1832,7 +1832,10 @@
     "curClassDesc":"Move your mouse to a classification to learn more.",
     "ContributedBy": "Contributed by",
     "DataOfCalculation": "Data of this calculation",
-    "Input": "Input"
+    "Input": "Input",
+    "Output": "Output",
+    "RunBy": "Run by",
+    "At": "at"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3661,6 +3664,9 @@
     "curClassDesc":"将鼠标移动到一个分类以了解更多信息。",
     "ContributedBy": "贡献于",
     "DataOfCalculation": "计算数据",
-    "Input": "输入"
+    "Input": "输入",
+    "Output": "输出",
+    "RunBy": "运行自",
+    "At": "于"
   }
 }
