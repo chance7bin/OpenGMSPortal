@@ -206,7 +206,7 @@ var createDataHubs = Vue.extend({
             treeData_select:[],
             curClassDesc: {
                 label:'',
-                desc:"Move your mouse to a classification to learn more."
+                desc:this.htmlJson.curClassDesc
             },
             currentLocalization: {
                 localCode: "",
@@ -713,7 +713,10 @@ var createDataHubs = Vue.extend({
             // this.htmlJSON = newData;
             // this.treeData_part1 = newData.treeData_part1;
             // this.treeData_part2 = newData.treeData_part2;
-            if (this.editType == 'create'){
+            const url = window.location.href.split("/");
+            console.log(url[url.length-1]);
+
+            if (url[url.length-1] == 'createDataHubs'){
                 $("#subRteTitle").text("/" + newData.CreateDataHubs);
             } else {
                 $("#subRteTitle").text("/" + newData.ModifyDataHubs);
@@ -1024,7 +1027,7 @@ var createDataHubs = Vue.extend({
         }
         else {
             // $("#title").text("Modify Model Item")
-            $("#subRteTitle").text("/"+this.htmlJson.ModifyDataHubs)
+            $("#subRteTitle").text("/"+this.htmlJson.CreateDataHubs)
 
             // document.title="Modify Data Hubs | OpenGMS"
             axios.get('/dataHub/itemInfo/'+oid).then(res=>{

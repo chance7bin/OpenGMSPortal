@@ -57,7 +57,7 @@
                             </div>
                             <div>
                                 <h3 class="model_title"> {{info.modelInfo.name}}</h3>
-                                <span  >Contributed by <span  style="cursor: pointer; font-size: 2rem;"
+                                <span  >{{htmlJSON.ContributedBy}}<span  style="cursor: pointer; font-size: 2rem;"
                                                               @click="goPersonCenter(info.userInfo.compute_model_user_oid)">{{info.userInfo.compute_model_user_name}}</span></span>
                                 <br>
                             </div>
@@ -69,11 +69,11 @@
                             <el-row type="flex" justify="space-between" align="middle">
                                 <el-row type="flex" align="middle">
                                     <i class="fa fa-database"></i>
-                                    <p style="font-size: 18px;margin-bottom: 0">&nbsp&nbsp<span style="font-style: italic;">Data</span> of this caculation</p>
+                                    <p>{{htmlJSON.DataOfCalculation}}</p>
                                 </el-row>
                                 <div v-cloak style="margin-right: 5px;font-style: italic">
-                                    <span style="font-size: 15px">Run by </span><span @click="window.open('/profile/'+info.userInfo.userOid)" style="color: #389bdb;font-size: 22px;cursor: pointer">{{info.userInfo.name}}</span>
-                                    <span style="font-size: 15px">at</span> <span style="margin-right: 15px">{{dateFormat(info.taskInfo.createTime)}}</span>
+                                    <span style="font-size: 15px">{{htmlJSON.RunBy}} </span><span @click="window.open('/profile/'+info.userInfo.userOid)" style="color: #389bdb;font-size: 22px;cursor: pointer">{{info.userInfo.name}}</span>
+                                    <span style="font-size: 15px">{{htmlJSON.At}}</span> <span style="margin-right: 15px">{{dateFormat(info.taskInfo.createTime)}}</span>
                                     <!--<span style="font-style: normal">-->
                                         <!--<i style="font-size: 18px!important;" class="fa fa-bar-chart"></i> 0 &nbsp-->
                                     <!--</span>-->
@@ -83,7 +83,7 @@
                             <el-row type="flex" justify="space-between" align="middle" >
                                 <div class="containerShallowBlue"
                                         style="font-size: 16px;min-width: 60%;max-height: 110px;flex: 1;margin-right: 15px">
-                                    <p>Description:<br></p>
+                                    <p>{{htmlJSON.Description}}:<br></p>
                                     <div style="width: 99%;word-wrap: break-word" v-if="info.taskInfo.description!=''">{{this.info.taskInfo.description}}</div>
 
 
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="dataContainer">
                                     <div class="_params-group">
-                                        <el-row v-if="inEventList(state).length!==0" class="_title">Input</el-row>
+                                        <el-row v-if="inEventList(state).length!==0" class="_title">{{htmlJSON.Input}}</el-row>
                                         <div class="_items">
                                             <el-row v-for="(modelInEvent,inEventIndex) in inEventList(state)"
                                                     :key="inEventIndex" class="_item">
@@ -165,7 +165,7 @@
                                     </div>
 
                                     <div class="_params-group">
-                                        <el-row v-if="outEventList(state).length!==0" class="_title">Output</el-row>
+                                        <el-row v-if="outEventList(state).length!==0" class="_title">{{htmlJSON.Output}}</el-row>
                                         <div class="_items">
                                             <el-row v-for="(modelOutEvent,outEventIndex) in outEventList(state)"
                                                     :key="outEventIndex" class="_item">

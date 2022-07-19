@@ -309,7 +309,7 @@
         <div th:if="${modularType.name eq 'ComputableModel' and history!=true and showTag==true}"  class="detail_option">
             <span th:if="${itemInfo.contentType=='Package'}">
                 <button th:unless="${itemInfo.deploy==true}" class="btn btn-lg btn-info" type="button"
-                        @click="dialogVisible = true">Deploy
+                        @click="dialogVisible = true">{{htmlJSON.Deploy}}
                 </button>
             </span>
             <button th:if="${itemInfo.deploy==true||itemInfo.contentType=='MD5'}" class="btn btn-lg btn-success" type="button" style="font-size: 18px;vertical-align: initial;margin-right:10px;"
