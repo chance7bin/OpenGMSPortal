@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.PortalApplication;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.*;
+import njgis.opengms.portal.entity.doo.AuthorInfo;
+import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.dto.ResultDTO;
@@ -391,6 +393,7 @@ public class DataItemService {
                 }
             }
 
+            List<String> oriRelatedModels = item.getRelatedModels();
             item.setRelatedModels(relations);
             item.setLastModifyTime(now);
             item.setLastModifier(email);
@@ -400,7 +403,8 @@ public class DataItemService {
             if (author.equals(email)){
                 versions.add(new_version.getId());
                 item.setVersions(versions);
-
+                updateModelRelate(relations, oriRelatedModels,ItemTypeEnum.DataItem,id);
+                item.setRelatedModels(relations);
                 dataItemDao.save(item);
                 result.put("type","suc");
 
@@ -424,8 +428,77 @@ public class DataItemService {
             return ResultUtils.success(result);
         }
 
+    }
 
 
+    //当数据条目更新与模型的关系时，同时更新模型的关系
+    public void updateModelRelate(List<String> newRelations, List<String> oriRelations, ItemTypeEnum itemType, String itemId){
+
+        switch (itemType){
+            case DataItem:{
+
+                //添加关联
+                for (String relation : newRelations) {
+
+                    if (!oriRelations.contains(relation)){
+                        ModelItem item = modelItemDao.findFirstById(relation);
+                        List<String> dataItems = item.getRelate().getDataItems();
+                        if (!dataItems.contains(itemId)){
+                            dataItems.add(itemId);
+                            modelItemDao.save(item);
+                        }
+                    }
+                }
+
+                //删除关联
+                for (String ori : oriRelations) {
+
+                    if (!newRelations.contains(ori)){
+                        ModelItem item = modelItemDao.findFirstById(ori);
+                        List<String> dataItems = item.getRelate().getDataItems();
+                        if (dataItems.contains(itemId)){
+                            dataItems.remove(itemId);
+                            modelItemDao.save(item);
+                        }
+                    }
+
+                }
+
+
+                break;
+            }
+            case DataHub:{
+
+                //添加关联
+                for (String relation : newRelations) {
+
+                    if (!oriRelations.contains(relation)){
+                        ModelItem item = modelItemDao.findFirstById(relation);
+                        List<String> dataHubs = item.getRelate().getDataHubs();
+                        if (!dataHubs.contains(itemId)){
+                            dataHubs.add(itemId);
+                            modelItemDao.save(item);
+                        }
+                    }
+                }
+
+                //删除关联
+                for (String ori : oriRelations) {
+
+                    if (!newRelations.contains(ori)){
+                        ModelItem item = modelItemDao.findFirstById(ori);
+                        List<String> dataHubs = item.getRelate().getDataHubs();
+                        if (dataHubs.contains(itemId)){
+                            dataHubs.remove(itemId);
+                            modelItemDao.save(item);
+                        }
+                    }
+
+                }
+
+                break;
+            }
+        }
 
     }
 

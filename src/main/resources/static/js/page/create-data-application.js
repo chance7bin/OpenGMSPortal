@@ -282,7 +282,31 @@ var createDataApplication = Vue.extend({
                 .catch(_ => {
                 });
         },
+        // selectDataspaceFile(file){
+        //     if (this.selectedFile.indexOf(file) > -1) {
+        //         for (var i = 0; i < this.selectedFile.length; i++) {
+        //             if (this.selectedFile[i] === file) {
+        //                 //删除
+        //                 this.selectedFile.splice(i, 1);
+        //                 // this.downloadDataSetName.splice(i, 1)
+        //                 break
+        //             }
+        //         }
+        //     } else {
+        //         this.selectedFile.push(file);
+        //     }
+        // },
+
         selectDataspaceFile(file){
+            if (this.selectedFile.indexOf(file) > -1) {
+
+            } else {
+                file.label = file.name; //datamethod的testData是用label标识的
+                this.selectedFile.push(file);
+            }
+        },
+
+        removeDataspaceFile(file) {
             if (this.selectedFile.indexOf(file) > -1) {
                 for (var i = 0; i < this.selectedFile.length; i++) {
                     if (this.selectedFile[i] === file) {
@@ -290,12 +314,11 @@ var createDataApplication = Vue.extend({
                         this.selectedFile.splice(i, 1);
                         // this.downloadDataSetName.splice(i, 1)
                         break
-                    }
+                    }gg
                 }
-            } else {
-                this.selectedFile.push(file);
             }
         },
+
         openTemplateDialog(){
             this.pageOption.currentPage = 1;
             this.pageOption.sortAsc = false;
@@ -534,9 +557,10 @@ var createDataApplication = Vue.extend({
 
                     var bindOid=this.getSession("bindOid");
                     this.dataApplication.bindOid=bindOid;
+                    if (bindOid == null) {return;}
                     $.ajax({
                         type: "Get",
-                        url: "/modelItem/getInfo/"+bindOid,
+                        url: "/modelItem/info/"+bindOid,
                         data: { },
                         cache: false,
                         async: true,
@@ -581,7 +605,7 @@ var createDataApplication = Vue.extend({
 
                 success: (result) => {
                     window.sessionStorage.setItem("editdataApplication_id", "");
-                    console.log("/dataMethod/itemInfo/:",result)
+                    // console.log("/dataMethod/itemInfo/:",result)
                     var basicInfo = result.data.data;
                     if(basicInfo.resourceJson!=null)
                         that.resources=basicInfo.resourceJson;
@@ -816,9 +840,11 @@ var createDataApplication = Vue.extend({
             let dataUrls = [];
             console.log("this.selectedFile:",this.selectedFile)
             for(let item of this.selectedFile){
-                let obj = new Object();
+                let obj = {};
                 // obj.oid = item.uid;
                 obj.url = item.address;
+                obj.label = item.name;
+                obj.suffix = item.suffix;
                 dataUrls.push(item.address);
                 testData.push(obj);
             }
@@ -828,7 +854,7 @@ var createDataApplication = Vue.extend({
             dataForm.append("datafileUrl", dataUrls)
 
             $.ajax({
-                url:"http://geomodeling.njnu.edu.cn/dataTransferServer/dataDownloadContainer/",
+                url:"http://172.21.213.111:8082/dataDownloadContainer/",
                 type:"POST",
                 data:dataForm,
                 cache: false,
@@ -858,7 +884,7 @@ var createDataApplication = Vue.extend({
                 dataForm2.append("resources",this.fileArray[i]);
             }
             $.ajax({
-                url:"http://geomodeling.njnu.edu.cn/dataTransferServer/dataDownloadAndCpmpress/",
+                url:"http://172.21.213.111:8082/dataDownloadAndCpmpress/",
                 type:"POST",
                 data:dataForm2,
                 cache: false,
@@ -1226,7 +1252,7 @@ var createDataApplication = Vue.extend({
 
         axios.get("/dataItem/categoryTree")
             .then(res => {
-                that.tObj = res.data;
+                that.tObj = res.data.data;
                 let tree = [];
                 for (let i in Object.values(that.tObj)){
                     // console.log(grandpa);

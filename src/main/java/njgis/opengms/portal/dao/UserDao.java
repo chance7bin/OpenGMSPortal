@@ -25,7 +25,9 @@ public interface UserDao extends MongoRepository<User,String> {
     // @Query("{name:{$regex: '?0',$options:'i'}}")
     List<User> findAllByNameContainsIgnoreCase(String name);
 
-    Page<User> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+    // Page<User> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+
+    Page<User> findAllByEmailContainsIgnoreCase(String email, Pageable pageable);
 
 
     List<User> findAllByUserRole(UserRoleEnum role);

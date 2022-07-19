@@ -666,7 +666,8 @@ public class DataMethodService {
 //                dataApplicationDao.insert(dataMethod);
 
                 //部署服务
-                result = deployPackage(dataMethod);
+                // result = deployPackage2(dataMethod);
+                result = deployPackage(dataMethod, dataMethod.getTestDataPath());
 
                 userService.updateUserResourceCount(email, ItemTypeEnum.DataMethod, "add");
 
@@ -687,12 +688,174 @@ public class DataMethodService {
         return result;
     }
 
+
+    public JsonResult deployPackage(DataMethod dataApplication, String dataPath) throws Exception {
+        JsonResult res = new JsonResult();
+        //跨域调用容器接口，部署数据
+//        String dataUrl="http://172.21.213.111:8899" + "/newFile";
+        String dataUrl="http://172.21.213.111:8899" + "/newFile";
+
+        List<InvokeService> invokeServices = dataApplication.getInvokeServices();
+        InvokeService invokeService = invokeServices.get(0);
+
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> part = new HashMap<>();
+        part.put("uid", "0");//存在根目录中
+        part.put("instype", "Data");
+
+//        part.put("userToken", "f30f0e82-f6f1-4264-a302-caff7c40ccc9");//33
+//        part.put("userToken", "e3cea591-a8a5-4f50-b640-a569eccd94b7");//75
+        part.put("userToken", "4cfc7691-c56b-483f-b1c9-bab859be9e00");//75_2
+        String newFileId = UUID.randomUUID().toString();
+        part.put("id", newFileId);
+        part.put("oid", "0");
+        part.put("name", dataApplication.getName());
+        Date date = new Date();
+        part.put("date", date.toString());
+        part.put("type", "file");
+        part.put("authority", true);
+
+        List<String> dataIds = new ArrayList<>();
+        dataIds.add(newFileId);
+        invokeService.setDataIds(dataIds);
+
+        MetaData metaData = new MetaData();
+        metaData.setDataPath(dataPath);
+        metaData.setDataTime("1970/1/1 上午8:00:00");
+        metaData.setFileDataType("File");
+        metaData.setSecurity("Public");
+        metaData.setUid(UUID.randomUUID().toString());
+
+        part.put("meta", metaData);
+
+        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", "Bearer "+ StaticParams.access_token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map> httpEntity = new HttpEntity<>(part, headers);
+        try {
+            ResponseEntity<JSONObject> response = restTemplate.exchange(dataUrl, HttpMethod.PUT, httpEntity, JSONObject.class);
+            //解析response
+            JSONObject j_result = response.getBody();
+            //捕获sdk异常
+            if(j_result.getString("code").equals("-1")){
+                // res.setMsg(j_result.getString("message"));
+                // res.setCode(-1);
+                res = ResultUtils.error(j_result.getString("message"));
+                return res;
+            }
+        }catch (ResourceAccessException e){
+            // res.setMsg("deploy file time out");
+            // res.setCode(-1);
+            res = ResultUtils.error("deploy file time out");
+            return res;
+        }
+
+
+        //部署服务
+        String prcUrl="http://172.21.213.111:8899"+ "/newprocess";
+        RestTemplate restTemplate2 = new RestTemplate();
+        MultiValueMap<String, Object> part2 = new LinkedMultiValueMap<>();
+        part2.add("authority", true);
+        Date date2 = new Date();
+        part2.add("date", date2.toString());
+
+        String serviceId = UUID.randomUUID().toString();
+        part2.add("id", serviceId);
+        if(dataApplication.getMethod().equals("Processing")||dataApplication.getMethod().equals("Conversion")) {
+            part2.add("instype", "Processing");
+        }else {
+            part2.add("instype", "Visualization");
+        }
+        part2.add("name", dataApplication.getName());
+        //todo
+
+//        part2.add("oid", "I3MXbzRq/NZkbWcKO8tF0w==");//33
+        part2.add("oid", "5KglgbsDPmrFnA3J9CALzQ==");//75
+
+        //获取xml
+        String packageZipPath = resourcePath + "/DataApplication/Package" + dataApplication.getResources().get(0).getPath();
+        File packageZip = new File(packageZipPath);
+        String destDirPath = resourcePath + "/DataApplication/Package/" + UUID.randomUUID().toString();
+        //解压zip
+        FileUtil.zipUncompress(packageZipPath,destDirPath);
+        dataApplication.setPackagePath(destDirPath);
+
+        packageZip = new File(destDirPath);
+        File[] files = packageZip.listFiles();
+        String fileList = "";
+        int paramsCount = 0;
+        int i=0;
+        for (File file:files){
+//            fileList.add(file.getName());
+            if (i==0) {
+                fileList += file.getName();
+            }else {
+                fileList += ("," + file.getName());
+            }
+            i++;
+            if (file.getName().substring(file.getName().lastIndexOf(".")).equals(".xml")){
+                //解析xml文件
+                if (!file.exists()){
+                    return null;
+                }
+                FileInputStream inputStream = new FileInputStream(file);
+                int length = inputStream.available();
+                byte bytes[] = new byte[length];
+                inputStream.read(bytes);
+                inputStream.close();
+                String xml = new String(bytes, StandardCharsets.UTF_8);
+
+                //解析xml  利用Iterator获取xml的各种子节点
+                Document document = DocumentHelper.parseText(xml);
+                Element root = document.getRootElement();
+                paramsCount =  root.element("Parameter").elements().size();
+            }
+        }
+
+        part2.add("fileList", fileList);
+        part2.add("paramsCount", paramsCount+"");//解析xml
+        part2.add("relatedData", newFileId);//dataId
+        part2.add("type", "Processing");
+        part2.add("uid", "0");
+
+//        part2.add("userToken", "f30f0e82-f6f1-4264-a302-caff7c40ccc9");//33
+//        part2.add("userToken", "e3cea591-a8a5-4f50-b640-a569eccd94b7");//75
+        part2.add("userToken", "4cfc7691-c56b-483f-b1c9-bab859be9e00");//75_2
+        part2.add("processingPath", dataApplication.getPackagePathContainer());
+
+        invokeService.setServiceId(serviceId);
+        List<InvokeService> invokeServices1 = new ArrayList<>();
+        invokeServices1.add(invokeService);
+        dataApplication.setInvokeServices(invokeServices1);
+
+        try {
+            JSONObject jsonObject = restTemplate2.postForObject(prcUrl, part2,JSONObject.class);
+            //捕获sdk异常
+            if(jsonObject.getString("code").equals("-1")){
+                // res.setMsg(jsonObject.getString("message"));
+                // res.setCode(-1);
+                res = ResultUtils.error(jsonObject.getString("message"));
+                return res;
+            }
+        }catch (ResourceAccessException e){
+            // res.setMsg("deploy server time out");
+            // res.setCode(-1);
+            res = ResultUtils.error("deploy server time out");
+            return res;
+        }
+        // res.setCode(0);
+        // res.setData(dataApplication.getId());
+        res = ResultUtils.success(dataApplication.getId());
+        dataMethodDao.save(dataApplication);
+        return res;
+    }
+
     /**
-     * 部署文件以及处理服务
+     * 部署文件以及处理服务(有bug的)
      * @param dataMethod 待部署的dataMethod
      * @return 是否成功部署
      */
-    public JsonResult deployPackage(DataMethod dataMethod) throws Exception {
+    public JsonResult deployPackage2(DataMethod dataMethod) throws Exception {
         JsonResult res = new JsonResult();
         String dataPath = dataMethod.getTestDataPath();
         //跨域调用容器接口，部署数据
@@ -772,7 +935,7 @@ public class DataMethodService {
         part2.add("id", "5KglgbsDPmrFnA3J9CALzQ==");//75
 
         //获取xml
-        String packageZipPath = resourcePath + "/DataApplication/Package" + dataMethod.getResources().get(0);
+        String packageZipPath = resourcePath + "/DataApplication/Package" + dataMethod.getResources().get(0).getPath();
         File packageZip = new File(packageZipPath);
         String destDirPath = resourcePath + "/DataApplication/Package/" + UUID.randomUUID().toString();
         //解压zip

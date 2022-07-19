@@ -36,6 +36,7 @@ Vue.component("linkRelatedItemModule",
         data() {
             return {
                 // modulesValue: module_msg,
+                // modulesValue: module_msg,
                 targetItemId:'',
                 targetItemType:'',
                 relateItemType:'',
@@ -131,9 +132,19 @@ Vue.component("linkRelatedItemModule",
 
             confirmLogin(){
                 window.sessionStorage.setItem("history", window.location.href);
-                this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
+                const language = this.getStorage("language");
+
+                if (language == "zh-cn"){
+                    var loginTip = "This function requires an account, please login first."
+                    var login = "Log in"
+                }else {
+                    var loginTip = "该操作需要一个账户，请先登录."
+                    var login = "登录"
+                }
+
+                this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', 'Tip', {
                     dangerouslyUseHTMLString: true,
-                    confirmButtonText: 'Log In',
+                    confirmButtonText: login,
                     cancelButtonClass: 'fontsize-15',
                     confirmButtonClass: 'fontsize-15',
                     type: 'info',
@@ -557,6 +568,22 @@ Vue.component("linkRelatedItemModule",
                 }
             },
 
+            loadJs(src){
+                return new Promise((resolve,reject)=>{
+                    let script = document.createElement('script');
+                    script.type = "text/javascript";
+                    script.src= src;
+                    document.body.appendChild(script);
+
+                    script.onload = ()=>{
+                        resolve();
+                    }
+                    script.onerror = ()=>{
+                        reject();
+                    }
+            })
+}
+
         },
         created() {
 
@@ -569,9 +596,17 @@ Vue.component("linkRelatedItemModule",
             // console.log("modulesValue:", this.modulesValue);
             // console.log("modulesValue");
             // console.log("create window:",window.module_msg);
+            // var modulesValue = require("../modules/modulesValue")
+            // console.log("modulesValue:", modulesValue);
+
 
 
         },
-        mounted() {}
+        mounted() {
+
+            this.loadJs("/static/js/modules/modulesValue.js").then(() => {
+                console.log("modulesValue:", window.module_msg);
+            })
+        }
     }
 )

@@ -13,4 +13,6 @@ public class CheckedHistory extends CheckedModel{
     String modelName; //模型名字
     String author; //模型作者
     String taskId; //调用成功的任务id
+    String msrAddress; //模型服务容器地址
+    String msrid; //模型运行实例id
 }

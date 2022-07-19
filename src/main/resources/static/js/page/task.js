@@ -698,7 +698,7 @@ var vue = new Vue({
                 success: (result) => {
 
                     this.options = [];
-                    this.options.push({"name": "None", "oid": "none"})
+                    this.options.push({"name": "None", "id": "none"})
                     for (let index in result.data.list) {
                         this.options.push(result.data.list[index]);
                     }
@@ -3309,7 +3309,7 @@ var vue = new Vue({
 
         axios.get("/dataItem/categoryTree")
             .then(res => {
-                tha.tObj = res.data;
+                tha.tObj = res.data.data;
                 for (var e in tha.tObj) {
                     var a = {
                         key: e,

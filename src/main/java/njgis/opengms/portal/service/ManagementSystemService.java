@@ -279,8 +279,9 @@ public class ManagementSystemService {
         checkedModel.setStatus(0);
         checkedModel.setInvokeEmail(email);
         checkedModel.getTaskIdList().add(resultData.getString("tid"));
-        checkedModel.setMsrAddress(getModelContainerByTaskId(resultData.getString("tid")));
+        // checkedModel.setMsrAddress(getModelContainerByTaskId(resultData.getString("tid")));
         saveComputableModel(computableModel,checkedModel,"模型调用成功");
+
 
         return result;
 
@@ -311,7 +312,13 @@ public class ManagementSystemService {
             if (invokeResult.getCode() == ResultEnum.SUCCESS.getCode()){
                 List<String> taskIdList = checkedModel.getTaskIdList();
                 int size = taskIdList.size();
-                checkedHistory.setTaskId(taskIdList.get(size - 1));
+                String taskId = taskIdList.get(size - 1);
+                checkedHistory.setTaskId(taskId);
+                checkedHistory.setMsrAddress(getModelContainerByTaskId(taskId));
+                checkedHistory.setMsrid(getMsridByTaskId(taskId));
+            } else {
+                checkedHistory.setStatus(-1);
+                checkedHistory.setMsg(invokeResult.getMsg());
             }
 
             checkedHistoryList.add(checkedHistory);
@@ -445,29 +452,45 @@ public class ManagementSystemService {
         List<Task> ts = taskDao.findAllByTaskIdIn(ids);
         List<Task> newTasks = taskService.updateUserTasks(ts);
 
-        for(Task newTask : newTasks){
-            for(ComputableModel computableModel:content){
-                CheckedModel model = computableModel.getCheckedModel();
-                if (model != null){
-                    List<String> taskIdList = model.getTaskIdList();
-                    int size = taskIdList.size();
-                    if(newTask.getTaskId().equals(taskIdList.get(size - 1))){
-                        // 更新model中checkedModel属性的状态，并保存
-                        model.setStatus(newTask.getStatus());
-                        model.setMsg(changeTaskMsgByStatus(newTask.getStatus()));
-                        //status = -1 时有两种显示情况，未找到测试数据要单独判断（是否需要）
+        updateCMRunStatusByTask(content, newTasks);
 
-                        computableModel.setCheckedModel(model);
-                        computableModelDao.save(computableModel);
-                        break;
-                    }
-                }
-            }
+        //这边还存在checkmodel和task两张表不同步的情况，还要再遍历一遍
+        if (newTasks.size() == 0){
+            updateCMRunStatusByTask(content, ts);
         }
+
+
 
 
         return content;
 
+    }
+
+    //通过task表的记录更新computable model里的记录
+    public void updateCMRunStatusByTask(List<ComputableModel> content, List<Task> ts) {
+        for(Task t : ts){
+            for(ComputableModel computableModel:content){
+                if (t.getComputableId().equals(computableModel.getId())){
+                    CheckedModel model = computableModel.getCheckedModel();
+                    if (model != null){
+                        List<String> taskIdList = model.getTaskIdList();
+                        int size = taskIdList.size();
+                        if (size == 0){continue;}
+                        if(t.getTaskId().equals(taskIdList.get(size - 1))){
+                            // 更新model中checkedModel属性的状态，并保存
+                            model.setStatus(t.getStatus());
+                            model.setMsg(changeTaskMsgByStatus(t.getStatus()));
+                            //status = -1 时有两种显示情况，未找到测试数据要单独判断（是否需要）
+
+                            computableModel.setCheckedModel(model);
+                            computableModelDao.save(computableModel);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     private String changeTaskMsgByStatus(int status){
@@ -533,37 +556,27 @@ public class ManagementSystemService {
             //     resultList.add(cml);
             // }
 
-            //所以更新history的状态都要走更新computableModel状态的方法，通过返回的model信息更新history
-            List<String> modelNameList = new ArrayList<>();
+            //根据taskid更新history
+            List<String> taskIdList = new ArrayList<>();
             for (CheckModelList checkModelList : content) {
                 List<CheckedHistory> historyList = checkModelList.getHistoryList();
                 for (CheckedHistory history : historyList) {
-                    modelNameList.add(history.getModelName());
-                }
-            }
-            //主键不能进行in查询
-            List<ComputableModel> computableModels = computableModelDao.findAllByNameIn(modelNameList);
-            //得到查到的结果并更新计算模型的运行状态
-            computableModels = updateTaskStatus(computableModels);
-
-            //更新history的运行状态
-            for (CheckModelList checkModelList : content) {
-                List<CheckedHistory> historyList = checkModelList.getHistoryList();
-                for (CheckedHistory history : historyList) {
-                    String modelId = history.getModelId();
-                    for (ComputableModel model : computableModels) {
-                        if (model.getId().equals(modelId)){
-                            // 更新model中checkedModel属性的状态，并保存
-                            history.setStatus(model.getCheckedModel().getStatus());
-                            history.setMsg(model.getCheckedModel().getMsg());
-                            break;
-                        }
+                    //状态记录为0以及1才要更新
+                    if (history.getStatus() == -1 || history.getStatus() == 2){
+                        continue;
                     }
+                    taskIdList.add(history.getTaskId());
                 }
-                checkModelList.setHistoryList(historyList);
-                checkModelListDao.save(checkModelList);
             }
-            // return ResultUtils.success();
+
+            List<Task> ts = taskDao.findAllByTaskIdIn(taskIdList);
+            List<Task> newTasks = taskService.updateUserTasks(ts);
+
+            updateHistoryByTask(content, newTasks);
+
+            if (newTasks.size() == 0){
+                updateHistoryByTask(content, ts);
+            }
 
             JSONObject result = new JSONObject();
             result.put("total",allByDraftName.getTotalElements());
@@ -574,6 +587,34 @@ public class ManagementSystemService {
             return ResultUtils.error("find error");
         }
 
+    }
+
+    //通过task表的记录更新History里的记录
+    public void updateHistoryByTask(List<CheckModelList> checkModelLists, List<Task> ts) {
+
+        for (CheckModelList checkModelList : checkModelLists) {
+
+            List<CheckedHistory> historyList = checkModelList.getHistoryList();
+
+            for (CheckedHistory history : historyList) {
+
+                for (Task t : ts) {
+
+                    if (t.getTaskId().equals(history.getTaskId())){
+                        history.setStatus(t.getStatus());
+                        history.setMsg(changeTaskMsgByStatus(t.getStatus()));
+                        history.setMsrid(getMsridByTaskId(t.getTaskId()));
+                        break;
+                    }
+
+                }
+
+            }
+
+            // checkModelList.setHistoryList(historyList);
+            checkModelListDao.save(checkModelList);
+
+        }
     }
 
 
@@ -630,7 +671,7 @@ public class ManagementSystemService {
     public JsonResult getUserList(FindDTO findDTO){
 
         Pageable pageable = genericService.getPageable(findDTO);
-        Page<User> users = userDao.findAllByNameContainsIgnoreCase(findDTO.getSearchText(), pageable);
+        Page<User> users = userDao.findAllByEmailContainsIgnoreCase(findDTO.getSearchText(), pageable);
 
         return ResultUtils.success(users);
     }
@@ -894,6 +935,28 @@ public class ManagementSystemService {
 
         return MSRAddress == null ? "" : MSRAddress;
 
+    }
+
+    /**
+     * 根据taskId得到运行该任务的模型运行实例id
+     * @param taskId
+     * @return java.lang.String
+     * @Author bin
+     **/
+    public String getMsridByTaskId(String taskId){
+        //先根据taskId到task表找，得到模型容器的serverId
+        Document filter = new Document();
+        filter.append("_id", new ObjectId(taskId));
+        FindIterable<Document> taskRes = taskCollection.find(filter);
+
+        String msrid = null;
+        for (Document datum : taskRes) {
+            //对应TaskServer中server表的id
+            msrid = datum.getString("t_msrid");
+        }
+
+
+        return msrid;
     }
 
 

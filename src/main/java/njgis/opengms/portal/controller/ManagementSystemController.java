@@ -126,12 +126,19 @@ public class ManagementSystemController {
         BeanUtils.copyProperties(checkedModel,checkedHistory,"taskIdList");
         checkedHistory.setModelId(modelId);
         checkedHistory.setModelName(model.getName());
+
         User user = userDao.findFirstByEmail(model.getAuthor());
         checkedHistory.setAuthor(user.getName());
         if (invokeResult.getCode() == ResultEnum.SUCCESS.getCode()){
             List<String> taskIdList = checkedModel.getTaskIdList();
             int size = taskIdList.size();
-            checkedHistory.setTaskId(taskIdList.get(size - 1));
+            String taskId = taskIdList.get(size - 1);
+            checkedHistory.setTaskId(taskId);
+            checkedHistory.setMsrAddress(managementSystemService.getModelContainerByTaskId(taskId));
+            checkedHistory.setMsrid(managementSystemService.getMsridByTaskId(taskId));
+        } else {
+            checkedHistory.setStatus(-1);
+            checkedHistory.setMsg(invokeResult.getMsg());
         }
 
         checkedHistoryList.add(checkedHistory);

@@ -473,6 +473,22 @@ new Vue({
         htmlJSON:{}
     },
     methods: {
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         getClassifications(){
         },
         translatePage(jsonContent){
@@ -868,16 +884,25 @@ new Vue({
                 crossDomain: true,
                 success: (result) => {
                     if (result.code !== 0) {
-                        this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
+                        const language = this.getStorage("language");
+
+                        if (language == "zh-cn"){
+                            var loginTip = "This function requires an account, please login first."
+                            var login = "Log in"
+                        }else {
+                            var loginTip = "该操作需要一个账户，请先登录."
+                            var login = "登录"
+                        }
+
+                        this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', 'Tip', {
                             dangerouslyUseHTMLString: true,
-                            confirmButtonText: 'Log In',
+                            confirmButtonText: login,
                             cancelButtonClass: 'fontsize-15',
                             confirmButtonClass: 'fontsize-15',
                             type: 'info',
                             center: true,
                             showClose: false,
                         }).then(() => {
-                            this.setSession("history",window.location.href);
                             window.location.href = "/user/login";
                         }).catch(() => {
 
@@ -1228,11 +1253,14 @@ new Vue({
 
         handlePageChange(val) {
             this.pageOption.currentPage = val;
+            this.pageOption1.currentPage = val;
+            // if(this.inSearch==0)
+            //     this.loadSpatialReference();
+            // else
+            //     this.searchSpatialReference()
 
-            if(this.inSearch==0)
-                this.loadSpatialReference();
-            else
-                this.searchSpatialReference()
+            this.searchMethod();
+
         },
         loadSpatialReference(){
             this.inSearch = 0
@@ -1881,7 +1909,7 @@ new Vue({
             //获取所有的template
             let pageData = {
                 asc: this.pageOption1.sortAsc,
-                page: this.pageOption1.currentPage-1,
+                page: this.pageOption1.currentPage,
                 pageSize: this.pageOption1.pageSize,
                 searchText: this.pageOption1.searchText,
                 sortElement: "default",
@@ -1895,7 +1923,7 @@ new Vue({
                 async: true,
                 contentType: contentType,
                 success:(json)=>{
-                    console.log(json);
+                    // console.log(json);
                     // that.dataApplication.bindTemplates = result.data;
 
                     if (json.code === 0) {

@@ -525,7 +525,7 @@ var info=new Vue({
                         }, {"id": 7, "label": "Solid earth", "oid": "d3ba6e0b-78ec-4fe8-9985-4d5708f28e3e"}, {
                             "id": 8,
                             "label": "Integrated perspective",
-                            "oid": "eb1d8ddc-6be1-41ef-bab6-a8d940d46499"
+                            "oid": "396cc739-ef33-4332-8d5d-9a67c89567c7"
                         }], "id": 1, "label": "Natural-perspective", "oid": "6b2c8632-964a-4a65-a6c5-c360b2b515f0"
                     }, {
                         "children": [{
@@ -536,7 +536,7 @@ var info=new Vue({
                             "id": 12,
                             "label": "Economic regions",
                             "oid": "cf9cd106-b873-4a8a-9336-dd72398fc769"
-                        }, {"id": 13, "label": "Integrated perspective", "oid": "65dbe5a9-ada9-4c02-8353-5029a84d7628"}],
+                        }],
                         "id": 9,
                         "label": "Human-perspective",
                         "oid": "77e7482c-1844-4bc3-ae37-cb09b61572da"
@@ -618,7 +618,7 @@ var info=new Vue({
                 content:'',
             },
 
-            targetFile:{},
+            targetFile:[],
 
             showDataChose:false,
 
@@ -813,6 +813,22 @@ var info=new Vue({
         }
     },
     methods: {
+        // 获取缓存
+        getStorage(key){
+            var localStorage = window.localStorage;
+            if (localStorage )
+                var v = localStorage.getItem(key);
+            if (!v) {
+                return;
+            }
+            if (v.indexOf('obj-') === 0) {
+                v = v.slice(4);
+                return JSON.parse(v);
+            } else if (v.indexOf('str-') === 0) {
+                return v.slice(4);
+            }
+        },
+
         translatePage(jsonContent){
             this.htmlJSON = jsonContent;
             let el_breadcrumb = $(".el-breadcrumb");
@@ -2268,10 +2284,19 @@ var info=new Vue({
 
         confirmLogin(){
             window.sessionStorage.setItem("history", window.location.href);
-            this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
+            const language = this.getStorage("language");
+
+            if (language == "zh-cn"){
+                var loginTip = "This function requires an account, please login first."
+                var login = "Log in"
+            }else {
+                var loginTip = "该操作需要一个账户，请先登录."
+                var login = "登录"
+            }
+
+            this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', 'Tip', {
                 dangerouslyUseHTMLString: true,
-                cancelButtonText: 'Cancel',
-                confirmButtonText: 'Log In',
+                confirmButtonText: login,
                 cancelButtonClass: 'fontsize-15',
                 confirmButtonClass: 'fontsize-15',
                 type: 'info',
@@ -2686,6 +2711,11 @@ var info=new Vue({
             }
             let url, contentType;
 
+            if (this.relateType == "exLink" || this.relateType == "dataSpaceFile"){
+                return;
+            }
+
+
             if(scope=="all") {
                 url = "/" + this.relateType + "/list";
             }else{
@@ -2753,8 +2783,8 @@ var info=new Vue({
             };
             $.ajax({
                 type: "GET",
-                url: "/modelItem/relatedResources",
-                data: data,
+                url: "/modelItem/relatedResources/" + id,
+                // data: data,
                 async: true,
                 success: (json) => {
                     if (json.code == 0) {
@@ -2800,25 +2830,7 @@ var info=new Vue({
         },
 
         handleDelete(index, row) {
-            console.log(index, row);
-            let table = new Array();
-            for (i = 0; i < this.tableData.length; i++) {
-                let data = this.tableData[i];
-                let oid1,oid2;
-                if(data.oid!=undefined){
-                    oid1 = data.oid;
-                    oid2 = row.oid;
-                }else{
-                    oid1 = data.id;
-                    oid2 = row.id;
-                }
-                if(oid1!=oid2) {
-                    table.push(this.tableData[i]);
-                }
-            }
-            // table.splice(index, 1);
-            this.tableData = table;
-
+            this.tableData.splice(index, 1);
         },
 
         handleEdit(index, row) {
@@ -2848,7 +2860,7 @@ var info=new Vue({
             let stringInfo = []
             this.tableData.forEach(function (item, index) {
                 let relateItem={}
-                relateItem.oid = item.oid
+                relateItem.id = item.id
                 relateItem.type = item.type
                 if(item.type=='localFile'){
                     formData.append("resources",item.raw);
@@ -2858,7 +2870,7 @@ var info=new Vue({
                     relateItem.name = item.name
                 }
                 if(item.type=='dataSpaceFile'){
-                    relateItem.oid = item.oid
+                    // relateItem.oid = item.oid
                     relateItem.url = item.url
                     relateItem.name = item.name
                 }
@@ -2872,13 +2884,13 @@ var info=new Vue({
 
 
             let arr = window.location.href.split("/");
-            let oid = arr[arr.length - 1].split("#")[0];
+            let id = arr[arr.length - 1].split("#")[0];
 
             let url = '';
 
             $.ajax({
                 type: "POST",
-                url: "/modelItem/addRelateResources/"+oid,
+                url: "/modelItem/addRelateResources/"+id,
                 data: formData,
                 cache: false,
                 processData: false,
@@ -2919,7 +2931,7 @@ var info=new Vue({
             })
         },
 
-        async checkPersonData() {
+        checkPersonData() {
             this.showDataChose = true;
             this.$nextTick(()=>{
                 this.$refs.userDataSpace.getFilePackage();
@@ -2927,36 +2939,63 @@ var info=new Vue({
 
         },
 
-        selectDataspaceFile(file) {
-            this.targetFile = file
+        selectDataspaceFile(file){
+            if (this.targetFile.indexOf(file) > -1) {
+                // for (var i = 0; i < this.targetFile.length; i++) {
+                //     if (this.targetFile[i] === file) {
+                //         //删除
+                //         this.targetFile.splice(i, 1);
+                //         // this.downloadDataSetName.splice(i, 1)
+                //         break
+                //     }
+                // }
+            } else {
+                this.targetFile.push(file);
+            }
         },
 
+        // selectDataspaceFile(file) {
+        //     this.targetFile = file
+        // },
+
         removeDataspaceFile(file) {
-            this.targetFile = {}
+            // this.targetFile = []
+            if (this.targetFile.indexOf(file) > -1) {
+                for (var i = 0; i < this.targetFile.length; i++) {
+                    if (this.targetFile[i] === file) {
+                        //删除
+                        this.targetFile.splice(i, 1);
+                        // this.downloadDataSetName.splice(i, 1)
+                        break
+                    }
+                }
+            }
         },
 
         selectDataFromPersonal(){
-            let file = {
-                name:this.targetFile.label+this.targetFile.suffix,
-                oid:this.targetFile.id,
-                url:this.targetFile.url,
-                type:"dataSpaceFile"
-            }
-            for(let tableEle of this.tableData){
-                if(tableEle.oid == file.oid){
-                    this.$alert('You have select this file.', 'Tip', {
-                            type:"warning",
-                            confirmButtonText: 'OK',
-                            callback: ()=>{
-                                return
-                            }
-                        }
-                    );
-                    return
+            for (let i = 0; i < this.targetFile.length; i++) {
+                let file = {
+                    name:this.targetFile[i].name + "." + this.targetFile[i].suffix,
+                    url:this.targetFile[i].address,
+                    type:"dataSpaceFile"
                 }
-            }
+                for(let tableEle of this.tableData){
+                    if(tableEle.url == file.url){
+                        this.$alert('You have selected ' + file.name, 'Tip', {
+                                type:"warning",
+                                confirmButtonText: 'OK',
+                                callback: ()=>{
+                                    return
+                                }
+                            }
+                        );
+                        return
+                    }
+                }
 
-            this.tableData.push(file)
+                this.tableData.push(file)
+
+            }
 
             this.showDataChose = false
         },
@@ -3161,7 +3200,7 @@ var info=new Vue({
             }else if(row.type=='link'){
                 window.open(row.content)
             }else {
-                window.open('/repository/'+row.type+'/'+row.oid)
+                window.open('/repository/'+row.type+'/'+row.id)
             }
         },
 

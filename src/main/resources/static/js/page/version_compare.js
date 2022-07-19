@@ -24,7 +24,11 @@ var version_compare = new Vue({
             references_new:{},
             oldVerBackground:"",
             newVerBackground: "",
-            htmlJSON: {}
+            htmlJSON: {},
+            newVerBackground:"",
+            //conceptual_model
+            activeNameGraph: 'Image',
+            graphVisible:"none",
         }
     },
     methods:{

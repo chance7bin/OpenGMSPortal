@@ -24,6 +24,5 @@ public class CheckedModel {
     String msg; //调用模型返回的信息
     int status;  //模型状态  Started: 1, Finished: 2, Inited: 0, Error: -1
     List<String> taskIdList = new ArrayList<>(); //存放调用的任务的taskId的列表 (task表的taskId)
-
-    String msrAddress; //模型服务容器地址
+    // String msrAddress; //模型服务容器地址
 }

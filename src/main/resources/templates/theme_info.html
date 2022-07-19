@@ -16,13 +16,13 @@
     <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
     <link rel="stylesheet" href="/static/css/page/theme_info.css">
     <link rel="stylesheet" href="/static/css/base/universal.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/data-tables/DT_bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/plugins/data-tables/DT_bootstrap.css"/>
     <!--<link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/style.css"/>-->
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/themeEditor.css"/>
     <link rel="stylesheet" href="/static/css/base/wzhFlexContainer.css">
     <link rel="stylesheet" href="/static/css/base/wzhStyle.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/jquery.tag-editor.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/plugins/iCheck/skins/flat/green.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/fabric/fabric.min.css"/>
     <link rel="stylesheet" href="/static/css/base/universal.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/other/bootstrap-select.css"/>
@@ -65,11 +65,15 @@
             z-index: 2004;
             background-color: cyan;
         }
+        .submenu-title{
+            font-size: 15px;
+            font-weight: 600;
+        }
     </style>
 
 </head>
 <body class="scrollbar">
-<div id="app" class="flex-colDirect" style="height: 100%">
+<div id="app" class="flex-colDirect" v-cloak style="height: 100%">
     <div th:replace="fragments/navbar :: unlog"></div>
     <translation-bar
             json-file="theme_info"
@@ -135,7 +139,7 @@
                             <el-menu-item index="1" @click="show('detailinfo','BasicInfoPanel','detailIntroducePanel')">
                                 <i class="el-icon-info"></i>
                                 <span slot="title">
-                                    <span>{{htmlJSON.themeinfo}}</span>
+                                    <span class="submenu-title">{{htmlJSON.themeinfo}}</span>
                                     <i class="el-icon-edit editMenuIcon"  @click="edit_themeDetail()" v-if="editActiveIndex==1"></i>
                                 </span>
                             </el-menu-item>
@@ -144,7 +148,7 @@
                             <el-submenu  v-if="(themeModelData[0]!=undefined&&themeModelData[0].children.length>0)||editActiveIndex==1"  index="2" class="model">
                                 <div slot="title" class="menuTitleFlex">
                                     <i class="el-icon-menu"></i>
-                                    <span  slot="title">{{htmlJSON.models}}</span>
+                                    <span  slot="title" class="submenu-title">{{htmlJSON.models}}</span>
 <!--                                    <i class="el-icon-edit editMenuIcon"  @click="dialogVisibleModel=true" v-if="editActiveIndex==1"></i>-->
 
                                     <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
@@ -229,7 +233,7 @@
                             <el-submenu v-if="(themeData[0]!=undefined&&themeData[0].children.length>0)||editActiveIndex==1"  index="3" class="data">
                                 <div slot="title" class="menuTitleFlex">
                                     <i class="el-icon-coin"></i>
-                                    <span slot="title">{{htmlJSON.data}}</span>
+                                    <span slot="title" class="submenu-title">{{htmlJSON.data}}</span>
 <!--                                    <i class="el-icon-edit editMenuIcon" style="margin-left: 120px" @click="dialogVisibleData=true" v-if="editActiveIndex==1"></i>-->
                                     <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
                                         <i class="el-icon-plus menuIcon" @click="appendData(themeData[0])"></i>
@@ -311,7 +315,7 @@
                             <el-submenu v-if="(themeDataMethod[0]!=undefined&&themeDataMethod[0].children.length>0)||editActiveIndex==1" index="5-4" class="dataMethod">
                                 <div slot="title" class="menuTitleFlex">
                                     <i class="el-icon-finished"></i>
-                                    <span slot="title">{{htmlJSON.dataMethod}}</span>
+                                    <span slot="title" class="submenu-title">{{htmlJSON.dataMethod}}</span>
 <!--                                    <i class="el-icon-edit editMenuIcon" style="margin-left: 70px"  @click="dialogVisibleDataMethod=true" v-if="editActiveIndex==1"></i>-->
                                     <div v-if="editActiveIndex == 1" class="editHeadBtnGroups">
                                         <i class="el-icon-plus menuIcon" @click="appendDataMethod(themeDataMethod[0])"></i>
@@ -393,7 +397,7 @@
 
                                 <div slot="title"  id="applications1">
                                     <i class="el-icon-bangzhu"></i>
-                                    <span>{{htmlJSON.applications}}</span>
+                                    <span class="submenu-title">{{htmlJSON.applications}}</span>
                                 <i class="el-icon-edit editMenuIcon"  @click="dialogVisibleApplication=true" v-if="editActiveIndex==1"></i>
                                 </div>
                             </el-menu-item>
@@ -401,7 +405,7 @@
 <!--                            maintainers-->
                             <el-menu-item index="5" @click="showData('maintainers1','maintainerPanel')" >
                                 <i class="el-icon-s-custom"></i>
-                                <span slot="title" id="maintainer">{{htmlJSON.maintainers}}</span>
+                                <span slot="title" id="maintainer" class="submenu-title" >{{htmlJSON.maintainers}}</span>
                             </el-menu-item>
                         </el-menu>
                     </div>
@@ -533,7 +537,7 @@
                                     <div class="x_content model_item" th:id="'modelClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                                <a th:href="'/modelItem/'+${item.id}" target = "_blank">
+                                                <a th:href="'/modelItem/'+${item.oid}" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div th:unless="${item.image}!=''" style="text-align: center;justify-content: center">
@@ -558,7 +562,7 @@
                                 <div class="x_content model_item" th:id="'modelClass'+${index.index}" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div th:each="item:${modelClass.content}" class="col-md-2 model_col">
-                                            <a th:href="'/modelItem/'+${item}" target = "_blank">
+                                            <a th:href="'/modelItem/'+${item.oid}" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div th:unless="${item.image}!=''" style="text-align: center;justify-content: center">
@@ -664,7 +668,7 @@
                                 <div class="x_content data_item" th:id="'dataClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                            <a th:href="'/dataItem/'+${item.id}" target = "_blank">
+                                            <a th:href="'/dataItem/'+${item.oid}" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -689,7 +693,7 @@
                             <div class="x_content data_item" th:id="'dataClass'+${index.index}" style="width: 100%">
                                 <el-row type="center" id="content" >
                                     <div th:each="item:${dataClass.content}" class="col-md-2 model_col">
-                                        <a th:href="'/dataItem/'+${item}" target = "_blank">
+                                        <a th:href="'/dataItem/'+${item.oid}" target = "_blank">
                                             <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                 <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                 <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -731,10 +735,9 @@
                                 <div class="editItemCard">
                                     <i class="fa fa-plus" ></i>
                                 </div>
-
                             </el-card>
-
                         </div>
+                        <p>{{themeDataMethod[0].children}}</p>
                         <div  v-for="(dataMethodClass,index) in themeDataMethod[0].children"  class="model_card">
                             <!--                        有孩子-->
                             <div v-if="dataMethodClass.children!=null&&dataMethodClass.children!=undefined&&dataMethodClass.children.length>0">
@@ -742,6 +745,7 @@
                                     <div class="x_content data_item" :id="'dataMethodClass_edit'+index+'-'+index2" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div v-for="(item,index3) in dataMethod.tableData" class="col-md-2 model_col">
+
                                                 <a :href="'/dataMethod/'+item.id" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <div  v-if="item.image == undefined||item.image == ''" style="text-align: center;justify-content: center">
@@ -793,12 +797,13 @@
 
                         <div th:each="dataMethodClass,index:${dataMethodClassInfos}" class="model_card">
 
+<!--                            有孩子-->
                             <div th:if="${#lists.size(dataMethodClass.children)} gt 0">
                                 <div th:each="class,index2:${dataMethodClass.children}" >
                                     <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}+'-'+${index2.index}" style="width: 100%">
                                         <el-row type="center" id="content" >
                                             <div th:each="item:${class.content}" class="col-md-2 model_col">
-                                                <a th:href="'/dataMethod/'+${item.id}" target = "_blank">
+                                                <a th:href="'/dataMethod/'+${item.oid}" target = "_blank">
                                                     <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                         <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                         <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -818,12 +823,12 @@
                                 </div>
 
                             </div>
-
+<!--                            没孩子-->
                             <div th:if="${#lists.size(dataMethodClass.children)} eq 0">
                                 <div class="x_content data_item" th:id="'dataMethodClass'+${index.index}" style="width: 100%">
                                     <el-row type="center" id="content" >
                                         <div th:each="item:${dataMethodClass.content}" class="col-md-2 model_col">
-                                            <a th:href="'https://geomodeling.njnu.edu.cn/dataMethod/'+${item}" target = "_blank">
+                                            <a th:href="'/dataMethod/'+${item.oid}" target = "_blank">
                                                 <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width: 100%;height: 220px" id="model_card">
                                                     <!--<img src="/static/img/thematic_center/thumb.png" class="image" id="model_image">-->
                                                     <div th:unless="${item.image}!=null" style="text-align: center;justify-content: center">
@@ -936,7 +941,7 @@
         </div>
 
 <!--        model-->
-        <el-dialog/>
+        <el-dialog
                 v-cloak
                 :title="htmlJSON.editModel+currentModelName"
                 :visible.sync="dialogVisibleModel"
@@ -980,7 +985,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/'+relateType+'/'+props.row.id"
+                                                <a :href="'/modelItem/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1036,7 +1041,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/repository/'+relateType+'/'+props.row.id"
+                                                <a :href="'/modelItem/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1100,6 +1105,7 @@
                                              class="clearfix">
                                             <span>{{htmlJSON.selectedItems}}</span>
                                         </div>
+                                        <p>{{selectedTableData}}</p>
                                         <el-table
                                                 :data="selectedTableData"
                                                 ref="leftTable"
@@ -1124,7 +1130,7 @@
                                                     label="Name">
                                                 <template
                                                         slot-scope="props">
-                                                    <a :href="'/'+relateType+'/'+props.row.id"
+                                                    <a :href="'/dataItem/'+props.row.id"
                                                        target="_blank">{{props.row.name}}</a>
                                                 </template>
                                             </el-table-column>
@@ -1181,7 +1187,7 @@
                                                     label="Name">
                                                 <template
                                                         slot-scope="props">
-                                                    <a :href="'/repository/'+relateType+'/'+props.row.id"
+                                                    <a :href="'/dataItem/'+props.row.id"
                                                        target="_blank">{{props.row.name}}</a>
                                                 </template>
                                             </el-table-column>
@@ -1239,6 +1245,7 @@
                         <div style="width: 100%;float: right">
                             <div v-if="parentdataMethodNode" style="text-align: center">{{htmlJSON.pleaseDataMethod}}</div>
                             <div class='model-attr' v-if="childdataMethodNode">
+                                <p >{{selecteddataMethodTableData}}</p>
                                 <el-card class="box-card"
                                          style="width:40%;margin-right: 1%;float: left;"
                                          id="step3_left">
@@ -1270,7 +1277,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/'+relateType+'/'+props.row.id"
+                                                <a :href="'/dataMethod/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1327,7 +1334,7 @@
                                                 label="Name">
                                             <template
                                                     slot-scope="props">
-                                                <a :href="'/repository/'+relateType+'/'+props.row.id"
+                                                <a :href="'/dataMethod/'+props.row.id"
                                                    target="_blank">{{props.row.name}}</a>
                                             </template>
                                         </el-table-column>
@@ -1530,11 +1537,11 @@
 <script type="text/javascript" src="/static/js/common/pageEn.js"></script>
 <script src="/static/js/common/bootstrap.min.js"></script>
 
-<script src="/static/iCheck/jquery.icheck.min.js"></script>
+<script src="/static/plugins/iCheck/jquery.icheck.min.js"></script>
 <script src="/static/js/page/theme_info.js"></script>
 
 <!--<script src="/static/socket/message.js"></script>-->
-<script src="/static/socket/sockjs.min.js"></script>
+<script src="/static/plugins/socket/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jutils-src"></script>
 <script src="/static/js/page/create-theme.js"></script>
 <script src="/static/js/common/navbar.js"></script>

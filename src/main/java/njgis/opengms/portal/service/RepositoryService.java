@@ -738,7 +738,7 @@ public class RepositoryService {
         //String detailResult;
         // String theme_detailDesc=theme.getDetail();
         String theme_detailDesc = "";
-        if(theme.getLocalizationList()!=null){
+        if(theme.getLocalizationList().size() != 0){
             theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
         }
 
@@ -760,7 +760,7 @@ public class RepositoryService {
             classInfos_result.add(findChildren(classInfos.get(i)));
 
         }
-        System.out.println(classInfos_result);
+        // System.out.println(classInfos_result);
 
 //        data
         List<DataClassInfo> dataClassInfos = theme.getDataClassInfo();

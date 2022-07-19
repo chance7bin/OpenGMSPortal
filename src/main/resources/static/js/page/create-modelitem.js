@@ -169,7 +169,7 @@ var createModelItem = Vue.extend({
             status: 'Public',
             curClassDesc: {
                 label:'',
-                desc:"Move your mouse to a classification to learn more."
+                desc: this.htmlJson.curClassDesc
             },
             nodekeys: [],
         socket:"",
@@ -1803,6 +1803,7 @@ var createModelItem = Vue.extend({
 
             // document.title="Modify Model Item | OpenGMS"
             if(window.localStorage.getItem('draft')==null){
+                if (oid == null) {return;}
                 $.ajax({
                     url: "/modelItem/info/" + oid,
                     type: "get",

@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+    <link rel="stylesheet" href="/static/css/base/relate_item.css">
     <style>
         .img img {
             width: 90px;
@@ -51,7 +52,7 @@
     </style>
 </head>
 <body>
-<div id="app">
+<div id="app" v-cloak>
     <div th:replace="fragments/navbar :: unlog"></div>
 
     <div th:replace="fragments/backToTop :: backtop-down"></div>
@@ -73,7 +74,7 @@
 
             <div th:replace="fragments/itemInfoModules :: computable_Authorship0"></div>
 
-            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo})"></div>
+            <div th:replace="fragments/itemInfoModules :: conceptual_graph(${itemInfo},${itemInfo.contentType},${loadPath},true)"></div>
 
             <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 

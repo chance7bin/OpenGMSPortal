@@ -206,7 +206,7 @@ var createDataHubs = Vue.extend({
             treeData_select:[],
             curClassDesc: {
                 label:'',
-                desc:"Move your mouse to a classification to learn more."
+                desc:this.htmlJson.curClassDesc
             },
             currentLocalization: {
                 localCode: "",
@@ -588,7 +588,11 @@ var createDataHubs = Vue.extend({
                         if (result.status ===200){
                             if (result.data.code === 0) {
                                 if(result.data.data.method==="update") {
-                                    alert(this.htmlJson.UpdateSuccess);
+                                    this.$message({
+                                        message: this.htmlJson.UpdateSuccess,
+                                        type: 'success'
+                                    });
+                                    // alert(this.htmlJson.UpdateSuccess);
                                     $("#editModal", parent.document).remove();
                                     window.location.href = "/dataHub/" + result.data.data.id;
                                 }
@@ -709,7 +713,10 @@ var createDataHubs = Vue.extend({
             // this.htmlJSON = newData;
             // this.treeData_part1 = newData.treeData_part1;
             // this.treeData_part2 = newData.treeData_part2;
-            if (this.editType == 'create'){
+            const url = window.location.href.split("/");
+            console.log(url[url.length-1]);
+
+            if (url[url.length-1] == 'createDataHubs'){
                 $("#subRteTitle").text("/" + newData.CreateDataHubs);
             } else {
                 $("#subRteTitle").text("/" + newData.ModifyDataHubs);
@@ -1020,7 +1027,7 @@ var createDataHubs = Vue.extend({
         }
         else {
             // $("#title").text("Modify Model Item")
-            $("#subRteTitle").text("/"+this.htmlJson.ModifyDataHubs)
+            $("#subRteTitle").text("/"+this.htmlJson.CreateDataHubs)
 
             // document.title="Modify Data Hubs | OpenGMS"
             axios.get('/dataHub/itemInfo/'+oid).then(res=>{

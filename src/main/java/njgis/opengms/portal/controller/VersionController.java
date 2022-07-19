@@ -261,11 +261,8 @@ public class VersionController {
         if(email==null){
             modelAndView.setViewName("login");
         }
-        else if(email.equals("yss123yss@126.com")||email.equals("opengms@njnu.edu.cn")||email.equals("921485453@qq.com")){
-            modelAndView = versionService.getPage(id);
-        }
         else {
-            modelAndView.setViewName("login");
+            modelAndView = versionService.getPage(id);
         }
 
         return modelAndView;

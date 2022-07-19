@@ -10,7 +10,7 @@ export var UserTemplate = Vue.extend({
                     <!--搜索-->
                     <div class="table_head_item2">
                         <el-input
-                                placeholder="请输入内容"
+                                placeholder="请输入邮箱"
                                 prefix-icon="el-icon-search"
                                 v-model="searchInputUser"
                                 @keyup.enter.native="getUserList()"

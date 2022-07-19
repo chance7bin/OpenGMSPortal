@@ -66,7 +66,7 @@ var userVersion = Vue.extend({
     },
     methods:{
         handleParentTabChange(val){
-            console.log(val)
+            // console.log(val)
             if(val.index==="0"){
                 this.activeName="0"
             }else{

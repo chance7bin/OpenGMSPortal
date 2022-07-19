@@ -4,6 +4,7 @@ var userAccount = Vue.extend(
         props:["htmlJson"],
         data(){
             return{
+                editDisplayIndex:0,
                 //页面样式控制
                 loading: 'false',
                 load: true,
@@ -85,7 +86,8 @@ var userAccount = Vue.extend(
                     image: '',
                 },
                 imgClipDialog:false,
-                dragReady:false
+                dragReady:false,
+
             }
         },
 
@@ -393,43 +395,43 @@ var userAccount = Vue.extend(
             },
 
             editUserInfo(){
-                this.getUserInfo();
-                if (this.userInfo.avatar != "" && this.userInfo.avatar != null) {
-                    $("#userPhoto").attr("src", this.userInfo.avatar);
-                } else {
-                    $("#userPhoto").attr("src", "../static/img/icon/default.png");
-                }
+                // this.getUserInfo();
+                // if (this.userInfo.avatar != "" && this.userInfo.avatar != null) {
+                //     $("#userPhoto").attr("src", this.userInfo.avatar);
+                // } else {
+                //     $("#userPhoto").attr("src", "../static/img/icon/default.png");
+                // }
 
-                if (this.userInfo.organizations != null && this.userInfo.organizations.length != 0) {
-                    $("#inputOrganizations").tagEditor("destroy");
-                    $('#inputOrganizations').tagEditor({
-                        initialTags: this.userInfo.organizations,
-                        forceLowercase: false,
-                        placeholder: 'Enter Organizations ...'
-                    });
-                } else {
-                    $("#inputOrganizations").tagEditor("destroy");
-                    $('#inputOrganizations').tagEditor({
-                        initialTags: [],
-                        forceLowercase: false,
-                        placeholder: 'Enter Organizations ...'
-                    });
-                }
-                if (this.userInfo.domain != null && this.userInfo.domain.length != 0) {
-                    $("#inputSubjectAreas").tagEditor("destroy");
-                    $('#inputSubjectAreas').tagEditor({
-                        initialTags: this.userInfo.domain,
-                        forceLowercase: false,
-                        placeholder: 'Enter Study Areas ...'
-                    });
-                } else {
-                    $("#inputSubjectAreas").tagEditor("destroy");
-                    $('#inputSubjectAreas').tagEditor({
-                        initialTags: [],
-                        forceLowercase: false,
-                        placeholder: 'Enter Study Areas ...'
-                    });
-                }
+                // if (this.userInfo.organizations != null && this.userInfo.organizations.length != 0) {
+                //     $("#inputOrganizations").tagEditor("destroy");
+                //     $('#inputOrganizations').tagEditor({
+                //         initialTags: this.userInfo.organizations,
+                //         forceLowercase: false,
+                //         placeholder: 'Enter Organizations ...'
+                //     });
+                // } else {
+                //     $("#inputOrganizations").tagEditor("destroy");
+                //     $('#inputOrganizations').tagEditor({
+                //         initialTags: [],
+                //         forceLowercase: false,
+                //         placeholder: 'Enter Organizations ...'
+                //     });
+                // }
+                // if (this.userInfo.domain != null && this.userInfo.domain.length != 0) {
+                //     $("#inputSubjectAreas").tagEditor("destroy");
+                //     $('#inputSubjectAreas').tagEditor({
+                //         initialTags: this.userInfo.domain,
+                //         forceLowercase: false,
+                //         placeholder: 'Enter Study Areas ...'
+                //     });
+                // } else {
+                //     $("#inputSubjectAreas").tagEditor("destroy");
+                //     $('#inputSubjectAreas').tagEditor({
+                //         initialTags: [],
+                //         forceLowercase: false,
+                //         placeholder: 'Enter Study Areas ...'
+                //     });
+                // }
                 $('#myModal').modal('show');
             },
             //
