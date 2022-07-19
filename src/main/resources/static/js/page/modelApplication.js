@@ -32,6 +32,22 @@ var vue = new Vue({
             }
         },
         methods: {
+            // 获取缓存
+            getStorage(key){
+                var localStorage = window.localStorage;
+                if (localStorage )
+                    var v = localStorage.getItem(key);
+                if (!v) {
+                    return;
+                }
+                if (v.indexOf('obj-') === 0) {
+                    v = v.slice(4);
+                    return JSON.parse(v);
+                } else if (v.indexOf('str-') === 0) {
+                    return v.slice(4);
+                }
+            },
+
             translatePage(jsonContent){
                 this.htmlJSON = jsonContent
             },
@@ -141,9 +157,19 @@ var vue = new Vue({
             },
 
             confirmLogin(){
-                this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
+                const language = this.getStorage("language");
+
+                if (language == "zh-cn"){
+                    var loginTip = "This function requires an account, please login first."
+                    var login = "Log in"
+                }else {
+                    var loginTip = "该操作需要一个账户，请先登录."
+                    var login = "登录"
+                }
+
+                this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', 'Tip', {
                     dangerouslyUseHTMLString: true,
-                    confirmButtonText: 'Log In',
+                    confirmButtonText: login,
                     cancelButtonClass: 'fontsize-15',
                     confirmButtonClass: 'fontsize-15',
                     type: 'info',

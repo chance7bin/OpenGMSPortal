@@ -93,9 +93,9 @@ new Vue({
         },
 
         confirmLogin(){
-            this.$confirm('<div style=\'font-size: 18px\'>This function requires an account, <br/>please login first.</div>', 'Tip', {
+            this.$confirm('<div style=\'font-size: 18px\'>'+ this.htmlJson.RequiresAnAccount +'</div>', 'Tip', {
                 dangerouslyUseHTMLString: true,
-                confirmButtonText: 'Log In',
+                confirmButtonText: this.htmlJson.login,
                 cancelButtonClass: 'fontsize-15',
                 confirmButtonClass: 'fontsize-15',
                 type: 'info',
