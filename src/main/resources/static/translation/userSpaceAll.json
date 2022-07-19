@@ -1833,7 +1833,9 @@
     "ContributedBy": "Contributed by",
     "DataOfCalculation": "Data of this calculation",
     "Input": "Input",
-    "RequiresAnAccount": "This function requires an account, please login first."
+    "Output": "Output",
+    "RunBy": "Run by",
+    "At": "at"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3663,6 +3665,8 @@
     "ContributedBy": "贡献于",
     "DataOfCalculation": "计算数据",
     "Input": "输入",
-    "RequiresAnAccount": "该操作需要一个账户，请先登录."
+    "Output": "输出",
+    "RunBy": "运行自",
+    "At": "于"
   }
 }

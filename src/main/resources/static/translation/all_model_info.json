@@ -154,7 +154,8 @@
     "allDeleteInfo": "All of the selected files will be deleted.",
     "selectDirTip": "Please select a file directory.",
     "DataResourceUrl": "Data Resource Url",
-    "CategoryTags": "Category Tags"
+    "CategoryTags": "Category Tags",
+    "Deploy": "Deploy"
   },
   "zh-cn": {
       "DataResourceUrl": "数据资源链接",
@@ -309,7 +310,8 @@
     "continue": "继续",
     "Back": "返回",
     "allDeleteInfo": "所有已选择的将会被删除。",
-    "selectDirTip": "请选择一个文件夹"
+    "selectDirTip": "请选择一个文件夹",
+    "Deploy":"调用"
   }
 
 }

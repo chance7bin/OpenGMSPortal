@@ -205,6 +205,7 @@ new Vue({
                 let treeData1 = treeData[i];
                 if (treeData1.oid == this.categoryName){
                     this.currentClass = treeData1.label
+                    console.log(this.categoryName)
                     break;
                 }
                 for(j = 0;j<treeData1.children.length;j++){
