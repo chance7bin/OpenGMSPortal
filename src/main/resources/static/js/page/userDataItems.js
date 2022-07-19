@@ -188,7 +188,7 @@ var userDataItems = Vue.extend(
                     page: this.page,
                     pagesize: this.pageSize,
                     searchText: this.searchText,
-                    asc: -1
+                    asc: false
                 }
                 console.log("aaaaa")
                 console.log(this.userId)
