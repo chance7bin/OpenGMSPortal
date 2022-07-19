@@ -183,7 +183,7 @@ var userDataHubs = Vue.extend(
                     authorEmail: this.userEmail,
                     page: this.page,
                     pagesize: this.pageSize,
-                    asc: -1,
+                    asc: false,
                     searchText:this.searchText
                 }
                 this.loading = true
