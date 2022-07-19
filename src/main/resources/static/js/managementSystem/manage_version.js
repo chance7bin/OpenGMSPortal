@@ -23,7 +23,7 @@ export var VersionTemplate = Vue.extend({
                                         stripe
                                         style="width: 100% "
                                         height="70vh"
-                                        :default-sort="{ prop: 'viewCount', order: 'descending' }"
+                                        :default-sort="{ prop: 'submitTime', order: 'descending' }"
                                 >
                                     <el-table-column sortable prop="submitTime" label="日期"  show-overflow-tooltip min-width="240px">
                                     </el-table-column>
@@ -154,7 +154,7 @@ export var VersionTemplate = Vue.extend({
                                         stripe
                                         style="width: 100%"
                                         height="70vh"
-                                        :default-sort="{ prop: 'viewCount', order: 'descending' }"
+                                        :default-sort="{ prop: 'submitTime', order: 'descending' }"
                                 >
                                     <el-table-column sortable prop="submitTime" label="日期" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
@@ -217,7 +217,7 @@ export var VersionTemplate = Vue.extend({
                                         stripe
                                         style="width: 100%"
                                         height="70vh"
-                                        :default-sort="{ prop: 'viewCount', order: 'descending' }"
+                                        :default-sort="{ prop: 'submitTime', order: 'descending' }"
                                 >
                                     <el-table-column sortable prop="submitTime" label="日期" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
@@ -392,7 +392,8 @@ export var VersionTemplate = Vue.extend({
                             type: 'success',
                             message: '拒绝成功!'
                         });
-                        this.getVersionList(this.versionUrl)
+                        // this.getVersionList(this.versionUrl)
+                        this.getWaitVersionList()
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -427,11 +428,11 @@ export var VersionTemplate = Vue.extend({
                 "page": this.currentPageAcceptVersion,
                 "pageSize": this.PageSizeAcceptVersion,
                 "searchText": this.searchInputAcceptVersion,
-                "sortField": "createTime",
+                "sortField": "submitTime",
             })
                 .then(response=> {
                     this.acceptVersionTableData=response.data.data.content
-                    this.totalAcceptVersion=response.data.data.totalElements
+                    this.totalAcceptVersion=response.data.data.count
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -464,7 +465,7 @@ export var VersionTemplate = Vue.extend({
                 .then(response=> {
                     console.log(response)
                     this.rejectVersionTableData=response.data.data.content
-                    this.totalRejectVersion=response.data.data.totalElements
+                    this.totalRejectVersion=response.data.data.count
                     console.log(this.rejectVersionTableData)
                 })
                 .catch(function (error) {
