@@ -810,7 +810,7 @@ public class RepositoryService {
                 ma.put("id", maintainer.getId());
                 User user = userDao.findFirstById(maintainer.getId());
                 if(user!=null){
-                    ma.put("image",user.getAvatar());
+                    ma.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
                 }
 
                 maintainer_result.add(ma);
@@ -850,7 +850,7 @@ public class RepositoryService {
                 }
                 model.put("name",modelItem.getName());
                 model.put("image",modelItem.getImage());
-                model.put("oid",modelItem.getId());
+                model.put("id",modelItem.getId());
                 models.add(model);
             }
             classObj.put("content",models);

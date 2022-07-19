@@ -15,6 +15,7 @@ import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.Task;
+import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.ComputableModelService;
 import njgis.opengms.portal.service.GenericService;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -182,7 +184,26 @@ public class ComputableModelRestController {
     @ApiOperation(value = "查找部署的模型 [ /searchDeployedModel ]")
     @RequestMapping(value="/deployedModel",method= RequestMethod.POST)
     public JsonResult searchDeployedModel(@RequestBody FindDTO findDTO) {
-        return ResultUtils.success(computableModelService.searchDeployedModel(findDTO));
+
+
+        JSONObject jsonObject = computableModelService.searchDeployedModel(findDTO);
+        List<ComputableModel> ComputableModelList = (List<ComputableModel>) jsonObject.get("content");
+
+        //加上作者的authorId(accessId)
+        List<JSONObject> computableModelListJson = new ArrayList<>();
+        for (ComputableModel model : ComputableModelList) {
+            JSONObject o = (JSONObject)JSONObject.toJSON(model);
+            User user = userService.getByEmail(model.getAuthor());
+            if (user != null){
+                o.put("authorId", user.getAccessId());
+                o.put("author", user.getName());
+            }
+            computableModelListJson.add(o);
+        }
+
+        jsonObject.put("content", computableModelListJson);
+
+        return ResultUtils.success(jsonObject);
     }
 
 

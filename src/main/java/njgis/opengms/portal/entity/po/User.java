@@ -94,6 +94,7 @@ public class User extends PortalIdPlus {
 
     //通知
     int noticeNum;
+    int unreadNoticeNum;
     List<Notice> noticeList;
 
     //时间信息

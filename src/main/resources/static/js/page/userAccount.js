@@ -13,6 +13,7 @@ var userAccount = Vue.extend(
                 //显示控制
                 curIndex:8,
 
+                temp:"123456",
                 //
                 userInfo:{
                     oid:'',
@@ -303,12 +304,12 @@ var userAccount = Vue.extend(
                 }
                 if (!flag) {
 
-                    let subscribe = {};
-                    subscribe.name = row.name;
-                    subscribe.oid = row.oid;
-                    subscribe.type = row.contentType;
+                    let subscribe1 = {};
+                    subscribe1.name = row.name;
+                    subscribe1.oid = row.oid;
+                    subscribe1.type = row.contentType;
 
-                    this.subscribeList.push(subscribe);
+                    this.subscribeList.push(subscribe1);
                 }
             },
 
@@ -498,7 +499,7 @@ var userAccount = Vue.extend(
                 userUpdate.organizations = $("#inputOrganizations").val().split(",");
                 userUpdate.domain = $("#inputSubjectAreas").val().split(",");
                 userUpdate.introduction = this.userInfo.introduction;
-                if($("#userPhoto").get(0).src!="http://localhost:8080/static/img/icon/default.png")
+                if($("#userPhoto").get(0).src.indexOf("default.png") < 0)
                     userUpdate.avatar = $("#userPhoto").get(0).src;
 
                 let that = this
@@ -642,9 +643,28 @@ var userAccount = Vue.extend(
             sendUserToParent(userEid){
                 this.$emit('com-senduserinfo',userEid)
             },
+
+            // 获取缓存
+            getStorage(key){
+                var localStorage = window.localStorage;
+                if (localStorage )
+                    var v = localStorage.getItem(key);
+                if (!v) {
+                    return;
+                }
+                if (v.indexOf('obj-') === 0) {
+                    v = v.slice(4);
+                    return JSON.parse(v);
+                } else if (v.indexOf('str-') === 0) {
+                    return v.slice(4);
+                }
+            }
         },
 
         created() {
+
+            this.htmlJson = this.getStorage("userSpaceAll");
+
         },
 
         mounted() {
@@ -655,7 +675,8 @@ var userAccount = Vue.extend(
                 this.ScreenMaxHeight = (height) + "px";
 
                 window.onresize = () => {
-                    console.log('come on ..');
+                    // console.log('come on ..');
+                    // console.log("this.userInfo:", this.userInfo);
                     height = document.documentElement.clientHeight;
                     this.ScreenMinHeight = (height) + "px";
                     this.ScreenMaxHeight = (height) + "px";

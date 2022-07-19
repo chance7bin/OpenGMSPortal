@@ -810,7 +810,7 @@ public class ModelItemService {
                 jsonObject.put("name",user.getName());
                 jsonObject.put("accessId",user.getAccessId());
                 jsonObject.put("email",user.getEmail());
-                jsonObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath+user.getAvatar());
+                jsonObject.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
 
                 jsonArray.add(jsonObject);
 
@@ -875,6 +875,10 @@ public class ModelItemService {
 
         JSONArray result=new JSONArray();
         ModelItem modelItem=modelItemDao.findFirstById(modelId);
+
+        if (modelItem == null)
+            return result;
+
         ModelItemRelate relation=modelItem.getRelate();
         List<String> list=new ArrayList<>();
 
@@ -2070,6 +2074,17 @@ public class ModelItemService {
             modelItemService.update(modelItemUpdateDTO,email);
             return "version";
         }
+
+    }
+
+    public List<Localization> getDescription(String id) {
+
+        ModelItem item = modelItemDao.findFirstById(id);
+
+        if (item == null)
+            return null;
+
+        return item.getLocalizationList();
 
     }
 }

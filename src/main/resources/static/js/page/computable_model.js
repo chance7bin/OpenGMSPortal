@@ -348,7 +348,8 @@ new Vue({
             const oid=hrefs[hrefs.length-1];
             let serverInfo = {
                 'id':oid,
-                'ip':'172.21.212.103',
+                // 'ip':'172.21.212.103',
+                'ip':'172.21.213.245',
                 'port':'8060',
             }
             $.ajax({

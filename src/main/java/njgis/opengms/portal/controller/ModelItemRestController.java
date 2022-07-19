@@ -493,4 +493,13 @@ public class ModelItemRestController {
 
 
     }
+
+
+    @LoginRequired
+    @RequestMapping(value = "/getDescription/{id}", method = RequestMethod.GET)
+    JsonResult getDescription(@PathVariable("id") String id,HttpServletRequest request){
+        List<Localization> description = modelItemService.getDescription(id);
+        return description == null ? ResultUtils.error() : ResultUtils.success(description);
+    }
+
 }

@@ -869,14 +869,14 @@ public class UserRestController {
     }
 
 
-    @LoginRequired
-    @ApiOperation(value = "保存用户头像 [ /user/saveUserIcon ]")
-    @RequestMapping(value = "/update/userIcon", method = RequestMethod.POST)
-    public JsonResult saveUserIcon(@RequestParam(value = "img") String img, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
-        return ResultUtils.success(userService.saveUserIcon(img, email));
-    }
+    // @LoginRequired
+    // @ApiOperation(value = "保存用户头像")
+    // @RequestMapping(value = "/update/saveUserIcon", method = RequestMethod.POST)
+    // public JsonResult saveUserIcon(@RequestParam(value = "img") String img, HttpServletRequest request) {
+    //     HttpSession session = request.getSession();
+    //     String email = session.getAttribute("email").toString();
+    //     return ResultUtils.success(userService.saveUserIcon(img, email));
+    // }
 
     @LoginRequired
     @ApiOperation(value = "得到用户的订阅列表 [ /user/getSubscribedList ]")

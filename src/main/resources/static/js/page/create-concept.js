@@ -1725,6 +1725,8 @@ var createConcept = Vue.extend({
 
     mounted() {
 
+
+
         let that = this;
         that.init();
         //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
@@ -1866,7 +1868,6 @@ var createConcept = Vue.extend({
             forceLowercase: false,
             placeholder: this.htmlJson.EnterKeywords
         });
-
 
         //判断是否登录
         $.ajax({

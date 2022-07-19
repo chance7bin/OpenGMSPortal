@@ -238,7 +238,7 @@ public class GenericService {
             User user = userDao.findFirstByEmail(email);
             JSONObject userObject = new JSONObject();
             userObject.put("id",user.getId());
-            userObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath + user.getAvatar());
+            userObject.put("image",user.getAvatar().equals("")?"":"/userServer" + user.getAvatar());
             userObject.put("name",user.getName());
             userObject.put("userId",user.getAccessId());
             userObject.put("accessId",user.getAccessId());
@@ -981,7 +981,7 @@ public class GenericService {
             User user = userDao.findFirstByEmail(item.getAuthor());
             if (user != null){
                 userObj.put("accessId", user.getAccessId());
-                userObj.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
+                userObj.put("image", user.getAvatar().equals("") ? "" : "/userServer" + user.getAvatar());
                 userObj.put("name", user.getName());
             } else {
                 userObj.put("name", "unknown");

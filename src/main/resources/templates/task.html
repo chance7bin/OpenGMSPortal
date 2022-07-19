@@ -1209,7 +1209,7 @@
                                             :label="htmlJSON.Name"
                                     >
                                         <template slot-scope="scope">
-                                            <a class="cursorPointer" :href="'/computableModel/'+scope.row.oid">{{scope.row.name}}</a>
+                                            <a class="cursorPointer" :href="'/computableModel/'+scope.row.id">{{scope.row.name}}</a>
                                         </template>
                                     </el-table-column>
                                     <el-table-column
@@ -1225,7 +1225,7 @@
                                             width="180"
                                     >
                                         <template slot-scope="scope">
-                                            <el-button size="mini" round type="success" @click="selectModel(scope.row.oid)">load</el-button>
+                                            <el-button size="mini" round type="success" @click="selectModel(scope.row.id)">load</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>

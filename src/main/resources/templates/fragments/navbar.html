@@ -101,7 +101,7 @@
                                  style="width:30px;height: 30px;display: inline-block;margin-right:10px;margin-top: -3px">
                             <div class="el-badge item" style="flex: 0.5;">
                                 <div id="userName" class="textLineLimit" th:text="${userNavBar.name}" style="display: inline-block;max-width: 100px">Hello!!!!!!!!!</div>
-                                <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                <sup th:if="${userNavBar.unreadNoticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
                                 right: 0px !important;
                                 border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                                 </sup>
@@ -117,7 +117,7 @@
                                      th:src="${(userNavBar.avatar == null ||#strings.isEmpty(userNavBar.avatar)) ? '/static/img/icon/default.png' : userNavBar.avatar}"
                                      onerror="src='/static/img/icon/default.png'"
                                      style="width:30px;height: 30px;display: inline-block;margin-right:0px">
-                                <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
+                                <sup th:if="${userNavBar.unreadNoticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 0px !important;
                                 right: 0px !important;
                                 border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                                 </sup>
@@ -193,7 +193,7 @@
                         <a id="userNoticeDir1" href="/user/userSpace#/notice" translateId="notice">Notice</a>
                         <!--<sup th:if="${userNavBar.noticeNum}" class="el-badge__content is-fixed" th:text="${userNavBar.noticeNum}"-->
                              <!--style="top: 30%;right: 30% !important;padding-right: 4px;padding-left: 4px;"></sup>-->
-                        <sup th:if="${userNavBar.noticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 15px !important;
+                        <sup th:if="${userNavBar.unreadNoticeNum>0}" class="el-badge__content is-fixed is-dot message_user" style="width: 8px;top: 15px !important;
                                 right: 45px !important;
                                 border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                         </sup>
