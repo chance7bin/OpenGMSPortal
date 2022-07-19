@@ -87,7 +87,7 @@ var userVersion = Vue.extend({
                 "page": this.currentPage,
                 "pageSize": this.pageSize,
                 "searchText": "",
-                "sortField": "createTime"
+                "sortField": "submitTime"
             })
                 .then(res=> {
                     // console.log(url+" :",res.data)
