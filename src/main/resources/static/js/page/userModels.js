@@ -476,7 +476,7 @@ var userModels = Vue.extend(
                     data: JSON.stringify({
                         page: this.page,
                         sortType: this.sortType,
-                        asc: true,
+                        asc: false,
                         authorEmail: this.userId,
                     }),
                     contentType:"application/json",
