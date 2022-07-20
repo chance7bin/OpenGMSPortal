@@ -67,6 +67,9 @@ public class LogicalModelService {
     @Value("${resourcePath}")
     String resourcePath;
 
+    @Autowired
+    RedisService redisService;
+
     /**
      * @Description 获取模型信息
      * @param id
@@ -306,7 +309,8 @@ public class LogicalModelService {
                 }
                 modelItemRelate.getLogicalModels().add(logicalModel.getId());
                 modelItem.setRelate(modelItemRelate);
-                modelItemDao.save(modelItem);
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
 
@@ -419,8 +423,8 @@ public class LogicalModelService {
                 if (author0.equals(email)) {
                     versions.add(version_new.getId());
                     logicalModel.setVersions(versions);
-                    logicalModelDao.save(logicalModel);
-
+                    // logicalModelDao.save(logicalModel);
+                    redisService.saveItem(logicalModel, ItemTypeEnum.LogicalModel);
                     result.put("method", "update");
                     result.put("id", logicalModel.getId());
 
@@ -490,11 +494,13 @@ public class LogicalModelService {
                     }
                 }
                 modelItem.getRelate().setLogicalModels(logicalModelIds);
-                modelItemDao.save(modelItem);
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
             //条目删除
-            logicalModelDao.delete(logicalModel);
+            // logicalModelDao.delete(logicalModel);
+            redisService.deleteItem(logicalModel, ItemTypeEnum.LogicalModel);
             userService.updateUserResourceCount(email, ItemTypeEnum.LogicalModel);
 
             return ResultUtils.success();

@@ -64,6 +64,9 @@ public class DataHubService {
     @Autowired
     VersionService versionService;
 
+    @Autowired
+    RedisService redisService;
+
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
@@ -81,8 +84,8 @@ public class DataHubService {
      * @Author bin
      **/
     public JSONObject updateDataHubs(DataItemDTO dataItemUpdateDTO, String email, String id) {
-        JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataHub);
-        return dataItemService.updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"),id);
+        // JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataHub);
+        return dataItemService.updateItem(dataItemUpdateDTO,email,ItemTypeEnum.DataHub,id);
     }
 
     public Page<ResultDTO> getUsersUploadDataHubs(String author, Integer page, Integer pagesize, Integer asc) {
@@ -122,7 +125,8 @@ public class DataHubService {
         //     }
 
         try {
-            dataHubDao.deleteById(id);
+            // dataHubDao.deleteById(id);
+            redisService.deleteItem(data, ItemTypeEnum.DataHub);
             userService.updateUserResourceCount(email, ItemTypeEnum.DataHub, "delete");
         }catch (Exception e){
             return ResultUtils.error("delete error");
@@ -183,7 +187,8 @@ public class DataHubService {
                 item.setVersions(versions);
                 dataItemService.updateModelRelate(relations, oriRelatedModels, ItemTypeEnum.DataHub,id);
                 item.setRelatedModels(relations);
-                dataHubDao.save(item);
+                // dataHubDao.save(item);
+                redisService.saveItem(item,ItemTypeEnum.DataHub);
                 result.put("type","suc");
 
                 return ResultUtils.success(result);

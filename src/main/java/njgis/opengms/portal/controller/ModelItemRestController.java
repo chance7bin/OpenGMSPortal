@@ -107,6 +107,7 @@ public class ModelItemRestController {
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
     ModelAndView get(@PathVariable("id") String id, HttpServletRequest request){
         PortalItem portalItem = genericService.getPortalItem(id, ItemTypeEnum.ModelItem);
+        // PortalItem portalItem = modelItemService.findById(id);
         ModelAndView modelAndView = genericService.checkPrivatePageAccessPermission(portalItem, Utils.checkLoginStatus(request));
         if(modelAndView != null){
             return modelAndView;

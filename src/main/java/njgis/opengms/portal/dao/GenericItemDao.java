@@ -16,6 +16,8 @@ import java.util.Optional;
  * @Date 2021/08/13
  */
 public interface GenericItemDao<T>{
+
+
     T findFirstById(String id);
 
     T findFirstByAuthor(String author);

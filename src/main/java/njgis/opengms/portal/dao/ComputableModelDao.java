@@ -1,6 +1,8 @@
 package njgis.opengms.portal.dao;
 
+import njgis.opengms.portal.component.AopCacheEnable;
 import njgis.opengms.portal.entity.po.ComputableModel;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -14,10 +16,13 @@ import java.util.List;
  */
 public interface ComputableModelDao  extends MongoRepository<ComputableModel,String>, GenericItemDao<ComputableModel> {
 
+
+
     Page<ComputableModel> findAllByDeployAndStatusInAndNameLikeIgnoreCase(boolean deploy, List<String> status, String name, Pageable pageable);
 
     ComputableModel findFirstByMd5(String md5);
 
+    @AopCacheEnable(key = "#id", group = ItemTypeEnum.ComputableModel, expireTime = 300)
     ComputableModel findFirstById(String id);
 
     Page<ComputableModel> findByContentType(String contentType, Pageable pageable);

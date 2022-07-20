@@ -117,7 +117,8 @@ public class DataMethodService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
-
+    @Autowired
+    RedisService redisService;
 
     public JsonResult getMethods(SpecificFindDTO dataMethodsFindDTO){
         return ResultUtils.success(genericService.searchItems(dataMethodsFindDTO, ItemTypeEnum.DataMethod));
@@ -529,7 +530,8 @@ public class DataMethodService {
         int invokeCount = dataMethod.getInvokeCount();
         invokeCount++;
         dataMethod.setInvokeCount(invokeCount);
-        dataMethodDao.save(dataMethod);
+        // dataMethodDao.save(dataMethod);
+        redisService.saveItem(dataMethod,ItemTypeEnum.DataMethod);
         // invokeCount = (invokeCount == null) ? 0 : invokeCount;
 
         try {
@@ -846,7 +848,8 @@ public class DataMethodService {
         // res.setCode(0);
         // res.setData(dataApplication.getId());
         res = ResultUtils.success(dataApplication.getId());
-        dataMethodDao.save(dataApplication);
+        // dataMethodDao.save(dataApplication);
+        redisService.saveItem(dataApplication,ItemTypeEnum.DataMethod);
         return res;
     }
 
@@ -1144,7 +1147,8 @@ public class DataMethodService {
             if (dataMethod.getAuthor().equals(email)) {
                 versions.add(new_version.getId());
                 dataMethod.setVersions(versions);
-                dataMethodDao.save(dataMethod);
+                // dataMethodDao.save(dataMethod);
+                redisService.saveItem(dataMethod,ItemTypeEnum.DataMethod);
                 result.put("method", "update");
                 result.put("id", dataMethod.getId());
             } else {
@@ -1242,7 +1246,8 @@ public class DataMethodService {
             }
 
             try {
-                dataMethodDao.delete(dataMethod);
+                // dataMethodDao.delete(dataMethod);
+                redisService.deleteItem(dataMethod, ItemTypeEnum.DataMethod);
                 userService.updateUserResourceCount(dataMethod.getAuthor(), ItemTypeEnum.DataMethod, "delete");
             }catch (Exception e){
                 return ResultUtils.error("delete error");

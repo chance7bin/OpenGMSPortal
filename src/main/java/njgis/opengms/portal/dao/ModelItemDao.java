@@ -1,7 +1,9 @@
 package njgis.opengms.portal.dao;
 
+import njgis.opengms.portal.component.AopCacheEnable;
 import njgis.opengms.portal.entity.doo.base.PortalIdPlus;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public interface ModelItemDao extends MongoRepository<ModelItem,String>, Generic
 
     List<PortalIdPlus> findAllByAccessIdContains(String text);
 
+    @AopCacheEnable(key = "#id", group = ItemTypeEnum.ModelItem, expireTime = 300)
     ModelItem findFirstById(String id);
 
     ////服务于QueryList////

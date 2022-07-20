@@ -1,6 +1,8 @@
 package njgis.opengms.portal.dao;
 
+import njgis.opengms.portal.component.AopCacheEnable;
 import njgis.opengms.portal.entity.po.LogicalModel;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -11,6 +13,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 public interface LogicalModelDao extends MongoRepository<LogicalModel,String>, GenericItemDao<LogicalModel> {
 
-
+    @AopCacheEnable(key = "#id", group = ItemTypeEnum.LogicalModel, expireTime = 300)
+    LogicalModel findFirstById(String id);
 
 }

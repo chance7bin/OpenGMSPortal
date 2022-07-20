@@ -1,7 +1,8 @@
 package njgis.opengms.portal.dao;
 
-import njgis.opengms.portal.entity.po.Concept;
+import njgis.opengms.portal.component.AopCacheEnable;
 import njgis.opengms.portal.entity.po.ConceptualModel;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -11,4 +12,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @Version 1.0.0
  */
 public interface ConceptualModelDao extends MongoRepository<ConceptualModel,String>, GenericItemDao<ConceptualModel> {
+    @AopCacheEnable(key = "#id", group = ItemTypeEnum.ConceptualModel, expireTime = 300)
+    ConceptualModel findFirstById(String id);
 }

@@ -1,7 +1,9 @@
 package njgis.opengms.portal.dao;
 
 
+import njgis.opengms.portal.component.AopCacheEnable;
 import njgis.opengms.portal.entity.po.DataItem;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -14,6 +16,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @Version 1.0.0
  */
 public interface DataItemDao extends MongoRepository<DataItem,String>, GenericItemDao<DataItem> {
+
+    @AopCacheEnable(key = "#id", group = ItemTypeEnum.DataItem, expireTime = 300)
+    DataItem findFirstById(String id);
 
     // DataItem findFirstById(String id);
     //
