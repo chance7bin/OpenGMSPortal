@@ -80,7 +80,7 @@
     "SpendTime": "This possibly needs to spend some time",
     "NoCalTask": "No calculation tasks",
     "Calculation": "calculation",
-    "SomethingWrong": "Something with it",
+    "SomethingWrong": "Something wrong with it",
     "TaskWaitingInvoke": "This task is waiting to be invoked, please be patient",
     "TaskPrivate": "Private",
     "TaskPublic": "Public",
