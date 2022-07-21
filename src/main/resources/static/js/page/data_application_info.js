@@ -216,12 +216,14 @@ var data_application_info = new Vue({
                         if (language == "zh-cn"){
                             var loginTip = "This function requires an account, please login first."
                             var login = "Log in"
+                            var tip = "Tip"
                         }else {
                             var loginTip = "该操作需要一个账户，请先登录."
                             var login = "登录"
+                            var tip = "提示"
                         }
 
-                        this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', 'Tip', {
+                        this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', tip, {
                             dangerouslyUseHTMLString: true,
                             confirmButtonText: login,
                             cancelButtonClass: 'fontsize-15',

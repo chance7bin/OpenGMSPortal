@@ -63,8 +63,8 @@ var info=new Vue({
                 "RelatedModelItem":"Edit Related Model Item",
                 "Reference":"Reference",
                 "Material":"Material",
-                "relatedMaterial":"Edit related material",
-                "relatedReference":"Edit related reference",
+                "relatedMaterial":"Edit Related Material",
+                "relatedReference":"Edit Related Reference",
                 "authorshipSubmitted":"These authorship information will be submitted to the contributor to review.",
                 "RelatedComputableModel":"Edit Related Computable Model",
                 "noComputableModel":"There is no related computable model. You can link computable models.",
@@ -2289,12 +2289,14 @@ var info=new Vue({
             if (language == "zh-cn"){
                 var loginTip = "This function requires an account, please login first."
                 var login = "Log in"
+                var tip = "Tip"
             }else {
                 var loginTip = "该操作需要一个账户，请先登录."
                 var login = "登录"
+                var tip = "提示"
             }
 
-            this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', 'Tip', {
+            this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', tip, {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: login,
                 cancelButtonClass: 'fontsize-15',

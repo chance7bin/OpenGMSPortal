@@ -11,6 +11,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -33,6 +34,9 @@ public class CacheEnableAspect {
     @Autowired
     RedisService redisService;
 
+
+    @Value("${redis.enable}")
+    boolean redisEnable;
 
     /**
      * 用于SpEL表达式解析.
@@ -65,6 +69,11 @@ public class CacheEnableAspect {
 
     @Around("queryCache()")
     public Object Interceptor(ProceedingJoinPoint pjp) throws Throwable {
+
+        // System.out.println(redisEnable);
+        if (!redisEnable){
+            return pjp.proceed();
+        }
 
         // StringBuilder redisKeySb = new StringBuilder("AOP").append("::");
         StringBuilder redisKeySb = new StringBuilder("AOP");
@@ -107,6 +116,11 @@ public class CacheEnableAspect {
     /*** 定义清除缓存逻辑，先操作数据库，后清除缓存*/
     @Around(value = "ClearCache()")
     public Object evict(ProceedingJoinPoint pjp) throws Throwable {
+
+        if (!redisEnable){
+            return pjp.proceed();
+        }
+
         StringBuilder redisKeySb = new StringBuilder("AOP");
 
         Method method = getMethod(pjp);
@@ -146,6 +160,12 @@ public class CacheEnableAspect {
 
     @Around("PageableCache()")
     public Object pageableQuery(ProceedingJoinPoint pjp) throws Throwable{
+
+
+        if (!redisEnable){
+            return pjp.proceed();
+        }
+
         StringBuilder redisKeySb = new StringBuilder("Pageable");
 
         Method method = getMethod(pjp);
