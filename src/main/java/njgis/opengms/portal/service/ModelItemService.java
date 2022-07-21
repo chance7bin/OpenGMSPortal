@@ -820,7 +820,7 @@ public class ModelItemService {
                 jsonObject.put("name",user.getName());
                 jsonObject.put("accessId",user.getAccessId());
                 jsonObject.put("email",user.getEmail());
-                jsonObject.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+                jsonObject.put("image",user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
 
                 jsonArray.add(jsonObject);
 

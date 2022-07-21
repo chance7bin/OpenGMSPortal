@@ -36,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
@@ -282,7 +281,7 @@ public class UserService {
             user = userDao.findFirstByEmail(account);
 
             user.setName(userShuttleDTO.getName());
-            user.setAvatar(user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+            user.setAvatar(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
 
 
             //TODO wzh 没看懂
@@ -503,7 +502,10 @@ public class UserService {
 
             String avatar = userInfo.getString("avatar");
             if(avatar!=null){
-                avatar = "/userServer" + avatar;
+                // avatar = "/userServer" + avatar;
+                //修正avatar前面加了/userServer
+                // avatar = avatar.replaceAll("/userServer","");
+                genericService.formatUserAvatar(avatar);
             }
             userInfo.put("avatar",avatar);
             userInfo.put("msg","suc");
@@ -538,8 +540,8 @@ public class UserService {
             // }
             exLinks.add(commonInfo.getString("homepage"));
             j_result.put("location", commonInfo.getString("city"));
-            j_result.put("image", "".equals(commonInfo.getString("avatar"))?"":"/userServer"+commonInfo.getString("avatar"));
-            j_result.put("researchInterests", commonInfo.getString("domain"));
+            j_result.put("image", "".equals(commonInfo.getString("avatar"))?"":genericService.formatUserAvatar(commonInfo.getString("avatar")));
+            j_result.put("researchInterests", commonInfo.get("domain"));
 
 
 
@@ -1183,6 +1185,7 @@ public class UserService {
                         if(shuttleField.getName().equals("avatar")){//用户头像单独处理
                             String avatar = (String) shuttleField.get(userShuttleDTO);
                             // avatar = "/userServer" + avatar;
+                            avatar = avatar.replaceAll("/userServer","");
                             field.set(portalUser, avatar);
                         }else{
                             field.set(portalUser, shuttleField.get(userShuttleDTO));
@@ -1299,22 +1302,30 @@ public class UserService {
         try {
             User user = userDao.findFirstByEmail(email);
             if (user != null) {
-                String uploadImage = img;
-                String path = "/user/";
-                if (!uploadImage.contains("/user/")) {
-                    //删除旧图片
-                    File file = new File(resourcePath + user.getAvatar());
-                    if (file.exists() && file.isFile())
-                        file.delete();
-                    //添加新图片
-                    path = "/user/" + UUID.randomUUID().toString() + ".jpg";
-                    String imgStr = uploadImage.split(",")[1];
-                    Utils.base64StrToImage(imgStr, resourcePath + path);
-                    user.setAvatar(path);
 
-                }
-                userDao.save(user);
-                return path;
+                JSONObject commonInfo = getInfoFromUserServer(email);
+                UserShuttleDTO userShuttleDTO = JSONObject.toJavaObject(commonInfo, UserShuttleDTO.class);
+                userShuttleDTO.setAvatar(img);
+
+                updateUsertoServer(userShuttleDTO);
+
+                return "done";
+                // String uploadImage = img;
+                // String path = "/user/";
+                // if (!uploadImage.contains("/user/")) {
+                //     //删除旧图片
+                //     File file = new File(resourcePath + user.getAvatar());
+                //     if (file.exists() && file.isFile())
+                //         file.delete();
+                //     //添加新图片
+                //     path = "/user/" + UUID.randomUUID().toString() + ".jpg";
+                //     String imgStr = uploadImage.split(",")[1];
+                //     Utils.base64StrToImage(imgStr, resourcePath + path);
+                //     user.setAvatar(path);
+                //
+                // }
+                // userDao.save(user);
+                // return path;
 
             } else
                 return "no user";

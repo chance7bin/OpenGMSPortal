@@ -3773,7 +3773,7 @@ new Vue({
         function saveUserIcon(img) {
             $.ajax({
                     data:{img:img},
-                    url:'/user/saveUserIcon',
+                    url:'/user/update/saveUserIcon',
                     type:'POST',
                     async:true,
                 success:(json)=>{
@@ -3783,8 +3783,8 @@ new Vue({
                     } else {
                         that.getUserInfo();
                         alert('Save successfully!')
-                        let src='/static/upload'+json.data
-                        $('.userIcon').attr("src",src)
+                        let src= json.data
+                        $('.userIcon').attr("src",that.userPersonalInfo.image)
                         $('#editUserImg').modal('hide')
                     }
                 }

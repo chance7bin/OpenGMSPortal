@@ -814,7 +814,7 @@ public class RepositoryService {
                 ma.put("id", maintainer.getId());
                 User user = userDao.findFirstById(maintainer.getId());
                 if(user!=null){
-                    ma.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+                    ma.put("image",user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
                 }
 
                 maintainer_result.add(ma);

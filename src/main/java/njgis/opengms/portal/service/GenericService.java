@@ -222,6 +222,12 @@ public class GenericService {
         return generateSearchResult(allPortalItem, totalElements);
     }
 
+    //格式化用户头像：先统一把/userServer用''替换掉，再加上/userServer
+    public String formatUserAvatar(String avatar){
+        avatar = avatar.replaceAll("/userServer","");
+        return "/userServer" + avatar;
+    }
+
     /**
      * 生成接口返回的数据信息
      * @param allPortalItem
@@ -240,7 +246,7 @@ public class GenericService {
             User user = userDao.findFirstByEmail(email);
             JSONObject userObject = new JSONObject();
             userObject.put("id",user.getId());
-            userObject.put("image",user.getAvatar().equals("")?"":"/userServer" + user.getAvatar());
+            userObject.put("image",user.getAvatar().equals("")?"": formatUserAvatar(user.getAvatar()));
             userObject.put("name",user.getName());
             userObject.put("userId",user.getAccessId());
             userObject.put("accessId",user.getAccessId());
@@ -991,7 +997,7 @@ public class GenericService {
             User user = userDao.findFirstByEmail(item.getAuthor());
             if (user != null){
                 userObj.put("accessId", user.getAccessId());
-                userObj.put("image", user.getAvatar().equals("") ? "" : "/userServer" + user.getAvatar());
+                userObj.put("image", user.getAvatar().equals("") ? "" : formatUserAvatar(user.getAvatar()));
                 userObj.put("name", user.getName());
             } else {
                 userObj.put("name", "unknown");
