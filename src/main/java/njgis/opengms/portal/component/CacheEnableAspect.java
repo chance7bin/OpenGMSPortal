@@ -216,19 +216,19 @@ public class CacheEnableAspect {
             log.error("redis connection exception");
             try {
                 result = pjp.proceed();
-                log.info("从数据库中获取数据");
+                // log.info("从数据库中获取数据");
             } catch (Throwable ex) {
                 throw new RuntimeException(ex.getMessage(), ex);
             }
             return result;
         }
         if (result != null) {
-            log.info("从Redis中获取数据");
+            // log.info("从Redis中获取数据");
             return result;
         } else {
             try {
                 result = pjp.proceed();
-                log.info("从数据库中获取数据");
+                // log.info("从数据库中获取数据");
             } catch (Throwable e) {
                 throw new RuntimeException(e.getMessage(), e);
             }

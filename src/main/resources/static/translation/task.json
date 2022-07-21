@@ -122,7 +122,8 @@
       "UploadFailed": "Upload failed",
       "PleaseSelectFiles": "Please select files!",
       "PleaseEnterDatasetName": "Please enter the dataset name!",
-      "SelectDataTemplate": "Please select a data template!"
+      "SelectDataTemplate": "Please select a data template!",
+      "DataTemplate":"Data Template"
     },
     "zh-cn":{
       "selectModel": "选择计算模型",
@@ -248,6 +249,7 @@
       "UploadFailed": "上传失败",
       "PleaseSelectFiles": "请选择文件",
       "PleaseEnterDatasetName": "请输入数据集名称",
-      "SelectDataTemplate": "请选择数据模板"
+      "SelectDataTemplate": "请选择数据模板",
+      "DataTemplate":"数据模板"
     }
 }
