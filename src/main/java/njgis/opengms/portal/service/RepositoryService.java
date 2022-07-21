@@ -103,6 +103,8 @@ public class RepositoryService {
     @Value("${resourcePath}")
     String resourcePath;
 
+    @Autowired
+    RedisService redisService;
 
 
     public JSONArray getClassification(List<String> classifications, GenericCategoryDao categoryDao){
@@ -322,7 +324,8 @@ public class RepositoryService {
             if (author.equals(email)) {
                 versions.add(new_version.getId());
                 item.setVersions(versions);
-                itemDao.save(item);
+                // itemDao.save(item);
+                redisService.saveItem(item,itemType);
                 result.put("method", "update");
                 result.put("id", item.getId());
             } else {
@@ -396,7 +399,8 @@ public class RepositoryService {
                 if (file.exists() && file.isFile())
                     file.delete();
             }
-            itemDao.delete(item);
+            // itemDao.delete(item);
+            redisService.deleteItem(item, itemType);
             try {
                 userService.updateUserResourceCount(email,itemType,"delete");
             }catch (Exception e){
@@ -810,7 +814,7 @@ public class RepositoryService {
                 ma.put("id", maintainer.getId());
                 User user = userDao.findFirstById(maintainer.getId());
                 if(user!=null){
-                    ma.put("image",user.getAvatar());
+                    ma.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
                 }
 
                 maintainer_result.add(ma);
@@ -850,7 +854,7 @@ public class RepositoryService {
                 }
                 model.put("name",modelItem.getName());
                 model.put("image",modelItem.getImage());
-                model.put("oid",modelItem.getId());
+                model.put("id",modelItem.getId());
                 models.add(model);
             }
             classObj.put("content",models);

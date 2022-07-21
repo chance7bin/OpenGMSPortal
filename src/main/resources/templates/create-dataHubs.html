@@ -474,7 +474,7 @@
                         :visible.sync="dialogVisible"
                         width="80%"
                         :before-close="handleClose">
-                    <user-data @com-selectfile="selectDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
+                    <user-data :html-Json="htmlJson" @com-selectfile="selectDataspaceFile" ref="userDataSpace" style="height: 505px;"></user-data>
                     <span slot="footer" class="dialog-footer">
                       <el-button @click="dialogVisible = false">{{htmlJson.userModel.Cancel}}</el-button>
                       <el-button type="primary" @click="dialogVisible = false">{{htmlJson.userModel.Confirm}}</el-button>

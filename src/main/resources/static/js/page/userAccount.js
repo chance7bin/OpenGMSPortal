@@ -305,12 +305,12 @@ var userAccount = Vue.extend(
                 }
                 if (!flag) {
 
-                    let subscribe = {};
-                    subscribe.name = row.name;
-                    subscribe.oid = row.oid;
-                    subscribe.type = row.contentType;
+                    let subscribe1 = {};
+                    subscribe1.name = row.name;
+                    subscribe1.oid = row.oid;
+                    subscribe1.type = row.contentType;
 
-                    this.subscribeList.push(subscribe);
+                    this.subscribeList.push(subscribe1);
                 }
             },
 
@@ -395,43 +395,43 @@ var userAccount = Vue.extend(
             },
 
             editUserInfo(){
-                // this.getUserInfo();
-                // if (this.userInfo.avatar != "" && this.userInfo.avatar != null) {
-                //     $("#userPhoto").attr("src", this.userInfo.avatar);
-                // } else {
-                //     $("#userPhoto").attr("src", "../static/img/icon/default.png");
-                // }
+                this.getUserInfo();
+                if (this.userInfo.avatar != "" && this.userInfo.avatar != null) {
+                    $("#userPhoto").attr("src", this.userInfo.avatar);
+                } else {
+                    $("#userPhoto").attr("src", "../static/img/icon/default.png");
+                }
 
-                // if (this.userInfo.organizations != null && this.userInfo.organizations.length != 0) {
-                //     $("#inputOrganizations").tagEditor("destroy");
-                //     $('#inputOrganizations').tagEditor({
-                //         initialTags: this.userInfo.organizations,
-                //         forceLowercase: false,
-                //         placeholder: 'Enter Organizations ...'
-                //     });
-                // } else {
-                //     $("#inputOrganizations").tagEditor("destroy");
-                //     $('#inputOrganizations').tagEditor({
-                //         initialTags: [],
-                //         forceLowercase: false,
-                //         placeholder: 'Enter Organizations ...'
-                //     });
-                // }
-                // if (this.userInfo.domain != null && this.userInfo.domain.length != 0) {
-                //     $("#inputSubjectAreas").tagEditor("destroy");
-                //     $('#inputSubjectAreas').tagEditor({
-                //         initialTags: this.userInfo.domain,
-                //         forceLowercase: false,
-                //         placeholder: 'Enter Study Areas ...'
-                //     });
-                // } else {
-                //     $("#inputSubjectAreas").tagEditor("destroy");
-                //     $('#inputSubjectAreas').tagEditor({
-                //         initialTags: [],
-                //         forceLowercase: false,
-                //         placeholder: 'Enter Study Areas ...'
-                //     });
-                // }
+                if (this.userInfo.organizations != null && this.userInfo.organizations.length != 0) {
+                    $("#inputOrganizations").tagEditor("destroy");
+                    $('#inputOrganizations').tagEditor({
+                        initialTags: this.userInfo.organizations,
+                        forceLowercase: false,
+                        placeholder: 'Enter Organizations ...'
+                    });
+                } else {
+                    $("#inputOrganizations").tagEditor("destroy");
+                    $('#inputOrganizations').tagEditor({
+                        initialTags: [],
+                        forceLowercase: false,
+                        placeholder: 'Enter Organizations ...'
+                    });
+                }
+                if (this.userInfo.domain != null && this.userInfo.domain.length != 0) {
+                    $("#inputSubjectAreas").tagEditor("destroy");
+                    $('#inputSubjectAreas').tagEditor({
+                        initialTags: this.userInfo.domain,
+                        forceLowercase: false,
+                        placeholder: 'Enter Study Areas ...'
+                    });
+                } else {
+                    $("#inputSubjectAreas").tagEditor("destroy");
+                    $('#inputSubjectAreas').tagEditor({
+                        initialTags: [],
+                        forceLowercase: false,
+                        placeholder: 'Enter Study Areas ...'
+                    });
+                }
                 $('#myModal').modal('show');
             },
             //
@@ -500,7 +500,7 @@ var userAccount = Vue.extend(
                 userUpdate.organizations = $("#inputOrganizations").val().split(",");
                 userUpdate.domain = $("#inputSubjectAreas").val().split(",");
                 userUpdate.introduction = this.userInfo.introduction;
-                if($("#userPhoto").get(0).src!="http://localhost:8080/static/img/icon/default.png")
+                if($("#userPhoto").get(0).src.indexOf("default.png") < 0)
                     userUpdate.avatar = $("#userPhoto").get(0).src;
 
                 let that = this
@@ -644,9 +644,28 @@ var userAccount = Vue.extend(
             sendUserToParent(userEid){
                 this.$emit('com-senduserinfo',userEid)
             },
+
+            // 获取缓存
+            getStorage(key){
+                var localStorage = window.localStorage;
+                if (localStorage )
+                    var v = localStorage.getItem(key);
+                if (!v) {
+                    return;
+                }
+                if (v.indexOf('obj-') === 0) {
+                    v = v.slice(4);
+                    return JSON.parse(v);
+                } else if (v.indexOf('str-') === 0) {
+                    return v.slice(4);
+                }
+            }
         },
 
         created() {
+
+            this.htmlJson = this.getStorage("userSpaceAll");
+
         },
 
         mounted() {
@@ -657,7 +676,8 @@ var userAccount = Vue.extend(
                 this.ScreenMaxHeight = (height) + "px";
 
                 window.onresize = () => {
-                    console.log('come on ..');
+                    // console.log('come on ..');
+                    // console.log("this.userInfo:", this.userInfo);
                     height = document.documentElement.clientHeight;
                     this.ScreenMinHeight = (height) + "px";
                     this.ScreenMaxHeight = (height) + "px";

@@ -97,6 +97,9 @@ public class ComputableModelService {
     @Value("${managerServerIpAndPort}")
     private String managerServerIpAndPort;
 
+    @Autowired
+    RedisService redisService;
+
     public ModelAndView getPage(ComputableModel computableModel) {
         //条目信息
         ModelAndView modelAndView = new ModelAndView();
@@ -695,7 +698,8 @@ public class ComputableModelService {
 
             Version version_new = versionService.addVersion(computableModel, email, originalItemName);
             if (computableModel.getAuthor().equals(email)) {
-                computableModelDao.save(computableModel);
+                // computableModelDao.save(computableModel);
+                redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);
                 versions.add(version_new.getId());
                 computableModel.setVersions(versions);
                 result.put("method", "update");
@@ -750,7 +754,8 @@ public class ComputableModelService {
             }
 
             //计算模型删除
-            computableModelDao.delete(computableModel);
+            // computableModelDao.delete(computableModel);
+            redisService.deleteItem(computableModel, ItemTypeEnum.ComputableModel);
             userService.updateUserResourceCount(email, ItemTypeEnum.ComputableModel, "delete");
 
             return ResultUtils.success();
@@ -771,6 +776,8 @@ public class ComputableModelService {
         //     User user = userDao.findFirstByEmail(computableModel.getAuthor());
         //     computableModel.setAuthor(user.getName());
         // }
+
+
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("total",computableModelPage.getTotalElements());

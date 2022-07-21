@@ -400,7 +400,7 @@ let vue = new Vue({
 
             let name = this.selectedFile[0].name + '.' + this.selectedFile[0].suffix;
             this.metaDetail.input[this.fileOrder].loadName = name;
-            this.metaDetail.input[this.fileOrder].url = this.selectedFile[0].url;
+            this.metaDetail.input[this.fileOrder].url = this.selectedFile[0].address;
             // for (let i=0;i<this.metaDetail.input.length;i++){
             //     if(this.metaDetail.input[i].name === name){
             //

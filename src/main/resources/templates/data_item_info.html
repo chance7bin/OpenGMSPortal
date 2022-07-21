@@ -151,8 +151,8 @@
                         <span th:if="${authorship==''}"
                               th:text="${user.name}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
                         <a style="word-break:break-all;"
-                           th:href="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"
-                           th:text="'https://geomodeling.njnu.edu.cn/dataItem/'+${itemInfo.id}"></a>
+                           th:href="'https://geomodeling.njnu.edu.cn/' + ${modularType.text} + '/'+${itemInfo.id}"
+                           th:text="'https://geomodeling.njnu.edu.cn/' + ${modularType.text} + '/'+${itemInfo.id}"></a>
                     </div>
                     <div id="copy" class="btn btn-info">
                         Copy

@@ -1,11 +1,9 @@
 package njgis.opengms.portal.dao;
 
+import njgis.opengms.portal.component.AopCacheEnable;
 import njgis.opengms.portal.entity.po.DataHub;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.List;
 
 /**
  * @Description
@@ -13,6 +11,10 @@ import java.util.List;
  * @Date 2021/08/13
  */
 public interface DataHubDao extends MongoRepository<DataHub, String>, GenericItemDao<DataHub> {
+
+    @AopCacheEnable(key = "#id", group = ItemTypeEnum.DataHub, expireTime = 300)
+    DataHub findFirstById(String id);
+
     // DataHub findFirstById(String id);
     //
     // DataHub findFirstByAuthor(String author);

@@ -191,13 +191,13 @@ var createDataItem = Vue.extend({
                     suffix:"",
                     url:""
                 };
-                fileMetaUser.id = this.selectedFile[i].id;
-                fileMetaUser.name = this.selectedFile[i].label;
+                fileMetaUser.id = this.selectedFile[i].uid;
+                fileMetaUser.name = this.selectedFile[i].name;
+                // fileMetaUser.label = this.selectedFile[i].label;
                 fileMetaUser.suffix = this.selectedFile[i].suffix;
-                fileMetaUser.url = this.selectedFile[i].url;
+                fileMetaUser.url = this.selectedFile[i].address;
                 this.userDataList.push(fileMetaUser);
             }
-
 
             this.dataItemAddDTO.name = $("#dataname").val();
 

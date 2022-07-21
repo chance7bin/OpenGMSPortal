@@ -108,6 +108,13 @@ public class ModelItemService {
     @Autowired
     NoticeService noticeService;
 
+    @Autowired
+    RedisService redisService;
+
+    // @AopCacheEnable(key = "modelItem",expireTime = 40)
+    public ModelItem findById(String id){
+        return modelItemDao.findFirstById(id);
+    }
 
     public ModelAndView getPage(String id) {
         ModelItem portalItem = modelItemDao.findFirstById(id);
@@ -557,7 +564,8 @@ public class ModelItemService {
                 for(int j = 0;j<relatedModelList1.size();j++){
                     if(relatedModelList1.get(j).getModelId().equals(modelItem.getId())){
                         modelItem1.getRelate().getModelRelationList().remove(j);
-                        modelItemDao.save(modelItem1);
+                        // modelItemDao.save(modelItem1);
+                        redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
                     }
                 }
             }
@@ -569,12 +577,14 @@ public class ModelItemService {
             for(int i=0;i<relatedData.size();i++){
                 DataItem dataItem=dataItemDao.findFirstById(relatedData.get(i));
                 dataItem.getRelatedModels().remove(id);
-                dataItemDao.save(dataItem);
+                // dataItemDao.save(dataItem);
+                redisService.saveItem(dataItem,ItemTypeEnum.DataItem);
             }
 
             //TODO 同时删除datahub dataApplication中的关联记录
 
-            modelItemDao.delete(modelItem);
+            // modelItemDao.delete(modelItem);
+            redisService.deleteItem(modelItem, ItemTypeEnum.ModelItem);
             userService.updateUserResourceCount(email, ItemTypeEnum.ModelItem);
             return ResultUtils.success();
         }
@@ -757,8 +767,8 @@ public class ModelItemService {
                 versions.add(version_new.getId());
                 modelItem.setVersions(versions);
 
-                modelItemDao.save(modelItem);
-
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
                 JSONObject result = new JSONObject();
                 result.put("method", "update");
                 result.put("id", modelItem.getId());
@@ -810,7 +820,7 @@ public class ModelItemService {
                 jsonObject.put("name",user.getName());
                 jsonObject.put("accessId",user.getAccessId());
                 jsonObject.put("email",user.getEmail());
-                jsonObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath+user.getAvatar());
+                jsonObject.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
 
                 jsonArray.add(jsonObject);
 
@@ -875,6 +885,10 @@ public class ModelItemService {
 
         JSONArray result=new JSONArray();
         ModelItem modelItem=modelItemDao.findFirstById(modelId);
+
+        if (modelItem == null)
+            return result;
+
         ModelItemRelate relation=modelItem.getRelate();
         List<String> list=new ArrayList<>();
 
@@ -1360,8 +1374,8 @@ public class ModelItemService {
 
         if(author.equals(email)) {
             modelItem.setClassifications(classi);
-            modelItemDao.save(modelItem);
-
+            // modelItemDao.save(modelItem);
+            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
             return "suc";
         }else{
             ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
@@ -1384,7 +1398,8 @@ public class ModelItemService {
 
         if(author.equals(email)) {
             modelItem.setAlias(aliasList);
-            modelItemDao.save(modelItem);
+            // modelItemDao.save(modelItem);
+            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
 
             return "suc";
         }else{
@@ -1407,8 +1422,8 @@ public class ModelItemService {
 
         if(author.equals(email)) {
             modelItem.setLocalizationList(localizations);
-            modelItemDao.save(modelItem);
-
+            // modelItemDao.save(modelItem);
+            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
             return "suc";
         }else{
             ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
@@ -1450,8 +1465,8 @@ public class ModelItemService {
 
         if(author.equals(email)) {
             modelItem.setReferences(reference_ids);
-            modelItemDao.save(modelItem);
-
+            // modelItemDao.save(modelItem);
+            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
             return "suc";
         }else{
             ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
@@ -1606,7 +1621,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModels();
                         if (!relatedModels.contains(modelId)){
                             relatedModels.add(modelId);
-                            dataItemDao.save(item);
+                            // dataItemDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.DataItem);
                         }
                     }
 
@@ -1620,7 +1636,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModels();
                         if (relatedModels.contains(modelId)){
                             relatedModels.remove(modelId);
-                            dataItemDao.save(item);
+                            // dataItemDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.DataItem);
                         }
                     }
 
@@ -1642,7 +1659,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModelItems();
                         if (!relatedModels.contains(modelId)){
                             relatedModels.add(modelId);
-                            conceptualModelDao.save(item);
+                            // conceptualModelDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.ConceptualModel);
                         }
                     }
 
@@ -1656,7 +1674,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModelItems();
                         if (relatedModels.contains(modelId)){
                             relatedModels.remove(modelId);
-                            conceptualModelDao.save(item);
+                            // conceptualModelDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.ConceptualModel);
                         }
                     }
 
@@ -1677,7 +1696,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModelItems();
                         if (!relatedModels.contains(modelId)){
                             relatedModels.add(modelId);
-                            logicalModelDao.save(item);
+                            // logicalModelDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.LogicalModel);
                         }
                     }
 
@@ -1691,7 +1711,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModelItems();
                         if (relatedModels.contains(modelId)){
                             relatedModels.remove(modelId);
-                            logicalModelDao.save(item);
+                            // logicalModelDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.LogicalModel);
                         }
                     }
 
@@ -1712,7 +1733,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModelItems();
                         if (!relatedModels.contains(modelId)){
                             relatedModels.add(modelId);
-                            computableModelDao.save(item);
+                            // computableModelDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.ComputableModel);
                         }
                     }
 
@@ -1726,7 +1748,8 @@ public class ModelItemService {
                         List<String> relatedModels = item.getRelatedModelItems();
                         if (relatedModels.contains(modelId)){
                             relatedModels.remove(modelId);
-                            computableModelDao.save(item);
+                            // computableModelDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.ComputableModel);
                         }
                     }
 
@@ -1772,7 +1795,8 @@ public class ModelItemService {
                                     modelItem1.getRelate().getModelRelationList().get(k).setRelation(RelationTypeEnum.getOpposite(modelRelationNew.getRelation().getNumber()));
                                 }
                             }
-                            modelItemDao.save(modelItem1);
+                            // modelItemDao.save(modelItem1);
+                            redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
                         }
                         break;
                     }
@@ -1795,7 +1819,8 @@ public class ModelItemService {
                     modelRelation1.setRelation(RelationTypeEnum.getOpposite(modelRelation.getRelation().getNumber()));
                     ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
                     modelItem1.getRelate().getModelRelationList().add(modelRelation1);
-                    modelItemDao.save(modelItem1);
+                    // modelItemDao.save(modelItem1);
+                    redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
                 }
             }
 
@@ -1822,14 +1847,16 @@ public class ModelItemService {
                             break;
                         }
                     }
-                    modelItemDao.save(modelItem1);
+                    // modelItemDao.save(modelItem1);
+                    redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
 
                 }
             }
 
             modelItem.getRelate().setModelRelationList(modelRelationListNew);
 
-            modelItemDao.save(modelItem);
+            // modelItemDao.save(modelItem);
+            redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
 
             JSONArray modelItemArray = new JSONArray();
 
@@ -2060,8 +2087,8 @@ public class ModelItemService {
 
         if(email.equals(modelItem.getAuthor())) {
             modelItem.setRelate(relate);
-            modelItemDao.save(modelItem);
-
+            // modelItemDao.save(modelItem);
+            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
             return "suc";
         }else{
             ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
@@ -2070,6 +2097,17 @@ public class ModelItemService {
             modelItemService.update(modelItemUpdateDTO,email);
             return "version";
         }
+
+    }
+
+    public List<Localization> getDescription(String id) {
+
+        ModelItem item = modelItemDao.findFirstById(id);
+
+        if (item == null)
+            return null;
+
+        return item.getLocalizationList();
 
     }
 }

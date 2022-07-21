@@ -288,8 +288,7 @@
       "getDoiTitle": "Is this article you want to add",
       "Authors": "Authors",
       "getDoiYes": "Yes, this is it",
-      "getDoiNo": "Cancel",
-      "Operation": "Operation"
+      "getDoiNo": "Cancel"
     },
     "Language": {
       "label": "Language",
@@ -1767,8 +1766,6 @@
     "UpdateUnitSuccessfully": "Update unit successfully",
     "CreateThemeSuccessfully": "Create theme  successfully",
 
-    "Operation": "Operation",
-
     "SendSuggestionSuccessfully": "Send suggestion successfully",
     "OldPassword": "Old Password",
     "NewPassword": "New Password",
@@ -2018,7 +2015,7 @@
     "Phone": "电话",
     "HomePage": "主页",
     "Organizations": "机构",
-    "Domain": "域",
+    "Domain": "领域",
     "Introduction": "介绍",
     "EditInformation": "编辑信息",
     "ChangePassword": "修改密码",
@@ -2125,8 +2122,7 @@
       "getDoiTitle": "这篇文章是你想要添加的吗",
       "Authors": "相关作者",
       "getDoiYes": "是的，就是它",
-      "getDoiNo": "取消",
-      "Operation": "操作"
+      "getDoiNo": "取消"
     },
     "Language": {
       "label": "语言",
@@ -3600,7 +3596,6 @@
     "Accept": "接受",
     "Reject": "拒绝",
     "CreateThemeSuccessfully": "创建专题成功",
-    "Operation": "操作",
 
     "SendSuggestionSuccessfully": "提交建议成功!",
     "OldPassword": "旧密码",

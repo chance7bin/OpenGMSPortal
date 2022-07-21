@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.component.PageableCacheEnable;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -130,6 +131,7 @@ public class GenericService {
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
+    @PageableCacheEnable(key = "#findDTO", group = "#type")
     public JSONObject searchItems(SpecificFindDTO findDTO, ItemTypeEnum type){
 
         if(findDTO.getSortField().equals("default")){
@@ -238,7 +240,7 @@ public class GenericService {
             User user = userDao.findFirstByEmail(email);
             JSONObject userObject = new JSONObject();
             userObject.put("id",user.getId());
-            userObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath + user.getAvatar());
+            userObject.put("image",user.getAvatar().equals("")?"":"/userServer" + user.getAvatar());
             userObject.put("name",user.getName());
             userObject.put("userId",user.getAccessId());
             userObject.put("accessId",user.getAccessId());
@@ -536,13 +538,21 @@ public class GenericService {
     public PortalItem getById(String id, GenericItemDao genericItemDao) {
 
 
-        return (PortalItem) genericItemDao.findById(id).orElseGet(() -> {
-
+        PortalItem item = (PortalItem)genericItemDao.findFirstById(id);
+        if (item == null){
             log.error("有人乱查数据库！！该ID不存在对象:" + id);
-
             throw new MyException(ResultEnum.NO_OBJECT);
+        } else {
+            return item;
+        }
 
-        });
+        // return (PortalItem) genericItemDao.findById(id).orElseGet(() -> {
+        //
+        //     log.error("有人乱查数据库！！该ID不存在对象:" + id);
+        //
+        //     throw new MyException(ResultEnum.NO_OBJECT);
+        //
+        // });
 
     }
     
@@ -981,7 +991,7 @@ public class GenericService {
             User user = userDao.findFirstByEmail(item.getAuthor());
             if (user != null){
                 userObj.put("accessId", user.getAccessId());
-                userObj.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
+                userObj.put("image", user.getAvatar().equals("") ? "" : "/userServer" + user.getAvatar());
                 userObj.put("name", user.getName());
             } else {
                 userObj.put("name", "unknown");

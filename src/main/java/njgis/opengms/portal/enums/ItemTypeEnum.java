@@ -12,6 +12,8 @@ public enum ItemTypeEnum {
     //所有类型的条目，用于区别按分类查找的情况
     All(18,"all"),
 
+    PortalItem(19,"PortalItem"),
+
     ModelItem(1,"modelItem"),
     ConceptualModel(2,"conceptualModel"),
     LogicalModel(3,"logicalModel"),
@@ -62,4 +64,5 @@ public enum ItemTypeEnum {
         }
         return null;
     }
+
 }

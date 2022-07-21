@@ -67,6 +67,9 @@ public class ConceptualModelService {
     @Value("${resourcePath}")
     String resourcePath;
 
+    @Autowired
+    RedisService redisService;
+
     /**
      * @Description 获取模型信息
      * @param id
@@ -308,7 +311,8 @@ public class ConceptualModelService {
                 }
                 modelItemRelate.getConceptualModels().add(conceptualModel.getId());
                 modelItem.setRelate(modelItemRelate);
-                modelItemDao.save(modelItem);
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
             conceptualModelDao.insert(conceptualModel);
@@ -423,8 +427,8 @@ public class ConceptualModelService {
                 if (author0.equals(email)) {
                     versions.add(version_new.getId());
                     conceptualModel.setVersions(versions);
-                    conceptualModelDao.save(conceptualModel);
-
+                    // conceptualModelDao.save(conceptualModel);
+                    redisService.saveItem(conceptualModel, ItemTypeEnum.ConceptualModel);
                     result.put("method", "update");
                     result.put("id", conceptualModel.getId());
 
@@ -497,11 +501,13 @@ public class ConceptualModelService {
                     }
                 }
                 modelItem.getRelate().setConceptualModels(conceptualModelIds);
-                modelItemDao.save(modelItem);
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
             //条目删除
-            conceptualModelDao.delete(conceptualModel);
+            // conceptualModelDao.delete(conceptualModel);
+            redisService.deleteItem(conceptualModel, ItemTypeEnum.ConceptualModel);
             userService.updateUserResourceCount(email, ItemTypeEnum.ConceptualModel);
 
 

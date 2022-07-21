@@ -2119,7 +2119,7 @@ var vue = new Vue({
                 //1为type是modelitem
                 case 1: {
                     let data = {
-                        oid: oid,
+                        id: oid,
                     };
                     $.ajax({
                         url: "/theme/getModelItem",
@@ -2141,7 +2141,7 @@ var vue = new Vue({
                 }
                 case 2: {
                     let data = {
-                        oid: oid,
+                        id: oid,
                     };
                     $.ajax({
                         url: "/theme/getDataItem",
@@ -2163,7 +2163,7 @@ var vue = new Vue({
                 }
                 case 3:{
                     let data = {
-                        oid: oid,
+                        id: oid,
                     };
                     $.ajax({
                         url: "/theme/getDataMethod",

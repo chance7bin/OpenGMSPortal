@@ -39,10 +39,12 @@
                     </span>
     </div>
     <div th:fragment="descriptionContent" class="block_content">
-        <div v-if="detail==''" th:utext="${detail}" id="detail" class="detailIntroducePanel 22">
-        </div>
-        <div v-else v-html="detail" id="detail" class="detailIntroducePanel 11">
-        </div>
+        <!--<div v-if="detail==''" th:utext="${detail}" id="detail" class="detailIntroducePanel 22">-->
+        <!--</div>-->
+        <!--<div v-else v-html="detail" id="detail" class="detailIntroducePanel 11">-->
+        <!--</div>-->
+        <div id="detail" class="detailIntroducePanel" th:utext="${detail}"
+             style="overflow:auto"></div>
     </div>
     <div class="fullPaper text-center hide">
         <a id="fullPaper" style ="cursor:pointer;font-size:16px;" ><span translateId="viewFullText">View Full Text</span><i class="fa fa-angle-down"
@@ -1547,7 +1549,7 @@
                     </div>
                     <div class="el-row" style="height: 45px;">
                         <div class="el-col el-col-2">&nbsp;</div>
-                        <div class="el-col el-col-20"><p th:text="${data.label}+'.'+${data.suffix}"
+                        <div class="el-col el-col-20"><p th:text="${data.name == null ? 'unknwon' : data.name}+'.'+${data.suffix}"
                                                          style="overflow: hidden;overflow-wrap: break-word; word-break: break-all; text-align: center;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
                         </p></div>
                         <div class="el-col el-col-2">&nbsp;</div>

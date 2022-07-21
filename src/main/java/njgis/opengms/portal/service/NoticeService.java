@@ -446,7 +446,17 @@ public class NoticeService {
             notice.setHasRead(true);
         }
         noticeDao.saveAll(notices);
+        updateUserUnreadNum(email);
         return ResultUtils.success();
+    }
+
+    private void updateUserUnreadNum(String email) {
+        User user = userService.getByEmail(email);
+        if (user != null){
+            int unreadNoticeNum = countUserUnreadNoticeNum(email);
+            user.setUnreadNoticeNum(unreadNoticeNum);
+            userDao.save(user);
+        }
     }
 
 
@@ -455,7 +465,8 @@ public class NoticeService {
         Notice notice = noticeDao.findFirstById(noticeId);
         notice.setHasRead(true);
         noticeDao.save(notice);
-
+        String recipient = notice.getRecipient();
+        updateUserUnreadNum(recipient);
         return ResultUtils.success();
     }
 }

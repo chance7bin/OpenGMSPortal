@@ -282,7 +282,7 @@ public class UserService {
             user = userDao.findFirstByEmail(account);
 
             user.setName(userShuttleDTO.getName());
-            user.setAvatar(userShuttleDTO.getAvatar());
+            user.setAvatar(user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
 
 
             //TODO wzh 没看懂
@@ -533,27 +533,48 @@ public class UserService {
             j_result.putAll(commonInfo);
 
             List<String> exLinks = new ArrayList<>();
-            exLinks.add(user.getHomepage());
+            // if (user.getHomepage() != null){
+            //     exLinks.add(user.getHomepage());
+            // }
+            exLinks.add(commonInfo.getString("homepage"));
+            j_result.put("location", commonInfo.getString("city"));
+            j_result.put("image", "".equals(commonInfo.getString("avatar"))?"":"/userServer"+commonInfo.getString("avatar"));
+            j_result.put("researchInterests", commonInfo.getString("domain"));
+
+
+
             j_result.put("id",user.getId());
             // j_result.put("userId", user.getAccessId());
             j_result.put("accessId", user.getAccessId());
             j_result.put("email", user.getEmail());
-            j_result.put("phone", user.getPhone());
+            // j_result.put("phone", user.getPhone());
             j_result.put("lab", user.getLab());
-            j_result.put("homepage", user.getHomepage());
+            // j_result.put("homepage", user.getHomepage());
             j_result.put("externalLinks", exLinks);
             j_result.put("eduExperiences", user.getEducationExperiences());
             j_result.put("awdHonors", user.getAwardsHonors());
             j_result.put("runTask", user.getRunTask());
-            j_result.put("image", user.getAvatar().equals("") ? "" : htmlLoadPath + user.getAvatar());
             j_result.put("subscribe", user.getSubscribe());
-            j_result.put("location", user.getCity());
-            j_result.put("researchInterests", user.getDomain());
+
 
 
         }else {
             j_result = commonInfo;
         }
+
+        // j_result.put("externalLinks",null);
+        // j_result.put("eduExperiences",null);
+        // j_result.put("awdHonors",null);
+        // j_result.put("runTask",null);
+
+
+        // Set<String> keys = j_result.keySet();
+        // for(String key:keys){
+        //     Object o = j_result.get(key);
+        //
+        // }
+
+
 
         return j_result;
     }
@@ -1161,7 +1182,7 @@ public class UserService {
                     if (field.get(portalUser)!=null&&!field.get(portalUser).equals(shuttleField.get(userShuttleDTO))) {
                         if(shuttleField.getName().equals("avatar")){//用户头像单独处理
                             String avatar = (String) shuttleField.get(userShuttleDTO);
-                            avatar = "/userServer" + avatar;
+                            // avatar = "/userServer" + avatar;
                             field.set(portalUser, avatar);
                         }else{
                             field.set(portalUser, shuttleField.get(userShuttleDTO));
@@ -1310,13 +1331,15 @@ public class UserService {
         JSONArray array = new JSONArray();
         for (int i = 0; i < subscribeItemList.size(); i++) {
             ComputableModel computableModel = computableModelDao.findFirstById(subscribeItemList.get(i).getOid());
+            if (computableModel != null){
+                JSONObject subscribe = new JSONObject();
+                subscribe.put("name", computableModel.getName());
+                subscribe.put("type", computableModel.getContentType());
+                subscribe.put("oid", computableModel.getId());
 
-            JSONObject subscribe = new JSONObject();
-            subscribe.put("name", computableModel.getName());
-            subscribe.put("type", computableModel.getContentType());
-            subscribe.put("oid", computableModel.getId());
+                array.add(subscribe);
+            }
 
-            array.add(subscribe);
         }
 
         return array;
@@ -1651,9 +1674,9 @@ public class UserService {
         try {
             String email = userShuttleDTO.getEmail();
             User existedUser = userDao.findFirstByEmail(email);
-//            if(existedUser!=null){
-//                return ResultUtils.error(-2, "Fail: user already exists in the database.");
-//            }
+           if(existedUser!=null){
+               return ResultUtils.error(-2, "Fail: user already exists in the database.");
+           }
 
             try{
                 RestTemplate restTemplate = new RestTemplate();
@@ -1929,8 +1952,10 @@ public class UserService {
             for (String dataId : dataIds) {
                 for (DataMeta dataMeta : dataList) {
                     String url = dataMeta.getUrl();
-                    String param = url.split("[?]")[1];
-                    String id = param.split("=")[1];
+                    // String param = url.split("[?]")[1];
+                    // String id = param.split("=")[1];
+                    String[] split = url.split("/");
+                    String id = split[split.length -1 ];
                     if (dataId.equals(url)) {
                         boolean exist = false;
                         for (FileMeta fm : fileMetaList) {

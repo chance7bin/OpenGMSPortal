@@ -335,7 +335,7 @@ var vue = new Vue({
                 lastModifyTime: "2019-05-17T13:25:55.947+0000",
                 md5: "15ea8a5740fdcfa951eea30579a33c4d",
                 name: "SWAT_Model",
-                oid: "16e31602-bd05-4da4-bd01-cb7582c21ae8",
+                id: "16e31602-bd05-4da4-bd01-cb7582c21ae8",
             },
             {
                 author: "Qiang Dai",
@@ -344,7 +344,7 @@ var vue = new Vue({
                 lastModifyTime: "2019-05-16T14:43:40.834+0000",
                 md5: "387e28f188717c4745a071356839ecb0",
                 name: "SWMM",
-                oid: "35c12565-6a5f-41e1-8e4b-5a3c7d256b03",
+                id: "35c12565-6a5f-41e1-8e4b-5a3c7d256b03",
             },
             {
                 author: "Bo Huang",
@@ -352,7 +352,7 @@ var vue = new Vue({
                 createTime: "2019-05-16T14:43:03.277+0000",
                 lastModifyTime: "2019-05-16T14:43:03.277+0000",
                 name: "TouchAir",
-                oid: "ff844894-bbb5-492c-b72f-a7e2fa651d57",
+                id: "ff844894-bbb5-492c-b72f-a7e2fa651d57",
             },
             {
                 author: "王明",
@@ -360,7 +360,7 @@ var vue = new Vue({
                 createTime: "2019-05-16T14:56:38.504+0000",
                 lastModifyTime: "2019-05-16T14:56:38.504+0000",
                 name: "Fire Dynamics Simulator",
-                oid: "fe6beeac-d4fa-4685-a7fa-3fc58dfb59d3",
+                id: "fe6beeac-d4fa-4685-a7fa-3fc58dfb59d3",
             },
             {
                 author: "Junzhi Liu",
@@ -368,7 +368,7 @@ var vue = new Vue({
                 createTime: "2019-06-17T14:03:22.373+0000",
                 lastModifyTime: "2019-06-17T14:03:22.373+0000",
                 name: "SEIMS",
-                oid: "39daf1cf-acdb-4ea0-875b-9963bb80b887",
+                id: "39daf1cf-acdb-4ea0-875b-9963bb80b887",
             },
             {
                 author: "Xia Li",
@@ -376,7 +376,7 @@ var vue = new Vue({
                 createTime: "2019-05-16T07:30:44.453+0000",
                 lastModifyTime: "2019-05-16T07:30:44.453+0000",
                 name: "GeoSOS_ANN_Wrap",
-                oid: "d8754772-86b7-4f5b-9398-60f320c161c9",
+                id: "d8754772-86b7-4f5b-9398-60f320c161c9",
             },
             {
                 author: "Min Cao",
@@ -384,7 +384,7 @@ var vue = new Vue({
                 createTime: "2019-06-17T14:43:57.024+0000",
                 lastModifyTime: "2019-06-17T14:43:57.024+0000",
                 name: "GCAM-CA",
-                oid: "ebc7beaf-ff61-49da-9899-bc68e7c920e6",
+                id: "ebc7beaf-ff61-49da-9899-bc68e7c920e6",
             },
             {
                 author: "A. Stewart Fotheringham",
@@ -392,7 +392,7 @@ var vue = new Vue({
                 createTime: "2019-06-17T14:07:05.185+0000",
                 lastModifyTime: "2019-06-17T14:07:05.185+0000",
                 name: "GWR",
-                oid: "fcf84557-3264-405e-93cc-0827b29fae63",
+                id: "fcf84557-3264-405e-93cc-0827b29fae63",
             },
             {
                 author: "王明",
@@ -400,7 +400,7 @@ var vue = new Vue({
                 createTime: "2019-05-16T13:31:58.276+0000",
                 lastModifyTime: "2019-05-16T13:31:58.276+0000",
                 name: "TaiHu_Fvcom",
-                oid: "d41dfc74-3509-4d02-8f45-5e2eeaf5eec7",
+                id: "d41dfc74-3509-4d02-8f45-5e2eeaf5eec7",
             },
             {
                 author: "Dawen Yang",
@@ -408,7 +408,7 @@ var vue = new Vue({
                 createTime: "2020-06-12T13:35:48.436+0000",
                 lastModifyTime: "2020-06-12T13:35:48.436+0000",
                 name: "GBEHM",
-                oid: "d1057c98-dcf1-4188-9bd4-49e94770901e",
+                id: "d1057c98-dcf1-4188-9bd4-49e94770901e",
             },
             {
                 author: "王明",
@@ -416,7 +416,7 @@ var vue = new Vue({
                 createTime: "2019-05-05T08:00:35.199+0000",
                 lastModifyTime: "2019-05-05T08:00:35.199+0000",
                 name: "Fvcom_lu_step1",
-                oid: "322dcfb0-6a79-48a2-9b80-bb105f1bb36d",
+                id: "322dcfb0-6a79-48a2-9b80-bb105f1bb36d",
             },
             {
                 author: "王明",
@@ -424,7 +424,7 @@ var vue = new Vue({
                 createTime: "2019-05-05T08:01:21.060+0000",
                 lastModifyTime: "2019-05-05T08:01:21.060+0000",
                 name: "Fvcom_lu_step2",
-                oid: "32a4ea56-991b-4f13-87c2-f2f9bb02b61c",
+                id: "32a4ea56-991b-4f13-87c2-f2f9bb02b61c",
             },
             {
                 author: "王明",
@@ -432,7 +432,7 @@ var vue = new Vue({
                 createTime: "2019-05-05T08:02:02.646+0000",
                 lastModifyTime: "2019-05-05T08:02:02.646+0000",
                 name: "Fvcom_lu_step3",
-                oid: "c7e6fb7f-5b88-4130-9522-81fd8fe87369",
+                id: "c7e6fb7f-5b88-4130-9522-81fd8fe87369",
             },
             {
                 author: "王明",
@@ -440,7 +440,7 @@ var vue = new Vue({
                 createTime: "2019-05-05T07:59:20.528+0000",
                 lastModifyTime: "2019-05-05T07:59:20.528+0000",
                 name: "Fvcom_lu_step4",
-                oid: "c9a9be25-a16b-4812-9ffd-aae6bf37098c",
+                id: "c9a9be25-a16b-4812-9ffd-aae6bf37098c",
             },
             {
                 author: "Jinfeng Wang",
@@ -448,7 +448,7 @@ var vue = new Vue({
                 createTime: "2019-05-16T12:47:36.883+0000",
                 lastModifyTime: "2019-05-16T12:47:36.883+0000",
                 name: "Geographical detector",
-                oid: "e80789bc-d29c-4bd4-9ef8-674541f40d42",
+                id: "e80789bc-d29c-4bd4-9ef8-674541f40d42",
             },
             {
                 author: "Xinyue Ye",
@@ -456,7 +456,7 @@ var vue = new Vue({
                 createTime: "2018-01-02T14:01:01.030+0000",
                 lastModifyTime: "2019-05-16T14:01:01.030+0000",
                 name: "Space-Time Analysis of Regional Systems",
-                oid: "9948998b-1daa-4dec-8d41-d74efb20431a",
+                id: "9948998b-1daa-4dec-8d41-d74efb20431a",
             },
         ],
         inSearch:0,

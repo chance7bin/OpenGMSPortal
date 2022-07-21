@@ -203,6 +203,23 @@ Vue.component("user-data",
             }
         },
         methods: {
+
+            // 获取缓存
+            getStorage(key){
+                var localStorage = window.localStorage;
+                if (localStorage )
+                    var v = localStorage.getItem(key);
+                if (!v) {
+                    return;
+                }
+                if (v.indexOf('obj-') === 0) {
+                    v = v.slice(4);
+                    return JSON.parse(v);
+                } else if (v.indexOf('str-') === 0) {
+                    return v.slice(4);
+                }
+            },
+
             formatDate(value, callback) {
                 const date = new Date(value);
                 y = date.getFullYear();

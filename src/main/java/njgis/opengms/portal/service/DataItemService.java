@@ -87,6 +87,9 @@ public class DataItemService {
     @Value("${resourcePath}")
     private String resourcePath;
 
+    @Autowired
+    RedisService redisService;
+
     public JsonResult getItems(SpecificFindDTO dataItemFindDTO){
         return ResultUtils.success(genericService.searchItems(dataItemFindDTO, ItemTypeEnum.DataItem));
     }
@@ -405,7 +408,8 @@ public class DataItemService {
                 item.setVersions(versions);
                 updateModelRelate(relations, oriRelatedModels,ItemTypeEnum.DataItem,id);
                 item.setRelatedModels(relations);
-                dataItemDao.save(item);
+                // dataItemDao.save(item);
+                redisService.saveItem(item, ItemTypeEnum.DataItem);
                 result.put("type","suc");
 
                 return ResultUtils.success(result);
@@ -445,7 +449,8 @@ public class DataItemService {
                         List<String> dataItems = item.getRelate().getDataItems();
                         if (!dataItems.contains(itemId)){
                             dataItems.add(itemId);
-                            modelItemDao.save(item);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
                         }
                     }
                 }
@@ -458,7 +463,8 @@ public class DataItemService {
                         List<String> dataItems = item.getRelate().getDataItems();
                         if (dataItems.contains(itemId)){
                             dataItems.remove(itemId);
-                            modelItemDao.save(item);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
                         }
                     }
 
@@ -477,7 +483,8 @@ public class DataItemService {
                         List<String> dataHubs = item.getRelate().getDataHubs();
                         if (!dataHubs.contains(itemId)){
                             dataHubs.add(itemId);
-                            modelItemDao.save(item);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
                         }
                     }
                 }
@@ -490,7 +497,8 @@ public class DataItemService {
                         List<String> dataHubs = item.getRelate().getDataHubs();
                         if (dataHubs.contains(itemId)){
                             dataHubs.remove(itemId);
-                            modelItemDao.save(item);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
                         }
                     }
 
@@ -650,8 +658,8 @@ public class DataItemService {
      **/
     public JSONObject updateDataItem(DataItemDTO dataItemUpdateDTO, String email, String id){
 
-        JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataItem);
-        return updateItem(dataItemUpdateDTO,email,(GenericItemDao) dao.get("itemDao"),id);
+        // JSONObject dao = genericService.daoFactory(ItemTypeEnum.DataItem);
+        return updateItem(dataItemUpdateDTO,email,ItemTypeEnum.DataItem,id);
 
     }
 
@@ -661,11 +669,13 @@ public class DataItemService {
      * 修改dataItem、datahub通用方法
      * @param dataItemUpdateDTO
      * @param email
-     * @param genericItemDao
+     * @param type
      * @return com.alibaba.fastjson.JSONObject
      * @Author bin
      **/
-    public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, GenericItemDao genericItemDao, String id){
+    public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, ItemTypeEnum type, String id){
+        GenericItemDao genericItemDao = (GenericItemDao)genericService.daoFactory(type);
+
         JSONObject result = new JSONObject();
         PortalItem item = (PortalItem) genericItemDao.findFirstById(id);
         String originalItemName = item.getName();
@@ -726,7 +736,9 @@ public class DataItemService {
                 versions.add(new_version.getId());
                 item.setVersions(versions);
 
-                genericItemDao.save(item);
+                // genericItemDao.save(item);
+                redisService.saveItem(item,type);
+
                 result.put("method", "update");
                 result.put("id",item.getId());
                 return result;
@@ -792,7 +804,8 @@ public class DataItemService {
         //     }
 
         try {
-            dataItemDao.deleteById(id);
+            // dataItemDao.deleteById(id);
+            redisService.deleteItem(data, ItemTypeEnum.DataItem);
             userService.updateUserResourceCount(email, ItemTypeEnum.DataItem, "delete");
         }catch (Exception e){
             return ResultUtils.error("delete error");
@@ -829,7 +842,8 @@ public class DataItemService {
 
         dataItem.setRelatedModels(relatedModels);
 
-        dataItemDao.save(dataItem);
+        // dataItemDao.save(dataItem);
+        redisService.saveItem(dataItem,ItemTypeEnum.DataItem);
 
         return ResultUtils.success();
     }
