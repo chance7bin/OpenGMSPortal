@@ -639,6 +639,7 @@ Vue.component("linkRelatedItemModule",
 
         },
         created() {
+            // console.log("created linkRelatedItemModule");
 
             this.relateItemType = this.relateType
             this.targetItemType = this.targetType

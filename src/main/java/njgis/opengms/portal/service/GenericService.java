@@ -269,6 +269,7 @@ public class GenericService {
             jsonObject.put("image",imageStr);
             jsonObject.put("keywords", portalItem.getKeywords());
             jsonObject.put("description",portalItem.getOverview());
+            jsonObject.put("overview",portalItem.getOverview());
             // jsonObject.put("type",portalItem.getType());
             jsonObject.put("status",portalItem.getStatus());
             // jsonObject.put("id",portalItem.getId());
