@@ -21,6 +21,7 @@ Vue.component("editClassificationModule",
                     children: 'children',
                     label: 'label'
                 },
+                htmlJSON:{}
             }
         },
         computed: {},
@@ -164,8 +165,11 @@ Vue.component("editClassificationModule",
 
         },
         created() {
+            this.htmlJSON = this.getStorage("userSpaceAll")
+
             if(this.classificationSystem=='modelItem'){
-                this.treeData = window.classificationTree_modelItem
+                // this.treeData = window.classificationTree_modelItem
+                this.treeData = this.htmlJSON.treeData_part1
             }
 
         },

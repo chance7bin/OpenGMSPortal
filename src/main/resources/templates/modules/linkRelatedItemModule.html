@@ -40,7 +40,7 @@
                     <!--</template>-->
                     <!--</el-table-column>-->
 
-                    <el-table-column Label="Relation" v-if="relateItemType=='modelItem'">
+                    <el-table-column :Label="htmlJson.Relation" v-if="relateItemType=='modelItem'">
                         <template slot-scope="props">
                             <el-tooltip popper-class="fontsize-15" effect="light"
                                         :content="itemInfo.name +' '+  props.row.relation.toLowerCase() + ' ' + props.row.name"
@@ -53,7 +53,7 @@
                                         <el-option
                                                 v-for="item in group.options"
                                                 :key="item.value"
-                                                :label="item.value"
+                                                :label="item.label"
                                                 :value="item.value">
                                         </el-option>
                                     </el-option-group>
@@ -66,7 +66,7 @@
                     </el-table-column>
 
                     <el-table-column
-                            label="Name">
+                            :label="htmlJson.Name">
                         <template slot-scope="props">
                             <!--<a :href="'/'+relateItemType+'/'+props.row.id" target="_blank">{{props.row.name}}</a>-->
                             <a v-if="relateItemType=='modelItem-D'" :href="'/'+'modelItem'+'/'+props.row.id" target="_blank">{{props.row.name}}</a>
@@ -127,7 +127,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column sortable='custom'
-                                         label="Name">
+                                         :label="htmlJson.Name">
                             <template slot-scope="props">
                                 <!--<a :href="'/'+relateItemType+'/'+props.row.id"-->
                                 <!--   target="_blank">{{props.row.name}}</a>-->
