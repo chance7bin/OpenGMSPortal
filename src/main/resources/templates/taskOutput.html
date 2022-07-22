@@ -290,14 +290,14 @@
 
                         </el-dialog>
 
-                        <el-dialog title="Share My Output Data" :visible.sync="shareIndex" width="40%">
+                        <el-dialog :title="htmlJSON.ShareMyOutputData" :visible.sync="shareIndex" width="40%">
                             <h4>url: </h4>
                             <el-input :value="downloadUrl" type="textarea">
                             </el-input>
                             <span slot="footer" class="dialog-footer">
                                 <el-button slot="trigger" type="primary" @click="copyLink" :data-clipboard-text="downloadUrl"
-                                           class="copyLinkBtn">Copy Link</el-button>
-                                <el-button slot="trigger" type="warning" @click="shareIndex=false">Cancel</el-button>
+                                           class="copyLinkBtn">{{htmlJSON.CopyLink}}</el-button>
+                                <el-button slot="trigger" type="warning" @click="shareIndex=false">{{htmlJSON.Cancel}}</el-button>
                             </span>
                         </el-dialog>
                     </el-row>

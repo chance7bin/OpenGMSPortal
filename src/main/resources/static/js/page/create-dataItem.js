@@ -599,9 +599,11 @@ var createDataItem = Vue.extend({
             handler:function (val) {
                 treetrans = val.tree7
                 this.classificationShow()
-                if (this.editType == 'create'){
+                url_arr = window.location.href.split("/")
+                url_item = url_arr[url_arr.length-1]
+                if (url_item == "createDataItem"){
                     $("#subRteTitle").text("/" + val.CreateDataItem1);
-                } else {
+                }else {
                     $("#subRteTitle").text("/" + val.ModifyDataItem1);
                 }
                 }
@@ -841,13 +843,13 @@ var createDataItem = Vue.extend({
                     $("#keywords").tagEditor({
                         initialTags: data.keywords,
                         forceLowercase: false,
-                        placeholder: 'Enter keywords ...'
+                        placeholder: this.htmlJson.EnterKeywords
                     });
                     $("#contributers").tagEditor('destory');
                     $("#contributers").tagEditor({
                         initialTags: data.contributers,
                         forceLowercase: false,
-                        placeholder: 'Enter keywords ...'
+                        placeholder: this.htmlJson.EnterKeywords
                     });
 
                     $("#detail").html(data.localizationList[0].description);

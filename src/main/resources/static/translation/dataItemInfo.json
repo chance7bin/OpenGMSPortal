@@ -59,7 +59,8 @@
     "PermanentlyDelete": "This will permanently delete the comment. Continue?",
     "CommentDeletedSuccessfully": "Comment deleted successfully!",
     "DeleteError": "Delete Error!",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Edit": "Edit"
 
   },
   "zh-cn": {
@@ -121,7 +122,8 @@
     "PermanentlyDelete": "这将会永久删除评论，是否继续？",
     "CommentDeletedSuccessfully": "评论删除成功",
     "DeleteError": "删除失败",
-    "Delete": "删除"
+    "Delete": "删除",
+    "Edit":"编辑"
 
 
   }

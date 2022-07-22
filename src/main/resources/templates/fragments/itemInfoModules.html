@@ -26,12 +26,12 @@
         <span class="fa fa-language" style="background-color:white;padding-left:10px;float:right;font-size:23px;"></span>
 
         <span  th:class="${showTag==true?'blockEdit':'hideClass'}"  >
-                         <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                         <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                        type="primary" icon="el-icon-edit" @click="getDescription" circle></el-button>
                         </el-tooltip>
                         <el-tooltip popper-class="fontsize-15"
-                                    content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                    :content="htmlJSON.anotherVersion"
                                     effect="light" placement="top">
                             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                        icon="el-icon-edit" plain circle></el-button>
@@ -197,23 +197,35 @@
         <h2 th:utext="${itemInfo.name}"
             style="display: inline-block;word-wrap:break-word; word-break:break-all;width:90%;"></h2>
         <div  class="pull-right" th:if="${itemInfo.status!=null}">
-            <el-tooltip th:if="${showTag==true}" popper-class="fontsize-15" content="Edit" effect="light" placement="top" >
+            <el-tooltip th:if="${showTag==true}" popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top" >
                 <a th:if="${showTag==true&&itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}" href="javascript:void(0);"
                    class='fa fa-pencil fa-2x' aria-hidden='true' @click="edit"></a>
             </el-tooltip>
             <el-tooltip th:if="${showTag==true}" popper-class="fontsize-15"
-                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                        :content="htmlJSON.anotherVersion"
                         effect="light" placement="top">
                 <li th:if="${itemInfo.status!=null&&itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}" class='fa fa-pencil fa-2x'
                     style="color:#cccccc" aria-hidden='true'></li>
             </el-tooltip>
-            <el-tooltip popper-class="fontsize-15" th:content="${itemInfo.status}" effect="light"
+
+            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" :content="htmlJSON.Public" effect="light"
                         placement="top">
-                <i th:if="${itemInfo.status=='Public'}" class="el-icon-unlock public fontsize-2em "></i>
-                <i th:if="${itemInfo.status=='Discoverable'}"
-                   class="el-icon-unlock discoverable fontsize-2em "></i>
-                <i th:if="${itemInfo.status=='Private'}" class="el-icon-lock private fontsize-2em "></i>
+                <i  class="el-icon-unlock public fontsize-2em "></i>
             </el-tooltip>
+
+            <el-tooltip th:if="${itemInfo.status=='Discoverable'}" popper-class="fontsize-15" :content="htmlJSON.Discoverable" effect="light"
+                        placement="top">
+                <i
+                   class="el-icon-unlock discoverable fontsize-2em "></i>
+            </el-tooltip>
+
+            <el-tooltip th:if="${itemInfo.status=='Private'}" popper-class="fontsize-15" :content="htmlJSON.Private" effect="light"
+                        placement="top">
+                <i  class="el-icon-lock private fontsize-2em "></i>
+            </el-tooltip>
+
+
+
         </div>
     </div>
     <!--<div class="detail_overview" th:if="${itemInfo.overview!=null||itemInfo.image!=null}">-->
@@ -358,12 +370,12 @@
                 <h4 translateId="Classification">Classification(s)</h4>
             </div>
             <span th:if="${showTag==true}" class="blockEdit">
-                            <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                            <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
                                 <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                            type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
                             </el-tooltip>
                             <el-tooltip popper-class="fontsize-15"
-                                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                                        :content="htmlJSON.anotherVersion"
                                         effect="light" placement="top">
                                 <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                            icon="el-icon-edit" plain circle></el-button>
@@ -409,12 +421,12 @@
             <h4 translateId="Alias">Alias</h4>
         </div>
         <span class="blockEdit">
-                 <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+                 <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
                     <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                type="primary" icon="el-icon-edit" circle></el-button>
                 </el-tooltip>
                 <el-tooltip popper-class="fontsize-15"
-                            content="There is another version haven't been reviewed, you can edit it later or contact us."
+                            :content="htmlJSON.anotherVersion"
                             effect="light" placement="top">
                     <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
                                icon="el-icon-edit" plain circle></el-button>
@@ -1073,41 +1085,41 @@
                     <el-table-column
                             prop="title"
                             sortable
-                            label="Title"
+                            :label="htmlJSON.Title"
                             width="200">
                     </el-table-column>
                     <el-table-column
                             prop="authors"
                             sortable
-                            label="Author(s)"
+                            :label="htmlJSON.Author"
                             width="200">
                     </el-table-column>
                     <el-table-column
                             prop="date"
-                            label="Date">
+                            :label="htmlJSON.Date">
                     </el-table-column>
                     <el-table-column
                             prop="journal"
-                            label="Journal">
+                            :label="htmlJSON.Journal">
                     </el-table-column>
                     <el-table-column
                             prop="volume"
-                            label="Volume">
+                            :label="htmlJSON.Volume">
                     </el-table-column>
                     <el-table-column
                             prop="pageRange"
-                            label="Page Range">
+                            :label="htmlJSON.PageRange">
                     </el-table-column>
                     <el-table-column
-                            label="Link">
+                            :label="htmlJSON.Link">
                         <template slot-scope="scope">
                             <el-button v-if="scope.row.link!=''"
                                        class="refLink"
                                        size="mini"
                                        type="danger"
-                                       @click="link(scope.row.link)">View
+                                       @click="link(scope.row.link)">{{htmlJSON.View}}
                             </el-button>
-                            <div v-if="scope.row.link==''">No link</div>
+                            <div v-if="scope.row.link==''">{{htmlJSON.NoLink}}</div>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -2404,4 +2416,5 @@
     </div>
 </div>
 </body>
+<script src="/static/js/page/itemInfoModules.js"></script>
 </html>
