@@ -208,7 +208,7 @@
                     style="color:#cccccc" aria-hidden='true'></li>
             </el-tooltip>
 
-            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" content="公开的信息" effect="light"
+            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" :content="htmlJSON.Public" effect="light"
                         placement="top">
                 <i  class="el-icon-unlock public fontsize-2em "></i>
             </el-tooltip>
@@ -841,7 +841,7 @@
                         <div class="info" style="margin-top:0px;">
                             <span class="label label-success">{{model.relation}}</span>
                             <el-tooltip effect="light"
-                                        :content="itemInfo.name+' '+model.relation.toLowerCase()+' '+model.name"
+                                        :content="itemInfo.name+' '+model.relation +' '+model.name"
                                         placement="top">
                                 <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
                             </el-tooltip>
