@@ -77,28 +77,37 @@ Vue.component("linkRelatedItemModule",
                 options: [{
                     // label: 'Basic',
                     options: [{
+                        label: 'Connected with',
                         value: 'Connected with'
                     }, {
+                        label: 'Similar to',
                         value: 'Similar to'
                     }, {
+                        label: 'Coexist in',
                         value: 'Coexist in'
                     }]
                 }, {
                     // label: 'Child',
                     options: [{
+                        label: 'Evolved from',
                         value: 'Evolved from'
                     }, {
+                        label: 'Belongs to',
                         value: 'Belongs to'
                     }, {
+                        label: 'Integrated into',
                         value: 'Integrated into'
                     }]
                 }, {
                     // label: 'Parent',
                     options: [{
+                        label: 'Inspires',
                         value: 'Inspires'
                     }, {
+                        label: 'Contains',
                         value: 'Contains'
                     }, {
+                        label: 'Employs/Depends on',
                         value: 'Employs/Depends on'
                     }]
                 }],
@@ -120,6 +129,46 @@ Vue.component("linkRelatedItemModule",
                 } else if (v.indexOf('str-') === 0) {
                     return v.slice(4);
                 }
+            },
+
+            initOption(){
+                this.options = [{
+                    // label: 'Basic',
+                    options: [{
+                        label: this.htmlJson.ConnectedWith,
+                        value: 'Connected with'
+                    }, {
+                        label: this.htmlJson.SimilarTo,
+                        value: 'Similar to'
+                    }, {
+                        label: this.htmlJson.CoexistIn,
+                        value: 'Coexist in'
+                    }]
+                }, {
+                    // label: 'Child',
+                    options: [{
+                        label: this.htmlJson.EvolvedFrom,
+                        value: 'Evolved from'
+                    }, {
+                        label: this.htmlJson.BelongsTo,
+                        value: 'Belongs to'
+                    }, {
+                        label: this.htmlJson.IntegratedInto,
+                        value: 'Integrated into'
+                    }]
+                }, {
+                    // label: 'Parent',
+                    options: [{
+                        label: this.htmlJson.Inspires,
+                        value: 'Inspires'
+                    }, {
+                        label: this.htmlJson.Contain,
+                        value: 'Contains'
+                    }, {
+                        label: this.htmlJson.EmploysDependsOn,
+                        value: 'Employs/Depends on'
+                    }]
+                }]
             },
 
             postMsg(msg){
@@ -595,6 +644,7 @@ Vue.component("linkRelatedItemModule",
             this.targetItemType = this.targetType
             this.targetItemId = this.targetId
             this.htmlJson = this.getStorage("userSpaceAll")
+            this.initOption()
 
             //module_msg赋值给window对象
             // console.log("modulesValue:", this.modulesValue);

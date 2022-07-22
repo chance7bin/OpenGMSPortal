@@ -46,7 +46,9 @@
     "CommentDeletedSuccessfully": "Comment deleted successfully!",
     "DeleteError": "Delete Error!",
     "ReplyTo": "Reply to ",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "Public": "Public"
 
   },
   "zh-cn": {
@@ -96,7 +98,9 @@
     "CommentDeletedSuccessfully": "评论删除成功",
     "DeleteError": "删除失败",
     "ReplyTo": "回复 ",
-    "Delete": "删除"
+    "Delete": "删除",
+    "Edit": "编辑",
+    "Public": "公开"
   }
 
 }
