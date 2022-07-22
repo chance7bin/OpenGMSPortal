@@ -1,6 +1,6 @@
 var vue = new Vue({
     el: "#app",
-    props:['htmlJson'],
+    // props:['htmlJSON'],
     data: {
         tableLoading: true,
         first: true,
@@ -91,6 +91,11 @@ var vue = new Vue({
     },
     computed: {},
     methods: {
+
+        translatePage(jsonContent){
+            // console.log("translatePage:",jsonContent);
+        },
+
         // 获取缓存
         getStorage(key){
             var localStorage = window.localStorage;
@@ -328,7 +333,7 @@ var vue = new Vue({
                 // dataType: "json",
                 success:(json)=>{
                     if(json.code==0){
-                        alert(this.htmlJson.AddSuccess);
+                        alert(this.htmlJSON.AddSuccess);
                     }
                 }
                 }
@@ -392,7 +397,7 @@ var vue = new Vue({
                                     contentType: "application/x-www-form-urlencoded",
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert(this.htmlJson.LoginInFirst)
+                                            alert(this.htmlJSON.LoginInFirst)
                                             window.sessionStorage.setItem("history", window.location.href);
                                             window.location.href = "/user/login"
                                         } else {
@@ -415,7 +420,7 @@ var vue = new Vue({
                     this.rightMenuShow=false
                     this.$message({
                         type: 'success',
-                        message: this.htmlJson.ThisPageCanBeVisitedByPublic
+                        message: this.htmlJSON.ThisPageCanBeVisitedByPublic
                     });
                 });
             }else {
@@ -448,7 +453,7 @@ var vue = new Vue({
                                     contentType: "application/x-www-form-urlencoded",
                                     success: (json) => {
                                         if (json.code == -1) {
-                                            alert(this.htmlJson.LoginInFirst)
+                                            alert(this.htmlJSON.LoginInFirst)
                                             window.sessionStorage.setItem("history", window.location.href);
                                             window.location.href = "/user/login"
                                         } else {
@@ -471,7 +476,7 @@ var vue = new Vue({
                     this.rightMenuShow = false
                     this.$message({
                         type: 'success',
-                        message: this.htmlJson.ThisTaskHasBeenSetPrivate
+                        message: this.htmlJSON.ThisTaskHasBeenSetPrivate
                     });
                 });
             }
@@ -483,11 +488,11 @@ var vue = new Vue({
             console.log(this.clipBoard);
             let vthis = this;
             this.clipBoard.on('success', function () {
-                vthis.$alert(this.htmlJson.CopyLinkSuccessfully,{type:'success',confirmButtonText: 'OK',})
+                vthis.$alert(this.htmlJSON.CopyLinkSuccessfully,{type:'success',confirmButtonText: 'OK',})
                 this.clipBoard.destroy()
             });
             this.clipBoard.on('error', function () {
-                vthis.$alert(this.htmlJson.FailedToCopyLink,{type:'error',confirmButtonText: 'OK',})
+                vthis.$alert(this.htmlJSON.FailedToCopyLink,{type:'error',confirmButtonText: 'OK',})
                 this.clipBoard.destroy()
             });
             this.shareIndex=false
@@ -586,7 +591,7 @@ var vue = new Vue({
         },
         selectUserData(item,e){
             // console.log(e)
-            this.$message(this.htmlJson.YouHaveSelected + item.fileName+'.'+item.suffix);
+            this.$message(this.htmlJSON.YouHaveSelected + item.fileName+'.'+item.suffix);
             if(this.selectData.length===0){
                 let d={e,item}
                 this.selectData.push(d)
@@ -641,13 +646,13 @@ var vue = new Vue({
 
     async mounted() {
         this.htmlJSON = this.getStorage("userSpaceAll");
-        console.log("111111",this.htmlJSON);
+        // console.log("111111",this.htmlJSON);
 
         console.log(this.info);
         if(info==null||info==undefined){
-            alert(this.htmlJson.InitializationError)
+            alert(this.htmlJSON.InitializationError)
         }else if(info.permission==='forbid'){
-            alert(this.htmlJson.YouDontHavePermissionToThisPrivatePage)
+            alert(this.htmlJSON.YouDontHavePermissionToThisPrivatePage)
             return
         }
 

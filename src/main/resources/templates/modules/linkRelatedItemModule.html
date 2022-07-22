@@ -43,7 +43,7 @@
                     <el-table-column :Label="htmlJson.Relation" v-if="relateItemType=='modelItem'">
                         <template slot-scope="props">
                             <el-tooltip popper-class="fontsize-15" effect="light"
-                                        :content="itemInfo.name +' '+  props.row.relation.toLowerCase() + ' ' + props.row.name"
+                                        :content="itemInfo.name +' '+  props.row.relation + ' ' + props.row.name"
                                         placement="top">
                                 <el-select v-model="props.row.relation" value-key="props.row.relation" placeholder="Select">
                                     <el-option-group
@@ -120,7 +120,7 @@
                             <template slot-scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-form-item label="Overview">
-                                        <span>{{ props.row.description }}</span>
+                                        <span>{{ props.row.overview }}</span>
                                     </el-form-item>
 
                                 </el-form>
@@ -185,7 +185,7 @@
                             <template slot-scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-form-item label="Overview">
-                                        <span>{{ props.row.description }}</span>
+                                        <span>{{ props.row.overview }}</span>
                                     </el-form-item>
 
                                 </el-form>
