@@ -490,7 +490,8 @@ public class ComputableModelService {
                     ModelItemRelate modelItemRelate = modelItem.getRelate();
                     modelItemRelate.getComputableModels().add(computableModel.getId());
                     modelItem.setRelate(modelItemRelate);
-                    modelItemDao.save(modelItem);
+                    // modelItemDao.save(modelItem);
+                    redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
                 }
 
                 computableModelDao.insert(computableModel);
@@ -526,7 +527,8 @@ public class ComputableModelService {
                 }
             }else{
                 computableModel.setLock(true);
-                computableModelDao.save(computableModel);
+                // computableModelDao.save(computableModel);
+                redisService.saveItem(computableModel,ItemTypeEnum.ComputableModel);
             }
 
             String path = resourcePath + "/computableModel/" + jsonObject.getString("contentType");
@@ -750,7 +752,8 @@ public class ComputableModelService {
                     }
                 }
                 modelItem.getRelate().setComputableModels(computableModelIds);
-                modelItemDao.save(modelItem);
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
             //计算模型删除
@@ -873,8 +876,8 @@ public class ComputableModelService {
         downloadCount++;
         resource.setDownloadCount(downloadCount);
         computableModel.setResources(resources);
-        computableModelDao.save(computableModel);
-
+        // computableModelDao.save(computableModel);
+        redisService.saveItem(computableModel,ItemTypeEnum.ComputableModel);
         FileUtil.downloadFile(path, response);
 
     }
@@ -910,7 +913,8 @@ public class ComputableModelService {
                     // computableModel.setModelserUrl("http://" + ip + ":" + port + "/modelser/" + mid);
                     computableModel.setLastModifyTime(new Date());
 
-                    computableModelDao.save(computableModel);
+                    // computableModelDao.save(computableModel);
+                    redisService.saveItem(computableModel,ItemTypeEnum.ComputableModel);
 
                     return "suc";
 

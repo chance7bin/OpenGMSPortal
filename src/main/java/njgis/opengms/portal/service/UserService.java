@@ -714,7 +714,8 @@ public class UserService {
                 return "/static/img/icon/default.png";
             }else {
                 // return  "https://" + userServer + result.getString("msg");
-                return  "/userServer" + result.getString("msg");
+                // return  "/userServer" + result.getString("msg");
+                return  genericService.formatUserAvatar(result.getString("msg"));
             }
 
         }catch (Exception e){

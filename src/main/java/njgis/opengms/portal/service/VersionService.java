@@ -114,6 +114,9 @@ public class VersionService {
     @Autowired
     DataHubDao dataHubDao;
 
+    @Autowired
+    RedisService redisService;
+
     /**
      * 添加审核版本
      * @param item 修改的条目数据
@@ -215,7 +218,8 @@ public class VersionService {
         GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         try {
             versionDao.save(version);
-            itemDao.save(content);
+            // itemDao.save(content);
+            redisService.saveItem(content,version.getType());
 
             //给编辑者发邮件
             userService.sendAcceptMail(version.getEditor(),content);
@@ -267,7 +271,19 @@ public class VersionService {
         if (updateRelations != null && updateRelateItemType != null){
             modelItemService.updateModelItemRelation(updateRelations, updateRelateItemType, oriVersion);
         }
+
+
+        //modelItem条目的关联单独处理
+        if (!Utils.equalLists(oriRelate.getModelRelationList(), newRelate.getModelRelationList())){
+            modelItemService.updateModelItem2ModelItem(version.getItemId(),
+                oriRelate.getModelRelationList(), newRelate.getModelRelationList());
+        }
+
+
+
     }
+
+
 
     /**
      * 审核未通过

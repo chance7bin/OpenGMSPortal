@@ -445,8 +445,9 @@
                  th:key="${key.index}" @click.native="getid(id)"
                  style="width: 150px;">
                 <i class="fas fa-file-download"></i>
+                <!--th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"-->
                 <a target="_blank"
-                   th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"
+                   th:href="'/' + ${type} + '/resource/download/' + ${itemInfo.id} + '/' + ${key.index}"
                    style="color:black">
                     <div class="resouceFile el-card__body">
                         <div class="el-row">

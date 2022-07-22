@@ -224,8 +224,10 @@ public class GenericService {
 
     //格式化用户头像：先统一把/userServer用''替换掉，再加上/userServer
     public String formatUserAvatar(String avatar){
+        if (avatar == null)
+            return null;
         avatar = avatar.replaceAll("/userServer","");
-        return "/userServer" + avatar;
+        return "null".equals(avatar) ? null : "/userServer" + avatar;
     }
 
     /**

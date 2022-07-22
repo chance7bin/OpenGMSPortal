@@ -1151,7 +1151,11 @@ new Vue({
                      }
                  })
                  .then(async () => {
-                     await axios.get(' /user/resourceCount').then(res => {
+                     let url = ' /user/resourceCount';
+                     if (!this.isLoginUser){
+                         url += '?email=' + email
+                     }
+                     await axios.get(url).then(res => {
                          if(res.data.code == 0){
                              _this.resourceCount = JSON.parse(JSON.stringify(res.data.data))
                          }

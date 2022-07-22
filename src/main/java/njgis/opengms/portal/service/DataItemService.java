@@ -386,7 +386,8 @@ public class DataItemService {
             //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
             if (!author.equals(email)){
                 item.setLock(true);
-                dataItemDao.save(item);
+                // dataItemDao.save(item);
+                redisService.saveItem(item,ItemTypeEnum.DataItem);
             } else {
                 if (versions == null || versions.size() == 0) {
                     Version version = versionService.addVersion(item, email, originalItemName);
@@ -689,7 +690,8 @@ public class DataItemService {
             //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
             if (!author.equals(email)){
                 item.setLock(true);
-                genericItemDao.save(item);
+                // genericItemDao.save(item);
+                redisService.saveItem(item,type);
             } else {
                 if (versions == null || versions.size() == 0) {
 

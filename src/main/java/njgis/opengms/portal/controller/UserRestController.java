@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -640,12 +642,19 @@ public class UserRestController {
     // }
 
 
-    @LoginRequired
+    // @LoginRequired
     @ApiOperation(value = "得到用户贡献的资源数量")
     @RequestMapping (value = "/resourceCount", method = RequestMethod.GET)
-    public JsonResult getResourceCount(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String email = session.getAttribute("email").toString();
+    public JsonResult getResourceCount(@RequestParam(value = "email", required=false) String requestEmail ,HttpServletRequest request){
+        String email;
+        if (requestEmail != null && !"".equals(requestEmail)){
+            email = requestEmail;
+        } else {
+            HttpSession session = request.getSession();
+            email = session.getAttribute("email").toString();
+        }
+
+
         return ResultUtils.success(userService.countResource(email));
     }
 
@@ -669,9 +678,11 @@ public class UserRestController {
 
     @ApiOperation(value = "根据用户名得到email")
     @RequestMapping (value = "/email", method = RequestMethod.GET)
-    public JsonResult getUserEmail(@PathParam("userName") String userName){
+    public JsonResult getUserEmail(@PathParam("userName") String userName) throws UnsupportedEncodingException {
         userName = userName.split("\\?")[0];
-        return ResultUtils.success(userService.getUserEmail(userName));
+        //处理中文乱码
+        String name = URLDecoder.decode(userName, "UTF-8");
+        return ResultUtils.success(userService.getUserEmail(name));
     }
 
 

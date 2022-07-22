@@ -532,6 +532,8 @@ Vue.component("linkRelatedItemModule",
 
                                             this.postMsg(window.module_msg.suc)
                                         }
+
+                                        window.location.reload();
                                     }
                                 });
                             }else if(info==='version'){
