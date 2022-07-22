@@ -1125,7 +1125,7 @@ public class Utils {
      * @return boolean 
      * @Author bin
      **/
-    public static boolean equalLists(List<String> one, List<String> two){
+    public static <T extends Comparable> boolean equalLists(List<T> one, List<T> two){
         if (one == null && two == null){
             return true;
         }
@@ -1138,8 +1138,8 @@ public class Utils {
 
         //to avoid messing the order of the lists we will use a copy
         //as noted in comments by A. R. S.
-        one = new ArrayList<String>(one);
-        two = new ArrayList<String>(two);
+        one = new ArrayList<>(one);
+        two = new ArrayList<>(two);
 
         Collections.sort(one);
         Collections.sort(two);

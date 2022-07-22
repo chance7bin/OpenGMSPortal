@@ -49,6 +49,9 @@ public class TemplateService {
     @Autowired
     DataMethodDao dataMethodDao;
 
+    @Autowired
+    RedisService redisService;
+
     @Value("${resourcePath}")
     private String resourcePath;
 
@@ -76,7 +79,8 @@ public class TemplateService {
             }
             relatedMethods.add(dataMethodId);
             template.setRelatedMethods(relatedMethods);
-            templateDao.save(template);
+            // templateDao.save(template);
+            redisService.saveItem(template,ItemTypeEnum.Template);
         }
     }
 
@@ -96,7 +100,8 @@ public class TemplateService {
             }
             relatedMethods.remove(dataMethodId);
             template.setRelatedMethods(relatedMethods);
-            templateDao.save(template);
+            // templateDao.save(template);
+            redisService.saveItem(template,ItemTypeEnum.Template);
         }
     }
 

@@ -64,7 +64,7 @@
 <!--                                    <img :src="(userInfo.avatar==''||userInfo.avatar==undefined)?'/static/img/icon/default.png':userInfo.avatar">-->
                                     <user-avatar :email="userInfo.email" ref="userAvatar" style="width:105px;height: 105px;float:left;"></user-avatar>
                                 </div>
-                                <h4>{{htmlJson.Welcome}}, <a :href="'/profile/'+userInfo.userId">{{userInfo.name}}</a></h4>
+                                <h4>{{htmlJson.Welcome}}, <a :href="'/profile/'+userInfo.accessId">{{userInfo.name}}</a></h4>
                             </section>
                             <section class="flexRowContainer flexWrap contentSection">
                                 <div class="contentCard flexCol flexColCenter" style="height: 450px">

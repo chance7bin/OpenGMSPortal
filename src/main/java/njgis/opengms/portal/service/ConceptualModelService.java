@@ -361,7 +361,8 @@ public class ConceptualModelService {
                 }
             }else{
                 conceptualModel.setLock(true);
-                conceptualModelDao.save(conceptualModel);
+                // conceptualModelDao.save(conceptualModel);
+                redisService.saveItem(conceptualModel,ItemTypeEnum.ConceptualModel);
             }
 
             String path = resourcePath + "/conceptualModel";

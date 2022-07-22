@@ -201,11 +201,11 @@ public class ModelItemRestController {
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
     public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO, HttpServletRequest request) {
-        // if (findDTO.getAuthorEmail() == null){
-        //     HttpSession session=request.getSession();
-        //     String email=session.getAttribute("email").toString();
-        //     findDTO.setAuthorEmail(email);
-        // }
+        if (findDTO.getAuthorEmail() == null || "".equals(findDTO.getAuthorEmail())){
+            HttpSession session=request.getSession();
+            String email=session.getAttribute("email").toString();
+            findDTO.setAuthorEmail(email);
+        }
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.ModelItem,findDTO, true));
 
     }

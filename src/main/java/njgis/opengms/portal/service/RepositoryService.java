@@ -306,7 +306,8 @@ public class RepositoryService {
             //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
             if (!author.equals(email)){
                 item.setLock(true);
-                itemDao.save(item);
+                // itemDao.save(item);
+                redisService.saveItem(item,itemType);
             } else {
                 if (versions == null || versions.size() == 0) {
 
@@ -814,7 +815,7 @@ public class RepositoryService {
                 ma.put("id", maintainer.getId());
                 User user = userDao.findFirstById(maintainer.getId());
                 if(user!=null){
-                    ma.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+                    ma.put("image",user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
                 }
 
                 maintainer_result.add(ma);

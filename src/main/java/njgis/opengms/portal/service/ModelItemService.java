@@ -733,7 +733,8 @@ public class ModelItemService {
                 }
             }else{
                 modelItem.setLock(true);
-                modelItemDao.save(modelItem);
+                // modelItemDao.save(modelItem);
+                redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
             BeanUtils.copyProperties(modelItemUpdateDTO, modelItem, Utils.getNullPropertyNames(modelItemUpdateDTO));
@@ -820,7 +821,7 @@ public class ModelItemService {
                 jsonObject.put("name",user.getName());
                 jsonObject.put("accessId",user.getAccessId());
                 jsonObject.put("email",user.getEmail());
-                jsonObject.put("image",user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+                jsonObject.put("image",user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
 
                 jsonArray.add(jsonObject);
 
@@ -1764,9 +1765,7 @@ public class ModelItemService {
     public JSONObject setModelRelation(String id, List<ModelRelation> modelRelationListNew,String user) {
         ModelItem modelItem = modelItemDao.findFirstById(id);
         ModelItemRelate modelItemRelate = modelItem.getRelate();
-        List<ModelRelation> modelRelationListOld = modelItemRelate.getModelRelationList();
 
-        List<ModelRelation> relationIntersection = new ArrayList<>();
 
         if(!user.equals(modelItem.getAuthor())){
             ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
@@ -1781,82 +1780,22 @@ public class ModelItemService {
 
             return result;
         }else {
-            for (int i = 0; i < modelRelationListNew.size(); i++) {
-                ModelRelation modelRelationNew = modelRelationListNew.get(i);
-                for (int j = 0; j < modelRelationListOld.size(); j++) {
-                    ModelRelation modelRelationOld = modelRelationListOld.get(j);
-                    if (modelRelationNew.getModelId().equals(modelRelationOld.getModelId())) {
-                        relationIntersection.add(modelRelationListNew.get(i));
-                        if(modelRelationNew.getRelation()!=modelRelationOld.getRelation()){
 
-                            ModelItem modelItem1 = modelItemDao.findFirstById(modelRelationNew.getModelId());
-                            for(int k = 0;k< modelItem1.getRelate().getModelRelationList().size();k++){
-                                if(modelItem1.getRelate().getModelRelationList().get(k).getModelId().equals(id)){
-                                    modelItem1.getRelate().getModelRelationList().get(k).setRelation(RelationTypeEnum.getOpposite(modelRelationNew.getRelation().getNumber()));
-                                }
-                            }
-                            // modelItemDao.save(modelItem1);
-                            redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
-                        }
-                        break;
-                    }
-                }
-            }
+            List<ModelRelation> modelRelationListOld = modelItemRelate.getModelRelationList();
 
-            for (int i = 0; i < modelRelationListNew.size(); i++) {
-                ModelRelation modelRelation = modelRelationListNew.get(i);
-                boolean exist = false;
-                for (int j = 0; j < relationIntersection.size(); j++) {
-                    if (modelRelation.getModelId().equals(relationIntersection.get(j).getModelId())) {
-                        exist = true;
-                        break;
-                    }
-                }
-                if (!exist) {
+            updateModelItem2ModelItem(id, modelRelationListOld, modelRelationListNew);
 
-                    ModelRelation modelRelation1 = new ModelRelation();
-                    modelRelation1.setModelId(id);
-                    modelRelation1.setRelation(RelationTypeEnum.getOpposite(modelRelation.getRelation().getNumber()));
-                    ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
-                    modelItem1.getRelate().getModelRelationList().add(modelRelation1);
-                    // modelItemDao.save(modelItem1);
-                    redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
-                }
-            }
-
-            for (int i = 0; i < modelRelationListOld.size(); i++) {
-                ModelRelation modelRelation = modelRelationListOld.get(i);
-                boolean exist = false;
-                for (int j = 0; j < relationIntersection.size(); j++) {
-                    if (modelRelation.getModelId().equals(relationIntersection.get(j).getModelId())) {
-                        exist = true;
-                        break;
-                    }
-                }
-                if (!exist) {
-
-                    ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
-                    if(modelItem1.getStatus().equals("Private")){
-                        modelRelationListNew.add(modelRelation);
-                        continue;
-                    }
-                    List<ModelRelation> modelRelationList = modelItem1.getRelate().getModelRelationList();
-                    for (ModelRelation modelRelation1 : modelRelationList) {
-                        if (modelRelation1.getModelId().equals(id)) {
-                            modelItem1.getRelate().getModelRelationList().remove(modelRelation1);
-                            break;
-                        }
-                    }
-                    // modelItemDao.save(modelItem1);
-                    redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
-
-                }
-            }
-
-            modelItem.getRelate().setModelRelationList(modelRelationListNew);
-
+            // modelItem.getRelate().setModelRelationList(modelRelationListNew);
             // modelItemDao.save(modelItem);
-            redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
+            // redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
+
+            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+            modelItemUpdateDTO.setOriginId(modelItem.getId());
+            modelItemRelate.setModelRelationList(modelRelationListNew);
+            modelItemUpdateDTO.setRelate(modelItemRelate);//
+
+            update(modelItemUpdateDTO,user);
+
 
             JSONArray modelItemArray = new JSONArray();
 
@@ -1889,6 +1828,87 @@ public class ModelItemService {
 //            relationAdd.add(modelRelationList.get(i));
 //        }
     }
+
+
+    //模型条目关联模型条目是需要根据RelationTypeEnum进行关联的
+    public void updateModelItem2ModelItem(String modelId, List<ModelRelation> modelRelationListOld, List<ModelRelation> modelRelationListNew){
+
+        List<ModelRelation> relationIntersection = new ArrayList<>();
+
+        for (int i = 0; i < modelRelationListNew.size(); i++) {
+            ModelRelation modelRelationNew = modelRelationListNew.get(i);
+            for (int j = 0; j < modelRelationListOld.size(); j++) {
+                ModelRelation modelRelationOld = modelRelationListOld.get(j);
+                if (modelRelationNew.getModelId().equals(modelRelationOld.getModelId())) {
+                    relationIntersection.add(modelRelationListNew.get(i));
+                    if(modelRelationNew.getRelation()!=modelRelationOld.getRelation()){
+
+                        ModelItem modelItem1 = modelItemDao.findFirstById(modelRelationNew.getModelId());
+                        for(int k = 0;k< modelItem1.getRelate().getModelRelationList().size();k++){
+                            if(modelItem1.getRelate().getModelRelationList().get(k).getModelId().equals(modelId)){
+                                modelItem1.getRelate().getModelRelationList().get(k).setRelation(RelationTypeEnum.getOpposite(modelRelationNew.getRelation().getNumber()));
+                            }
+                        }
+                        // modelItemDao.save(modelItem1);
+                        redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
+                    }
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < modelRelationListNew.size(); i++) {
+            ModelRelation modelRelation = modelRelationListNew.get(i);
+            boolean exist = false;
+            for (int j = 0; j < relationIntersection.size(); j++) {
+                if (modelRelation.getModelId().equals(relationIntersection.get(j).getModelId())) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+
+                ModelRelation modelRelation1 = new ModelRelation();
+                modelRelation1.setModelId(modelId);
+                modelRelation1.setRelation(RelationTypeEnum.getOpposite(modelRelation.getRelation().getNumber()));
+                ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
+                modelItem1.getRelate().getModelRelationList().add(modelRelation1);
+                // modelItemDao.save(modelItem1);
+                redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
+            }
+        }
+
+        for (int i = 0; i < modelRelationListOld.size(); i++) {
+            ModelRelation modelRelation = modelRelationListOld.get(i);
+            boolean exist = false;
+            for (int j = 0; j < relationIntersection.size(); j++) {
+                if (modelRelation.getModelId().equals(relationIntersection.get(j).getModelId())) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+
+                ModelItem modelItem1 = modelItemDao.findFirstById(modelRelation.getModelId());
+                if(modelItem1.getStatus().equals("Private")){
+                    modelRelationListNew.add(modelRelation);
+                    continue;
+                }
+                List<ModelRelation> modelRelationList = modelItem1.getRelate().getModelRelationList();
+                for (ModelRelation modelRelation1 : modelRelationList) {
+                    if (modelRelation1.getModelId().equals(modelId)) {
+                        modelItem1.getRelate().getModelRelationList().remove(modelRelation1);
+                        break;
+                    }
+                }
+                // modelItemDao.save(modelItem1);
+                redisService.saveItem(modelItem1,ItemTypeEnum.ModelItem);
+
+            }
+        }
+
+    }
+
 
     /**
      * @Description 获取模型浏览和相关计算模型调用次数

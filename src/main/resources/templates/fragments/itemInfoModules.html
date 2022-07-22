@@ -208,7 +208,7 @@
                     style="color:#cccccc" aria-hidden='true'></li>
             </el-tooltip>
 
-            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" :content="htmlJSON.Public" effect="light"
+            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" content="公开的信息" effect="light"
                         placement="top">
                 <i  class="el-icon-unlock public fontsize-2em "></i>
             </el-tooltip>
@@ -457,8 +457,9 @@
                  th:key="${key.index}" @click.native="getid(id)"
                  style="width: 150px;">
                 <i class="fas fa-file-download"></i>
+                <!--th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"-->
                 <a target="_blank"
-                   th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"
+                   th:href="'/' + ${type} + '/resource/download/' + ${itemInfo.id} + '/' + ${key.index}"
                    style="color:black">
                     <div class="resouceFile el-card__body">
                         <div class="el-row">
@@ -2416,5 +2417,5 @@
     </div>
 </div>
 </body>
-<script src="/static/js/page/itemInfoModules.js"></script>
+
 </html>

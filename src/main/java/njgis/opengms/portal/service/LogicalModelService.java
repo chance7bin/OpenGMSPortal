@@ -358,7 +358,8 @@ public class LogicalModelService {
                 }
             }else{
                 logicalModel.setLock(true);
-                logicalModelDao.save(logicalModel);
+                // logicalModelDao.save(logicalModel);
+                redisService.saveItem(logicalModel,ItemTypeEnum.LogicalModel);
             }
 
             String path = resourcePath + "/logicalModel";

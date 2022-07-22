@@ -1,7 +1,6 @@
 package njgis.opengms.portal.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
@@ -9,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public enum RelationTypeEnum {
 
     ConnectedWith(0,"Connected with"),
+    SimilarTo(7,"Similar to"),
+    CoexistIn(8,"Coexist in"),
 
     EvolvedFrom(1,"Evolved from"),
     BelongsTo(2,"Belongs to"),
@@ -17,9 +18,8 @@ public enum RelationTypeEnum {
     Inspires(4,"Inspires"),
     Contains(5,"Contains"),
     Employs(6,"Employs/Depends on"),
+    ;
 
-    SimilarTo(7,"Similar to"),
-    CoexistIn(8,"Coexist in");
 
     private int number;
     private String text;

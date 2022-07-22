@@ -8,8 +8,15 @@ import njgis.opengms.portal.enums.RelationTypeEnum;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModelRelation {
+public class ModelRelation implements Comparable{
 
     String modelId;
     RelationTypeEnum relation;
+
+
+    @Override
+    public int compareTo(Object o) {
+        return this.getModelId().compareTo(((ModelRelation)o).getModelId());
+    }
+
 }

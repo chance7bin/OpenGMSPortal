@@ -77,7 +77,7 @@ public class ThemeService {
         for(Maintainer maintainer:maintainers){
             user = userDao.findFirstByEmail(maintainer.getId());
             if(maintainer.getImage()==null||maintainer.getImage().equals("")){
-                maintainer.setImage(user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+                maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
             }
             if(maintainer.getEmail()==null||maintainer.getEmail().equals("")){
                 maintainer.setEmail(user.getEmail());
@@ -223,7 +223,7 @@ public class ThemeService {
         maintainer.setId(email);
         maintainer.setEmail(user.getEmail());
         maintainer.setName(user.getName());
-        maintainer.setImage(user.getAvatar().equals("")?"":"/userServer"+user.getAvatar());
+        maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
         maintainer.setUserId(user.getAccessId());
 
         maintainers.add(maintainer);

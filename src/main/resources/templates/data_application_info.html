@@ -70,7 +70,7 @@
             <!--description-->
             <div th:replace="fragments/itemInfoModules :: data_description"></div>
 
-            <div th:replace="fragments/itemInfoModules :: Resource(${resources},'DataApplication')"
+            <div th:replace="fragments/itemInfoModules :: Resource(${resources},'dataMethod')"
                  th:if="${(itemInfo.contentType=='Code'||itemInfo.contentType=='Library'||itemInfo.contentType=='Package')&&(itemInfo.resources!=null&&#lists.size(itemInfo.resources)>0)}">
             </div>
 

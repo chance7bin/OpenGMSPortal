@@ -581,6 +581,8 @@ Vue.component("linkRelatedItemModule",
 
                                             this.postMsg(window.module_msg.suc)
                                         }
+
+                                        window.location.reload();
                                     }
                                 });
                             }else if(info==='version'){
@@ -637,6 +639,7 @@ Vue.component("linkRelatedItemModule",
 
         },
         created() {
+            // console.log("created linkRelatedItemModule");
 
             this.relateItemType = this.relateType
             this.targetItemType = this.targetType

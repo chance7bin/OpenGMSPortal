@@ -1073,7 +1073,8 @@ public class DataMethodService {
             //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
             if (!dataMethod.getAuthor().equals(email)){
                 dataMethod.setLock(true);
-                dataMethodDao.save(dataMethod);
+                // dataMethodDao.save(dataMethod);
+                redisService.saveItem(dataMethod,ItemTypeEnum.DataMethod);
             } else {
                 if (versions == null || versions.size() == 0) {
 
@@ -1299,8 +1300,8 @@ public class DataMethodService {
         downloadCount++;
         resource.setDownloadCount(downloadCount);
         dataMethod.setResources(resources);
-        dataMethodDao.save(dataMethod);
-
+        // dataMethodDao.save(dataMethod);
+        redisService.saveItem(dataMethod,ItemTypeEnum.DataMethod);
         FileUtil.downloadFile(path, response);
 
 
