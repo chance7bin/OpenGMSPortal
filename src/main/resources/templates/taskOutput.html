@@ -43,9 +43,19 @@
 <body>
 <div id="app" v-cloak>
     <div th:replace="fragments/navbar :: unlog"></div>
-    <div class="taskMain">
-        <el-row type="flex" justify="space-around">
+    <div  class="pageMainContent clearfix" style="height: auto;position: relative;">
 
+        <translation-bar
+            json-file="userSpaceAll"
+            @translate-page="translatePage"
+            with-comments="true"
+            with-item-info-modules="true"
+            initial-lang="en-us"
+            theme="dark"
+            style="position: absolute;top: 10px;right:15px; z-index: 99">
+        </translation-bar>
+
+        <el-row type="flex" justify="space-around">
 
             <el-col :span="22" style="margin-left: 8px">
                 <div class="content">
@@ -346,6 +356,10 @@
 <!--<script src="/static/js/common/knockout-3.4.2.js"></script>-->
 <script src="/static/js/common/jquery-3.3.1.min.js"></script>
 
+<!--翻译组件，本页面组件js引入位置不能靠后-->
+<template th:replace="modules/translationBar :: translationBar"></template>
+<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/js/modules/translationBar.js"></script>
 
 <!--<script src="/static/js/common/jquery.gritter.min.js"></script>-->
 <!--<script src="/static/js/common/lodash.js"></script>-->

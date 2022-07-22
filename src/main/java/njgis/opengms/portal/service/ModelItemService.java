@@ -792,6 +792,30 @@ public class ModelItemService {
         }
     }
 
+    public List<String> referencesDetail2Id(List<String> references) {
+
+        List<String> articlesIdList = new ArrayList<>();
+        for (String reference : references) {
+            Article article = JSONObject.parseObject(reference, Article.class);
+            List<Article> articles = articleDao.findAllByTitle(article.getTitle());
+            Boolean find = false;
+            for(Article art : articles){
+                if(article.isSame(art)){
+                    find = true;
+                    articlesIdList.add(art.getId());
+                    break;
+                }
+            }
+            if(!find){
+                articlesIdList.add(article.getId());
+                articleDao.insert(article);
+            }
+        }
+
+        return articlesIdList;
+
+    }
+
 
     /**
      * @Description 获取模型贡献者信息
@@ -864,7 +888,19 @@ public class ModelItemService {
         JSONArray references = new JSONArray();
         for(int i=0;i<reference_ids.size();i++) {
             Article article = articleDao.findFirstById(reference_ids.get(i));
-            references.add(JSONObject.toJSONString(article));
+            if (article != null)
+                references.add(JSONObject.toJSONString(article));
+//            System.out.println(references.get(i));
+        }
+        return references;
+    }
+
+    public JSONArray getReferencesUseInEdit(List<String> reference_ids){
+        JSONArray references = new JSONArray();
+        for(int i=0;i<reference_ids.size();i++) {
+            Article article = articleDao.findFirstById(reference_ids.get(i));
+            if (article != null)
+                references.add(article);
 //            System.out.println(references.get(i));
         }
         return references;
@@ -1464,18 +1500,15 @@ public class ModelItemService {
             }
         }
 
+        ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+        modelItemUpdateDTO.setOriginId(modelItem.getId());
+        modelItemUpdateDTO.setReferences(reference_ids);
+        modelItemService.update(modelItemUpdateDTO,email);
+
         if(author.equals(email)) {
-            modelItem.setReferences(reference_ids);
-            // modelItemDao.save(modelItem);
-            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
+
             return "suc";
         }else{
-            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
-            modelItemUpdateDTO.setOriginId(modelItem.getId());
-
-            modelItemUpdateDTO.setReferences(reference_ids);
-
-            modelItemService.update(modelItemUpdateDTO,email);
 
             return "version";
         }
@@ -1955,7 +1988,7 @@ public class ModelItemService {
             org.dom4j.Document doc = null;
             doc = DocumentHelper.parseText(xml);
             Element root = doc.getRootElement();
-            System.out.println("根节点：" + root.getName());
+            log.info("根节点：" + root.getName());
             Element coredata = root.element("coredata");
             String title = coredata.elementTextTrim("title");
             String journal = coredata.elementTextTrim("publicationName");

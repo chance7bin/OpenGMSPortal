@@ -17,6 +17,7 @@ import njgis.opengms.portal.entity.po.Article;
 import njgis.opengms.portal.entity.po.ModelItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.RelationTypeEnum;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.ModelItemService;
 import njgis.opengms.portal.service.UserService;
@@ -230,6 +231,11 @@ public class ModelItemRestController {
         String model=IOUtils.toString(file.getInputStream(),"utf-8");
         JSONObject jsonObject=JSONObject.parseObject(model);
         ModelItemUpdateDTO modelItemUpdateDTO=JSONObject.toJavaObject(jsonObject,ModelItemUpdateDTO.class);
+
+        //references详情转id
+        List<String> references = modelItemUpdateDTO.getReferences();
+        List<String> referencesList = modelItemService.referencesDetail2Id(references);
+        modelItemUpdateDTO.setReferences(referencesList);
 
         JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
         if(result==null){
@@ -447,7 +453,17 @@ public class ModelItemRestController {
     @ApiOperation(value = "根据id得到模型条目信息")
     @RequestMapping(value = "/info/{id}",method = RequestMethod.GET)
     public JsonResult getItemById(@PathVariable String id){
-        return genericService.getById(id, ItemTypeEnum.ModelItem);
+        JsonResult itemJson = genericService.getById(id, ItemTypeEnum.ModelItem);
+        if (itemJson.getCode() != ResultEnum.SUCCESS.getCode()){
+            return itemJson;
+        }
+        //处理references的返回
+        ModelItem modelItem = (ModelItem) itemJson.getData();
+        List<String> references = modelItem.getReferences();
+        JSONArray referencesArr = modelItemService.getReferencesUseInEdit(references);
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(modelItem));
+        jsonObject.put("references", referencesArr);
+        return ResultUtils.success(jsonObject);
     }
 
     @ApiOperation(value = "根据id得到模型条目贡献者信息 [/modelItem/getContributors]")
