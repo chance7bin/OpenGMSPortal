@@ -208,7 +208,7 @@
                     style="color:#cccccc" aria-hidden='true'></li>
             </el-tooltip>
 
-            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" content="公开的信息" effect="light"
+            <el-tooltip th:if="${itemInfo.status=='Public'}" popper-class="fontsize-15" :content="htmlJSON.Public" effect="light"
                         placement="top">
                 <i  class="el-icon-unlock public fontsize-2em "></i>
             </el-tooltip>
