@@ -855,7 +855,7 @@ public class RepositoryService {
                 }
                 model.put("name",modelItem.getName());
                 model.put("image",modelItem.getImage());
-                model.put("id",modelItem.getId());
+                model.put("oid",modelItem.getId());
                 models.add(model);
             }
             classObj.put("content",models);

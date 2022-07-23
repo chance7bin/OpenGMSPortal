@@ -1,11 +1,9 @@
 package njgis.opengms.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
-import njgis.opengms.portal.dao.CommentDao;
-import njgis.opengms.portal.dao.NoticeDao;
-import njgis.opengms.portal.dao.UserDao;
-import njgis.opengms.portal.dao.VersionDao;
+import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.Comment;
 import njgis.opengms.portal.entity.po.Notice;
@@ -423,13 +421,59 @@ public class NoticeService {
      * @return org.springframework.data.domain.Page<njgis.opengms.portal.entity.po.Notice>
      * @Author bin
      **/
-    public Page<Notice> getUserNoticeList(FindDTO findDTO, String email){
+    public JSONObject getUserNoticeList(FindDTO findDTO, String email){
         Pageable pageable = genericService.getPageable(findDTO);
         Page<Notice> noticeList = noticeDao.findAllByRecipient(email, pageable);
+        JSONObject result = new JSONObject();
+        List<JSONObject> content = new ArrayList<>();
         for (Notice notice : noticeList) {
+
             getMessageByTemplate(notice,email);
+
+            JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(notice));
+
+            //email -> name
+            String dispatcher = notice.getDispatcher();
+            User user = userDao.findFirstByEmail(dispatcher);
+            if (user != null){
+                jsonObject.put("dispatcher",user.getName());
+                jsonObject.put("dispatcherAccessId",user.getAccessId());
+            }
+
+
+            //根据notice.getObjectType()找到通知关联的条目
+            ItemTypeEnum type = notice.getObjectType();
+            if (type == ItemTypeEnum.Version){
+                Version version = (Version)notice.getObjectContent();
+                jsonObject.put("relateItemId",version.getItemId());
+                // ItemTypeEnum itemType = version.getType();
+                // GenericItemDao itemDao = (GenericItemDao)genericService.daoFactory(itemType).get("itemDao");
+                // PortalItem item = (PortalItem)itemDao.findFirstById(version.getItemId());
+                jsonObject.put("relateItemName",version.getItemName());
+                jsonObject.put("relateItemType",version.getType().getText());
+            } else if (type == ItemTypeEnum.Comment){
+                Comment comment = (Comment)notice.getObjectContent();
+                jsonObject.put("relateItemId",comment.getRelateItemId());
+                ItemTypeEnum itemType = comment.getRelateItemType();
+                GenericItemDao itemDao = (GenericItemDao)genericService.daoFactory(itemType).get("itemDao");
+                PortalItem item = (PortalItem)itemDao.findFirstById(comment.getRelateItemId());
+                if (item!=null){
+                    jsonObject.put("relateItemName",item.getName());
+                }
+                jsonObject.put("relateItemType",comment.getRelateItemType().getText());
+            }
+
+
+
+            content.add(jsonObject);
+
         }
-        return noticeList;
+
+        result.put("content",content);
+        //分页总数
+        result.put("totalElements",noticeList.getTotalElements());
+
+        return result;
 
     }
 

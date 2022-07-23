@@ -196,7 +196,7 @@ public class CommentController {
         JSONObject author=new JSONObject();
         author.put("userId",email);
         author.put("name",jsonObject.getString("name"));
-        author.put("img",jsonObject.getString("avatar"));
+        author.put("img",genericService.formatUserAvatar(jsonObject.getString("avatar")));
 
         return author;
     }

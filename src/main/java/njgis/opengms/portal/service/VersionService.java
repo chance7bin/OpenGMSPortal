@@ -94,6 +94,8 @@ public class VersionService {
     @Autowired
     DataItemService dataItemService;
 
+    @Autowired
+    UserDao userDao;
 
     @Autowired
     LogicalModelService logicalModelService;
@@ -620,8 +622,10 @@ public class VersionService {
         }
 
         try {
+
             if (op.equals("edit")){
-                return ResultUtils.success(versionDao.findAllByStatusAndEditorAndTypeIn(status,email,findType,pageable));
+                Page<Version> versionPage = versionDao.findAllByStatusAndEditorAndTypeIn(status, email, findType, pageable);
+                return ResultUtils.success(versionInfoPageable2JSONObject(versionPage));
             }
             else if (op.equals("review")) {
                 // 如果登录用户是门户的话那可以得到所有对应状态的版本
@@ -629,14 +633,47 @@ public class VersionService {
                 //     return ResultUtils.success(versionDao.findAllByStatusAndTypeIn(status,findType,pageable));
                 // }
                 // return ResultUtils.success(versionDao.findAllByStatusAndItemCreatorAndTypeIn(status,email,findType,pageable));
-                return ResultUtils.success(versionDao.findAllByStatusAndAuthReviewersInAndTypeIn(status,email,findType,pageable));
+                Page<Version> versionPage = versionDao.findAllByStatusAndAuthReviewersInAndTypeIn(status, email, findType, pageable);
+                return ResultUtils.success(versionInfoPageable2JSONObject(versionPage));
             }
+
+
         }catch (Exception e){
             return ResultUtils.error(e.getMessage());
         }
 
         return ResultUtils.error("invalid operation");
 
+    }
+
+    //版本返回的信息从分页类型转换成json对象，并增加前端需要的属性
+    private JSONObject versionInfoPageable2JSONObject(Page<Version> versions){
+
+        JSONObject result = new JSONObject();
+        List<JSONObject> content = new ArrayList<>();
+
+        for (Version version : versions) {
+            JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(version));
+            jsonObject.put("relateItemId",version.getItemId());
+            jsonObject.put("relateItemName",version.getItemName());
+            jsonObject.put("relateItemType",version.getType().getText());
+
+            //email -> name
+            String editor = version.getEditor();
+            User user = userDao.findFirstByEmail(editor);
+            if (user != null){
+                jsonObject.put("editor",user.getName());
+                jsonObject.put("editorAccessId",user.getAccessId());
+            }
+
+            content.add(jsonObject);
+        }
+
+        result.put("content",content);
+        //分页总数
+        result.put("totalElements",versions.getTotalElements());
+
+        return result;
     }
 
 

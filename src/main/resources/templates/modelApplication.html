@@ -151,10 +151,13 @@
 
                             </div>
                             <img src="/static/img/work.png" style="height: 30%;align-self: center;"/>
-                            <button class="wzhBtn nutBtn plainBtn hoverJblue"
-                                    @click="loadIntegratedGuideDialog"
-                                    style="align-self:flex-end">
-                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.TryIt}}</p>
+                            <!--<button class="wzhBtn nutBtn plainBtn hoverJblue"-->
+                            <!--        @click="loadIntegratedGuideDialog"-->
+                            <!--        style="align-self:flex-end">-->
+                            <!--    <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.TryIt}}</p>-->
+                            <!--</button>-->
+                            <button class="wzhBtn nutBtn plainBtn hoverOrange" @click="underConstruction()" style="align-self: center">
+                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.UnderConstruct}} </p>
                             </button>
                         </div>
                     </div>
@@ -177,8 +180,9 @@
 
                             </div>
                             <img src="/static/img/work.png" style="height: 30%;align-self: center;"/>
-                            <button class="wzhBtn nutBtn plainBtn hoverOrange" @click="loadParamOptimaGuideDialog()" style="align-self: center">
-                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.UnderConstruct}} </p>
+                            <button class="wzhBtn nutBtn plainBtn hoverOrange" @click="loadParamOptimaGuideDialog()" style="align-self: flex-end">
+                            <!--<button class="wzhBtn nutBtn plainBtn hoverOrange" @click="underConstruction()" style="align-self: center">-->
+                                <p style="font-size: 2.0rem;font-weight: 600;font-family: Aktiv Grotesk">{{htmlJSON.TryIt}} </p>
                             </button>
                         </div>
                     </div>

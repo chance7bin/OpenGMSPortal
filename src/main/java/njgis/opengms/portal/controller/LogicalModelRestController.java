@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
-import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -176,8 +175,12 @@ public class LogicalModelRestController {
     @LoginRequired
     @ApiOperation(value = "某用户查询自己的模型条目", notes = "@LoginRequired\n主要用于个人空间")
     @RequestMapping(value = {"/queryListOfAuthorSelf","/listByAuthor"}, method = RequestMethod.POST)
-    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO) {
-
+    public JsonResult queryListOfAuthorSelf(@RequestBody UserFindDTO findDTO,HttpServletRequest request) {
+        if (findDTO.getAuthorEmail() == null || "".equals(findDTO.getAuthorEmail())){
+            HttpSession session=request.getSession();
+            String email=session.getAttribute("email").toString();
+            findDTO.setAuthorEmail(email);
+        }
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.LogicalModel,findDTO, true));
 
     }
