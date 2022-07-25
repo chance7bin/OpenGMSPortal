@@ -1,5 +1,7 @@
 package njgis.opengms.portal.entity.po;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.base.PortalId;
 import njgis.opengms.portal.entity.doo.intergrate.Model;
@@ -23,6 +25,8 @@ public class Task extends PortalId {
     int port;
     int loadTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     Date runTime;
 
     int status;//Started: 1, Finished: 2, Inited: 0, Error: -1
