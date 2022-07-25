@@ -16,6 +16,7 @@ var userNotice = Vue.extend({
 
             noticeDialogVisible:false,
             currentMessage:"",
+            userPageUrl:"https://geomodeling.njnu.edu.cn/profile/" // 门户个人主页
 
             // htmlJSON:{}
         }
