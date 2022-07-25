@@ -1,5 +1,6 @@
 package njgis.opengms.portal.entity.po;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class Notice extends PortalId {
     String recipient; //接收者email
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     Date createTime; //发送时间
     // String title; //消息标题
     String message = "The message needs to be generated through a template"; //消息内容，根据action由消息模版生成
