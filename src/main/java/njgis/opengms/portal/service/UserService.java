@@ -858,6 +858,17 @@ public class UserService {
         return user.getResourceCount();
     }
 
+    public UserResourceCount countResourceWithUpdate(String requestEmail, String loginEmail){
+
+        //如果请求用户和登录用户一样的话就直接从数据库拿，如果不一样的话就先更新请求用户的资源数量
+        if (!requestEmail.equals(loginEmail)){
+            //先更新，再查
+            updateAllResourceCount(requestEmail);
+        }
+        User user = userDao.findFirstByEmail(requestEmail);
+        return user.getResourceCount();
+    }
+
 
     /**
      * 设置用户权限
@@ -1279,6 +1290,11 @@ public class UserService {
         userShuttleDTO.setHomepage(userInfoUpdateDTO.getExternalLinks().get(0));
         userShuttleDTO.setDomain(userInfoUpdateDTO.getResearchInterests());
         userShuttleDTO.setCity(userInfoUpdateDTO.getLocation());
+
+        //用户头像设置为null，因为该接口并没有修改头像，把头像上传到用户服务器会出错
+        userShuttleDTO.setAvatar(null);
+
+
         try {
             updateUsertoServer(userShuttleDTO);
         }catch (Exception e){
