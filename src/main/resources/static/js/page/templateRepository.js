@@ -162,7 +162,7 @@ new Vue({
 
 
             //当前类别中英文切换
-            let language = this.getStorage("language")
+            let language = window.localStorage.getItem("language")
             let flag = 0;
             for(i = 0;i<treeData.length;i++){
                 let treeData1 = treeData[i];
@@ -201,7 +201,7 @@ new Vue({
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : this.htmlJson.ModelClassifications,
+                            "title" : this.htmlJson.ClassSystem,
                             "description" : this.htmlJson.QueryTemplateByChoosingCollection,
                             "position" : "right-top",
                         }

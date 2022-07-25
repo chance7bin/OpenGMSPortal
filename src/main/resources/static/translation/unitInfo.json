@@ -106,8 +106,8 @@
     "EditRelatedModelItem":"Edit Related Model Item",
     "Reference":"Reference",
     "Material":"Material",
-    "relatedMaterial":"Edit related material",
-    "relatedReference":"Edit related reference",
+    "relatedMaterial":"Edit Related Material",
+    "relatedReference":"Edit Related Reference",
     "authorshipSubmitted":"These authorship information will be submitted to the contributor to review.",
     "RelatedComputableModel":"Edit Related Computable Model",
     "noComputableModel":"There is no related computable model. You can link computable models.",
@@ -206,7 +206,8 @@
     "SureSubmitChanges": "Are you sure to submit changes?",
     "Yes": "Yes",
     "No": "No",
-    "Public": "Public"
+    "Public": "Public",
+    "Discoverable": "Discoverable"
 
   },
   "zh-cn": {

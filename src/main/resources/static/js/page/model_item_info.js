@@ -810,6 +810,7 @@ var info=new Vue({
             editingModelAlias:'',
 
             checkUrlValidLoading:false,
+            htmlJson:{}
         }
     },
     methods: {
@@ -2284,7 +2285,7 @@ var info=new Vue({
 
         confirmLogin(){
             window.sessionStorage.setItem("history", window.location.href);
-            const language = this.getStorage("language");
+            const language = window.localStorage.getItem("language");
 
             if (language == "zh-cn"){
                 var loginTip = "This function requires an account, please login first."
@@ -3078,7 +3079,15 @@ var info=new Vue({
                                 this.activeName_dialog = "my";
                                 break;
                         }
-                        this.relateTitle = "Link Related "+this.typeName+" to "+this.itemInfo.name;
+                        var linkTip = ""
+                        const lang = window.localStorage.getItem("language");
+                        console.log(lang)
+                        if (lang === "en-us"){
+                            linkTip = "Link to "
+                        }else {
+                            linkTip = "关联至"
+                        }
+                        this.relateTitle = linkTip+this.itemInfo.name;
                         this.tableData = [];
 
                         this.pageOption_my.currentPage = 1;
@@ -3342,6 +3351,7 @@ var info=new Vue({
     },
 
     mounted() {
+        this.htmlJson = this.getStorage("userSpaceAll")
         let vthis = this
 
 

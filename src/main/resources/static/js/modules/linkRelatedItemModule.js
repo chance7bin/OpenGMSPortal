@@ -181,7 +181,7 @@ Vue.component("linkRelatedItemModule",
 
             confirmLogin(){
                 window.sessionStorage.setItem("history", window.location.href);
-                const language = this.getStorage("language");
+                const language = window.localStorage.getItem("language");
 
                 if (language == "zh-cn"){
                     var loginTip = "This function requires an account, please login first."

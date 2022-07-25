@@ -102,10 +102,16 @@
 
                                     </div>
                                     <div class="content_w32 flexJustAround flexColCenter buttonZone">
-                                        <el-tooltip popper-class="fontsize-15" effect="light" :content="dataHub.status" placement="left">
-                                            <i v-if="dataHub.status=='Public'" class="el-icon-unlock public fontsize-20 pull-right"></i>
-                                            <i v-if="dataHub.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-20 pull-right"></i>
-                                            <i v-if="dataHub.status=='Private'" class="el-icon-lock private fontsize-20 pull-right"></i>
+                                        <el-tooltip v-if="dataHub.status=='Public'" popper-class="fontsize-15" effect="light" :content="htmlJson.Public.label" placement="left">
+                                            <i class="el-icon-unlock public fontsize-20 pull-right"></i>
+                                        </el-tooltip>
+
+                                        <el-tooltip v-if="dataHub.status=='Discoverable'" popper-class="fontsize-15" effect="light" :content="htmlJson.Discoverable.label" placement="left">
+                                            <i class="el-icon-unlock discoverable fontsize-20 pull-right"></i>
+                                        </el-tooltip>
+
+                                        <el-tooltip v-if="dataHub.status=='Private'" popper-class="fontsize-15" effect="light" :content="htmlJson.Private.label" placement="left">
+                                            <i class="el-icon-lock private fontsize-20 pull-right"></i>
                                         </el-tooltip>
                                         <div class="lineButton flexJustStart flexColCenter" @click="editItem(1,dataHub.id)">
                                             <i class="fa fa-edit" style="margin-right: 5px"></i>

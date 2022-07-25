@@ -33,7 +33,6 @@ var userComment = Vue.extend({
         getCommentList(){
             axios.get("/comment/getCommentsByUser")
                 .then(res=> {
-                    console.log("commentList:",res)
                     this.commentTableData=res.data.data
                 })
                 .catch(function (error) {

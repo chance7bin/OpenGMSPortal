@@ -133,10 +133,10 @@
     "mainFunc": "主要功能",
 
     "sharing":"共享",
-    "sharingSetence": "将模型、数据及计算资源作为可重用资源进行共享",
+    "sharingSetence": "将模型、数据及计算资源作为服务资源进行共享",
 
 
-    "reusing":"重用",
+    "reusing":"复用",
     "reusingSetence": "在网络环境下重用模型、数据及计算资源",
 
 

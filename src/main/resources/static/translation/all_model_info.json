@@ -81,8 +81,8 @@
     "EditRelatedModelItem":"Edit Related Model Item",
     "Reference":"Reference",
     "Material":"Material",
-    "relatedMaterial":"Edit related material",
-    "relatedReference":"Edit related reference",
+    "relatedMaterial":"Edit Related Material",
+    "relatedReference":"Edit Related Reference",
     "authorshipSubmitted":"These authorship information will be submitted to the contributor to review.",
     "RelatedComputableModel":"Edit Related Computable Model",
     "noComputableModel":"There is no related computable model. You can link computable models.",
@@ -181,7 +181,10 @@
     "SureSubmitChanges": "Are you sure to submit changes?",
     "Yes": "Yes",
     "No": "No",
-    "Public": "Public"
+    "Public": "Public",
+    "ReferenceInfo": "Reference Info",
+    "GetByDoi": "Get by doi",
+    "EnterDoiClickSearch": "Enter the doi and click search, information may be filled automatically."
   },
   "zh-cn": {
       "DataResourceUrl": "数据资源链接",
@@ -365,7 +368,10 @@
     "Yes": "确认",
     "No": "取消",
     "Public": "公开",
-    "Discoverable": "可发现"
+    "Discoverable": "可发现",
+    "ReferenceInfo": "参考信息",
+    "GetByDoi": "Doi获取",
+    "EnterDoiClickSearch": "输入Doi并点击搜索，信息就会被自动填充."
 
   }
 

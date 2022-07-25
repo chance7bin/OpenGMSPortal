@@ -884,7 +884,7 @@ new Vue({
                 crossDomain: true,
                 success: (result) => {
                     if (result.code !== 0) {
-                        const language = this.getStorage("language");
+                        const language = window.localStorage.getItem("language");
 
                         if (language == "zh-cn"){
                             var loginTip = "This function requires an account, please login first."

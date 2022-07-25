@@ -105,7 +105,9 @@
       }], "id": 25, "label": "Method-focused categories", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718"}],
     "Cancel": "Cancel",
     "Confirm": "Confirm",
-    "DataSelect": "DataSelect"
+    "DataSelect": "DataSelect",
+    "Public": "Public",
+    "Discoverable": "Discoverable"
   },
   "zh-cn": {
     "PageName": "模型条目库",
@@ -213,7 +215,9 @@
       }], "id": 25, "label": "面向方法的分类", "oid": "5f74872a-196c-4889-a7b8-9c9b04e30718"}],
     "Cancel": "取消",
     "Confirm": "确认",
-    "DataSelect": "数据选择"
+    "DataSelect": "数据选择",
+    "Public": "公开",
+    "Discoverable": "可发现"
   }
 
 }
