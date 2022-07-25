@@ -67,6 +67,10 @@ var vue = new Vue({
             },
 
             loadParamOptimaGuideDialog(){
+
+                window.open("https://geomodeling.njnu.edu.cn/sensitivityAnalysis")
+                return;
+
                 this.paramOptimaDialog=true
                 this.guideActive = 0
             },
@@ -80,7 +84,7 @@ var vue = new Vue({
             },
 
             underConstruction(){
-                this.$message({message:'We are working to complete this.',type: 'success', center: true});
+                this.$message({message:this.htmlJSON.underConstructionMsg,type: 'warning', center: true});
             },
 
             handlePageChange(val) {

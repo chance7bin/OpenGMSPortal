@@ -27,7 +27,9 @@
     "Cancel": "Cancel",
     "Next": "Next",
     "Previous": "Previous",
-    "EnterNow": "Enter now"
+    "EnterNow": "Enter now",
+
+    "underConstructionMsg": "We are working to complete this."
   },
   "zh-cn": {
     "PageName": "模型应用",
@@ -57,6 +59,7 @@
     "Cancel": "取消",
     "Next": "下一步",
     "Previous": "上一步",
-    "EnterNow": "进入"
+    "EnterNow": "进入",
+    "underConstructionMsg": "我们正在积极建设"
   }
 }

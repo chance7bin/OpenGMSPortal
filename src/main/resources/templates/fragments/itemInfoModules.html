@@ -5,7 +5,7 @@
     <title>itemInfoModule</title>
 </head>
 <body>
-<div th:fragment="description(itemInfo, detailLanguage, showTag)" id="description" th:if="${detailLanguage!=''}" class="detail_block">
+<div  th:fragment="description(itemInfo, detailLanguage, showTag)" id="description" th:if="${detailLanguage!=''}" class="detail_block">
     <div class="block_head">
         <div class="head_text">
             <h4 translateId="detailedDescription">Detailed Description</h4>
@@ -69,7 +69,7 @@
         <div class="el-row"
              style="margin-bottom: 3px;height: 40px;display: flex;justify-content: center;align-items: center;">
             <div class="el-col ">
-                <user-avatar ref="mainContributorAvatar"
+                <user-avatar :email="lightenContributor.email" ref="mainContributorAvatar"
                              style="width:40px;height: 40px;float:left;">
                 </user-avatar>
             </div>
@@ -119,7 +119,8 @@
              style="margin-bottom: 3px;height: 40px;display: flex;align-items: center;">
             <div class="el-col ">
                 <a :href="'/profile/'+lightenContributor.accessId" target="_blank">
-                    <user-avatar ref="mainContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
+                    <user-avatar :email="lightenContributor.email"
+                        ref="mainContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
                 </a>
             </div>
             <div class="el-col">
@@ -582,7 +583,7 @@
                                 :content="contributor.name"
                                 placement="bottom">
                         <a :href="'/profile/'+contributor.accessId" target="_blank">
-                            <user-avatar ref="coContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
+                            <user-avatar :email="contributor.email" ref="coContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
                         </a>
                     </el-tooltip>
                 </div>
