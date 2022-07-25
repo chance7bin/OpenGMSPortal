@@ -90,7 +90,7 @@ var userSpaceHome = Vue.extend(
             },
 
             openTheme(){
-                window.location.href='/user/userSpace#/userTheme'
+                window.location.href='/repository/thematic'
             },
 
             sendcurIndexToParent(){

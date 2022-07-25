@@ -23,7 +23,9 @@
     "contributeStr":"contributed at ",
     "Conversion": "Conversion",
     "Processing": "Processing",
-    "Visualization": "Visualization"
+    "Visualization": "Visualization",
+    "Public": "Public",
+    "Discoverable": "Discoverable"
 
   },
   "zh-cn": {
@@ -50,6 +52,8 @@
     "contributeStr":"贡献于 ",
     "Conversion": "格式转换",
     "Processing": "数据处理",
-    "Visualization": "可视化"
+    "Visualization": "可视化",
+    "Public": "公开",
+    "Discoverable": "可发现"
   }
 }

@@ -1165,29 +1165,29 @@
         </span>
     </el-dialog>
 
-    <el-dialog title="Reference Info" :close-on-click-modal="false" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
+    <el-dialog :title="htmlJSON.ReferenceInfo" :close-on-click-modal="false" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
         <div class="wzhScrollbar" style="max-height: 500px;padding-right:10px" >
             <div class="tab-content" v-loading="doiLoading">
                 <div class="tab-pane active articleInfo" id="manually" >
                     <div class="form-group">
                         <label for="doiTitle" class="col-sm-2 control-label">
-                            Get by doi :
+                            {{htmlJSON.GetByDoi}} :
                         </label>
-                        <el-tag size="middle" primary>Enter the doi and click search, information may be filled automaticly. </el-tag>
+                        <el-tag size="middle" primary>{{htmlJSON.EnterDoiClickSearch}}</el-tag>
                         <div class="input-group col-md-12">
                             <input id="doiTitle" type="text"
                                    class="form-control" v-model="doi">
                             <span class="input-group-btn" style="width: 19%">
                                                     <button id="doiSearch"
                                                             class="btn btn-info"
-                                                            type="button" @click="searchDoi()" style="height: 34px;width: 100%;margin: 0;">Search</button>
+                                                            type="button" @click="searchDoi()" style="height: 34px;width: 100%;margin: 0;">{{htmlJSON.Search}}</button>
                                                 </span>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="refTitle"
-                               class="col-sm-12 control-label">Title</label>
+                               class="col-sm-12 control-label">{{htmlJSON.Title}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="refTitle"/>
@@ -1195,7 +1195,7 @@
                     </div>
                     <div class="form-group">
                         <label for="refAuthor"
-                               class="col-sm-12 control-label">Author</label>
+                               class="col-sm-12 control-label">{{htmlJSON.Author}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="refAuthor"/>
@@ -1205,7 +1205,7 @@
 
                     <div class="form-group">
                         <label for="refDate"
-                               class="col-sm-12 control-label">Date</label>
+                               class="col-sm-12 control-label">{{htmlJSON.Date}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="refDate"/>
@@ -1213,7 +1213,7 @@
                     </div>
                     <div class="form-group">
                         <label for="refJournal"
-                               class="col-sm-12 control-label">Journal</label>
+                               class="col-sm-12 control-label">{{htmlJSON.Journal}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="refJournal"/>
@@ -1221,7 +1221,7 @@
                     </div>
                     <div class="form-group">
                         <label for="volumeIssue"
-                               class="col-sm-12 control-label">Volume(issue)</label>
+                               class="col-sm-12 control-label">{{htmlJSON.Volume}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="volumeIssue"/>
@@ -1229,7 +1229,7 @@
                     </div>
                     <div class="form-group">
                         <label for="refPages"
-                               class="col-sm-12 control-label">Page Range</label>
+                               class="col-sm-12 control-label">{{htmlJSON.PageRange}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="refPages"/>
@@ -1237,7 +1237,7 @@
                     </div>
                     <div class="form-group">
                         <label for="refLink"
-                               class="col-sm-12 control-label">Link</label>
+                               class="col-sm-12 control-label">{{htmlJSON.Link}}</label>
                         <div>
                             <input type="text" class="form-control"
                                    id="refLink"/>
@@ -1257,8 +1257,8 @@
 
         </div>
         <span slot="footer" class="dialog-footer">
-                        <el-button type="primary" size="small" @click="updateArticleConfirmClick" id="modal_save">Add</el-button>
-                        <el-button size="small" @click="cancelSearch()">Cancel</el-button>
+                        <el-button type="primary" size="small" @click="updateArticleConfirmClick" id="modal_save">{{htmlJSON.Add}}</el-button>
+                        <el-button size="small" @click="cancelSearch()">{{htmlJSON.Cancel}}</el-button>
                     </span>
     </el-dialog>
 

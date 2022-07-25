@@ -190,11 +190,18 @@
                 </div>
 
                 <div class="content_w32 flexJustAround flexColCenter buttonZone">
-                    <el-tooltip popper-class="fontsize-15" effect="light" :content="modelItem.status" placement="left">
-                        <i v-if="modelItem.status=='Public'" class="el-icon-unlock public fontsize-20 pull-right"></i>
-                        <i v-if="modelItem.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-20 pull-right"></i>
-                        <i v-if="modelItem.status=='Private'" class="el-icon-lock private fontsize-20 pull-right"></i>
+                    <el-tooltip v-if="modelItem.status=='Public'" popper-class="fontsize-15" effect="light" :content="htmlJson.Public.label" placement="left">
+                        <i class="el-icon-unlock public fontsize-20 pull-right"></i>
                     </el-tooltip>
+
+                    <el-tooltip v-if="modelItem.status=='Discoverable'" popper-class="fontsize-15" effect="light" :content="htmlJson.Discoverable.label" placement="left">
+                        <i class="el-icon-unlock discoverable fontsize-20 pull-right"></i>
+                    </el-tooltip>
+
+                    <el-tooltip v-if="modelItem.status=='Private'" popper-class="fontsize-15" effect="light" :content="htmlJson.Private.label" placement="left">
+                        <i class="el-icon-lock private fontsize-20 pull-right"></i>
+                    </el-tooltip>
+
                     <!--<div class="lineButton flexJustStart flexColCenter" @click="getAdmins(modelItem.oid,modelItem.name)">-->
                         <!--<i class="el-icon-s-custom" style="margin-right: 5px;font-size: 20px"></i>-->
                     <!--</div>-->

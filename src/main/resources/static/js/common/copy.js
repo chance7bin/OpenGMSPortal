@@ -7,9 +7,7 @@ $(function () {
         input.setAttribute('value', cite);
         input.select();
 
-        //获取url截取languages
-        location_href = window.location.href
-        lang = location_href.split("=")[1]
+        let lang = window.localStorage.getItem('language');
 
         if (lang == "zh-cn"){
             if (document.execCommand('copy')) {
