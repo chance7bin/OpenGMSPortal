@@ -3,7 +3,9 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import njgis.opengms.portal.component.PageableCacheEnable;
+import njgis.opengms.portal.component.annotation.PageableCacheEnable;
+import njgis.opengms.portal.component.annotation.UserCacheEnable;
+import njgis.opengms.portal.component.annotation.UserCacheEvict;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.GenericCategory;
 import njgis.opengms.portal.entity.doo.JsonResult;
@@ -28,7 +30,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Field;
@@ -107,6 +111,14 @@ public class GenericService {
     @Autowired
     CommentDao commentDao;
 
+    @Value("${userServer}")
+    private String userServer;
+
+    @Value("${userServerCilent}")
+    private String userServerCilent;
+
+    @Value("${userServerCilentPWD}")
+    private String userServerCilentPWD;
 
 
     @Value("${htmlLoadPath}")
@@ -1024,6 +1036,46 @@ public class GenericService {
         if (id.contains("?"))
             id = (id.split("\\?"))[0];
         return id;
+    }
+
+    //从用户服务器请求数据，为了aop，把这个方法抽出来
+    @UserCacheEnable(key = "#email")
+    public JSONObject getInfoFromUserServer(String email){
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String userInfoUrl = "http://" + userServer + "/user/" + email + "/" + userServerCilent + "/" + userServerCilentPWD;
+            HttpHeaders headers = new HttpHeaders();
+            MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
+            headers.setContentType(mediaType);
+            headers.set("user-agent", "portal_backend");
+            HttpEntity httpEntity = new HttpEntity(headers);
+            ResponseEntity<JSONObject> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, httpEntity, JSONObject.class);
+            JSONObject userInfo = response.getBody().getJSONObject("data");
+
+            String avatar = userInfo.getString("avatar");
+            if(avatar!=null){
+                // avatar = "/userServer" + avatar;
+                //修正avatar前面加了/userServer
+                // avatar = avatar.replaceAll("/userServer","");
+                formatUserAvatar(avatar);
+            }
+            userInfo.put("avatar",avatar);
+            userInfo.put("msg","suc");
+            return userInfo;
+        }catch(Exception e){
+            log.error(e.getMessage());
+            // System.out.println(e.fillInStackTrace());
+            jsonObject.put("msg","no user");
+        }
+        return jsonObject;
+    }
+
+    //aop要走代理，通过该方法触发代理使注解生效
+    @UserCacheEvict(key = "#email")
+    public void userCacheEvict(String email){
+
     }
 
 }

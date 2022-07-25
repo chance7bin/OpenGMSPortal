@@ -1,7 +1,7 @@
 package njgis.opengms.portal.dao;
 
 
-import njgis.opengms.portal.component.AopCacheEnable;
+import njgis.opengms.portal.component.annotation.AopCacheEnable;
 import njgis.opengms.portal.entity.po.DataItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.domain.Page;

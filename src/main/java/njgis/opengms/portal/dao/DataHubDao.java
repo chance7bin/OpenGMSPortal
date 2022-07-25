@@ -1,6 +1,6 @@
 package njgis.opengms.portal.dao;
 
-import njgis.opengms.portal.component.AopCacheEnable;
+import njgis.opengms.portal.component.annotation.AopCacheEnable;
 import njgis.opengms.portal.entity.po.DataHub;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import org.springframework.data.mongodb.repository.MongoRepository;

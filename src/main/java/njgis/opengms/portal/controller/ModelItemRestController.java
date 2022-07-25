@@ -3,7 +3,7 @@ package njgis.opengms.portal.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
-import njgis.opengms.portal.component.LoginRequired;
+import njgis.opengms.portal.component.annotation.LoginRequired;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
