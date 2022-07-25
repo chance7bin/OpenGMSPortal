@@ -69,6 +69,20 @@ var modelItem = Vue.extend({
             chart.showLoading();
             $.get("/modelItem/dailyViewAndInvokeCount",{id:this.currentOid},(result)=> {
                 let valueList = result.data.valueList;//[0, 0, 0, 0, 0];
+
+                var invokeTime = ""
+                var viewTime = ""
+                let lang = window.localStorage.getItem('language');
+                if(lang=="en-us"){
+                    invokeTime = "Invoke Times"
+                    viewTime = "View Times"
+                }else{
+                    invokeTime = "调用量"
+                    viewTime = "访问量"
+                }
+
+                result.data.valueList[1][0] = viewTime
+                result.data.valueList[2][0] = invokeTime
                 console.log(result)
                 chart.hideLoading();
 

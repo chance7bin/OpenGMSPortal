@@ -349,10 +349,26 @@ new Vue({
             resourceSortEleText:'View Count',
 
             htmlJSON:{},
+
+            modelIndex:1,
+            dataIndex:2,
+            communityIndex:6
         }
     },
 
     methods: {
+
+        changeModelIndex(index){
+            this.modelIndex = index
+        },
+
+        changeDataIndex(index){
+            this.dataIndex = index
+        },
+
+        changeCommunityIndex(index){
+            this.communityIndex = index
+        },
 
         // 获取缓存
         getStorage(key){
@@ -2156,6 +2172,8 @@ new Vue({
         searchResourceClick(index){
             this.pageOption.currentPage=1;
             this.resourceIndex=index;
+
+
             this.searchResource();
 
         },
@@ -2223,57 +2241,57 @@ new Vue({
                         // this.articles.result=data.list;
                         switch (this.resourceIndex) {
                             case 1:
-                                Vue.set(this.modelItems ,'total', data.total);
+                                // Vue.set(this.modelItems ,'total', data.total);
                                 Vue.set(this.modelItems ,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 2:
-                                Vue.set(this.dataHubs ,'total', data.total);
+                                // Vue.set(this.dataHubs ,'total', data.total);
                                 Vue.set(this.dataHubs ,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 3:
-                                Vue.set(this.conceptualModels ,'total', data.total);
+                                // Vue.set(this.conceptualModels ,'total', data.total);
                                 Vue.set(this.conceptualModels,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 4:
-                                Vue.set(this.logicalModels,'total', data.total);
+                                // Vue.set(this.logicalModels,'total', data.total);
                                 Vue.set(this.logicalModels,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 5:
-                                Vue.set(this.computableModels ,'total', data.total);
+                                // Vue.set(this.computableModels ,'total', data.total);
                                 Vue.set(this.computableModels,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 6:
-                                Vue.set(this.concepts,'total', data.total);
+                                // Vue.set(this.concepts,'total', data.total);
                                 Vue.set(this.concepts,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 7:
-                                Vue.set(this.spatials ,'total', data.total);
+                                // Vue.set(this.spatials ,'total', data.total);
                                 Vue.set(this.spatials,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 8:
-                                Vue.set(this.templates ,'total', data.total);
+                                // Vue.set(this.templates ,'total', data.total);
                                 Vue.set(this.templates,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 9:
-                                Vue.set(this.units ,'total', data.total);
+                                // Vue.set(this.units ,'total', data.total);
                                 Vue.set(this.units,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 10:
-                                Vue.set(this.dataMethods ,'total', data.total);
+                                // Vue.set(this.dataMethods ,'total', data.total);
                                 Vue.set(this.dataMethods,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
                             case 11:
-                                Vue.set(this.dataItems ,'total', data.total);
+                                // Vue.set(this.dataItems ,'total', data.total);
                                 Vue.set(this.dataItems,'result', data.list);
                                 this.pageOption.progressBar=false;
                                 break;
@@ -3311,7 +3329,12 @@ new Vue({
         htmlJSON:function(newData){
             // this.selectSortEle("viewCount");
             this.selectSortEle(this.resourcesortField)
+        },
+
+        resourceIndex:(newData)=>{
+            console.log("resourceIndex:",newData)
         }
+
     },
 
     mounted() {

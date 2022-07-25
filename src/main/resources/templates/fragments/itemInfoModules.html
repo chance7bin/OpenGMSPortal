@@ -622,21 +622,25 @@
                         <a th:href="'/computableModel/'+${model.id}"
                            th:text="${model.name}">Ground Water Flow System</a>
                         <div style="display: inline-block;margin-left:5px">
-                                        <span class="label label-success" th:if="${model.contentType == 'Package' || model.contentType == 'MD5'}">
-                                            {{htmlJSON.package}}
-                                        </span>
+                            <span class="label label-success" th:if="${model.contentType == 'Package' || model.contentType == 'MD5'}">
+                                {{htmlJSON.package}}
+                            </span>
+
                             <span class="label label-success" th:if="${model.contentType == 'Code'}">
                                             {{htmlJSON.sourceCode}}
-                                        </span>
+                            </span>
+
                             <span class="label label-success" th:if="${model.contentType == 'Library'}">
                                             {{htmlJSON.library}}
-                                        </span>
+                            </span>
+
                             <span class="label label-success" th:if="${model.contentType == 'Service'}">
                                             {{htmlJSON.webLink}}
-                                        </span>
+                            </span>
+
                             <span class="label label-success" th:if="${model.contentType == 'Link'}">
                                             {{htmlJSON.downloadLink}}
-                                        </span>
+                            </span>
                         </div>
                         <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
                             neural network method to extract
@@ -839,10 +843,106 @@
                             <img v-if="model.image==null" src="/static/img/model/model.png">
                             <img v-else :src="model.image">
                         </a>
-                        <div class="info" style="margin-top:0px;">
-                            <span class="label label-success">{{model.relation}}</span>
+                        <div class="info" v-if="model.relation=='Integrated into'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.IntegratedInto}}</span>
                             <el-tooltip effect="light"
-                                        :content="itemInfo.name+' '+model.relation +' '+model.name"
+                                        :content="itemInfo.name+' '+htmlJson.IntegratedInto+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Coexist in'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.CoexistIn}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.CoexistIn+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Connected with'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.ConnectedWith}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.ConnectedWith+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Similar to'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.SimilarTo}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.SimilarTo+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Evolved from'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.EvolvedFrom}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.EvolvedFrom+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Belongs to'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.BelongsTo}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.BelongsTo+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Inspires'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.Inspires}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.Inspires+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Contains'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.Contain}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.Contain+' '+model.name"
+                                        placement="top">
+                                <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
+                            </el-tooltip>
+                            <a :href="'/modelItem/'+model.id">{{model.name}}</a>
+
+                            <p style="margin-top: 0px">{{model.overview}}</p>
+                        </div>
+
+                        <div class="info" v-if="model.relation=='Employs/Depends on'" style="margin-top:0px;">
+                            <span class="label label-success">{{htmlJson.EmploysDependsOn}}</span>
+                            <el-tooltip effect="light"
+                                        :content="itemInfo.name+' '+htmlJson.EmploysDependsOn+' '+model.name"
                                         placement="top">
                                 <i class="fa fa-question-circle-o" aria-hidden="true" style="vertical-align: text-top;"></i>
                             </el-tooltip>

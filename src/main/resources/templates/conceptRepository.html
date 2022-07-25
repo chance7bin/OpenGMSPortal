@@ -149,9 +149,12 @@
                     <div class="content-body">
                         <div v-cloak class="list-item" v-for="(concept,key) in pageOption.searchResult">
                             <div class="detail_title">
-                                <el-tooltip popper-class="fontsize-15" effect="light" :content="concept.status" placement="left">
-                                    <i v-if="concept.status=='Public'" class="el-icon-unlock public fontsize-24 pull-right"></i>
-                                    <i v-if="concept.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
+                                <el-tooltip v-if="concept.status=='Public'" popper-class="fontsize-15" effect="light" :content="htmlJSON.Public" placement="left">
+                                    <i class="el-icon-unlock public fontsize-24 pull-right"></i>
+                                </el-tooltip>
+
+                                <el-tooltip v-if="concept.status=='Discoverable'" popper-class="fontsize-15" effect="light" :content="htmlJSON.Discoverable" placement="left">
+                                    <i class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                 </el-tooltip>
                                 <a :class="concept.viewCount>500?'hot':''" :href="'/repository/concept/'+ concept.id" target="_blank">{{concept.name==''?concept.alias:concept.name}}&nbsp&nbsp</a>
                             </div>

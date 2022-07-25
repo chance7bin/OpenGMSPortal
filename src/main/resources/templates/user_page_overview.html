@@ -274,14 +274,14 @@
 
                     <el-tabs v-model="mainActiveName">
                         <el-tab-pane :label="htmlJSON.model" name="Model">
-                                <span slot="label" style="width: 100px">
+                                <span slot="label" style="width: 100px" @click="searchResourceClick(modelIndex)">
                                     <img src="../../static/img/model/model.png" class="square_15">
                                     <span>{{htmlJSON.model}}</span>
                             </span>
                             <div class="defaultTabs Model-tabs deleteBorder">
                                 <el-tabs v-model="modelActiveName" class="deleteBorder" @tab-click="handleClick">
                                     <el-tab-pane :label="htmlJSON.modelItem" name="ModelItem">
-                                        <span slot="label">
+                                        <span slot="label" @click="changeModelIndex(1)">
                                             <span>{{htmlJSON.modelItem}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{modelItems.total}}&nbsp;&nbsp;
@@ -392,7 +392,7 @@
                                         </div>
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.conceptualModel" name="ConceptualModel">
-                                         <span slot="label">
+                                         <span slot="label" @click="changeModelIndex(3)">
                                             <span>{{htmlJSON.conceptualModel}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{conceptualModels.total}}&nbsp;&nbsp;
@@ -507,7 +507,7 @@
                                         </div>
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.logicalModel" name="LogicalModel">
-                                        <span slot="label">
+                                        <span slot="label" @click="changeModelIndex(4)">
                                             <span>{{htmlJSON.logicalModel}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{logicalModels.total}}&nbsp;&nbsp;
@@ -621,7 +621,7 @@
                                         </div>
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.computableModel" name="ComputableModel">
-                                         <span slot="label">
+                                         <span slot="label" @click="changeModelIndex(5)">
                                             <span>{{htmlJSON.computableModel}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{computableModels.total}}&nbsp;&nbsp;
@@ -739,14 +739,14 @@
 
                         </el-tab-pane>
                         <el-tab-pane :label="htmlJSON.data" name="Data">
-                            <span slot="label">
+                            <span slot="label" @click="searchResourceClick(dataIndex)">
                                 <i class="fa fa-database" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
                                 <span>{{htmlJSON.data}}</span>
                             </span>
                             <div class="defaultTabs Data-tabs deleteBorder">
                                 <el-tabs v-model="dataActiveName" class="deleteBorder" @tab-click="handleClick">
                                     <el-tab-pane :label="htmlJSON.dataHub" name="DataHub">
-                                            <span slot="label">
+                                            <span slot="label" @click="changeDataIndex(2)">
                                                 <span>{{htmlJSON.dataHub}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{dataHubs.total}}&nbsp;&nbsp;
@@ -862,7 +862,7 @@
 
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.dataItem" name="DataItemRepository">
-                                        <span slot="label">
+                                        <span slot="label" @click="changeDataIndex(11)">
                                             <span>{{htmlJSON.dataItem}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{dataItems.total}}&nbsp;&nbsp;
@@ -977,7 +977,7 @@
                                         </div>
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.dataMethod" name="DataMethod">
-                                             <span slot="label">
+                                             <span slot="label" @click="changeDataIndex(10)">
                                                 <span>{{htmlJSON.dataMethod}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{dataMethods.total}}&nbsp;&nbsp;
@@ -1084,7 +1084,7 @@
 
                         </el-tab-pane>
                         <el-tab-pane :label="htmlJSON.community" name="Community">
-                             <span slot="label">
+                             <span slot="label" @click="searchResourceClick(communityIndex)">
                                  <i class="el-icon-s-opportunity" style="font-size: 18px; color: rgb(5, 196, 255); margin: 4px;"></i>
                                  <!--                                 <i data-icon-name="HomeGroup" aria-hidden="true" class="ms-Icon root-43"-->
 <!--                                    style="font-size: 18px;color: rgb(5, 196, 255);margin: 4px;font-weight: 400;position: relative;top: 2px;"></i>-->
@@ -1093,7 +1093,7 @@
                             <div class="defaultTabs Community-tabs deleteBorder">
                                 <el-tabs v-model="communityActiveName" class="deleteBorder" @tab-click="handleClick">
                                     <el-tab-pane :label="htmlJSON.concept" name="Concept&Semantic">
-                                            <span slot="label">
+                                            <span slot="label" @click="changeCommunityIndex(6)">
                                                 <span>{{htmlJSON.concept}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{concepts.total}}&nbsp;&nbsp;
@@ -1211,7 +1211,7 @@
 
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.spatial" name="SpatialReference">
-                                             <span slot="label">
+                                             <span slot="label" @click="changeCommunityIndex(7)">
                                                 <span>{{htmlJSON.spatial}}</span>
                                                 <span class="btn-bell-badge">
                                                     &nbsp;&nbsp;{{spatials.total}}&nbsp;&nbsp;
@@ -1326,7 +1326,7 @@
 
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.template" name="DataTemplate">
-                                        <span slot="label">
+                                        <span slot="label" @click="changeCommunityIndex(8)">
                                             <span>{{htmlJSON.template}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{templates.total}}&nbsp;&nbsp;
@@ -1440,7 +1440,7 @@
                                         </div>
                                     </el-tab-pane>
                                     <el-tab-pane :label="htmlJSON.unit" name="Unit&Metric">
-                                        <span slot="label">
+                                        <span slot="label" @click="changeCommunityIndex(6)">
                                             <span>{{htmlJSON.unit}}</span>
                                             <span class="btn-bell-badge">
                                                 &nbsp;&nbsp;{{units.total}}&nbsp;&nbsp;

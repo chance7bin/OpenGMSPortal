@@ -125,7 +125,7 @@ var data_items = new Vue({
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : this.htmlJson.ModelClassifications,
+                            "title" : this.htmlJson.DataCategories,
                             "description" : this.htmlJson.QueryDataByChoosingCategory,
                             "position" : "right-top",
                         }
@@ -345,7 +345,7 @@ var data_items = new Vue({
         //首先到缓存中获取userSpaceAll
         this.htmlJson = this.getStorage("userSpaceAll");
 
-        let language = this.getStorage("language");
+        let language = window.localStorage.getItem("language");
         if (language == "zh-cn"){
             this.showCategoryName = "陆地圈"
         } else {

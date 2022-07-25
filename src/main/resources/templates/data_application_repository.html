@@ -122,7 +122,7 @@
 <!--                        </strong>-->
                         <strong style="float: right">
 <!--                            {{datacount!=0 ?(datacount===-1?'loading...':datacount+' items'):'no data'}}-->
-                                {{datacount!=0 ?(datacount===-1?htmlJSON.Loading:datacount+htmlJSON.items):htmlJSON.NoData}}
+                                {{datacount!=0 ?(datacount===-1?htmlJSON.Loading:datacount+" "+htmlJSON.items):htmlJSON.NoData}}
 
                         </strong>
 
@@ -165,9 +165,12 @@
                         <div  class="content-body">
                             <div class="list-item" v-for="(item,index) in list" :key="index">
                                 <div class="detail_title">
-                                    <el-tooltip popper-class="fontsize-15" effect="light" :content="item.status" placement="left">
-                                        <i v-if="item.status=='Public'" class="el-icon-unlock public fontsize-24 pull-right"></i>
-                                        <i v-if="item.status=='Discoverable'" class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
+                                    <el-tooltip v-if="item.status=='Public'" popper-class="fontsize-15" effect="light" :content="htmlJSON.Public" placement="left">
+                                        <i class="el-icon-unlock public fontsize-24 pull-right"></i>
+                                    </el-tooltip>
+
+                                    <el-tooltip v-if="item.status=='Discoverable'" popper-class="fontsize-15" effect="light" :content="htmlJSON.Discoverable" placement="left">
+                                        <i class="el-icon-unlock discoverable fontsize-24 pull-right"></i>
                                     </el-tooltip>
                                     <a :class="item.viewCount>100?'hot':''" :href="goto(item.id)" target="_blank" >{{item.name}}&nbsp&nbsp</a>
                                 </div>
