@@ -1,7 +1,7 @@
 package njgis.opengms.portal.controller;
 
 import io.swagger.annotations.ApiOperation;
-import njgis.opengms.portal.component.LoginRequired;
+import njgis.opengms.portal.component.annotation.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.service.ArticleService;

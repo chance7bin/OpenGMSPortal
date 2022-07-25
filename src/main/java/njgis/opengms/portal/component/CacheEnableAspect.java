@@ -1,6 +1,7 @@
 package njgis.opengms.portal.component;
 
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.component.annotation.*;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.RedisService;
@@ -51,21 +52,32 @@ public class CacheEnableAspect {
     /**
      * Mapper层切点 使用到了我们定义的 AopCacheEnable 作为切点表达式。
      */
-    @Pointcut("@annotation(njgis.opengms.portal.component.AopCacheEnable)")
+    @Pointcut("@annotation(njgis.opengms.portal.component.annotation.AopCacheEnable)")
     public void queryCache() {
     }
 
     /**
      * Mapper层切点 使用到了我们定义的 AopCacheEvict 作为切点表达式。
      */
-    @Pointcut("@annotation(njgis.opengms.portal.component.AopCacheEvict)")
+    @Pointcut("@annotation(njgis.opengms.portal.component.annotation.AopCacheEvict)")
     public void ClearCache() {
     }
 
+    @Pointcut("@annotation(njgis.opengms.portal.component.annotation.UserCacheEnable)")
+    public void queryUserCache() {
+    }
+
+    @Pointcut("@annotation(njgis.opengms.portal.component.annotation.UserCacheEvict)")
+    public void clearUserCache() {
+    }
+
+
     //分页切点
-    @Pointcut("@annotation(njgis.opengms.portal.component.PageableCacheEnable)")
+    @Pointcut("@annotation(njgis.opengms.portal.component.annotation.PageableCacheEnable)")
     public void PageableCache() {
     }
+
+
 
     @Around("queryCache()")
     public Object Interceptor(ProceedingJoinPoint pjp) throws Throwable {
@@ -76,7 +88,7 @@ public class CacheEnableAspect {
         }
 
         // StringBuilder redisKeySb = new StringBuilder("AOP").append("::");
-        StringBuilder redisKeySb = new StringBuilder("AOP");
+        StringBuilder redisKeySb = new StringBuilder("item");
 
         // 类
         // String className = pjp.getTarget().toString().split("@")[0];
@@ -121,7 +133,7 @@ public class CacheEnableAspect {
             return pjp.proceed();
         }
 
-        StringBuilder redisKeySb = new StringBuilder("AOP");
+        StringBuilder redisKeySb = new StringBuilder("item");
 
         Method method = getMethod(pjp);
         // 获取方法的注解
@@ -158,6 +170,74 @@ public class CacheEnableAspect {
     }
 
 
+    @Around("queryUserCache()")
+    public Object userQuery(ProceedingJoinPoint pjp) throws Throwable{
+        // System.out.println(redisEnable);
+        if (!redisEnable){
+            return pjp.proceed();
+        }
+
+        StringBuilder redisKeySb = new StringBuilder("user");
+
+
+        //获取当前被切注解的方法名
+        Method method = getMethod(pjp);
+
+        //获取当前被切方法的注解
+        UserCacheEnable userCacheEnable = method.getAnnotation(UserCacheEnable.class);
+        if (userCacheEnable == null) {
+            return pjp.proceed();
+        }
+
+        //从注解中获取key
+        //通过注解key使用的SpEL表达式获取到SpEL执行结果
+        String key = userCacheEnable.key();
+        // redisKeySb.append(args);
+        String resV = generateKeyBySpEL(key, pjp).toString();
+        redisKeySb.append(":").append(resV);
+
+
+        return query(redisKeySb, userCacheEnable.expireTime(), pjp);
+    }
+
+    @Around("clearUserCache()")
+    public Object userEvict(ProceedingJoinPoint pjp) throws Throwable{
+        if (!redisEnable){
+            return pjp.proceed();
+        }
+
+        StringBuilder redisKeySb = new StringBuilder("user");
+
+        Method method = getMethod(pjp);
+        // 获取方法的注解
+        UserCacheEvict cacheEvict = method.getAnnotation(UserCacheEvict.class);
+        if (cacheEvict == null) {
+            return pjp.proceed();
+        }
+
+        //从注解中获取key
+        //通过注解key使用的SpEL表达式获取到SpEL执行结果
+        String key = cacheEvict.key();
+        // redisKeySb.append(args);
+        key = generateKeyBySpEL(key, pjp).toString();
+
+        redisKeySb.append(":").append(key);
+
+        //先操作db
+        Object result = pjp.proceed();
+
+        //根据key从缓存中删除
+        String redisKey = redisKeySb.toString();
+        try {
+            redisService.delete(redisKey);
+        } catch (Exception e){
+            log.error("redis connection exception");
+        }
+
+        return result;
+    }
+
+
     @Around("PageableCache()")
     public Object pageableQuery(ProceedingJoinPoint pjp) throws Throwable{
 
@@ -166,7 +246,7 @@ public class CacheEnableAspect {
             return pjp.proceed();
         }
 
-        StringBuilder redisKeySb = new StringBuilder("Pageable");
+        StringBuilder redisKeySb = new StringBuilder("pageable");
 
         Method method = getMethod(pjp);
         // 获取方法的注解
