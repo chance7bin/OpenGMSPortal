@@ -349,10 +349,26 @@ new Vue({
             resourceSortEleText:'View Count',
 
             htmlJSON:{},
+
+            modelIndex:1,
+            dataIndex:2,
+            communityIndex:6
         }
     },
 
     methods: {
+
+        changeModelIndex(index){
+            this.modelIndex = index
+        },
+
+        changeDataIndex(index){
+            this.dataIndex = index
+        },
+
+        changeCommunityIndex(index){
+            this.communityIndex = index
+        },
 
         // 获取缓存
         getStorage(key){
@@ -2156,6 +2172,8 @@ new Vue({
         searchResourceClick(index){
             this.pageOption.currentPage=1;
             this.resourceIndex=index;
+
+
             this.searchResource();
 
         },
@@ -3311,7 +3329,12 @@ new Vue({
         htmlJSON:function(newData){
             // this.selectSortEle("viewCount");
             this.selectSortEle(this.resourcesortField)
+        },
+
+        resourceIndex:(newData)=>{
+            console.log("resourceIndex:",newData)
         }
+
     },
 
     mounted() {
