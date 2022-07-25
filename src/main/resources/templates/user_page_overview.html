@@ -46,6 +46,10 @@
         .list-item{
             text-align: left;
         }
+
+        [v-cloak]{
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -162,7 +166,7 @@
                     </div>
 
 
-                    <div class="researchInterests flex-rowDirect edit_col1" v-if="userPersonalInfo.researchInterests!=null && userPersonalInfo.researchInterests.length!=0" >
+                    <div class="researchInterests flex-rowDirect edit_col1" v-if="userPersonalInfo.researchInterests!=null && userPersonalInfo.researchInterests.length!=0 && userPersonalInfo.researchInterests[0]!=''" >
                         <el-tooltip class="item" effect="dark" :content="htmlJSON.ResearchInterests" placement="top-start" >
                             <i class="el-icon-star-on"></i>
                         </el-tooltip>

@@ -658,6 +658,16 @@ public class UserRestController {
         return ResultUtils.success(userService.countResource(email));
     }
 
+    @LoginRequired
+    @ApiOperation(value = "得到用户贡献的资源数量,同时更新该用户的数据库")
+    @RequestMapping (value = "/resourceCountWithUpdate", method = RequestMethod.GET)
+    public JsonResult getResourceCountWithUpdate(@RequestParam(value = "email", required=true) String requestEmail ,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String loginEmail = session.getAttribute("email").toString();
+
+        return ResultUtils.success(userService.countResourceWithUpdate(requestEmail, loginEmail));
+    }
+
     // @ApiOperation(value = "得到门户管理员")
     // @RequestMapping (value = "/admin", method = RequestMethod.GET)
     // public List<User> getAdminUser(){

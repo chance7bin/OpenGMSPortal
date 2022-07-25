@@ -175,7 +175,10 @@ public class ModelItemRestController {
     @ApiOperation(value = "模型条目查询", notes = "可以查询到所有公开的模型条目")
     @RequestMapping(value = {"/items","/list"}, method = RequestMethod.POST)
     public JsonResult queryList(@RequestBody SpecificFindDTO modelItemFindDTO) {
-        modelItemFindDTO.setSortField("viewCount");
+        String sortField = modelItemFindDTO.getSortField();
+        if (sortField == null || (!sortField.equals("name") && !sortField.equals("createTime") && !sortField.equals("viewCount"))){
+            modelItemFindDTO.setSortField("viewCount");
+        }
         return ResultUtils.success(genericService.searchItems(modelItemFindDTO, ItemTypeEnum.ModelItem));
         // return ResultUtils.success(modelItemService.query(modelItemFindDTO, false));
     }
