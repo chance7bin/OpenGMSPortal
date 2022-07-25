@@ -18,6 +18,7 @@ var userVersion = Vue.extend({
 
             versionUrl:"",
 
+            userPageUrl:"https://geomodeling.njnu.edu.cn/profile/" // 门户个人主页
             // htmlJSON:{}
         }
     },

@@ -17,7 +17,14 @@
 <!--    <script src="/static/element-ui/index.js"></script>-->
 <!--    <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">-->
 <!--    <script src="/static/js/common/axios.min.js"></script>-->
-
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/page/message_confirm.css">
+    <link rel="stylesheet" href="/static/css/base/navbar.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
+    <link rel="stylesheet" href="/static/css/base/universal.css">
 </head>
 <body>
 
@@ -64,7 +71,7 @@
                                                 <span>{{htmlJson.Date}}</span>
                                             </template>
                                             <template slot-scope="scope">
-                                                <h4>{{ scope.row.createTime }}</h4>
+                                                <h5>{{ scope.row.createTime }}</h5>
                                             </template>
                                         </el-table-column>
                                         <el-table-column
@@ -83,10 +90,23 @@
                                                 min-width="200"
                                                 show-overflow-tooltip>
                                             <template slot="header" slot-scope="scope">
+                                                <span>{{htmlJson.ItemName}}</span>
+                                            </template>
+                                            <template slot-scope="scope">
+<!--                                                <h5>{{ scope.row.relateItemName }}</h5>-->
+                                                <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
+
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="dispatcher"
+                                                min-width="200"
+                                                show-overflow-tooltip>
+                                            <template slot="header" slot-scope="scope">
                                                 <span>{{htmlJson.Dispatcher}}</span>
                                             </template>
                                             <template slot-scope="scope">
-                                                <h4>{{ scope.row.dispatcher }}</h4>
+                                                <el-link :href="userPageUrl+scope.row.dispatcherAccessId" target="_blank">{{scope.row.dispatcher}}</el-link>
                                             </template>
                                         </el-table-column>
                                         <el-table-column min-width="200">
@@ -101,8 +121,8 @@
                                                         width="30%">
                                                     <span>{{currentMessage}}</span>
                                                     <span slot="footer" class="dialog-footer">
-                                                    <el-button @click="noticeDialogVisible = false">取 消</el-button>
-                                                    <el-button type="primary" @click="noticeDialogVisible = false">确 定</el-button>
+                                                    <el-button @click="noticeDialogVisible = false">{{htmlJson.Cancel}}</el-button>
+                                                    <el-button type="primary" @click="noticeDialogVisible = false">{{htmlJson.Confirm}}</el-button>
                                                   </span>
                                                 </el-dialog>
                                                 <el-button
