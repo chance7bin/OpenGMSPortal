@@ -67,7 +67,7 @@
                                 <span>{{htmlJson.ItemName}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.itemName }}</h5>
+                                 <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -89,7 +89,8 @@
                                 <span>{{htmlJson.Editor}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.editor }}</h5>
+                                <el-link :href="userPageUrl+scope.row.editorAccessId" target="_blank">{{scope.row.editor}}</el-link>
+
                               </template>
                             </el-table-column>
                             <el-table-column min-width="250">
@@ -149,7 +150,7 @@
                                 <span>{{htmlJson.ItemName}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.itemName }}</h5>
+                                 <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -171,7 +172,7 @@
                                 <span>{{htmlJson.Editor}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.editor }}</h5>
+                                <el-link :href="userPageUrl+scope.row.editorAccessId" target="_blank">{{scope.row.editor}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column min-width="250">
@@ -231,7 +232,7 @@
                                 <span>{{htmlJson.ItemName}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.itemName }}</h5>
+                                 <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -253,7 +254,7 @@
                                 <span>{{htmlJson.Editor}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.editor }}</h5>
+                                <el-link :href="userPageUrl+scope.row.editorAccessId" target="_blank">{{scope.row.editor}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column min-width="250">
@@ -318,7 +319,7 @@
                                 <span>{{htmlJson.ItemName}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.itemName }}</h5>
+                                 <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -340,7 +341,7 @@
                                 <span>{{htmlJson.Editor}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.editor }}</h5>
+                                <el-link :href="userPageUrl+scope.row.editorAccessId" target="_blank">{{scope.row.editor}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column label="Conduct" min-width="250">
@@ -408,7 +409,7 @@
                                 <span>{{htmlJson.ItemName}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.itemName }}</h5>
+                                 <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -430,7 +431,7 @@
                                 <span>{{htmlJson.Editor}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.editor }}</h5>
+                                <el-link :href="userPageUrl+scope.row.editorAccessId" target="_blank">{{scope.row.editor}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column  min-width="250">
@@ -490,7 +491,7 @@
                                 <span>{{htmlJson.ItemName}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.itemName }}</h5>
+                                 <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -512,7 +513,7 @@
                                 <span>{{htmlJson.Editor}}</span>
                               </template>
                               <template slot-scope="scope">
-                                <h5>{{ scope.row.editor }}</h5>
+                                <el-link :href="userPageUrl+scope.row.editorAccessId" target="_blank">{{scope.row.editor}}</el-link>
                               </template>
                             </el-table-column>
                             <el-table-column min-width="250">

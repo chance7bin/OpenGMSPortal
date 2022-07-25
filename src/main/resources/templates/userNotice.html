@@ -17,7 +17,14 @@
 <!--    <script src="/static/element-ui/index.js"></script>-->
 <!--    <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">-->
 <!--    <script src="/static/js/common/axios.min.js"></script>-->
-
+    <link rel="stylesheet" href="/static/lib/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/css/page/message_confirm.css">
+    <link rel="stylesheet" href="/static/css/base/navbar.css">
+    <link rel="stylesheet" href="/static/css/base/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/base/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
+    <link rel="stylesheet" href="/static/css/base/universal.css">
 </head>
 <body>
 
@@ -87,7 +94,7 @@
                                             </template>
                                             <template slot-scope="scope">
 <!--                                                <h5>{{ scope.row.relateItemName }}</h5>-->
-                                                <el-link :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
+                                                <el-link v-if="scope.row.relateItemType" :href="'/'+scope.row.relateItemType+'/'+scope.row.relateItemId" target="_blank">{{scope.row.relateItemName}}</el-link>
 
                                             </template>
                                         </el-table-column>

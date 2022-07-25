@@ -49,7 +49,7 @@
                         <span>{{htmlJson.Date}}</span>
                       </template>
                       <template slot-scope="scope">
-                        <h4>{{ scope.row.date }}</h4>
+                        <h5>{{ scope.row.date }}</h5>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -70,6 +70,18 @@
                             <h5>{{scope.row.replier.userId}} review you about {{scope.row.itemInfo.name}} : {{scope.row.content}}</h5>
                           </div>
                         </div>
+
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="date"
+                            min-width="200">
+                      <template slot="header" slot-scope="scope">
+                        <span>{{htmlJson.ItemName}}</span>
+                      </template>
+                      <template slot-scope="scope">
+<!--                        <h5>{{ scope.row.itemInfo.name }}</h5>-->
+                        <el-link v-if="scope.row.itemInfo"  :href="'/'+scope.row.itemInfo.type+'/'+scope.row.itemInfo.id" target="_blank">{{scope.row.itemInfo.name}}</el-link>
 
                       </template>
                     </el-table-column>

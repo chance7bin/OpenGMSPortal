@@ -69,6 +69,11 @@ export var ItemTemplate = Vue.extend({
                                             type="primary"
                                             icon="el-icon-user"
                                             @click="openDialog(scope.row)">管理员设置</el-button>
+                                    <el-button
+                                            size="mini"
+                                            type="danger"
+                                            icon="el-icon-delete"
+                                            @click="deleteItem(scope.row)">删除</el-button>
                                 </template>
 
                             </el-table-column>
@@ -302,6 +307,35 @@ export var ItemTemplate = Vue.extend({
             this.admins=val.admins
             this.getUserList()
             this.currentItemId=val.id
+        },
+        deleteItem(val){
+            console.log(val)
+            let type=""
+            if(this.itemType="ModelItem"){
+                type="modelItem"
+            }else if(this.itemType="DataHub"){
+                type="dataHub"
+            }else if(this.itemType="DataItem"){
+                type="dataItem"
+            }else if(this.itemType="DataMethod"){
+                type="dataMethod"
+            }else if(this.itemType="Concept"){
+                type="concept"
+            }else if(this.itemType="SpatialReference"){
+                type="spatialReference"
+            }else if(this.itemType="Template"){
+                type="template"
+            }else if(this.itemType="Unit"){
+                type="unit"
+            }
+            axios.delete("/"+type+'/'+val.id)
+                .then( response=> {
+                    console.log(response);
+                    this.getGeoItemList()
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         //获取用户列表
         getUserList(){
