@@ -270,7 +270,7 @@
 
                     <el-tabs v-model="mainActiveName">
                         <el-tab-pane :label="htmlJSON.model" name="Model">
-                                <span slot="label" style="width: 100px">
+                                <span slot="label" style="width: 100px" @click="searchResourceClick(1)">
                                     <img src="../../static/img/model/model.png" class="square_15">
                                     <span>{{htmlJSON.model}}</span>
                             </span>

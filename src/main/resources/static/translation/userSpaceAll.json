@@ -1844,7 +1844,8 @@
     "Inspires": "Inspires",
     "Contain": "Contains",
     "EmploysDependsOn": "Employs/Depends on",
-    "Relation": "Relation"
+    "Relation": "Relation",
+    "ClassSystem": "ClassSystem"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -1861,7 +1862,7 @@
     "Community": "社区",
     "Theme": "专题",
     "MyAccount": "我的账户",
-    "Notice": "消息",
+    "Notice": "通知",
     "Version": "版本",
     "Comment": "评论",
     "DraftBox": "草稿箱",
@@ -3323,7 +3324,7 @@
         {
           "id": 10,
           "oid": "1d573467-f1f3-440a-a827-110ac1e820bd",
-          "label": "3D模型数据格式"
+          "label": "三维模型数据格式"
         },
         {
           "id": 11,
@@ -3342,7 +3343,7 @@
         "oid": "9a8680fe-ffd6-4e5a-959b-d0f157506cd3",
         "children": [{
           "id": 2,
-          "label": "声学",
+          "label": "声音",
           "oid": "58d45317-6dfa-4615-94a7-b0549125e2b0"
         }, {
           "id": 3,
@@ -3350,27 +3351,27 @@
           "oid": "143787c5-d011-468b-b319-66e9c941707b"
         }, {
           "id": 4,
-          "label": "电磁",
+          "label": "电和磁",
           "oid": "eaa28ef2-1cf2-4d8e-bfb1-fa51f8658be2"
         }, {
           "id": 5,
-          "label": "热",
+          "label": "热量",
           "oid": "f82fcaa2-abde-4e85-8dd5-4e23270f8c60"
         }, {
           "id": 6,
-          "label": "光",
+          "label": "光照",
           "oid": "4c8f27b7-7f14-451b-907f-a7cf2eebd6f0"
         }, {
           "id": 7,
-          "label": "结构学",
+          "label": "机械",
           "oid": "5fbe2a8f-64ac-4dd9-806b-b2a8166e1522"
         }, {
           "id": 8,
-          "label": "核",
+          "label": "核能",
           "oid": "f6710cbd-3158-49c0-994a-ef64c909c10e"
         }, {
           "id": 9,
-          "label": "定期",
+          "label": "周期",
           "oid": "783bc5ce-55c5-48b0-ba5c-2313afac675a"
         }, {
           "id": 10,
@@ -3382,7 +3383,7 @@
           "oid": "e5c598d0-5a89-4ee5-9c91-3c78fc26d084"
         }, {
           "id": 12,
-          "label": "时空",
+          "label": "时间和空间",
           "oid": "3a1c1a4f-af6c-47d8-8c6e-d29c33472b2f"
         }]
       }
@@ -3686,6 +3687,7 @@
     "Inspires": "产生",
     "Contain": "包含",
     "EmploysDependsOn": "取决于/依赖于",
-    "Relation": "关系"
+    "Relation": "关系",
+    "ClassSystem": "分类体系"
   }
 }

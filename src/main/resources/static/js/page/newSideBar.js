@@ -20,7 +20,10 @@ Vue.component('headSideBar', {
             },
             noticeNum:0,
 
-            htmlJSON:{}
+            htmlJSON:{},
+
+            myPage: "",
+            logOut:""
 
         }
     },
@@ -208,6 +211,15 @@ Vue.component('headSideBar', {
     },
 
     mounted(){
+
+        let lang = window.localStorage.getItem('language');
+        if(lang=="en-us"){
+            this.myPage = "My Page"
+            this.logOut = "Log Out"
+        }else{
+            this.myPage = "主页"
+            this.logOut = "退出"
+        }
 
         let that = this;
         //let that= this;

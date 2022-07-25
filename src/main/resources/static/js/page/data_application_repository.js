@@ -105,7 +105,7 @@ var data_items = new Vue({
         },
 
         transFormCate(categoryName){
-            let lang = this.getStorage("language");
+            let lang = window.localStorage.getItem("language");
 
             if (lang === "zh-cn"){
                 if (categoryName === '6117767e61ce444130b1a276')

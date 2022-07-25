@@ -21,7 +21,9 @@
     "Desc": ["Desc.","Desc."],
     "queryFields":[[1,"Name","Name"],[2,"Keyword","Keyword"],[3,"Content","Content"],[4,"Contributor","Contributor"]],
     "contributeStr":"contributed at ",
-    "noResult": "No Result"
+    "noResult": "No Result",
+    "Public": "Public",
+    "Discoverable": "Discoverable"
 
   },
   "zh-cn": {
@@ -29,7 +31,7 @@
     "PageIntro":"单位和度量标准信息库",
     "Contribute": "+ 创建新条目",
 
-    "RepositoryCollections": "知识库集合",
+    "RepositoryCollections": "分类体系",
 
     "AdvancedSearch": "高级搜索（多条件查询）",
     "SearchHolding": "输入名称",
@@ -46,6 +48,8 @@
     "Desc": ["降序","Desc."],
     "queryFields":[[1,"名称","Name"],[2,"关键词","Keyword"],[3,"内容","Content"],[4,"贡献者","Contributor"]],
     "contributeStr":"贡献于 ",
-    "noResult": "查询结果为空"
+    "noResult": "查询结果为空",
+    "Public": "公开",
+    "Discoverable": "可发现"
   }
 }
