@@ -1,9 +1,8 @@
 package njgis.opengms.portal.entity.doo.base;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.support.DailyViewCount;
@@ -37,8 +36,12 @@ public class PortalItem extends PortalIdPlus implements Serializable {
     List<String> contributors = new ArrayList<>(); //修改者
 
 //    @JsonFormat(pattern = "yyyy-MM-dd")//是否有用待测试
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     Date createTime; //创建时间
 //    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     Date lastModifyTime; //最后一次修改时间
 
     String status; //访问状态 Public, Discoverable or Private
