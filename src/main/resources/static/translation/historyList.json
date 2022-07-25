@@ -1,0 +1,13 @@
+ {
+  "en-us": {
+    "Date": "Date",
+    "Modifier": "Modifier",
+    "View": "View"
+  },
+  "zh-cn": {
+    "Date": "日期",
+    "Modifier": "修改者",
+    "View": "查看"
+  }
+
+}
