@@ -25,11 +25,11 @@ export var ItemTemplate = Vue.extend({
                                     placeholder="请输入内容"
                                     prefix-icon="el-icon-search"
                                     v-model="searchInputGeo"
-                                    @keyup.enter.native="getGeoItemList()"
+                                    @keyup.enter.native="searchGeoItemList()"
                             >
                             </el-input>
                             &nbsp;&nbsp;
-                            <el-button  type="success" icon="el-icon-search" @click="getGeoItemList()" >搜索</el-button>
+                            <el-button  type="success" icon="el-icon-search" @click="searchGeoItemList()" >搜索</el-button>
                         </div>
                     </div>
                     <div class="geoItemMainContent" >
@@ -181,33 +181,46 @@ export var ItemTemplate = Vue.extend({
             geoItemMenuData:[{
                 id:1,
                 label: 'Model',
-            }, {
-                id:2,
-                label: 'Data',
                 children: [{
+                    id:2,
+                    label: 'Model Item'
+                }, {
                     id:3,
-                    label: 'Hub Repository'
+                    label: 'Conceptual Model'
                 }, {
                     id:4,
-                    label: 'Item Repository',
+                    label: 'Logical Model',
                 },{
                     id:5,
-                    label:"Method Repository"
+                    label:"Computable Model"
                 }]
             }, {
                 id:6,
-                label: 'Community',
+                label: 'Data',
                 children: [{
                     id:7,
-                    label: 'Concept & Semantic',
+                    label: 'Hub Repository'
                 }, {
                     id:8,
-                    label: 'Spatiotemporal Reference',
+                    label: 'Item Repository',
                 },{
                     id:9,
+                    label:"Method Repository"
+                }]
+            }, {
+                id:10,
+                label: 'Community',
+                children: [{
+                    id:11,
+                    label: 'Concept & Semantic',
+                }, {
+                    id:12,
+                    label: 'Spatiotemporal Reference',
+                },{
+                    id:13,
                     label: 'Data Template',
                 },{
-                    id:10,
+                    id:14,
                     label: 'Unit & Metric',
                 },]
             }], //条目页左侧菜单
@@ -230,25 +243,31 @@ export var ItemTemplate = Vue.extend({
     methods: {
         //条目管理菜单
         handleNodeClickGeoItem(data){
-            let treeNodeId=data.$treeNodeId
-            if(treeNodeId===1){
+            let treeNodeId=data.id
+            if(treeNodeId===2){
                 this.itemType="ModelItem"
             }else if(treeNodeId===3){
-                this.itemType="DataHub"
+                this.itemType="ConceptualModel"
             }else if(treeNodeId===4){
-                this.itemType="DataItem"
+                this.itemType="LogicalModel"
             }else if(treeNodeId===5){
-                this.itemType="DataMethod"
+                this.itemType="ComputableModel"
+            }else if(treeNodeId===6){
+                this.itemType="DataHub"
             }else if(treeNodeId===7){
-                this.itemType="Concept"
+                this.itemType="DataItem"
             }else if(treeNodeId===8){
-                this.itemType="SpatialReference"
+                this.itemType="DataMethod"
             }else if(treeNodeId===9){
-                this.itemType="Template"
+                this.itemType="Concept"
             }else if(treeNodeId===10){
+                this.itemType="SpatialReference"
+            }else if(treeNodeId===11){
+                this.itemType="Template"
+            }else if(treeNodeId===12){
                 this.itemType="Unit"
             }
-            console.log(this.itemType)
+            this.currentPageGeo=1
             this.getGeoItemList()
         },
 
@@ -278,6 +297,12 @@ export var ItemTemplate = Vue.extend({
         },
         handleCurrentChangeGeo(val){
             this.currentPageGeo=val
+            this.getGeoItemList()
+        },
+
+        //搜索条目
+        searchGeoItemList(){
+            this.currentPageGeo=1
             this.getGeoItemList()
         },
 
@@ -311,8 +336,12 @@ export var ItemTemplate = Vue.extend({
         deleteItem(val){
             console.log(val)
             let type=""
-            if(this.itemType="ModelItem"){
-                type="modelItem"
+            if(this.itemType="ConceptualModel"){
+                type="conceptualModel"
+            }else if(this.itemType="LogicalModel"){
+                type="logicalModel"
+            }else if(this.itemType="ComputableModel"){
+                type="computableModel"
             }else if(this.itemType="DataHub"){
                 type="dataHub"
             }else if(this.itemType="DataItem"){
@@ -328,14 +357,27 @@ export var ItemTemplate = Vue.extend({
             }else if(this.itemType="Unit"){
                 type="unit"
             }
-            axios.delete("/"+type+'/'+val.id)
-                .then( response=> {
-                    console.log(response);
-                    this.getGeoItemList()
-                })
-                .catch(function (error) {
-                    console.log(error);
+
+
+            this.$confirm('删除该条目, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                axios.delete("/"+type+'/'+val.id)
+                    .then( response=> {
+                        console.log(response);
+                        this.getGeoItemList()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
+            });
         },
         //获取用户列表
         getUserList(){

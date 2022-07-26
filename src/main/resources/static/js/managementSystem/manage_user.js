@@ -35,7 +35,7 @@ export var UserTemplate = Vue.extend({
                         :default-sort="{ prop: 'viewCount', order: 'descending' }"
                 >
 
-                    <el-table-column sortable label="姓名"show-overflow-tooltip min-width="200px">
+                    <el-table-column sortable prop="name" label="姓名" show-overflow-tooltip min-width="200px">
                         <template slot-scope="scope" >
                             <el-link :href="userPageUrl+scope.row.accessId" target="_blank">{{scope.row.name}}</el-link>
                         </template>
