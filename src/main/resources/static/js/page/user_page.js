@@ -7,6 +7,7 @@ new Vue({
     },
     data() {
         return {
+            saveTip:"",
             resourceCount:{
                 computableModel: 0,
                 concept: 0,
@@ -357,7 +358,16 @@ new Vue({
     },
 
     methods: {
+        InitLanguage(){
+            const language = window.localStorage.getItem("language");
 
+            if (language == "en-us"){
+                this.saveTip = "Successfully saved!"
+            }else {
+                this.saveTip = "保存成功!"
+
+            }
+        },
         changeModelIndex(index){
             this.modelIndex = index
         },
@@ -3302,6 +3312,7 @@ new Vue({
     },
 
     async created(){
+        this.InitLanguage();
         await this.getUserInfo();
         this.modelItemHandleCurrentChange(1);
         this.dataItemHandleCurrentChange(1);
@@ -3796,7 +3807,6 @@ new Vue({
         dragBar();
 
         // scaleImg();
-
         function saveUserIcon(img) {
             $.ajax({
                     data:{img:img},
@@ -3809,9 +3819,16 @@ new Vue({
                         window.location.href = "/user/login"
                     } else {
                         that.getUserInfo();
-                        alert('Save successfully!')
+
+                        that.$message({
+                            message: that.saveTip,
+                            type: 'success'
+                        });
                         let src= json.data
+                        that.userPersonalInfo.image = img
                         $('.userIcon').attr("src",that.userPersonalInfo.image)
+                        $('.round_icon').attr("src",that.userPersonalInfo.image)
+
                         $('#editUserImg').modal('hide')
                     }
                 }

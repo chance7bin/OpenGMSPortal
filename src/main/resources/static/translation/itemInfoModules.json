@@ -84,7 +84,7 @@
       "ConceptSemantic":"概念和语义",
    "SpatialReference":"空间参考",
     "DataTemplate":"数据模板",
-     "UnitMetric":"单位度量",
+     "UnitMetric":"单位量纲",
       "logicalModel":"逻辑模型",
        "computableModel":"计算模型",
        "conceptualModel":"概念模型",

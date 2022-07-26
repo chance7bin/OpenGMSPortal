@@ -201,7 +201,7 @@ new Vue({
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : this.htmlJson.ClassSystem,
+                            "title" : this.htmlJson.RepositoryCollections,
                             "description" : this.htmlJson.QueryTemplateByChoosingCollection,
                             "position" : "right-top",
                         }

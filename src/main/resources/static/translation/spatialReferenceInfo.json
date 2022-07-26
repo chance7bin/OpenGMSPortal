@@ -210,8 +210,12 @@
     "SureSubmitChanges": "Are you sure to submit changes?",
     "Yes": "Yes",
     "No": "No",
-    "Public": "Public"
-
+    "Public": "Public",
+    "CannotTransform": "The selected coordinates are not supported to transform.",
+    "InputValidValue": "Please input valid value",
+    "InputCoordinatesystem":"Please select the input coordinate system",
+    "OutputCoordinatesystem": "Please select the output coordinate system",
+    "InputCsvFile": "Please input a csv file"
   },
   "zh-cn": {
     "Classification": "类别",
@@ -421,8 +425,12 @@
     "Yes": "确认",
     "No": "取消",
     "Public": "公开",
-    "Discoverable": "可发现"
-
+    "Discoverable": "可发现",
+    "CannotTransform":"所选坐标不支持转换.",
+    "InputValidValue": "请输入有效的值",
+    "InputCoordinatesystem": "请选择输入坐标系",
+    "OutputCoordinatesystem": "请选择输出坐标系",
+    "InputCsvFile": "请输入csv文件"
   }
 
 }
