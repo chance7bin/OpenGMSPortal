@@ -2,7 +2,7 @@ package njgis.opengms.portal.component.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import njgis.opengms.portal.component.AdminRequired;
+import njgis.opengms.portal.component.annotation.AdminRequired;
 import njgis.opengms.portal.dao.UserDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;

@@ -2,7 +2,7 @@ package njgis.opengms.portal.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import njgis.opengms.portal.component.LoginRequired;
+import njgis.opengms.portal.component.annotation.LoginRequired;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.draft.EditDraftDTO;
 import njgis.opengms.portal.service.EditDraftService;

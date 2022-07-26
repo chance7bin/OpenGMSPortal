@@ -1,6 +1,6 @@
 package njgis.opengms.portal.service;
 
-import njgis.opengms.portal.component.AopCacheEvict;
+import njgis.opengms.portal.component.annotation.AopCacheEvict;
 import njgis.opengms.portal.dao.GenericItemDao;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.enums.ItemTypeEnum;

@@ -323,6 +323,8 @@ public class UserService {
      **/
     public int updatePartInfotoUserServer(String email,JSONObject updateInfo) throws ParseException, IOException, URISyntaxException, IllegalAccessException {
 
+        genericService.userCacheEvict(email);
+
         try {
             String token = tokenService.checkToken(email);
             if(token.equals("out")){
@@ -487,35 +489,7 @@ public class UserService {
      * @Date 2021/7/6
      **/
     public JSONObject getInfoFromUserServer(String email){
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            String userInfoUrl = "http://" + userServer + "/user/" + email + "/" + userServerCilent + "/" + userServerCilentPWD;
-            HttpHeaders headers = new HttpHeaders();
-            MediaType mediaType = MediaType.parseMediaType("application/json;charset=UTF-8");
-            headers.setContentType(mediaType);
-            headers.set("user-agent", "portal_backend");
-            HttpEntity httpEntity = new HttpEntity(headers);
-            ResponseEntity<JSONObject> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, httpEntity, JSONObject.class);
-            JSONObject userInfo = response.getBody().getJSONObject("data");
-
-            String avatar = userInfo.getString("avatar");
-            if(avatar!=null){
-                // avatar = "/userServer" + avatar;
-                //修正avatar前面加了/userServer
-                // avatar = avatar.replaceAll("/userServer","");
-                genericService.formatUserAvatar(avatar);
-            }
-            userInfo.put("avatar",avatar);
-            userInfo.put("msg","suc");
-            return userInfo;
-        }catch(Exception e){
-            log.error(e.getMessage());
-            // System.out.println(e.fillInStackTrace());
-            jsonObject.put("msg","no user");
-        }
-        return jsonObject;
+        return genericService.getInfoFromUserServer(email);
     }
 
     /**
@@ -644,7 +618,6 @@ public class UserService {
 
         return jsonObject;
     }
-
 
     public JSONObject getItemUserInfoByEmail(String email) {
         User user = null;
@@ -1118,7 +1091,12 @@ public class UserService {
         }
     }
 
+
+
     public int updateUsertoServer(UserShuttleDTO userShuttleDTO) throws Exception {
+
+        genericService.userCacheEvict(userShuttleDTO.getEmail());
+
         String token = tokenService.checkToken(userShuttleDTO.getEmail());
         if(token.equals("out")){
             return -1;
