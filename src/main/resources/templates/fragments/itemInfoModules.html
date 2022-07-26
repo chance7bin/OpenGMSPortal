@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>itemInfoModule</title>
+    <script type="text/javascript" src="/static/js/page/repositoryInfo.js"></script>
 </head>
 <body>
 <div  th:fragment="description(itemInfo, detailLanguage, showTag)" id="description" th:if="${detailLanguage!=''}" class="detail_block">
@@ -2448,7 +2449,7 @@
                         <el-input   id="ipt1"
                                     size="medium"
                                     type="text"
-                                    placeholder="input a value"
+                                    :placeholder="inputvalue"
                                     v-model="ipt1value">
                         </el-input>
 
@@ -2479,7 +2480,7 @@
                     <el-col :span="12">
                         <el-input  id="ipt2"
                                    size="medium"
-                                   placeholder="output a value"
+                                   :placeholder="outputvalue"
                                    :readonly= "true"
                         >
                         </el-input>
@@ -2490,7 +2491,7 @@
 
                         <el-select  id="slct2"
                                     size="medium"
-                                    placeholder="select the value"
+                                    :placeholder="selectvalue"
                                     v-model="slct2Value"
                                     style="width: 100%">
                             <el-option
