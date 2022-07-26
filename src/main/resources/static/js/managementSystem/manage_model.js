@@ -137,7 +137,7 @@ export var ModelTemplate = Vue.extend({
                         >
                             <el-table-column type="selection">
                             </el-table-column>
-                            <el-table-column sortable label="名称" show-overflow-tooltip min-width="200px">
+                            <el-table-column sortable prop="name" label="名称" show-overflow-tooltip min-width="200px">
                                 <template slot-scope="scope" >
                                     <el-link :href="computableModelUrl+scope.row.id" target="_blank" >{{scope.row.name}}</el-link>
                                 </template>
@@ -150,7 +150,7 @@ export var ModelTemplate = Vue.extend({
                             </el-table-column>
 
                             <el-table-column sortable prop="viewCount" label="访问量" min-width="80px"></el-table-column>
-                            <el-table-column sortable label="模型容器IP" min-width="120px">
+                            <el-table-column label="模型容器IP" min-width="120px">
                                 <template slot-scope="scope" >
                                   <el-popover
                                     placement="bottom"
