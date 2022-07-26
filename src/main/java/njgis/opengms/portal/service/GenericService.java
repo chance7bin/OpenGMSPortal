@@ -150,7 +150,7 @@ public class GenericService {
             findDTO.setSortField("viewCount");
         }
         //页码前端从1开始，后端需要减一
-        findDTO.setPage(findDTO.getPage()-1);
+        // findDTO.setPage(findDTO.getPage()-1);
 
         //curQueryField 需要转换成小写
         findDTO.setCurQueryField(findDTO.getCurQueryField().toLowerCase());
@@ -177,7 +177,7 @@ public class GenericService {
         int totalElements = 0;
         try {
             Page itemsPage;
-            Pageable pageable = PageRequest.of(findDTO.getPage() , findDTO.getPageSize(), Sort.by(findDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,findDTO.getSortField()));
+            Pageable pageable = getPageable(findDTO);
 
             // 从工厂中拿对应的dao
             JSONObject daoFactory = daoFactory(type);

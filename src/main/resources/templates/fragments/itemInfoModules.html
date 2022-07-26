@@ -230,7 +230,7 @@
         </div>
     </div>
     <!--<div class="detail_overview" th:if="${itemInfo.overview!=null||itemInfo.image!=null}">-->
-    <div class="detail_overview" th:if="${itemInfo.overview!=null||itemInfo.image!=null}">
+    <div class="detail_overview">
         <div th:if="${itemInfo.image!=null}">
             <div th:if="${modularType.name} eq 'ModelItem'"  th:switch="${itemInfo.image}" class="img">
                 <img th:case="''" src="/static/img/model/model.png">
@@ -310,7 +310,8 @@
                 <span th:case="'LogicalModel'" class="label label-info" translateId="logicalModel"></span>
                 <div th:case="'ComputableModel'">
                     <span class="label label-info" translateId="computableModel"></span>
-                    <span class="label label-info" translateId="package"></span>
+                    <!--<span class="label label-info" translateId="package"></span>-->
+                    <span class="label label-info" th:translateId="${itemInfo.contentType}"></span>
                 </div>
                 <span th:case="'ConceptualModel'" class="label label-info" translateId="conceptualModel"></span>
                 <span th:case="*" >
@@ -444,55 +445,57 @@
 
 <!--resource资源-->
 <div th:fragment="Resource(resources,type)" id="Resource" class="detail_block" style="padding: 10px 20px 0 0;">
-    <div class="block_head">
-        <div class="head_text">
-            <h4 v-text="htmlJSON.Resource"></h4>
+    <div th:if="${#lists.size(resources)}!=0">
+        <div class="block_head">
+            <div class="head_text">
+                <h4 v-text="htmlJSON.Resource"></h4>
+            </div>
         </div>
-    </div>
-    <div class="block_content" style="margin-right: 0;">
-        <div class="el-card filecontent is-always-shadow" id="browsercont"
-             style=" overflow-y: auto;">
-            <div class="el-card dataitemisol is-never-shadow"
-                 th:each="data,key:${resources}"
-                 th:title="${data.name}" shadow="never" th:id="${key.index}"
-                 th:key="${key.index}" @click.native="getid(id)"
-                 style="width: 150px;">
-                <i class="fas fa-file-download"></i>
-                <!--th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"-->
-                <a target="_blank"
-                   th:href="'/' + ${type} + '/resource/download/' + ${itemInfo.id} + '/' + ${key.index}"
-                   style="color:black">
-                    <div class="resouceFile el-card__body">
-                        <div class="el-row">
-                            <!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
-                            <div class="fileIcon el-col el-col-12" style="margin-left: 30px;">
-                                <img
+        <div class="block_content" style="margin-right: 0;">
+            <div class="el-card filecontent is-always-shadow" id="browsercont"
+                 style=" overflow-y: auto;">
+                <div class="el-card dataitemisol is-never-shadow"
+                     th:each="data,key:${resources}"
+                     th:title="${data.name}" shadow="never" th:id="${key.index}"
+                     th:key="${key.index}" @click.native="getid(id)"
+                     style="width: 150px;">
+                    <i class="fas fa-file-download"></i>
+                    <!--th:href="'/static/' + ${type} + '/' + ${itemInfo.contentType} + ${data.path.path}"-->
+                    <a target="_blank"
+                       th:href="'/' + ${type} + '/resource/download/' + ${itemInfo.id} + '/' + ${key.index}"
+                       style="color:black">
+                        <div class="resouceFile el-card__body">
+                            <div class="el-row">
+                                <!--                                        <div class="el-col el-col-6">&nbsp;</div>-->
+                                <div class="fileIcon el-col el-col-12" style="margin-left: 30px;">
+                                    <img
                                         th:src="'/static/img/filebrowser/'+${data.suffix}+'.svg'"
                                         onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'"
                                         style="width: 100%;">
-                            </div>
-                            <div style="margin-left: 15px;display: none" class="downloadIcon" >
-                                <img
+                                </div>
+                                <div style="margin-left: 15px;display: none" class="downloadIcon" >
+                                    <img
                                         th:src="'/static/img/filebrowser/download.png'"
                                         onerror="this.onerror='';src='/static/img/filebrowser/unknow.svg'">
+                                </div>
+                                <div class="el-col el-col-6">&nbsp;</div>
                             </div>
-                            <div class="el-col el-col-6">&nbsp;</div>
-                        </div>
-                        <div class="el-row" style="height: 45px;">
-                            <div class="el-col el-col-2">&nbsp;</div>
-                            <div class="el-col el-col-20 fileIcon">
-                                <p th:text="${data.name}" style="overflow: hidden;
+                            <div class="el-row" style="height: 45px;">
+                                <div class="el-col el-col-2">&nbsp;</div>
+                                <div class="el-col el-col-20 fileIcon">
+                                    <p th:text="${data.name}" style="overflow: hidden;
                                         overflow-wrap: break-word; word-break: break-all; text-align: center;
                                         display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;line-height: 1.5">
-                                </p>
+                                    </p>
+                                </div>
+                                <div class="el-col el-col-2">&nbsp;</div>
                             </div>
-                            <div class="el-col el-col-2">&nbsp;</div>
                         </div>
-                    </div>
 
-                </a>
+                    </a>
+                </div>
+
             </div>
-
         </div>
     </div>
 </div>

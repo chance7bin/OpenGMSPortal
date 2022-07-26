@@ -146,10 +146,10 @@
                 </div>
                 <div class="block_content" th:object="${itemInfo}">
                     <div id="cite-text" class="">
-                        <span th:if="${authorship!=''}"
-                              th:text="${authorships}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
-                        <span th:if="${authorship==''}"
-                              th:text="${user.name}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', Data Item, OpenGMS, '"></span>
+                        <span th:if="${authorships!=''}"
+                              th:text="${authorships}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', ' + ${modularType.text=='dataItem'?'Data Item':'Data Hub'} + ', OpenGMS, '"></span>
+                        <span th:if="${authorships==''}"
+                              th:text="${user.name}+' ('+${#dates.format(itemInfo.createTime,'yyyy')}+'). '+${itemInfo.name}+', ' + ${modularType} + ', OpenGMS, '"></span>
                         <a style="word-break:break-all;"
                            th:href="'https://geomodeling.njnu.edu.cn/' + ${modularType.text} + '/'+${itemInfo.id}"
                            th:text="'https://geomodeling.njnu.edu.cn/' + ${modularType.text} + '/'+${itemInfo.id}"></a>
