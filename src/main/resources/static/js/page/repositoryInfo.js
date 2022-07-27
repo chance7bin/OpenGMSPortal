@@ -19,7 +19,9 @@ new Vue({
         useroid: "",
         userId:"",
         userImg: "",
-
+        inputvalue:"",
+        outputvalue:"",
+        selectvalue:"",
         item_classifications:[],
 
         addLocalVisible:false,
@@ -489,6 +491,26 @@ new Vue({
             }
         },
 
+        Initlanguage(){
+            const language = window.localStorage.getItem("language");
+
+            if (language == "en-us"){
+                var loginTip = "This function requires an account, please login first."
+                var login = "Log in"
+                var tip = "Tip"
+                this.inputvalue="input a value"
+                this.outputvalue="output a value"
+                this.selectvalue="select the value"
+            }else {
+                var loginTip = "该操作需要一个账户，请先登录."
+                var login = "登录"
+                var tip = "提示"
+                this.inputvalue="输入一个值"
+                this.outputvalue="输出一个值"
+                this.selectvalue="选择一个值"
+            }
+        },
+
         getClassifications(){
         },
         translatePage(jsonContent){
@@ -884,17 +906,7 @@ new Vue({
                 crossDomain: true,
                 success: (result) => {
                     if (result.code !== 0) {
-                        const language = window.localStorage.getItem("language");
 
-                        if (language == "zh-cn"){
-                            var loginTip = "This function requires an account, please login first."
-                            var login = "Log in"
-                            var tip = "Tip"
-                        }else {
-                            var loginTip = "该操作需要一个账户，请先登录."
-                            var login = "登录"
-                            var tip = "提示"
-                        }
 
                         this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', tip, {
                             dangerouslyUseHTMLString: true,
@@ -1374,27 +1386,27 @@ new Vue({
         async transformClick(){
             if(this.judgeUnit(this.inputCoordinate)==='metre'){
                 if(this.inputCoordinate.name==''){
-                    this.$alert('Please select the input coordinate system')
+                    this.$alert(this.htmlJSON.InputCoordinatesystem)
                     return
                 }
                 if(this.inputX==''||this.inputY==''||!this.isNum(this.inputX)||!this.isNum(this.inputY)){
-                    this.$alert('Please input valid value')
+                    this.$alert(this.htmlJSON.InputValidValue)
                     return
                 }
 
             }else{
                 if(this.inputCoordinate.name==''){
-                    this.$alert('Please select the input coordinate system')
+                    this.$alert(this.htmlJSON.InputCoordinatesystem)
                     return
                 }
                 if(this.inputLong==''||this.inputLat==''||!this.isNum(this.inputLong)||!this.isNum(this.inputLat)){
-                    this.$alert('Please input valid value')
+                    this.$alert(this.htmlJSON.InputValidValue)
                     return
                 }
             }
 
             if(this.outputCoordinate.name==''){
-                this.$alert('Please select the output coordinate system')
+                this.$alert(this.htmlJSON.OutputCoordinatesystem)
                 return
             }
 
@@ -1426,7 +1438,8 @@ new Vue({
             var secondProjection = this.outputCoordinate.wkt;
 
             if(firstProjection.indexOf('GEOGCS')==-1||secondProjection.indexOf('GEOGCS')==-1){
-                this.$alert('The selected coordinates are not supported to transform.')
+                    this.$alert(this.htmlJSON.CannotTransform)
+
                 console.log(1);
                 return
             }
@@ -1443,7 +1456,7 @@ new Vue({
                 }
             }catch (e) {
                 console.log("e:",e);
-                this.$alert('The selected coordinates are not supported to transform.')
+                this.$alert(this.htmlJSON.CannotTransform)
                 console.log(2);
             }
 
@@ -1560,8 +1573,9 @@ new Vue({
         },
 
         batchinputTransform(){
-            this.batchSpatialInputDialog=false
-            this.batchSpatialLoading=true
+
+            //
+
             let formData = new FormData()
 
             let spatialInfo = {
@@ -1571,36 +1585,48 @@ new Vue({
                 outputRefWkt:this.outputCoordinate.wkt,
             }
             formData.append('spatialInfo',JSON.stringify(spatialInfo))
+            console.log(this.csvFile.length)
+            if(this.csvFile.length==0){
+                this.$message(this.htmlJSON.InputCsvFile);
+                // alert(this.htmlJSON.InputCsvFile)
+                // return
+            }
+            else{
 
-            formData.append('csv',this.csvFile[0].raw)
+                console.log(11)
+                formData.append('csv',this.csvFile[0].raw)
 
-            this.csvFile = [];
+                this.csvFile = [];
 
-            $.ajax(
-                {
-                    url:'/GDAL/transformSpatialByBatch',
-                    type:'post',
-                    data:formData,
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    async: true,
-                    success:(res)=>{
-                        if(res.code != -1){
-                            this.batchSpatialOutput = res.data.csv
-                            this.batchSpatialOutputDialog = true
-                            this.useroid = res.data.user
+                $.ajax(
+                    {
+                        url:'/GDAL/transformSpatialByBatch',
+                        type:'post',
+                        data:formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        async: true,
+                        success:(res)=>{
+                            if(res.code != -1){
+                                this.batchSpatialOutput = res.data.csv
+                                this.batchSpatialOutputDialog = true
+                                this.useroid = res.data.user
 
-                        }else{
-                            this.$message(this.htmlJson.FailToTransform);
+                            }else{
+                                this.$message(this.htmlJson.FailToTransform);
+                            }
+                            this.batchSpatialLoading = false
+                        },
+                        error:(res)=>{
+                            this.batchSpatialLoading = false
                         }
-                        this.batchSpatialLoading = false
-                    },
-                    error:(res)=>{
-                        this.batchSpatialLoading = false
                     }
-                }
-            )
+                )
+                this.batchSpatialInputDialog=false
+                this.batchSpatialLoading=true
+            }
+
         },
 
         downloadSpatialOutput(){
@@ -2427,7 +2453,12 @@ new Vue({
             return new Array(hour,minute,second);
         }
     },
+    updated(){
+        this.Initlanguage()
+    },
     mounted() {
+
+
 
         // console.log("this.oid_cvt:",this.oid_cvt);
 

@@ -140,7 +140,7 @@ var data_items = new Vue({
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : this.htmlJson.ModelClassifications,
+                            "title" : this.htmlJson.MethodCategories,
                             "description" : this.htmlJson.QueryProcessByChoosingCollection,
                             "position" : "right-top",
                         }
