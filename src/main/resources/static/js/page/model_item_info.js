@@ -1409,12 +1409,13 @@ var info=new Vue({
         },
 
         getAlias(){
-            this.editAliasDialog = true
+
             axios.get('/modelItem/alias/'+this.modelId
             ).then(res => {
                 if(res.data.code == -1){
                     this.confirmLogin()
                 }else{
+                    this.editAliasDialog = true
                     Vue.nextTick(()=>{
                         if($('#aliasInput').nextAll().length>0){
                             $('#aliasInput').tagEditor('destroy');

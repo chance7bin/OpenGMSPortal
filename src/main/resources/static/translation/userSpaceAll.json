@@ -1846,7 +1846,12 @@
     "EmploysDependsOn": "Employs/Depends on",
     "Relation": "Relation",
     "ClassSystem": "ClassSystem",
-    "MethodCategories": "Method Categories"
+    "MethodCategories": "Method Categories",
+    "Delete": "Delete",
+    "SureToDelete": "Are you sure to delete this model container?",
+    "Tip": "Tip",
+    "RegisterTime": "Register Time",
+    "LastUpdatedTime": "Last Updated Time"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2085,6 +2090,7 @@
     "Delete": "删除",
     "Cancel": "取消",
     "Confirm": "确认",
+    "SureToDelete": "你确认要删除此模型容器吗？",
     "MarkAllRead": "标记全部已读",
     "MarkRead": "标记已读",
 
@@ -3691,6 +3697,10 @@
     "EmploysDependsOn": "取决于/依赖于",
     "Relation": "关系",
     "ClassSystem": "分类体系",
-    "MethodCategories": "方法类别"
+    "MethodCategories": "方法类别",
+    "Delete": "删除",
+    "Tip": "提示",
+    "RegisterTime": "注册时间",
+    "LastUpdatedTime":"上次更新时间"
   }
 }
