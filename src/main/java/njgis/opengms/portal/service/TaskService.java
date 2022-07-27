@@ -96,6 +96,7 @@ public class TaskService {
     @Value("${resourcePath}")
     private String resourcePath;
 
+    private int modelInvokeInternal = 180;
 
     /**
      * 初始化任务

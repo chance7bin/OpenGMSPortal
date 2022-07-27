@@ -215,7 +215,8 @@ Vue.component("editLogicalModelModule",
 
             init:function () {
 
-                if ('WebSocket' in window) {
+                //  1===0 表示不执行该方法，执行的话把这个去掉
+                if (1===0 && 'WebSocket' in window) {
                     // this.socket = new WebSocket("ws://localhost:8080/websocket");
                     this.socket = new WebSocket(this.path);
                     // 监听socket连接
