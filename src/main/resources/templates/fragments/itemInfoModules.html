@@ -373,7 +373,7 @@
                 <h4 translateId="Classification">Classification(s)</h4>
             </div>
             <span th:if="${showTag==true}" class="blockEdit">
-                            <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
+                            <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top" >
                                 <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                                            type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
                             </el-tooltip>
@@ -426,7 +426,7 @@
         <span class="blockEdit">
                  <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
                     <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                               type="primary" icon="el-icon-edit" circle></el-button>
+                               type="primary" icon="el-icon-edit" circle @click="getAlias"></el-button>
                 </el-tooltip>
                 <el-tooltip popper-class="fontsize-15"
                             :content="htmlJSON.anotherVersion"

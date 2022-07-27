@@ -217,7 +217,7 @@ Vue.component('headSideBar', {
             this.myPage = "My Page"
             this.logOut = "Log Out"
         }else{
-            this.myPage = "主页"
+            this.myPage = "个人主页"
             this.logOut = "退出"
         }
 

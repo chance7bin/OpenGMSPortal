@@ -366,7 +366,8 @@ var userAccount = Vue.extend(
                     res => {
                         if(res.data.code==0){
                             this.userInfo = res.data.data//userserver多包一层data
-                            this.userInfo.avatar = "http://geomodeling.njnu.edu.cn" + this.userInfo.avatar
+                            // this.userInfo.avatar = "http://geomodeling.njnu.edu.cn" + this.userInfo.avatar
+                            // this.userInfo.avatar = this.userInfo.avatar
                             this.subscribe = this.userInfo.subscribe;
                             let orgs = this.userInfo.organizations;
 

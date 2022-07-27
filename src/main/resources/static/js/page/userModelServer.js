@@ -4,6 +4,9 @@ var userModelServer = Vue.extend(
         props: ['htmlJson'],
         data(){
             return{
+                EditContainerName:"",
+                Name:"",
+                Date:"",
                 //页面样式控制
                 loading: 'false',
                 load: true,
@@ -77,6 +80,19 @@ var userModelServer = Vue.extend(
         },
 
         methods:{
+            InitLanguage(){
+                const language = window.localStorage.getItem("language");
+
+                if (language == "en-us"){
+                    this.EditContainerName="Edit Container Name"
+                    this.Name="Name"
+                    this.Date="Date"
+                }else {
+                    this.EditContainerName="编辑容器名称"
+                    this.Name="名称"
+                    this.Date="日期"
+                }
+            },
             //公共功能
             formatDate(value,callback) {
                 const date = new Date(value);
@@ -134,10 +150,10 @@ var userModelServer = Vue.extend(
             },
 
             deleteNodeClick(node){
-                 this.$confirm('Are you sure to <b>delete</b> this model container?', 'Tip', {
+                 this.$confirm(this.htmlJson.SureToDelete, this.htmlJson.Tip, {
                                          type:"warning",
-                                         cancelButtonText: 'Cancel',
-                                         confirmButtonText: 'Confirm',
+                                         cancelButtonText:this.htmlJson.Cancel,
+                                         confirmButtonText:this.htmlJson.Confirm,
                                          dangerouslyUseHTMLString: true,
                                      }
                                  ).then(() => {
@@ -314,12 +330,14 @@ var userModelServer = Vue.extend(
         },
 
         created() {
+            // this.htmlJson = this.getStorage("userSpaceAll");
 
-
+        },
+        updated(){
+            this.InitLanguage();
         },
 
         mounted() {
-
             $(() => {
 
                 let height = document.documentElement.clientHeight;
@@ -396,6 +414,5 @@ var userModelServer = Vue.extend(
             //初始化的时候吧curIndex传给父组件，来控制bar的高亮显示
             this.sendcurIndexToParent()
         },
-
     }
 )
