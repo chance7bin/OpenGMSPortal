@@ -336,9 +336,9 @@ public class TaskController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "把任务公有化 [ /setPublic ]")
-    @RequestMapping(value = "/publicization/{taskId}",method = RequestMethod.POST)
-    public JsonResult setPublic(@PathVariable String taskId)
+    @ApiOperation(value = "把任务公有化")
+    @RequestMapping(value = "/setPublic",method = RequestMethod.POST)
+    public JsonResult setPublic(@RequestParam String taskId,HttpServletRequest httpServletRequest)
     {
         return taskService.setPublic(taskId);
     }

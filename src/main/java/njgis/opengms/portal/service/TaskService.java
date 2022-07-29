@@ -18,6 +18,7 @@ import njgis.opengms.portal.entity.doo.user.UserTaskInfo;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.*;
+import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.utils.*;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -98,6 +99,9 @@ public class TaskService {
 
     private int modelInvokeInternal = 180;
 
+    @Autowired
+    RedisService redisService;
+
     /**
      * 初始化任务
      * @param id
@@ -109,7 +113,8 @@ public class TaskService {
         //条目信息
         ComputableModel modelInfo = computableModelDao.findFirstById(id);
         modelInfo.setInvokeCount(modelInfo.getInvokeCount() + 1);
-        computableModelDao.save(modelInfo);
+        // computableModelDao.save(modelInfo);
+        redisService.saveItem(modelInfo, ItemTypeEnum.ComputableModel);
 
         //用户信息
         User user = userDao.findFirstByEmail(modelInfo.getAuthor());
@@ -348,7 +353,8 @@ public class TaskService {
 
             });
             computableModel.setTestDataCache(resultDataDTOs);
-            computableModelDao.save(computableModel);
+            // computableModelDao.save(computableModel);
+            redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);
             return ResultUtils.success(resultDataDTOs);
 
         }
@@ -688,7 +694,8 @@ public class TaskService {
 
             computableModel.setDailyInvokeCount(dailyInvokeCount);
             computableModel.setInvokeCount(computableModel.getInvokeCount()+1);
-            computableModelDao.save(computableModel);
+            // computableModelDao.save(computableModel);
+            redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);
 
             //存入用户信息记录
             String msg= userService.addTaskInfo(email,userTaskInfo);
@@ -1126,7 +1133,8 @@ public class TaskService {
 
         ComputableModel modelInfo = computableModelDao.findFirstById(modelId);
         modelInfo.setViewCount(modelInfo.getViewCount() + 1);
-        computableModelDao.save(modelInfo);
+        // computableModelDao.save(modelInfo);
+        redisService.saveItem(modelInfo, ItemTypeEnum.ComputableModel);
 
         User user = userDao.findFirstByEmail(modelInfo.getAuthor());
         JSONObject userJSON = userService.getInfoFromUserServer(user.getEmail());

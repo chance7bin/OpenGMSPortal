@@ -1439,10 +1439,10 @@ var info=new Vue({
             }
 
             let data = {
-                oid:this.modelId,
+                id:this.modelId,
                 alias:alias,
             };
-            $.post("/modelItem/updateAlias",data,(result)=>{
+            $.post("/modelItem/alias",data,(result)=>{
                 if (result.code == -1) {
                     this.confirmLogin()
                 }else{

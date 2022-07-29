@@ -695,6 +695,7 @@ public class RepositoryService {
      **/
     public JSONArray getThematic() {
         List<Theme> themes= themeDao.findAll();
+        Collections.sort(themes, Collections.reverseOrder());
         JSONArray themeRs = new JSONArray();
         for (int i=0;i<themes.size();i++){
             JSONObject themeR = new JSONObject();
