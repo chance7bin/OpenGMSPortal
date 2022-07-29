@@ -7,7 +7,7 @@ export var VersionTemplate = Vue.extend({
                         <div class=" flexColumnStart">
                                 <div class="flexRowBetween">
                                     <el-input
-                                            placeholder="请输入内容"
+                                            placeholder="请输入名称"
                                             prefix-icon="el-icon-search"
                                             v-model="searchInputWaitVersion"
                                             @keyup.enter.native="getWaitVersionList()"
