@@ -547,8 +547,8 @@ var userAccount = Vue.extend(
 
                         this.$refs.userAvatar.updateAvatar();
 
-                        $('.userIcon').attr("src",that.userInfo.avatar)
-                        $('.round_icon').attr("src",that.userInfo.avatar)
+                        // $('.userIcon').attr("src",that.userInfo.avatar)
+                        // $('.round_icon').attr("src",that.userInfo.avatar)
                     }
                 });
             },
