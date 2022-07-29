@@ -22,7 +22,7 @@ export var ItemTemplate = Vue.extend({
                     <div class="geoSubTopMenu ">
                         <div class="flexRowBetween">
                             <el-input
-                                    placeholder="请输入内容"
+                                    placeholder="请输入条目名称"
                                     prefix-icon="el-icon-search"
                                     v-model="searchInputGeo"
                                     @keyup.enter.native="searchGeoItemList()"
