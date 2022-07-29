@@ -227,7 +227,7 @@ export var ModelTemplate = Vue.extend({
             currentPage: 1,  //模型列表当前页
             PageSize: 20,  //模型列表每页数量
             searchInput:"", //模型列表搜索框内容
-            sortField:"createTime", //模型列表排序字段 默认时间
+            sortField:"viewCount", //模型列表排序字段
             ifAsc:false, //模型请求列表升降序
             historyTableVisible:false, //历史记录弹出框
             historyList:[], //历史记录数据
