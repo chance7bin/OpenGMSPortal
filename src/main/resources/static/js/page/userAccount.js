@@ -546,6 +546,9 @@ var userAccount = Vue.extend(
                         that.$parent.getUserInfo();//调用父组件的getuser,修改headBar的userInfo
 
                         this.$refs.userAvatar.updateAvatar();
+
+                        $('.userIcon').attr("src",that.userInfo.avatar)
+                        $('.round_icon').attr("src",that.userInfo.avatar)
                     }
                 });
             },

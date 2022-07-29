@@ -77,9 +77,10 @@ public class ThemeService {
         User user;
         for(Maintainer maintainer:maintainers){
             user = userDao.findFirstByEmail(maintainer.getId());
-            if(maintainer.getImage()==null||maintainer.getImage().equals("")){
-                maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
-            }
+            // if(maintainer.getImage()==null||maintainer.getImage().equals("")){
+            //     maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
+            // }
+            maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
             if(maintainer.getEmail()==null||maintainer.getEmail().equals("")){
                 maintainer.setEmail(user.getEmail());
             }
