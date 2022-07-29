@@ -4,6 +4,7 @@ var userModelServer = Vue.extend(
         props: ['htmlJson'],
         data(){
             return{
+                Save:"",
                 EditContainerName:"",
                 Name:"",
                 Date:"",
@@ -87,10 +88,12 @@ var userModelServer = Vue.extend(
                     this.EditContainerName="Edit Container Name"
                     this.Name="Name"
                     this.Date="Date"
+                    this.Save="Save"
                 }else {
                     this.EditContainerName="编辑容器名称"
                     this.Name="名称"
                     this.Date="日期"
+                    this.Save="保存"
                 }
             },
             //公共功能
