@@ -524,17 +524,11 @@ var userTask = Vue.extend(
                 if (task.permission == 'private') {
                     this.$msgbox({
                         title: ' ',
-                        message: h('p', null, [
-                            h('span', {style: 'font-size:15px'}, 'All of the users will have'), h('span', {style: 'font-weight:600'}, ' permission '), h('span', 'to this task.'),
-                            h('br'),
-                            h('span', null, 'Are you sure to set the task'),
-                            h('span', {style: 'color: #e6a23c;font-weight:600'}, ' public'),
-                            h('span', null, '?'),
-                        ]),
+                        message: this.htmlJson.SureSetPublic,
                         type: 'warning',
                         showCancelButton: true,
-                        confirmButtonText: 'Confirm',
-                        cancelButtonText: 'Cancel',
+                        confirmButtonText: this.htmlJson.confirmButtonText,
+                        cancelButtonText: this.htmlJson.cancelButtonText,
                         beforeClose: (action, instance, done) => {
                             let href = window.location.href.split('/')
                             let ids = href[href.length - 1]
@@ -580,17 +574,11 @@ var userTask = Vue.extend(
                 } else {
                     this.$msgbox({
                         title: ' ',
-                        message: h('p', null, [
-                            h('span', {style: 'font-size:15px'}, 'Only you have'), h('span', {style: 'font-weight:600'}, ' permission '), h('span', 'to this task.'),
-                            h('br'),
-                            h('span', null, 'Are you sure to'),
-                            h('span', {style: 'color: #67c23a;font-weight:600'}, ' continue'),
-                            h('span', null, '?'),
-                        ]),
+                        message: this.htmlJson.SureSetPrivate,
                         type: 'warning',
                         showCancelButton: true,
-                        confirmButtonText: 'Confirm',
-                        cancelButtonText: 'Cancel',
+                        confirmButtonText: this.htmlJson.confirm,
+                        cancelButtonText: this.htmlJson.cancel,
                         beforeClose: (action, instance, done) => {
                             let href = window.location.href.split('/')
                             let ids = href[href.length - 1]
@@ -630,7 +618,7 @@ var userTask = Vue.extend(
                         this.rightMenuShow = false
                         this.$message({
                             type: 'success',
-                            message: 'This task has been set private'
+                            message: this.htmlJson.HasBeenSetPrivate
                         });
                     });
                 }

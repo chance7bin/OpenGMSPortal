@@ -197,7 +197,8 @@
     "SureSubmitChanges": "Are you sure to submit changes?",
     "Yes": "Yes",
     "No": "No",
-    "Public": "Public"
+    "Public": "Public",
+    "TryIt": "Try it"
 
 
   },
@@ -320,7 +321,7 @@
     "RelatedConceptual":"编辑相关概念模型",
     "viewHistory":"查看历史版本",
 
-    "Affiliation":"组织",
+    "Affiliation":"单位",
     "Email":"邮箱",
     "Homepage":"主页",
     "authorshipCorrect":"作者身份不正确?",
@@ -400,7 +401,8 @@
     "Yes": "确认",
     "No": "取消",
     "Public": "公开",
-    "Discoverable": "可发现"
+    "Discoverable": "可发现",
+    "TryIt": "试一试"
 
   }
 }
