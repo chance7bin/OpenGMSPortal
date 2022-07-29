@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.theme.Application;
 import njgis.opengms.portal.entity.doo.theme.Maintainer;
@@ -101,7 +102,7 @@ public class ThemeService {
             //详情页面
             String detailResult;
             String theme_detailDesc = "";
-            if(theme.getLocalizationList()!=null){
+            if(theme.getLocalizationList()!=null && theme.getLocalizationList().size() != 0){
                 theme_detailDesc=theme.getLocalizationList().get(0).getDescription();
             }
             int num=theme_detailDesc.indexOf("/upload/document/");
@@ -157,7 +158,19 @@ public class ThemeService {
                     detailResult = theme_detailDesc;
                 }
             }
-            theme.getLocalizationList().get(0).setDescription(detailResult);
+
+            if(theme.getLocalizationList()!=null && theme.getLocalizationList().size() != 0){
+                theme.getLocalizationList().get(0).setDescription(detailResult);
+            } else {
+                Localization localization = new Localization();
+                localization.setLocalCode("en");
+                localization.setName(theme.getThemename());
+                localization.setLocalName("English");
+                localization.setDescription(detailResult);
+                List<Localization> localizationList = theme.getLocalizationList();
+                localizationList.add(localization);
+            }
+
 
             theme.setImage(theme.getImage().equals("")?"":htmlLoadPath+theme.getImage());
             return theme;

@@ -1458,13 +1458,24 @@ public class UserService {
                 String fileName = files.get(i).get("file_name").toString();
                 String address = "/data/" + files.get(i).get("source_store_id").toString();
                 String[] a = fileName.split("\\.");
-                String name = files.get(i).get("name").toString();
+                Object nameObj = files.get(i).get("name");
+                String name;
+                if (nameObj != null){
+                    name = files.get(i).get("name").toString();
+                } else {
+                    name = files.get(i).get("label").toString();
+                }
+
                 String suffix = files.get(i).get("suffix").toString();
                 String uid = UUID.randomUUID().toString();
                 Boolean folder = false;
                 String type = "data";
                 String privacy = "private";
-                long fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;
+                // long fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;
+                Long fileSize = null;
+                if (files.get(i).get("file_size") != null){
+                    fileSize = Long.parseLong(String.valueOf(files.get(i).get("file_size"))) ;
+                }
                 Date uploadTime = new Date();
 
                 JSONObject j_resourceInfo = new JSONObject();

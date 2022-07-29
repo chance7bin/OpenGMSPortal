@@ -304,32 +304,37 @@
 
 
 <script>
-    var behavior = {};
 
-    if (Behavior.StateGroup[0].States === '') {
-        behavior.states = [];
-    }
-    else {
-        behavior.states = Behavior.StateGroup[0].States[0].State;
+    if (Behavior != null){
+        var behavior = {};
+
+        if (Behavior.StateGroup[0].States === '') {
+            behavior.states = [];
+        }
+        else {
+            behavior.states = Behavior.StateGroup[0].States[0].State;
+        }
+
+        if (Behavior.StateGroup[0].StateTransitions === "") {
+            behavior.transition = [];
+        }
+        else {
+            behavior.transition = Behavior.StateGroup[0].StateTransitions[0].Add;
+        }
+
+        if (Behavior.RelatedDatasets === "") {
+            behavior.dataRef = [];
+        }
+        else {
+            behavior.dataRef = Behavior.RelatedDatasets[0].DatasetItem;
+        }
+
+        function getLoadJson() {
+            return JSON.stringify(behavior).replace(new RegExp("\"Event\":", "gm"), "\"events\":");
+        }
     }
 
-    if (Behavior.StateGroup[0].StateTransitions === "") {
-        behavior.transition = [];
-    }
-    else {
-        behavior.transition = Behavior.StateGroup[0].StateTransitions[0].Add;
-    }
 
-    if (Behavior.RelatedDatasets === "") {
-        behavior.dataRef = [];
-    }
-    else {
-        behavior.dataRef = Behavior.RelatedDatasets[0].DatasetItem;
-    }
-
-    function getLoadJson() {
-        return JSON.stringify(behavior).replace(new RegExp("\"Event\":", "gm"), "\"events\":");
-    }
 
 </script>
 

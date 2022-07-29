@@ -1530,7 +1530,8 @@ var  data_item_info = new Vue({
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
         // let that=_this
 
-        if(window.WebSocket) {
+        //  1===0 表示不执行该方法，执行的话把这个去掉
+        if( 1===0 && window.WebSocket) {
             this.$root.$el._myws = new WebSocket('ws://111.229.14.128:1708');
             this.$root.$el._myws.onopen = function (e) {
                 let obj = {

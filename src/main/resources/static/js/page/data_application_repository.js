@@ -140,7 +140,7 @@ var data_items = new Vue({
                     {
                         "element" : ".categoryList",
                         "popover" : {
-                            "title" : this.htmlJson.ModelClassifications,
+                            "title" : this.htmlJson.MethodCategories,
                             "description" : this.htmlJson.QueryProcessByChoosingCollection,
                             "position" : "right-top",
                         }
@@ -307,15 +307,23 @@ var data_items = new Vue({
         getData(){
             this.setFindDto()
             let that = this;
+            let sendDate = (new Date()).getTime();
             axios.post(getMethodList(),that.findDto)
                 .then((res)=>{
+                    let receiveDate = (new Date()).getTime();
+                    let responseTimeMs = receiveDate - sendDate;
+                    let timeoutTime=0;
+                    //console.log(responseTimeMs)
+                    if(responseTimeMs<450){
+                        timeoutTime=450-responseTimeMs;
+                    }
                     setTimeout(()=>{
                         that.list=res.data.data.list;
                         that.progressBar=false;
                         that.datacount=res.data.data.total;
                         that.users=res.data.data.users;
                         that.loading=false;
-                    },100)
+                    },timeoutTime)
                 });
         }
     }

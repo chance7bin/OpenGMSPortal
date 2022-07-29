@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 @Document
-public class Theme extends PortalItem {
+public class Theme extends PortalItem  implements Comparable{
     String creator_name;
     String creator_eid;
     String themename;
@@ -42,4 +42,8 @@ public class Theme extends PortalItem {
     List<ThemeData> themeData;  // 多级菜单保存下来，为了后面好编辑
     List<ThemeModelData> themeModelData;
 
+    @Override
+    public int compareTo(Object o) {
+        return this.getCreateTime().compareTo(((Theme) o).getCreateTime());
+    }
 }

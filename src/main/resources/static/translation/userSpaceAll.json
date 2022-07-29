@@ -75,7 +75,7 @@
     "DataTask": "Data Task",
     "IntegratedTask": "Integrated Task",
     "TaskStatus": "Task status",
-    "Search": "SEARCH",
+    "Search": "Search",
     "SearchInfo": "please enter name",
     "SpendTime": "This possibly needs to spend some time",
     "NoCalTask": "No calculation tasks",
@@ -575,7 +575,7 @@
           "oid": "6883d3fb-8485-4771-9a3e-3276c759364e"
         }]
     }],
-
+    "appellation":"Appellation",
     "UploadData": "Upload Data",
     "AddFolder": "Add folder",
     "DownloadAll": "Download All",
@@ -1845,7 +1845,13 @@
     "Contain": "Contains",
     "EmploysDependsOn": "Employs/Depends on",
     "Relation": "Relation",
-    "ClassSystem": "ClassSystem"
+    "ClassSystem": "ClassSystem",
+    "MethodCategories": "Method Categories",
+    "Delete": "Delete",
+    "SureToDelete": "Are you sure to delete this model container?",
+    "Tip": "Tip",
+    "RegisterTime": "Register Time",
+    "LastUpdatedTime": "Last Updated Time"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2025,6 +2031,7 @@
     "Name": "名称",
     "Email": "邮箱",
     "Title": "标题",
+    "appellation":"称谓",
     "Phone": "电话",
     "HomePage": "主页",
     "Organizations": "机构",
@@ -2083,6 +2090,7 @@
     "Delete": "删除",
     "Cancel": "取消",
     "Confirm": "确认",
+    "SureToDelete": "你确认要删除此模型容器吗？",
     "MarkAllRead": "标记全部已读",
     "MarkRead": "标记已读",
 
@@ -3688,6 +3696,11 @@
     "Contain": "包含",
     "EmploysDependsOn": "取决于/依赖于",
     "Relation": "关系",
-    "ClassSystem": "分类体系"
+    "ClassSystem": "分类体系",
+    "MethodCategories": "方法类别",
+    "Delete": "删除",
+    "Tip": "提示",
+    "RegisterTime": "注册时间",
+    "LastUpdatedTime":"上次更新时间"
   }
 }

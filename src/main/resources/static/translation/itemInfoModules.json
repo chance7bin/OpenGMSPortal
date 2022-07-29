@@ -48,8 +48,13 @@
     "ReplyTo": "Reply to ",
     "Delete": "Delete",
     "Edit": "Edit",
-    "Public": "Public"
-
+    "Public": "Public",
+    "Code": "Source Code",
+    "Package": "OpenGMS Model-Service Package",
+    "MD5": "OpenGMS Model-Service Package",
+    "Library": "Executable Library",
+    "Service": "Third-party Web-Service Link",
+    "Link": "Downloadable Link"
   },
   "zh-cn": {
       "package": "OpenGMS模型服务封装包",
@@ -84,7 +89,7 @@
       "ConceptSemantic":"概念和语义",
    "SpatialReference":"空间参考",
     "DataTemplate":"数据模板",
-     "UnitMetric":"单位度量",
+     "UnitMetric":"单位量纲",
       "logicalModel":"逻辑模型",
        "computableModel":"计算模型",
        "conceptualModel":"概念模型",
@@ -100,7 +105,13 @@
     "ReplyTo": "回复 ",
     "Delete": "删除",
     "Edit": "编辑",
-    "Public": "公开"
+    "Public": "公开",
+    "Code": "源代码",
+    "Package": "OpenGMS模型服务封装包",
+    "MD5": "OpenGMS模型服务封装包",
+    "Library": "可执行链接库",
+    "Service": "第三方服务链接",
+    "Link": "可下载链接"
   }
 
 }

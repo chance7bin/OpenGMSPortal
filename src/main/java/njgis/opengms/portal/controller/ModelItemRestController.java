@@ -343,7 +343,7 @@ public class ModelItemRestController {
     }
 
     @ApiOperation(value = "更新模型条目别名信息", notes = "@LoginRequired\n")
-    @RequestMapping(value = "/Alias", method = RequestMethod.PUT)
+    @RequestMapping(value = "/alias", method = RequestMethod.POST)
     public JsonResult updateAlias(@RequestParam(value = "id") String id,
                                   @RequestParam(value = "alias[]") List<String> alias,
                                   HttpServletRequest request){
