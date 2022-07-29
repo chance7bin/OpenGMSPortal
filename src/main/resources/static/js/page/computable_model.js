@@ -702,76 +702,80 @@ new Vue({
             }
         );
 
-        diagram = new OGMSDiagram();
-        diagram.init($('#mxGraphContainer'),
-            {
-                width: 1000,       //! Width of panel
-                height: '100%',       //! Height of panel
-                // height: 1000,       //! Height of panel
-                enabled: false      //! Edit enabled
-            },
-            {
-                x: 500,            //! X postion of state information window
-                y: $("#mxGraphContainer").offset().top - $(window).scrollTop() ,              //! Y postion of state information window
-                width: 520,         //! Width of state information window
-                height: 650         //! Height of state information window
-            },
-            {
-                x: 1000,           //! X postion of data reference information window
-                y: $("#mxGraphContainer").offset().top - $(window).scrollTop(),              //! Y postion of data reference information window
-                width: 300,         //! Width of data reference information window
-                height: 400         //! Height of data reference information window
-            },
-            '/static/js/mxGraph/images/modelState.png',    //! state IMG
-            '/static/js/mxGraph/images/grid.gif',          //! Grid IMG
-            '/static/js/mxGraph/images/connector.gif',     //! Connection center IMG
-            false                       //! Debug button
-        );
+        if (Behavior != null){
+            diagram = new OGMSDiagram();
+            diagram.init($('#mxGraphContainer'),
+                {
+                    width: 1000,       //! Width of panel
+                    height: '100%',       //! Height of panel
+                    // height: 1000,       //! Height of panel
+                    enabled: false      //! Edit enabled
+                },
+                {
+                    x: 500,            //! X postion of state information window
+                    y: $("#mxGraphContainer").offset().top - $(window).scrollTop() ,              //! Y postion of state information window
+                    width: 520,         //! Width of state information window
+                    height: 650         //! Height of state information window
+                },
+                {
+                    x: 1000,           //! X postion of data reference information window
+                    y: $("#mxGraphContainer").offset().top - $(window).scrollTop(),              //! Y postion of data reference information window
+                    width: 300,         //! Width of data reference information window
+                    height: 400         //! Height of data reference information window
+                },
+                '/static/js/mxGraph/images/modelState.png',    //! state IMG
+                '/static/js/mxGraph/images/grid.gif',          //! Grid IMG
+                '/static/js/mxGraph/images/connector.gif',     //! Connection center IMG
+                false                       //! Debug button
+            );
 
-        console.log(Behavior)
+            // console.log(Behavior)
 
-        var behavior={};
+            var behavior={};
 
-        if (Behavior.StateGroup[0].States== '') {
-            behavior.states = [];
-        }
-        else {
-            behavior.states = Behavior.StateGroup[0].States[0].State;
-        }
+            if (Behavior.StateGroup[0].States== '') {
+                behavior.states = [];
+            }
+            else {
+                behavior.states = Behavior.StateGroup[0].States[0].State;
+            }
 
-        if (Behavior.StateGroup[0].StateTransitions == "") {
-            behavior.transition = [];
-        }
-        else {
-            behavior.transition = Behavior.StateGroup[0].StateTransitions[0].Add;
-        }
+            if (Behavior.StateGroup[0].StateTransitions == "") {
+                behavior.transition = [];
+            }
+            else {
+                behavior.transition = Behavior.StateGroup[0].StateTransitions[0].Add;
+            }
 
-        if (Behavior.RelatedDatasets == "") {
-            behavior.dataRef = [];
-        }
-        else {
-            behavior.dataRef = Behavior.RelatedDatasets[0].DatasetItem;
-        }
+            if (Behavior.RelatedDatasets == "") {
+                behavior.dataRef = [];
+            }
+            else {
+                behavior.dataRef = Behavior.RelatedDatasets[0].DatasetItem;
+            }
 
-        //console.log(behavior)
-        this.loadjson=JSON.stringify(behavior).replace(new RegExp("\"Event\":","gm"), "\"events\":");
-        console.log(JSON.parse(this.loadjson));
-        diagram.loadJSON(this.loadjson);
+            //console.log(behavior)
+            this.loadjson=JSON.stringify(behavior).replace(new RegExp("\"Event\":","gm"), "\"events\":");
+            // console.log(JSON.parse(this.loadjson));
+            diagram.loadJSON(this.loadjson);
 
-        diagram.onStatedbClick(function(state){
-            diagram.showStateWin({
-                x : 900,
-                y : $(window).scrollTop() + 80,
-            },{
-                width : 520,
-                height : 640
+            diagram.onStatedbClick(function(state){
+                diagram.showStateWin({
+                    x : 900,
+                    y : $(window).scrollTop() + 80,
+                },{
+                    width : 520,
+                    height : 640
+                });
+
             });
+        }
 
-        });
-        console.log(typeof author)
+
+        // console.log(typeof author)
         this.lightenContributor = author
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
-        console.log(this.lightenContributor)
+        // console.log(this.lightenContributor)
     }
 })

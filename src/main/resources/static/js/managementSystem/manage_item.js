@@ -252,19 +252,19 @@ export var ItemTemplate = Vue.extend({
                 this.itemType="LogicalModel"
             }else if(treeNodeId===5){
                 this.itemType="ComputableModel"
-            }else if(treeNodeId===6){
-                this.itemType="DataHub"
             }else if(treeNodeId===7){
-                this.itemType="DataItem"
+                this.itemType="DataHub"
             }else if(treeNodeId===8){
-                this.itemType="DataMethod"
+                this.itemType="DataItem"
             }else if(treeNodeId===9){
-                this.itemType="Concept"
-            }else if(treeNodeId===10){
-                this.itemType="SpatialReference"
+                this.itemType="DataMethod"
             }else if(treeNodeId===11){
-                this.itemType="Template"
+                this.itemType="Concept"
             }else if(treeNodeId===12){
+                this.itemType="SpatialReference"
+            }else if(treeNodeId===13){
+                this.itemType="Template"
+            }else if(treeNodeId===14){
                 this.itemType="Unit"
             }
             this.currentPageGeo=1
@@ -335,26 +335,29 @@ export var ItemTemplate = Vue.extend({
         },
         deleteItem(val){
             console.log(val)
+            console.log(this.itemType)
             let type=""
-            if(this.itemType="ConceptualModel"){
+            if(this.itemType=="ModelItem"){
+                type="modelItem"
+            }else if(this.itemType=="ConceptualModel"){
                 type="conceptualModel"
-            }else if(this.itemType="LogicalModel"){
+            }else if(this.itemType=="LogicalModel"){
                 type="logicalModel"
-            }else if(this.itemType="ComputableModel"){
+            }else if(this.itemType=="ComputableModel"){
                 type="computableModel"
-            }else if(this.itemType="DataHub"){
+            }else if(this.itemType=="DataHub"){
                 type="dataHub"
-            }else if(this.itemType="DataItem"){
+            }else if(this.itemType=="DataItem"){
                 type="dataItem"
-            }else if(this.itemType="DataMethod"){
+            }else if(this.itemType=="DataMethod"){
                 type="dataMethod"
-            }else if(this.itemType="Concept"){
+            }else if(this.itemType=="Concept"){
                 type="concept"
-            }else if(this.itemType="SpatialReference"){
+            }else if(this.itemType=="SpatialReference"){
                 type="spatialReference"
-            }else if(this.itemType="Template"){
+            }else if(this.itemType=="Template"){
                 type="template"
-            }else if(this.itemType="Unit"){
+            }else if(this.itemType=="Unit"){
                 type="unit"
             }
 

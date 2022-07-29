@@ -112,5 +112,7 @@ public class User extends PortalIdPlus {
 
     UserRoleEnum userRole;
 
+    Date lastInvokeTime;
+
 
 }

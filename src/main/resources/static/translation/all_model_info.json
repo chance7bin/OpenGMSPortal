@@ -6,6 +6,7 @@
 
     "package": "OpenGMS Model-Service Package",
     "sourceCode": "Source Code",
+    "Code": "Source Code",
     "library": "Executable Library",
     "webLink": "Third-party Web-Service Link",
     "downloadLink": "Downloadable Link",
@@ -195,6 +196,7 @@
     "CategoryTags": "类别标签",
     "package": "OpenGMS模型服务封装包",
     "sourceCode": "源代码",
+    "Code": "源代码",
     "library": "可执行链接库",
     "webLink": "第三方服务链接",
     "downloadLink": "可下载链接",

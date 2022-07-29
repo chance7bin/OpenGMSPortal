@@ -60,6 +60,7 @@ public class ManagementSystemController {
     @Autowired
     UserDao userDao;
 
+    @AdminRequired
     @GetMapping("/home")
     public ModelAndView getHomePage(){
         ModelAndView modelAndView = new ModelAndView();
@@ -67,6 +68,7 @@ public class ManagementSystemController {
         return modelAndView;
     }
 
+    @AdminRequired
     @GetMapping("/home_en")
     public ModelAndView getHomeEnPage(){
         ModelAndView modelAndView = new ModelAndView();

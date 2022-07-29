@@ -102,7 +102,8 @@ public class ManagementSystemService {
     @Autowired
     CommentDao commentDao;
 
-
+    @Autowired
+    RedisService redisService;
 
 
     public JsonResult searchDeployedModel(FindDTO findDTO) {
@@ -338,7 +339,8 @@ public class ManagementSystemService {
     public void saveComputableModel(ComputableModel computableModel, CheckedModel checkedModel, String msg){
         checkedModel.setMsg(msg);
         computableModel.setCheckedModel(checkedModel);
-        computableModelDao.save(computableModel);
+        // computableModelDao.save(computableModel);
+        redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);
     }
 
 
@@ -483,7 +485,8 @@ public class ManagementSystemService {
                             //status = -1 时有两种显示情况，未找到测试数据要单独判断（是否需要）
 
                             computableModel.setCheckedModel(model);
-                            computableModelDao.save(computableModel);
+                            // computableModelDao.save(computableModel);
+                            redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);
                             break;
                         }
                     }

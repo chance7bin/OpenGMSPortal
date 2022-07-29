@@ -59,17 +59,17 @@ public class ThemeController {
     // }
 
     @RequestMapping(value = "/getModelItem",method = RequestMethod.GET)
-    JsonResult getModelItem(@RequestParam(value = "oid") String id){
+    JsonResult getModelItem(@RequestParam(value = "id") String id){
         JSONObject result = themeService.getModelItem(id);
         return ResultUtils.success(result);
     }
     @RequestMapping(value = "/getDataItem",method = RequestMethod.GET)
-    JsonResult getDataItem(@RequestParam(value = "oid") String id){
+    JsonResult getDataItem(@RequestParam(value = "id") String id){
         JSONObject result = themeService.getDataItem(id);
         return ResultUtils.success(result);
     }
     @RequestMapping(value = "/getDataMethod",method = RequestMethod.GET)
-    JsonResult getDataMethod(@RequestParam(value = "oid") String id){
+    JsonResult getDataMethod(@RequestParam(value = "id") String id){
         JSONObject result = themeService.getDataMethod(id);
         return ResultUtils.success(result);
     }
