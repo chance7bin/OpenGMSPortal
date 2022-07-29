@@ -339,6 +339,15 @@ var data_items = new Vue({
         // that.dataType = u.substring(index+1,u.length);
         this.getData()
         $('#conversion').click()
+        if (window.localStorage.getItem("fromApplication") == 1){
+            let mouse = document.getElementById("dataProcess")
+            mouse.click()
+            window.localStorage.removeItem("fromApplication")
+        }else if(window.localStorage.getItem("fromApplication") == 2){
+            let mouse = document.getElementById("dataVisualization")
+            mouse.click()
+            window.localStorage.removeItem("fromApplication")
+        }
         axios.get("/user/load")
             .then((res)=>{
                 that.userName=res.data.data.name;

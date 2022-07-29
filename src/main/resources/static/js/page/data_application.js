@@ -21,6 +21,15 @@ var data_application = new Vue({
         }
     },
     methods: {
+        // 设置缓存
+        setStorage(key, value){
+            var v = value;
+            var localStorage = window.localStorage;
+            if (localStorage) {
+                localStorage .setItem(key, v);
+            }
+        },
+
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
         },

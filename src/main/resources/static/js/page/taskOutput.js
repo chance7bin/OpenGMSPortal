@@ -94,6 +94,7 @@ var vue = new Vue({
 
         translatePage(jsonContent){
             // console.log("translatePage:",jsonContent);
+            this.htmlJSON = jsonContent
         },
 
         // 获取缓存
