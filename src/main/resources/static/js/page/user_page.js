@@ -8,6 +8,7 @@ new Vue({
     data() {
         return {
             saveTip:"",
+            selectPicture:"",
             resourceCount:{
                 computableModel: 0,
                 concept: 0,
@@ -363,10 +364,14 @@ new Vue({
 
             if (language == "en-us"){
                 this.saveTip = "Successfully saved!"
+                // this.selectPicture="Select a picture"
             }else {
                 this.saveTip = "保存成功!"
+                // this.selectPicture="选择一张照片"
 
             }
+
+            console.log(this.selectPicture)
         },
         changeModelIndex(index){
             this.modelIndex = index
@@ -398,6 +403,7 @@ new Vue({
 
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
+            console.log("jsonContent:",jsonContent)
         },
 
         selectFirstActive(){

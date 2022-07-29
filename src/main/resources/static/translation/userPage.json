@@ -1,6 +1,5 @@
 {
   "en-us": {
-
     "noIntro": "No Introduction",
     "editProfile": "Edit profile",
     "save": "Save",
@@ -48,7 +47,10 @@
     "Location": "Location",
     "ResearchInterests": "Research Interests",
     "Website": "Website",
-    "Email": "Email"
+    "Email": "Email",
+    "SelectPicture": "Select a picture",
+    "overview": "Overview"
+
   },
   "zh-cn": {
     "noIntro": "无简介",
@@ -99,7 +101,9 @@
     "Location": "位置",
     "ResearchInterests": "研究领域",
     "Website": "网页",
-    "Email": "邮箱"
+    "Email": "邮箱",
+    "SelectPicture": "选择一张照片",
+    "overview":"预览"
   }
 
 }
