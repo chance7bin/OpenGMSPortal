@@ -44,6 +44,7 @@ new Vue({
         this.getUserCount()
 
         this.autoChangeServiceCount()
+
         this.autoChangeItemCount()
 
     },
@@ -58,7 +59,6 @@ new Vue({
                     this.serviceUseType="computableModel"
                 }
                 this.getServiceUseCount()
-
             },2000)
         },
 
@@ -121,9 +121,11 @@ new Vue({
             },
                 // backgroundColor: 'rgba(255,255,255,0)',
                 globe: {
-                    baseTexture: ROOT_PATH + '/data-gl/asset/world.topo.bathy.200401.jpg',
-                    heightTexture:
-                        ROOT_PATH + '/data-gl/asset/bathymetry_bw_composite_4k.jpg',
+                    // baseTexture: ROOT_PATH + '/data-gl/asset/world.topo.bathy.200401.jpg',
+                    // heightTexture:
+                    //     ROOT_PATH + '/data-gl/asset/bathymetry_bw_composite_4k.jpg',
+                    baseTexture: '../static/img/world.jpg',
+                    heightTexture: '../static/img/world_grey.jpg',
                     shading: 'lambert',
                     light: {
                         ambient: {
@@ -186,7 +188,6 @@ new Vue({
 
         //获取资源数量
         getResourceCount(){
-
             axios.get("/managementSystem/item/count/all")
                 .then(response=> {
                     this.resourceCount=response.data.data
@@ -195,8 +196,8 @@ new Vue({
                 .catch(function (error) {
                     console.log(error);
                 });
-
         },
+
         //绘制资源数量
         drawResourceCount(){
             let myChart =echarts.init( document.getElementById('resourceCount'));
@@ -208,7 +209,6 @@ new Vue({
             }
 
             myChart.setOption(
-
                 {
                     title: {
                         text: '平台资源数量数量',
@@ -717,7 +717,7 @@ new Vue({
                         {
                             type: 'gauge',
                             min: 0,
-                            max: 2000,
+                            max: 3000,
                             progress: {
                                 show: true,
                                 width: 18
