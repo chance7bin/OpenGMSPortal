@@ -21,10 +21,12 @@ public interface VersionDao extends MongoRepository<Version,String>{
     List<Version> findAllByStatus(int status);
 
     Page<Version> findAllByStatus(int status, Pageable pageable);
+    Page<Version> findAllByItemNameContainsIgnoreCaseAndStatus(String itemName, int status, Pageable pageable);
 
     List<Version> findAllByStatusAndType(int status, ItemTypeEnum type);
 
     Page<Version> findAllByStatusAndType(int status, ItemTypeEnum type, Pageable pageable);
+    Page<Version> findAllByItemNameContainsIgnoreCaseAndStatusAndType(String itemName, int status, ItemTypeEnum type, Pageable pageable);
 
     List<Version> findAllByItemCreator(String email);
 

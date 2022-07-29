@@ -76,7 +76,7 @@ public class VersionController {
     //     return versionService.getVersions(findDTO);
     // }
 
-    @ApiOperation(value = "得到接收的审核信息 [ /version/getAccepted ]")
+    @ApiOperation(value = "得到接收的审核信息 searchText:itemName [ /version/getAccepted ]")
     @PostMapping(value = "/versionList/accepted/{type}")
     public JsonResult getAccepted(@RequestBody FindDTO findDTO,
                                   @ApiParam(name = "type", value = "type传入All为不分类")  @PathVariable ItemTypeEnum type) {
@@ -89,7 +89,7 @@ public class VersionController {
     //     return versionService.getConcreteStatus(findDTO,1);
     // }
 
-    @ApiOperation(value = "得到未审核的审核信息")
+    @ApiOperation(value = "得到未审核的审核信息 searchText:itemName")
     @PostMapping(value = "/versionList/uncheck/{type}")
     public JsonResult getUncheck(@RequestBody FindDTO findDTO,
                                  @ApiParam(name = "type", value = "type传入All为不分类")  @PathVariable ItemTypeEnum type) {
@@ -102,7 +102,7 @@ public class VersionController {
     //     return versionService.getConcreteStatus(findDTO,0);
     // }
 
-    @ApiOperation(value = "得到拒绝的审核信息")
+    @ApiOperation(value = "得到拒绝的审核信息 searchText:itemName")
     @PostMapping(value = "/versionList/rejected/{type}")
     public JsonResult getRejected(@RequestBody FindDTO findDTO,
                                   @ApiParam(name = "type", value = "type传入All为不分类")  @PathVariable ItemTypeEnum type) {

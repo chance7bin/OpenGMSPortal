@@ -101,7 +101,7 @@ public class ManagementSystemController {
     }
 
 
-    @ApiOperation(value = "得到已部署的模型")
+    @ApiOperation(value = "得到已部署的模型 searchText:name")
     @RequestMapping(value="/deployedModel",method= RequestMethod.POST)
     public JsonResult searchDeployedModel(@RequestBody FindDTO findDTO) {
         return managementSystemService.searchDeployedModel(findDTO);
@@ -220,7 +220,7 @@ public class ManagementSystemController {
     }
 
 
-    @ApiOperation(value = "用户列表")
+    @ApiOperation(value = "用户列表 searchText:email")
     @RequestMapping(value="/user/info",method= RequestMethod.POST)
     public JsonResult getUserList(@RequestBody FindDTO findDTO){
         return managementSystemService.getUserList(findDTO);
@@ -246,7 +246,7 @@ public class ManagementSystemController {
 
 
 
-    @ApiOperation(value = "条目展示, 根据条目类型(type必填)")
+    @ApiOperation(value = "条目展示, 根据条目类型(type必填)  查询可以根据curQueryField自己指定查询的属性")
     @RequestMapping(value="/item/info/{itemType}",method= RequestMethod.POST)
     public JsonResult getItemInfo(@PathVariable ItemTypeEnum itemType, @RequestBody SpecificFindDTO specificFindDTO){
         return ResultUtils.success(managementSystemService.getItemInfo(itemType, specificFindDTO));
