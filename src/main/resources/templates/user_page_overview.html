@@ -54,51 +54,11 @@
 </head>
 <body>
 <div id="app">
+
     <div th:replace="fragments/navbar :: unlog"></div>
 
 
-    <div class="modal fade" id="editUserImg" aria-hidden="true" aria-labelledby="myModalLabel" style="margin-top: 45px">
-        <div class="modal-dialog">
-            <div class="modal-content" id="modalContent">
-                <div class="modal-header" style="background: deepskyblue;border-bottom: 0">
-                    <h3 class="modal-title" style="color:aliceblue;text-align: center">
-                        Select a picture
-                    </h3>
-                </div>
-                <div class="flexAround" style="height: 280px;border: 1px solid #cccccc;padding: 0 5%">
-                    <div class="containerWithDashed">
-                        <div id="imgChange" >
-                            <i class="fa fa-plus fa-5x"></i>
-                        </div>
-                    </div>
-                    <input id="imgFile" type="file"
-                           style="display: none"
-                           accept="image/*"/>
-                    <div class="innerBorderCol"></div>
-                    <div class="overviewContainer" style="width: 40%">
-                        <p style="text-align: center;color: #595959;font-size: 15px">overview</p>
-                        <div class="flexAround" style="background-color: inherit;margin-top: 20px">
-                            <div class="circlePhotoFrame flexCenter">
-                                <canvas></canvas>
-                            </div>
-                            <!--<div class="circlePhotoFrameShade">-->
-                            <!--</div>-->
-                            <!--<img id="imgShowBig" style="width: 145px;height: 145px"-->
-                            <!--     src="../static/img/icon/default.png">-->
 
-                            <!--<div class="dragBar" style="margin-top:15px ">-->
-                            <!--    <div class="dragBlock" ></div>-->
-                            <!--</div>-->
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex;justify-content: flex-end;padding:10px 15px 10px">
-                    <button id="saveUserImgButton" class="saveUserImgButton">Save</button>
-                    <button id="closeSaveUserImg" class="closeSaveUserImg">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div id="userPage" class="clearfix flex-rowDirect" style="display: flex;justify-content:center; flex-wrap: wrap; height: auto;background-color: #ffffff" v-cloak>
         <translation-bar
@@ -108,6 +68,48 @@
                 theme="dark"
                 style="position: absolute;top: 105px;right:15px">
         </translation-bar>
+
+        <div class="modal fade" id="editUserImg" aria-hidden="true" aria-labelledby="myModalLabel" style="margin-top: 45px">
+            <div class="modal-dialog">
+                <div class="modal-content" id="modalContent">
+                    <div class="modal-header" style="background: deepskyblue;border-bottom: 0">
+                        <h3 class="modal-title" style="color:aliceblue;text-align: center">{{htmlJSON.SelectPicture}}</h3>
+                    </div>
+                    <div class="flexAround" style="height: 280px;border: 1px solid #cccccc;padding: 0 5%">
+                        <div class="containerWithDashed">
+                            <div id="imgChange" >
+                                <i class="fa fa-plus fa-5x"></i>
+                            </div>
+                        </div>
+                        <input id="imgFile" type="file"
+                               style="display: none"
+                               accept="image/*"/>
+                        <div class="innerBorderCol"></div>
+                        <div class="overviewContainer" style="width: 40%">
+                            <p style="text-align: center;color: #595959;font-size: 15px">{{htmlJSON.overview}}</p>
+                            <div class="flexAround" style="background-color: inherit;margin-top: 20px">
+                                <div class="circlePhotoFrame flexCenter">
+                                    <canvas></canvas>
+                                </div>
+                                <!--<div class="circlePhotoFrameShade">-->
+                                <!--</div>-->
+                                <!--<img id="imgShowBig" style="width: 145px;height: 145px"-->
+                                <!--     src="../static/img/icon/default.png">-->
+
+                                <!--<div class="dragBar" style="margin-top:15px ">-->
+                                <!--    <div class="dragBlock" ></div>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex;justify-content: flex-end;padding:10px 15px 10px">
+                        <button id="saveUserImgButton" class="saveUserImgButton">{{htmlJSON.save}}</button>
+                        <button id="closeSaveUserImg" class="closeSaveUserImg">{{htmlJSON.cancel}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <el-col :lg="4" :xs="18" :sm="11" :md="12" class="leftContainer">
 
             <div class="flex-center flex-colDirect">
