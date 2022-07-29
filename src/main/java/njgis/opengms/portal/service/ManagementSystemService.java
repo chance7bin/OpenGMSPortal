@@ -121,6 +121,7 @@ public class ManagementSystemService {
             o.put("accessId",computableModel.getAccessId());
             o.put("name",computableModel.getName());
             o.put("author", userService.getUserName(computableModel.getAuthor()));
+            o.put("authorEmail", computableModel.getAuthor());
             o.put("createTime",Utils.dateFormat(computableModel.getCreateTime()));
             o.put("viewCount",computableModel.getViewCount());
             o.put("lastModifyTime",computableModel.getLastModifyTime());
@@ -683,7 +684,7 @@ public class ManagementSystemService {
     private List<String> allVisible;
 
     public JSONObject getItemInfo(ItemTypeEnum itemType, SpecificFindDTO specificFindDTO){
-        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType,allVisible);
+        JSONObject jsonObject = genericService.searchDBItems(specificFindDTO, itemType, allVisible);
 
         // 如果有字段需要筛选的话再加
 
@@ -710,6 +711,7 @@ public class ManagementSystemService {
             }
             item.put("admins", adminsList);
             item.put("author", userService.getUserName(object.getString("author")));
+            item.put("authorEmail", object.getString("author"));
             if (object.get("invokeCount") != null){
                 item.put("invokeCount", object.get("invokeCount"));
             }
@@ -1085,6 +1087,7 @@ public class ManagementSystemService {
             } else {
                 o.put("itemName", item.getName());
             }
+            o.put("commentUserName", userService.getUserName(comment.getCommentEmail()));
             contentList.add(o);
 
         }

@@ -313,7 +313,7 @@ export var VersionTemplate = Vue.extend({
                 "page": this.currentPageWaitVersion,
                 "pageSize": this.PageSizeWaitVersion,
                 "searchText": this.searchInputWaitVersion,
-                "sortField": "createTime",
+                "sortField": "submitTime",
             })
                 .then(response=> {
                     console.log(response)
@@ -460,7 +460,7 @@ export var VersionTemplate = Vue.extend({
                 "page": this.currentPageRejectVersion,
                 "pageSize": this.PageSizeRejectVersion,
                 "searchText": this.searchInputRejectVersion,
-                "sortField": "createTime",
+                "sortField": "submitTime",
             })
                 .then(response=> {
                     console.log(response)

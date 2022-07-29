@@ -498,23 +498,27 @@ public class VersionService {
             }
             else if (type == ItemTypeEnum.All){
                 Pageable pageable = genericService.getPageable(findDTO);
-                Page<Version> allByStatus = versionDao.findAllByStatus(status, pageable);
+                Page<Version> allByStatus = versionDao.findAllByItemNameContainsIgnoreCaseAndStatus(findDTO.getSearchText(),status, pageable);
                 versionList = allByStatus.getContent();
                 count = (int) allByStatus.getTotalElements();
             }
             else {
                 Pageable pageable = genericService.getPageable(findDTO);
-                Page<Version> allByStatus = versionDao.findAllByStatusAndType(status, type, pageable);
+                // Page<Version> allByStatus = versionDao.findAllByStatusAndType(status, type, pageable);
+                Page<Version> allByStatus = versionDao.findAllByItemNameContainsIgnoreCaseAndStatusAndType(findDTO.getSearchText(), status, type, pageable);
                 versionList = allByStatus.getContent();
                 count = (int) allByStatus.getTotalElements();
                 // return ResultUtils.success(versionDao.findAllByStatus(status,pageable));
             }
 
-            List<Version> versions = new ArrayList<>();
+            List<JSONObject> versions = new ArrayList<>();
             for (Version version : versionList) {
                 Version newV = new Version();
-                BeanUtils.copyProperties(version, newV, "content","changedField");
-                versions.add(newV);
+                BeanUtils.copyProperties(version, newV, "content","original","changedField");
+                JSONObject o = (JSONObject)JSONObject.toJSON(newV);
+                o.put("editor",userService.getUserName(newV.getEditor()));
+                o.put("editorEmail",newV.getEditor());
+                versions.add(o);
             }
 
             JSONObject jsonObject = new JSONObject();

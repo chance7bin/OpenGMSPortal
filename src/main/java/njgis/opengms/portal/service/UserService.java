@@ -515,6 +515,7 @@ public class UserService {
             exLinks.add(commonInfo.getString("homepage"));
             j_result.put("location", commonInfo.getString("city"));
             j_result.put("image", "".equals(commonInfo.getString("avatar"))?"":genericService.formatUserAvatar(commonInfo.getString("avatar")));
+            j_result.put("avatar", "".equals(commonInfo.getString("avatar"))?"":genericService.formatUserAvatar(commonInfo.getString("avatar")));
             j_result.put("researchInterests", commonInfo.get("domain"));
 
 
