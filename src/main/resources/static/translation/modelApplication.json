@@ -36,16 +36,16 @@
     "PageIntro":"模型的实际应用",
 
     "ModelExecution": "模型运行",
-    "ModelExecution1": "我们拥有大量的模型在网站中。",
+    "ModelExecution1": "网站中有大量可在线运行的模型。",
     "ModelExecution2": "选择你想要使用的模型！",
 
     "ModelExecDialog1": "选择计算模型",
     "ModelExecDialog2": "加载计算模型",
     "ModelExecDialog3": "开始运行",
 
-    "ModelIntegration": "模型整合",
+    "ModelIntegration": "模型集成",
     "ModelIntegration1": "单个模型无法满足您的需要吗？",
-    "ModelIntegration2": "在这里你可以整合多个模型来解决复杂问题。",
+    "ModelIntegration2": "在这里你可以集成多个模型来解决复杂问题。",
     "ModelIntegerDialog1": "选择计算模型",
     "ModelIntegerDialog2": "加载计算模型",
     "ModelIntegerDialog3": "开始运行",
