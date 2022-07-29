@@ -221,7 +221,7 @@ export var VersionTemplate = Vue.extend({
                                 >
                                     <el-table-column sortable prop="submitTime" label="日期" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
-                                    <el-table-column sortable prop="itemName" label="名称" show-overflow-tooltip min-width="240px>
+                                    <el-table-column sortable prop="itemName" label="名称" show-overflow-tooltip min-width="240px">
                                     </el-table-column>
 
                                     <el-table-column sortable prop="type" label="类型" show-overflow-tooltip min-width="100px">
@@ -415,7 +415,6 @@ export var VersionTemplate = Vue.extend({
             this.getWaitVersionList();
         },
         handleCurrentChangeWaitVersion(val){
-            console.log(val);
             this.currentPageWaitVersion=val;
             this.getWaitVersionList();
         },
@@ -438,12 +437,9 @@ export var VersionTemplate = Vue.extend({
                     console.log(error);
                 });
         },
-        viewAcceptVersion(){
-
-        },
 
         handleSizeChangeAcceptVersion(val){
-            this.currentPageAcceptVersion=val;
+            this.PageSizeAcceptVersion=val;
             this.getAcceptVersionList();
         },
         handleCurrentChangeAcceptVersion(val){

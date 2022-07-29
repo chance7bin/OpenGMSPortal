@@ -11,7 +11,7 @@ export var ModelTemplate = Vue.extend({
 <!--                            搜索-->
                             <div class="table_head_item2">
                                 <el-input
-                                        placeholder="请输入内容"
+                                        placeholder="请输入模型名称"
                                         prefix-icon="el-icon-search"
                                         v-model="searchInput"
                                         @keyup.enter.native="getModelList()"

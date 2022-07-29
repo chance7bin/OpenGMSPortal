@@ -56,10 +56,11 @@ export var TaskTemplate = Vue.extend({
                     <el-pagination 
                                    background
                                    style="text-align: center;margin-top:20px"
+                                    @size-change="handleTaskSizeChange"
                                    @current-change="handleTaskPageChange"
                                    :current-page="taskCurrentPage"
                                    layout="total, sizes, prev, pager, next, jumper"
-                                   page-size=20
+                                   :page-size=taskPageSize
                                    :total="taskTotal">
                     </el-pagination>
                 </el-tab-pane>
@@ -95,6 +96,7 @@ export var TaskTemplate = Vue.extend({
             taskData: [],//task的数据
             taskTotal: 0,//task总数
             taskCurrentPage: 1, //task当前页面
+            taskPageSize:20,
 
             containerData: [], //容器列表数据
 
@@ -109,7 +111,7 @@ export var TaskTemplate = Vue.extend({
             axios.post('/managementSystem/taskList', {
                 "asc": false,
                 "page": this.taskCurrentPage,
-                "pageSize": 20,
+                "pageSize": this.taskPageSize,
                 "searchText": "",
                 "sortField": "createTime"
             })
@@ -128,6 +130,13 @@ export var TaskTemplate = Vue.extend({
             this.taskCurrentPage = val;
             this.getTaskList();
         },
+
+        handleTaskSizeChange(val){
+          this.taskPageSize=val;
+          this.getTaskList();
+        },
+
+
 
         getContainerList() {
             axios.get('/managementSystem/mscList')

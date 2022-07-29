@@ -34,7 +34,7 @@ export var CommentTemplate = Vue.extend({
         return {
             commentTableData:[], //用户列表数据
             currentPageComment:1, //用户列表表格页
-            PageSizeComment:10, //用户列表每页数目
+            PageSizeComment:20, //用户列表每页数目
             totalComment:0, //用户总数
             searchInputComment:"", //用户表搜索内容
 
