@@ -54,7 +54,8 @@
     "MD5": "OpenGMS Model-Service Package",
     "Library": "Executable Library",
     "Service": "Third-party Web-Service Link",
-    "Link": "Downloadable Link"
+    "Link": "Downloadable Link",
+    "viewHistory":"View History"
   },
   "zh-cn": {
       "package": "OpenGMS模型服务封装包",
@@ -111,7 +112,8 @@
     "MD5": "OpenGMS模型服务封装包",
     "Library": "可执行链接库",
     "Service": "第三方服务链接",
-    "Link": "可下载链接"
+    "Link": "可下载链接",
+    "viewHistory":"查看历史版本"
   }
 
 }

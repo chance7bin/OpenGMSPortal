@@ -55,7 +55,7 @@
 
                             <!--                             history-->
                             <div th:if="${originalField?.get('lastModifyTime')!=null} or ${originalField?.get('lastModifier')!=null}">
-                                <div th:replace="fragments/itemInfoModules :: History(${originalField.lastModifier}, ${originalField.lastModifyTime})"></div>
+                                <div th:replace="fragments/itemInfoModules :: History(${originalField.lastModifier}, ${originalField.lastModifyTime}, null)"></div>
                             </div>
 
                             <!--                             author-->
@@ -302,7 +302,7 @@
 
                             <!--                             history-->
                             <div th:if="${newField?.get('lastModifyTime')!=null} or ${newField?.get('lastModifier')!=null}">
-                                <div th:replace="fragments/itemInfoModules :: History(${newField.lastModifier}, ${newField.lastModifyTime})"></div>
+                                <div th:replace="fragments/itemInfoModules :: History(${newField.lastModifier}, ${newField.lastModifyTime}, null)"></div>
                             </div>
 
                             <!--                             author-->

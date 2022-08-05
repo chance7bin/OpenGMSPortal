@@ -63,4 +63,20 @@ public class DBConfig {
         return collection;
     }
 
+    //迁移modelItemVerison用的旧数据库user表
+    @Bean(name = "userCollection")
+    public MongoCollection<Document> userCollection() throws SQLException {
+        String MONGO_HOST = "222.192.7.75";
+        Integer MONGO_PORT = 23266;
+        String MONGO_DB_NAME = "Portal";
+        String MONGO_COLLECTION_NAME = "user";
+
+        // MongoClient mongoClient = new MongoClient(MONGO_HOST, MONGO_PORT);
+        MongoClient mongoClient = MongoClients.create("mongodb://ogmsPortal:62e779183825@" + MONGO_HOST + ":" + MONGO_PORT + "/?authSource=" + MONGO_DB_NAME);
+        MongoDatabase db = mongoClient.getDatabase(MONGO_DB_NAME);
+        MongoCollection<Document> collection = db.getCollection(MONGO_COLLECTION_NAME);
+
+        return collection;
+    }
+
 }

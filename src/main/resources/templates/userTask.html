@@ -131,7 +131,8 @@
                                                         <div class="" style="display: flex;align-items: center;">
                                                             <el-button v-if="task.status==2&&!task.integrate" :type="task.permission=='public'?'success':'warning'"
                                                                        size="mini"
-                                                                       @click="publishTask(task)">
+                                                                       @click="publishTask(task)"
+                                                                       style="margin: 0 3px;" >
                                                                 <span v-if="task.permission=='public'">
                                                                     <span>
                                                                         <i class="fa fa-unlock "></i>
@@ -145,14 +146,14 @@
                                                                     {{htmlJson.TaskPrivate}}
                                                                 </span>
                                                             </el-button>
-                                                            <el-button v-if="task.status==2&&!task.integrate"
-                                                                       @click="sharingTaskData(task)" plain size="mini"
-                                                                       style="margin: 0 5px;"><i
-                                                                    class="fa fa-share-square-o" aria-hidden="true"></i>
-                                                                {{htmlJson.ShareDataItem}}
-                                                            </el-button>
+                                                            <!--<el-button v-if="task.status==2&&!task.integrate"-->
+                                                            <!--           @click="sharingTaskData(task)" plain size="mini"-->
+                                                            <!--           style="margin: 0 5px;"><i-->
+                                                            <!--        class="fa fa-share-square-o" aria-hidden="true"></i>-->
+                                                            <!--    {{htmlJson.ShareDataItem}}-->
+                                                            <!--</el-button>-->
                                                             <el-button type="primary" size="mini"
-                                                                       style="float: right;margin-right: 3px;background-color: rgb(0,200,255);border:0"
+                                                                       style="float: right;margin: 0 3px;background-color: rgb(0,200,255);border:0"
                                                                        @click="checkOutput(task.computableId,task.taskId,task.integrate)">
                                                                 {{htmlJson.CheckTaskInfo}}
                                                             </el-button>
@@ -362,20 +363,21 @@
                                                         <div class="" style="display: flex;align-items: center;">
                                                             <el-button v-if="task.status==2&&!task.integrate" type="warning"
                                                                        size="mini"
-                                                                       @click="publishDataTask(task)">
+                                                                       @click="publishDataTask(task)"
+                                                                       style="margin: 0 3px;">
                                                     <span v-if="task.permission=='public'">
                                                         <span><i class="fa fa-unlock"></i></span>
                                                         {{htmlJson.TaskPublic}}</span>
                                                                 <span v-else><span style="margin-right: 2px"><i
                                                                         class="fa fa-lock wzhI"></i></span>{{htmlJson.TaskPrivate}}</span>
                                                             </el-button>
-                                                            <el-button v-if="task.status==2&&!task.integrate"
-                                                                       @click="sharingTaskData(task)" plain size="mini"
-                                                                       style="margin: 0 5px;"><i
-                                                                    class="fa fa-share-square-o" aria-hidden="true"></i>{{htmlJson.ShareDataItem}}
-                                                            </el-button>
+                                                            <!--<el-button v-if="task.status==2&&!task.integrate"-->
+                                                            <!--           @click="sharingTaskData(task)" plain size="mini"-->
+                                                            <!--           style="margin: 0 5px;"><i-->
+                                                            <!--        class="fa fa-share-square-o" aria-hidden="true"></i>{{htmlJson.ShareDataItem}}-->
+                                                            <!--</el-button>-->
                                                             <el-button type="primary" size="mini"
-                                                                       style="float: right;margin-right: 3px;background-color: rgb(0,200,255);border:0"
+                                                                       style="float: right;margin: 0 3px;background-color: rgb(0,200,255);border:0"
                                                                        @click="checkDataTaskOutput(task.oid)">
                                                                 {{htmlJson.CheckTaskInfo}}
                                                             </el-button>
@@ -574,20 +576,21 @@
                                                         <div class="" style="display: flex;align-items: center;">
                                                             <el-button v-if="task.status==2&&!task.integrate" type="warning"
                                                                        size="mini"
-                                                                       @click="publishTask(task)">
+                                                                       @click="publishTask(task)"
+                                                                       style="margin: 0 3px;">
                                                     <span v-if="task.permission=='public'">
                                                         <span><i class="fa fa-unlock"></i></span>
                                                         {{htmlJson.TaskPublic}}</span>
                                                                 <span v-else><span style="margin-right: 2px"><i
                                                                         class="fa fa-lock wzhI"></i></span>{{htmlJson.TaskPrivate}}</span>
                                                             </el-button>
-                                                            <el-button v-if="task.status==2&&!task.integrate"
-                                                                       @click="sharingTaskData(task)" plain size="mini"
-                                                                       style="margin: 0 5px;"><i
-                                                                    class="fa fa-share-square-o" aria-hidden="true"></i>{{htmlJson.ShareDataItem}}
-                                                            </el-button>
+                                                            <!--<el-button v-if="task.status==2&&!task.integrate"-->
+                                                            <!--           @click="sharingTaskData(task)" plain size="mini"-->
+                                                            <!--           style="margin: 0 5px;"><i-->
+                                                            <!--        class="fa fa-share-square-o" aria-hidden="true"></i>{{htmlJson.ShareDataItem}}-->
+                                                            <!--</el-button>-->
                                                             <el-button type="primary" size="mini"
-                                                                       style="float: right;margin-right: 3px;background-color: rgb(0,200,255);border:0"
+                                                                       style="float: right;margin:0 3px;background-color: rgb(0,200,255);border:0"
                                                                        @click="checkItdTask(task.oid)">
                                                                 {{htmlJson.CheckTaskInfo}}
                                                             </el-button>

@@ -307,7 +307,8 @@ public class VersionService {
         content.setLock(false);
         try {
             versionDao.save(version);
-            itemDao.save(content);
+            // itemDao.save(content);
+            redisService.saveItem(content,version.getType());
 
             //给编辑者发邮件
             userService.sendRejectMail(version.getEditor(),content);
@@ -1380,47 +1381,57 @@ public class VersionService {
         PortalItem latestVersion = (PortalItem) itemDao.findFirstById(itemId);
 
         PortalItem content = version.getContent();
-        switch (itemType) {
-            case ModelItem:
-                modelAndView= modelItemService.getPage((ModelItem) content);
-                break;
-            case ConceptualModel:
-                modelAndView= conceptualModelService.getPage((ConceptualModel) content);
-                break;
-            case LogicalModel:
-                modelAndView= logicalModelService.getPage((LogicalModel) content);
-                break;
-            case ComputableModel:
-                modelAndView= computableModelService.getPage((ComputableModel) content);
-                break;
-            case Concept:
-                modelAndView= repositoryService.getConceptPage((Concept) content);
-                break;
-            case SpatialReference:
-                modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content);
-                break;
-            case Template:
-                modelAndView= repositoryService.getTemplatePage((Template) content);
-                break;
-            case Unit:
-                modelAndView= repositoryService.getUnitPage((Unit) content);
-                break;
-            case DataItem:
-                modelAndView = dataItemService.getPage((DataItem) content, dataItemDao);
-                break;
-            case DataHub:
-                modelAndView = dataItemService.getPage((DataItem) content, dataHubDao);
-                break;
-            case DataMethod:
-                modelAndView = dataMethodService.getPage((DataMethod) content);
-                break;
 
+        try {
+            switch (itemType) {
+                case ModelItem:
+                    modelAndView= modelItemService.getPage((ModelItem) content);
+                    break;
+                case ConceptualModel:
+                    modelAndView= conceptualModelService.getPage((ConceptualModel) content);
+                    break;
+                case LogicalModel:
+                    modelAndView= logicalModelService.getPage((LogicalModel) content);
+                    break;
+                case ComputableModel:
+                    modelAndView= computableModelService.getPage((ComputableModel) content);
+                    break;
+                case Concept:
+                    modelAndView= repositoryService.getConceptPage((Concept) content);
+                    break;
+                case SpatialReference:
+                    modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content);
+                    break;
+                case Template:
+                    modelAndView= repositoryService.getTemplatePage((Template) content);
+                    break;
+                case Unit:
+                    modelAndView= repositoryService.getUnitPage((Unit) content);
+                    break;
+                case DataItem:
+                    modelAndView = dataItemService.getPage((DataItem) content, dataItemDao);
+                    break;
+                case DataHub:
+                    modelAndView = dataItemService.getPage((DataItem) content, dataHubDao);
+                    break;
+                case DataMethod:
+                    modelAndView = dataMethodService.getPage((DataMethod) content);
+                    break;
+
+            }
+
+            //更新回去
+            // itemDao.save(latestVersion);
+            redisService.saveItem(latestVersion, itemType);
+
+            modelAndView.addObject("history",true);
+        } catch (Exception e){
+            // 获取页面出错的话要把条目更新回去
+            redisService.saveItem(latestVersion, itemType);
+
+            modelAndView.setViewName("/error/500");
         }
 
-        //更新回去
-        itemDao.save(latestVersion);
-
-        modelAndView.addObject("history",true);
         return modelAndView;
 
     }

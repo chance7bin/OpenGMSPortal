@@ -567,8 +567,8 @@ var userAccount = Vue.extend(
 
                         this.$refs.userAvatar.updateAvatar();
 
-                        $('.userIcon').attr("src",that.userInfo.avatar)
-                        $('.round_icon').attr("src",that.userInfo.avatar)
+                        // $('.userIcon').attr("src",that.userInfo.avatar)
+                        // $('.round_icon').attr("src",that.userInfo.avatar)
                     }
                 });
             },
@@ -1129,7 +1129,7 @@ var userAccount = Vue.extend(
                             newTH=oldTarH*times
 
                             let backgsize=newTW+'px'+' '+newTH+"px"
-                            console.log(backgsize)
+                            // console.log(backgsize)
                             canvas.style.backgroundSize=backgsize
 
                             let timesP=newTW/targetW

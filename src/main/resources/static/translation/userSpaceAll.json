@@ -1856,7 +1856,8 @@
     "LastUpdatedTime": "Last Updated Time",
     "EnterStudyArea": "Enter Study Areas ...",
     "EnterOrganizations": "Enter Organizations ...",
-    "Save": "Save"
+    "Save": "Save",
+    "ClickToSelect": "Click to select"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -3711,6 +3712,7 @@
     "LastUpdatedTime":"上次更新时间",
     "EnterStudyArea": "输入研究领域...",
     "EnterOrganizations":"输入组织...",
-    "Save": "保存"
+    "Save": "保存",
+    "ClickToSelect": "点击选择"
   }
 }
