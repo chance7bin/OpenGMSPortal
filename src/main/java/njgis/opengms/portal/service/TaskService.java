@@ -19,6 +19,7 @@ import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
+import njgis.opengms.portal.enums.UserRoleEnum;
 import njgis.opengms.portal.utils.*;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -556,17 +557,21 @@ public class TaskService {
 
         // TODO: 2021/11/9 判断用户最后一次调用时间
         // 判断用户最后一次调用时间
-        // User user = userDao.findFirstByEmail(email);
-        // Date lastInvokeTime = user.getLastInvokeTime();
-        // Date now = new Date();
-        // if(lastInvokeTime != null){
-        //     long intervalSec = (now.getTime() - lastInvokeTime.getTime())/1000;
-        //     if(intervalSec<modelInvokeInternal){
-        //         return ResultUtils.error(-2,"Each user can only invoke the model once in three minutes, you need to wait "+String.valueOf(modelInvokeInternal-intervalSec)+" seconds before invoking the next model.");
-        //     }
-        // }
-        // user.setLastInvokeTime(new Date());
-        // userDao.save(user);
+        User user = userDao.findFirstByEmail(email);
+        UserRoleEnum userRole = user.getUserRole();
+        if (userRole == null || !userRole.isAdmin()){
+            Date lastInvokeTime = user.getLastInvokeTime();
+            Date now = new Date();
+            if(lastInvokeTime != null){
+                long intervalSec = (now.getTime() - lastInvokeTime.getTime())/1000;
+                if(intervalSec<modelInvokeInternal){
+                    // return ResultUtils.error(-2,"Each user can only invoke the model once in three minutes, you need to wait "+String.valueOf(modelInvokeInternal-intervalSec)+" seconds before invoking the next model.");
+                    return ResultUtils.error(-2,"每位用户在三分钟之内只能调用一次模型，您还需等待 "+String.valueOf(modelInvokeInternal-intervalSec)+" 秒才可以调用下次模型");
+                }
+            }
+            user.setLastInvokeTime(new Date());
+            userDao.save(user);
+        }
 
         ComputableModel computableModel=computableModelDao.findFirstById(lists.getString("oid"));
         String mdlStr=computableModel.getMdl();

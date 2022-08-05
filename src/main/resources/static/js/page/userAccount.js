@@ -1129,7 +1129,7 @@ var userAccount = Vue.extend(
                             newTH=oldTarH*times
 
                             let backgsize=newTW+'px'+' '+newTH+"px"
-                            console.log(backgsize)
+                            // console.log(backgsize)
                             canvas.style.backgroundSize=backgsize
 
                             let timesP=newTW/targetW

@@ -126,7 +126,7 @@
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime}, 'concept')"></div>
             </div>
 
             <div th:replace="fragments/itemInfoModules :: QR_sm"></div>
@@ -159,7 +159,7 @@
 
             <div id="Modifier" class="detail_block"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
+                <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime}, 'concept')"></div>
             </div>
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
 

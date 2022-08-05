@@ -248,13 +248,13 @@
                                             <label for="inputName">{{htmlJson.Name}}</label>
                                             <div class="">
                                                 <input type="text" class="form-control" id="inputName"
-                                                       placeholder="Name" v-model="userInfo.name">
+                                                       :placeholder="htmlJson.Name" v-model="userInfo.name">
                                             </div>
                                         </div>
                                          <div class="wzhModalForm">
                                             <label for="inputName">{{htmlJson.appellation}}</label>
                                             <div class="">
-                                                <el-select v-model="userInfo.title" placeholder="Click to select" style="width: 100%">
+                                                <el-select v-model="userInfo.title" :placeholder="htmlJson.ClickToSelect" style="width: 100%">
                                                     <el-option
                                                             v-for="item in titleOptions"
                                                             :key="item.value"

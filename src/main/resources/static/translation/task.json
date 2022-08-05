@@ -17,7 +17,7 @@
       "semantics": "Semantics",
       "workFlow": "Work flow",
       "input": "Input",
-      "dataType": "Data Type:",
+      "dataType": "Data Type",
       "publicExample": "Public Example",
       "myTaskData": "My Task Data",
       "user": "User",
@@ -123,7 +123,8 @@
       "PleaseSelectFiles": "Please select files!",
       "PleaseEnterDatasetName": "Please enter the dataset name!",
       "SelectDataTemplate": "Please select a data template!",
-      "DataTemplate":"Data Template"
+      "DataTemplate":"Data Template",
+      "Tip": "Tip"
     },
     "zh-cn":{
       "selectModel": "选择计算模型",
@@ -143,7 +144,7 @@
       "semantics": "语义",
       "workFlow": "工作流",
       "input": "输入",
-      "dataType": "数据类型:",
+      "dataType": "数据类型",
       "publicExample": "公共示例",
       "myTaskData": "我的任务数据",
       "user": "用户",
@@ -250,6 +251,7 @@
       "PleaseSelectFiles": "请选择文件",
       "PleaseEnterDatasetName": "请输入数据集名称",
       "SelectDataTemplate": "请选择数据模板",
-      "DataTemplate":"数据模板"
+      "DataTemplate":"数据模板",
+      "Tip": "提示"
     }
 }

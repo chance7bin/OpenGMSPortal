@@ -168,6 +168,15 @@ public class DataMethodService {
         modelAndView.addObject("lastModifyTime", lastModifyTime);
 
         modelAndView.addObject("modularType", ItemTypeEnum.DataMethod);
+
+        //修改者信息
+        String lastModifier=dataMethod.getLastModifier();
+        JSONObject modifierJson=null;
+        if(lastModifier!=null){
+            modifierJson = userService.getItemUserInfoByEmail(lastModifier);
+        }
+        modelAndView.addObject("lastModifier", modifierJson);
+
         return modelAndView;
     }
 
