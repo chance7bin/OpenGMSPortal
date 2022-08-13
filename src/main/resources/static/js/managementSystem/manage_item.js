@@ -25,11 +25,11 @@ export var ItemTemplate = Vue.extend({
                                     placeholder="请输入条目名称"
                                     prefix-icon="el-icon-search"
                                     v-model="searchInputGeo"
-                                    @keyup.enter.native="searchGeoItemList()"
+                                    @keyup.enter.native="searchItem()"
                             >
                             </el-input>
                             &nbsp;&nbsp;
-                            <el-button  type="success" icon="el-icon-search" @click="searchGeoItemList()" >搜索</el-button>
+                            <el-button  type="success" icon="el-icon-search" @click="searchItem()" >搜索</el-button>
                         </div>
                     </div>
                     <div class="geoItemMainContent" >
@@ -103,11 +103,11 @@ export var ItemTemplate = Vue.extend({
                                         placeholder="请输入邮箱"
                                         prefix-icon="el-icon-search"
                                         v-model="searchUserInput"
-                                        @keyup.enter.native="getUserList()"
+                                        @keyup.enter.native="searchUser()"
                                     >
                                     </el-input>
                                     &nbsp;&nbsp;
-                                    <el-button  type="success" icon="el-icon-search" @click="getUserList()" >搜索</el-button>
+                                    <el-button  type="success" icon="el-icon-search" @click="searchUser()" >搜索</el-button>
                                 </div>
                                 <el-table
                                     :data="userTable"
@@ -290,9 +290,16 @@ export var ItemTemplate = Vue.extend({
                     console.log(error);
                 });
         },
+
+        searchItem(){
+          this.currentPageGeo=1;
+          this.searchGeoItemList();
+        },
+
         //页面切换
         handleSizeChangeGeo(val){
             this.PageSizeGeo=val
+            this.currentPageGeo=1;
             this.getGeoItemList()
         },
         handleCurrentChangeGeo(val){
@@ -398,6 +405,10 @@ export var ItemTemplate = Vue.extend({
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        searchUser(){
+          this.userNowPage=1;
+          this.getUserList();
         },
         //用户页面切换
         handleUserCurrentChange(val){

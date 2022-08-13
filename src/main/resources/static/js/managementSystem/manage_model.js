@@ -14,7 +14,7 @@ export var ModelTemplate = Vue.extend({
                                         placeholder="请输入模型名称"
                                         prefix-icon="el-icon-search"
                                         v-model="searchInput"
-                                        @keyup.enter.native="getModelList()"
+                                        @keyup.enter.native="searchModel()"
                                 >
                                 </el-input>
                                 &nbsp;&nbsp;
@@ -273,6 +273,7 @@ export var ModelTemplate = Vue.extend({
         //模型列表分页
         handleSizeChange(val) {
             this.PageSize = val;
+            this.currentPage=1
             this.getModelList();
         },
         handleCurrentChange(val) {
@@ -282,6 +283,7 @@ export var ModelTemplate = Vue.extend({
 
         //模型搜索
         searchModel(){
+            this.currentPage=1
             this.getModelList();
         },
 
