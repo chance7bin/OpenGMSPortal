@@ -13,11 +13,11 @@ export var UserTemplate = Vue.extend({
                                 placeholder="请输入邮箱"
                                 prefix-icon="el-icon-search"
                                 v-model="searchInputUser"
-                                @keyup.enter.native="getUserList()"
+                                @keyup.enter.native="userSearch()"
                         >
                         </el-input>
                         &nbsp;&nbsp;
-                        <el-button  type="success" icon="el-icon-search" @click="getUserList()" >搜索</el-button>
+                        <el-button  type="success" icon="el-icon-search" @click="userSearch()" >搜索</el-button>
                     </div>
 
                     <!--表格头部菜单-->
@@ -111,9 +111,15 @@ export var UserTemplate = Vue.extend({
                 });
         },
 
+        userSearch(){
+          this.currentPageUser=1;
+          this.getUserList();
+        },
+
         //页面切换
         handleSizeChangeUser(val){
             this.PageSizeUser=val
+            this.currentPageUser=1;
             this.getUserList()
         },
         handleCurrentChangeUser(val){

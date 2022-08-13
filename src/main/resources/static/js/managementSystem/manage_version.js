@@ -10,11 +10,11 @@ export var VersionTemplate = Vue.extend({
                                             placeholder="请输入名称"
                                             prefix-icon="el-icon-search"
                                             v-model="searchInputWaitVersion"
-                                            @keyup.enter.native="getWaitVersionList()"
+                                            @keyup.enter.native="searchWaitVersionList()"
                                     >
                                     </el-input>
                                     &nbsp;&nbsp;
-                                    <el-button  type="success" icon="el-icon-search" @click="getWaitVersionList()" >搜索</el-button>
+                                    <el-button  type="success" icon="el-icon-search" @click="searchWaitVersionList()" >搜索</el-button>
                                 </div>
                             <div>
                                 <el-table
@@ -325,6 +325,11 @@ export var VersionTemplate = Vue.extend({
                 });
         },
 
+        searchWaitVersionList(){
+            this.currentPageWaitVersion=1;
+            this.getWaitVersionList();
+        },
+
 
         // //查看某次审核，对比 旧
         // viewWaitVersion(versionId){
@@ -366,6 +371,7 @@ export var VersionTemplate = Vue.extend({
                             type: 'success',
                             message: '接受成功!'
                         });
+                        this.currentPageWaitVersion=1;
                         this.getWaitVersionList()
                     })
                     .catch(function (error) {
@@ -393,6 +399,7 @@ export var VersionTemplate = Vue.extend({
                             message: '拒绝成功!'
                         });
                         // this.getVersionList(this.versionUrl)
+                        this.currentPageWaitVersion=1;
                         this.getWaitVersionList()
                     })
                     .catch(function (error) {
@@ -412,6 +419,7 @@ export var VersionTemplate = Vue.extend({
 
         handleSizeChangeWaitVersion(val){
             this.PageSizeWaitVersion=val;
+            this.currentPageWaitVersion=1;
             this.getWaitVersionList();
         },
         handleCurrentChangeWaitVersion(val){
@@ -437,9 +445,14 @@ export var VersionTemplate = Vue.extend({
                     console.log(error);
                 });
         },
+        searchAcceptVersionList(){
+          this.currentPageAcceptVersion=1;
+          this.getAcceptVersionList();
+        },
 
         handleSizeChangeAcceptVersion(val){
             this.PageSizeAcceptVersion=val;
+            this.currentPageAcceptVersion=1;
             this.getAcceptVersionList();
         },
         handleCurrentChangeAcceptVersion(val){
@@ -468,6 +481,11 @@ export var VersionTemplate = Vue.extend({
                     console.log(error);
                 });
         },
+        searchRejectVersionList(){
+            this.currentPageRejectVersion=1;
+            this.getRejectVersionList()
+
+        },
 
 
         viewRejectVersion(){
@@ -476,6 +494,7 @@ export var VersionTemplate = Vue.extend({
 
         handleSizeChangeRejectVersion(val){
             this.PageSizeRejectVersion=val;
+            this.currentPageRejectVersion=1;
             this.getRejectVersionList();
         },
         handleCurrentChangeRejectVersion(val){
