@@ -245,16 +245,16 @@
                                 <div class="modal-body">
                                     <form class="form-horizontal wzhScrollBar" role="form" style="margin-top: 20px;height: 80vh;max-height: 490px;">
                                         <div class="wzhModalForm">
-                                            <label for="inputName">Name</label>
+                                            <label for="inputName">{{htmlJson.Name}}</label>
                                             <div class="">
                                                 <input type="text" class="form-control" id="inputName"
-                                                       placeholder="Name" v-model="userInfo.name">
+                                                       :placeholder="htmlJson.Name" v-model="userInfo.name">
                                             </div>
                                         </div>
                                          <div class="wzhModalForm">
-                                            <label for="inputName">Title</label>
+                                            <label for="inputName">{{htmlJson.appellation}}</label>
                                             <div class="">
-                                                <el-select v-model="userInfo.title" placeholder="Click to select" style="width: 100%">
+                                                <el-select v-model="userInfo.title" :placeholder="htmlJson.ClickToSelect" style="width: 100%">
                                                     <el-option
                                                             v-for="item in titleOptions"
                                                             :key="item.value"
@@ -265,30 +265,30 @@
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputPhone">Phone</label>
+                                            <label for="inputPhone">{{htmlJson.Phone}}</label>
                                             <div class="">
                                                 <input type="text" class="form-control" id="inputPhone"
-                                                       placeholder="Phone" v-model="userInfo.phone">
+                                                       :placeholder="phonePH" v-model="userInfo.phone">
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputHomePage">Home Page</label>
+                                            <label for="inputHomePage">{{htmlJson.HomePage}}</label>
                                             <div class="">
                                                 <input type="text" class="form-control" id="inputHomePage"
                                                        v-model="userInfo.homepage"
-                                                       placeholder="Home Page">
+                                                       :placeholder="homePagePH">
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputOrganizations">Organizations</label>
+                                            <label for="inputOrganizations">{{htmlJson.Organizations}}</label>
                                             <div class="">
                                                 <input type="text" class="form-control"
                                                        id="inputOrganizations"
-                                                       placeholder="Organizations">
+                                                       :placeholder="organizationsPH">
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputSubjectAreas">Domain</label>
+                                            <label for="inputSubjectAreas">{{htmlJson.Domain}}</label>
                                             <div class="">
                                                 <input type="text" class="form-control"
                                                        id="inputSubjectAreas"
@@ -296,11 +296,11 @@
                                             </div>
                                         </div>
                                         <div class="wzhModalForm">
-                                            <label for="inputDescription">Introduction</label>
+                                            <label for="inputDescription">{{htmlJson.Introduction}}</label>
                                             <div class="">
                                                 <textarea type="text" class="form-control" id="inputDescription"
                                                   v-model="userInfo.introduction"
-                                                  placeholder="Introduction"></textarea>
+                                                  :placeholder="introductionPH"></textarea>
                                             </div>
                                         </div>
                                     </form>
@@ -309,7 +309,7 @@
                                 <div class="modal-footer">
                                     <button id="saveUser" type="button" class="btn btn-round btn-primary "
                                             style="text-transform: capitalize;font-size: 15px;    margin-right: 15px;"
-                                            @click="saveEditInfo">Save
+                                            @click="saveEditInfo">{{htmlJson.Save}}
                                     </button>
                                 </div>
                             </div>

@@ -116,7 +116,7 @@
         </div>
     </div>
     <div class="block_content" style="padding-left:10px;">
-        <div class="el-row"
+        <div class="el-row" th:if="${history!=true}"
              style="margin-bottom: 3px;height: 40px;display: flex;align-items: center;">
             <div class="el-col ">
                 <a :href="'/profile/'+lightenContributor.accessId" target="_blank">
@@ -130,13 +130,27 @@
                 </div>
             </div>
         </div>
+        <div class="el-row" th:if="${history==true}"
+             style="margin-bottom: 3px;height: 40px;display: flex;align-items: center;">
+            <div class="el-col ">
+                <a th:href="${'/profile/'+lastModifier.accessId}" target="_blank">
+                    <user-avatar th:email="${lastModifier.email}"
+                                 ref="mainContributorAvatar1" style="width:35px;height: 35px;"></user-avatar>
+                </a>
+            </div>
+            <div class="el-col">
+                <div class="pull-left" style="display: block;margin-left: 15px;">
+                    <a th:href="${'/profile/'+lastModifier.accessId}" target="_blank"><h4 style="padding: 0;" th:text="${lastModifier.name}"></h4></a>
+                </div>
+            </div>
+        </div>
         <div class="el-row">
             <div>
                 <h5 th:if="${history!=true}"><span translateId="InitialContribute">Initial contribute : </span>
                     <span th:if="${itemType} eq 'Data'" th:text="${#dates.format(itemInfo.createTime,'yyyy-MM-dd')}"></span>
                     <span th:text="${date}"></span>
                 </h5>
-                <h5 th:if="${history==true}"><span translateId="ModifyTime">Modify Time : </span><span th:text="${date}"></span></h5>
+                <h5 th:if="${history==true}"><span translateId="ModifyTime">Modify Time : </span><span th:text="${#dates.format(itemInfo.lastModifyTime,'yyyy-MM-dd')}"></span></h5>
             </div>
         </div>
 
@@ -517,8 +531,8 @@
 </div>
 
 <!--history 历史-->
-<div th:fragment="History(lastModifier, lastModifyTime)" id="History" class="detail_block">
-    <!--     th:if="${history!=true&&itemInfo.versions!=null&&#lists.size(itemInfo.versions)!=0}">-->
+<div th:fragment="History(lastModifier, lastModifyTime, itemType)" id="History" class="detail_block"
+         th:if="${history!=true&&itemInfo.versions!=null&&#lists.size(itemInfo.versions)!=0}">
     <div class="block_head">
         <div class="head_text" style="padding-left: 10px;">
             <h4 translateId="History">History</h4>
@@ -539,7 +553,7 @@
 
                     <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
                     <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
-                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/modelItem/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
+                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/' + ${itemType==null?'modelItem':itemType} + '/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
                 </dl>
             </div>
 
@@ -1427,7 +1441,7 @@
 
 <div th:fragment="model_modifier0" id="model_modifier0" class="detail_block minScreen"
      th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
-    <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime})"></div>
+    <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime}, null)"></div>
 </div>
 
 <div th:fragment="model_Knowledge_Graph" th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph" class="detail_block">

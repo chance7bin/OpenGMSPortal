@@ -3,7 +3,12 @@ var userAccount = Vue.extend(
         template: "#userAccount",
         props:["htmlJson"],
         data(){
+
             return{
+                phonePH:'',
+                homePagePH:'',
+                organizationsPH:'',
+                introductionPH:'',
                 editDisplayIndex:0,
                 //页面样式控制
                 loading: 'false',
@@ -96,6 +101,21 @@ var userAccount = Vue.extend(
         },
 
         methods:{
+            InitLanguage(){
+                const language = window.localStorage.getItem("language");
+
+                if (language == "en-us"){
+                    this.phonePH="Phone"
+                    this.homePagePH="Home Page"
+                    this.organizationsPH="Organizations"
+                    this.introductionPH="Introduction"
+                }else {
+                    this.phonePH="电话"
+                    this.homePagePH="主页"
+                    this.organizationsPH="机构"
+                    this.introductionPH="介绍"
+                }
+            },
             //公共功能
             setSession(name, value) {
                 window.sessionStorage.setItem(name, value);
@@ -408,14 +428,14 @@ var userAccount = Vue.extend(
                     $('#inputOrganizations').tagEditor({
                         initialTags: this.userInfo.organizations,
                         forceLowercase: false,
-                        placeholder: 'Enter Organizations ...'
+                        placeholder: this.htmlJson.EnterOrganizations
                     });
                 } else {
                     $("#inputOrganizations").tagEditor("destroy");
                     $('#inputOrganizations').tagEditor({
                         initialTags: [],
                         forceLowercase: false,
-                        placeholder: 'Enter Organizations ...'
+                        placeholder: this.htmlJson.EnterOrganizations
                     });
                 }
                 if (this.userInfo.domain != null && this.userInfo.domain.length != 0) {
@@ -423,14 +443,14 @@ var userAccount = Vue.extend(
                     $('#inputSubjectAreas').tagEditor({
                         initialTags: this.userInfo.domain,
                         forceLowercase: false,
-                        placeholder: 'Enter Study Areas ...'
+                        placeholder: this.htmlJson.EnterStudyArea
                     });
                 } else {
                     $("#inputSubjectAreas").tagEditor("destroy");
                     $('#inputSubjectAreas').tagEditor({
                         initialTags: [],
                         forceLowercase: false,
-                        placeholder: 'Enter Study Areas ...'
+                        placeholder: this.htmlJson.EnterStudyArea
                     });
                 }
                 $('#myModal').modal('show');
@@ -547,8 +567,8 @@ var userAccount = Vue.extend(
 
                         this.$refs.userAvatar.updateAvatar();
 
-                        $('.userIcon').attr("src",that.userInfo.avatar)
-                        $('.round_icon').attr("src",that.userInfo.avatar)
+                        // $('.userIcon').attr("src",that.userInfo.avatar)
+                        // $('.round_icon').attr("src",that.userInfo.avatar)
                     }
                 });
             },
@@ -671,7 +691,9 @@ var userAccount = Vue.extend(
             this.htmlJson = this.getStorage("userSpaceAll");
 
         },
-
+        updated(){
+            this.InitLanguage()
+        },
         mounted() {
             var vthis = this
             $(() => {
@@ -1107,7 +1129,7 @@ var userAccount = Vue.extend(
                             newTH=oldTarH*times
 
                             let backgsize=newTW+'px'+' '+newTH+"px"
-                            console.log(backgsize)
+                            // console.log(backgsize)
                             canvas.style.backgroundSize=backgsize
 
                             let timesP=newTW/targetW

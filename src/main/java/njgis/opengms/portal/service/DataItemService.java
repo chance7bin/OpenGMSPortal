@@ -150,6 +150,14 @@ public class DataItemService {
         view.addObject("detail",detailResult);
         view.addObject("history",false);
 
+        //修改者信息
+        String lastModifier=dataItem.getLastModifier();
+        JSONObject modifierJson=null;
+        if(lastModifier!=null){
+            modifierJson = userService.getItemUserInfoByEmail(lastModifier);
+        }
+        view.addObject("lastModifier", modifierJson);
+
         return view;
     }
 

@@ -328,9 +328,8 @@ public class TaskController {
 
     @LoginRequired
     @ApiOperation(value = "把任务私有化 [ /setPrivate ]")
-    @RequestMapping(value = "/privatization/{taskId}",method = RequestMethod.POST)
-    public JsonResult setPrivate(@PathVariable String taskId)
-    {
+    @RequestMapping(value = "/setPrivate",method = RequestMethod.POST)
+    public JsonResult setPrivate(@RequestParam String taskId){
         return taskService.setPrivate(taskId);
 
     }

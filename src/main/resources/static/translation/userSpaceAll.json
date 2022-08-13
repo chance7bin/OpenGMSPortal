@@ -1741,7 +1741,7 @@
     "Accept": "Accept",
     "Reject": "Reject",
 
-
+    "SelectPicture": "Select a picture",
     "PleaseSelectFirst": "please select first!",
     "Statistics": "Statistics",
     "PleaseChooseCategoriesFromSidebar": "Please choose categories from sidebar",
@@ -1853,7 +1853,11 @@
     "SureToDelete": "Are you sure to delete this model container?",
     "Tip": "Tip",
     "RegisterTime": "Register Time",
-    "LastUpdatedTime": "Last Updated Time"
+    "LastUpdatedTime": "Last Updated Time",
+    "EnterStudyArea": "Enter Study Areas ...",
+    "EnterOrganizations": "Enter Organizations ...",
+    "Save": "Save",
+    "ClickToSelect": "Click to select"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2488,7 +2492,7 @@
     "Detail": "详情",
     "newFolderTip": "请输入新文件夹的名称",
     "enterUrl": "请输入计算模型的URL",
-
+    "SelectPicture": "选择一张照片",
     "ModelServerContainer": "模型服务容器",
     "ModelServerContainerSub": "OpenGMS封装系统是一个面向服务的系统，其目的是在网络上共享和重用标准模型服务。",
     "RefreshMyNodes": "更新我的节点",
@@ -3705,6 +3709,10 @@
     "Delete": "删除",
     "Tip": "提示",
     "RegisterTime": "注册时间",
-    "LastUpdatedTime":"上次更新时间"
+    "LastUpdatedTime":"上次更新时间",
+    "EnterStudyArea": "输入研究领域...",
+    "EnterOrganizations":"输入组织...",
+    "Save": "保存",
+    "ClickToSelect": "点击选择"
   }
 }
