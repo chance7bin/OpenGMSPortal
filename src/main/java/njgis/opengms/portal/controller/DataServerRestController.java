@@ -10,10 +10,7 @@ import njgis.opengms.portal.utils.ResultUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -50,6 +47,32 @@ public class DataServerRestController {
         }else {
             return ResultUtils.success(jsonObject);
         }
+
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/pageDataItemChecked", method = RequestMethod.GET)
+    public JsonResult pageAllDataItemChecked(@RequestParam(value = "page") int page,
+                                             @RequestParam(value = "pageSize") int pageSize,
+                                             @RequestParam(value="asc") int asc,
+                                             @RequestParam(value="sortEle") String sortEle,
+                                             @RequestParam(value="searchText") String searchText,
+                                             HttpServletRequest request
+    ){
+        HttpSession session = request.getSession();
+        String userId = session.getAttribute("email").toString();
+        return ResultUtils.success(dataServerService.pageDataItemChecked(page,pageSize,asc,sortEle,searchText,userId));
+
+    }
+
+
+    @RequestMapping(value = "/checkNodeContent", method = RequestMethod.GET)
+    public JsonResult checkNodeContent(@RequestParam("serverId") String serverId,
+                                       @RequestParam("token") String token,
+                                       @RequestParam("type") String type
+    ){
+
+        return ResultUtils.success(dataServerService.checkNodeContent(serverId,token,type));
 
     }
 

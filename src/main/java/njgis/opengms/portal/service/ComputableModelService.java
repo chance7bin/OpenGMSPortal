@@ -1034,4 +1034,24 @@ public class ComputableModelService {
 
     }
 
+    public JSONObject getDeployedModelById(String id) {
+
+        ComputableModel computableModel = computableModelDao.findFirstByIdAndDeploy(id,true);
+
+        if(computableModel.getMdl()!=null){
+            try {
+                computableModel.setMdlJson(convertMdl(computableModel.getMdl()));
+            }catch (Exception e){
+
+            }
+        }
+        String userName = computableModel.getAuthor();
+        User user = userDao.findFirstByEmail(userName);
+        JSONObject j_comptblModel = (JSONObject) JSONObject.toJSON(computableModel);
+        j_comptblModel.put("authorName",user.getName());
+        j_comptblModel.put("authorId",user.getAccessId());
+
+        return j_comptblModel;
+
+    }
 }
