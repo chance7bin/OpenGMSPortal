@@ -7,6 +7,8 @@ import njgis.opengms.portal.component.annotation.LoginRequired;
 import njgis.opengms.portal.dao.ComputableModelDao;
 import njgis.opengms.portal.dao.IntegratedTaskDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.intergrate.DataProcessing;
+import njgis.opengms.portal.entity.doo.intergrate.ModelAction;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.ComputableModel;
@@ -36,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -343,56 +346,50 @@ public class TaskController {
     }
 
 
+    @LoginRequired
     @RequestMapping(value="/runIntegratedTask",method = RequestMethod.POST)
     JsonResult runIntegratedModel(@RequestParam("file") MultipartFile file,
                                   @RequestParam("name") String name,
                                   @RequestParam("taskOid") String taskOid,
                                   HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
-        if(session.getAttribute("uid")==null) {
-            return ResultUtils.error(-1, "no login");
-        }
-        else {
-            try{
-                String username = session.getAttribute("uid").toString();
-                RestTemplate restTemplate=new RestTemplate();
-                String url="http://" + managerServerIpAndPort + "/GeoModeling/task/runTask";//远程接口
+        try{
+            String username = session.getAttribute("email").toString();
+            RestTemplate restTemplate=new RestTemplate();
+            String url="http://" + managerServerIpAndPort + "/GeoModeling/task/runTask";//远程接口
 //                logger.info(url);
-                String suffix="."+ FilenameUtils.getExtension(file.getOriginalFilename());
-                File temp=File.createTempFile("temp",suffix);
-                file.transferTo(temp);
-                FileSystemResource resource = new FileSystemResource(temp);
-                MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-                param.add("file", resource);
-                param.add("userName",username);
+            String suffix="."+ FilenameUtils.getExtension(file.getOriginalFilename());
+            File temp=File.createTempFile("temp",suffix);
+            file.transferTo(temp);
+            FileSystemResource resource = new FileSystemResource(temp);
+            MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+            param.add("file", resource);
+            param.add("userName",username);
 //                logger.info("param");
-                HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
-                ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
-                if (responseEntity.getStatusCode()!= HttpStatus.OK){
-                    throw new Exception("远程服务出错");
-                }
-                else{
-                    JSONObject body=responseEntity.getBody();
-                    if(body.getInteger("code")==-1){
-                        return ResultUtils.error(-2,body.getString("msg"));
-                    }
-                    else {
-                        String taskId = responseEntity.getBody().getString("data");
-
-                        IntegratedTask task = integratedTaskDao.findByOid(taskOid);
-                        task.setTaskId(taskId);
-                        task.setStatus(1);
-                        integratedTaskDao.save(task);
-                        return ResultUtils.success(taskId);
-                    }
-                }
-            }catch (Exception e){
-                // e.printStackTrace();
-                log.error(e.getMessage());
-                return ResultUtils.error(-1,"err");
+            HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
+            ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, JSONObject.class);
+            if (responseEntity.getStatusCode()!= HttpStatus.OK){
+                throw new Exception("远程服务出错");
             }
+            else{
+                JSONObject body=responseEntity.getBody();
+                if(body.getInteger("code")==-1){
+                    return ResultUtils.error(-2,body.getString("msg"));
+                }
+                else {
+                    String taskId = responseEntity.getBody().getString("data");
 
-
+                    IntegratedTask task = integratedTaskDao.findByOid(taskOid);
+                    task.setTaskId(taskId);
+                    task.setStatus(1);
+                    integratedTaskDao.save(task);
+                    return ResultUtils.success(taskId);
+                }
+            }
+        }catch (Exception e){
+            // e.printStackTrace();
+            log.error(e.getMessage());
+            return ResultUtils.error(-1,"err");
         }
     }
 
@@ -430,5 +427,94 @@ public class TaskController {
         return ResultUtils.success(taskService.PageIntegrateTaskByUser(email,pageNum,pageSize,asc,sortElement));
 
     }
+
+    @LoginRequired
+    @RequestMapping(value = "/saveIntegratedTask", method = RequestMethod.POST)
+    JsonResult saveIntegratedTask(@RequestBody IntegratedTaskAddDto integratedTaskAddDto,
+                                  HttpServletRequest request
+    ){
+        HttpSession session = request.getSession();
+        String userName = session.getAttribute("email").toString();
+        String xml = integratedTaskAddDto.getXml();
+        String mxgraph = integratedTaskAddDto.getMxgraph();
+        List<Map<String,String>> models = integratedTaskAddDto.getModels();
+        List<Map<String,String>> processingTools = integratedTaskAddDto.getProcessingTools();
+        List<ModelAction> modelActions = integratedTaskAddDto.getModelActions();
+        List<DataProcessing> dataProcessings = integratedTaskAddDto.getDataProcessings();
+        List<Map<String,Object>> dataItems = integratedTaskAddDto.getDataItems();
+        List<Map<String,String>> dataLinks = integratedTaskAddDto.getDataLinks();
+        String description = integratedTaskAddDto.getDescription();
+        String taskName = integratedTaskAddDto.getTaskName();
+
+        return ResultUtils.success(taskService.saveIntegratedTask(xml, mxgraph, models,processingTools, modelActions,dataProcessings,dataItems,dataLinks,userName,taskName,description));
+    }
+
+
+    @RequestMapping(value = "/getIntegrateTaskByOid", method = RequestMethod.GET)
+    JsonResult getIntegrateTaskByOid(@RequestParam("taskOid") String taskOid){
+        return ResultUtils.success(taskService.getIntegratedTaskByOid(taskOid));
+    }
+
+
+    @RequestMapping(value = "/updateIntegratedTaskInfo", method = RequestMethod.POST)
+    JsonResult updateIntegratedTaskInfo(@RequestBody IntegratedTaskAddDto integratedTaskAddDto,
+                                        HttpServletRequest request
+    ){
+        HttpSession session = request.getSession();
+        String userName = session.getAttribute("email").toString();
+        String taskOid = integratedTaskAddDto.getTaskOid();
+        String xml = integratedTaskAddDto.getXml();
+        String mxgraph = integratedTaskAddDto.getMxgraph();
+        List<Map<String,String>> models = integratedTaskAddDto.getModels();
+        List<ModelAction> modelActions = integratedTaskAddDto.getModelActions();
+        List<DataProcessing> dataProcessings = integratedTaskAddDto.getDataProcessings();
+        List<Map<String,Object>> dataItems = integratedTaskAddDto.getDataItems();
+        List<Map<String,String>> dataLinks = integratedTaskAddDto.getDataLinks();
+        String description = integratedTaskAddDto.getDescription();
+        String taskName = integratedTaskAddDto.getTaskName();
+
+        return ResultUtils.success(taskService.updateIntegratedTask(taskOid, xml, mxgraph, models, modelActions,dataProcessings,dataItems,dataLinks,userName,taskName,description));
+    }
+
+
+    @RequestMapping(value="/checkIntegratedTask/{taskId}", method = RequestMethod.GET)
+    JsonResult checkIntegratedTask(@PathVariable("taskId") String taskId,HttpServletRequest request){
+
+        return ResultUtils.success(taskService.checkIntegratedTask(taskId));
+    }
+
+
+    @RequestMapping(value = "/updateIntegrateTaskId", method = RequestMethod.POST)//把managerserver返回的taskid更新到门户数据库
+    JsonResult updateIntegrateTaskId(@RequestParam("taskOid") String taskOid,
+                                     @RequestParam("taskId") String taskId){
+        return ResultUtils.success(taskService.updateIntegrateTaskId(taskOid,taskId));
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/deleteIntegratedTask", method = RequestMethod.DELETE)
+    JsonResult saveIntegratedTask(@RequestParam(value = "taskOid") String oid,
+                                  HttpServletRequest request
+    ){
+        return ResultUtils.success(taskService.deleteIntegratedTask(oid));
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/updateIntegrateTaskName",method = RequestMethod.POST)
+    JsonResult updateIntegrateTaskName(@RequestParam(value = "taskOid")String taskOid,
+                                       @RequestParam(value = "taskName")String taskName,
+                                       HttpServletRequest request){
+        return ResultUtils.success(taskService.updateIntegrateTaskName(taskOid,taskName));
+
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/updateIntegrateTaskDescription",method = RequestMethod.POST)
+    JsonResult updateIntegrateTaskDescription(@RequestParam(value = "taskOid")String taskOid,
+                                              @RequestParam(value = "taskDescription")String taskDescription,
+                                              HttpServletRequest request){
+        return ResultUtils.success(taskService.updateIntegrateTaskDescription(taskOid,taskDescription));
+
+    }
+
 
 }

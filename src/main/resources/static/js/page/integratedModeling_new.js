@@ -39,7 +39,7 @@ var dataServerIp = '111.229.14.128:8898'
 
 var vue = new Vue({
     el: "#app",
-    props: ['htmlJson'],
+    // props: ['htmlJson'],
     data: {
         models:[],
         modelActions: [],
@@ -79,6 +79,7 @@ var vue = new Vue({
         checkModelList: [],
 
         targetFile: {},
+        // targetFile: [],
 
         flashInterval:'',
 
@@ -572,6 +573,41 @@ var vue = new Vue({
         newSolutionDialog:false,
 
         solution:{},
+
+        htmlJson:{
+            "LoginInFirst": "Login in first",
+            "SelectData": "Select Data",
+            "UploadData": "Upload Data",
+            "AddFolder": "Add folder",
+            "DownloadAll": "Download All",
+            "Paste": "Paste",
+            "DeleteAll": "Delete all",
+            "filenamePlaceHolder": "file name...",
+            "YouHaveSelected": "You have selected",
+            "path": "path",
+            "noData": "no data...",
+            "Max": "Max",
+            "Download": "Download",
+            "Copy": "Copy",
+            "Share": "Share",
+            "Rename": "Rename",
+            "rightClick": "Left or right click can call out some function",
+            "DatasetName": "Dataset name",
+            "StoragePath": "Storage path",
+            "UploadFiles": "Upload files",
+            "Change": "Change",
+            "SelectFile": "Select File",
+            "SelectFolder": "Select Folder",
+            "AddNewFolder": "Add new folder",
+            "deleteInfo": "All of the content will be deleted.",
+            "AreYouSureTo": "Are you sure to ",
+            "continue": "continue",
+            "Back": "Back",
+            "allDeleteInfo": "All of the selected files will be deleted.",
+            "selectDirTip": "Please select a file directory.",
+            "ViewInUserspace": "View in userspace",
+            "PleaseSelectDataFirst": "Please select data first"
+        }
 
     },
 
@@ -1616,6 +1652,28 @@ var vue = new Vue({
         removeDataspaceFile(file) {
             this.targetFile = {}
         },
+
+        // selectDataspaceFile(file){
+        //     if (this.targetFile.indexOf(file) > -1) {
+        //
+        //     } else {
+        //         file.label = file.name; //datamethod的testData是用label标识的
+        //         this.targetFile.push(file);
+        //     }
+        // },
+        //
+        // removeDataspaceFile(file) {
+        //     if (this.targetFile.indexOf(file) > -1) {
+        //         for (var i = 0; i < this.targetFile.length; i++) {
+        //             if (this.targetFile[i] === file) {
+        //                 //删除
+        //                 this.targetFile.splice(i, 1);
+        //                 // this.downloadDataSetName.splice(i, 1)
+        //                 break
+        //             }
+        //         }
+        //     }
+        // },
 
         selectFromDataSpace() {
             if(this.dataFromActive == 'dataSpace'){

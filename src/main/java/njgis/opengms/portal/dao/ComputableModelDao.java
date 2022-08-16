@@ -34,4 +34,6 @@ public interface ComputableModelDao  extends MongoRepository<ComputableModel,Str
 
     List<ComputableModel> findAllByNameIn(List<String> nameList);
 
+    ComputableModel findFirstByIdAndDeploy(String id,boolean deploy);
+
 }

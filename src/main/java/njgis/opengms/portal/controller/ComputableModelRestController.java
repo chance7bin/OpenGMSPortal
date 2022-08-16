@@ -353,7 +353,20 @@ public class ComputableModelRestController {
     }
 
 
+    @RequestMapping(value="/getDeployedModelByOid",method = RequestMethod.GET)
+    public JsonResult getDeployedModelByOid(@RequestParam(value="oid") String oid    )
+    {
+        return ResultUtils.success(computableModelService.getDeployedModelById(oid));
+
+    }
+
+
+
+
     //模型集成结束
+
+
+
 
 
 
