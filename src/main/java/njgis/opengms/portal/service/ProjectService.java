@@ -42,14 +42,14 @@ public class ProjectService {
         //根据不同的查询字段进行查询
         Page<Project> itemPage = null;
 
-        itemPage = projectDao.findByProjectNameContainsIgnoreCase(searchText, pageable);
+        // itemPage = projectDao.findByProjectNameContainsIgnoreCase(searchText, pageable);
 
         //若未指定author，则查询全部公开的条目
-        // if(authorEmail == null || authorEmail.trim().equals("")) {
-        //     itemPage = articleDao.findByTitleContainsIgnoreCase(searchText, pageable);
-        // }else{
-        //     itemPage = articleDao.findByTitleContainsIgnoreCaseAndAuthors(searchText, authorEmail, pageable);
-        // }
+        if(authorEmail == null || authorEmail.trim().equals("")) {
+            itemPage = projectDao.findByProjectNameContainsIgnoreCase(searchText, pageable);
+        }else{
+            itemPage = projectDao.findByProjectNameContainsIgnoreCaseAndContributor(searchText, authorEmail, pageable);
+        }
 
         //获取模型条目的创建者信息
         List<Project> items = itemPage.getContent();
