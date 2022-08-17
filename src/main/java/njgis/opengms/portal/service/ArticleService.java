@@ -43,14 +43,14 @@ public class ArticleService {
         //根据不同的查询字段进行查询
         Page<Article> itemPage = null;
 
-        itemPage = articleDao.findByTitleContainsIgnoreCase(searchText, pageable);
+        // itemPage = articleDao.findByTitleContainsIgnoreCase(searchText, pageable);
 
         //若未指定author，则查询全部公开的条目
-        // if(authorEmail == null || authorEmail.trim().equals("")) {
-        //     itemPage = articleDao.findByTitleContainsIgnoreCase(searchText, pageable);
-        // }else{
-        //     itemPage = articleDao.findByTitleContainsIgnoreCaseAndAuthors(searchText, authorEmail, pageable);
-        // }
+        if(authorEmail == null || authorEmail.trim().equals("")) {
+            itemPage = articleDao.findByTitleContainsIgnoreCase(searchText, pageable);
+        }else{
+            itemPage = articleDao.findByTitleContainsIgnoreCaseAndAuthors(searchText, authorEmail, pageable);
+        }
 
         //获取模型条目的创建者信息
         List<Article> items = itemPage.getContent();
