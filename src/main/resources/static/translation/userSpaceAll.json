@@ -236,6 +236,7 @@
     "Confirm": "Confirm",
     "MarkAllRead": "Mark All Read",
     "MarkRead": "Mark Read",
+    "VersionManagement": "Version Management",
 
     "CreateModelItem": "Create Model Item",
     "ModifyModelItem": "Modify Model Item",
@@ -2099,6 +2100,7 @@
     "SureToDelete": "你确认要删除此模型容器吗？",
     "MarkAllRead": "标记全部已读",
     "MarkRead": "标记已读",
+    "VersionManagement": "版本管理",
 
     "CreateModelItem": "创建模型条目",
     "ModifyModelItem": "修改模型条目",
