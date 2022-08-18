@@ -14,5 +14,5 @@ public interface ProjectDao extends MongoRepository<Project, String> {
 
     Page<Project> findByProjectNameContainsIgnoreCase(String name, Pageable pageable);
 
-
+    Page<Project> findByProjectNameContainsIgnoreCaseAndContributor(String name, String email, Pageable pageable);
 }

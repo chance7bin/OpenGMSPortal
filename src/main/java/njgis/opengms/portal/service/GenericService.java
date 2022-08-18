@@ -157,6 +157,11 @@ public class GenericService {
 
         JSONObject jsonObject = searchDBItems(findDTO, type, itemStatusVisible);
 
+        if (type == ItemTypeEnum.DataMethod){
+            return generateSearchResult((List<PortalItem>) jsonObject.get("allPortalItem"),
+                jsonObject.getIntValue("totalElements"), ItemTypeEnum.DataMethod);
+        }
+
         return generateSearchResult((List<PortalItem>) jsonObject.get("allPortalItem"), jsonObject.getIntValue("totalElements"));
     }
 
@@ -250,6 +255,11 @@ public class GenericService {
      * @Author bin
      **/
     public JSONObject generateSearchResult(List<PortalItem> allPortalItem, int totalElements){
+        return generateSearchResult(allPortalItem, totalElements, null);
+    }
+
+    public JSONObject generateSearchResult(List<PortalItem> allPortalItem, int totalElements, ItemTypeEnum typeEnum){
+
         JSONArray lists = new JSONArray();
         JSONArray users = new JSONArray();
         for (int i=0;i<allPortalItem.size();++i) {
@@ -284,13 +294,17 @@ public class GenericService {
             jsonObject.put("overview",portalItem.getOverview());
             // jsonObject.put("type",portalItem.getType());
             jsonObject.put("status",portalItem.getStatus());
-            // jsonObject.put("id",portalItem.getId());
+            jsonObject.put("id",portalItem.getId());
             jsonObject.put("id", portalItem.getId());
             jsonObject.put("viewCount",portalItem.getViewCount());
             jsonObject.put("dailyViewCount",portalItem.getDailyViewCount());
-            // jsonObject.put("invokeServices",portalItem.getInvokeServices());
-            // jsonObject.put("authorName",user.getName());
-            // jsonObject.put("authorId",user.getAccessId());
+
+            if (typeEnum != null && typeEnum == ItemTypeEnum.DataMethod){
+                jsonObject.put("invokeServices",((DataMethod)portalItem).getInvokeServices());
+            }
+
+            jsonObject.put("authorName",user.getName());
+            jsonObject.put("authorId",user.getAccessId());
 
             // /modelItem/items
             jsonObject.put("author_name",user.getName());
@@ -304,6 +318,7 @@ public class GenericService {
         res.put("total",totalElements);
         res.put("users",users);
         return res;
+
     }
 
 

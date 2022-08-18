@@ -183,6 +183,8 @@
     "Yes": "Yes",
     "No": "No",
     "Public": "Public",
+    "Discoverable": "Discoverable",
+    "Private": "Private",
     "ReferenceInfo": "Reference Info",
     "GetByDoi": "Get by doi",
     "EnterDoiClickSearch": "Enter the doi and click search, information may be filled automatically."
@@ -371,6 +373,7 @@
     "No": "取消",
     "Public": "公开",
     "Discoverable": "可发现",
+    "Private": "私有",
     "ReferenceInfo": "参考信息",
     "GetByDoi": "Doi获取",
     "EnterDoiClickSearch": "输入Doi并点击搜索，信息就会被自动填充."

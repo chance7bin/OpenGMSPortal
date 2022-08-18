@@ -103,15 +103,23 @@ public class NoticeService {
                 String p1;
                 if (notice.getDispatcher().equals(currentUser))
                     p1 = "you";
-                else
-                    p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                else {
+                    // p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                    User u = userDao.findFirstByEmail(notice.getDispatcher());
+                    p1 = u == null ? "unknown" : u.getName();
+                }
+
                 switch (notice.getAction()){
                     case Edit:{
                         String p2;
                         if (notice.getRecipient().equals(currentUser) && version.getItemCreator().equals(notice.getRecipient()))
                             p2 = "your ";
-                        else
-                            p2 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
+                        else{
+                            // p2 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
+                            User u = userDao.findFirstByEmail(version.getItemCreator());
+                            p2 = (u == null ? "unknown" : u.getName()) + "'s ";
+                        }
+
                         // message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName + " (" + notice.getRemark() + ")";
                         message = p1 + " " + OperationEnum.Edit.getText() + "ed " + p2 + itemName;
                         break;
@@ -123,13 +131,21 @@ public class NoticeService {
 
                         if (notice.getRecipient().equals(currentUser) && version.getEditor().equals(notice.getRecipient()))
                             p2 = "your ";
-                        else
-                            p2 = userDao.findFirstByEmail(version.getEditor()).getName() + "'s ";
+                        else{
+                            // p2 = userDao.findFirstByEmail(version.getEditor()).getName() + "'s ";
+                            User u = userDao.findFirstByEmail(version.getEditor());
+                            p2 = (u == null ? "unknown" : u.getName()) + "'s ";
+                        }
+
 
                         if (notice.getRecipient().equals(currentUser) && version.getItemCreator().equals(notice.getRecipient()))
                             p3 = "your ";
-                        else
-                            p3 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
+                        else{
+                            // p3 = userDao.findFirstByEmail(version.getItemCreator()).getName() + "'s ";
+                            User u = userDao.findFirstByEmail(version.getItemCreator());
+                            p3 = (u == null ? "unknown" : u.getName()) + "'s ";
+                        }
+
                         // message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName + " (" + notice.getRemark() + ")";
                         message = p1 + " " + notice.getAction().getText() + "ed " + p2 + "modification to " + p3  + itemName;
                         break;
@@ -146,8 +162,12 @@ public class NoticeService {
                 String p1;
                 if (notice.getDispatcher().equals(currentUser))
                     p1 = "you";
-                else
-                    p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                else{
+                    // p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                    User u = userDao.findFirstByEmail(notice.getDispatcher());
+                    p1 = (u == null ? "unknown" : u.getName()) + "'s ";
+                }
+
                 message = p1 + " " + notice.getRemark();
 
                 break;
@@ -164,8 +184,12 @@ public class NoticeService {
                 String p1;
                 if (notice.getDispatcher().equals(currentUser))
                     p1 = "you";
-                else
-                    p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                else{
+                    // p1 = userDao.findFirstByEmail(notice.getDispatcher()).getName();
+                    User u = userDao.findFirstByEmail(notice.getDispatcher());
+                    p1 = (u == null ? "unknown" : u.getName()) + "'s ";
+                }
+
                 message = p1 + ": " + comment.getContent();
                 break;
             }

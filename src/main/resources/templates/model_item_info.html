@@ -20,21 +20,21 @@
     <link rel="stylesheet" href="/static/css/base/relate_item.css">
     <link rel="stylesheet" href="/static/css/page/model_item_info.css">
     <link rel="stylesheet" href="/static/css/base/userModule.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhFlexContainer.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/wzhStyle.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/footerResponse.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/navbar.css"/>
 
 
     <style>
 
-        .blockEdit{
-            display:none;
-            margin-top:-5px;
-            background-color:white;
-            float:right;
-            padding-left:10px;
-            padding-right:5px;
+        .blockEdit {
+            display: none;
+            margin-top: -5px;
+            background-color: white;
+            float: right;
+            padding-left: 10px;
+            padding-right: 5px;
         }
 
         #description .block_content h1 {
@@ -76,7 +76,7 @@
             background-color: #409EFF;
         }
 
-        .gray{
+        .gray {
             background-color: #bbbbbb;
         }
 
@@ -88,31 +88,31 @@
             margin-bottom: 0;
         }
 
-        .tox.tox-silver-sink. tox-tinymce-aux{
+        .tox.tox-silver-sink. tox-tinymce-aux {
             z-index: 2077;
         }
 
-        .modelRelationGraphSideBar::-webkit-scrollbar {/*滚动条整体样式*/
+        .modelRelationGraphSideBar::-webkit-scrollbar { /*滚动条整体样式*/
 
-            width: 7px;     /*高宽分别对应横竖滚动条的尺寸*/
+            width: 7px; /*高宽分别对应横竖滚动条的尺寸*/
 
             height: 1px;
 
         }
 
-        .modelRelationGraphSideBar::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        .modelRelationGraphSideBar::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
 
             border-radius: 10px;
 
-            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 
             background: #9e9e9e;
 
         }
 
-        .modelRelationGraphSideBar::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        .modelRelationGraphSideBar::-webkit-scrollbar-track { /*滚动条里面轨道*/
 
-            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 
             border-radius: 10px;
 
@@ -120,17 +120,17 @@
 
         }
 
-        .el-tabs__item > div > div > .el-switch__label.is-active{
+        .el-tabs__item > div > div > .el-switch__label.is-active {
             color: #13ce66;
         }
 
-        .uploadCenter{
+        .uploadCenter {
             display: flex;
             flex-direction: column;
             align-self: center;
         }
 
-        .uploadCenter .el-upload.el-upload--text{
+        .uploadCenter .el-upload.el-upload--text {
             display: flex;
             flex-direction: column;
             align-self: center;
@@ -153,29 +153,33 @@
             font-style: normal;
         }
 
-        .localization .tox-tinymce{
+        .localization .tox-tinymce {
             border: none;
         }
 
-        .localization .el-table td{
+        .localization .el-table td {
             padding: 0;
         }
-        .localization .el-table .cell{
+
+        .localization .el-table .cell {
             padding: 0;
         }
-        .localization .el-button{
-            padding-left:0;
-            padding-right:0;
+
+        .localization .el-button {
+            padding-left: 0;
+            padding-right: 0;
             border: none;
             -webkit-border-radius: 0;
             -moz-border-radius: 0;
             border-radius: 0;
         }
-        .localization .el-card{
+
+        .localization .el-card {
             box-shadow: none;
             -webkit-box-shadow: none;
         }
-        .localization .el-card__body{
+
+        .localization .el-card__body {
             padding: 0;
         }
 
@@ -185,7 +189,6 @@
 <body style="overflow-x: hidden;">
 
 
-
 <div id="app" v-cloak>
     <div th:replace="fragments/navbar :: unlog"></div>
 
@@ -193,20 +196,21 @@
 
     <div class="pageMainContent clearfix" style="padding:40px 0px;height: auto;position: relative;">
         <translation-bar
-                json-file="all_model_info"
-                @translate-page="translatePage"
-                with-comments="true"
-                with-item-info-modules="true"
-                initial-lang="en-us"
-                theme="dark"
-                style="position: absolute;top: 10px;right:15px">
+            json-file="all_model_info"
+            @translate-page="translatePage"
+            with-comments="true"
+            with-item-info-modules="true"
+            initial-lang="en-us"
+            theme="dark"
+            style="position: absolute;top: 10px;right:15px">
         </translation-bar>
-        <div class="left-panel el-col" >
+        <div class="left-panel el-col">
             <div th:replace="fragments/itemInfoModules :: itemTitle(${itemInfo}, true)"></div>
             <div th:replace="fragments/itemInfoModules :: alias(${itemInfo})"></div>
-            <div th:replace="fragments/itemInfoModules :: contributor_sm" ></div>
+            <div th:replace="fragments/itemInfoModules :: contributor_sm"></div>
 
-            <div th:insert="fragments/itemInfoModules :: authorship(0,${itemInfo},true)" id="Authorship0" class="detail_block minScreen" ></div>
+            <div th:insert="fragments/itemInfoModules :: authorship(0,${itemInfo},true)" id="Authorship0"
+                 class="detail_block minScreen"></div>
 
             <div th:replace="fragments/itemInfoModules :: classifications(${classifications}, true)"></div>
 
@@ -217,6 +221,181 @@
             <div th:replace="fragments/itemInfoModules :: model_related_data"></div>
 
             <div th:replace="fragments/itemInfoModules :: model_related_resource(${references}, true)"></div>
+
+
+            <div th:if="${history!=true}" id="metadata" class="detail_block">
+                <div class="block_head">
+                    <div class="head_text">
+                        <h4>Model Metadata</h4>
+                    </div>
+                    <span class="blockEdit">
+            <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                       type="primary" icon="el-icon-edit" @click="getMetadata" circle></el-button>
+            </el-tooltip>
+            <el-tooltip popper-class="fontsize-15"
+                        content="There is another version haven't been reviewed, you can edit it later or contact us."
+                        effect="light" placement="top">
+            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                       icon="el-icon-edit" plain circle></el-button>
+            </el-tooltip>
+            </span>
+                </div>
+                <el-tabs class="block_content" v-model="metaDataTab" type="border-card" stretch="true">
+                    <el-tab-pane label="Overview" name="first">
+                        <table class="wzhTable" style="width: 100%" v-if="!checkObjAllProptNull(metadata.overview)">
+                            <tr v-if="metadata.overview.name!=undefined&&metadata.overview.name!=''">
+                                <th class="tableSubTitle">Name</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.overview.name}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.overview.version!=undefined&&metadata.overview.version!=''">
+                                <th class="tableSubTitle">Version</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.overview.version}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.overview.modelType!=undefined&&metadata.overview.modelType!=''">
+                                <th class="tableSubTitle">Model Type</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.overview.modelType}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.overview.modelDomain!=undefined&&metadata.overview.modelDomain.length>0">
+                                <th class="tableSubTitle">Model Domain</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    <div class="flexJustStart cell">
+                                        <div class="wzhTag flexCenter" v-for="domain in metadata.overview.modelDomain">
+                                            {{domain}}
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.overview.scale!=undefined&&metadata.overview.scale!=''">
+                                <th class="tableSubTitle">Sacle</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.overview.scale}}
+                                </th>
+                            </tr>
+                        </table>
+                        <div class="text-center" v-else>
+                            <p>There is no overview about this model.
+                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add
+                                overview.</p>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="Design" name="second">
+                        <table class="wzhTable" style="width: 100%" v-if="!checkObjAllProptNull(metadata.design)">
+                            <tr v-if="metadata.design.purpose!=undefined&&metadata.design.purpose!=''">
+                                <th class="tableSubTitle">Purpose</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.design.purpose}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.design.principles!=undefined&&metadata.design.principles.length>0">
+                                <th class="tableSubTitle">Principles</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    <div class="flexJustStart cell">
+                                        <div class="wzhTag flexCenter" v-for="principle in metadata.design.principles">
+                                            {{principle}}
+                                        </div>
+                                    </div>
+
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.design.incorporatedModels!=undefined&&metadata.design.incorporatedModels.length>0">
+                                <th class="tableSubTitle">Incorporated Models</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    <div class="flexJustStart cell">
+                                        <div class="wzhTag flexCenter"
+                                             v-for="incorporatedModel in metadata.design.incorporatedModels">
+                                            {{incorporatedModel}}
+                                        </div>
+                                    </div>
+
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.design.framework!=undefined&&metadata.design.framework!=''">
+                                <th class="tableSubTitle">Model part of larger framework:</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.design.framework}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.design.process!=undefined&&metadata.design.process.length>0">
+                                <th class="tableSubTitle">Incorporated Models</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    <div class="flexJustStart cell">
+                                        <div class="wzhTag flexCenter" v-for="process in metadata.design.process">
+                                            {{process}}
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                        <div class="text-center" v-else>
+                            <p>There is no design info about this model.
+                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add
+                                overview.</p>
+                        </div>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="Usage" name="third">
+                        <table class="wzhTable" style="width: 100%" v-if="!checkObjAllProptNull(metadata.usage)">
+                            <tr v-if="metadata.usage.information!=undefined&&metadata.usage.information!=''">
+                                <th class="tableSubTitle">Information</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.usage.information}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.usage.initialization!=undefined&&metadata.usage.initialization!=''">
+                                <th class="tableSubTitle">Initialization</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.usage.initialization}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.usage.hardware!=undefined&&metadata.usage.hardware!=''">
+                                <th class="tableSubTitle">Hardware Requirements</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.usage.hardware}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.usage.software!=undefined&&metadata.usage.software!=''">
+                                <th class="tableSubTitle">Software Requirements</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    {{metadata.usage.software}}
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.usage.inputs!=undefined&&metadata.usage.inputs.length>0">
+                                <th class="tableSubTitle">Inputs</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    <div class="flexJustStart cell">
+                                        <div class="wzhTag flexCenter" v-for="input in metadata.usage.inputs">
+                                            {{input}}
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr v-if="metadata.usage.outputs!=undefined&&metadata.usage.outputs.length>0">
+                                <th class="tableSubTitle">Outputs</th>
+                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
+                                    <div class="flexJustStart cell">
+                                        <div class="wzhTag flexCenter" v-for="output in metadata.usage.outputs">
+                                            {{output}}
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                        <div class="text-center" v-else>
+                            <p>There is no usage info about this model.
+                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add
+                                overview.</p>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+
+            </div>
 
             <div th:if="${history!=true}" id="cite" class="detail_block">
                 <div class="block_head">
@@ -246,7 +425,8 @@
 
             <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
-            <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph0" class="detail_block minScreen">
+            <div th:if="${history!=true&&itemInfo.knowledgeGraph!=null}" id="Knowledge_Graph0"
+                 class="detail_block minScreen">
                 <div class="block_head">
                     <div class="head_text" style="padding-left: 10px;">
                         <h4>{{htmlJSON.KnowledgeGraph}}</h4>
@@ -270,26 +450,30 @@
 
         </div>
         <div class="right-panel el-col">
-            <div th:replace="fragments/itemInfoModules :: contributor_lg" ></div>
+            <div th:replace="fragments/itemInfoModules :: contributor_lg"></div>
 
             <div th:replace="fragments/itemInfoModules :: coContributor"></div>
 
-            <div th:insert="fragments/itemInfoModules :: authorship(1,${itemInfo},true)" id="Authorship" class="detail_block"></div>
+            <div th:insert="fragments/itemInfoModules :: authorship(1,${itemInfo},true)" id="Authorship"
+                 class="detail_block"></div>
 
             <div th:replace="fragments/itemInfoModules :: model_Knowledge_Graph"></div>
 
-            <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime}, 'modelItem')"></div>
+            <div
+                th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime}, 'modelItem')"></div>
 
             <div th:replace="fragments/itemInfoModules :: QR_lg"></div>
         </div>
 
-        <div th:if="${history==true}" style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
+        <div th:if="${history==true}"
+             style="pointer-events:none;position: absolute;top:0;bottom: 0;left: 0;right: 0;background-image: url('/static/img/historyBackground.png')"></div>
     </div>
 
     <el-dialog v-cloak :visible.sync="graphFullScreen" fullscreen show-close :title="htmlJSON.ModelRelationGraph"
-    @close="graphFullDialogClose">
+               @close="graphFullDialogClose">
         <div class="fullScreenMask" style="height: 100%;width: 100%;position: relative;background-color: white;">
-            <div class="modelRelationGraphSideBar" v-if="modelRelationGraphSideBarShow" style="height:100%;width:300px;padding:15px;position: absolute;z-index: 999;background-color: #f6f6f6eb">
+            <div class="modelRelationGraphSideBar" v-if="modelRelationGraphSideBarShow"
+                 style="height:100%;width:300px;padding:15px;position: absolute;z-index: 999;background-color: #f6f6f6eb">
                 <div class="mr_header" style="height:10px;">
                     <a href="javascript:void(0);" @click="closeGraphSideBar" style="font-size: 20px;">×</a>
                 </div>
@@ -297,16 +481,19 @@
                     <div class="mr_title" style="text-align: center;">
                         <div v-if="curRelation.type=='model'">
                             <div style="margin-bottom: 10px;">
-                                <img v-if="curRelation.img != ''" :src="curRelation.img" style="width:90px;height:90px;">
+                                <img v-if="curRelation.img != ''" :src="curRelation.img"
+                                     style="width:90px;height:90px;">
                                 <img v-else src="/static/img/model/model.png"/>
                             </div>
-                            <a :href="'/modelItem/'+curRelation.id" target="_blank" style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
+                            <a :href="'/modelItem/'+curRelation.id" target="_blank"
+                               style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
                         </div>
                         <div v-if="curRelation.type=='ref'">
                             <div style="margin-bottom: 10px;">
                                 <li class="el-icon-document" style="font-size: 90px;"></li>
                             </div>
-                            <a v-if="curRelation.link!=''" :href="curRelation.link" target="_blank" style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
+                            <a v-if="curRelation.link!=''" :href="curRelation.link" target="_blank"
+                               style="font-size: 16px;text-decoration: underline;">{{curRelation.name}}</a>
                             <div v-else style="font-size: 16px;">{{curRelation.name}}</div>
                         </div>
                     </div>
@@ -331,65 +518,67 @@
 
             </div>
             <div id="fullScreenGraph" style="height: 100%;"></div>
-            <div class="modelRelationGraphSideBar_right" style="position: absolute;right:0;top:40px;height:auto;width:130px;z-index: 999;background-color: #cacaca38;padding:15px;border-radius: 10px;">
+            <div class="modelRelationGraphSideBar_right"
+                 style="position: absolute;right:0;top:40px;height:auto;width:130px;z-index: 999;background-color: #cacaca38;padding:15px;border-radius: 10px;">
                 <label>{{htmlJSON.nodeLabel}}</label><br/>
                 <el-switch
-                        v-model="nodeLabelShow"
-                        :active-text="htmlJSON.On"
-                        :inactive-text="htmlJSON.Off"
-                        @change="nodeLabelShowChange">
+                    v-model="nodeLabelShow"
+                    :active-text="htmlJSON.On"
+                    :inactive-text="htmlJSON.Off"
+                    @change="nodeLabelShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
                 <label>{{htmlJSON.fullName}}</label><br/>
                 <el-switch
-                        v-model="fullNameShow"
-                        :active-text="htmlJSON.On"
-                        :inactive-text="htmlJSON.Off"
-                        @change="fullNameShowChange">
+                    v-model="fullNameShow"
+                    :active-text="htmlJSON.On"
+                    :inactive-text="htmlJSON.Off"
+                    @change="fullNameShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
                 <label>{{htmlJSON.lineLabel}}</label><br/>
                 <el-switch
-                        v-model="lineLabelShow"
-                        :active-text="htmlJSON.On"
-                        :inactive-text="htmlJSON.Off"
-                        @change="lineLabelShowChange">
+                    v-model="lineLabelShow"
+                    :active-text="htmlJSON.On"
+                    :inactive-text="htmlJSON.Off"
+                    @change="lineLabelShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
                 <label>{{htmlJSON.lineColor}}</label><br/>
                 <el-switch
-                        v-model="lineColorShow"
-                        :active-text="htmlJSON.On"
-                        :inactive-text="htmlJSON.Off"
-                        @change="lineColorShowChange">
+                    v-model="lineColorShow"
+                    :active-text="htmlJSON.On"
+                    :inactive-text="htmlJSON.Off"
+                    @change="lineColorShowChange">
                 </el-switch>
                 <hr style="border-color: #00b9ff;"/>
                 <label>{{htmlJSON.fullRelation}}</label><br/>
                 <el-switch
-                        v-model="fullRelationShow"
-                        :active-text="htmlJSON.On"
-                        :inactive-text="htmlJSON.Off"
-                        @change="fullRelationShowChange">
+                    v-model="fullRelationShow"
+                    :active-text="htmlJSON.On"
+                    :inactive-text="htmlJSON.Off"
+                    @change="fullRelationShowChange">
                 </el-switch>
             </div>
         </div>
     </el-dialog>
 
     <!--Relation 弹出框-->
-    <el-dialog v-cloak :visible.sync="dialogTableVisible" :title="relateTitle"  width="70%"
+    <el-dialog v-cloak :visible.sync="dialogTableVisible" :title="relateTitle" width="70%"
                top="40px">
 
         <link-related-item-module
-                in-dialog
-                ref="linkRelatedItemModule"
-                @close-father-dialog="dialogTableVisible=false"
-                @receive-msg="receiveModuleMsg"
+            in-dialog
+            ref="linkRelatedItemModule"
+            @close-father-dialog="dialogTableVisible=false"
+            @receive-msg="receiveModuleMsg"
         ></link-related-item-module>
 
     </el-dialog>
 
     <!--related knowledge 弹出框-->
-    <el-dialog v-cloak :visible.sync="relatedResourceVisible" :title="'Link Material to '+ itemInfo.name" width="72%" style="min-height: 450px">
+    <el-dialog v-cloak :visible.sync="relatedResourceVisible" :title="'Link Material to '+ itemInfo.name" width="72%"
+               style="min-height: 450px">
 
         <el-card shadow="never" class="box-card" style="width:40%;margin-right: 1%;float: left;">
             <div slot="header" class="clearfix">
@@ -397,25 +586,30 @@
 
             </div>
             <el-table
-                    :data="tableData"
-                    :max-height="tableMaxHeight">
+                :data="tableData"
+                :max-height="tableMaxHeight">
                 <el-table-column
-                        :label="htmlJSON.Name"
+                    :label="htmlJSON.Name"
                 >
                     <template slot-scope="props">
-                        <a class="cursorPointer ellipsis" @click="checkContent(props.row)" target="_blank">{{props.row.name}}</a>
+                        <a class="cursorPointer ellipsis" @click="checkContent(props.row)"
+                           target="_blank">{{props.row.name}}</a>
                     </template>
                 </el-table-column>
 
                 <el-table-column
-                        :label="htmlJSON.Type"
-                        width="120"
+                    :label="htmlJSON.Type"
+                    width="120"
                 >
                     <template slot-scope="props">
-                        <el-tooltip class="item" effect="dark" :content="getTypeExpress(props.row)" placement="bottom-start">
-                            <i class="fa fa-file-o" style="font-size: 26px;color: #11c2fd;" v-if="props.row.type=='dataSpaceFile'"></i>
-                            <i class="fa fa-link" style="font-size: 26px;color: #11c2fd;" v-else-if="props.row.type=='exLink'"></i>
-                            <img class="ellipsis" :src="getTypeImg(props.row)" v-else target="_blank" style="width: 27px;">{{props.row.name}}</img>
+                        <el-tooltip class="item" effect="dark" :content="getTypeExpress(props.row)"
+                                    placement="bottom-start">
+                            <i class="fa fa-file-o" style="font-size: 26px;color: #11c2fd;"
+                               v-if="props.row.type=='dataSpaceFile'"></i>
+                            <i class="fa fa-link" style="font-size: 26px;color: #11c2fd;"
+                               v-else-if="props.row.type=='exLink'"></i>
+                            <img class="ellipsis" :src="getTypeImg(props.row)" v-else target="_blank"
+                                 style="width: 27px;">{{props.row.name}}</img>
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -423,10 +617,10 @@
                 <el-table-column fixed="right" label=" " width="70">
                     <template slot-scope="scope">
                         <el-button
-                                size="mini"
-                                type="danger"
-                                icon="el-icon-close" circle
-                                @click="handleDelete(scope.$index, scope.row)">
+                            size="mini"
+                            type="danger"
+                            icon="el-icon-close" circle
+                            @click="handleDelete(scope.$index, scope.row)">
                         </el-button>
 
 
@@ -435,48 +629,52 @@
             </el-table>
         </el-card>
 
-        <div class="flexJustStart" style="width:59%;float: left;" >
+        <div class="flexJustStart" style="width:59%;float: left;">
             <ul class="sideSelect">
-                <li class="sideSelectLi" @click="changeRelateType('concept')" :class="relateType!='concept'?'':'active'">
+                <li class="sideSelectLi" @click="changeRelateType('concept')"
+                    :class="relateType!='concept'?'':'active'">
                     <div class="sideSelectCell flexCenter">
                         <el-tooltip content="Concept & Semantic" placement="right-start">
                             <img src="/static/img/model/semantics.png">
                         </el-tooltip>
                     </div>
                 </li>
-                <li class="sideSelectLi" @click="changeRelateType('spatialReference')" :class="relateType!='spatialReference'?'':'active'">
+                <li class="sideSelectLi" @click="changeRelateType('spatialReference')"
+                    :class="relateType!='spatialReference'?'':'active'">
                     <div class="sideSelectCell flexCenter">
-                    <el-tooltip content="Spatiotemporal Reference" placement="right-start">
-                        <img style="width: 30px" src="/static/img/model/spatialreference.png">
-                    </el-tooltip>
+                        <el-tooltip content="Spatiotemporal Reference" placement="right-start">
+                            <img style="width: 30px" src="/static/img/model/spatialreference.png">
+                        </el-tooltip>
                     </div>
                 </li>
-                <li class="sideSelectLi" @click="changeRelateType('template')" :class="relateType!='template'?'':'active'">
+                <li class="sideSelectLi" @click="changeRelateType('template')"
+                    :class="relateType!='template'?'':'active'">
                     <div class="sideSelectCell flexCenter">
-                    <el-tooltip content="Data Template" placement="right-start">
-                        <img src="/static/img/model/template.png">
-                    </el-tooltip>
+                        <el-tooltip content="Data Template" placement="right-start">
+                            <img src="/static/img/model/template.png">
+                        </el-tooltip>
                     </div>
                 </li>
                 <li class="sideSelectLi" @click="changeRelateType('unit')" :class="relateType!='unit'?'':'active'">
                     <div class="sideSelectCell flexCenter">
-                    <el-tooltip content="Unit & Metric" placement="right-start">
-                        <img src="/static/img/model/unit.png">
-                    </el-tooltip>
+                        <el-tooltip content="Unit & Metric" placement="right-start">
+                            <img src="/static/img/model/unit.png">
+                        </el-tooltip>
                     </div>
                 </li>
-                <li class="sideSelectLi" @click="changeRelateType('dataSpaceFile')" :class="relateType!='dataSpaceFile'?'':'active'">
+                <li class="sideSelectLi" @click="changeRelateType('dataSpaceFile')"
+                    :class="relateType!='dataSpaceFile'?'':'active'">
                     <div class="sideSelectCell flexCenter">
-                    <el-tooltip content="File" placement="right-start">
-                        <i class="fa fa-file-o" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
-                    </el-tooltip>
+                        <el-tooltip content="File" placement="right-start">
+                            <i class="fa fa-file-o" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
+                        </el-tooltip>
                     </div>
                 </li>
                 <li class="sideSelectLi" @click="changeRelateType('exLink')" :class="relateType!='exLink'?'':'active'">
                     <div class="sideSelectCell flexCenter">
-                    <el-tooltip content="External Link" placement="right-start">
-                        <i class="fa fa-link" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
-                    </el-tooltip>
+                        <el-tooltip content="External Link" placement="right-start">
+                            <i class="fa fa-link" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
+                        </el-tooltip>
                     </div>
                 </li>
             </ul>
@@ -487,21 +685,25 @@
                         border-radius: 4px;
                         border-left: 5px solid #50bfff;
                         margin: 0 0 10px;">
-                    <p style="font-size: 14px;color: #5e6d82;line-height: 1.5em;margin:0;">{{htmlJSON.LinkResourceFromRepositoryOrCreate}}<a style="cursor:pointer;text-decoration: underline"
-                                                                     @click="jump">{{htmlJSON.create}}</a>.
+                    <p style="font-size: 14px;color: #5e6d82;line-height: 1.5em;margin:0;">
+                        {{htmlJSON.LinkResourceFromRepositoryOrCreate}}<a
+                        style="cursor:pointer;text-decoration: underline"
+                        @click="jump">{{htmlJSON.create}}</a>.
                     </p>
                 </div>
-                <el-tab-pane name="my" label="My Repository" v-if="relateType!='concept'&&relateType!='spatialReference'&&relateType!='template'&&relateType!='unit'">
+                <el-tab-pane name="my" label="My Repository"
+                             v-if="relateType!='concept'&&relateType!='spatialReference'&&relateType!='template'&&relateType!='unit'">
 
-                    <el-input placeholder="Please enter name..." v-model="pageOption_my.relateSearch" class="input-with-select"
+                    <el-input placeholder="Please enter name..." v-model="pageOption_my.relateSearch"
+                              class="input-with-select"
                               clearable="true" @keyup.enter.native="searchInit">
                         <el-button slot="append" icon="el-icon-search" @click="searchInit"></el-button>
                     </el-input>
                     <el-table
-                            :data="pageOption_my.searchResult"
-                            style="margin-top:17px;"
-                            show-overflow-tooltip
-                            :max-height="tableMaxHeight">
+                        :data="pageOption_my.searchResult"
+                        style="margin-top:17px;"
+                        show-overflow-tooltip
+                        :max-height="tableMaxHeight">
                         <el-table-column type="expand">
                             <template slot-scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
@@ -526,18 +728,18 @@
                         <el-table-column fixed="right" label=" " width="60">
                             <template slot-scope="scope">
                                 <el-button
-                                        v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"
-                                        size="mini"
-                                        type="success"
-                                        icon="el-icon-plus" circle
-                                        @click="handleEdit(scope.$index, scope.row)">
+                                    v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"
+                                    size="mini"
+                                    type="success"
+                                    icon="el-icon-plus" circle
+                                    @click="handleEdit(scope.$index, scope.row)">
                                 </el-button>
                                 <el-button
-                                        v-if="hasAdded(scope.row)"
-                                        size="mini"
-                                        type="danger"
-                                        icon="el-icon-close" circle
-                                        @click="handleDelete(scope.$index, scope.row)">
+                                    v-if="hasAdded(scope.row)"
+                                    size="mini"
+                                    type="danger"
+                                    icon="el-icon-close" circle
+                                    @click="handleDelete(scope.$index, scope.row)">
                                 </el-button>
 
                             </template>
@@ -553,16 +755,17 @@
                 </el-tab-pane>
                 <el-tab-pane name="all" :label="htmlJSON.AllRepository">
 
-                    <el-input :placeholder="htmlJSON.PleaseEnterName" v-model="pageOption_all.relateSearch" class="input-with-select"
+                    <el-input :placeholder="htmlJSON.PleaseEnterName" v-model="pageOption_all.relateSearch"
+                              class="input-with-select"
                               clearable="true" @keyup.enter.native="searchInit('all')">
                         <el-button slot="append" icon="el-icon-search" @click="searchInit('all')"></el-button>
                     </el-input>
                     <el-table
-                            :data="pageOption_all.searchResult"
-                            style="margin-top:17px;"
-                            show-overflow-tooltip
-                            @sort-change="relationSortChange"
-                            :max-height="tableMaxHeight">
+                        :data="pageOption_all.searchResult"
+                        style="margin-top:17px;"
+                        show-overflow-tooltip
+                        @sort-change="relationSortChange"
+                        :max-height="tableMaxHeight">
                         <el-table-column type="expand">
                             <template slot-scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
@@ -587,18 +790,18 @@
                         <el-table-column fixed="right" label=" " width="60">
                             <template slot-scope="scope">
                                 <el-button
-                                        v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"
-                                        size="mini"
-                                        type="success"
-                                        icon="el-icon-plus" circle
-                                        @click="handleEdit(scope.$index, scope.row)">
+                                    v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"
+                                    size="mini"
+                                    type="success"
+                                    icon="el-icon-plus" circle
+                                    @click="handleEdit(scope.$index, scope.row)">
                                 </el-button>
                                 <el-button
-                                        v-if="hasAdded(scope.row)"
-                                        size="mini"
-                                        type="danger"
-                                        icon="el-icon-close" circle
-                                        @click="handleDelete(scope.$index, scope.row)">
+                                    v-if="hasAdded(scope.row)"
+                                    size="mini"
+                                    type="danger"
+                                    icon="el-icon-close" circle
+                                    @click="handleDelete(scope.$index, scope.row)">
                                 </el-button>
                             </template>
                         </el-table-column>
@@ -613,16 +816,16 @@
                 </el-tab-pane>
             </el-tabs>
             <el-card v-if="relateType=='localFile'">
-                <div   class="">
+                <div class="">
                     <el-upload
-                            class="uploadCenter"
-                            drag
-                            ref="upload"
-                            :on-change="uploadChange"
-                            :on-remove="uploadRemove"
-                            :auto-upload="false"
-                            :show-file-list="false"
-                            :multiple="false">
+                        class="uploadCenter"
+                        drag
+                        ref="upload"
+                        :on-change="uploadChange"
+                        :on-remove="uploadRemove"
+                        :auto-upload="false"
+                        :show-file-list="false"
+                        :multiple="false">
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">Drop the file here, or<em>click </em>to upload.</div>
                         <template #tip>
@@ -636,38 +839,38 @@
             <el-card v-if="relateType=='dataSpaceFile'" class="flexCenter" style="min-height: 260px;flex:1">
                 <el-button round size="mini" @click='checkPersonData()' type="primary">Select From My Space</el-button>
             </el-card>
-            <el-card v-if="relateType=='exLink'" v-loading="checkUrlValidLoading"  style="min-height: 260px;flex:1">
+            <el-card v-if="relateType=='exLink'" v-loading="checkUrlValidLoading" style="min-height: 260px;flex:1">
                 <div class="flexCol flexAlignCenter">
                     <el-input
-                            :rows="2"
-                            placeholder="please input the name of the external link"
-                            v-model="exLink.name"
-                            style="margin-top:15px"
+                        :rows="2"
+                        placeholder="please input the name of the external link"
+                        v-model="exLink.name"
+                        style="margin-top:15px"
                     >
                     </el-input>
                     <el-input
-                            type="textarea"
-                            :rows="2"
-                            placeholder="please input the content the external link"
-                            v-model="exLink.content"
-                            style="margin-top:15px">
+                        type="textarea"
+                        :rows="2"
+                        placeholder="please input the content the external link"
+                        v-model="exLink.content"
+                        style="margin-top:15px">
                     </el-input>
-                    <el-button round size="mini" @click='addExLink' type="success" style="margin-top:15px">+ add</el-button>
+                    <el-button round size="mini" @click='addExLink' type="success" style="margin-top:15px">+ add
+                    </el-button>
                 </div>
 
             </el-card>
         </div>
 
 
-
         <div slot="footer" class="dialog-footer">
             <!--<span style="float:left;font-size: 16px">Or you can click <a style="cursor:pointer" @click="jump">here</a> to create a new one.</span>-->
             <el-button @click="relatedResourceVisible = false;">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
-  confirm-button-text='Yes'
-  cancel-button-text='No'
-                    title="Are you sure to submit changes?"
-                    @confirm="addRelateResources()"
+                confirm-button-text='Yes'
+                cancel-button-text='No'
+                title="Are you sure to submit changes?"
+                @confirm="addRelateResources()"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.OK}}</el-button>
             </el-popconfirm>
@@ -709,7 +912,7 @@
 
     <!-- edit -->
     <el-dialog v-cloak title="Edit Model Item" class="responseDialog" :visible.sync="editModelItemDialog"
-               modal="false" append-to-body   width="65%">
+               modal="false" append-to-body width="65%">
         <edit-modelitem-module :model-edit-oid="modelOid"></edit-modelitem-module>
     </el-dialog>
 
@@ -730,14 +933,15 @@
     </el-dialog>
 
     <el-dialog v-cloak :title="htmlJSON.EditClassification" :visible.sync="editClassification" width="50%">
-        <edit-classification-module ref="editClassificationModule" @select-classification="getClassificationFromCom"></edit-classification-module>
+        <edit-classification-module ref="editClassificationModule"
+                                    @select-classification="getClassificationFromCom"></edit-classification-module>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editClassification = false">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
-  :confirm-button-text='htmlJSON.Yes'
-  :cancel-button-text='htmlJSON.No'
-                    :title="htmlJSON.SureSubmitChanges"
-                    @confirm="submitClassifications"
+                :confirm-button-text='htmlJSON.Yes'
+                :cancel-button-text='htmlJSON.No'
+                :title="htmlJSON.SureSubmitChanges"
+                @confirm="submitClassifications"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
             </el-popconfirm>
@@ -750,44 +954,47 @@
                 <div slot="header" class="clearfix">
                     <span style="font-weight: bold">{{htmlJSON.Localizations}}</span>
                     <el-button
-                            style="float: right; padding: 3px 0"
-                            type="text" @click="addLocalization">+ {{htmlJSON.Add}}
+                        style="float: right; padding: 3px 0"
+                        type="text" @click="addLocalization">+ {{htmlJSON.Add}}
                     </el-button>
                 </div>
                 <el-collapse-transition>
                     <div v-show="languageAdd.show">
-                        <el-select v-model="languageAdd.local" filterable :placeholder="htmlJSON.SelectLanguage" style="width:80%;float: left;">
+                        <el-select v-model="languageAdd.local" filterable :placeholder="htmlJSON.SelectLanguage"
+                                   style="width:80%;float: left;">
                             <el-option
-                                    v-for="item in languageList"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item">
+                                v-for="item in languageList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item">
                                 <span style="float: left">{{ item.label }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                             </el-option>
                         </el-select>
-                        <el-button @click="confirmAddLocal" type="success" style="width:10%;float: left;"><i class="el-icon-check"></i></el-button>
-                        <el-button @click="cancelAddLocal" type="danger" style="width:10%;"><i class="el-icon-close"></i></el-button>
+                        <el-button @click="confirmAddLocal" type="success" style="width:10%;float: left;"><i
+                            class="el-icon-check"></i></el-button>
+                        <el-button @click="cancelAddLocal" type="danger" style="width:10%;"><i
+                            class="el-icon-close"></i></el-button>
                     </div>
                 </el-collapse-transition>
                 <div class="clearfix" style="height:400px;overflow: auto;">
                     <el-table
-                            :data="localizationList"
-                            :show-header="false"
+                        :data="localizationList"
+                        :show-header="false"
                     >
                         <el-table-column>
                             <template slot-scope="props">
                                 <el-tooltip class="item" effect="light" :content="props.row.localCode" placement="top">
                                     <el-button
-                                            :class="{localizationSelected:props.row.selected}"
-                                            style="width:90%;float:left;"
-                                            @click="changeLocalization(props.row)">
+                                        :class="{localizationSelected:props.row.selected}"
+                                        style="width:90%;float:left;"
+                                        @click="changeLocalization(props.row)">
                                         {{props.row.localName}}
                                     </el-button>
                                 </el-tooltip>
 
                                 <el-button style="width:10%;" @click="deleteLocalization(props.row)"><i
-                                        class="el-icon-close"></i>
+                                    class="el-icon-close"></i>
                                 </el-button>
 
                             </template>
@@ -809,8 +1016,8 @@
         <span slot="footer" class="dialog-footer">
             <el-button @click="editDescription = false">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm confirm-button-text='Yes' cancel-button-text='No'
-                    title="Are you sure to submit changes?"
-                    @confirm="submitDescription"
+                           title="Are you sure to submit changes?"
+                           @confirm="submitDescription"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
             </el-popconfirm>
@@ -818,7 +1025,7 @@
     </el-dialog>
 
     <el-dialog v-cloak title="Edit Model Metadata" :visible.sync="editMetadata" width="72%">
-        <el-tabs v-model="metaDataTab" >
+        <el-tabs v-model="metaDataTab">
             <el-tab-pane label="Overview" name="first">
                 <div class="form-horizontal">
                     <div class="form-group">
@@ -907,8 +1114,8 @@
                         </lable>
                         <div class='col-sm-10'>
                                                                                             <textarea
-                                                                                                    class="form-control"
-                                                                                                    id="principlesInput"></textarea>
+                                                                                                class="form-control"
+                                                                                                id="principlesInput"></textarea>
                         </div>
                     </div>
 
@@ -922,8 +1129,8 @@
                         </lable>
                         <div class='col-sm-10'>
                                                                                             <textarea
-                                                                                                    class="form-control"
-                                                                                                    id="incorporatedModelsInput"></textarea>
+                                                                                                class="form-control"
+                                                                                                id="incorporatedModelsInput"></textarea>
                         </div>
                     </div>
                 </div>
@@ -932,8 +1139,9 @@
                     <div class="form-group flexAlignCenter">
                         <lable class='control-label col-sm-2 text-center'
                                style='font-weight: bold;'>
-                            <p>Model part of </p><p>
-                            larger framework</p>
+                            <p>Model part of </p>
+                            <p>
+                                larger framework</p>
                         </lable>
                         <div class='col-sm-10'>
                             <input type='text'
@@ -951,8 +1159,8 @@
                         </lable>
                         <div class='col-sm-10'>
                                                                                             <textarea
-                                                                                                    class="form-control"
-                                                                                                    id="processInput"></textarea>
+                                                                                                class="form-control"
+                                                                                                id="processInput"></textarea>
                         </div>
                     </div>
                 </div>
@@ -1018,8 +1226,8 @@
                         </lable>
                         <div class='col-sm-10'>
                                                                                             <textarea
-                                                                                                    class="form-control"
-                                                                                                    id="inputsInput"></textarea>
+                                                                                                class="form-control"
+                                                                                                id="inputsInput"></textarea>
                         </div>
                     </div>
                 </div>
@@ -1031,8 +1239,8 @@
                         </lable>
                         <div class='col-sm-10'>
                                                                                             <textarea
-                                                                                                    class="form-control"
-                                                                                                    id="outputsInput"></textarea>
+                                                                                                class="form-control"
+                                                                                                id="outputsInput"></textarea>
                         </div>
                     </div>
                 </div>
@@ -1041,17 +1249,17 @@
         <span slot="footer" class="dialog-footer">
             <el-button @click="editMetadata = false">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
-  confirm-button-text='Yes'
-  cancel-button-text='No'
-                    title="Are you sure to submit changes?"
-                    @confirm="submitMetadata"
+                confirm-button-text='Yes'
+                cancel-button-text='No'
+                title="Are you sure to submit changes?"
+                @confirm="submitMetadata"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
             </el-popconfirm>
         </span>
     </el-dialog>
 
-    <el-dialog  v-cloak :title="htmlJSON.EditReference" :visible.sync="editReference" width="75%">
+    <el-dialog v-cloak :title="htmlJSON.EditReference" :visible.sync="editReference" width="75%">
         <table class="display table table-bordered table-striped dataTable"
                id="dynamic-table"
                aria-describedby="dynamic-table_info">
@@ -1063,7 +1271,7 @@
                     aria-controls="dynamic-table"
                     rowspan="1" colspan="1"
                     aria-label="Title: activate to sort column ascending"
-                    >
+                >
                     Title
                 </th>
                 <th class="sorting"
@@ -1072,7 +1280,7 @@
                     aria-controls="dynamic-table"
                     rowspan="1" colspan="1"
                     aria-label="Author: activate to sort column ascending"
-                    >
+                >
                     Author
                 </th>
                 <th class="sorting"
@@ -1081,7 +1289,7 @@
                     aria-controls="dynamic-table"
                     rowspan="1" colspan="1"
                     aria-label="Date: activate to sort column ascending"
-                    >
+                >
                     Date
                 </th>
                 <th class="hidden-phone sorting"
@@ -1090,7 +1298,7 @@
                     aria-controls="dynamic-table"
                     rowspan="1" colspan="1"
                     aria-label="Journal: activate to sort column ascending"
-                    >
+                >
                     Journal
                 </th>
                 <th class="hidden-phone sorting"
@@ -1100,7 +1308,7 @@
                     rowspan="1" colspan="1"
                     aria-sort="descending"
                     aria-label="Pages: activate to sort column ascending"
-                    >
+                >
                     Volume(Issue)
                 </th>
                 <th class="hidden-phone sorting"
@@ -1110,7 +1318,7 @@
                     rowspan="1" colspan="1"
                     aria-sort="descending"
                     aria-label="Pages: activate to sort column ascending"
-                    >
+                >
                     Pages
                 </th>
                 <th class="hidden-phone sorting"
@@ -1120,7 +1328,7 @@
                     rowspan="1" colspan="1"
                     aria-sort="descending"
                     aria-label="Links: activate to sort column ascending"
-                    >
+                >
                     Links
                 </th>
                 <th class="hidden-phone sorting"
@@ -1130,7 +1338,7 @@
                     rowspan="1" colspan="1"
                     aria-sort="descending"
                     aria-label="Links: activate to sort column ascending"
-                    >
+                >
                     Doi
                 </th>
                 <th class="hidden-phone sorting"
@@ -1140,7 +1348,7 @@
                     rowspan="1" colspan="1"
                     aria-sort="descending"
                     aria-label="CSS grade: activate to sort column ascending"
-                    >
+                >
                     Operation
                 </th>
             </tr>
@@ -1165,10 +1373,11 @@
         </span>
     </el-dialog>
 
-    <el-dialog :title="htmlJSON.ReferenceInfo" :close-on-click-modal="false" :visible.sync = "editArticleDialog" width="33%" custom-class="min400w" >
-        <div class="wzhScrollbar" style="max-height: 500px;padding-right:10px" >
+    <el-dialog :title="htmlJSON.ReferenceInfo" :close-on-click-modal="false" :visible.sync="editArticleDialog"
+               width="33%" custom-class="min400w">
+        <div class="wzhScrollbar" style="max-height: 500px;padding-right:10px">
             <div class="tab-content" v-loading="doiLoading">
-                <div class="tab-pane active articleInfo" id="manually" >
+                <div class="tab-pane active articleInfo" id="manually">
                     <div class="form-group">
                         <label for="doiTitle" class="col-sm-2 control-label">
                             {{htmlJSON.GetByDoi}} :
@@ -1180,7 +1389,8 @@
                             <span class="input-group-btn" style="width: 19%">
                                                     <button id="doiSearch"
                                                             class="btn btn-info"
-                                                            type="button" @click="searchDoi()" style="height: 34px;width: 100%;margin: 0;">{{htmlJSON.Search}}</button>
+                                                            type="button" @click="searchDoi()"
+                                                            style="height: 34px;width: 100%;margin: 0;">{{htmlJSON.Search}}</button>
                                                 </span>
                         </div>
                     </div>
@@ -1257,17 +1467,20 @@
 
         </div>
         <span slot="footer" class="dialog-footer">
-                        <el-button type="primary" size="small" @click="updateArticleConfirmClick" id="modal_save">{{htmlJSON.Add}}</el-button>
+                        <el-button type="primary" size="small" @click="updateArticleConfirmClick"
+                                   id="modal_save">{{htmlJSON.Add}}</el-button>
                         <el-button size="small" @click="cancelSearch()">{{htmlJSON.Cancel}}</el-button>
                     </span>
     </el-dialog>
 
-    <el-dialog title="Is this article you want to add?" :visible.sync = "showUploadArticleDialog" width="30%" custom-class="min400w">
+    <el-dialog title="Is this article you want to add?" :visible.sync="showUploadArticleDialog" width="30%"
+               custom-class="min400w">
         <h4>{{articleUploading.title}}</h4>
-        <p v-if="articleUploading.authors.length>0"><span>Authors:</span><span>&nbsp&nbsp{{articleUploading.authors[0]}},</span>
+        <p v-if="articleUploading.authors.length>0">
+            <span>Authors:</span><span>&nbsp&nbsp{{articleUploading.authors[0]}},</span>
             <span v-if="articleUploading.authors[1]">{{articleUploading.authors[1]}}, </span>
             <span v-if="articleUploading.authors[2]">{{articleUploading.authors[2]}},</span>
-            <span v-if="articleUploading.authors.length>3"> et al.</span> </p>
+            <span v-if="articleUploading.authors.length>3"> et al.</span></p>
         <p v-if="articleUploading.journal!=''"><span>Journal:</span> &nbsp&nbsp{{articleUploading.journal}}</p>
         <p v-if="articleUploading.date!=''"><span>Date:</span> &nbsp&nbsp{{articleUploading.date}}</p>
         <p v-if="articleUploading.pageRange!=''"><span>Page range:</span> &nbsp&nbsp{{articleUploading.pageRange}}</p>
@@ -1284,14 +1497,15 @@
             <!--                                        <el-button type="primary" @click="articleDoiUploadConfirm('learner')" plain>I am a learner</el-button>-->
             <!--                                    </div>-->
             <!--                                    <div class="innerBorderCol" style="height: 40px"></div>-->
-                                    <el-button type="success" @click="articleDoiUploadConfirm()" plain>Yes, this is it</el-button>
+                                    <el-button type="success" @click="articleDoiUploadConfirm()"
+                                               plain>Yes, this is it</el-button>
                                     <el-button @click="showUploadArticleDialog = false">Cancel</el-button>
             <!--                                </div>-->
                             </span>
     </el-dialog>
 
     <el-dialog title="Tip"
-               :visible.sync = "showUploadedArticleDialog" width="30%" custom-class="min400w">
+               :visible.sync="showUploadedArticleDialog" width="30%" custom-class="min400w">
         <!--                            <div class="flexCol" style="font-size:16px;word-break: normal ">-->
         <!--                                <p>The article <span style="font-weight: 600;"> {{articleUploading.title}} </span> has been-->
         <!--                                    <span style="color: #2b95f7"> uploaded</span> yet, do you want to be one of the contrbutors?</p>-->
@@ -1329,7 +1543,8 @@
         ></user-data>
         <span slot="footer" class="dialog-footer">
                                 <el-button @click="showDataChose = false">{{htmlJSON.Cancel}}</el-button>
-                                <el-button type="primary" @click="selectDataFromPersonal">{{htmlJSON.Confirm}}</el-button>
+                                <el-button type="primary"
+                                           @click="selectDataFromPersonal">{{htmlJSON.Confirm}}</el-button>
 
                             </span>
     </el-dialog>
@@ -1371,7 +1586,8 @@
 <script src="/static/js/common/qrcode.min.js"></script>
 <!--翻译组件，本页面组件js引入位置不能靠后-->
 <template th:replace="modules/translationBar :: translationBar"></template>
-<script src="/static/element-ui/umd/locale/en.js"></script> <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
+<script src="/static/element-ui/umd/locale/en.js"></script>
+<script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
 <script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/js/common/commonValue.js"></script>

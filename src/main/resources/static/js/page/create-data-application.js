@@ -314,7 +314,7 @@ var createDataApplication = Vue.extend({
                         this.selectedFile.splice(i, 1);
                         // this.downloadDataSetName.splice(i, 1)
                         break
-                    }gg
+                    }
                 }
             }
         },

@@ -14,4 +14,6 @@ public interface ConferenceDao extends MongoRepository<Conference,String>{
 
     Page<Conference> findByTitleContainsIgnoreCase(String name, Pageable pageable);
 
+    Page<Conference> findByTitleContainsIgnoreCaseAndContributor(String name, String email, Pageable pageable);
+
 }

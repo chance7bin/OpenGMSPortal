@@ -48,4 +48,6 @@ public interface DataItemDao extends MongoRepository<DataItem,String>, GenericIt
 
     Page<DataItem> findByNameContainingOrOverviewContainingOrKeywordsContaining(Pageable pageable, String name, String overview, String keywords);
 
+
+    Page<DataItem> findAllByNameContainsIgnoreCase(Pageable pageable,String name);
 }

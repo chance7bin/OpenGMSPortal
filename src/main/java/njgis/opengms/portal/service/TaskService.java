@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.AbstractTask.AsyncTask;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
+import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.intergrate.Action;
 import njgis.opengms.portal.entity.doo.intergrate.DataProcessing;
 import njgis.opengms.portal.entity.doo.intergrate.Model;
@@ -32,7 +33,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -1982,7 +1986,7 @@ public class TaskService {
 
     public JSONObject PageIntegrateTaskByUser(String email, int pageNum, int pageSize, int asc, String sortElement){
         User user = userDao.findFirstByEmail(email);
-        String userName = user.getAccessId();
+        String userName = user.getEmail();
         if (userName == null){
             return null;
         }
@@ -1996,6 +2000,137 @@ public class TaskService {
         result.put("content",integratedTaskPage.getContent());
 
         return result;
+    }
+
+    public String saveIntegratedTask(String xml, String mxgraph, List<Map<String,String>> models, List<Map<String,String>> processingTools,
+                                     List<ModelAction> modelActions, List<DataProcessing> dataProcessings,List<Map<String,Object>> dataItems, List<Map<String,String>> dataLinks, String userName, String taskName, String description){
+        IntegratedTask integratedTask = new IntegratedTask();
+
+        integratedTask.setOid(UUID.randomUUID().toString());
+        integratedTask.setModels(models);
+        integratedTask.setProcessingTools(processingTools);
+        integratedTask.setModelActions(modelActions);
+        integratedTask.setDataProcessings(dataProcessings);
+        integratedTask.setDataItems(dataItems);
+        integratedTask.setDataLinks(dataLinks);
+        integratedTask.setXml(xml);
+        integratedTask.setMxGraph(mxgraph);
+        integratedTask.setStatus(0);
+        integratedTask.setIntegrate(true);
+        integratedTask.setUserId(userName);
+        integratedTask.setTaskName(taskName);
+        integratedTask.setDescription(description);
+        Date now = new Date();
+        if(integratedTask.getCreateTime()==null){
+            integratedTask.setCreateTime(now);
+        }
+        integratedTask.setLastModifiedTime(now);
+
+        return integratedTaskDao.save(integratedTask).getOid();
+
+    }
+
+
+
+    public IntegratedTask getIntegratedTaskByOid(String taskOid){
+        IntegratedTask integratedTask = integratedTaskDao.findByOid(taskOid);
+
+        return integratedTask;
+    }
+
+    //用户更新集成Task的信息
+    public IntegratedTask updateIntegratedTask( String taskOid, String xml, String mxgraph, List<Map<String,String>> models,
+                                                List<ModelAction> modelActions,List<DataProcessing> dataProcessings, List<Map<String,Object>> dataItems,List<Map<String,String>> dataLinks,String userName,String taskName,String description){
+        IntegratedTask integratedTask = integratedTaskDao.findByOid(taskOid);
+
+        integratedTask.setModels(models);
+        integratedTask.setModelActions(modelActions);
+        integratedTask.setDataProcessings(dataProcessings);
+        integratedTask.setDataLinks(dataLinks);
+        integratedTask.setDataItems(dataItems);
+        integratedTask.setXml(xml);
+        integratedTask.setMxGraph(mxgraph);
+        integratedTask.setTaskName(taskName);
+        integratedTask.setDescription(description);
+
+        Date now = new Date();
+        integratedTask.setLastModifiedTime(now);
+
+        return integratedTaskDao.save(integratedTask);
+
+    }
+
+    //更新集成任务的运行信息
+    public JSONObject checkIntegratedTask(String taskId){
+        JSONObject data = getIntegratedTask(taskId);
+        if(data.isEmpty()){
+            return data;
+        }else {
+            return updateIntegratedTaskInfo(taskId,data);
+        }
+    }
+
+    //从managerserver获取task的最新状态
+    public JSONObject getIntegratedTask(String taskId){
+        RestTemplate restTemplate=new RestTemplate();
+        String url="http://" + managerServerIpAndPort + "/GeoModeling/task/checkTaskStatus?taskId={taskId}";//远程接口
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", taskId);
+
+        JSONObject data = new JSONObject();
+        ResponseEntity<JSONObject> responseEntity=restTemplate.getForEntity(url,JSONObject.class,params);
+        if (responseEntity.getStatusCode()!= HttpStatus.OK){
+            throw new MyException("远程服务出错");
+        }
+        else {
+            data = responseEntity.getBody().getJSONObject("data");
+        }
+
+        return data;
+    }
+
+
+    public String updateIntegrateTaskId(String taskOid, String taskId){
+        IntegratedTask integratedTask = integratedTaskDao.findByOid(taskOid);
+
+        integratedTask.setTaskId(taskId);
+        Date now = new Date();
+        integratedTask.setLastModifiedTime(now);
+
+        integratedTaskDao.save(integratedTask);
+        return taskId;
+    }
+
+    public int deleteIntegratedTask(String oid){
+        IntegratedTask integratedTask = integratedTaskDao.findByOid(oid);
+        if (integratedTask != null) {
+            integratedTaskDao.delete(integratedTask);
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public String updateIntegrateTaskName(String taskOid,String taskName) {
+        IntegratedTask integratedTask = integratedTaskDao.findByOid(taskOid);
+
+        integratedTask.setTaskName(taskName);
+        Date now = new Date();
+        integratedTask.setLastModifiedTime(now);
+
+        integratedTaskDao.save(integratedTask);
+        return taskName;
+    }
+
+    public String updateIntegrateTaskDescription(String taskOid,String taskDescription) {
+        IntegratedTask integratedTask = integratedTaskDao.findByOid(taskOid);
+
+        integratedTask.setDescription(taskDescription);
+        Date now = new Date();
+        integratedTask.setLastModifiedTime(now);
+
+        integratedTaskDao.save(integratedTask);
+        return taskDescription;
     }
 
 }
