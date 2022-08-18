@@ -12,10 +12,9 @@
   <link rel="stylesheet" type="text/css" media="screen" href="/static/css/base/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" media="screen" href="/static/iCheck/skins/flat/green.css"/>
   <link rel="stylesheet" href="/static/css/base/universal.css">
+
 </head>
-
 <body>
-
 
 <div id="app">
   <head-side-bar :user-infoin-parent="userInfo"></head-side-bar>
@@ -28,7 +27,7 @@
            :style="{'height':ScreenMinHeight,'min-height':ScreenMinHeight,'max-height':ScreenMaxHeight}">
 
         <div style="margin-top: 70px; display: flex; justify-content: space-around;">
-          <h2>{{htmlJson.VersionManagement}}</h2>
+          <h2>{{htmlJson.Version}}</h2>
         </div>
 
         <div style="display: flex;justify-content: center;">
@@ -36,11 +35,9 @@
             <div style="display: flex; justify-content: space-around;flex-direction: column; align-items: center;width: 95%;">
               <br/>
               <div style="width: 100%;">
-                <div style="margin-bottom: 10px">
-                  <el-button :class="[isActive ? 'versionBtnActiveClass' : '']" @click="changeVersionClass('edit')">{{htmlJson.MySubmission}}</el-button>
-                  <el-button :class="[isActive ? '' : 'versionBtnActiveClass']" @click="changeVersionClass('review')">{{htmlJson.OthersReview}}</el-button>
-                </div>
-                    <el-tabs type="border-card" v-if="isActive" @tab-click="tabChange" v-model="activeTabName"  stretch  >
+                <el-tabs type="border-card"  stretch @tab-click="handleParentTabChange">
+                  <el-tab-pane  :label="htmlJson.MySubmission">
+                    <el-tabs type="border-card" v-model="activeName"   stretch  >
                       <el-tab-pane name="0" :label="htmlJson.UncheckedVersion">
 <!--                        self unchecked version-->
                         <div style="width: 100%;">
@@ -291,8 +288,10 @@
                       </el-tab-pane>
                     </el-tabs>
 
-                    <el-tabs type="border-card" v-else @tab-click="tabChange" v-model="activeTabName" stretch >
-                      <el-tab-pane name="0" :label="htmlJson.UncheckedVersion">
+                  </el-tab-pane>
+                  <el-tab-pane :label="htmlJson.OthersReview" >
+                    <el-tabs v-model="activeName"  type="border-card" stretch >
+                      <el-tab-pane name="3" :label="htmlJson.UncheckedVersion">
 <!--                        other unchecked version-->
                         <div style="width: 100%;">
                           <el-table
@@ -382,7 +381,7 @@
                         </div>
 
                       </el-tab-pane>
-                      <el-tab-pane name="1" :label="htmlJson.AcceptedVersion">
+                      <el-tab-pane name="4" :label="htmlJson.AcceptedVersion">
 <!--                        other Accepted version-->
                         <div style="width: 100%;">
                           <el-table
@@ -464,7 +463,7 @@
                         </div>
 
                       </el-tab-pane>
-                      <el-tab-pane name="2" :label="htmlJson.RejectedVersion">
+                      <el-tab-pane name="5" :label="htmlJson.RejectedVersion">
 <!--                        other Rejected version-->
                         <div style="width: 100%;">
                           <el-table
@@ -547,6 +546,12 @@
 
                       </el-tab-pane>
                     </el-tabs>
+
+                  </el-tab-pane>
+
+                </el-tabs>
+
+
 
               </div>
 
