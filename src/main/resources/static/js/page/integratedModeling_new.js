@@ -2577,9 +2577,9 @@ var vue = new Vue({
                                     o1.value = dataContent.value
                                     o1.fileName = dataContent.fileName
                                     o1.suffix = dataContent.suffix
-                                    if(o1.fileName.indexOf(',')){
+                                    // if(o1.fileName.indexOf(',')){
                                         // this.unFoldMultiOutput(m1,o1);
-                                    }
+                                    // }
                                     break
                                 }
                             }
