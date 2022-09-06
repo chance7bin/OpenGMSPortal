@@ -1953,8 +1953,8 @@ ul, li {
 
 
     /*font-weight: 700;*/
-    float: left;
-    margin-left: 18px;
+    /*float: left;*/
+    /*margin-left: 18px;*/
     font-style: oblique;
 }
 
@@ -3113,7 +3113,7 @@ ul.p-info li:last-child {
 
 .el-form--label-top .el-form-item__label {
     padding: 0;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: unset;
     color: black;
 }

@@ -6,6 +6,14 @@ var info=new Vue({
     },
     data: function () {
         return {
+            rulesPreparation:[
+                {metaid: true}
+            ],
+
+            nowLanguage: '',
+
+            activeNames: 1,
+            isCreator: false,
             htmlJSON:{
                 "HowtoCite": "How to Cite",
 
@@ -812,37 +820,718 @@ var info=new Vue({
                 }
             },
 
-            metadataTemp:{
-                overview:{
-                    name:'',
-                    version:'',
-                    modelType:'',
-                    modelDomain:[],
-                    scale:'',
-                },
-                design:{
-                    purpose:'',
-                    principles:[],
-                    incorporatedModels:[],
-                    framework:'',
-                    process:[],
-                },
-                usage:{
-                    information:'',
-                    initialization:'',
-                    hardware:'',
-                    software:'',
-                    inputs:[],
-                    outputs:[],
-                }
-            },
-
             editMetadata:false,
             editAliasDialog:false,
             editingModelAlias:'',
 
             checkUrlValidLoading:false,
-            htmlJson:{}
+            htmlJson:{},
+
+            ModelMetaData:{
+                pie: {
+                    modelPurpose: [''],
+                    modelAssumption: [''],
+                    basicPrinciple: [''],
+                    modelCategory: undefined,
+                    classificationInfo: [''],
+                    applicationScope: {
+                        timeScope: {
+                            resolution: '',
+                            scale: '',
+                            step: '',
+                            scope: ''
+                        },
+                        spatialScope: {
+                            dimension: '',
+                            gridType: '',
+                            resolution: '',
+                            scale: '',
+                            scope: ''
+                        }
+                    },
+                    codeLanguage: []
+                },
+                mp: {
+                    modelName: {
+                        modelName: '',
+                        modelAlias: []
+                    },
+                    modelVersion: {
+                        seriesName: '',
+                        numbering: '',
+                        purpose: undefined,
+                        changeContent: '',
+                        author: [
+                            {
+                                contactorName: {
+                                    fullName: '',
+                                    surname: ''
+                                },
+                                contactorAddress: {
+                                    country: '',
+                                    province: '',
+                                    city: '',
+                                    address: '',
+                                    postCode: ''
+                                },
+                                title: [''],
+                                affiliation: [''],
+                                email: [''],
+                                phone: [''],
+                                fax: [''],
+                                personalPage: ['']
+                            }
+                        ],
+                        date: undefined
+                    },
+                    descriptionInfo: {
+                        descAbstract: '',
+                        detailDescription: ''
+                    },
+                    keywords: [],
+                    referenceSystem: {
+                        temporalReference: {
+                            name: ''
+                        },
+                        spatialReference: [{
+                            type: '',
+                            name: ''
+                        }]
+                    },
+                    developInfo: {
+                        startDate: '',
+                        endDate: '',
+                        process: '',
+                        developer: [
+                            {
+                                contactorName: {
+                                    fullName: '',
+                                    surname: ''
+                                },
+                                contactorAddress: {
+                                    country: '',
+                                    province: '',
+                                    city: '',
+                                    address: '',
+                                    postCode: ''
+                                },
+                                title: [''],
+                                affiliation: [''],
+                                email: [''],
+                                phone: [''],
+                                fax: [''],
+                                personalPage: ['']
+                            }
+                        ]
+                    },
+                    publishInfo: {
+                        publishMode: {
+                            openAccess: '',
+                            accessMethod: '',
+                            usageMethod: '',
+                            openSourceProtocol: ''
+                        },
+                        publishMethod: {
+                            transmitMode: '',
+                            accessLocation: ''
+                        },
+                        publishDate: '',
+                        publisher: [
+                            {
+                                contactorName: {
+                                    fullName: '',
+                                    surname: ''
+                                },
+                                contactorAddress: {
+                                    country: '',
+                                    province: '',
+                                    city: '',
+                                    address: '',
+                                    postCode: ''
+                                },
+                                title: [''],
+                                affiliation: [''],
+                                email: [''],
+                                phone: [''],
+                                fax: [''],
+                                personalPage: ['']
+                            }
+                        ]
+                    },
+                    relateItem: [{
+                        projectName: '',
+                        projectId: '',
+                        fundingAgency: '',
+                        type: ''
+                    }],
+                    reference: [{
+                        title: '',
+                        author: '',
+                        agency: '',
+                        press: '',
+                        reel: '',
+                        issue: '',
+                        page: '',
+                        publishDate:'',
+                        url: ''
+                    }],
+                    occupySpace: '',
+                    occupySpaceUnit: 'KB',
+                    metaDataVersion: {
+                        id: '',
+                        purpose: '',
+                        changeContent: '',
+                        author: [
+                            {
+                                contactorName: {
+                                    fullName: '',
+                                    surname: ''
+                                },
+                                contactorAddress: {
+                                    country: '',
+                                    province: '',
+                                    city: '',
+                                    address: '',
+                                    postCode: ''
+                                },
+                                title: [''],
+                                affiliation: [''],
+                                email: [''],
+                                phone: [''],
+                                fax: [''],
+                                personalPage: ['']
+                            }
+                        ],
+                        date: ''
+                    }
+                },
+                mo: {
+                    modelStructure: {
+                        legend: '',
+                        type: ''
+                    }
+                    ,
+                    subModel: [
+                        {
+                            modelName: '',
+                            version: '',
+                            versionId: '',
+                            usage: ''
+                        }
+                    ],
+                    couplingMode: ''
+                },
+                di: {
+                    formula: '',
+                    term: [{
+                        name: '',
+                        desc: ''
+                    }],
+                    inOutPara: [
+                        {
+                            name: '',
+                            type: '',
+                            desc: '',
+                            unit: '',
+                            limit: '',
+                            defaultValue: '',
+                            format: ''
+                        }
+                    ]
+                },
+                mdt: {
+                    runTime:'',
+                    runTemplates:[
+                        {
+                            configInfo:[
+                                {
+                                    name: '',
+                                    type: '',
+                                    value: ''
+                                }
+                            ],
+                            desc: ''
+                        }
+                    ],
+                    modelAnalysis:{
+                        modelCalibration: '',
+                        modelValidation:'',
+                        effectivenessAnalysis:'',
+                        uncertaintyAnalysis: '',
+                        sensitivityAnalysis: ''
+                    },
+                    instruction:''
+                },
+                editTime: '',
+                createTime: ''
+            },
+
+            ModelMetaDataList: [],
+
+            pie: {
+                modelPurpose: [''],
+                modelAssumption: [''],
+                basicPrinciple: [''],
+                classificationInfo: [''],
+                modelCategory: undefined,
+                applicationScope: {
+                    timeScope: {
+                        resolution: '',
+                        scale: '',
+                        step: '',
+                        scope: ''
+                    },
+                    spatialScope: {
+                        dimension: '',
+                        gridType: '',
+                        resolution: '',
+                        scale: '',
+                        scope: ''
+                    }
+                },
+                codeLanguage: []
+            },
+
+            mp: {
+                modelName: {
+                    modelName: '',
+                    modelAlias: []
+                },
+                modelVersion: {
+                    seriesName: '',
+                    numbering: '',
+                    purpose: undefined,
+                    changeContent: '',
+                    author: [
+                        {
+                            contactorName: {
+                                fullName: '',
+                                surname: ''
+                            },
+                            contactorAddress: {
+                                country: '',
+                                province: '',
+                                city: '',
+                                address: '',
+                                postCode: ''
+                            },
+                            title: [''],
+                            affiliation: [''],
+                            email: [''],
+                            phone: [''],
+                            fax: [''],
+                            personalPage: ['']
+                        }
+                    ],
+                    date: undefined
+                },
+                descriptionInfo: {
+                    descAbstract: '',
+                    detailDescription: ''
+                },
+                keywords: [],
+                referenceSystem: {
+                    temporalReference: {
+                        name: ''
+                    },
+                    spatialReference: [{
+                        type: '',
+                        name: ''
+                    }]
+                },
+                developInfo: {
+                    startDate: '',
+                    endDate: '',
+                    process: '',
+                    developer: [
+                        {
+                            contactorName: {
+                                fullName: '',
+                                surname: ''
+                            },
+                            contactorAddress: {
+                                country: '',
+                                province: '',
+                                city: '',
+                                address: '',
+                                postCode: ''
+                            },
+                            title: [''],
+                            affiliation: [''],
+                            email: [''],
+                            phone: [''],
+                            fax: [''],
+                            personalPage: ['']
+                        }
+                    ]
+                },
+                publishInfo: {
+                    publishMode: {
+                        openAccess: '',
+                        accessMethod: '',
+                        usageMethod: '',
+                        openSourceProtocol: ''
+                    },
+                    publishMethod: {
+                        transmitMode: '',
+                        accessLocation: ''
+                    },
+                    publishDate: '',
+                    publisher: [
+                        {
+                            contactorName: {
+                                fullName: '',
+                                surname: ''
+                            },
+                            contactorAddress: {
+                                country: '',
+                                province: '',
+                                city: '',
+                                address: '',
+                                postCode: ''
+                            },
+                            title: [''],
+                            affiliation: [''],
+                            email: [''],
+                            phone: [''],
+                            fax: [''],
+                            personalPage: ['']
+                        }
+                    ]
+                },
+                relateItem: [{
+                    projectName: '',
+                    projectId: '',
+                    fundingAgency: '',
+                    type: ''
+                }],
+                reference: [{
+                    title: '',
+                    author: '',
+                    agency: '',
+                    press: '',
+                    reel: '',
+                    issue: '',
+                    page: '',
+                    publishDate:'',
+                    url: ''
+                }],
+                occupySpace: '',
+                occupySpaceUnit: 'KB',
+                metaDataVersion: {
+                    id: '',
+                    purpose: '',
+                    changeContent: '',
+                    author: [
+                        {
+                            contactorName: {
+                                fullName: '',
+                                surname: ''
+                            },
+                            contactorAddress: {
+                                country: '',
+                                province: '',
+                                city: '',
+                                address: '',
+                                postCode: ''
+                            },
+                            title: [''],
+                            affiliation: [''],
+                            email: [''],
+                            phone: [''],
+                            fax: [''],
+                            personalPage: ['']
+                        }
+                    ],
+                    date: ''
+                }
+            },
+
+            mo: {
+                modelStructure: {
+                    legend: '',
+                    type: ''
+                }
+                ,
+                subModel: [
+                    {
+                        modelName: '',
+                        version: '',
+                        versionId: '',
+                        usage: ''
+                    }
+                ],
+                couplingMode: ''
+            },
+
+            di: {
+                formula: '',
+                term: [{
+                    name: '',
+                    desc: ''
+                }],
+                inOutPara: [
+                    {
+                        name: '',
+                        type: '',
+                        desc: '',
+                        unit: '',
+                        limit: '',
+                        defaultValue: '',
+                        format: ''
+                    }
+                ]
+            },
+
+            mdt: {
+                runTime:'',
+                runTemplates:[
+                    {
+                        configInfo:[
+                            {
+                                name: '',
+                                type: '',
+                                value: ''
+                            }
+                        ],
+                        desc: ''
+                    }
+                ],
+                modelAnalysis:{
+                    modelCalibration: '',
+                    modelValidation:'',
+                    effectivenessAnalysis:'',
+                    uncertaintyAnalysis: '',
+                    sensitivityAnalysis: ''
+                },
+                instruction:''
+            },
+
+            typeOptions:[{
+                value:1,
+                label:'输入'
+            },{
+                value:2,
+                label:'输出'
+            },{
+                value:3,
+                label:'参数'
+            }],
+
+            legendOptions:[{
+                value:1,
+                label: '复杂型(通常用运行结构图例表示)'
+            },{
+                value:2,
+                label: '简单计算型'
+            },{
+                value:3,
+                label: '时间推进型'
+            },{
+                value:4,
+                label: '事件响应型'
+            }],
+
+            dialogImageUrl: '',
+            dialogVisible: false,
+
+            formData: new FormData(),
+            fileList: [],
+
+            modelTypeOptions:[{
+                value:1,
+                label: '模型'
+            },{
+                value:2,
+                label: '工具'
+            },{
+                value:3,
+                label: '模块'
+            },{
+                value:4,
+                label: '公式'
+            }],
+
+            scaleOptions:[{
+                value:1,
+                label: '百万年以上'
+            },{
+                value:2,
+                label: '百万年尺度'
+            },{
+                value:3,
+                label: '万年尺度'
+            },{
+                value:4,
+                label: '千年尺度'
+            },{
+                value:5,
+                label: '百年尺度'
+            },{
+                value:6,
+                label: '10年尺度'
+            },{
+                value:7,
+                label: '年'
+            },{
+                value:8,
+                label: '月'
+            },{
+                value:9,
+                label: '日'
+            },{
+                value:10,
+                label: '日以下'
+            },{
+                value:11,
+                label: '基于事件(次，如降水)'
+            }],
+
+            dimensionOptions:[{
+                    value:1,
+                    label: '1D'
+                },{
+                    value:2,
+                    label: '1.5D'
+                },{
+                    value:3,
+                    label: '2D'
+                },{
+                    value:4,
+                    label: '2.5D'
+                },{
+                    value:5,
+                    label: '3D'
+                }],
+
+            spatialScaleOptions:[{
+                value:1,
+                label: '全球尺度'
+            },{
+                value:2,
+                label: '洲际尺度'
+            },{
+                value:3,
+                label: '区域尺度'
+            },{
+                value:4,
+                label: '流域尺度'
+            },{
+                value:5,
+                label: '基本单元(地块尺度)'
+            }],
+
+            metaPurposeOptions:[{
+                value: 1,
+                label: '首次创建'
+            },{
+                value: 2,
+                label: '修改'
+            }],
+
+            dynamicTags: ['标签一', '标签二', '标签三'],
+            inputVisible: false,
+            inputVisible2: false,
+            inputVisible4: false,
+            inputVisible5: false,
+            inputVisible6: false,
+            inputValue: '',
+            inputValue2: '',
+            inputValue4: '',
+            inputValue5: '',
+            inputValue6: '',
+
+            purposeOptions:[{
+                value:1,
+                label: '首次创建'
+            },{
+                value:2,
+                label: '修改问题'
+            },{
+                value:3,
+                label: '增加新功能'
+            },{
+                value:4,
+                label: '调整'
+            }],
+
+            occupySpaceOptions:[{
+                value:'KB',
+                label: 'KB'
+            },{
+                value:'MB',
+                label: 'MB'
+            },{
+                value:'GB',
+                label: 'GB'
+            }],
+
+            authorDialogTableVisible: false,
+            developerDialogTableVisible: false,
+            publisherDialogTableVisible: false,
+            metaDialogTableVisible: false,
+
+            processOptions:[{
+                value:1,
+                label: '完成'
+            },{
+                value:2,
+                label: '开发中'
+            },{
+                value:3,
+                label: '已计划'
+            },{
+                value:4,
+                label: '有需求'
+            },{
+                value:5,
+                label: '即将完成'
+            },{
+                value:6,
+                label: '历史档案'
+            },{
+                value:7,
+                label: '已作废'
+            }],
+
+            openAccessOptions:[{
+                value:true,
+                label: '开源'
+            },{
+                value:false,
+                label: '不开源'
+            }],
+
+            classificationList:[
+                { "value": "陆地圈", "address": "陆地圈" },
+                { "value": "海洋圈", "address": "海洋圈" },
+                { "value": "冰冻圈", "address": "冰冻圈" },
+                { "value": "大气圈", "address": "大气圈" },
+                { "value": "太空-地球", "address": "太空-地球" },
+                { "value": "固体地球", "address": "固体地球" },
+                { "value": "发展活动", "address": "发展活动" },
+                { "value": "社会活动", "address": "社会活动" },
+                { "value": "经济活动", "address": "经济活动" },
+                { "value": "全球尺度", "address": "全球尺度" },
+                { "value": "区域尺度", "address": "区域尺度" },
+                { "value": "地理信息分析", "address": "地理信息分析" },
+                { "value": "遥感分析", "address": "遥感分析" },
+                { "value": "地学统计分析", "address": "地学统计分析" },
+                { "value": "智能分析计算", "address": "智能分析计算" },
+                { "value": "物理过程计算", "address": "物理过程计算" },
+                { "value": "化学过程计算", "address": "化学过程计算" },
+                { "value": "生物过程计算", "address": "生物过程计算" },
+                { "value": "人类活动计算", "address": "人类活动计算" }
+            ],
+
+            rule1: {
+                modeltype: [{ required: true, message: '请选择模型类型', trigger: 'blur' }],
+                typeInfo: [{ required: true, message: '请输入分类信息', trigger: 'blur' }],
+            },
+
+            rules3: {
+                modelName: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+            }
         }
     },
     methods: {
@@ -864,6 +1553,9 @@ var info=new Vue({
 
         translatePage(jsonContent){
             this.htmlJSON = jsonContent;
+            this.nowLanguage = window.localStorage.getItem("language");
+            console.log(this.nowLanguage)
+
             let el_breadcrumb = $(".el-breadcrumb");
 
             for(i=0;i<el_breadcrumb.length;i++){
@@ -969,6 +1661,20 @@ var info=new Vue({
             opts.series[0].links = links;
             this.modelRelationGraph.clear();
             this.modelRelationGraph.setOption(opts);
+        },
+
+        uuid() {
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+            s[8] = s[13] = s[18] = s[23] = "-";
+
+            var uuid = s.join("");
+            return uuid;
         },
 
         fullNameShowChange(newValue){
@@ -1669,117 +2375,117 @@ var info=new Vue({
             }
         },
 
-        insertMetaData(metadata,data){
-            let overview = data.overview
-            let design = data.design
-            let usage = data.usage
+        // insertMetaData(metadata,data){
+        //     let overview = data.overview
+        //     let design = data.design
+        //     let usage = data.usage
+        //
+        //     metadata.overview.name = overview.name
+        //     metadata.overview.version = overview.version
+        //     metadata.overview.modelType = overview.modelType
+        //     metadata.overview.scale = overview.scale
+        //
+        //     metadata.design.purpose = design.purpose
+        //     metadata.design.framework = design.framework
+        //
+        //     metadata.usage.information = usage.information
+        //     metadata.usage.initialization = usage.initialization
+        //     metadata.usage.hardware = usage.hardware
+        //     metadata.usage.software = usage.software
+        //
+        //     Vue.nextTick(()=>{
+        //         if ($("#modelDomainInput").nextAll().length != 0){
+        //             $('#modelDomainInput').tagEditor('destroy');
+        //         }
+        //         $('#modelDomainInput').tagEditor({
+        //             initialTags: overview.modelDomain==null?[]:overview.modelDomain ,
+        //             forceLowercase: false,
+        //         });
+        //         if ($("#principlesInput").nextAll().length != 0){
+        //             $('#principlesInput').tagEditor('destroy');
+        //         }
+        //         $('#principlesInput').tagEditor({
+        //             initialTags: design.principles==null?[]:design.principles ,
+        //             forceLowercase: false,
+        //         });
+        //         if ($("#incorporatedModelsInput").nextAll().length != 0){
+        //             $('#incorporatedModelsInput').tagEditor('destroy');
+        //         }
+        //
+        //         $('#incorporatedModelsInput').tagEditor({
+        //             initialTags: design.incorporatedModels==null?[]:design.incorporatedModels ,
+        //             forceLowercase: false,
+        //         });
+        //         if ($("#processInput").nextAll().length != 0){
+        //             $('#processInput').tagEditor('destroy');
+        //         }
+        //         $('#processInput').tagEditor({
+        //             initialTags: design.process==null?[]:design.process ,
+        //             forceLowercase: false,
+        //         });
+        //         if ($("#inputsInput").nextAll().length != 0){
+        //             $('#inputsInput').tagEditor('destroy');
+        //         }
+        //         $('#inputsInput').tagEditor({
+        //             initialTags: usage.inputs==null?[]:usage.inputs ,
+        //             forceLowercase: false,
+        //         });
+        //         if ($("#outputsInput").nextAll().length != 0){
+        //             $('#outputsInput').tagEditor('destroy');
+        //         }
+        //         $("#outputsInput").tagEditor({
+        //             initialTags: usage.outputs==null?[]:usage.outputs ,
+        //             forceLowercase: false,
+        //         })
+        //     })
+        //
+        //
+        //
+        // },
 
-            metadata.overview.name = overview.name
-            metadata.overview.version = overview.version
-            metadata.overview.modelType = overview.modelType
-            metadata.overview.scale = overview.scale
-
-            metadata.design.purpose = design.purpose
-            metadata.design.framework = design.framework
-
-            metadata.usage.information = usage.information
-            metadata.usage.initialization = usage.initialization
-            metadata.usage.hardware = usage.hardware
-            metadata.usage.software = usage.software
-
-            Vue.nextTick(()=>{
-                if ($("#modelDomainInput").nextAll().length != 0){
-                    $('#modelDomainInput').tagEditor('destroy');
-                }
-                $('#modelDomainInput').tagEditor({
-                    initialTags: overview.modelDomain==null?[]:overview.modelDomain ,
-                    forceLowercase: false,
-                });
-                if ($("#principlesInput").nextAll().length != 0){
-                    $('#principlesInput').tagEditor('destroy');
-                }
-                $('#principlesInput').tagEditor({
-                    initialTags: design.principles==null?[]:design.principles ,
-                    forceLowercase: false,
-                });
-                if ($("#incorporatedModelsInput").nextAll().length != 0){
-                    $('#incorporatedModelsInput').tagEditor('destroy');
-                }
-
-                $('#incorporatedModelsInput').tagEditor({
-                    initialTags: design.incorporatedModels==null?[]:design.incorporatedModels ,
-                    forceLowercase: false,
-                });
-                if ($("#processInput").nextAll().length != 0){
-                    $('#processInput').tagEditor('destroy');
-                }
-                $('#processInput').tagEditor({
-                    initialTags: design.process==null?[]:design.process ,
-                    forceLowercase: false,
-                });
-                if ($("#inputsInput").nextAll().length != 0){
-                    $('#inputsInput').tagEditor('destroy');
-                }
-                $('#inputsInput').tagEditor({
-                    initialTags: usage.inputs==null?[]:usage.inputs ,
-                    forceLowercase: false,
-                });
-                if ($("#outputsInput").nextAll().length != 0){
-                    $('#outputsInput').tagEditor('destroy');
-                }
-                $("#outputsInput").tagEditor({
-                    initialTags: usage.outputs==null?[]:usage.outputs ,
-                    forceLowercase: false,
-                })
-            })
-
-
-
-        },
-
-        getMetaData(){
-            let metadata = {
-                'overview':{},
-                'design':{},
-                'usage':{},
-            }
-            metadata.overview.name = this.metadataTemp.overview.name==null?null:this.metadataTemp.overview.name.trim()
-            metadata.overview.version = this.metadataTemp.overview.version==null?null:this.metadataTemp.overview.version.trim()
-            metadata.overview.modelType = this.metadataTemp.overview.modelType==null?null:this.metadataTemp.overview.modelType.trim()
-            metadata.overview.modelDomain = $("#modelDomainInput").val().split(",");
-            if (metadata.overview.modelDomain.length === 1 && metadata.overview.modelDomain[0] === "") {
-                metadata.overview.modelDomain = [];
-            }
-            metadata.overview.scale = this.metadataTemp.overview.scale==null?null:this.metadataTemp.overview.scale.trim()
-
-            metadata.design.purpose = this.metadataTemp.design.purpose==null?null:this.metadataTemp.design.purpose.trim()
-            metadata.design.principles = $("#principlesInput").val().split(",");
-            if (metadata.design.principles.length === 1 && metadata.design.principles[0] === "") {
-                metadata.design.principles = [];
-            }
-            metadata.design.incorporatedModels = $("#incorporatedModelsInput").val().split(",");
-            if (metadata.design.incorporatedModels.length === 1 && metadata.design.incorporatedModels[0] === "") {
-                metadata.design.incorporatedModels = [];
-            }
-            metadata.design.framework = this.metadataTemp.design.framework==null?null:this.metadataTemp.design.framework.trim()
-            metadata.design.process = $("#processInput").val().split(",");
-            if (metadata.design.process.length === 1 && metadata.design.process[0] === "") {
-                metadata.design.process = [];
-            }
-            metadata.usage.information = this.metadataTemp.usage.information==null?null:this.metadataTemp.usage.information.trim()
-            metadata.usage.initialization = this.metadataTemp.usage.initialization==null?null:this.metadataTemp.usage.initialization.trim()
-            metadata.usage.hardware = this.metadataTemp.usage.hardware==null?null:this.metadataTemp.usage.hardware.trim()
-            metadata.usage.software = this.metadataTemp.usage.software==null?null:this.metadataTemp.usage.software.trim()
-            metadata.usage.inputs = $("#inputsInput").val().split(",");
-            if (metadata.usage.inputs.length === 1 && metadata.usage.inputs[0] === "") {
-                metadata.usage.inputs = [];
-            }
-            metadata.usage.outputs = $("#outputsInput").val().split(",");
-            if (metadata.usage.outputs.length === 1 && metadata.usage.outputs[0] === "") {
-                metadata.usage.outputs = [];
-            }
-            return metadata
-        },
+        // getMetaData(){
+        //     let metadata = {
+        //         'overview':{},
+        //         'design':{},
+        //         'usage':{},
+        //     }
+        //     metadata.overview.name = this.metadataTemp.overview.name==null?null:this.metadataTemp.overview.name.trim()
+        //     metadata.overview.version = this.metadataTemp.overview.version==null?null:this.metadataTemp.overview.version.trim()
+        //     metadata.overview.modelType = this.metadataTemp.overview.modelType==null?null:this.metadataTemp.overview.modelType.trim()
+        //     metadata.overview.modelDomain = $("#modelDomainInput").val().split(",");
+        //     if (metadata.overview.modelDomain.length === 1 && metadata.overview.modelDomain[0] === "") {
+        //         metadata.overview.modelDomain = [];
+        //     }
+        //     metadata.overview.scale = this.metadataTemp.overview.scale==null?null:this.metadataTemp.overview.scale.trim()
+        //
+        //     metadata.design.purpose = this.metadataTemp.design.purpose==null?null:this.metadataTemp.design.purpose.trim()
+        //     metadata.design.principles = $("#principlesInput").val().split(",");
+        //     if (metadata.design.principles.length === 1 && metadata.design.principles[0] === "") {
+        //         metadata.design.principles = [];
+        //     }
+        //     metadata.design.incorporatedModels = $("#incorporatedModelsInput").val().split(",");
+        //     if (metadata.design.incorporatedModels.length === 1 && metadata.design.incorporatedModels[0] === "") {
+        //         metadata.design.incorporatedModels = [];
+        //     }
+        //     metadata.design.framework = this.metadataTemp.design.framework==null?null:this.metadataTemp.design.framework.trim()
+        //     metadata.design.process = $("#processInput").val().split(",");
+        //     if (metadata.design.process.length === 1 && metadata.design.process[0] === "") {
+        //         metadata.design.process = [];
+        //     }
+        //     metadata.usage.information = this.metadataTemp.usage.information==null?null:this.metadataTemp.usage.information.trim()
+        //     metadata.usage.initialization = this.metadataTemp.usage.initialization==null?null:this.metadataTemp.usage.initialization.trim()
+        //     metadata.usage.hardware = this.metadataTemp.usage.hardware==null?null:this.metadataTemp.usage.hardware.trim()
+        //     metadata.usage.software = this.metadataTemp.usage.software==null?null:this.metadataTemp.usage.software.trim()
+        //     metadata.usage.inputs = $("#inputsInput").val().split(",");
+        //     if (metadata.usage.inputs.length === 1 && metadata.usage.inputs[0] === "") {
+        //         metadata.usage.inputs = [];
+        //     }
+        //     metadata.usage.outputs = $("#outputsInput").val().split(",");
+        //     if (metadata.usage.outputs.length === 1 && metadata.usage.outputs[0] === "") {
+        //         metadata.usage.outputs = [];
+        //     }
+        //     return metadata
+        // },
 
         getDescription(){
             axios.get('/modelItem/localizationList/'+this.modelId
@@ -1806,60 +2512,82 @@ var info=new Vue({
         },
 
         getMetadata(){
-
-            axios.get('/modelItem/getMetadata/'+this.modelId
+            axios.get('/modelItem/getMetaData/'+this.modelId
             ).then(
                 res => {
                     if(res.data.code==-1){
                         this.confirmLogin()
                     }else{
-                        this.editMetadata = true
-                        let data = res.data.data
-                        this.insertMetaData(this.metadataTemp, data)
+                        if (this.isCreator == 'false'){
+                            this.$alert('目前暂不支持编辑他人创建的模型的元数据，请期待后续更新~', '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.editMetadata = true
+                                    let data = res.data.data
+                                    // 如果是null，则不操作
+                                    if (data == null){
+                                        const uuid = this.uuid();
+                                        this.ModelMetaData.mp.metaDataVersion.id = uuid;
+                                        return
+                                    }
+                                    this.ModelMetaData = {...data}
+                                }
+                            })
+                        }else {
+                            this.editMetadata = true
+                            let data = res.data.data
+                            // 如果是null，则不操作
+                            if (data == null){
+                                const uuid = this.uuid();
+                                this.ModelMetaData.mp.metaDataVersion.id = uuid;
+                                return
+                            }
+                            this.ModelMetaData = {...data}
+                        }
                     }
                 }
             )
         },
 
-        submitMetadata(){
-            let data = {}
-            data.oid = this.modelId
-            data.metadata = JSON.stringify(this.getMetaData())
-
-            $.ajax({
-                type:'post',
-                url:'/modelItem/updateMetadata',
-                data: data,
-                // dataType: "json",
-                // accept: 'application/json',
-                success:(res)=>{
-                    let data = res.data
-                    if (res.code == -1) {
-                        this.confirmLogin()
-                    }else{
-                        if(data=='suc'){
-                            this.$alert("Change metadata successfully!", 'Success', {
-                                type: 'success',
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    window.location.reload();
-                                }
-                            })
-                        }else if(data=='version'){
-                            this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
-                                type: 'success',
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    window.location.reload();
-                                }
-                            })
-                        }
-                    }
-
-
-                }
-            })
-        },
+        // submitMetadata(){
+        //     let data = {}
+        //     data.oid = this.modelId
+        //     data.metadata = JSON.stringify(this.getMetaData())
+        //
+        //     $.ajax({
+        //         type:'post',
+        //         url:'/modelItem/updateMetadata',
+        //         data: data,
+        //         // dataType: "json",
+        //         // accept: 'application/json',
+        //         success:(res)=>{
+        //             let data = res.data
+        //             if (res.code == -1) {
+        //                 this.confirmLogin()
+        //             }else{
+        //                 if(data=='suc'){
+        //                     this.$alert("Change metadata successfully!", 'Success', {
+        //                         type: 'success',
+        //                         confirmButtonText: 'OK',
+        //                         callback: action => {
+        //                             window.location.reload();
+        //                         }
+        //                     })
+        //                 }else if(data=='version'){
+        //                     this.$alert("Your edit has been submit, please wait for the contributor to handle it.", 'Success', {
+        //                         type: 'success',
+        //                         confirmButtonText: 'OK',
+        //                         callback: action => {
+        //                             window.location.reload();
+        //                         }
+        //                     })
+        //                 }
+        //             }
+        //
+        //
+        //         }
+        //     })
+        // },
 
         submitDescription(){
             for (i = 0; i < this.localizationList.length; i++) {
@@ -3113,8 +3841,7 @@ var info=new Vue({
                                 break;
                         }
                         var linkTip = ""
-                        const lang = window.localStorage.getItem("language");
-                        console.log(lang)
+                        const lang = window.localStorage.getItem("language")
                         if (lang === "en-us"){
                             linkTip = "Link to "
                         }else {
@@ -3364,13 +4091,712 @@ var info=new Vue({
         checkObjAllProptNull(obj){
             let pros = Object.values(obj)
             return pros.every( ele => {
-                return ele === null||ele.length==0
+                console.log('111:' + ele)
+                return ele === null || ele.length==0 || ele===""
             })
         },
 
         changeRelateType(activeType){
             this.relateType = activeType
             this.searchInit(this.activeName_dialog)
+        },
+
+        submitMetaData(metaData){
+            try {this.ModelMetaData.di.formula =  tinyMCE.get('singleFormula').getContent()}catch (err){console.log(err)}
+            try {this.ModelMetaData.mdt.instruction =  tinyMCE.get('singleDescription').getContent()}catch (err){console.log(err)}
+            try {this.ModelMetaData.mdt.modelAnalysis.modelCalibration =  tinyMCE.get('singleModelCalibration').getContent()}catch (err){console.log(err)}
+            try {this.ModelMetaData.mdt.modelAnalysis.modelValidation =  tinyMCE.get('singleModelValidation').getContent()}catch (err){console.log(err)}
+            try {this.ModelMetaData.mdt.modelAnalysis.effectivenessAnalysis =  tinyMCE.get('singleEffectivenessAnalysis').getContent()}catch (err){console.log(err)}
+            try {this.ModelMetaData.mdt.modelAnalysis.uncertaintyAnalysis =  tinyMCE.get('singleUncertaintyAnalysis').getContent()}catch (err){console.log(err)}
+            try {this.ModelMetaData.mdt.modelAnalysis.sensitivityAnalysis =  tinyMCE.get('singleSensitivityAnalysis').getContent()}catch (err){console.log(err)}
+            if (this.judgeRequired() == false){
+                return
+            }
+            axios.post("/modelItem/saveMetaData/" + this.modelId, metaData).then(res => {
+                console.log(metaData)
+                if (res.data.code == -1){
+                    this.$message({
+                        message: "模型元数据上传失败！请稍后重试！",
+                        type: "warning"
+                    });
+                }else {
+                    this.$message({
+                        message: "模型元数据上传成功！",
+                        type: "success"
+                    });
+                    location.reload();
+                }
+            })
+            this.editMetadata = false
+        },
+
+        addRunTemplates(){
+            this.ModelMetaData.mdt.runTemplates.push(
+                {
+                    configInfo:[
+                        {
+                            name: '',
+                            type: '',
+                            value: ''
+                        }
+                    ],
+                    desc: ''
+                }
+            )
+        },
+
+        removeRunTemplates(i){
+            this.ModelMetaData.mdt.runTemplates.splice(i, 1)
+        },
+
+        addConfig(i){
+            this.ModelMetaData.mdt.runTemplates[i].configInfo.push(
+                {
+                    name: '',
+                    type: '',
+                    value: ''
+                }
+            )
+        },
+
+        removeConfig(i){
+            this.ModelMetaData.mdt.runTemplates[i].configInfo.pop()
+        },
+
+        removeAnalysis(i){
+            if (i==0){
+                this.ModelMetaData.mdt.modelAnalysis.modelCalibration.pop()
+            }
+            else if (i == 1){
+                this.ModelMetaData.mdt.modelAnalysis.modelValidation.pop()
+            }
+            else if (i==2){
+                this.ModelMetaData.mdt.modelAnalysis.effectivenessAnalysis.pop()
+            }
+            else if (i==3){
+                this.ModelMetaData.mdt.modelAnalysis.uncertaintyAnalysis.pop()
+            }
+            else if (i==4){
+                this.ModelMetaData.mdt.modelAnalysis.sensitivityAnalysis.pop()
+            }
+        },
+
+        addAnalysis(i){
+            if (i==0){
+                this.ModelMetaData.mdt.modelAnalysis.modelCalibration.push('')
+            }
+            else if (i == 1){
+                this.ModelMetaData.mdt.modelAnalysis.modelValidation.push('')
+            }
+            else if (i==2){
+                this.ModelMetaData.mdt.modelAnalysis.effectivenessAnalysis.push('')
+            }
+            else if (i==3){
+                this.ModelMetaData.mdt.modelAnalysis.uncertaintyAnalysis.push('')
+            }
+            else if (i==4){
+                this.ModelMetaData.mdt.modelAnalysis.sensitivityAnalysis.push('')
+            }
+            console.log(this.ModelMetaData.mdt.modelAnalysis.modelCalibration)
+        },
+
+        addTerm(){
+            this.ModelMetaData.di.term.push({
+                name: '',
+                desc: ''
+            })
+        },
+
+        removeTerm(i){
+            this.ModelMetaData.di.term.splice(i,1)
+        },
+
+        addInOut(){
+            this.ModelMetaData.di.inOutPara.push({
+                name: '',
+                type: '',
+                desc: '',
+                unit: '',
+                limit: '',
+                defaultValue: '',
+                format: ''
+            })
+        },
+
+        removeInOut(i){
+            this.ModelMetaData.di.inOutPara.splice(i,1)
+        },
+
+        addSubModel(){
+            this.ModelMetaData.mo.subModel.push(
+                {
+                    modelName: '',
+                    version: '',
+                    versionId: '',
+                    usage: ''
+                }
+            )
+        },
+
+        removeSubModel(i){
+            this.ModelMetaData.mo.subModel.splice(i,1)
+        },
+
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
+
+        picExceed(){
+            this.$message({
+                message: '单个模型结构条目仅支持上传一张图例！'
+            });
+        },
+
+        modeUpload(option){
+            this.fileList.push(option)
+            let uploadUrl = 'http://221.226.60.2:8082/data'
+            // 使用form表单的数据格式
+            const formData  = new FormData()
+            // 将上传文件数组依次添加到参数paramsData中
+            this.fileList.forEach((it, index) => {
+                formData.append('datafile', it.file)
+            });
+            this.fileList = []
+            // 将表单数据添加到参数paramsData中
+            formData.append('name', 'model Structure')
+            fetch(uploadUrl, {method: 'POST', body: formData})
+                .then(response => {
+                    if(response.status == 200){
+                        return response.json()
+                    }
+                    else throw new Error('服务端错误')
+                })
+                .then((data) => {
+                    let downloadUrl = uploadUrl + '/' + data.data.id
+                    this.ModelMetaData.mo.modelStructure.legend = downloadUrl
+                })
+                .catch(alert)
+        },
+
+        addStructure(){
+            this.ModelMetaData.mo.modelStructure.push(
+                {
+                    legend: '',
+                    type: ''
+                }
+            )
+        },
+
+        removeStructure(i){
+            // console.log(i)
+            this.ModelMetaData.mo.modelStructure.splice(i,1)
+        },
+
+        addPurpose(){
+            this.ModelMetaData.pie.modelPurpose.push('')
+        },
+
+        removePurpose(i){
+            this.ModelMetaData.pie.modelPurpose.splice(i,1)
+        },
+
+        addAssumnption(){
+            this.ModelMetaData.pie.modelAssumption.push('')
+        },
+
+        removeAssumption(i){
+            this.ModelMetaData.pie.modelAssumption.splice(i,1)
+        },
+
+        addPrinciple(){
+            this.ModelMetaData.pie.basicPrinciple.push('')
+        },
+
+        removePrinciple(i){
+            this.ModelMetaData.pie.basicPrinciple.splice(i,1)
+        },
+
+        addclassificationInfo(){
+            this.ModelMetaData.pie.classificationInfo.push('')
+        },
+
+        removeclassificationInfo(i){
+            this.ModelMetaData.pie.classificationInfo.splice(i,1)
+        },
+
+        addCodeLanguage(){
+            this.ModelMetaData.pie.codeLanguage.push('')
+        },
+
+        removeCodeLanguage(i){
+            this.ModelMetaData.pie.codeLanguage.splice(i,1)
+        },
+
+        handleClose2(tag) {
+            this.ModelMetaData.mp.modelName.modelAlias.splice(this.ModelMetaData.mp.modelName.modelAlias.indexOf(tag), 1);
+        },
+
+        showInput() {
+            this.inputVisible = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput.$refs.input.focus();
+            });
+        },
+
+        showInput4() {
+            this.inputVisible4 = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput4.$refs.input.focus();
+            });
+        },
+
+        showInput5() {
+            this.inputVisible5 = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput5.$refs.input.focus();
+            });
+        },
+
+        showInput6() {
+            this.inputVisible6 = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput6.$refs.input.focus();
+            });
+        },
+
+        handleInputConfirm() {
+            let inputValue = this.inputValue;
+            if (inputValue) {
+                console.log(this.ModelMetaData.mp.modelName)
+                this.ModelMetaData.mp.modelName.modelAlias.push(inputValue);
+            }
+            this.inputVisible = false;
+            this.inputValue = '';
+        },
+
+        handleClose3(tag) {
+            this.ModelMetaData.mp.keywords.splice(this.ModelMetaData.mp.keywords.indexOf(tag), 1);
+        },
+
+        handleClose4(tag, i) {
+            this.ModelMetaData.mp.reference[i].author.splice(this.ModelMetaData.mp.reference[i].author.indexOf(tag), 1);
+        },
+
+        handleClose5(tag, i) {
+            this.ModelMetaData.mp.reference[i].agency.splice(this.ModelMetaData.mp.reference[i].agency.indexOf(tag), 1);
+        },
+
+        handleClose6(tag, i) {
+            this.ModelMetaData.pie.codeLanguage.splice(this.ModelMetaData.pie.codeLanguage.indexOf(tag), 1);
+        },
+
+        showInput3() {
+            this.inputVisible2 = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput2.$refs.input.focus();
+            });
+        },
+
+        handleInputConfirm3() {
+            let inputValue = this.inputValue2;
+            if (inputValue) {
+                this.ModelMetaData.mp.keywords.push(inputValue);
+            }
+            this.inputVisible2 = false;
+            this.inputValue2 = '';
+        },
+
+        handleInputConfirm4(i) {
+            let inputValue = this.inputValue4;
+            if (inputValue) {
+                this.ModelMetaData.mp.reference[i].author.push(inputValue);
+            }
+            this.inputVisible4 = false;
+            this.inputValue4 = '';
+        },
+
+        handleInputConfirm5(i) {
+            let inputValue = this.inputValue5;
+            if (inputValue) {
+                this.ModelMetaData.mp.reference[i].agency.push(inputValue);
+            }
+            this.inputVisible5 = false;
+            this.inputValue5 = '';
+        },
+
+        handleInputConfirm6(i) {
+            let inputValue = this.inputValue6;
+            if (inputValue) {
+                this.ModelMetaData.pie.codeLanguage.push(inputValue);
+            }
+            this.inputVisible6 = false;
+            this.inputValue6 = '';
+        },
+
+        addTitle(i, item, item2){
+            this.ModelMetaData.mp[item][item2][i].title.push('')
+        },
+
+        removeTitle(i, j, item, item2){
+            this.ModelMetaData.mp[item][item2][j].title.splice(i,1)
+        },
+
+        addAffliation(i, item, item2){
+
+            this.ModelMetaData.mp[item][item2][i].affiliation.push('')
+        },
+
+        removeAffliation(i, j, item, item2){
+            this.ModelMetaData.mp[item][item2][j].affiliation.splice(i,1)
+        },
+
+        addEmail(i, item, item2){
+            this.ModelMetaData.mp[item][item2][i].email.push('')
+        },
+
+        removeEmail(i, j, item, item2){
+            this.ModelMetaData.mp[item][item2][j].email.splice(i,1)
+        },
+
+        addPhone(i, item, item2){
+            this.ModelMetaData.mp[item][item2][i].phone.push('')
+        },
+
+        removePhone(i, j, item, item2){
+            this.ModelMetaData.mp[item][item2][j].phone.splice(i,1)
+        },
+
+        addFax(i, item, item2){
+            this.ModelMetaData.mp[item][item2][i].fax.push('')
+        },
+
+        removeFax(i, j, item, item2){
+            this.ModelMetaData.mp[item][item2][j].fax.splice(i,1)
+        },
+
+        addPersonalPage(i, item, item2){
+            this.ModelMetaData.mp[item][item2][i].personalPage.push('')
+        },
+
+        removePersonalPage(i, j, item, item2){
+            this.ModelMetaData.mp[item][item2][j].personalPage.splice(i,1)
+        },
+
+        addAuthor(item, item2){
+            this.ModelMetaData.mp[item][item2].push({
+                contactorName: {
+                    fullName: '',
+                    surname: ''
+                },
+                contactorAddress: {
+                    country: '',
+                    province: '',
+                    city: '',
+                    address: '',
+                    postCode: ''
+                },
+                title: [''],
+                affiliation: [''],
+                email: [''],
+                phone: [''],
+                fax: [''],
+                personalPage: ['']
+            })
+        },
+
+        removeAuthor(i, item, item2){
+            this.ModelMetaData.mp[item][item2].splice(i,1)
+        },
+
+        addSpatialReference(){
+            this.ModelMetaData.mp.referenceSystem.spatialReference.push({
+                type: '',
+                name: ''
+            })
+        },
+
+        removeSpatialReference(i){
+            this.ModelMetaData.mp.referenceSystem.spatialReference.splice(i, 1)
+        },
+
+        addRelateItem(){
+            this.ModelMetaData.mp.relateItem.push({
+                projectName: '',
+                projectId: '',
+                fundingAgency: '',
+                type: ''
+            })
+        },
+
+        removeRelateItem(i){
+            this.ModelMetaData.mp.relateItem.splice(i, 1)
+        },
+
+        addReference(){
+            this.ModelMetaData.mp.reference.push({
+                title: '',
+                author: [],
+                agency: [],
+                press: '',
+                reel: '',
+                issue: '',
+                page: '',
+                publishDate:'',
+                url: ''
+            })
+        },
+
+        removeReference(i){
+            this.ModelMetaData.mp.reference.splice(i, 1)
+        },
+
+        beforeUpload(file) {
+            const FILE_NAME = file.name
+            if (FILE_NAME.substring(FILE_NAME.lastIndexOf('.')) !== '.jpg' && FILE_NAME.substring(FILE_NAME.lastIndexOf('.')) !== '.png') {
+                this.$message.warning('仅支持.jpg和.png文件')
+                return false
+            }
+        },
+
+        tabclick(tab, event){
+            if (tab.index == 3){
+                tinymce.init({
+                    selector: '#singleFormula',
+                    plugins: "kityformula-editor",
+                    toolbar: "kityformula-editor",
+                    readonly: this.isCreator == 'false'
+                })
+            }
+            if (tab.index == 4){
+                tinymce.init({
+                    selector: '#singleDescription',
+                    plugins: 'link',
+                    toolbar: 'link',
+                    readonly: this.isCreator == 'false',
+                    file_picker_callback: function (callback, value, meta) {
+                        //文件分类
+                        var filetype='.pdf, .txt, .doc, .docx';
+                        //后端接收上传文件的地址
+                        var upurl='http://221.226.60.2:8082/data';
+                        //模拟出一个input用于添加本地文件
+                        var input = document.createElement('input');
+                        input.setAttribute('type', 'file');
+                        input.setAttribute('accept', filetype);
+                        input.click();
+                        input.onchange = function() {
+                            var file = this.files[0];
+                            console.log(file.name);
+                            const formData = new FormData()
+                            formData.append('datafile', file);
+                            formData.append('name', 'Instructions');
+                            fetch(upurl, {method: 'POST', body: formData})
+                                .then(response => {
+                                    if(response.status == 200){
+                                        return response.json()
+                                    }
+                                    else throw new Error('服务端错误')
+                                })
+                                .then((data) => {
+                                    alert('上传成功')
+                                    let downloadUrl = upurl + '/' + data.data.id
+                                    callback(downloadUrl);
+                                })
+                                .catch(alert)
+                        };
+                    },
+                })
+            }
+        },
+
+        collapseChange(newVal){
+            if (newVal['1'] == 1 || newVal['2'] == 1 || newVal['3'] == 1 || newVal['4'] == 1 || newVal['5'] == 1){
+                tinymce.init({
+                    selector: '#singleModelCalibration',
+                    readonly: this.isCreator == 'false'
+                    // plugins: "code kityformula-editor",
+                    // toolbar: "code kityformula-editor",
+                })
+            }
+            if (newVal['1'] == 2 || newVal['2'] == 2 || newVal['3'] == 2 || newVal['4'] == 2 || newVal['5'] == 2){
+                tinymce.init({
+                    selector: '#singleModelValidation',
+                    readonly: this.isCreator == 'false'
+                    // plugins: "code kityformula-editor",
+                    // toolbar: "code kityformula-editor",
+                })
+            }
+            if (newVal['1'] == 3 || newVal['2'] == 3 || newVal['3'] == 3 || newVal['4'] == 3 || newVal['5'] == 3){
+                tinymce.init({
+                    selector: '#singleEffectivenessAnalysis',
+                    readonly: this.isCreator == 'false'
+                    // plugins: "code kityformula-editor",
+                    // toolbar: "code kityformula-editor",
+                })
+            }
+            if (newVal['1'] == 4 || newVal['2'] == 4 || newVal['3'] == 4 || newVal['4'] == 4 || newVal['5'] == 4){
+                tinymce.init({
+                    selector: '#singleUncertaintyAnalysis',
+                    readonly: this.isCreator == 'false'
+                    // plugins: "code kityformula-editor",
+                    // toolbar: "code kityformula-editor",
+                })
+            }
+            if (newVal['1'] == 5 || newVal['2'] == 5 || newVal['3'] == 5 || newVal['4'] == 5 || newVal['5'] == 5){
+                tinymce.init({
+                    selector: '#singleSensitivityAnalysis',
+                    readonly: this.isCreator == 'false'
+                    // plugins: "code kityformula-editor",
+                    // toolbar: "code kityformula-editor",
+                })
+            }
+        },
+
+        querySearch(queryString, cb) {
+            var classification = this.classificationList;
+            var results = queryString ? classification.filter(this.createFilter(queryString)) : classification;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+
+        createFilter(queryString) {
+            return (classification) => {
+                return (classification.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+
+        judgeIsCreator(){
+            axios.get('/modelItem/matchLoginerCreater/'+this.modelId
+            ).then(
+                res => {
+                    let data = res.data.data
+                    this.isCreator = data
+                }
+            )
+        },
+
+        objectValueAllEmpty(data) {
+            let flag = true;
+            let _this = this;
+            function judgeChildren(obj) {
+                for(var key in obj){
+                    if(typeof obj[key] === 'string'){
+                        // 字符串
+                        if((obj[key] != null) && (obj[key] != '') && (obj[key] != undefined)){
+                            flag = false
+                            //可以在此将key赋值给一个全局变量，判断是哪个属性值为空
+                            return
+                        }
+                    }else if(Array.isArray(obj[key])){
+                        // 数组
+                        obj[key].forEach((item)=>{
+                            judgeChildren(item)
+                        })
+                    }else{
+                        //对象
+                        judgeChildren(obj[key])
+                    }
+                }
+            }
+            judgeChildren(data);
+            return flag;
+        },
+
+        judgeRequired(){
+            if (this.ModelMetaData.mp.modelVersion.numbering == '' || this.ModelMetaData.mp.modelVersion.purpose == undefined || this.ModelMetaData.mp.modelVersion.date == '' || this.ModelMetaData.mp.modelVersion.author[0].contactorName.fullName == '' || this.ModelMetaData.mp.modelVersion.author[0].contactorName.surname == ''
+            || this.ModelMetaData.mp.descriptionInfo.descAbstract == '' || this.ModelMetaData.mp.developInfo.startDate == '' || this.ModelMetaData.mp.developInfo.process == '' || this.ModelMetaData.mp.developInfo.developer[0].contactorName.fullName == '' || this.ModelMetaData.mp.developInfo.developer[0].contactorName.surname == ''
+            || this.ModelMetaData.mp.metaDataVersion.purpose == '' || this.ModelMetaData.mp.metaDataVersion.date == '' || this.ModelMetaData.mp.metaDataVersion.author[0].contactorName.fullName == '' || this.ModelMetaData.mp.metaDataVersion.author[0].contactorName.surname == ''){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if (this.ModelMetaData.pie.modelCategory == undefined || this.ModelMetaData.pie.classificationInfo[0] == ''){
+                this.$message({
+                    message: '请完善设计理念！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.ModelMetaData.mp.referenceSystem.temporalReference.name != '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].type != '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].name != '') && (this.ModelMetaData.mp.referenceSystem.temporalReference.name == '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].type == '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].name == '')){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if (this.ModelMetaData.mp.modelVersion.purpose != 1 && this.ModelMetaData.mp.modelVersion.changeContent == ''){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if (this.ModelMetaData.mp.metaDataVersion.purpose != 1 && this.ModelMetaData.mp.metaDataVersion.changeContent == ''){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if (this.ModelMetaData.mp.publishInfo.publishMode.openAccess == true && this.ModelMetaData.mp.publishInfo.publishMode.openSourceProtocol == ''){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.publishInfo) == false) && (this.ModelMetaData.mp.publishInfo.publishMode.openAccess === '' || this.ModelMetaData.mp.publishInfo.publishMode.accessMethod == '' || this.ModelMetaData.mp.publishInfo.publishMode.usageMethod == '' || this.ModelMetaData.mp.publishInfo.publishMethod.transmitMode == ''
+                || this.ModelMetaData.mp.publishInfo.publishMethod.accessLocation == '' || this.ModelMetaData.mp.publishInfo.publishDate == undefined || this.ModelMetaData.mp.publishInfo.publisher[0].contactorName.fullName == '' || this.ModelMetaData.mp.publishInfo.publisher[0].contactorName.surname == '')){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.pie.applicationScope) == false) && (this.ModelMetaData.pie.applicationScope.timeScope.resolution == '' || this.ModelMetaData.pie.applicationScope.timeScope.scale == '' || this.ModelMetaData.pie.applicationScope.timeScope.step == '' || this.ModelMetaData.pie.applicationScope.timeScope.scope == ''
+            ||this.ModelMetaData.pie.applicationScope.spatialScope.dimension == '' || this.ModelMetaData.pie.applicationScope.spatialScope.gridType == '' || this.ModelMetaData.pie.applicationScope.spatialScope.resolution == '' || this.ModelMetaData.pie.applicationScope.spatialScope.scale == '' || this.ModelMetaData.pie.applicationScope.spatialScope.scope == '')){
+                this.$message({
+                    message: '请完善设计理念！',
+                    type: 'warning'
+                });
+                return false
+            }else if (this.ModelMetaData.mo.modelStructure.legend != '' & (this.ModelMetaData.mo.modelStructure.type == '' || this.ModelMetaData.mo.modelStructure.type == undefined)){
+                this.$message({
+                    message: '请完善模型架构！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.di.inOutPara) == false) && (this.ModelMetaData.di.inOutPara[0].name == '' || this.ModelMetaData.di.inOutPara[0].type == '' || this.ModelMetaData.di.inOutPara[0].defaultValue == '' || this.ModelMetaData.di.inOutPara[0].format == '')){
+                this.$message({
+                    message: '请完善模型数据！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mdt.runTemplates) == false) && (this.ModelMetaData.mdt.runTemplates[0].configInfo[0].name == '' || this.ModelMetaData.mdt.runTemplates[0].configInfo[0].type == '' || this.ModelMetaData.mdt.runTemplates[0].configInfo[0].value == '')){
+                this.$message({
+                    message: '请完善运行测试！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.relateItem) == false) && (this.ModelMetaData.mp.relateItem[0].projectName == '' || this.ModelMetaData.mp.relateItem[0].projectId == '' || this.ModelMetaData.mp.relateItem[0].fundingAgency == '')){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.reference) == false) && (this.ModelMetaData.mp.reference[0].title == '' || this.ModelMetaData.mp.reference[0].author == '' ||this.ModelMetaData.mp.reference[0].press == '')){
+                this.$message({
+                    message: '请完善基本信息！',
+                    type: 'warning'
+                });
+                return false
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.di.term) == false) && (this.ModelMetaData.di.term[0].name == '' || this.ModelMetaData.di.term[0].desc == '')){
+                this.$message({
+                    message: '请完善模型数据！',
+                    type: 'warning'
+                });
+                return false
+            }
+            return true
         }
     },
 
@@ -3556,6 +4982,29 @@ var info=new Vue({
 
         // document.body.scrollTop = 0;
         // document.documentElement.scrollTop = 0;
+
+        axios.get('/modelItem/getMetaData/'+this.modelId
+        ).then(
+            res => {
+                if(res.data.code==-1){
+                    this.confirmLogin()
+                }else{
+                    let data = res.data.data
+                    // 如果是null，则不操作
+                    if (data == null){
+                        return
+                    }
+                    this.ModelMetaData = {...data}
+                    this.ModelMetaDataList.push(this.ModelMetaData)
+                    // this.insertMetaData(this.ModelMetaData, data)
+                }
+            }
+        )
+
+        this.judgeIsCreator()
+
+        this.nowLanguage = window.localStorage.getItem("language");
+
 
     }
 })

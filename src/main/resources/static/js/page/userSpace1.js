@@ -564,10 +564,7 @@ function initTinymce(idStr,callBack,callBackPara){
         toolbar:
             "undo redo | fontselect | fontsizeselect | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image mathjax",
         mathjax: {
-            lib: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js', //required path to mathjax
-            //symbols: {start: '\\(', end: '\\)'}, //optional: mathjax symbols
-            //className: "math-tex", //optional: mathjax element class
-            //configUrl: '/your-path-to-plugin/@dimakorotkov/tinymce-mathjax/config.js' //optional: mathjax config js
+            lib: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
         },
         file_picker_types: 'image',
         file_picker_callback: function (cb, value, meta) {
