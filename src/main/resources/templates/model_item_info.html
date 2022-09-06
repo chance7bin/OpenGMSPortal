@@ -222,15 +222,14 @@
 
             <div th:replace="fragments/itemInfoModules :: model_related_resource(${references}, true)"></div>
 
-            <!--先隐藏该模块，要打开的话把 1== 0 这行删了 开启第一行注释-->
-            <!--<div th:if="${history!=true}" id="metadata" class="detail_block">-->
-            <div th:if="1 == 0" id="metadata" class="detail_block">
+
+            <div th:if="${history!=true}" id="metadata" class="detail_block" v-if="nowLanguage=='zh-cn'">
                 <div class="block_head">
                     <div class="head_text">
-                        <h4>Model Metadata</h4>
+                        <h4>模型元数据</h4>
                     </div>
                     <span class="blockEdit">
-            <el-tooltip popper-class="fontsize-15" content="Edit" effect="light" placement="top">
+            <el-tooltip popper-class="fontsize-15" content="编辑" effect="light" placement="top">
             <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                        type="primary" icon="el-icon-edit" @click="getMetadata" circle></el-button>
             </el-tooltip>
@@ -242,159 +241,370 @@
             </el-tooltip>
             </span>
                 </div>
-                <el-tabs class="block_content" v-model="metaDataTab" type="border-card" stretch="true">
-                    <el-tab-pane label="Overview" name="first">
-                        <table class="wzhTable" style="width: 100%" v-if="!checkObjAllProptNull(metadata.overview)">
-                            <tr v-if="metadata.overview.name!=undefined&&metadata.overview.name!=''">
-                                <th class="tableSubTitle">Name</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.overview.name}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.overview.version!=undefined&&metadata.overview.version!=''">
-                                <th class="tableSubTitle">Version</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.overview.version}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.overview.modelType!=undefined&&metadata.overview.modelType!=''">
-                                <th class="tableSubTitle">Model Type</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.overview.modelType}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.overview.modelDomain!=undefined&&metadata.overview.modelDomain.length>0">
-                                <th class="tableSubTitle">Model Domain</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    <div class="flexJustStart cell">
-                                        <div class="wzhTag flexCenter" v-for="domain in metadata.overview.modelDomain">
-                                            {{domain}}
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.overview.scale!=undefined&&metadata.overview.scale!=''">
-                                <th class="tableSubTitle">Sacle</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.overview.scale}}
-                                </th>
-                            </tr>
-                        </table>
-                        <div class="text-center" v-else>
-                            <p>There is no overview about this model.
-                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add
-                                overview.</p>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="Design" name="second">
-                        <table class="wzhTable" style="width: 100%" v-if="!checkObjAllProptNull(metadata.design)">
-                            <tr v-if="metadata.design.purpose!=undefined&&metadata.design.purpose!=''">
-                                <th class="tableSubTitle">Purpose</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.design.purpose}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.design.principles!=undefined&&metadata.design.principles.length>0">
-                                <th class="tableSubTitle">Principles</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    <div class="flexJustStart cell">
-                                        <div class="wzhTag flexCenter" v-for="principle in metadata.design.principles">
-                                            {{principle}}
-                                        </div>
-                                    </div>
 
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.design.incorporatedModels!=undefined&&metadata.design.incorporatedModels.length>0">
-                                <th class="tableSubTitle">Incorporated Models</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    <div class="flexJustStart cell">
-                                        <div class="wzhTag flexCenter"
-                                             v-for="incorporatedModel in metadata.design.incorporatedModels">
-                                            {{incorporatedModel}}
-                                        </div>
-                                    </div>
+<!--                <el-tabs class="block_content" v-model="metaDataTab" type="border-card" stretch="true">-->
+<!--                    <el-tab-pane label="基本信息" name="second">-->
+<!--&lt;!&ndash;                        <el-form label-position="top" v-if="!(JSON.stringify(mp) === JSON.stringify(ModelMetaData.mp))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-form-item label="模型名称:" v-if="!(JSON.stringify(mp.modelName.modelName) === JSON.stringify(ModelMetaData.mp.modelName.modelName))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{ModelMetaData.mp.modelName.modelName}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
 
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.design.framework!=undefined&&metadata.design.framework!=''">
-                                <th class="tableSubTitle">Model part of larger framework:</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.design.framework}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.design.process!=undefined&&metadata.design.process.length>0">
-                                <th class="tableSubTitle">Incorporated Models</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    <div class="flexJustStart cell">
-                                        <div class="wzhTag flexCenter" v-for="process in metadata.design.process">
-                                            {{process}}
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </table>
-                        <div class="text-center" v-else>
-                            <p>There is no design info about this model.
-                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add
-                                overview.</p>
-                        </div>
-                    </el-tab-pane>
+<!--&lt;!&ndash;                            <el-form-item label="模型别名:" v-if="!(JSON.stringify(mp.modelName.modelAlias) === JSON.stringify(ModelMetaData.mp.modelName.modelAlias))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.mp.modelName.modelAlias">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
 
-                    <el-tab-pane label="Usage" name="third">
-                        <table class="wzhTable" style="width: 100%" v-if="!checkObjAllProptNull(metadata.usage)">
-                            <tr v-if="metadata.usage.information!=undefined&&metadata.usage.information!=''">
-                                <th class="tableSubTitle">Information</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.usage.information}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.usage.initialization!=undefined&&metadata.usage.initialization!=''">
-                                <th class="tableSubTitle">Initialization</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.usage.initialization}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.usage.hardware!=undefined&&metadata.usage.hardware!=''">
-                                <th class="tableSubTitle">Hardware Requirements</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.usage.hardware}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.usage.software!=undefined&&metadata.usage.software!=''">
-                                <th class="tableSubTitle">Software Requirements</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    {{metadata.usage.software}}
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.usage.inputs!=undefined&&metadata.usage.inputs.length>0">
-                                <th class="tableSubTitle">Inputs</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    <div class="flexJustStart cell">
-                                        <div class="wzhTag flexCenter" v-for="input in metadata.usage.inputs">
-                                            {{input}}
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                            <tr v-if="metadata.usage.outputs!=undefined&&metadata.usage.outputs.length>0">
-                                <th class="tableSubTitle">Outputs</th>
-                                <th class="tableContent wzhScrollbar" style="max-width: 660px;">
-                                    <div class="flexJustStart cell">
-                                        <div class="wzhTag flexCenter" v-for="output in metadata.usage.outputs">
-                                            {{output}}
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </table>
-                        <div class="text-center" v-else>
-                            <p>There is no usage info about this model.
-                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add
-                                overview.</p>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
+<!--&lt;!&ndash;                            <el-form-item label="模型版本:" v-if="!(JSON.stringify(mp.modelVersion) == JSON.stringify(ModelMetaData.mp.modelVersion))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    系列名：{{ModelMetaData.mp.modelVersion.seriesName}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    编号：{{ModelMetaData.mp.modelVersion.numbering}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <span&ndash;&gt;-->
+<!--&lt;!&ndash;                                      v-for="(item, index) in purposeOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      :key="index"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      :value="item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      v-if="ModelMetaData.mp.modelVersion.purpose == item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    >&ndash;&gt;-->
+<!--&lt;!&ndash;                                      目的：{{ item.label }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    修改内容：{{ModelMetaData.mp.modelVersion.changeContent}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="关键字:" v-if="!(JSON.stringify(mp.keywords) === JSON.stringify(ModelMetaData.mp.keywords))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.mp.keywords">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="占用空间:" v-if="!(JSON.stringify(mp.occupySpace) === JSON.stringify(ModelMetaData.mp.occupySpace))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{ModelMetaData.mp.occupySpace}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </el-form>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center"  v-if="!(JSON.stringify(mp) === JSON.stringify(ModelMetaData.mp))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>The above is part of the information. You can click <span><a class="cursorPointer" @click="getMetadata">here</a></span> to see full information.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center"  v-if="(JSON.stringify(mp) === JSON.stringify(ModelMetaData.mp))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>There is no Model Preparation about this model.&ndash;&gt;-->
+<!--&lt;!&ndash;                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add&ndash;&gt;-->
+<!--&lt;!&ndash;                                overview.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        <div class="text-center">-->
+<!--                            <p> <span><a class="cursorPointer" @click="getMetadata">点击</a></span> 查看基本信息.</p>-->
+<!--                        </div>-->
+<!--                    </el-tab-pane>-->
+
+<!--                    <el-tab-pane label="设计理念" name="first">-->
+<!--&lt;!&ndash;                        <el-form label-position="top" v-if="!(JSON.stringify(pie) == JSON.stringify(ModelMetaData.pie))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-form-item label="建模目的:" v-if="!(JSON.stringify(pie.modelPurpose) == JSON.stringify(ModelMetaData.pie.modelPurpose)) ">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.pie.modelPurpose">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="基本原理:" v-if="!(JSON.stringify(pie.basicPrinciple) == JSON.stringify(ModelMetaData.pie.basicPrinciple))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.pie.basicPrinciple">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="模型类型:" v-if="!(JSON.stringify(pie.modelCategory) == JSON.stringify(ModelMetaData.pie.modelCategory))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.pie.modelCategory">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <span&ndash;&gt;-->
+<!--&lt;!&ndash;                                      v-for="(item, index) in modelTypeOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      :key="index"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      :value="item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      v-if="tag == item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    >&ndash;&gt;-->
+<!--&lt;!&ndash;                                      {{ item.label }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="分类信息:" v-if="!(JSON.stringify(pie.classificationInfo) == JSON.stringify(ModelMetaData.pie.classificationInfo))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.pie.classificationInfo">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="编程语言:" v-if="!(JSON.stringify(pie.codeLanguage) == JSON.stringify(ModelMetaData.pie.codeLanguage))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.pie.codeLanguage">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </el-form>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center" v-if="!(JSON.stringify(pie) == JSON.stringify(ModelMetaData.pie))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>The above is part of the information. You can click <span><a class="cursorPointer" @click="getMetadata">here</a></span> to see full information.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center" v-if="(JSON.stringify(pie) == JSON.stringify(ModelMetaData.pie))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>There is no Pre-integration Evaluation about this model.&ndash;&gt;-->
+<!--&lt;!&ndash;                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add&ndash;&gt;-->
+<!--&lt;!&ndash;                                overview.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        <div class="text-center">-->
+<!--                            <p> <span><a class="cursorPointer" @click="getMetadata">点击</a></span> 查看设计理念.</p>-->
+<!--                        </div>-->
+<!--                    </el-tab-pane>-->
+
+<!--                    <el-tab-pane label="模型架构" name="third">-->
+<!--&lt;!&ndash;                        <el-form label-position="top" v-if="!(JSON.stringify(mo) === JSON.stringify(ModelMetaData.mo))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-form-item label="模型结构:" v-if="!(JSON.stringify(mo.modelStructure) === JSON.stringify(ModelMetaData.mo.modelStructure))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <el-row type="flex" justify="center" align="middle">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-col :span="7">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <span&ndash;&gt;-->
+<!--&lt;!&ndash;                                                  v-for="(item, index) in legendOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                  :key="index"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                  :value="item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                  v-if="ModelMetaData.mo.modelStructure.type == item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                >&ndash;&gt;-->
+<!--&lt;!&ndash;                                                 类型： {{ item.label }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-col :span="17">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <el-row :gutter="10">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-col :span="5">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <el-image&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      style="width: 100px; height: 100px; vertical-align: center"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      :src="ModelMetaData.mo.modelStructure.legend"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      :preview-src-list="[ModelMetaData.mo.modelStructure.legend]">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    </el-image>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <br>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="子模型信息:" v-if="!(JSON.stringify(mo.subModel) === JSON.stringify(ModelMetaData.mo.subModel))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <el-table :data="ModelMetaData.mo.subModel" stripe style="width: 100%">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="modelName" label="模型名称" width="180">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.modelName}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="version" label="版本" width="180">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.version}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <el-table-column prop="versionId" label="版本编号" width="250">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                                <el-tag>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                                    {{scope.row.versionId}}&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                                </el-tag>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                            </template>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        </el-table-column>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="usage" label="用途">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.usage}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </el-table>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <br>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="耦合模式" v-if="!(JSON.stringify(mo.couplingMode) === JSON.stringify(ModelMetaData.mo.couplingMode))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{ModelMetaData.mo.couplingMode}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </el-form>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center" v-if="(JSON.stringify(mo) === JSON.stringify(ModelMetaData.mo))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>There is no Model Orchestration about this model.&ndash;&gt;-->
+<!--&lt;!&ndash;                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add&ndash;&gt;-->
+<!--&lt;!&ndash;                                overview.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        <div class="text-center">-->
+<!--                            <p> <span><a class="cursorPointer" @click="getMetadata">点击</a></span> 查看模型架构.</p>-->
+<!--                        </div>-->
+<!--                    </el-tab-pane>-->
+
+<!--                    <el-tab-pane label="模型数据" name="fourth">-->
+<!--&lt;!&ndash;                        <el-form label-position="top"  v-if="!(JSON.stringify(di) === JSON.stringify(ModelMetaData.di))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-form-item label="术语:" v-if="!(JSON.stringify(di.term) === JSON.stringify(ModelMetaData.di.term))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag :key="tag" v-for="tag in ModelMetaData.di.term">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{tag}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="输入、输出及参数信息:" v-if="!(JSON.stringify(di.inOutPara) === JSON.stringify(ModelMetaData.di.inOutPara))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <el-table :data="ModelMetaData.di.inOutPara" stripe style="width: 100%">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="name" label="名称" width="180">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.name}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="type" label="类型" width="180">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <span&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      v-for="(item, index) in typeOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      :key="index"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      :value="item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      v-if="scope.row.type == item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    >&ndash;&gt;-->
+<!--&lt;!&ndash;                                                      {{ item.label }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="desc" label="描述">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.desc}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="unit" label="单位">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.unit}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="limit" label="约束">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.limit}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="defaultValue" label="默认值">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.defaultValue}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-table-column prop="format" label="格式">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <template slot-scope="scope">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    {{scope.row.format}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-table-column>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </el-table>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </el-form>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center"  v-if="(JSON.stringify(di) === JSON.stringify(ModelMetaData.di))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>There is no Data Interoperability about this model.&ndash;&gt;-->
+<!--&lt;!&ndash;                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add&ndash;&gt;-->
+<!--&lt;!&ndash;                                overview.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        <div class="text-center">-->
+<!--                            <p> <span><a class="cursorPointer" @click="getMetadata">点击</a></span> 查看模型数据.</p>-->
+<!--                        </div>-->
+<!--                    </el-tab-pane>-->
+
+<!--                    <el-tab-pane label="运行测试" name="fifth">-->
+<!--&lt;!&ndash;                        <el-form label-position="top" v-if="!(JSON.stringify(mdt) === JSON.stringify(ModelMetaData.mdt))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-form-item label="运行时间范围:" v-if="!(JSON.stringify(mdt.runTime) === JSON.stringify(ModelMetaData.mdt.runTime))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{ModelMetaData.mdt.runTime}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <el-form-item label="运行示例:" v-if="!(JSON.stringify(mdt.runTemplates) === JSON.stringify(ModelMetaData.mdt.runTemplates))">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div v-for="(item2, index2) in ModelMetaData.mdt.runTemplates" :key="index2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <el-row :gutter="10">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-col :span="6">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                示例描述：{{item2.desc}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-col :span="14">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <el-row :gutter="10" v-for="(item2, index) in item2.configInfo" :key="index" style="margin-bottom:10px">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-col :span="7">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                       名称： {{item2.name}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-col :span="4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                        <span&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          v-for="(item, index) in typeOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          :key="index"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          :value="item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                          v-if="item2.type == item.value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                        >&ndash;&gt;-->
+<!--&lt;!&ndash;                                                         类型： {{ item.label }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                        </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <el-col :span="4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                       值： {{item2.value}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    </el-tag>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </el-row>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;                            <el-form-item label="使用说明:" v-if="!(JSON.stringify(mdt.instruction) === JSON.stringify(ModelMetaData.mdt.instruction))">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                <el-tag>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    {{ModelMetaData.mdt.instruction}}&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                </el-tag>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                            </el-form-item>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                        </el-form>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center" v-if="(JSON.stringify(mdt) === JSON.stringify(ModelMetaData.mdt))">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>There is no Test about this model.&ndash;&gt;-->
+<!--&lt;!&ndash;                                You can <span><a class="cursorPointer" @click="getMetadata">click</a></span> to add&ndash;&gt;-->
+<!--&lt;!&ndash;                                overview.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        <div class="text-center">-->
+<!--                            <p> <span><a class="cursorPointer" @click="getMetadata">点击</a></span> 查看运行测试.</p>-->
+<!--                        </div>-->
+<!--                    </el-tab-pane>-->
+<!--                </el-tabs>-->
+
+                <el-table class="block_content" :data="ModelMetaDataList" border :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" style="width: auto">
+                    <el-table-column prop="mp.modelVersion.numbering" label="模型版本" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="mp.metaDataVersion.id" label="元数据版本" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="createTime" label="元数据创建日期" style="width: 20%">
+                    </el-table-column>
+                    <el-table-column prop="editTime" label="元数据更新日期" style="width: 20%">
+                    </el-table-column>
+                    <el-table-column label="操作" style="width: 10%">
+                        <template slot-scope="scope">
+                            <el-button @click="getMetadata" type="text" size="small">查看</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
 
             </div>
 
@@ -838,7 +1048,7 @@
                 </div>
             </el-card>
             <el-card v-if="relateType=='dataSpaceFile'" class="flexCenter" style="min-height: 260px;flex:1">
-                <el-button round size="mini" @click='checkPersonData()' type="primary">{{htmlJSON.SelectFromMySpace}}</el-button>
+                <el-button round size="mini" @click='checkPersonData()' type="primary">Select From My Space</el-button>
             </el-card>
             <el-card v-if="relateType=='exLink'" v-loading="checkUrlValidLoading" style="min-height: 260px;flex:1">
                 <div class="flexCol flexAlignCenter">
@@ -868,9 +1078,9 @@
             <!--<span style="float:left;font-size: 16px">Or you can click <a style="cursor:pointer" @click="jump">here</a> to create a new one.</span>-->
             <el-button @click="relatedResourceVisible = false;">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
-                :confirm-button-text='htmlJSON.Yes'
-                :cancel-button-text='htmlJSON.No'
-                :title="htmlJSON.SureSubmitChanges"
+                confirm-button-text='Yes'
+                cancel-button-text='No'
+                title="Are you sure to submit changes?"
                 @confirm="addRelateResources()"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.OK}}</el-button>
@@ -963,11 +1173,7 @@
                     <div v-show="languageAdd.show">
                         <el-select v-model="languageAdd.local" filterable :placeholder="htmlJSON.SelectLanguage"
                                    style="width:80%;float: left;">
-                            <el-option
-                                v-for="item in languageList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item">
+                            <el-option v-for="item in languageList" :key="item.value" :label="item.label" :value="item">
                                 <span style="float: left">{{ item.label }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                             </el-option>
@@ -979,10 +1185,7 @@
                     </div>
                 </el-collapse-transition>
                 <div class="clearfix" style="height:400px;overflow: auto;">
-                    <el-table
-                        :data="localizationList"
-                        :show-header="false"
-                    >
+                    <el-table :data="localizationList" :show-header="false">
                         <el-table-column>
                             <template slot-scope="props">
                                 <el-tooltip class="item" effect="light" :content="props.row.localCode" placement="top">
@@ -1016,8 +1219,8 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editDescription = false">{{htmlJSON.Cancel}}</el-button>
-            <el-popconfirm :confirm-button-text='htmlJSON.Yes' :cancel-button-text='htmlJSON.No'
-                           :title="htmlJSON.SureSubmitChanges"
+            <el-popconfirm confirm-button-text='Yes' cancel-button-text='No'
+                           title="Are you sure to submit changes?"
                            @confirm="submitDescription"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
@@ -1025,236 +1228,1377 @@
         </span>
     </el-dialog>
 
-    <el-dialog v-cloak title="Edit Model Metadata" :visible.sync="editMetadata" width="72%">
-        <el-tabs v-model="metaDataTab">
-            <el-tab-pane label="Overview" name="first">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Name:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.overview.name"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Version:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.overview.version"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Model Type:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.overview.modelType"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Model Domain:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <textarea class="form-control" id="modelDomainInput"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Scale:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.overview.scale"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
+    <el-dialog v-cloak title="模型元数据" :visible.sync="editMetadata" width="85%" :close-on-click-modal="false">
+        <el-tabs v-model="metaDataTab" @tab-click="tabclick">
+            <el-tab-pane label="基本信息" name="first">
+                <el-form label-position="left" :rules="rules3">
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>模型名称
+                            </template>
+                            <el-form-item>
+                                <el-row>
+                                    <el-col :span="1"><span style="color: red">*&nbsp;</span>名称</el-col>
+                                    <el-col :span="4">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.modelName.modelName" style="width: 200px; margin-bottom: 5px"></el-input>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="1">别名</el-col>
+                                    <el-col :span="23">
+                                        <el-tag :closable="!(isCreator == 'false')" :key="tag" v-for="tag in ModelMetaData.mp.modelName.modelAlias" :disable-transitions="false" @close="handleClose2(tag)">
+                                            {{tag}}
+                                        </el-tag>
+                                        <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
+                                        </el-input>
+                                        <el-button :disabled="isCreator == 'false'" v-else class="button-new-tag" size="small" @click="showInput">+</el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
 
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>模型版本
+                            </template>
+                            <el-form-item>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">系列名</el-col>
+                                    <el-col :span="4">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.modelVersion.seriesName"></el-input>
+                                    </el-col>
+                                </el-row>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>版本号</el-col>
+                                    <el-col :span="4">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.modelVersion.numbering">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>目的</el-col>
+                                    <el-col :span="4">
+                                        <el-row>
+                                            <el-select clearable :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.mp.modelVersion.purpose" placeholder="请选择">
+                                                <el-option v-for="item in purposeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                            </el-select>
+                                        </el-row>
+                                    </el-col>
+                                </el-row>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span v-if="(ModelMetaData.mp.modelVersion.purpose != 1) && (ModelMetaData.mp.modelVersion.purpose != undefined) && (ModelMetaData.mp.modelVersion.purpose != '')" style="color: red">*&nbsp;</span>修改内容</el-col>
+                                    <el-col :span="5">
+                                        <el-input :disabled="isCreator == 'false'" type="textarea" v-model="ModelMetaData.mp.modelVersion.changeContent">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>创建/修改日期</el-col>
+                                    <el-col :span="5">
+                                        <el-row>
+                                            <el-col>
+                                                <el-date-picker :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.modelVersion.date" type="date">
+                                                </el-date-picker>
+                                            </el-col>
+                                        </el-row>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>作者</el-col>
+                                    <el-col :span="22">
+                                        <el-table :data="ModelMetaData.mp.modelVersion.author">
+                                            <el-table-column property="contactorName" label="* 姓名" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.surname" placeholder="姓氏"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.fullName" placeholder="名字"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="contactorAddress" label="联系地址" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.country" placeholder="国家"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.province" placeholder="省份"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.city" placeholder="城市"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.address" placeholder="具体地址"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.postCode" placeholder="邮编"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="title" label="称谓" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.title" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.title[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addTitle(scope.$index, 'modelVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeTitle(index, scope.$index, 'modelVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="affiliation" label="隶属机构" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.affiliation" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.affiliation[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addAffliation(scope.$index, 'modelVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeAffliation(index, scope.$index, 'modelVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="email" label="邮箱" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.email" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.email[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addEmail(scope.$index, 'modelVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeEmail(index, scope.$index, 'modelVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="phone" label="电话" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.phone" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.phone[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPhone(scope.$index, 'modelVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePhone(index, scope.$index, 'modelVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="fax" label="传真" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.fax" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.fax[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addFax(scope.$index, 'modelVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeFax(index, scope.$index, 'modelVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="personalPage" label="个人主页" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.personalPage" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.personalPage[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPersonalPage(scope.$index, 'modelVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePersonalPage(index, scope.$index, 'modelVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column align="right" label="操作" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" slot="append" icon="el-icon-plus" @click="addAuthor('modelVersion', 'author')" placeholder="添加作者"></el-button>
+                                                    <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" slot="append" icon="el-icon-minus" @click="removeAuthor(scope.$index, 'modelVersion', 'author')" placeholder="移除作者"></el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>描述信息
+                            </template>
+                            <el-form-item>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>摘要</el-col>
+                                    <el-col :span="22">
+                                        <el-input :disabled="isCreator == 'false'"  type="textarea" :rows="2" v-model="ModelMetaData.mp.descriptionInfo.descAbstract"></el-input>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="2">详细描述</el-col>
+                                    <el-col :span="22">
+                                        <el-input :disabled="isCreator == 'false'" type="textarea" :rows="2" v-model="ModelMetaData.mp.descriptionInfo.detailDescription"></el-input>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="关键字">
+                            <el-form-item>
+                                <el-tag :closable="!(isCreator == 'false')" :key="tag" v-for="tag in ModelMetaData.mp.keywords" :disable-transitions="false" @close="handleClose3(tag)">
+                                    {{tag}}
+                                </el-tag>
+                                <el-input class="input-new-tag" v-if="inputVisible2" v-model="inputValue2" ref="saveTagInput2" size="small" @keyup.enter.native="handleInputConfirm3" @blur="handleInputConfirm3">
+                                </el-input>
+                                <el-button :disabled="isCreator == 'false'" v-else class="button-new-tag" size="small" @click="showInput3">+ 添加关键字</el-button>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="参考系">
+                            <el-form-item>
+                                <el-row>
+                                    <el-col :span="11">
+                                        <el-row style="margin-bottom: 10px">
+                                            <el-col :span="4"><span style="color: red">*</span> 时间参考系</el-col>
+                                            <el-col :span="20">
+                                                <el-input :disabled="isCreator == 'false'" type="text" placeholder="例如：UTC +8" v-model="ModelMetaData.mp.referenceSystem.temporalReference.name"></el-input>
+                                            </el-col>
+                                        </el-row>
+                                    </el-col>
+                                </el-row>
+
+                                <div v-for="(item, index) in ModelMetaData.mp.referenceSystem.spatialReference" :key="index">
+                                    <el-row :gutter="10" style="margin-bottom: 10px">
+                                        <el-col :span="11">
+                                            <el-row style="margin-bottom: 10px">
+                                                <el-col :span="4"><span style="color: red">*</span> 空间参考系类型</el-col>
+                                                <el-col :span="20">
+                                                    <el-input :disabled="isCreator == 'false'" type="text" placeholder="例如：地理坐标系、投影坐标系、高程参考系" v-model="ModelMetaData.mp.referenceSystem.spatialReference[index].type"></el-input>
+                                                </el-col>
+                                            </el-row>
+                                        </el-col>
+
+                                        <el-col :span="11">
+                                            <el-row style="margin-bottom: 10px">
+                                                <el-col :span="4"><span style="color: red">*</span> 空间参考系名称</el-col>
+                                                <el-col :span="20">
+                                                    <el-input :disabled="isCreator == 'false'" type="text" placeholder="例如：WGS 84,1985国家高程基准等" v-model="ModelMetaData.mp.referenceSystem.spatialReference[index].name"></el-input>
+                                                </el-col>
+                                            </el-row>
+                                        </el-col>
+
+                                        <el-col :span="2">
+                                            <el-button :disabled="isCreator == 'false'" size="medium" v-if="index==0" icon="el-icon-plus" @click="addSpatialReference" type="success"></el-button>
+                                            <el-button :disabled="isCreator == 'false'" size="medium" v-if="index>0" icon="el-icon-minus" @click="removeSpatialReference(index)" type="warning"></el-button>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>开发信息
+                            </template>
+                            <el-form-item>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        <span style="color: red">*&nbsp;</span>起始日期
+                                    </el-col>
+                                    <el-col :span="5">
+                                        <el-date-picker :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.developInfo.startDate" type="date"></el-date-picker>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        终止日期
+                                    </el-col>
+                                    <el-col :span="5">
+                                        <el-date-picker :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.developInfo.endDate" type="date"></el-date-picker>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        <span style="color: red">*&nbsp;</span>进展
+                                    </el-col>
+                                    <el-col :span="5">
+                                        <el-select clearable :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.mp.developInfo.process" placeholder="请选择">
+                                            <el-option v-for="item in processOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row>
+                                    <el-row>
+                                        <el-col :span="2"><span style="color: red">*&nbsp;</span>开发者</el-col>
+                                        <el-col :span="22">
+                                            <el-table :data="ModelMetaData.mp.developInfo.developer">
+                                                <el-table-column property="contactorName" label="* 姓名" width="150">
+                                                    <template slot-scope="scope">
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.surname" placeholder="姓氏"></el-input>
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.fullName" placeholder="名字"></el-input>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="contactorAddress" label="联系地址" width="250">
+                                                    <template slot-scope="scope">
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.country" placeholder="国家"></el-input>
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.province" placeholder="省份"></el-input>
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.city" placeholder="城市"></el-input>
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.address" placeholder="具体地址"></el-input>
+                                                        <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.postCode" placeholder="邮编"></el-input>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="title" label="称谓" width="150">
+                                                    <template slot-scope="scope">
+                                                        <el-row>
+                                                            <el-col v-for="(item, index) in scope.row.title" :key="index">
+                                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.title[index]">
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addTitle(scope.$index, 'developInfo', 'developer')" type="success"></el-button>
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeTitle(index, scope.$index, 'developInfo', 'developer')" type="warning"></el-button>
+                                                                </el-input>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="affiliation" label="隶属机构" width="250">
+                                                    <template slot-scope="scope">
+                                                        <el-row>
+                                                            <el-col v-for="(item, index) in scope.row.affiliation" :key="index">
+                                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.affiliation[index]">
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addAffliation(scope.$index, 'developInfo', 'developer')" type="success"></el-button>
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeAffliation(index, scope.$index, 'developInfo', 'developer')" type="warning"></el-button>
+                                                                </el-input>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="email" label="邮箱" width="250">
+                                                    <template slot-scope="scope">
+                                                        <el-row>
+                                                            <el-col v-for="(item, index) in scope.row.email" :key="index">
+                                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.email[index]">
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addEmail(scope.$index, 'developInfo', 'developer')" type="success"></el-button>
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeEmail(index, scope.$index, 'developInfo', 'developer')" type="warning"></el-button>
+                                                                </el-input>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="phone" label="电话" width="250">
+                                                    <template slot-scope="scope">
+                                                        <el-row>
+                                                            <el-col v-for="(item, index) in scope.row.phone" :key="index">
+                                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.phone[index]">
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPhone(scope.$index, 'developInfo', 'developer')" type="success"></el-button>
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePhone(index, scope.$index, 'developInfo', 'developer')" type="warning"></el-button>
+                                                                </el-input>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="fax" label="传真" width="250">
+                                                    <template slot-scope="scope">
+                                                        <el-row>
+                                                            <el-col v-for="(item, index) in scope.row.fax" :key="index">
+                                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.fax[index]">
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addFax(scope.$index, 'developInfo', 'developer')" type="success"></el-button>
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeFax(index, scope.$index, 'developInfo', 'developer')" type="warning"></el-button>
+                                                                </el-input>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column property="personalPage" label="个人主页" width="250">
+                                                    <template slot-scope="scope">
+                                                        <el-row>
+                                                            <el-col v-for="(item, index) in scope.row.personalPage" :key="index">
+                                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.personalPage[index]">
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPersonalPage(scope.$index, 'developInfo', 'developer')" type="success"></el-button>
+                                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePersonalPage(index, scope.$index, 'developInfo', 'developer')" type="warning"></el-button>
+                                                                </el-input>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column align="right" label="操作" width="150">
+                                                    <template slot-scope="scope">
+                                                        <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" slot="append" icon="el-icon-plus" @click="addAuthor('developInfo', 'developer')" placeholder="添加开发者"></el-button>
+                                                        <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" slot="append" icon="el-icon-minus" @click="removeAuthor(scope.$index, 'developInfo', 'developer')" placeholder="移除开发者"></el-button>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </el-col>
+                                    </el-row>
+
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="发布信息">
+                            <el-form-item >
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        <span style="color: red">*</span> 是否开源
+                                    </el-col>
+                                    <el-col :span="5">
+                                        <el-select clearable :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.mp.publishInfo.publishMode.openAccess" placeholder="是否开源">
+                                            <el-option v-for="item in openAccessOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        <span style="color: red">*</span> 访问方式
+                                    </el-col>
+
+                                    <el-col :span="5">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.publishInfo.publishMode.accessMethod" placeholder="任意浏览下载、只读等">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        <span style="color: red">*</span> 使用方式
+                                    </el-col>
+
+                                    <el-col :span="5">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.publishInfo.publishMode.usageMethod" placeholder="公开、私有、授权等"></el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span v-if="ModelMetaData.mp.publishInfo.publishMode.openAccess == true" style="color: red">*&nbsp;</span>开源协议</el-col>
+                                    <el-col :span="5">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.publishInfo.publishMode.openSourceProtocol" placeholder="Apache License 2.0等"></el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*</span> 传输方式</el-col>
+                                    <el-col :span="5">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.publishInfo.publishMethod.transmitMode" placeholder="HTTP,FTP,Email等"></el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*</span> 获取地址</el-col>
+                                    <el-col :span="5">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.publishInfo.publishMethod.accessLocation">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2">
+                                        <span style="color: red">*</span> 发布日期
+                                    </el-col>
+                                    <el-col :span="5">
+                                        <el-date-picker :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.publishInfo.publishDate" type="date"></el-date-picker>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row>
+                                    <el-col :span="2"><span style="color: red">*</span> 发布者</el-col>
+                                    <el-col :span="22">
+                                        <el-table :data="ModelMetaData.mp.publishInfo.publisher">
+                                            <el-table-column property="contactorName" label="* 姓名" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.surname" placeholder="姓氏"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.fullName" placeholder="名字"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="contactorAddress" label="联系地址" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.country" placeholder="国家"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.province" placeholder="省份"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.city" placeholder="城市"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.address" placeholder="具体地址"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.postCode" placeholder="邮编"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="title" label="称谓" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-row style="margin-bottom: 10px">
+                                                        <el-col v-for="(item, index) in scope.row.title" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.title[index]" style="margin-bottom: 10px">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addTitle(scope.$index, 'publishInfo', 'publisher')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeTitle(index, scope.$index, 'publishInfo', 'publisher')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="affiliation" label="隶属机构">
+                                                <template slot-scope="scope">
+                                                    <el-row style="margin-bottom: 10px">
+                                                        <el-col v-for="(item, index) in scope.row.affiliation" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.affiliation[index]" style="margin-bottom: 10px">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addAffliation(scope.$index, 'publishInfo', 'publisher')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeAffliation(index, scope.$index, 'publishInfo', 'publisher')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="email" label="邮箱">
+                                                <template slot-scope="scope">
+                                                    <el-row style="margin-bottom: 10px">
+                                                        <el-col v-for="(item, index) in scope.row.email" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.email[index]" style="margin-bottom: 10px">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addEmail(scope.$index, 'publishInfo', 'publisher')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeEmail(index, scope.$index, 'publishInfo', 'publisher')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="phone" label="电话">
+                                                <template slot-scope="scope">
+                                                    <el-row style="margin-bottom: 10px">
+                                                        <el-col v-for="(item, index) in scope.row.phone" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.phone[index]" style="margin-bottom: 10px">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPhone(scope.$index, 'publishInfo', 'publisher')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePhone(index, scope.$index, 'publishInfo', 'publisher')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="fax" label="传真">
+                                                <template slot-scope="scope">
+                                                    <el-row style="margin-bottom: 10px">
+                                                        <el-col v-for="(item, index) in scope.row.fax" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.fax[index]" style="margin-bottom: 10px">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addFax(scope.$index, 'publishInfo', 'publisher')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeFax(index, scope.$index, 'publishInfo', 'publisher')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="personalPage" label="个人主页">
+                                                <template slot-scope="scope">
+                                                    <el-row style="margin-bottom: 10px">
+                                                        <el-col v-for="(item, index) in scope.row.personalPage" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.personalPage[index]" style="margin-bottom: 10px">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPersonalPage(scope.$index, 'publishInfo', 'publisher')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePersonalPage(index, scope.$index, 'publishInfo', 'publisher')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column align="right" label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" slot="append" icon="el-icon-plus" @click="addAuthor('publishInfo', 'publisher')" placeholder="添加发布者"></el-button>
+                                                    <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" slot="append" icon="el-icon-minus" @click="removeAuthor(scope.$index, 'publishInfo', 'publisher')" placeholder="移除发布者"></el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="关联项目">
+                            <el-form-item>
+                                <el-row>
+                                    <el-table :data="ModelMetaData.mp.relateItem" stripe style="width: 100%">
+                                        <el-table-column prop="projectName" label="* 项目名">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.projectName"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="projectId" label="* 项目编号">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.projectId"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="fundingAgency" label="* 资助机构">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.fundingAgency"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="type" label="类型">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.type" placeholder="例如：973项目、自然基金项目等"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column align="right" width="100"  label="操作">
+                                            <template slot-scope="scope">
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" size="medium" slot="append" icon="el-icon-plus" @click="addRelateItem" placeholder="添加关联项目"></el-button>
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" size="medium" slot="append" icon="el-icon-minus" @click="removeRelateItem(scope.$index)" placeholder="移除关联项目"></el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="参考文献">
+                            <el-form-item>
+                                <el-row>
+                                    <el-table :data="ModelMetaData.mp.reference" stripe style="width: 100%">
+                                        <el-table-column prop="title" label="* 标题" width="250px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.title"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="author" label="* 作者" width="250px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.author"></el-input>
+                                                <!--                                        <el-tag :key="tag" v-for="tag in ModelMetaData.mp.reference[scope.$index].author" closable :disable-transitions="false" @close="handleClose4(tag, scope.$index)">-->
+                                                <!--                                            {{tag}}-->
+                                                <!--                                        </el-tag>-->
+                                                <!--                                        <el-input class="input-new-tag" v-if="inputVisible4" v-model="inputValue4" ref="saveTagInput4" size="small" @keyup.enter.native="handleInputConfirm4(scope.$index)" @blur="handleInputConfirm4(scope.$index)">-->
+                                                <!--                                        </el-input>-->
+                                                <!--                                        <el-button v-else class="button-new-tag" size="small" @click="showInput4">+</el-button>-->
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column prop="agency" label="机构" width="250px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.agency"></el-input>
+                                                <!--                                        <el-tag :key="tag" v-for="tag in ModelMetaData.mp.reference[scope.$index].agency" closable :disable-transitions="false" @close="handleClose5(tag, scope.$index)">-->
+                                                <!--                                            {{tag}}-->
+                                                <!--                                        </el-tag>-->
+                                                <!--                                        <el-input class="input-new-tag" v-if="inputVisible5" v-model="inputValue5" ref="saveTagInput5" size="small" @keyup.enter.native="handleInputConfirm5(scope.$index)" @blur="handleInputConfirm5(scope.$index)">-->
+                                                <!--                                        </el-input>-->
+                                                <!--                                        <el-button v-else class="button-new-tag" size="small" @click="showInput5">+</el-button>-->
+                                            </template>
+                                        </el-table-column>
+
+                                        <el-table-column prop="press" label="* 出版物" width="250px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.press"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="reel" label="卷号" width="100px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.reel"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="issue" label="期号" width="100px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.issue"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="page" label="页码范围" width="100px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.page"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="publishDate" label="发表时间" width="180px">
+                                            <template slot-scope="scope">
+                                                <el-date-picker :disabled="isCreator == 'false'" v-model="scope.row.publishDate" type="date"></el-date-picker>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="url" label="链接地址" width="250px">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.url"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column align="right" width="150"  label="操作">
+                                            <template slot-scope="scope">
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" size="medium" slot="append" icon="el-icon-plus" @click="addReference"></el-button>
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" size="medium" slot="append" icon="el-icon-minus" @click="removeReference(scope.$index)"></el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="占用空间">
+                            <el-form-item>
+                                <el-row :gutter="10">
+                                    <el-col :span="3">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.occupySpace" class="myAppend">
+                                            <template slot="append">
+                                                <el-select :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.occupySpaceUnit" palceholder="单位">
+                                                    <el-option v-for="item in occupySpaceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                                </el-select>
+                                            </template>
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>元数据版本
+                            </template>
+                            <el-form-item>
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>编号</el-col>
+                                    <el-col :span="6">
+                                        <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.metaDataVersion.id" disabled>
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>目的</el-col>
+                                    <el-col :span="6">
+                                        <el-select clearable :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.mp.metaDataVersion.purpose">
+                                            <el-option v-for="item in metaPurposeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span v-if="ModelMetaData.mp.metaDataVersion.purpose == 2" style="color: red">*&nbsp;</span>修改内容</el-col>
+                                    <el-col :span="6">
+                                        <el-input :disabled="isCreator == 'false'" type="textarea" v-model="ModelMetaData.mp.metaDataVersion.changeContent">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row style="margin-bottom: 10px">
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>创建/修改日期</el-col>
+                                    <el-col :span="6">
+                                        <el-date-picker :disabled="isCreator == 'false'" v-model="ModelMetaData.mp.metaDataVersion.date" type="date"></el-date-picker>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row>
+                                    <el-col :span="2"><span style="color: red">*&nbsp;</span>作者</el-col>
+                                    <el-col :span="21">
+                                        <el-table :data="ModelMetaData.mp.metaDataVersion.author" style="width: 100%">
+                                            <el-table-column property="contactorName" label="* 姓名" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.surname" placeholder="姓氏"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorName.fullName" placeholder="名字"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="contactorAddress" label="联系地址" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.country" placeholder="国家"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.province" placeholder="省份"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.city" placeholder="城市"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.address" placeholder="具体地址"></el-input>
+                                                    <el-input :disabled="isCreator == 'false'" v-model="scope.row.contactorAddress.postCode" placeholder="邮编"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="title" label="称谓" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.title" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.title[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addTitle(scope.$index, 'metaDataVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeTitle(index, scope.$index, 'metaDataVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="affiliation" label="隶属机构" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.affiliation" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.affiliation[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addAffliation(scope.$index, 'metaDataVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeAffliation(index, scope.$index, 'metaDataVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="email" label="邮箱" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.email" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.email[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addEmail(scope.$index, 'metaDataVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeEmail(index, scope.$index, 'metaDataVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="phone" label="电话" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.phone" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.phone[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPhone(scope.$index, 'metaDataVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePhone(index, scope.$index, 'metaDataVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="fax" label="传真" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.fax" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.fax[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addFax(scope.$index, 'metaDataVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeFax(index, scope.$index, 'metaDataVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column property="personalPage" label="个人主页" width="250">
+                                                <template slot-scope="scope">
+                                                    <el-row>
+                                                        <el-col v-for="(item, index) in scope.row.personalPage" :key="index">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="scope.row.personalPage[index]">
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPersonalPage(scope.$index, 'metaDataVersion', 'author')" type="success"></el-button>
+                                                                <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePersonalPage(index, scope.$index, 'metaDataVersion', 'author')" type="warning"></el-button>
+                                                            </el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column align="right" label="操作" width="100">
+                                                <template slot-scope="scope">
+                                                    <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" slot="append" icon="el-icon-plus" @click="addAuthor('metaDataVersion', 'author')" placeholder="添加作者"></el-button>
+                                                    <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" slot="append" icon="el-icon-minus" @click="removeAuthor(scope.$index, 'metaDataVersion', 'author')" placeholder="移除作者"></el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-form>
             </el-tab-pane>
-            <el-tab-pane label="Design" name="second">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Purpose:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.design.purpose"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Principles:
-                        </lable>
-                        <div class='col-sm-10'>
-                                                                                            <textarea
-                                                                                                class="form-control"
-                                                                                                id="principlesInput"></textarea>
-                        </div>
-                    </div>
 
-                </div>
+            <el-tab-pane label="设计理念" name="second">
+                <el-form label-position="left" :rules="rule1">
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="建模目的">
+                            <el-form-item>
+                                <el-row v-for="(item, index) in ModelMetaData.pie.modelPurpose" :key="index" style="margin-bottom: 10px">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.modelPurpose[index]" style="margin-bottom: 10px" required>
+                                        <template slot="prepend">{{index+1}}</template>
+                                        <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPurpose" type="success"></el-button>
+                                        <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePurpose(index)" type="warning"></el-button>
+                                    </el-input>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
 
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Incorporated models:
-                        </lable>
-                        <div class='col-sm-10'>
-                                                                                            <textarea
-                                                                                                class="form-control"
-                                                                                                id="incorporatedModelsInput"></textarea>
-                        </div>
-                    </div>
-                </div>
+                    <br>
 
-                <div class="form-horizontal">
-                    <div class="form-group flexAlignCenter">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            <p>Model part of </p>
-                            <p>
-                                larger framework</p>
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.design.framework"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="模型假设">
+                            <el-form-item>
+                                <el-row v-for="(item, index) in ModelMetaData.pie.modelAssumption" :key="index" style="margin-bottom: 10px">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.modelAssumption[index]" style="margin-bottom: 10px">
+                                        <template slot="prepend">{{index+1}}</template>
+                                        <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addAssumnption" type="success"></el-button>
+                                        <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeAssumnption(index)" type="warning"></el-button>
+                                    </el-input>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
 
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Process:
-                        </lable>
-                        <div class='col-sm-10'>
-                                                                                            <textarea
-                                                                                                class="form-control"
-                                                                                                id="processInput"></textarea>
-                        </div>
-                    </div>
-                </div>
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="基本原理">
+                            <el-form-item>
+                                <el-row v-for="(item, index) in ModelMetaData.pie.basicPrinciple" :key="index" style="margin-bottom: 10px">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.basicPrinciple[index]" style="margin-bottom: 10px">
+                                        <template slot="prepend">{{index+1}}</template>
+                                        <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addPrinciple" type="success"></el-button>
+                                        <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removePrinciple(index)" type="warning"></el-button>
+                                    </el-input>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>模型类型
+                            </template>
+                            <el-form-item prop="modeltype">
+                                <el-select :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.modelCategory" placeholder="请选择">
+                                    <el-option
+                                      v-for="item in modelTypeOptions"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item :name="1">
+                            <template slot="title">
+                                <span style="color: red">*&nbsp;</span>分类信息
+                            </template>
+                            <el-form-item>
+                                <el-row :gutter="10" style="margin-bottom: 10px">
+                                    <el-col :span="4" v-for="(item, index) in ModelMetaData.pie.classificationInfo" :key="index">
+                                        <el-autocomplete
+                                          class="inline-input"
+                                          v-model="ModelMetaData.pie.classificationInfo[index]"
+                                          :fetch-suggestions="querySearch"
+                                          placeholder="请输入内容"
+                                          :disabled="isCreator == 'false'"
+                                        >
+                                            <el-button :disabled="isCreator == 'false'" v-if="index==0" slot="append" icon="el-icon-plus" @click="addclassificationInfo" type="success"></el-button>
+                                            <el-button :disabled="isCreator == 'false'" v-if="index>0" slot="append" icon="el-icon-minus" @click="removeclassificationInfo(index)" type="warning"></el-button>
+                                        </el-autocomplete>
+
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames" style="margin-bottom: 10px">
+                        <el-collapse-item title="适用范围" name="1">
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>时间分辨率</el-col>
+                                <el-col :span="6">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.applicationScope.timeScope.resolution"></el-input>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>时间尺度</el-col>
+                                <el-col :span="6">
+                                    <el-select :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.pie.applicationScope.timeScope.scale" placeholder="请选择">
+                                        <el-option v-for="item in scaleOptions" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>时间步长</el-col>
+                                <el-col :span="6">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.applicationScope.timeScope.step"></el-input>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>时间范围</el-col>
+                                <el-col :span="6">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.applicationScope.timeScope.scope"></el-input>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2">
+                                    <span style="color: red">*&nbsp;</span>空间维度
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-select :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.pie.applicationScope.spatialScope.dimension" placeholder="请选择">
+                                        <el-option v-for="item in dimensionOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>格网类型</el-col>
+                                <el-col :span="6">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.applicationScope.spatialScope.gridType" placeholder="正方形、不规则三角形等"></el-input>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>空间分辨率</el-col>
+                                <el-col :span="6">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.applicationScope.spatialScope.resolution"></el-input>
+                                </el-col>
+                            </el-row>
+
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>空间尺度</el-col>
+                                <el-col :span="6">
+                                    <el-select :disabled="isCreator == 'false'" class="selectItem" v-model="ModelMetaData.pie.applicationScope.spatialScope.scale" placeholder="请选择">
+                                        <el-option v-for= "item in spatialScaleOptions" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-row>
+
+                            <el-row>
+                                <el-col :span="2"><span style="color: red">*&nbsp;</span>空间范围</el-col>
+                                <el-col :span="6">
+                                    <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.pie.applicationScope.spatialScope.scope">
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="编程语言">
+                            <el-form-item>
+                                <el-tag :closable="!(isCreator == 'false')" :key="tag" v-for="tag in ModelMetaData.pie.codeLanguage" :disable-transitions="false" @close="handleClose6(tag)">
+                                    {{tag}}
+                                </el-tag>
+                                <el-input class="input-new-tag" v-if="inputVisible6" v-model="inputValue6" ref="saveTagInput6" size="small" @keyup.enter.native="handleInputConfirm6" @blur="handleInputConfirm6" placeholder="C, Python, Java等">
+                                </el-input>
+                                <el-button :disabled="isCreator == 'false'" v-else class="button-new-tag" size="small" @click="showInput6">+</el-button>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                </el-form>
             </el-tab-pane>
-            <el-tab-pane label="Usage" name="third">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Information:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.usage.information"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Initialization:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.usage.initialization"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Hardware Requirements:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.usage.hardware"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Software Requirements:
-                        </lable>
-                        <div class='col-sm-10'>
-                            <input type='text'
-                                   v-model="metadataTemp.usage.software"
-                                   class='form-control'>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Inputs:
-                        </lable>
-                        <div class='col-sm-10'>
-                                                                                            <textarea
-                                                                                                class="form-control"
-                                                                                                id="inputsInput"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <lable class='control-label col-sm-2 text-center'
-                               style='font-weight: bold;'>
-                            Outputs:
-                        </lable>
-                        <div class='col-sm-10'>
-                                                                                            <textarea
-                                                                                                class="form-control"
-                                                                                                id="outputsInput"></textarea>
-                        </div>
-                    </div>
-                </div>
+
+            <el-tab-pane label="模型架构" name="third">
+                <el-form label-position="top">
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="模型结构">
+                            <el-row>
+                                <el-col :span="1">
+                                    <span style="color: red">*</span> 类型
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-select clearable	 :disabled="isCreator == 'false'" v-model="ModelMetaData.mo.modelStructure.type" placeholder="请选择">
+                                        <el-option v-for="item in legendOptions" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-col>
+                                <el-col :span="19">
+
+                                </el-col>
+                            </el-row>
+                            <br>
+                            <el-row :gutter="10" type="flex" justify="center" align="middle">
+                                <el-col :span="1">
+                                    图例
+                                </el-col>
+                                <el-col :span="3">
+                                    <el-image
+                                      style="width: 100px; height: 100px; vertical-align: center"
+                                      :src="ModelMetaData.mo.modelStructure.legend"
+                                      :preview-src-list="[ModelMetaData.mo.modelStructure.legend]">
+                                    </el-image>
+                                </el-col>
+
+                                <el-col :span="3">
+                                    <el-upload :disabled="isCreator == 'false'" action list-type="picture-card" :on-preview="handlePictureCardPreview"
+                                               :on-remove="handleRemove" :http-request="modeUpload" :show-file-list="false" accept="image/png, image/jpeg" :before-upload="beforeUpload">
+                                        <i class="el-icon-plus"></i>
+                                    </el-upload>
+                                    <el-dialog :visible.sync="dialogVisible">
+                                        <img width="100%" :src="dialogImageUrl" alt="">
+                                    </el-dialog>
+                                </el-col>
+                                <el-col :span="17"></el-col>
+                            </el-row>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="子模型信息">
+                            <el-form-item>
+                                <el-row>
+                                    <el-table :data="ModelMetaData.mo.subModel" stripe style="width: 100%">
+                                        <el-table-column prop="modelName" label="模型名称" width="180">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.modelName"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="version" label="版本" width="180">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.version"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <!--                                <el-table-column prop="versionId" label="版本编号" width="250">-->
+                                        <!--                                    <template slot-scope="scope">-->
+                                        <!--                                        <el-input v-model="scope.row.versionId" placeholder="每个模型版本的唯一编号"></el-input>-->
+                                        <!--                                    </template>-->
+                                        <!--                                </el-table-column>-->
+                                        <el-table-column prop="usage" label="用途">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.usage" placeholder="预处理、水文过程模拟等"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column align="right" width="100">
+                                            <template slot-scope="scope">
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" size="medium" slot="append" icon="el-icon-plus" @click="addSubModel" placeholder="添加子模型"></el-button>
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" size="medium" slot="append" icon="el-icon-minus" @click="removeSubModel(scope.$index)" placeholder="移除子模型"></el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="耦合模式">
+                            <el-form-item>
+                                <el-input :disabled="isCreator == 'false'" v-model="ModelMetaData.mo.couplingMode" placeholder="数据驱动耦合、边界变量交互耦合、多重网格嵌套耦合等"></el-input>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-form>
+            </el-tab-pane>
+
+            <el-tab-pane label="模型数据" name="fourth">
+                <el-form label-position="top">
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="公式（请对公式中各个变量的含义进行解释）">
+                            <el-form-item>
+                                <textarea :disabled="isCreator == 'false'" id="singleFormula" v-model="ModelMetaData.di.formula"></textarea>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="术语">
+                            <el-form-item>
+                                <el-row class="shuyu" :gutter="10" style="margin-bottom: 10px" v-for="(item, index) in ModelMetaData.di.term" :key="index">
+                                        <el-row :gutter="10" style="margin-bottom: 10px">
+                                            <el-col :span="11">
+                                                <el-row style="margin-bottom: 10px">
+                                                    <el-col :span="3"><span style="color: red">*</span> 名称</el-col>
+                                                    <el-col :span="21">
+                                                        <el-input :disabled="isCreator == 'false'" type="text" v-model="ModelMetaData.di.term[index].name"></el-input>
+                                                    </el-col>
+                                                </el-row>
+                                            </el-col>
+
+                                            <el-col :span="11">
+                                                <el-row style="margin-bottom: 10px">
+                                                    <el-col :span="3"><span style="color: red">*</span> 描述</el-col>
+                                                    <el-col :span="21">
+                                                        <el-input :disabled="isCreator == 'false'" type="text" v-model="ModelMetaData.di.term[index].desc"></el-input>
+                                                    </el-col>
+                                                </el-row>
+                                            </el-col>
+
+                                            <el-col :span="2">
+                                                <el-button :disabled="isCreator == 'false'" size="medium" v-if="index==0" icon="el-icon-plus" @click="addTerm" type="success"></el-button>
+                                                <el-button :disabled="isCreator == 'false'" size="medium" v-if="index>0" icon="el-icon-minus" @click="removeTerm(index)" type="warning"></el-button>
+                                            </el-col>
+                                        </el-row>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="输入、输出及参数信息">
+                            <el-form-item>
+                                <el-row>
+                                    <el-table :data="ModelMetaData.di.inOutPara" stripe style="width: 100%">
+                                        <el-table-column prop="name" label="* 名称" width="180">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.name"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="type" label="* 类型" width="180">
+                                            <template slot-scope="scope">
+                                                <el-select clearable :disabled="isCreator == 'false'" v-model="scope.row.type" placeholder="请选择">
+                                                    <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                                </el-select>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="desc" label="描述">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.desc"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="unit" label="单位">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.unit"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="limit" label="约束">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.limit"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="defaultValue" label="* 默认值">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.defaultValue"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="format" label="* 格式">
+                                            <template slot-scope="scope">
+                                                <el-input :disabled="isCreator == 'false'" v-model="scope.row.format" placeholder="ASCII,二进制文件等"></el-input>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column align="right">
+                                            <template slot-scope="scope">
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index==0" size="medium" slot="append" icon="el-icon-plus" @click="addInOut" placeholder="添加输入、输出、参数"></el-button>
+                                                <el-button :disabled="isCreator == 'false'" v-if="scope.$index>0" size="medium" slot="append" icon="el-icon-minus" @click="removeInOut(scope.$index)" placeholder="移除输入、输出、参数"></el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-row>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-form>
+            </el-tab-pane>
+
+            <el-tab-pane label="运行测试" name="fifth">
+                <el-form label-position="top">
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="模型运行所需时间(或时间范围)">
+                            <el-form-item>
+                                <el-input :disabled="isCreator == 'false'" type='text' v-model="ModelMetaData.mdt.runTime"></el-input>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="运行示例">
+                            <el-form-item>
+                                <div v-for="(item2, index2) in ModelMetaData.mdt.runTemplates" :key="index2">
+                                    <el-row :gutter="10">
+                                        <el-col :span="10">
+                                            <el-row>
+                                                <el-col :span="4">示例描述</el-col>
+                                                <el-col :span="18">
+                                                    <el-input :disabled="isCreator == 'false'"  v-model="item2.desc" style="margin-bottom: 10px">
+                                                        <el-button :disabled="isCreator == 'false'" v-if="index2==0" slot="append" icon="el-icon-plus" @click="addRunTemplates"></el-button>
+                                                        <el-button :disabled="isCreator == 'false'" v-if="index2>0" slot="append" icon="el-icon-minus" @click="removeRunTemplates(index2)"></el-button>
+                                                    </el-input>
+                                                </el-col>
+                                            </el-row>
+                                        </el-col>
+                                        <el-col :span="14">
+                                            <el-row :gutter="10" v-for="(item, index) in item2.configInfo" :key="index" style="margin-bottom:10px">
+                                                <el-col :span="7">
+                                                    <el-row>
+                                                        <el-col :span="7" style="text-align: center">
+                                                            <span style="color: red">*</span> 名称
+                                                        </el-col>
+                                                        <el-col :span="17">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="item.name"></el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </el-col>
+                                                <el-col :span="7">
+                                                    <el-rol>
+                                                        <el-col :span="7" style="text-align: center">
+                                                            <span style="color: red">*</span> 类型
+                                                        </el-col>
+                                                        <el-col :span="17">
+                                                            <el-select :disabled="isCreator == 'false'" v-model="item.type" placeholder=" ">
+                                                                <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                                            </el-select>
+                                                        </el-col>
+                                                    </el-rol>
+                                                </el-col>
+                                                <el-col :span="8">
+                                                    <el-row>
+                                                        <el-col :span="4" style="text-align: center">
+                                                            <span style="color: red">*</span> 值
+                                                        </el-col>
+                                                        <el-col :span="20">
+                                                            <el-input :disabled="isCreator == 'false'" v-model="item.value"></el-input>
+                                                        </el-col>
+                                                    </el-row>
+                                                </el-col>
+                                                <el-col :span="1">
+                                                    <el-button :disabled="isCreator == 'false'" v-if="index==0" icon="el-icon-plus" @click="addConfig(index2)" type="success" size="medium"></el-button>
+                                                    <el-button :disabled="isCreator == 'false'" v-if="index>0" icon="el-icon-minus" @click="removeConfig(index2)" type="warning" size="medium"></el-button>
+                                                    <!--                                                <el-button icon="el-icon-minus"  @click="removeConfig(index2)"></el-button>-->
+                                                </el-col>
+                                            </el-row>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+
+                    <br>
+
+                    <el-form-item label="模型分析" class="modelAnalysis">
+                        <el-collapse v-model="activeNames" @change="collapseChange">
+                            <el-collapse-item title="——  模型校准" name="1">
+                                <textarea :disabled="isCreator == 'false'" id="singleModelCalibration" v-model="ModelMetaData.mdt.modelAnalysis.modelCalibration"></textarea>
+                            </el-collapse-item>
+                            <el-collapse-item title="——  模型验证" name="2">
+                                <textarea :disabled="isCreator == 'false'" id="singleModelValidation" v-model="ModelMetaData.mdt.modelAnalysis.modelValidation"></textarea>
+                            </el-collapse-item>
+                            <el-collapse-item title="——  有效性分析" name="3">
+                                <textarea :disabled="isCreator == 'false'" id="singleEffectivenessAnalysis" v-model="ModelMetaData.mdt.modelAnalysis.effectivenessAnalysis"></textarea>
+                            </el-collapse-item>
+                            <el-collapse-item title="——  不确定性分析" name="4">
+                                <textarea :disabled="isCreator == 'false'" id="singleUncertaintyAnalysis" v-model="ModelMetaData.mdt.modelAnalysis.uncertaintyAnalysis"></textarea>
+                            </el-collapse-item>
+                            <el-collapse-item title="——  敏感性分析" name="5">
+                                <textarea :disabled="isCreator == 'false'" id="singleSensitivityAnalysis" v-model="ModelMetaData.mdt.modelAnalysis.sensitivityAnalysis"></textarea>
+                            </el-collapse-item>
+                        </el-collapse>
+
+                    </el-form-item>
+
+                    <br>
+
+                    <el-collapse v-model="activeNames">
+                        <el-collapse-item title="使用说明">
+                            <el-form-item>
+                                <textarea :disabled="isCreator == 'false'" id="singleDescription" v-model="ModelMetaData.mdt.instruction"></textarea>
+                            </el-form-item>
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-form>
             </el-tab-pane>
         </el-tabs>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="editMetadata = false">{{htmlJSON.Cancel}}</el-button>
-            <el-popconfirm
-                :confirm-button-text='htmlJSON.Yes'
-                :cancel-button-text='htmlJSON.No'
-                :title="htmlJSON.SureSubmitChanges"
-                @confirm="submitMetadata"
-            >
+            <el-button v-if="isCreator == 'true'" @click="editMetadata = false">{{htmlJSON.Cancel}}</el-button>
+            <el-popconfirm v-if="isCreator == 'true'" confirm-button-text='确定' mcancel-button-text='取消' title="您确定提交更改吗？" @confirm="submitMetaData(ModelMetaData)">
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
             </el-popconfirm>
         </span>
@@ -1578,6 +2922,7 @@
 <script type="text/javascript" src="/static/js/common/jquery.tag-editor.js"></script>
 <script type="text/javascript" src="/static/js/common/jquery-steps.js"></script>
 <script type="text/javascript" src="/static/plugins/data-tables/jquery.dataTables.js"></script>
+<script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 
 
 <script src="/static/js/common/vue.min.js"></script>
@@ -1590,7 +2935,6 @@
 <script src="/static/element-ui/umd/locale/en.js"></script>
 <script src="/static/element-ui/umd/locale/zh-CN.js"></script>
 <script src="/static/js/modules/translationBar.js"></script>
-<script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/static/js/common/commonValue.js"></script>
 
 <!--公共组件变量-->
@@ -1615,11 +2959,11 @@
 <script src="/static/js/modules/modulesValue.js"></script>
 <!--<script src="/static/js/modules/itemInfoModules.js"></script>-->
 <script src="/static/js/modules/editDescriptionModule.js"></script>
+<script src="/static/js/tinymce_5.3.2/tinymce/js/tinymce/tinymce.min.js"></script>
 <script>
     // import {module_msg} from '/modulesValue'
 </script>
 <script src="/static/js/tinymce_5.3.2/plugins/config.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
 </html>

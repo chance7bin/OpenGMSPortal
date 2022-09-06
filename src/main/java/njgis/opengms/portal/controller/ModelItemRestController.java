@@ -5,16 +5,21 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import njgis.opengms.portal.component.annotation.LoginRequired;
 import njgis.opengms.portal.dao.ModelItemDao;
+import njgis.opengms.portal.dao.ModelMetaDataDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
+import njgis.opengms.portal.entity.doo.support.MetaData;
+import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.metadata.MetadataDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.Article;
 import njgis.opengms.portal.entity.po.ModelItem;
+import njgis.opengms.portal.entity.po.ModelMetaData;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.RelationTypeEnum;
 import njgis.opengms.portal.enums.ResultEnum;
@@ -26,16 +31,22 @@ import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +72,9 @@ public class ModelItemRestController {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    ModelMetaDataDao modelMetaDataDao;
 
     /**
      * @Description 返回模型条目列表页面
@@ -523,4 +537,66 @@ public class ModelItemRestController {
         return description == null ? ResultUtils.error() : ResultUtils.success(description);
     }
 
+    @LoginRequired
+    @RequestMapping(value="/saveMetaData/{id}", method = RequestMethod.POST)
+    public JsonResult saveMetaData(@PathVariable("id") String id, @RequestBody MetadataDTO metadataDTO) {
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        String metaDataId = modelItem.getMetadataId();
+        if (metaDataId == null) {
+            ModelMetaData metaData = new ModelMetaData();
+            modelItem.setMetadataId(metaData.getId());
+            modelItemDao.save(modelItem);
+            BeanUtils.copyProperties(metadataDTO, metaData);
+            Date nowdate = new Date(System.currentTimeMillis());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String myDate = dateFormat.format(nowdate);
+            metaData.setCreateTime(myDate);
+            metaData.setEditTime(myDate);
+            modelMetaDataDao.insert(metaData);
+        } else {
+            //update and save metadata
+            ModelMetaData firstById = modelMetaDataDao.findFirstById(metaDataId);
+            BeanUtils.copyProperties(metadataDTO, firstById);
+            Date nowdate = new Date(System.currentTimeMillis());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String myDate = dateFormat.format(nowdate);
+            firstById.setEditTime(myDate);
+            modelMetaDataDao.save(firstById);
+        }
+        return ResultUtils.success();
+    }
+
+    @RequestMapping(value="/getMetaData/{id}", method = RequestMethod.GET)
+    public JsonResult getMetaData(@PathVariable("id") String id, HttpServletRequest request) {
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        String metaDataId = modelItem.getMetadataId();
+
+        if (metaDataId == null) {
+            return ResultUtils.success(null);
+        } else {
+            //update and save metadata
+            ModelMetaData firstById = modelMetaDataDao.findFirstById(metaDataId);
+            JSONObject jsonMetaData = JSONObject.parseObject(JSONObject.toJSONString(firstById));
+            return ResultUtils.success(firstById);
+        }
+    }
+
+    @RequestMapping(value="/matchLoginerCreater/{id}", method = RequestMethod.GET)
+    public JsonResult matchLoginerCreater(@PathVariable("id") String id, HttpServletRequest request) {
+        ModelItem modelItem = modelItemDao.findFirstById(id);
+        String ItemCreator = modelItem.getAuthor();
+
+        HttpSession session=request.getSession();
+        try {
+            String email=session.getAttribute("email").toString();
+            if (ItemCreator.equals(email)){
+                return ResultUtils.success("true");
+            }else {
+                return ResultUtils.success("false");
+            }
+        } catch (Exception e) {
+            return ResultUtils.success("false");
+        }
+
+    }
 }

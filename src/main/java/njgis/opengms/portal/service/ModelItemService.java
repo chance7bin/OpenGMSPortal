@@ -492,7 +492,7 @@ public class ModelItemService {
         modelItem.setCreateTime(now);
         modelItem.setLastModifyTime(now);
         modelItem.setStatus(modelItemAddDTO.getStatus());
-        modelItem.setMetadata(modelItemAddDTO.getMetaData());
+        // modelItem.setMetadata(modelItemAddDTO.getMetaData());
         modelItem.setAuthor(email);
         modelItem.setId(UUID.randomUUID().toString());
         String name = modelItemAddDTO.getName();

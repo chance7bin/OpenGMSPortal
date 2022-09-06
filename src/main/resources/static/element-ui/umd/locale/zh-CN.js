@@ -124,7 +124,7 @@
                 hasCheckedFormat: '已选 {checked}/{total} 项'
             },
             image: {
-                error: '加载失败'
+                error: '无'
             },
             pageHeader: {
                 title: '返回'
