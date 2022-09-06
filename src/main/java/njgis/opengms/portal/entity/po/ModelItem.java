@@ -3,7 +3,6 @@ package njgis.opengms.portal.entity.po;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
-import njgis.opengms.portal.entity.doo.model.ModelMetadata;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -23,8 +22,12 @@ public class ModelItem extends PortalItem {
 
 //    List<ModelRelation> modelRelationList = new ArrayList<>();
 
-    ModelMetadata metadata = new ModelMetadata();
+    // ModelMetadata metadata = new ModelMetadata();
 
 //    String modelId; //替换为accessId
+
+    //存放模型元数据信息id
+    String metadataId;
+
 
 }

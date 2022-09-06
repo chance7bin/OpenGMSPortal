@@ -25,6 +25,93 @@
     align-items: center;
 }
 
+.el-upload--picture-card{
+    width: 100px;
+    height: 100px;
+    line-height: 112px;
+}
+
+.el-upload-list__item {
+    transition: none !important;
+}
+
+.selectItem {
+    width: 100%;
+}
+
+
+.el-input__icon{
+    line-height: 35px;
+    width: 37px;
+}
+
+.el-tag{
+    margin-right: 10px;
+}
+
+.el-tag + .el-tag {
+    margin-bottom: 5px;
+}
+.button-new-tag {
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+}
+
+.el-table td div{
+    margin-bottom: 5px;
+}
+
+.el-date-editor.el-input, .el-date-editor.el-input__inner{
+    width: 100%;
+}
+
+.el-form--label-top .el-form-item__label{
+    font-size: 15px;
+}
+
+.el-collapse-item__header{
+    font-size: 15px;
+}
+
+.el-collapse-item__content{
+    line-height: 2.769231;
+}
+
+.myAppend .el-input-group__append {
+    width: 75px;
+}
+
+.modelAnalysis .el-collapse-item__header {
+    color: grey;
+    font-size: 13px;
+}
+
+.el-input.is-disabled .el-input__inner{
+    color: black;
+}
+
+.el-textarea.is-disabled .el-textarea__inner{
+    color: black;
+}
+
+.el-collapse-item__header{
+    font-weight: bold;
+}
+
+.modelAnalysis{
+    font-weight: bold;
+}
+
+.shuyu [class*=el-col-]{
+    text-align: center;
+}
 /*!*每一项related model 的card*!*/
 /*.models_margin_style{*/
     /*margin-top: 10px;*/

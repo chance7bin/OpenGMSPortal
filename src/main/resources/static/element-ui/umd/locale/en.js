@@ -124,7 +124,7 @@
                 hasCheckedFormat: '{checked}/{total} checked' // to be translated
             },
             image: {
-                error: 'FAILED'
+                error: '无图例'
             },
             pageHeader: {
                 title: 'Back' // to be translated

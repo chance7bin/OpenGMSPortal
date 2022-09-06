@@ -591,7 +591,6 @@ var createDataApplication = Vue.extend({
             $("#keyWords").tagEditor()
 
             initTinymce('textarea#dataApplicationText')
-
         }
         else {
             this.editType = 'modify';
