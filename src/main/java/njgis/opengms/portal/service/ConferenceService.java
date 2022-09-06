@@ -42,14 +42,14 @@ public class ConferenceService {
         //根据不同的查询字段进行查询
         Page<Conference> itemPage = null;
 
-        itemPage = conferenceDao.findByTitleContainsIgnoreCase(searchText, pageable);
+        // itemPage = conferenceDao.findByTitleContainsIgnoreCase(searchText, pageable);
 
         //若未指定author，则查询全部公开的条目
-        // if(authorEmail == null || authorEmail.trim().equals("")) {
-        //     itemPage = articleDao.findByTitleContainsIgnoreCase(searchText, pageable);
-        // }else{
-        //     itemPage = articleDao.findByTitleContainsIgnoreCaseAndAuthors(searchText, authorEmail, pageable);
-        // }
+        if(authorEmail == null || authorEmail.trim().equals("")) {
+            itemPage = conferenceDao.findByTitleContainsIgnoreCase(searchText, pageable);
+        }else{
+            itemPage = conferenceDao.findByTitleContainsIgnoreCaseAndContributor(searchText, authorEmail, pageable);
+        }
 
         //获取模型条目的创建者信息
         List<Conference> items = itemPage.getContent();

@@ -1702,6 +1702,9 @@ new Vue({
                 data:JSON.stringify({
                     authorEmail: this.userPersonalInfo.email,
                     page:this.pageOption.currentPage,
+                    pageSize:this.pageOption.pageSize,
+                    asc:this.projects.sortAsc,
+                    sortField:"createTime",
                 }),
                 contentType:"application/json",
                 async:true,

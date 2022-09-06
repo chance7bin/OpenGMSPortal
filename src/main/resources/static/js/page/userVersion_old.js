@@ -3,7 +3,6 @@ var userVersion = Vue.extend({
     props:['htmlJson'],
     data:function (){
         return{
-            isActive: true,
             ScreenMinHeight: "0px",
             ScreenMaxHeight: "0px",
             name:"wang",
@@ -14,17 +13,13 @@ var userVersion = Vue.extend({
             pageSize:10,
 
             activeMyName:0,
-            activeTabName:0,
             activeOthersName:3,
             activeName:0,
 
             versionUrl:"",
 
-            userPageUrl:"https://geomodeling.njnu.edu.cn/profile/", // 门户个人主页
+            userPageUrl:"https://geomodeling.njnu.edu.cn/profile/" // 门户个人主页
             // htmlJSON:{}
-            versionClass:"edit" //edit 或者 review
-
-
         }
     },
     mounted(){
@@ -71,29 +66,13 @@ var userVersion = Vue.extend({
         }
     },
     methods:{
-        tabChange(val){
-            this.resetPageInfo()
-            let type=""
+        handleParentTabChange(val){
+            // console.log(val)
             if(val.index==="0"){
-                type="uncheck"
-            }else if(val.index==="1"){
-                type="accepted"
-            }else {
-                type="rejected"
+                this.activeName="0"
+            }else{
+                this.activeName="3"
             }
-            this.currentPage=1
-            this.versionUrl="/version/user/versionList/"+this.versionClass+"/"+type+"/All"
-            this.getVersionList(this.versionUrl)
-        },
-
-        changeVersionClass(val){
-            this.resetPageInfo()
-            console.log(val)
-            this.isActive=!this.isActive
-            this.versionClass=val
-            this.activeTabName="0"
-            this.versionUrl="/version/user/versionList/"+this.versionClass+"/uncheck/All"
-            this.getVersionList(this.versionUrl)
         },
 
         resetPageInfo(){

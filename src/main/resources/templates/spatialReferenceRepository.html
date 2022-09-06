@@ -196,7 +196,7 @@
                                 padding-bottom: 61px;
                             ">
                             <span v-if="pageOption.progressBar">&nbsp;</span>
-                            <span v-if="!pageOption.progressBar">{{noResult}}</span>
+                            <span v-if="!pageOption.progressBar">{{htmlJSON.noResult}}</span>
                         </div>
                     </div>
                     <el-pagination style="text-align: center;margin-top:20px" v-if="pageOption.paginationShow && pageOption.searchResult.length>0"
