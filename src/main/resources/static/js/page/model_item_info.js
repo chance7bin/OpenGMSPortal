@@ -2522,15 +2522,14 @@ var info=new Vue({
                             this.$alert('目前暂不支持编辑他人创建的模型的元数据，请期待后续更新~', '提示', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.editMetadata = true
                                     let data = res.data.data
                                     // 如果是null，则不操作
                                     if (data == null){
-                                        const uuid = this.uuid();
-                                        this.ModelMetaData.mp.metaDataVersion.id = uuid;
                                         return
                                     }
                                     this.ModelMetaData = {...data}
+                                    this.editMetadata = true
+
                                 }
                             })
                         }else {
