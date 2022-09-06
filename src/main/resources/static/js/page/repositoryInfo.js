@@ -502,7 +502,7 @@ new Vue({
                 this.outputvalue="output a value"
                 this.selectvalue="select the value"
             }else {
-                var loginTip = "该操作需要一个账户，请先登录."
+                var loginTip = "该操作需要一个账户，请先登录"
                 var login = "登录"
                 var tip = "提示"
                 this.inputvalue="输入一个值"

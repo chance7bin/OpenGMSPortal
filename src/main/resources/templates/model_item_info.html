@@ -222,8 +222,9 @@
 
             <div th:replace="fragments/itemInfoModules :: model_related_resource(${references}, true)"></div>
 
-
-            <div th:if="${history!=true}" id="metadata" class="detail_block">
+            <!--先隐藏该模块，要打开的话把 1== 0 这行删了 开启第一行注释-->
+            <!--<div th:if="${history!=true}" id="metadata" class="detail_block">-->
+            <div th:if="1 == 0" id="metadata" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
                         <h4>Model Metadata</h4>
@@ -837,7 +838,7 @@
                 </div>
             </el-card>
             <el-card v-if="relateType=='dataSpaceFile'" class="flexCenter" style="min-height: 260px;flex:1">
-                <el-button round size="mini" @click='checkPersonData()' type="primary">Select From My Space</el-button>
+                <el-button round size="mini" @click='checkPersonData()' type="primary">{{htmlJSON.SelectFromMySpace}}</el-button>
             </el-card>
             <el-card v-if="relateType=='exLink'" v-loading="checkUrlValidLoading" style="min-height: 260px;flex:1">
                 <div class="flexCol flexAlignCenter">
@@ -867,9 +868,9 @@
             <!--<span style="float:left;font-size: 16px">Or you can click <a style="cursor:pointer" @click="jump">here</a> to create a new one.</span>-->
             <el-button @click="relatedResourceVisible = false;">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
-                confirm-button-text='Yes'
-                cancel-button-text='No'
-                title="Are you sure to submit changes?"
+                :confirm-button-text='htmlJSON.Yes'
+                :cancel-button-text='htmlJSON.No'
+                :title="htmlJSON.SureSubmitChanges"
                 @confirm="addRelateResources()"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.OK}}</el-button>
@@ -1015,8 +1016,8 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editDescription = false">{{htmlJSON.Cancel}}</el-button>
-            <el-popconfirm confirm-button-text='Yes' cancel-button-text='No'
-                           title="Are you sure to submit changes?"
+            <el-popconfirm :confirm-button-text='htmlJSON.Yes' :cancel-button-text='htmlJSON.No'
+                           :title="htmlJSON.SureSubmitChanges"
                            @confirm="submitDescription"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>
@@ -1249,9 +1250,9 @@
         <span slot="footer" class="dialog-footer">
             <el-button @click="editMetadata = false">{{htmlJSON.Cancel}}</el-button>
             <el-popconfirm
-                confirm-button-text='Yes'
-                cancel-button-text='No'
-                title="Are you sure to submit changes?"
+                :confirm-button-text='htmlJSON.Yes'
+                :cancel-button-text='htmlJSON.No'
+                :title="htmlJSON.SureSubmitChanges"
                 @confirm="submitMetadata"
             >
                 <el-button type="primary" slot="reference">{{htmlJSON.Submit}}</el-button>

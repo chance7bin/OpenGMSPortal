@@ -128,6 +128,7 @@
     "Confirm": "Confirm",
     "DataSelect": "DataSelect",
     "UploadData": "Upload Data",
+    "DataTemplate":"Data Template",
     "AddFolder": "Add folder",
     "DownloadAll": "Download All",
     "Paste": "Paste",
@@ -187,7 +188,8 @@
     "Private": "Private",
     "ReferenceInfo": "Reference Info",
     "GetByDoi": "Get by doi",
-    "EnterDoiClickSearch": "Enter the doi and click search, information may be filled automatically."
+    "EnterDoiClickSearch": "Enter the doi and click search, information may be filled automatically.",
+    "SelectFromMySpace": "Select From My Space"
   },
   "zh-cn": {
       "DataResourceUrl": "数据资源链接",
@@ -284,7 +286,7 @@
     "RelatedDataItem":"编辑相关数据项",
     "noRelatedReference":"无相关参考文献，您可以添加相关参考",
     "noRelatedData":"无相关数据条目，您可以添加相关数据条目",
-    "NoRelatedMmaterial":"无相关原型，您可以添加相关原型",
+    "NoRelatedMmaterial":"无相关资源，您可以添加相关资源",
     "NoRelatedConceptual":"无相关概念模型，您可以添加相关概念模型",
     "NoRelatedLogical":"无相关逻辑模型，您可以添加相关逻辑模型",
     "NoRelatedModel":"无相关模型条目，您可以添加相关模型条目",
@@ -318,6 +320,7 @@
     "Confirm": "确认",
     "DataSelect": "数据选择",
     "UploadData": "上传数据",
+    "DataTemplate":"数据模板",
     "AddFolder": "新增文件夹",
     "DownloadAll": "下载全部",
     "Paste": "粘贴",
@@ -376,8 +379,8 @@
     "Private": "私有",
     "ReferenceInfo": "参考信息",
     "GetByDoi": "Doi获取",
-    "EnterDoiClickSearch": "输入Doi并点击搜索，信息就会被自动填充."
-
+    "EnterDoiClickSearch": "输入Doi并点击搜索，信息就会被自动填充.",
+    "SelectFromMySpace": "从我的空间中选择"
   }
 
 }
