@@ -491,7 +491,7 @@ public class GenericService {
                             List<User> users = userDao.findAllByNameContainsIgnoreCase(searchText);
                             List<String> userEmailList = new ArrayList<>();
                             for (User user : users) {
-                                userEmailList.add(userDao.findFirstByName(user.getName()).getEmail());
+                                userEmailList.add(user.getEmail() != null && !"".equals(user.getEmail()) ? user.getEmail() : userDao.findFirstByName(user.getName()).getEmail());
                             }
                             result = genericItemDao.findAllByAuthorInOrContributorsIn(userEmailList, userEmailList, pageable);
                             break;
@@ -536,7 +536,7 @@ public class GenericService {
                             List<User> users = userDao.findAllByNameContainsIgnoreCase(searchText);
                             List<String> userEmailList = new ArrayList<>();
                             for (User user : users) {
-                                userEmailList.add(userDao.findFirstByName(user.getName()).getEmail());
+                                userEmailList.add(user.getEmail() != null && !"".equals(user.getEmail()) ? user.getEmail() : userDao.findFirstByName(user.getName()).getEmail());
                             }
                             result = genericItemDao.findAllByAuthorInAndClassificationsInAndStatusIn(userEmailList,classifications, visible, pageable);
                             // if(user != null){
