@@ -6,9 +6,8 @@ var info=new Vue({
     },
     data: function () {
         return {
-            rulesPreparation:[
-                {metaid: true}
-            ],
+            runTemplatesValueIndex: [0, 0],
+            inOutParam: [0],
 
             nowLanguage: '',
 
@@ -1315,7 +1314,7 @@ var info=new Vue({
                 label:'输出'
             },{
                 value:3,
-                label:'参数'
+                label:'控制参数'
             }],
 
             legendOptions:[{
@@ -3694,15 +3693,28 @@ var info=new Vue({
             })
         },
 
-        checkPersonData() {
-            this.showDataChose = true;
-            this.$nextTick(()=>{
-                this.$refs.userDataSpace.getFilePackage();
-            })
-
+        checkPersonData(i, j) {
+            try {
+                this.runTemplatesValueIndex[0] = i
+                this.inOutParam[0] = i
+                this.runTemplatesValueIndex[1] = j
+            }
+            catch (e) {
+                console.log(e)
+            }
+            finally {
+                this.showDataChose = true;
+                this.$nextTick(()=>{
+                    this.$refs.userDataSpace.getFilePackage();
+                })
+            }
         },
 
         selectDataspaceFile(file){
+            // if (this.editMetadata == true){
+            //     this.targetFile.push(file.address)
+            //     return
+            // }
             if (this.targetFile.indexOf(file) > -1) {
                 // for (var i = 0; i < this.targetFile.length; i++) {
                 //     if (this.targetFile[i] === file) {
@@ -3722,7 +3734,18 @@ var info=new Vue({
         // },
 
         removeDataspaceFile(file) {
-            // this.targetFile = []
+            if (file.address.substr(0,4)!="http"){
+                file.address = "https://geomodeling.njnu.edu.cn/dataTransferServer" + file.address
+            }
+
+            targetFileLength = this.targetFile.length
+            for (var i =0; i<targetFileLength; i++){
+                if (this.targetFile[i].address == file.address){
+                    this.targetFile.splice(i, 1);
+                    break
+                }
+            }
+
             if (this.targetFile.indexOf(file) > -1) {
                 for (var i = 0; i < this.targetFile.length; i++) {
                     if (this.targetFile[i] === file) {
@@ -3736,6 +3759,32 @@ var info=new Vue({
         },
 
         selectDataFromPersonal(){
+            if (this.editMetadata == true && this.metaDataTab == 'fifth'){
+                if (this.targetFile.length > 1){
+                    this.$message({
+                        message: '仅支持上传单个文件！',
+                        type: 'warning'
+                    });
+                }else {
+                    this.ModelMetaData.mdt.runTemplates[this.runTemplatesValueIndex[0]].configInfo[this.runTemplatesValueIndex[1]].value = this.targetFile[0].address
+                    // this.targetFile = []
+                    this.showDataChose = false
+                }
+                return;
+            }
+            if (this.editMetadata == true && this.metaDataTab == 'fourth'){
+                if (this.targetFile.length > 1){
+                    this.$message({
+                        message: '仅支持上传单个文件！',
+                        type: 'warning'
+                    });
+                }else {
+                    this.ModelMetaData.di.inOutPara[this.inOutParam[0]].defaultValue = this.targetFile[0].address
+                    // this.targetFile = []
+                    this.showDataChose = false
+                }
+                return;
+            }
             for (let i = 0; i < this.targetFile.length; i++) {
                 let file = {
                     name:this.targetFile[i].name + "." + this.targetFile[i].suffix,
@@ -3757,7 +3806,6 @@ var info=new Vue({
                 }
 
                 this.tableData.push(file)
-
             }
 
             this.showDataChose = false
@@ -4705,6 +4753,47 @@ var info=new Vue({
             return flag;
         },
 
+        objectValueHasEmpty(data) {
+            let flag = false;
+            let _this = this;
+            function judgeChildren(obj) {
+                for(var key in obj){
+                    if(typeof obj[key] === 'string'){
+                        // 字符串
+                        if((obj[key] == null) || (obj[key] == '') || (obj[key] == undefined)){
+                            flag = true
+                            //可以在此将key赋值给一个全局变量，判断是哪个属性值为空
+                            return
+                        }
+                    }else if(Array.isArray(obj[key])){
+                        // 数组
+                        obj[key].forEach((item)=>{
+                            judgeChildren(item)
+                        })
+                    }else{
+                        //对象
+                        judgeChildren(obj[key])
+                    }
+                }
+            }
+            judgeChildren(data);
+            return flag;
+        },
+
+        judgeFieldHasEmpty(obj, fields){
+            flag = false
+            objLength = obj.length
+            fieldLength = fields.length
+            for (var i=0; i<objLength; i++){
+                for (var j=0; j<fieldLength; j++){
+                    if ((obj[i][fields[j]] == null) || (obj[i][fields[j]] == '') || (obj[i][fields[j]] == undefined)){
+                        flag = true
+                    }
+                }
+            }
+            return flag
+        },
+
         judgeRequired(){
             if (this.ModelMetaData.mp.modelVersion.numbering == '' || this.ModelMetaData.mp.modelVersion.purpose == undefined || this.ModelMetaData.mp.modelVersion.date == '' || this.ModelMetaData.mp.modelVersion.author[0].contactorName.fullName == '' || this.ModelMetaData.mp.modelVersion.author[0].contactorName.surname == ''
             || this.ModelMetaData.mp.descriptionInfo.descAbstract == '' || this.ModelMetaData.mp.developInfo.startDate == '' || this.ModelMetaData.mp.developInfo.process == '' || this.ModelMetaData.mp.developInfo.developer[0].contactorName.fullName == '' || this.ModelMetaData.mp.developInfo.developer[0].contactorName.surname == ''
@@ -4714,13 +4803,13 @@ var info=new Vue({
                     type: 'warning'
                 });
                 return false
-            }else if (this.ModelMetaData.pie.modelCategory == undefined || this.ModelMetaData.pie.classificationInfo[0] == ''){
+            }else if (this.ModelMetaData.pie.modelCategory == undefined || this.objectValueHasEmpty(this.ModelMetaData.pie.classificationInfo) == true){
                 this.$message({
                     message: '请完善设计理念！',
                     type: 'warning'
                 });
                 return false
-            }else if ((this.ModelMetaData.mp.referenceSystem.temporalReference.name != '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].type != '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].name != '') && (this.ModelMetaData.mp.referenceSystem.temporalReference.name == '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].type == '' || this.ModelMetaData.mp.referenceSystem.spatialReference[0].name == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.referenceSystem) == false) && (this.objectValueHasEmpty(this.ModelMetaData.mp.referenceSystem) == true)){
                 this.$message({
                     message: '请完善基本信息！',
                     type: 'warning'
@@ -4751,8 +4840,7 @@ var info=new Vue({
                     type: 'warning'
                 });
                 return false
-            }else if ((this.objectValueAllEmpty(this.ModelMetaData.pie.applicationScope) == false) && (this.ModelMetaData.pie.applicationScope.timeScope.resolution == '' || this.ModelMetaData.pie.applicationScope.timeScope.scale == '' || this.ModelMetaData.pie.applicationScope.timeScope.step == '' || this.ModelMetaData.pie.applicationScope.timeScope.scope == ''
-            ||this.ModelMetaData.pie.applicationScope.spatialScope.dimension == '' || this.ModelMetaData.pie.applicationScope.spatialScope.gridType == '' || this.ModelMetaData.pie.applicationScope.spatialScope.resolution == '' || this.ModelMetaData.pie.applicationScope.spatialScope.scale == '' || this.ModelMetaData.pie.applicationScope.spatialScope.scope == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.pie.applicationScope) == false) && (this.objectValueHasEmpty(this.ModelMetaData.pie.applicationScope) == true)){
                 this.$message({
                     message: '请完善设计理念！',
                     type: 'warning'
@@ -4764,31 +4852,31 @@ var info=new Vue({
                     type: 'warning'
                 });
                 return false
-            }else if ((this.objectValueAllEmpty(this.ModelMetaData.di.inOutPara) == false) && (this.ModelMetaData.di.inOutPara[0].name == '' || this.ModelMetaData.di.inOutPara[0].type == '' || this.ModelMetaData.di.inOutPara[0].defaultValue == '' || this.ModelMetaData.di.inOutPara[0].format == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.di.inOutPara) == false) && (this.judgeFieldHasEmpty(this.ModelMetaData.di.inOutPara, ['name', 'type', 'defaultValue', 'format'])==true)){
                 this.$message({
                     message: '请完善模型数据！',
                     type: 'warning'
                 });
                 return false
-            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mdt.runTemplates) == false) && (this.ModelMetaData.mdt.runTemplates[0].configInfo[0].name == '' || this.ModelMetaData.mdt.runTemplates[0].configInfo[0].type == '' || this.ModelMetaData.mdt.runTemplates[0].configInfo[0].value == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mdt.runTemplates) == false) && (this.objectValueHasEmpty(this.ModelMetaData.mdt.runTemplates) == true)){
                 this.$message({
                     message: '请完善运行测试！',
                     type: 'warning'
                 });
                 return false
-            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.relateItem) == false) && (this.ModelMetaData.mp.relateItem[0].projectName == '' || this.ModelMetaData.mp.relateItem[0].projectId == '' || this.ModelMetaData.mp.relateItem[0].fundingAgency == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.relateItem) == false) && (this.judgeFieldHasEmpty(this.ModelMetaData.mp.relateItem, ['projectName', 'projectId', 'fundingAgency']))){
                 this.$message({
                     message: '请完善基本信息！',
                     type: 'warning'
                 });
                 return false
-            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.reference) == false) && (this.ModelMetaData.mp.reference[0].title == '' || this.ModelMetaData.mp.reference[0].author == '' ||this.ModelMetaData.mp.reference[0].press == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.mp.reference) == false) && (this.judgeFieldHasEmpty(this.ModelMetaData.mp.reference, ['title', 'author', 'press']))){
                 this.$message({
                     message: '请完善基本信息！',
                     type: 'warning'
                 });
                 return false
-            }else if ((this.objectValueAllEmpty(this.ModelMetaData.di.term) == false) && (this.ModelMetaData.di.term[0].name == '' || this.ModelMetaData.di.term[0].desc == '')){
+            }else if ((this.objectValueAllEmpty(this.ModelMetaData.di.term) == false) && (this.objectValueHasEmpty(this.ModelMetaData.di.term) == true)){
                 this.$message({
                     message: '请完善模型数据！',
                     type: 'warning'
