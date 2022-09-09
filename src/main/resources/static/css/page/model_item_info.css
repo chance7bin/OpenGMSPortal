@@ -112,6 +112,19 @@
 .shuyu [class*=el-col-]{
     text-align: center;
 }
+
+.mplClass .el-button--medium{
+    padding: 10px 8px;
+}
+
+.mplClass .el-table td div{
+    margin-bottom: 0px;
+}
+
+.mplClass .el-table .cell{
+    line-height: inherit;
+}
+
 /*!*每一项related model 的card*!*/
 /*.models_margin_style{*/
     /*margin-top: 10px;*/
