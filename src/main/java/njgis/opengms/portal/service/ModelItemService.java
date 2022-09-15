@@ -737,7 +737,14 @@ public class ModelItemService {
                 redisService.saveItem(modelItem,ItemTypeEnum.ModelItem);
             }
 
+            // 需在这里拷贝一下原始的item镜像，
+            // 因为后面的逻辑要把新生成的versionid保存到item中，
+            // 没拷贝镜像的话属性会被新修改的覆盖掉
+            ModelItem oriItem = modelItem;
+
             BeanUtils.copyProperties(modelItemUpdateDTO, modelItem, Utils.getNullPropertyNames(modelItemUpdateDTO));
+
+
             //判断是否为新图片
             String uploadImage = modelItemUpdateDTO.getUploadImage();
             if (uploadImage != null && !uploadImage.contains("/modelItem/") && !uploadImage.equals("")) {
@@ -766,13 +773,13 @@ public class ModelItemService {
             Version version_new = versionService.addVersion(modelItem, email, originalItemName);
             if (author.equals(email)) {
                 versions.add(version_new.getId());
-                modelItem.setVersions(versions);
+                oriItem.setVersions(versions);
 
                 // modelItemDao.save(modelItem);
-                redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
+                redisService.saveItem(oriItem, ItemTypeEnum.ModelItem);
                 JSONObject result = new JSONObject();
                 result.put("method", "update");
-                result.put("id", modelItem.getId());
+                result.put("id", oriItem.getId());
 
                 return result;
             } else {

@@ -26,18 +26,18 @@
         </el-dropdown>
         <span class="fa fa-language" style="background-color:white;padding-left:10px;float:right;font-size:23px;"></span>
 
-        <span  th:class="${showTag==true?'blockEdit':'hideClass'}"  >
-                         <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
-                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                                       type="primary" icon="el-icon-edit" @click="getDescription" circle></el-button>
-                        </el-tooltip>
-                        <el-tooltip popper-class="fontsize-15"
-                                    :content="htmlJSON.anotherVersion"
-                                    effect="light" placement="top">
-                            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
-                                       icon="el-icon-edit" plain circle></el-button>
-                        </el-tooltip>
-                    </span>
+        <!--<span  th:class="${showTag==true?'blockEdit':'hideClass'}"  >-->
+        <!--                 <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">-->
+        <!--                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"-->
+        <!--                               type="primary" icon="el-icon-edit" @click="getDescription" circle></el-button>-->
+        <!--                </el-tooltip>-->
+        <!--                <el-tooltip popper-class="fontsize-15"-->
+        <!--                            :content="htmlJSON.anotherVersion"-->
+        <!--                            effect="light" placement="top">-->
+        <!--                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"-->
+        <!--                               icon="el-icon-edit" plain circle></el-button>-->
+        <!--                </el-tooltip>-->
+        <!--            </span>-->
     </div>
     <div th:fragment="descriptionContent" class="block_content">
         <!--<div v-if="detail==''" th:utext="${detail}" id="detail" class="detailIntroducePanel 22">-->
@@ -386,18 +386,18 @@
             <div class="head_text">
                 <h4 translateId="Classification">Classification(s)</h4>
             </div>
-            <span th:if="${showTag==true}" class="blockEdit">
-                            <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top" >
-                                <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                                           type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>
-                            </el-tooltip>
-                            <el-tooltip popper-class="fontsize-15"
-                                        :content="htmlJSON.anotherVersion"
-                                        effect="light" placement="top">
-                                <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
-                                           icon="el-icon-edit" plain circle></el-button>
-                            </el-tooltip>
-                        </span>
+            <!--<span th:if="${showTag==true}" class="blockEdit">-->
+            <!--                <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top" >-->
+            <!--                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"-->
+            <!--                               type="primary" icon="el-icon-edit" @click="getClassifications" circle></el-button>-->
+            <!--                </el-tooltip>-->
+            <!--                <el-tooltip popper-class="fontsize-15"-->
+            <!--                            :content="htmlJSON.anotherVersion"-->
+            <!--                            effect="light" placement="top">-->
+            <!--                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"-->
+            <!--                               icon="el-icon-edit" plain circle></el-button>-->
+            <!--                </el-tooltip>-->
+            <!--            </span>-->
         </div>
         <div th:fragment="classificationsContent" class="block_content" style="margin-top:20px;" >
             <div   th:each="classS:${classifications}">
@@ -437,18 +437,19 @@
         <div class="head_text">
             <h4 translateId="Alias">Alias</h4>
         </div>
-        <span class="blockEdit">
-                 <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">
-                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
-                               type="primary" icon="el-icon-edit" circle @click="getAlias"></el-button>
-                </el-tooltip>
-                <el-tooltip popper-class="fontsize-15"
-                            :content="htmlJSON.anotherVersion"
-                            effect="light" placement="top">
-                    <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
-                               icon="el-icon-edit" plain circle></el-button>
-                </el-tooltip>
-        </span>
+        <!--编辑悬浮按钮隐藏-->
+        <!--<span class="blockEdit">-->
+        <!--         <el-tooltip popper-class="fontsize-15" :content="htmlJSON.Edit" effect="light" placement="top">-->
+        <!--            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"-->
+        <!--                       type="primary" icon="el-icon-edit" circle @click="getAlias"></el-button>-->
+        <!--        </el-tooltip>-->
+        <!--        <el-tooltip popper-class="fontsize-15"-->
+        <!--                    :content="htmlJSON.anotherVersion"-->
+        <!--                    effect="light" placement="top">-->
+        <!--            <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"-->
+        <!--                       icon="el-icon-edit" plain circle></el-button>-->
+        <!--        </el-tooltip>-->
+        <!--</span>-->
     </div>
     <div th:fragment="aliasContent" class="block_content" style="margin-bottom:10px;">
 
@@ -553,7 +554,8 @@
 
                     <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
                     <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
-                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/' + ${itemType==null?'modelItem':itemType} + '/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
+                        <!--查看历史版本隐藏-->
+                        <!--<a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/' + ${itemType==null?'modelItem':itemType} + '/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>-->
                 </dl>
             </div>
 
