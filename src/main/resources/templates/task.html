@@ -377,6 +377,28 @@
                                                                     <i class="fa fa-download"></i>
                                                                 </el-button>
 
+                                                                <!--可视化按钮，新加，临时-->
+                                                                <el-button plain round type="primary"
+                                                                           v-if="modelInEvent.url!=''&&modelInEvent.url!=null"
+                                                                           @click="dialogVisible = true">
+                                                                    <i class="el-icon-picture"></i>
+                                                                </el-button>
+
+                                                                <el-dialog
+                                                                    title="数据可视化"
+                                                                    :visible.sync="dialogVisible"
+                                                                    width="60%"
+                                                                    >
+                                                                    <!--<span></span>-->
+                                                                    <iframe frameborder="0" style="width: 90%; height: 200px"
+                                                                        src="http://175.27.137.60:8082/onlinePreview?url=aHR0cDovLzE3NS4yNy4xMzcuNjA6ODA4Mi9kZW1vL1N0YXRpb24udHh0#collapseOne"></iframe>
+
+                                                                    <span slot="footer" class="dialog-footer">
+                                                                        <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
+                                                                        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                                                                    </span>
+                                                                </el-dialog>
+
                                                             </div>
                                                         </el-col>
                                                     </div>

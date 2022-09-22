@@ -393,7 +393,7 @@
                             </el-submenu>
 
 <!--                            applications-->
-                            <el-menu-item index="4" @click="showData('application','applicationPanel')">
+                            <el-menu-item index="4" @click="showData('application','applicationPanel')" v-if="themeObj.application.length!==0">
 
                                 <div slot="title"  id="applications1">
                                     <i class="el-icon-bangzhu"></i>
@@ -922,9 +922,9 @@
                             <div v-for="(item, index) in maintainer.data" :key="index">
                                 <el-col :span="8" style="padding:10px;height:350px;width:230px">
                                     <div class="el-card__body" style="padding: 0px;">
-                                        <a :href="'/profile/' + item.userId" class="md-opjjpmhoiojifppkkcdabiobhakljdgm_doc">
-                                            <!--<img :src="item.image" onerror="src='/static/img/icon/default.png'" class="image"></a>-->
-                                            <img style="width:210px" :src="item.image!=''&&item.image!=null?item.image:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';"></a>
+                                        <!--<a :href="'/profile/' + item.userId" class="md-opjjpmhoiojifppkkcdabiobhakljdgm_doc">-->
+                                        <!--   <img style="width:210px" :src="item.image!=''&&item.image!=null?item.image:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';"></a>-->
+                                        <img style="width:210px" :src="item.image!=''&&item.image!=null?item.image:'/static/img/icon/default.png'" onerror="this.src='/static/img/icon/default.png';">
                                         <div style="padding: 14px;background-color: white">
                                             <p style="text-align: center;">{{ item.name }}</p>
                                         </div>

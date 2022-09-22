@@ -463,6 +463,7 @@ var vue = new Vue({
         isSearchModel:false,
 
         taskLoading:false,
+        dialogVisible: false
     },
     computed: {},
     watch: {
@@ -481,6 +482,14 @@ var vue = new Vue({
         }
     },
     methods: {
+        //可视化临时
+        visualizationTemp(){
+
+        },
+
+
+
+
         //翻译
         translatePage(jsonContent){
             this.htmlJSON = jsonContent
