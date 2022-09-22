@@ -327,7 +327,7 @@
                                     </div>
                                     <el-dropdown v-cloak style="float:right;padding:0 10px;background-color: white;cursor:pointer;" trigger="click" @command="changeDetailLanguage" >
 
-                                        <span  class="el-dropdown-link" >{{currentDetailLanguage_old}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                                        <span  class="el-dropdown-link" >{{currentDetailLanguage_new}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item v-for="item in languageList" :key="item.label" :command="beforeCommand(item.label,'old')" >{{item.label}}</el-dropdown-item>
                                         </el-dropdown-menu>
@@ -335,7 +335,7 @@
                                     <span class="fa fa-language" style="background-color:white;padding-left:10px;float:right;font-size:23px;"></span>
                                 </div>
                                 <div th:fragment="descriptionContent" class="block_content">
-                                    <div v-html="detail_old" id="detail" class="detailIntroducePanel">
+                                    <div v-html="detail_new" id="detail" class="detailIntroducePanel">
                                     </div>
                                 </div>
                                 <div class="fullPaper text-center hide">
@@ -428,7 +428,7 @@
                                                           th:text="${#lists.size(newField.references)}"></span>
 
                                                 </div>
-                                                <div class="block_content" th:if="${#lists.size(newField.references)}!=0">
+                                                <div class="block_content" th:if="${#lists.size(newField.references)!=0}">
                                                     <el-table
                                                             :data="references_old"
                                                             max-height="400"
@@ -477,7 +477,7 @@
                                                         </el-table-column>
                                                     </el-table>
                                                 </div>
-                                                <div class="text-center" th:if="${#lists.size(newField.references)}==0">
+                                                <div class="text-center" th:if="${#lists.size(newField.references)==0}">
                                                     <h5 style="margin-bottom: 10px;display: inline-block;">
                                                         {{htmlJSON.noRelatedReference}}
                                                     </h5>

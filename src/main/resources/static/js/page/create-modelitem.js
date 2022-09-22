@@ -800,6 +800,10 @@ var createModelItem = Vue.extend({
         },
 
         insertMetaData(metadata){
+            if (!metadata){
+                return;
+            }
+
             let overview = metadata.overview
             let design = metadata.design
             let usage = metadata.usage

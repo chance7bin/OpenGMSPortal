@@ -3046,12 +3046,12 @@ var info=new Vue({
             window.sessionStorage.setItem("history", window.location.href);
             const language = window.localStorage.getItem("language");
 
-            if (language == "zh-cn"){
+            if (language !== "zh-cn"){
                 var loginTip = "This function requires an account, please login first."
                 var login = "Log in"
                 var tip = "Tip"
             }else {
-                var loginTip = "该操作需要一个账户，请先登录."
+                var loginTip = "该操作需要一个账户，请先登录"
                 var login = "登录"
                 var tip = "提示"
             }
@@ -4002,13 +4002,14 @@ var info=new Vue({
             switch (row.type){
                 case "concept":
                     return 'Concept & Semantic'
-                    break;
                 case "spatialReference":
                     return 'Spatiotemporal Reference'
                 case "template":
                     return 'Data Template'
                 case "unit":
                     return 'Unit & Metric'
+                case "dataSpaceFile":
+                    return 'File'
             }
         },
 

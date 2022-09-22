@@ -80,6 +80,9 @@ public class ThemeService {
             // if(maintainer.getImage()==null||maintainer.getImage().equals("")){
             //     maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
             // }
+            if(user==null){
+                continue;
+            }
             maintainer.setImage(user.getAvatar().equals("")?"":genericService.formatUserAvatar(user.getAvatar()));
             if(maintainer.getEmail()==null||maintainer.getEmail().equals("")){
                 maintainer.setEmail(user.getEmail());

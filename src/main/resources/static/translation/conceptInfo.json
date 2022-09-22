@@ -338,7 +338,7 @@
     "RelatedDataItem":"编辑相关数据项",
     "noRelatedReference":"无相关参考文献，您可以添加相关参考",
     "noRelatedData":"无相关数据条目，您可以添加相关数据条目",
-    "NoRelatedMmaterial":"无相关原型，您可以添加相关原型",
+    "NoRelatedMmaterial":"无相关资源，您可以添加相关资源",
     "NoRelatedConceptual":"无相关概念模型，您可以添加相关概念模型",
     "NoRelatedLogical":"无相关逻辑模型，您可以添加相关逻辑模型",
     "NoRelatedModel":"无相关模型条目，您可以添加相关模型条目",
