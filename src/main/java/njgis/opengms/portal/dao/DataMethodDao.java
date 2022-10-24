@@ -46,4 +46,15 @@ public interface DataMethodDao extends MongoRepository<DataMethod,String>, Gener
 
     Page<DataMethod> findByNameLike(Pageable pageable,String name);
 
+
+    Page<DataMethod> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+    Page<DataMethod> findAllByKeywordsContainsIgnoreCase(String keyword, Pageable pageable);
+    Page<DataMethod> findAllByOverviewContainsIgnoreCase(String content, Pageable pageable);
+    Page<DataMethod> findAllByAuthorLikeIgnoreCase(String author, Pageable pageable);
+    Page<DataMethod> findAllByNameContainsIgnoreCaseAndMethodLikeIgnoreCase(String name, String method, Pageable pageable);
+    Page<DataMethod> findAllByKeywordsContainsIgnoreCaseAndMethodLikeIgnoreCase(String keyword, String method, Pageable pageable);
+    Page<DataMethod> findAllByOverviewContainsIgnoreCaseAndMethodLikeIgnoreCase(String content, String method, Pageable pageable);
+    Page<DataMethod> findAllByAuthorLikeIgnoreCaseAndMethodLikeIgnoreCase(String author, String method, Pageable pageable);
+    Page<DataMethod> findAllByMethodLikeIgnoreCase(String method,Pageable pageable);
+
 }

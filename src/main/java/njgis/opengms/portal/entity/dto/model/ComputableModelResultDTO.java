@@ -17,5 +17,5 @@ public class ComputableModelResultDTO extends ComputableModel {
 
     List<RelatedModelInfoDTO> relatedModelItemInfoList; //相关模型id及名称
     List<SimpleFileInfo> resourceJson; //用户上传的图片信息
-
+    List<String> relateModelItemName;
 }

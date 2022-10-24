@@ -3,6 +3,7 @@
      "systems": "OpenGMS Systems",
      "gsp": "GeoProblem Solving Platform",
      "mcp": "Model Comparison Platform",
+     "yangtze": "YangtzeVGLab",
 
      "tools": "Online Tools",
      "dsc": "Data Service Container",
@@ -22,6 +23,7 @@
      "systems": "OpenGMS系统",
      "gsp": "地理问题求解平台",
      "mcp": "模型比较平台",
+     "yangtze": "长三角虚拟地理实验平台",
 
      "tools": "在线工具",
      "dsc": "数据服务容器",
