@@ -98,6 +98,9 @@ public class ComputableModelService {
     private String managerServerIpAndPort;
 
     @Autowired
+    ModelItemService modelItemService;
+
+    @Autowired
     RedisService redisService;
 
     public ModelAndView getPage(ComputableModel computableModel) {
@@ -1052,6 +1055,117 @@ public class ComputableModelService {
         j_comptblModel.put("authorId",user.getAccessId());
 
         return j_comptblModel;
+
+    }
+
+    public JSONObject searchDeployedModelByUser(String userName,int asc,int page,int size,String searchText){
+        Sort sort = Sort.by(asc == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<ComputableModel> computableModelPage = computableModelDao.findAllByAuthorAndDeployAndStatusInAndNameLikeIgnoreCase(userName,true,itemStatusVisible,searchText,pageable);
+        List<ComputableModel> ComputableModelList = computableModelPage.getContent();
+        JSONArray j_computableModelArray = new JSONArray();
+
+        for(ComputableModel computableModel:ComputableModelList){
+            String author = computableModel.getAuthor();
+            User user = userService.getByEmail(computableModel.getAuthor());
+            JSONObject j_computableModel = new JSONObject();
+            j_computableModel.put("oid",computableModel.getId());
+            j_computableModel.put("name",computableModel.getName());
+            j_computableModel.put("description",computableModel.getOverview());
+            j_computableModel.put("author",user.getName());
+            j_computableModel.put("authorId",user.getAccessId());
+            j_computableModel.put("md5",computableModel.getMd5());
+            j_computableModel.put("mdl",computableModel.getMdl());
+            j_computableModel.put("mdlJson",computableModel.getMdlJson());
+            j_computableModel.put("createTime",computableModel.getCreateTime());
+            j_computableModel.put("lastModifyTime",computableModel.getLastModifyTime());
+            j_computableModelArray.add(j_computableModel);
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("total",computableModelPage.getTotalElements());
+        jsonObject.put("content",j_computableModelArray);
+
+        return jsonObject;
+    }
+
+    public JSONObject searchDeployedModel(int asc,int page,int size,String searchText){
+        Sort sort = Sort.by(asc == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "createTime");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<ComputableModel> computableModelPage = computableModelDao.findAllByDeployAndStatusInAndNameLikeIgnoreCase(true,itemStatusVisible,searchText,pageable);
+        List<ComputableModel> ComputableModelList = computableModelPage.getContent();
+        JSONArray j_computableModelArray = new JSONArray();
+
+        for(ComputableModel computableModel:ComputableModelList){
+            String author = computableModel.getAuthor();
+            User user = userService.getByEmail(computableModel.getAuthor());
+            JSONObject j_computableModel = new JSONObject();
+            j_computableModel.put("oid",computableModel.getId());
+            j_computableModel.put("name",computableModel.getName());
+            j_computableModel.put("description",computableModel.getOverview());
+            j_computableModel.put("author",user.getName());
+            j_computableModel.put("authorId",user.getAccessId());
+            j_computableModel.put("md5",computableModel.getMd5());
+            j_computableModel.put("mdl",computableModel.getMdl());
+            j_computableModel.put("mdlJson",computableModel.getMdlJson());
+            j_computableModel.put("createTime",computableModel.getCreateTime());
+            j_computableModel.put("lastModifyTime",computableModel.getLastModifyTime());
+            j_computableModelArray.add(j_computableModel);
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("total",computableModelPage.getTotalElements());
+        jsonObject.put("content",j_computableModelArray);
+
+        return jsonObject;
+    }
+
+    //专门针对userserver提供的方法
+    public JsonResult getInfoForUserserver(String id){
+
+        ComputableModel computableModel=computableModelDao.findFirstById(id);
+        ComputableModelResultDTO computableModelResultDTO=new ComputableModelResultDTO();
+        BeanUtils.copyProperties(computableModel,computableModelResultDTO);
+        computableModelResultDTO.setRelateModelItemName(
+            modelItemService.getModelItemName(computableModel.getRelatedModelItems()));
+
+        List<SimpleFileInfo> resourceArray = new ArrayList<>();
+        List<Resource> resources = computableModel.getResources();
+
+        if (resources != null) {
+            for (int i = 0; i < resources.size(); i++) {
+
+                String path = resources.get(i).getPath();
+
+                String[] arr = path.split("\\.");
+                String suffix = arr[arr.length - 1];
+
+                arr = path.split("/");
+                String name = arr[arr.length - 1].substring(14);
+
+                // JSONObject jsonObject = new JSONObject();
+                // jsonObject.put("id", i);
+                // jsonObject.put("name", name);
+                // jsonObject.put("suffix", suffix);
+                // jsonObject.put("path",htmlLoadPath+resources.get(i));
+                SimpleFileInfo simpleFileInfo = new SimpleFileInfo();
+                simpleFileInfo.setId(String.valueOf(i));
+                simpleFileInfo.setName(name);
+                simpleFileInfo.setSuffix(suffix);
+                simpleFileInfo.setPath(htmlLoadPath+resources.get(i));
+                resourceArray.add(simpleFileInfo);
+
+            }
+
+        }
+
+        computableModelResultDTO.setResourceJson(resourceArray);
+
+        return ResultUtils.success(computableModelResultDTO);
 
     }
 }

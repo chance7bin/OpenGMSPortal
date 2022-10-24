@@ -10,6 +10,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataApplicationFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.DataItemService;
@@ -416,5 +417,28 @@ public class DataMethodController {
         dataMethodService.downloadResource(id,index,response);
 
     }
+
+    /** 下面的接口是UserServer用到的接口 */
+    @RequestMapping(value = "/methods/getApplicationInvokable",method = RequestMethod.POST)
+    JsonResult getApplicationInvokable(@RequestBody DataApplicationFindDTO dataApplicationFindDTO){
+        return  ResultUtils.success(dataMethodService.searchApplication(dataApplicationFindDTO));
+    }
+
+
+    @RequestMapping(value = "/getApplication", method = RequestMethod.GET)      // 这是拿到用户上传的所有条目
+    public JsonResult getUserUploadData(@RequestParam(value = "userOid", required = false) String userOid,
+                                        @RequestParam(value = "page", required = false) Integer page,
+                                        @RequestParam(value = "pagesize", required = false) Integer pagesize,
+                                        @RequestParam(value = "asc", required = false) Integer asc,
+                                        @RequestParam(value = "type", required = false) String type
+    ) {
+        return ResultUtils.success(dataMethodService.getUsersUploadData(userOid, page, pagesize, asc,type));
+    }
+
+    @RequestMapping(value = "/getApplication/{oid}",method = RequestMethod.GET)     // 根据oid拿到条目的所有信息
+    public JsonResult getApplicationByOid(@PathVariable("oid") String oid) throws UnsupportedEncodingException {
+        return dataMethodService.getApplicationByOid(oid);
+    }
+
 
 }

@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class SimpleFileInfo {
+    String id;
     String name;
     String suffix;
     String path;

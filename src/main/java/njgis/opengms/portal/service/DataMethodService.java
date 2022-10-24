@@ -8,11 +8,14 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.doo.model.Resource;
+import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.support.MetaData;
 import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
+import njgis.opengms.portal.entity.dto.data.dataMethod.DataApplicationFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.entity.po.DataMethod;
 import njgis.opengms.portal.entity.po.DataServerTask;
@@ -1315,5 +1318,209 @@ public class DataMethodService {
 
 
 
+    }
+
+    public JSONObject searchApplication(DataApplicationFindDTO dataApplicationFindDTO){
+        Pageable pageable = PageRequest.of(dataApplicationFindDTO.getPage()-1, dataApplicationFindDTO.getPageSize(), Sort.by(dataApplicationFindDTO.getAsc()? Sort.Direction.ASC: Sort.Direction.DESC,dataApplicationFindDTO.getSortField()));
+        Page<DataMethod> dataApplicationPage;
+        try {
+            dataApplicationPage = selectMethodByCurQueryFieldAndMethod(dataApplicationFindDTO.getSearchText(), dataApplicationFindDTO.getCurQueryField(), dataApplicationFindDTO.getMethod(),pageable);
+
+            // if(dataApplicationFindDTO.getSearchText()!=null && dataApplicationFindDTO.getCurQueryField()!=null && dataApplicationFindDTO.getMethod()!=null) {
+            //     dataApplicationPage = selectMethodByCurQueryFieldAndMethod(dataApplicationFindDTO.getSearchText(), dataApplicationFindDTO.getCurQueryField(), dataApplicationFindDTO.getMethod(),pageable);
+            // }else {
+            //     dataApplicationPage = dataApplicationDao.findAll(pageable);
+            // }
+        } catch (MyException err) {
+            System.out.println(err);
+            return null;
+        }
+
+        List<DataMethod> dataApplications = dataApplicationPage.getContent();
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i=0;i<dataApplications.size();++i) {
+
+            DataMethod dataApplication = dataApplications.get(i);
+
+            String oid = dataApplication.getAuthor();
+            User user = userDao.findFirstByEmail(oid);
+            JSONObject userObject = new JSONObject();
+            userObject.put("id",user.getId());
+            userObject.put("image",user.getAvatar().equals("")?"":htmlLoadPath + user.getAvatar());
+            userObject.put("name",user.getName());
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("author",userObject);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            jsonObject.put("createTime",simpleDateFormat.format(dataApplication.getCreateTime()));
+            jsonObject.put("name",dataApplication.getName());
+            jsonObject.put("keywords", dataApplication.getKeywords());
+            jsonObject.put("description",dataApplication.getOverview());
+            jsonObject.put("type",dataApplication.getType());
+            jsonObject.put("status",dataApplication.getStatus());
+            jsonObject.put("oid",dataApplication.getId());
+            jsonObject.put("viewCount",dataApplication.getViewCount());
+            jsonObject.put("dailyViewCount",dataApplication.getDailyViewCount());
+            jsonObject.put("invokeServices",dataApplication.getInvokeServices());
+            jsonObject.put("authorName",user.getName());
+            jsonObject.put("authorId",user.getAccessId());
+            jsonArray.add(jsonObject);
+        }
+        JSONArray users = new JSONArray();
+        for(int i=0;i<dataApplications.size();++i) {
+            DataMethod dataApplication = dataApplications.get(i);
+            String oid = dataApplication.getAuthor();
+            User user = userDao.findFirstByEmail(oid);
+            JSONObject userObj = new JSONObject();
+            userObj.put("userId",user.getAccessId());
+            userObj.put("image", user.getAvatar().equals("")?"":htmlLoadPath + user.getAvatar());
+            userObj.put("name", user.getName());
+            userObj.put("email", user.getEmail());
+            users.add(userObj);
+
+            dataApplications.get(i).setAuthor(user.getName());
+            dataApplications.get(i).setId(dataApplication.getId());
+        }
+        JSONObject res = new JSONObject();
+        res.put("list",jsonArray);
+        res.put("total",dataApplicationPage.getTotalElements());
+        res.put("users",users);
+
+        return res;
+    }
+
+    public Page<DataMethod> selectMethodByCurQueryFieldAndMethod(String searchText, String curQueryField, String method,Pageable pageable) {       // 根据类别和搜索方式来查找所有数据
+        Page<DataMethod> result;
+
+        if(method.equals("")) {          // 不分类的情况
+            if(searchText.equals("")){
+                result = dataMethodDao.findAll(pageable);
+            }else{
+                switch (curQueryField) {
+                    case "name":{
+                        result = dataMethodDao.findAllByNameContainsIgnoreCase(searchText, pageable);
+                        break;
+                    }
+                    case "keyword":{
+                        result = dataMethodDao.findAllByKeywordsContainsIgnoreCase(searchText, pageable);
+                        break;
+                    }
+                    case "content":{
+                        result = dataMethodDao.findAllByOverviewContainsIgnoreCase(searchText, pageable);
+                        break;
+                    }
+                    case "contributor":{
+                        User user = userDao.findFirstByName(searchText);
+                        if(user != null){
+                            result = dataMethodDao.findAllByAuthorLikeIgnoreCase(user.getEmail(), pageable);
+                        } else {        // 娶一个不存在的名字，返回nodata，不能返回null
+                            result = dataMethodDao.findAllByAuthorLikeIgnoreCase("hhhhhhhhhhhhhhhhhh", pageable);
+                        }
+                        break;
+                    }
+                    default:{
+                        System.out.println("curQueryField" + curQueryField + " is wrong.");
+                        return null;
+                    }
+                }
+            }
+        } else {
+            if(searchText.equals("")){
+                result = dataMethodDao.findAllByMethodLikeIgnoreCase(method, pageable);
+            } else {
+                switch (curQueryField) {
+                    case "name":{
+                        result = dataMethodDao.findAllByNameContainsIgnoreCaseAndMethodLikeIgnoreCase(searchText, method, pageable);
+                        break;
+                    }
+                    case "keyword":{
+                        result = dataMethodDao.findAllByKeywordsContainsIgnoreCaseAndMethodLikeIgnoreCase(searchText, method, pageable);
+                        break;
+                    }
+                    case "content":{
+                        result = dataMethodDao.findAllByOverviewContainsIgnoreCaseAndMethodLikeIgnoreCase(searchText, method, pageable);
+                        break;
+                    }
+                    case "contributor":{
+                        User user = userDao.findFirstByName(searchText);
+                        if(user != null){
+                            result = dataMethodDao.findAllByAuthorLikeIgnoreCaseAndMethodLikeIgnoreCase(user.getEmail(), method, pageable);
+                        } else {    // 取一个不存在的名字，返回nodata，不能返回null
+                            result = dataMethodDao.findAllByAuthorLikeIgnoreCaseAndMethodLikeIgnoreCase("hhhhhhhhhhhhhhhh", method, pageable);
+                        }
+                        break;
+                    }
+                    default:{
+                        System.out.println("curQueryField" + curQueryField + " is wrong.");
+                        return null;
+                    }
+                }
+            }
+
+        }
+
+        return result;
+
+        // if(searchText.equals("") && method.equals("")){
+        //     return dataApplicationDao.findAllByInvokable(pageable,true);
+        // }else if(searchText.equals("") && !method.equals("")){
+        //     return dataApplicationDao.findAllByMethodLikeIgnoreCaseAndInvokable(method,pageable,true);
+        // }else if(!searchText.equals("") && method.equals("")){
+        //     return dataApplicationDao.findByNameLikeAndInvokable(searchText,pageable,true);
+        // } else{
+        //     return dataApplicationDao.findByMethodLikeIgnoreCaseAndNameLikeAndInvokable(method,searchText,pageable,true);
+        // }
+    }
+
+    public JsonResult getApplicationByOid(String oid) throws UnsupportedEncodingException {
+        DataMethod dataApplication = dataMethodDao.findFirstById(oid);
+        dataApplication = recordViewCount(dataApplication);
+        dataMethodDao.save(dataApplication);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("dataApplication", dataApplication);
+        List<InvokeService> invokeServices = dataApplication.getInvokeServices();
+        for (InvokeService invokeService:invokeServices){
+            String token = invokeService.getToken();
+            boolean isOnline = isOnline(token);
+            if(isOnline){
+                invokeService.setOnlineStatus("online");
+            }else {
+                invokeService.setOnlineStatus("offline");
+            }
+        }
+
+        return ResultUtils.success(JSONObject.toJSON(dataApplication));
+    }
+
+    public DataMethod recordViewCount(DataMethod item){     // 记录访问次数
+        Date now = new Date();
+        DailyViewCount newViewCount = new DailyViewCount(now, 1);
+
+        List<DailyViewCount> dailyViewCountList=item.getDailyViewCount();
+        if(dailyViewCountList==null){
+            List<DailyViewCount> newList=new ArrayList<>();
+            newList.add(newViewCount);
+            dailyViewCountList=newList;
+        }
+        else if(dailyViewCountList.size()>0) {
+            DailyViewCount dailyViewCount = dailyViewCountList.get(dailyViewCountList.size() - 1);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            if (sdf.format(dailyViewCount.getDate()).equals(sdf.format(now))) {
+                dailyViewCount.setCount(dailyViewCount.getCount() + 1);
+                dailyViewCountList.set(dailyViewCountList.size() - 1, dailyViewCount);
+            } else {
+                dailyViewCountList.add(newViewCount);
+            }
+        }
+        else{
+            dailyViewCountList.add(newViewCount);
+        }
+
+        item.setDailyViewCount(dailyViewCountList);
+        item.setViewCount(item.getViewCount()+1);
+
+        return item;
     }
 }

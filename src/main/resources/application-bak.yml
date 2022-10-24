@@ -1,0 +1,28 @@
+swagger:
+  enable: false
+
+spring:
+  thymeleaf:
+    cache: false # 控制前端页面模板缓存，若设置为true则前端页面不能实时刷新
+  data:
+    mongodb:
+      authentication-database: PortalOnline
+      database: PortalOnline
+      host: 175.27.137.60
+      port: 23266
+      username: OGMSROOT
+      password: ogms1qaz2wsx
+#  redis:
+#    host: localhost
+#    port: 6379
+
+resourcePath: /data/portal/upload
+
+rootUser: opengms@njnu.edu.cn
+
+logging:
+  file:
+    path: /data/portal/logs
+
+
+userServer : 94.191.49.160:8088/userServer

@@ -7,6 +7,7 @@ import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
@@ -15,6 +16,7 @@ import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.enums.RelationTypeEnum;
+import njgis.opengms.portal.enums.ResultEnum;
 import njgis.opengms.portal.utils.ImageUtils;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
@@ -2170,4 +2172,29 @@ public class ModelItemService {
         return item.getLocalizationList();
 
     }
+
+    public ModelItem getById(String id) {
+        try {
+            ModelItem modelItem=modelItemDao.findFirstById(id);
+            return modelItem;
+        } catch (Exception e) {
+            System.out.println("有人乱查数据库！！该ID不存在Model Item对象");
+            throw new MyException(ResultEnum.NO_OBJECT);
+        }
+    }
+
+
+    public List<String> getModelItemName(List<String> itemIdList){
+        List<String> itemNameList = new ArrayList<>();
+        for (String id : itemIdList) {
+            ModelItem item = getById(id);
+            String name = "";
+            if (item != null){
+                name = item.getName();
+            }
+            itemNameList.add(name);
+        }
+        return itemNameList;
+    }
+
 }

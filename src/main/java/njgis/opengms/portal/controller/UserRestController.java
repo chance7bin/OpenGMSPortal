@@ -1270,4 +1270,15 @@ public class UserRestController {
     }
 
 
+    /** 下面的接口是UserServer用到的接口 */
+    @RequestMapping(value = "/getOidByEmail", method = RequestMethod.GET)
+    public JsonResult getOidByEmail(HttpServletRequest req, @RequestParam String email) {
+        User user = userService.getByEmail(email);
+        String userId = null;
+        if(user != null){
+            userId = user.getId();
+        }
+        return userId == null?ResultUtils.error(-1, "user is not exist."):ResultUtils.success(userId);
+    }
+
 }

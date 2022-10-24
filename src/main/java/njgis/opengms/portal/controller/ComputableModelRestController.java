@@ -60,6 +60,7 @@ public class ComputableModelRestController {
     @Autowired
     TaskService taskService;
 
+
     /**
      * @Description 根据id获取计算模型详情页面
      * @param id
@@ -379,9 +380,32 @@ public class ComputableModelRestController {
     }
 
 
+    /** 下面的接口是UserServer用到的接口 */
+
+    @RequestMapping(value="/searchDeployedModelByUser",method=RequestMethod.GET)
+    public JsonResult searchDeployedModelByEmail(@RequestParam(value="userName") String userName,@RequestParam(value="asc") int asc,
+                                                 @RequestParam(value = "page") int page,
+                                                 @RequestParam(value = "size") int size,
+                                                 @RequestParam(value = "searchText") String searchText
+    ) {
+        return ResultUtils.success(computableModelService.searchDeployedModelByUser(userName,asc,page,size,searchText));
+    }
+
+    @RequestMapping(value="/searchDeployedModel",method=RequestMethod.GET)
+    public JsonResult searchDeployedModel(@RequestParam(value="asc") int asc,
+                                          @RequestParam(value = "page") int page,
+                                          @RequestParam(value = "size") int size,
+                                          @RequestParam(value = "searchText") String searchText
+    ) {
+        return ResultUtils.success(computableModelService.searchDeployedModel(asc,page,size,searchText));
+    }
 
 
 
+    @RequestMapping (value="/getInfo/{id}",method = RequestMethod.GET)
+    JsonResult getInfoForUserserver(@PathVariable ("id") String id){
+        return computableModelService.getInfoForUserserver(id);
+    }
 
 
 }
