@@ -104,11 +104,17 @@ public class ComputableModelService {
     RedisService redisService;
 
     public ModelAndView getPage(ComputableModel computableModel) {
+        return getPage(computableModel, false);
+    }
+
+    public ModelAndView getPage(ComputableModel computableModel, boolean history) {
         //条目信息
         ModelAndView modelAndView = new ModelAndView();
 
         computableModel=(ComputableModel)genericService.recordViewCount(computableModel);
-        computableModelDao.save(computableModel);
+        if (!history){
+            computableModelDao.save(computableModel);
+        }
 
         //时间
         Date date = computableModel.getCreateTime();

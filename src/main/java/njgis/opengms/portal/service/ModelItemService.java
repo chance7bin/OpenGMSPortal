@@ -123,11 +123,19 @@ public class ModelItemService {
         return getPage(portalItem);
     }
 
-    public ModelAndView getPage(ModelItem portalItem){
-        ModelAndView modelAndView=new ModelAndView();
-        ModelItem modelInfo = (ModelItem) genericService.recordViewCount(portalItem);
 
-        modelItemDao.save(modelInfo);
+    public ModelAndView getPage(ModelItem portalItem){
+        return getPage(portalItem, false);
+    }
+
+    public ModelAndView getPage(ModelItem portalItem, boolean history){
+        ModelAndView modelAndView=new ModelAndView();
+
+        ModelItem modelInfo = (ModelItem) genericService.recordViewCount(portalItem);
+        if(!history){
+            modelItemDao.save(modelInfo);
+        }
+
         JSONArray classResult = modelClassificationService.getClassifications(modelInfo.getClassifications());
 
         //详情页面
@@ -203,6 +211,8 @@ public class ModelItemService {
 
         return modelAndView;
     }
+
+
 
     public String getAuthorshipString(List<AuthorInfo> authorshipList) {
         String authorshipString = "";

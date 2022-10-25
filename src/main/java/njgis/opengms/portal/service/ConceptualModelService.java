@@ -95,9 +95,15 @@ public class ConceptualModelService {
     }
 
     public ModelAndView getPage(ConceptualModel conceptualModelInfo) {
-        conceptualModelInfo=(ConceptualModel)genericService.recordViewCount(conceptualModelInfo);
+        return getPage(conceptualModelInfo, false);
+    }
 
-        conceptualModelDao.save(conceptualModelInfo);
+    public ModelAndView getPage(ConceptualModel conceptualModelInfo, boolean history) {
+
+        conceptualModelInfo=(ConceptualModel)genericService.recordViewCount(conceptualModelInfo);
+        if (!history){
+            conceptualModelDao.save(conceptualModelInfo);
+        }
 
         //排序
         List<Localization> locals = conceptualModelInfo.getLocalizationList();

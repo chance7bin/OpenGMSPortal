@@ -380,7 +380,7 @@
                                                                 <!--可视化按钮，新加，临时-->
                                                                 <el-button plain round type="primary"
                                                                            v-if="modelInEvent.url!=''&&modelInEvent.url!=null"
-                                                                           @click="dialogVisible = true">
+                                                                           @click="visualization(modelInEvent.url)">
                                                                     <i class="el-icon-picture"></i>
                                                                 </el-button>
 
@@ -391,7 +391,7 @@
                                                                     >
                                                                     <!--<span></span>-->
                                                                     <iframe frameborder="0" style="width: 90%; height: 200px"
-                                                                        src="http://175.27.137.60:8082/onlinePreview?url=aHR0cDovLzE3NS4yNy4xMzcuNjA6ODA4Mi9kZW1vL1N0YXRpb24udHh0#collapseOne"></iframe>
+                                                                        src="http://221.226.60.2:8082/onlinePreview?url=aHR0cDovLzE3NS4yNy4xMzcuNjA6ODA4Mi9kZW1vL1N0YXRpb24udHh0#collapseOne"></iframe>
 
                                                                     <span slot="footer" class="dialog-footer">
                                                                         <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
@@ -1306,6 +1306,7 @@
 <script src="/static/driver/driver.min.js"></script>
 <script src="/static/js/modules/userDataSpaceModule.js"></script>
 <script src="/static/js/modules/publicDataCenter.js"></script>
+<script src="/static/js/common/base64.js"></script>
 <script src="/static/js/page/task.js"></script>
 
 <script src="/static/js/common/navbar.js"></script>

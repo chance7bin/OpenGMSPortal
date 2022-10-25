@@ -134,7 +134,7 @@
                                                         </h5>
                                                     </div>
                                                 </el-tab-pane>
-                                                <el-tab-pane name="Data Item">
+                                                <el-tab-pane name="Data Item"  th:if="${originalField.relate != null}">
                                                     <div slot="label">{{htmlJSON.DataItem}}
                                                         <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(originalField.relate.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
                                                               th:text="${#lists.size(originalField.relate.dataItems)}"></span>
@@ -164,7 +164,7 @@
                                         </div>
                                     </div >
 <!--                                    relate resource-->
-                                    <div th:if="${originalField?.get('references')!=null}">
+                                    <div th:if="${originalField?.get('references')!=null&&#lists.size(originalField.references)!=0}">
                                         <div id="model_related_resource_old" class="detail_block">
                                             <div class="block_head">
                                                 <div class="head_text">
@@ -256,7 +256,7 @@
 
                             <div th:if="${modularType.name=='DataMethod' or modularType.name=='ComputableModel'}">
                                 <div th:if="${originalField?.get('resources')!=null}">
-                                    <div th:replace="fragments/itemInfoModules :: Resource(${originalField.resources})"></div>
+                                    <div th:replace="fragments/itemInfoModules :: Resource(${originalField.resources}, ${modularType.name})"></div>
                                 </div>
                             </div>
 
@@ -382,7 +382,7 @@
                                                     </h5>
                                                 </div>
                                             </el-tab-pane>
-                                            <el-tab-pane name="Data Item">
+                                            <el-tab-pane name="Data Item" th:if="${newField.relate != null}">
                                                 <div slot="label">{{htmlJSON.DataItem}}
                                                     <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(newField.relate.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
                                                           th:text="${#lists.size(newField.relate.dataItems)}"></span>
@@ -505,7 +505,7 @@
 
                             <div th:if="${modularType.name=='DataMethod' or modularType.name=='ComputableModel'}">
                                 <div th:if="${newField?.get('resources')!=null}">
-                                    <div th:replace="fragments/itemInfoModules :: Resource(${newField.resources})"></div>
+                                    <div th:replace="fragments/itemInfoModules :: Resource(${newField.resources}, ${modularType.name})"></div>
                                 </div>
                             </div>
 
@@ -579,8 +579,8 @@
     // var author = [[${user}]];
     // var modelReferences = [[${references}]];
 
-    var references_old = [[${originalField.references}]];
-    var references_new = [[${newField.references}]];
+    // var references_old = [[${originalField.references}]];
+    // var references_new = [[${newField.references}]];
 
 </script>
 </html>

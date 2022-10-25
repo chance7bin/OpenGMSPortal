@@ -128,6 +128,10 @@ public class DataMethodService {
     }
 
     public ModelAndView getPage(DataMethod dataMethod){
+        return getPage(dataMethod, false);
+    }
+
+    public ModelAndView getPage(DataMethod dataMethod, boolean history){
         ModelAndView modelAndView = new ModelAndView();
         List<String> classificationsList = dataMethod.getClassifications();
         List<String> classifications = getClassifications(classificationsList);

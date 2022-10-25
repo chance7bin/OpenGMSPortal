@@ -95,9 +95,15 @@ public class LogicalModelService {
     }
 
     public ModelAndView getPage(LogicalModel logicalModelInfo) {
-        logicalModelInfo=(LogicalModel)genericService.recordViewCount(logicalModelInfo);
+        return getPage(logicalModelInfo, false);
+    }
 
-        logicalModelDao.save(logicalModelInfo);
+    public ModelAndView getPage(LogicalModel logicalModelInfo, boolean history) {
+
+        logicalModelInfo=(LogicalModel)genericService.recordViewCount(logicalModelInfo);
+        if(history){
+            logicalModelDao.save(logicalModelInfo);
+        }
 
         //排序
         List<Localization> locals = logicalModelInfo.getLocalizationList();
