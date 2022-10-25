@@ -301,7 +301,7 @@
                                 <div id="showStyle" style="position:absolute;right:160px">
                                     <span style="margin-right:10px">{{htmlJSON.showStyle}}</span>
                                     <el-radio-group v-model="radioStyle">
-                                        <el-radio-button id="classic" :label="htmlJSON.classic"></el-radio-button>
+                                        <el-radio-button id="Classic" :label="htmlJSON.classic"></el-radio-button>
                                         <el-radio-button id="semantics" :label="htmlJSON.semantics"></el-radio-button>
                                         <el-radio-button id="workFlow" :label="htmlJSON.workFlow"></el-radio-button>
                                     </el-radio-group>
@@ -464,7 +464,7 @@
                                                         <span v-if="modelOutEvent.data!=undefined&&modelOutEvent.data.length>0&&modelOutEvent.data[0].externalId!=undefined">
 
                                                             <el-tag type="info" :disable-transitions="true">
-                                                                Data Type:
+                                                                {{htmlJSON.dataType}}:
                                                                 <a style="text-decoration: underline"
                                                                    :href="'/repository/template/'+modelOutEvent.data[0].externalId.toLowerCase()"
                                                                    target="_blank">{{modelOutEvent.data[0].text}}</a>
