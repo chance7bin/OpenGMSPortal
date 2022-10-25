@@ -479,6 +479,16 @@ var vue = new Vue({
             console.log("watch info")
             console.log(o_val)
             console.log(n_val)
+        },
+
+        htmlJSON(){
+            if (this.htmlJSON.classic == '经典'){
+                // console.log(1)
+                this.radioStyle = '经典'
+            }else {
+                this.radioStyle = 'Classic'
+            }
+
         }
     },
     methods: {
@@ -2970,7 +2980,7 @@ var vue = new Vue({
 
             dom[0].style.top = e.pageY - 250 + "px"
             dom[0].style.left = e.pageX - 230 + "px";
-            console.log(e.style)
+            // console.log(e.style)
             $('.wzhRightMenu').animate({height: '120'}, 150);
         },
 
