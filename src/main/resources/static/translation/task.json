@@ -112,7 +112,7 @@
       "SomeInputParametersAreNotSet": "Some input parameters are not set",
       "SettingParameters": "Setting parameters...",
       "NoDataCanBeDownloaded": "No data can be downloaded",
-      "CantLoadTestData": "Can not load the test data, please load inputs of the model mannually",
+      "CantLoadTestData": "Can not load the test data, please load inputs of the model manually",
       "CopyLinkSuccessfully": "Copy link successfully",
       "FailedCopyLink": "Failed to copy link",
       "NameAlreadyExisting": "this name is existing in this path, please input a new one",
