@@ -52,18 +52,27 @@ export var ItemTemplate = Vue.extend({
 
                             <el-table-column  label="操作" min-width="300px">
                                 <template slot-scope="scope">
-                                    <el-button
-                                            v-if="scope.row.status==='Public'"
-                                            size="mini"
-                                            type="success"
-                                            icon="el-icon-unlock"
-                                            @click="changeStatus(scope.row)">公开-状态切换</el-button>
-                                    <el-button
-                                            v-if="scope.row.status==='Private'"
-                                            size="mini"
-                                            type="info"
-                                            icon="el-icon-lock"
-                                            @click="changeStatus(scope.row)">私有-状态切换</el-button>
+                                    <el-dropdown split-button type="success" size="mini" @command="changeStatus"">
+                                      {{scope.row.status}}
+                                      <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item :command="['Public',scope.row]">公开</el-dropdown-item>
+                                        <el-dropdown-item :command="['Private',scope.row]">私有</el-dropdown-item>
+                                        <el-dropdown-item :command="['Discoverable',scope.row]">可发现</el-dropdown-item>
+                                      </el-dropdown-menu>
+                                    </el-dropdown>
+                                
+<!--                                    <el-button-->
+<!--                                            v-if="scope.row.status==='Public'"-->
+<!--                                            size="mini"-->
+<!--                                            type="success"-->
+<!--                                            icon="el-icon-unlock"-->
+<!--                                            @click="changeStatus(scope.row)">公开-状态切换</el-button>-->
+<!--                                    <el-button-->
+<!--                                            v-if="scope.row.status==='Private'"-->
+<!--                                            size="mini"-->
+<!--                                            type="info"-->
+<!--                                            icon="el-icon-lock"-->
+<!--                                            @click="changeStatus(scope.row)">私有-状态切换</el-button>-->
                                     <el-button
                                             size="mini"
                                             type="primary"
@@ -314,15 +323,11 @@ export var ItemTemplate = Vue.extend({
         },
 
         //改变条目状态
-        changeStatus(val){
-            console.log(val)
-            let status=val.status
-            if(status==="Public"){
-                status="Private"
-            }else{
-                status="Public"
-            }
-            axios.post('/managementSystem/item/status/'+this.itemType+'/'+val.id+'/'+status, {
+        changeStatus(command){
+            console.log("command",command)
+            let status=command[0]
+            let id=command[1]["id"]
+            axios.post('/managementSystem/item/status/'+this.itemType+'/'+id+'/'+status, {
             })
                 .then(response=> {
                     this.getGeoItemList()
