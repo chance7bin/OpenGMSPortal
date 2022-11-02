@@ -1599,7 +1599,8 @@ Vue.component("user-data",
             },
 
             submitUpload() {
-                if (this.targetFile.length > 1){
+                console.log(this.uploadFileList)
+                if (this.uploadFileList.length > 1){
                     this.$message('仅可以选择单个文件！');
                     return;
                 }
