@@ -492,9 +492,13 @@ var vue = new Vue({
         }
     },
     methods: {
-        //可视化临时
-        visualizationTemp(){
-
+        //可视化
+        visualization(url){
+            // url = "http://221.226.60.2:8082/data/8c46f99c-77ac-496a-b6c8-290b653a10cf"
+            let urlArr = url.split("/");
+            // 兰德访问不了门户网站的数据，要转成兰德的服务器
+            url = "http://221.226.60.2:8082/data/" + urlArr[urlArr.length - 1]
+            window.open('http://221.226.60.2:8082/onlinePreview?url=' + Base64.encode(url));
         },
 
 

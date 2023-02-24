@@ -95,10 +95,16 @@ public class DataItemService {
     }
 
     public ModelAndView getPage(DataItem dataItem, GenericItemDao genericItemDao){
+        return getPage(dataItem,genericItemDao,false);
+    }
+
+    public ModelAndView getPage(DataItem dataItem, GenericItemDao genericItemDao, boolean history){
         ModelAndView view = new ModelAndView();
 
         dataItem = (DataItem)genericService.recordViewCount(dataItem);
-        genericItemDao.save(dataItem);
+        if (!history){
+            genericItemDao.save(dataItem);
+        }
 
         //用户信息
 

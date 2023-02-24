@@ -154,6 +154,12 @@ public class UserRestController {
 
         JSONObject result = userService.loginUserServer(account, DigestUtils.sha256Hex(password), ip);
         if (result != null) {
+
+            // 重试验证
+            if(result.getInteger("code") != null && result.getInteger("code") == -1){
+                return ResultUtils.success(result);
+            }
+
             // 密码验证成功，将用户数据放入到Session中
             String email = result.getString("email");
             String name = result.getString("name");

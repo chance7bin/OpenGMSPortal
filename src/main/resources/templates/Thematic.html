@@ -217,8 +217,6 @@
                     </div>
                 </div>
 
-
-
                 <div class="el-col el-col-6 pull-left" style="padding:0 15px 20px 0;">
                     <el-card slot="header" shadow="hover" style="text-align: center;">
                         <a href="http://geomodeling.njnu.edu.cn/ChinaBasin/" target="_blank">
@@ -241,36 +239,105 @@
                     </div>
                 </div>
 
-                <!--<i >-->
-                <div th:each="theme,index:${themeResult}" th:if="${theme.status!='Private'}" class="el-col el-col-6 pull-left" style="padding:0 15px 20px 0;">
+                <!--<div class="el-row" style="margin-top:29px; margin-bottom:20px;">-->
+
+                <div class="el-col el-col-6 pull-left" style="padding:0 15px 20px 0;">
                     <el-card slot="header" shadow="hover" style="text-align: center;">
-                        <a th:href="'../repository/theme/'+${theme.oid}"  target="_blank">
-<!--                            <img th:if="${theme.img}!=" th:src="'../static'+${theme.img}"  style="width:100%;height: auto;" class="image">-->
-
-                            <div th:unless="${theme.img}!=''" style="text-align: center;justify-content: center">
-                                <img src="/static/img/model/model.png" style="width:160px;height: 160px;">
-                            </div>
-                            <div th:if="${theme.img!=''}">
-                                <img th:src="'/static'+${theme.img}" class="image" style="width:100%;">
-                            </div>
+                        <a href="https://geomodeling.njnu.edu.cn/SdgPlatform/" target="_blank">
+                            <img src="/static/img/thematic_center/sdg.png" style="width:100%;height:auto" class="image">
                         </a>
-
                         <div style="text-align: center;padding: 15px 0 0 0;">
-                            <a th:href="'../repository/theme/'+${theme.oid}" th:utext="${theme.name}" target="_blank" style="font-size: 20px;font-weight: bold"></a>
+                            <a href="https://geomodeling.njnu.edu.cn/SdgPlatform/" target="_blank" style="font-size: 20px;font-weight: bold">生态文明建设与评估</a>
                         </div>
                     </el-card>
-                        <div class="el-row author">
-                            <div class="el-col el-col-4 el-col-offset-3">
-                                <img th:src="'/static/img/icon/default.png'"
-                                     class="round_icon" style="width:40px;height: 40px;float:left;">
+                    <div class="el-row author">
+                        <div class="el-col el-col-4 el-col-offset-3">
+                            <img th:src="'/static/img/icon/default.png'"
+                                 class="round_icon" style="width:40px;height: 40px;float:left;">
+                        </div>
+                        <div class="el-col el-col-17" style="display:flex;">
+                            <div class="pull-left" style="display: block;margin:0 auto;">
+                                <a href="../user/42"><h4>NNU_Group</h4></a>
                             </div>
-<!--                            <div class="el-col el-col-17" style="display:flex;">-->
-<!--                                <div class="pull-left" style="display: block;margin:0 auto;" id="test">-->
-<!--                                    <a th:href="'/profile/'+${theme.creator_oid}"><h4 th:text="${theme.creator_name}">Tom Marvolo Riddle</h4></a>-->
-<!--                                </div>-->
-<!--                            </div>-->
                         </div>
                     </div>
+                </div>
+
+
+                <div class="el-col el-col-6 pull-left" style="padding:0 15px 20px 0;">
+                    <el-card slot="header" shadow="hover" style="text-align: center;">
+                        <a href="https://geomodeling.njnu.edu.cn/SDGSilkRoad/" target="_blank">
+                            <img src="/static/img/thematic_center/fenxianli.png" style="width:100%;height:auto" class="image">
+                        </a>
+                        <div style="text-align: center;padding: 15px 0 0 0;">
+                            <a href="https://geomodeling.njnu.edu.cn/SDGSilkRoad/" target="_blank" style="font-size: 20px;font-weight: bold">丝绸之路土地利用模拟及分析案例</a>
+                        </div>
+                    </el-card>
+                    <div class="el-row author">
+                        <div class="el-col el-col-4 el-col-offset-3">
+                            <img th:src="'/static/img/icon/default.png'"
+                                 class="round_icon" style="width:40px;height: 40px;float:left;">
+                        </div>
+                        <div class="el-col el-col-17" style="display:flex;">
+                            <div class="pull-left" style="display: block;margin:0 auto;">
+                                <a href="../user/42"><h4>NNU_Group</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="el-col el-col-6 pull-left" style="padding:0 15px 20px 0;">
+                    <el-card slot="header" shadow="hover" style="text-align: center;">
+                        <a href="http://dev.owler.cn:11480/datav/publish.html?shareId=dec027e9bf234d9584a3fccd468f5adb#/" target="_blank">
+                            <img src="/static/img/thematic_center/keshihuafenxi.png" style="width:100%;height:auto" class="image">
+                        </a>
+                        <div style="text-align: center;padding: 15px 0 0 0;">
+                            <a href="http://dev.owler.cn:11480/datav/publish.html?shareId=dec027e9bf234d9584a3fccd468f5adb#/" target="_blank" style="font-size: 20px;font-weight: bold">生态文明模型方法库系统</a>
+                        </div>
+                    </el-card>
+                    <div class="el-row author">
+                        <div class="el-col el-col-4 el-col-offset-3">
+                            <img th:src="'/static/img/icon/default.png'"
+                                 class="round_icon" style="width:40px;height: 40px;float:left;">
+                        </div>
+                        <div class="el-col el-col-17" style="display:flex;">
+                            <div class="pull-left" style="display: block;margin:0 auto;">
+                                <a href="../user/42"><h4>NNU_Group</h4></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<i >-->
+<!--                <div th:each="theme,index:${themeResult}" th:if="${theme.status!='Private'}" class="el-col el-col-6 pull-left" style="padding:0 15px 20px 0;">-->
+<!--                    <el-card slot="header" shadow="hover" style="text-align: center;">-->
+<!--                        <a th:href="'../repository/theme/'+${theme.oid}"  target="_blank">-->
+<!--&lt;!&ndash;                            <img th:if="${theme.img}!=" th:src="'../static'+${theme.img}"  style="width:100%;height: auto;" class="image">&ndash;&gt;-->
+
+<!--                            <div th:unless="${theme.img}!=''" style="text-align: center;justify-content: center">-->
+<!--                                <img src="/static/img/model/model.png" style="width:160px;height: 160px;">-->
+<!--                            </div>-->
+<!--                            <div th:if="${theme.img!=''}">-->
+<!--                                <img th:src="'/static'+${theme.img}" class="image" style="width:100%;">-->
+<!--                            </div>-->
+<!--                        </a>-->
+
+<!--                        <div style="text-align: center;padding: 15px 0 0 0;">-->
+<!--                            <a th:href="'../repository/theme/'+${theme.oid}" th:utext="${theme.name}" target="_blank" style="font-size: 20px;font-weight: bold"></a>-->
+<!--                        </div>-->
+<!--                    </el-card>-->
+<!--                        <div class="el-row author">-->
+<!--                            <div class="el-col el-col-4 el-col-offset-3">-->
+<!--                                <img th:src="'/static/img/icon/default.png'"-->
+<!--                                     class="round_icon" style="width:40px;height: 40px;float:left;">-->
+<!--                            </div>-->
+<!--&lt;!&ndash;                            <div class="el-col el-col-17" style="display:flex;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="pull-left" style="display: block;margin:0 auto;" id="test">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <a th:href="'/profile/'+${theme.creator_oid}"><h4 th:text="${theme.creator_name}">Tom Marvolo Riddle</h4></a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                        </div>-->
+<!--                    </div>-->
                 <!--</i>-->
 
 

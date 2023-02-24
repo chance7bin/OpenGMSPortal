@@ -875,6 +875,7 @@ function watchWidth() {
     windowWidth=window.innerWidth;
     if (windowWidth > 500){
         // console.log(windowWidth);
+        // if(fullsub != null)
         fullsub.style.display='none';
     }
     if(windowWidth > 841||windowWidth < 501){

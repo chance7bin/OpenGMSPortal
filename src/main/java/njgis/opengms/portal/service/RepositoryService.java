@@ -432,6 +432,10 @@ public class RepositoryService {
     }
 
     public ModelAndView getTemplatePage(Template template) {
+        return getTemplatePage(template, false);
+    }
+
+    public ModelAndView getTemplatePage(Template template, boolean history) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("templateInfo");
 
@@ -441,7 +445,9 @@ public class RepositoryService {
         }
 
         template=(Template)genericService.recordViewCount(template);
-        templateDao.save(template);
+        if (!history){
+            templateDao.save(template);
+        }
 
         modelAndView = getCommonAttribute(template, templateClassificationDao, modelAndView);
         modelAndView.addObject("modularType", ItemTypeEnum.Template);
@@ -461,6 +467,10 @@ public class RepositoryService {
     }
 
     public ModelAndView getConceptPage(Concept concept) {
+        return getConceptPage(concept, false);
+    }
+
+    public ModelAndView getConceptPage(Concept concept, boolean history) {
         ModelAndView modelAndView = new ModelAndView();
         if(concept==null){
             modelAndView.setViewName("error/404");
@@ -470,7 +480,9 @@ public class RepositoryService {
         modelAndView.setViewName("conceptInfo");
 
         concept = (Concept)genericService.recordViewCount(concept);
-        conceptDao.save(concept);
+        if (!history){
+            conceptDao.save(concept);
+        }
 
         modelAndView = getCommonAttribute(concept, conceptClassificationDao, modelAndView);
 
@@ -505,9 +517,12 @@ public class RepositoryService {
     }
 
     public ModelAndView getSpatialReferencePage(SpatialReference spatialReference) {
+        return getSpatialReferencePage(spatialReference, false);
+    }
+
+    public ModelAndView getSpatialReferencePage(SpatialReference spatialReference, boolean history) {
         String flag="";
         ModelAndView modelAndView = new ModelAndView();
-
         if(spatialReference==null){
             modelAndView.setViewName("error/404");
             return modelAndView;
@@ -515,7 +530,10 @@ public class RepositoryService {
 
         modelAndView.setViewName("spatialReferenceInfo");
         spatialReference=(SpatialReference)genericService.recordViewCount(spatialReference);
-        spatialReferenceDao.save(spatialReference);
+
+        if (!history){
+            spatialReferenceDao.save(spatialReference);
+        }
 
         modelAndView = getCommonAttribute(spatialReference, spatialReferenceClassificationDao, modelAndView);
 
@@ -584,6 +602,10 @@ public class RepositoryService {
     }
 
     public ModelAndView getUnitPage(Unit unit) {
+        return getUnitPage(unit, false);
+    }
+
+    public ModelAndView getUnitPage(Unit unit, boolean history) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("unitInfo");
 
@@ -592,7 +614,9 @@ public class RepositoryService {
             return modelAndView;
         }
         unit=(Unit)genericService.recordViewCount(unit);
-        unitDao.save(unit);
+        if (!history){
+            unitDao.save(unit);
+        }
 
         modelAndView = getCommonAttribute(unit, unitClassificationDao, modelAndView);
 

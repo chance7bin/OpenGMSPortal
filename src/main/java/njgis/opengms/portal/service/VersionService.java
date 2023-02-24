@@ -10,6 +10,7 @@ import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
+import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -997,9 +998,6 @@ public class VersionService {
             newField.put("keywords", null);
 
 
-
-
-
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
         if(originalField.get("lastModifier")!=null){
@@ -1041,6 +1039,63 @@ public class VersionService {
             JSONArray  ref_new = getReferences(JSONArray.parseArray(newField.get("references").toString()));
             newField.remove("references");
             newField.put("references", ref_new);
+        }
+
+        //资源信息
+        if(originalField.get("resources")!=null){
+
+            JSONArray resourceArray = new JSONArray();
+            List<Resource> resources = ((JSONArray)originalField.get("resources")).toJavaList(Resource.class);
+
+            if (resources != null) {
+                for (int i = 0; i < resources.size(); i++) {
+
+                    String path = resources.get(i).getPath();
+
+                    String[] arr = path.split("\\.");
+                    String suffix = arr[arr.length - 1];
+
+                    arr = path.split("/");
+                    String name = arr[arr.length - 1].substring(14);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", name);
+                    jsonObject.put("suffix", suffix);
+                    jsonObject.put("path", resources.get(i));
+                    resourceArray.add(jsonObject);
+
+                }
+
+            }
+            originalField.remove("resources");
+            originalField.put("resources", resourceArray);
+        }
+        if(newField.get("resources")!=null){
+            JSONArray resourceArray = new JSONArray();
+            List<Resource> resources = ((JSONArray)newField.get("resources")).toJavaList(Resource.class);
+
+            if (resources != null) {
+                for (int i = 0; i < resources.size(); i++) {
+
+                    String path = resources.get(i).getPath();
+
+                    String[] arr = path.split("\\.");
+                    String suffix = arr[arr.length - 1];
+
+                    arr = path.split("/");
+                    String name = arr[arr.length - 1].substring(14);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", name);
+                    jsonObject.put("suffix", suffix);
+                    jsonObject.put("path", resources.get(i));
+                    resourceArray.add(jsonObject);
+
+                }
+
+            }
+            newField.remove("resources");
+            newField.put("resources", resourceArray);
         }
 
 
@@ -1331,14 +1386,26 @@ public class VersionService {
         GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
 
         PortalItem item = (PortalItem)itemDao.findFirstById(id);
-
         JSONArray resultList = new JSONArray();
+
+        if(item == null){
+            modelAndView.addObject("list", resultList);
+            return modelAndView;
+        }
+
         List<String> versions = item.getVersions();
         Collections.reverse(versions);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // 新增代码， 如果找不到版本信息，先记录下来 然后删除
+        List<String> need2delete = new ArrayList<>();
+
         for (String versionId : versions) {
             Version version = versionDao.findFirstById(versionId);
-            if (version == null) {continue;}
+            if (version == null) {
+                need2delete.add(versionId);
+                continue;
+            }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("date", sdf.format(version.getSubmitTime()));
             jsonObject.put("id", version.getId());
@@ -1347,6 +1414,10 @@ public class VersionService {
             jsonObject.put("accessId", user.getAccessId());
             resultList.add(jsonObject);
         }
+
+        // 删除未找到的version
+        versions.removeAll(need2delete);
+        itemDao.save(item);
 
         modelAndView.addObject("id", item.getId());
         modelAndView.addObject("name", item.getName());
@@ -1385,37 +1456,37 @@ public class VersionService {
         try {
             switch (itemType) {
                 case ModelItem:
-                    modelAndView= modelItemService.getPage((ModelItem) content);
+                    modelAndView= modelItemService.getPage((ModelItem) content, true);
                     break;
                 case ConceptualModel:
-                    modelAndView= conceptualModelService.getPage((ConceptualModel) content);
+                    modelAndView= conceptualModelService.getPage((ConceptualModel) content, true);
                     break;
                 case LogicalModel:
-                    modelAndView= logicalModelService.getPage((LogicalModel) content);
+                    modelAndView= logicalModelService.getPage((LogicalModel) content, true);
                     break;
                 case ComputableModel:
-                    modelAndView= computableModelService.getPage((ComputableModel) content);
+                    modelAndView= computableModelService.getPage((ComputableModel) content, true);
                     break;
                 case Concept:
-                    modelAndView= repositoryService.getConceptPage((Concept) content);
+                    modelAndView= repositoryService.getConceptPage((Concept) content, true);
                     break;
                 case SpatialReference:
-                    modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content);
+                    modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content, true);
                     break;
                 case Template:
-                    modelAndView= repositoryService.getTemplatePage((Template) content);
+                    modelAndView= repositoryService.getTemplatePage((Template) content, true);
                     break;
                 case Unit:
-                    modelAndView= repositoryService.getUnitPage((Unit) content);
+                    modelAndView= repositoryService.getUnitPage((Unit) content, true);
                     break;
                 case DataItem:
-                    modelAndView = dataItemService.getPage((DataItem) content, dataItemDao);
+                    modelAndView = dataItemService.getPage((DataItem) content, dataItemDao, true);
                     break;
                 case DataHub:
-                    modelAndView = dataItemService.getPage((DataItem) content, dataHubDao);
+                    modelAndView = dataItemService.getPage((DataItem) content, dataHubDao, true);
                     break;
                 case DataMethod:
-                    modelAndView = dataMethodService.getPage((DataMethod) content);
+                    modelAndView = dataMethodService.getPage((DataMethod) content, true);
                     break;
 
             }

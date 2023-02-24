@@ -202,6 +202,10 @@
                                                                     <!--        style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"-->
                                                                     <!--        @click="downloadSingle(input.url)">可视化-->
                                                                     <!--</button>-->
+                                                                    <button class="pull-right clearfix btn btn-default btn-round downloadAFile"
+                                                                            style="background-color: #024f91;border-color: #024f91; margin:0 5px"
+                                                                            @click="visualization(input.url)">{{htmlJson.VisualizationBtn}}
+                                                                    </button>
                                                                     <button class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
                                                                             @click="downloadSingle(input.url)">{{htmlJson.DownloadFile}}
@@ -222,6 +226,10 @@
                                                             <li class="flagcontent flexRowSpaceBetween" v-for="(output,key) in task.outputs">
                                                                 <span style="margin-top: 5px; displaay: inline-block;">{{output.event||(output.tag +'.'+ output.suffix)}}</span>
                                                                 <div class="flex">
+                                                                    <button class="pull-right clearfix btn btn-default btn-round downloadAFile"
+                                                                            style="background-color: #024f91;border-color: #024f91; margin:0 5px"
+                                                                            @click="visualization(output.url)">{{htmlJson.VisualizationBtn}}
+                                                                    </button>
                                                                     <button v-if="!output.multiple" class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
                                                                             @click="downloadSingle(output.url)">{{htmlJson.DownloadFile}}
@@ -421,6 +429,10 @@
                                                     {{input.event||(input.tag +'.'+ input.suffix)}}
                                                 </span>
                                                                 <div class="flex">
+                                                                    <button class="pull-right clearfix btn btn-default btn-round downloadAFile"
+                                                                            style="background-color: #024f91;border-color: #024f91; margin:0 5px"
+                                                                            @click="visualization(input.url)">{{htmlJson.VisualizationBtn}}
+                                                                    </button>
                                                                     <button class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
                                                                             @click="downloadSingle(input.url)">{{htmlJson.DownloadFile}}
@@ -441,6 +453,10 @@
                                                             <li class="flagcontent flexRowSpaceBetween" v-for="(output,key) in task.outputs">
                                                                 <span style="margin-top: 5px; displaay: inline-block;">{{output.event||(output.tag +'.'+ output.suffix)}}</span>
                                                                 <div class="flex">
+                                                                    <button class="pull-right clearfix btn btn-default btn-round downloadAFile"
+                                                                            style="background-color: #024f91;border-color: #024f91; margin:0 5px"
+                                                                            @click="visualization(output.url)">{{htmlJson.VisualizationBtn}}
+                                                                    </button>
                                                                     <button v-if="!output.multiple" class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
                                                                             @click="downloadSingle(output.url)">{{htmlJson.DownloadFile}}
@@ -638,6 +654,10 @@
                                                     {{input.event}}
                                                 </span>
                                                                 <div class="flex">
+                                                                    <button class="pull-right clearfix btn btn-default btn-round downloadAFile"
+                                                                            style="background-color: #024f91;border-color: #024f91; margin:0 5px"
+                                                                            @click="visualization(input.url)">{{htmlJson.VisualizationBtn}}
+                                                                    </button>
                                                                     <button class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
                                                                             @click="downloadSingle(input.url)">{{htmlJson.DownloadFile}}
@@ -658,6 +678,10 @@
                                                             <li class="flagcontent flexRowSpaceBetween" v-for="(output,key) in task.outputs">
                                                                 <span style="margin-top: 5px; displaay: inline-block;">{{output.event}}</span>
                                                                 <div class="flex">
+                                                                    <button class="pull-right clearfix btn btn-default btn-round downloadAFile"
+                                                                            style="background-color: #024f91;border-color: #024f91; margin:0 5px"
+                                                                            @click="visualization(output.url)">{{htmlJson.VisualizationBtn}}
+                                                                    </button>
                                                                     <button v-if="!output.multiple" class="pull-right clearfix btn btn-primary btn-round downloadAFile"
                                                                             style="background-color: #43aaff;border-color: #43aaff;margin:0 5px"
                                                                             @click="downloadSingle(output.url)">{{htmlJson.DownloadFile}}
