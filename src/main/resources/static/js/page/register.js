@@ -18,7 +18,9 @@ new Vue({
         };
 
         var validatePass = (rule, value, callback) => {
-            if (value === '') {
+            var reg = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!#@*&.])[a-zA-Z\d!#@*&.]*$/;
+            // if (value === '') {
+            if (!reg.test(value)) {
                 callback(new Error(this.htmlJSON.passwordStr));
             } else {
                 if (this.ruleForm2.checkPass !== '') {

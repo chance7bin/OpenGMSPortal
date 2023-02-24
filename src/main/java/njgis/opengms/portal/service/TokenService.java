@@ -108,6 +108,7 @@ public class TokenService {
         }catch (Exception e){
             log.error("Exception: " + e);
             // System.out.println("Exception: " + e.toString());
+
             return null;
         }
     }

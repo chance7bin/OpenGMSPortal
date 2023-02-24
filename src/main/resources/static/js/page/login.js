@@ -123,19 +123,32 @@ new Vue({
                         localStorage.setItem('remember', "yes");
                     }
                     if (result.code == "0") {
-                        this.$notify.success({
-                            title: this.htmlJSON.success,
-                            message: this.htmlJSON.sucInfo,
-                            offset: 70
-                        });
-                        setTimeout(() => {
 
-                            if (preUrl != null && preUrl.indexOf("user/register") == -1) {
-                                window.location.href = preUrl;
-                            } else {
-                                window.location.href = "/user/userSpace";
-                            }
-                        }, 1000)
+                        // 重试超过限制
+                        if(result.data.code == "-1"){
+                            this.$notify.error({
+                                title: this.htmlJSON.error,
+                                message: this.htmlJSON.maxRetryPre + " " + result.data.waitMinute + " " + this.htmlJSON.maxRetrySuffix,
+                                offset: 70
+                            });
+                            this.loadActiveIndex =false
+                        }
+
+                        else {
+                            this.$notify.success({
+                                title: this.htmlJSON.success,
+                                message: this.htmlJSON.sucInfo,
+                                offset: 70
+                            });
+                            setTimeout(() => {
+
+                                if (preUrl != null && preUrl.indexOf("user/register") == -1) {
+                                    window.location.href = preUrl;
+                                } else {
+                                    window.location.href = "/user/userSpace";
+                                }
+                            }, 1000)
+                        }
 
                     } else {
 

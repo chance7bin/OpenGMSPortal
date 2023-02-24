@@ -255,12 +255,46 @@ public class UserService {
      * @Date 2021/7/6
      **/
     public JSONObject loginUserServer(String account, String password, String ip){
+
+        User user = userDao.findFirstByEmail(account);
+        // 重试验证，前端解析该返回值
+        if(user.getNextLoginTime() != null && System.currentTimeMillis() < user.getNextLoginTime()){
+            JSONObject o = new JSONObject();
+            o.put("code", -1);
+            o.put("msg", "forbidden");
+            o.put("waitMinute", (user.getNextLoginTime() - System.currentTimeMillis()) / 1000 / 60 + 1);
+            return o;
+        }
+
         JSONObject j_tokenInfo = tokenService.getTokenUsePwd(account, password);
 
         UserShuttleDTO userShuttleDTO = new UserShuttleDTO();
         if (j_tokenInfo == null){
+
+            int retry = user.getRetry();
+            if(retry < 4 ){
+                retry++;
+                user.setRetry(retry);
+                userDao.save(user);
+            } else {
+                // 下次可登录时间 60 * 5 s
+                long nextLoginTime = System.currentTimeMillis() + 60 * 5 * 1000;
+                user.setNextLoginTime(nextLoginTime);
+                //重置重试次数
+                retry = 0;
+                user.setRetry(retry);
+                userDao.save(user);
+            }
+
             return null;
         }
+
+        // 重置登录错误次数
+        user.setNextLoginTime(null);
+        //重置重试次数
+        user.setRetry(0);
+        userDao.save(user);
+
         String access_token = (String)j_tokenInfo.get("access_token");
 
         //获取到用户服务器对象
@@ -269,7 +303,7 @@ public class UserService {
             userShuttleDTO = JSONObject.toJavaObject(userBaseJson, UserShuttleDTO.class);
 
             //更新该user的token
-            User user = userDao.findFirstByEmail(account);
+            user = userDao.findFirstByEmail(account);
             if(user==null){
                 User newUser = new User();
                 String name = userShuttleDTO.getName();

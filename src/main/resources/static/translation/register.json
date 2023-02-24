@@ -15,7 +15,7 @@
 
     "emailStr": "Please enter your email address",
     "emailCorrectStr": "Please enter the correct email address",
-    "passwordStr": "Please enter your password",
+    "passwordStr": "Must contain upper and lower case letters, numbers and characters",
     "checkPassStr": "Please enter your password again",
     "passwordCorrectStr": "Password and Confirm Password are inconsistent!",
     "nameStr": "Please enter your name",
@@ -35,7 +35,7 @@
     "join": "注册账号",
 
     "emailStr": "请输入您的邮箱地址",
-    "passwordStr": "请设置账号密码",
+    "passwordStr": "密码需包含大小写字母、数字和字符",
     "checkPassStr": "请确认您的密码",
     "nameStr": "请输入您的名字",
     "titleStr": "请选择您的称谓"
