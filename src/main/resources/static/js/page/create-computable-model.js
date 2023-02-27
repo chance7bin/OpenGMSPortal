@@ -1509,6 +1509,16 @@ var createComputableModel = Vue.extend({
                     //             break;
                     //     }
                     // }
+                    else if(res.code==415){
+                        this.$alert(this.htmlJson.NoModification, 'Tip', {
+                            type:"info",
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                $("#step").css("display", "block");
+                                $(".uploading").css("display", "none");
+                            }
+                        });
+                    }
                     else{
                         this.$alert(res.msg, 'Error', {
                             type:"error",

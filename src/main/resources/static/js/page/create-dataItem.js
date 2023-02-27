@@ -203,7 +203,7 @@ var createDataItem = Vue.extend({
 
             this.dataItemAddDTO.overview = $("#description").val();
             // this.dataItemAddDTO.detail=$("#detail").val();
-            var detail = tinyMCE.activeEditor.getContent();
+            var detail = tinyMCE.activeEditor?.getContent();
             this.dataItemAddDTO.detail = detail;
             //todo 获取作者信息
             // this.dataItemAddDTO.author=$("#author").val();
@@ -362,6 +362,9 @@ var createDataItem = Vue.extend({
                                 else if(result.data.code==-2){
                                     alert(this.htmlJson.LoginInFirst);
                                     window.location.href="/user/login";
+                                }
+                                else if(result.data.code==415){
+                                    alert(this.htmlJson.NoModification);
                                 }
                                 else{
                                     alert(result.data.msg);

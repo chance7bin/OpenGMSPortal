@@ -1034,15 +1034,26 @@ var createDataApplication = Vue.extend({
                                 }
                             });
                         }
-                    }else{
-                            this.$alert(res.msg, this.htmlJson.Error, {
-                                type:"error",
-                                confirmButtonText: 'OK',
-                                callback: action => {
-                                    $("#step").css("display", "block");
-                                    $(".uploading").css("display", "none");
-                                }
-                            });
+                    }
+                    else if(res.code==415){
+                        this.$alert(this.htmlJson.NoModification, 'Tip', {
+                            type:"info",
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                $("#step").css("display", "block");
+                                $(".uploading").css("display", "none");
+                            }
+                        });
+                    }
+                    else{
+                        this.$alert(res.msg, this.htmlJson.Error, {
+                            type:"error",
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                $("#step").css("display", "block");
+                                $(".uploading").css("display", "none");
+                            }
+                        });
                     }
 
 

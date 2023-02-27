@@ -705,9 +705,9 @@ public class ComputableModelService {
 
             Date curDate = new Date();
             computableModel.setLastModifyTime(curDate);
-            computableModel.setLastModifier(author0);
+            computableModel.setLastModifier(email);
 
-            Version version_new = versionService.addVersion(computableModel, email, originalItemName);
+            Version version_new = versionService.addVersion(computableModel, email, originalItemName, false);
             if (computableModel.getAuthor().equals(email)) {
                 // computableModelDao.save(computableModel);
                 redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);

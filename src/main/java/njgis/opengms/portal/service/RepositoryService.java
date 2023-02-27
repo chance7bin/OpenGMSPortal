@@ -321,7 +321,7 @@ public class RepositoryService {
 
             item = updatePart(item,updateDTO,itemType,email);
 
-            Version new_version = versionService.addVersion(item, email,originalItemName);
+            Version new_version = versionService.addVersion(item, email,originalItemName,false);
             if (author.equals(email)) {
                 versions.add(new_version.getId());
                 item.setVersions(versions);

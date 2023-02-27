@@ -277,7 +277,7 @@ var createConceptualModel = Vue.extend({
 
             //detail
 
-            $("#conceptualModelText").html(basicInfo.localizationList[0].description);
+            $("#conceptualModelText").html(basicInfo.localizationList[0]?.description);
 
             initTinymce('textarea#conceptualModelText')
 
@@ -367,7 +367,7 @@ var createConceptualModel = Vue.extend({
             itemObj.status = this.itemInfo.status
             itemObj.contentType=$("input[name='ContentType']:checked").val();
             itemObj.isAuthor=$("input[name='author_confirm']:checked").val();
-            console.log(tinyMCE);
+            // console.log(tinyMCE);
             var detail = tinyMCE.activeEditor.getContent();
             itemObj.detail = detail.trim();
 
@@ -1153,6 +1153,15 @@ var createConceptualModel = Vue.extend({
                     //             break;
                     //     }
                     // }
+                    else if(res.code==415){
+                        this.$alert(this.htmlJson.NoModification, 'Tip', {
+                            type:"info",
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                // window.location.href="/user/login";
+                            }
+                        });
+                    }
                     else{
                         this.$alert(res.msg, 'Error', {
                             type:"error",
