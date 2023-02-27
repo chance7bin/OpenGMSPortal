@@ -692,7 +692,7 @@ var createModelItem = Vue.extend({
                 // console.log("create modelitem localozation:")
                 // console.log("current: ",this.currentLocalization)
                 // console.log("old: ",this.localizationList)
-                console.log("getItemContent tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
+                // console.log("getItemContent tinymce.activeEditor.getContent()",tinymce.activeEditor.getContent())
 
                 for (i = 0; i < this.localizationList.length; i++) {
                     if (this.currentLocalization.localName == this.localizationList[i].localName) {
@@ -2205,6 +2205,15 @@ var createModelItem = Vue.extend({
                                 confirmButtonText: 'OK',
                                 callback: action => {
                                     window.location.href="/user/login";
+                                }
+                            });
+                        }
+                        else if(result.code==415){
+                            this.$alert(this.htmlJson.NoModification, 'Tip', {
+                                type:"info",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    // window.location.href="/user/login";
                                 }
                             });
                         }

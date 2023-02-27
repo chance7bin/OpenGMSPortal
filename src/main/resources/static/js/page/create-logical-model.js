@@ -295,7 +295,7 @@ var createLogicalModel = Vue.extend({
             //detail
 
             // $("#logicalModelText").html(basicInfo.detail);
-            $("#logicalModelText").html(basicInfo.localizationList[0].description);
+            $("#logicalModelText").html(basicInfo.localizationList[0]?.description);
 
 
             initTinymce('textarea#logicalModelText')
@@ -1057,6 +1057,15 @@ var createLogicalModel = Vue.extend({
                     //             break;
                     //     }
                     // }
+                    else if(res.code==415){
+                        this.$alert(this.htmlJson.NoModification, 'Tip', {
+                            type:"info",
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                // window.location.href="/user/login";
+                            }
+                        });
+                    }
                     else{
                         this.$alert(res.msg, this.htmlJson.Error, {
                             type:"error",

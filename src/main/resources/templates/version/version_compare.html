@@ -54,9 +54,9 @@
                             </div>
 
                             <!--                             history-->
-                            <div th:if="${originalField?.get('lastModifyTime')!=null} or ${originalField?.get('lastModifier')!=null}">
-                                <div th:replace="fragments/itemInfoModules :: History(${originalField.lastModifier}, ${originalField.lastModifyTime}, null)"></div>
-                            </div>
+                            <!--<div th:if="${originalField?.get('lastModifyTime')!=null} or ${originalField?.get('lastModifier')!=null}">-->
+                            <!--    <div th:replace="fragments/itemInfoModules :: History(${originalField.lastModifier}, ${originalField.lastModifyTime}, null)"></div>-->
+                            <!--</div>-->
 
                             <!--                             author-->
                             <div id="Authorship" class="detail_block"
@@ -120,6 +120,7 @@
                                                                 <!--<div th:text="${model.image}"></div>-->
                                                                 <a class="img" th:href="'/modelItem/'+${model.id}" th:switch="${model.image}" >
                                                                     <img th:case="''" src="/static/img/model/model.png"  >
+                                                                    <img th:case="null" src="/static/img/model/model.png"  >
                                                                     <img v-else th:src="${model.image}">
                                                                 </a>
                                                                 <div class="info" style="margin-top:0px;">
@@ -143,7 +144,8 @@
                                                         <div class="list_panel clearfix" th:each="data:${originalField.relate.dataItems}">
                                                             <!--<div th:text="${model.image}"></div>-->
                                                             <a class="img" th:href="'/dataItem/'+${data.id}" th:switch="${data.image}" >
-                                                                <img th:case="''" src="/static/img/model/data.png"  >
+                                                                <img th:case="''" src="/static/img/model/myData.png"  >
+                                                                <img th:case="null" src="/static/img/model/myData.png"  >
                                                                 <img v-else th:src="${data.image}">
                                                             </a>
 
@@ -164,7 +166,7 @@
                                         </div>
                                     </div >
 <!--                                    relate resource-->
-                                    <div th:if="${originalField?.get('references')!=null&&#lists.size(originalField.references)!=0}">
+                                    <div th:if="${originalField.get('references')!=null}">
                                         <div id="model_related_resource_old" class="detail_block">
                                             <div class="block_head">
                                                 <div class="head_text">
@@ -301,9 +303,9 @@
                             </div>
 
                             <!--                             history-->
-                            <div th:if="${newField?.get('lastModifyTime')!=null} or ${newField?.get('lastModifier')!=null}">
-                                <div th:replace="fragments/itemInfoModules :: History(${newField.lastModifier}, ${newField.lastModifyTime}, null)"></div>
-                            </div>
+                            <!--<div th:if="${newField?.get('lastModifyTime')!=null} or ${newField?.get('lastModifier')!=null}">-->
+                            <!--    <div th:replace="fragments/itemInfoModules :: History(${newField.lastModifier}, ${newField.lastModifyTime}, null)"></div>-->
+                            <!--</div>-->
 
                             <!--                             author-->
                             <div id="Authorship" class="detail_block"
@@ -352,7 +354,7 @@
                                 <!--                                    relate模型、relate model data-->
                                 <div th:if="${newField?.get('relate')!=null}">
                                     <div th:replace="fragments/itemInfoModules :: model_related_models(${newField.relate}, false)"></div>
-                                    <div th:if="${newField.relate.modelItems!=newField.relate.modelItems ||newField.relate.dataItems!=newField.relate.dataItems}" id="model_related_data" class="detail_block">
+                                    <div th:if="${originalField.relate.modelItems!=newField.relate.modelItems ||originalField.relate.dataItems!=newField.relate.dataItems}" id="model_related_data" class="detail_block">
                                         <div class="block_head">
                                             <div class="head_text">
                                                 <h4>{{htmlJSON.RelatedModelsData}}</h4>
@@ -368,6 +370,7 @@
                                                         <!--<div th:text="${model.image}"></div>-->
                                                         <a class="img" th:href="'/modelItem/'+${model.id}" th:switch="${model.image}" >
                                                             <img th:case="''" src="/static/img/model/model.png"  >
+                                                            <img th:case="null" src="/static/img/model/model.png"  >
                                                             <img v-else th:src="${model.image}">
                                                         </a>
                                                         <div class="info" style="margin-top:0px;">
@@ -391,7 +394,8 @@
                                                     <div class="list_panel clearfix" th:each="data:${newField.relate.dataItems}">
                                                         <!--<div th:text="${model.image}"></div>-->
                                                         <a class="img" th:href="'/dataItem/'+${data.id}" th:switch="${data.image}" >
-                                                            <img th:case="''" src="/static/img/model/data.png"  >
+                                                            <img th:case="''" src="/static/img/model/myData.png"  >
+                                                            <img th:case="null" src="/static/img/model/myData.png"  >
                                                             <img v-else th:src="${data.image}">
                                                         </a>
 
@@ -412,7 +416,7 @@
                                     </div>
                                 </div >
                                 <!--                                    relate resource-->
-                                <div th:if="${newField?.get('references')!=null}">
+                                <div th:if="${newField.get('references')!=null}">
                                     <div id="model_related_resource_old" class="detail_block">
                                         <div class="block_head">
                                             <div class="head_text">

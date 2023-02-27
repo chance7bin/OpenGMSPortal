@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.component.ServiceException;
 import njgis.opengms.portal.dao.ConceptualModelDao;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
@@ -428,9 +429,9 @@ public class ConceptualModelService {
                 conceptualModel.setSvg(jsonObject.getString("svg"));
                 Date curDate = new Date();
                 conceptualModel.setLastModifyTime(curDate);
-                conceptualModel.setLastModifier(author0);
+                conceptualModel.setLastModifier(email);
 
-                Version version_new = versionService.addVersion(conceptualModel, email, originalItemName);
+                Version version_new = versionService.addVersion(conceptualModel, email, originalItemName,false);
                 if (author0.equals(email)) {
                     versions.add(version_new.getId());
                     conceptualModel.setVersions(versions);
@@ -449,6 +450,8 @@ public class ConceptualModelService {
 
                 }
 
+            } catch (ServiceException se){
+                throw se;
             } catch (Exception e) {
                 // e.printStackTrace();
                 log.error(e.getMessage());

@@ -689,7 +689,7 @@ public class DataItemService {
      * @Author bin
      **/
     public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, ItemTypeEnum type, String id){
-        GenericItemDao genericItemDao = (GenericItemDao)genericService.daoFactory(type);
+        GenericItemDao genericItemDao = (GenericItemDao)genericService.daoFactory(type).get("itemDao");
 
         JSONObject result = new JSONObject();
         PortalItem item = (PortalItem) genericItemDao.findFirstById(id);
@@ -747,7 +747,7 @@ public class DataItemService {
             item.setLastModifyTime(now);
             item.setLastModifier(email);
 
-            Version new_version = versionService.addVersion(item, email,originalItemName);
+            Version new_version = versionService.addVersion(item, email,originalItemName,false);
             if (author.equals(email)){
                 versions.add(new_version.getId());
                 item.setVersions(versions);

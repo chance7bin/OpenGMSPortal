@@ -523,7 +523,7 @@
     "DeleteSuccess": "delete successfully!",
     "LoginInFirst": "Please log in first!",
     "SureDeleteModel": "Are you sure to delete this model?",
-
+    "NoModification": "No field modification, cannot be submitted for review!",
     "Overview_Detail": "Overview & Detail",
 
 
@@ -1861,7 +1861,10 @@
     "EnterStudyArea": "Enter Study Areas ...",
     "EnterOrganizations": "Enter Organizations ...",
     "Save": "Save",
-    "ClickToSelect": "Click to select"
+    "ClickToSelect": "Click to select",
+    "acceptTip": "Accept this version, whether to continue?",
+    "rejectTip": "Reject this version, whether to continue?",
+    "notOperated": "Not operated"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -2387,7 +2390,7 @@
     "DeleteSuccess": "删除成功！",
     "LoginInFirst": "请先登录！",
     "SureDeleteModel": "您确认删除该模型吗？",
-
+    "NoModification": "无字段修改，不可提交审核！",
     "Overview_Detail":"概述 & 详情",
 
     "CreateSpatiotemporalReference": "创建时空参考",
@@ -3721,6 +3724,9 @@
     "EnterStudyArea": "输入研究领域...",
     "EnterOrganizations":"输入组织...",
     "Save": "保存",
-    "ClickToSelect": "点击选择"
+    "ClickToSelect": "点击选择",
+    "acceptTip": "接受该版本, 是否继续?",
+    "rejectTip": "拒绝该版本, 是否继续?",
+    "notOperated": "未操作"
   }
 }

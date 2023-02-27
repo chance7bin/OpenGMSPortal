@@ -126,16 +126,16 @@ var userVersion = Vue.extend({
             window.open(versionViewUrl, '_blank')
         },
         acceptVersionById(versionId){
-            this.$confirm('接受该版本, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(this.htmlJson.acceptTip, this.htmlJson.Tip, {
+                confirmButtonText: this.htmlJson.Confirm,
+                cancelButtonText: this.htmlJson.Cancel,
                 type: 'warning'
             }).then(() => {
                 axios.get("/version/accept/"+versionId)
                     .then(res=> {
                         this.$message({
                             type: 'success',
-                            message: '接受成功!'
+                            message: this.htmlJson.Success
                         });
                         this.getVersionList(this.versionUrl)
                     })
@@ -145,22 +145,22 @@ var userVersion = Vue.extend({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: this.htmlJson.notOperated
                 });
             });
 
         },
         rejectVersionById(versionId){
-            this.$confirm('拒接该版本, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(this.htmlJson.rejectTip, this.htmlJson.Tip, {
+                confirmButtonText: this.htmlJson.Confirm,
+                cancelButtonText: this.htmlJson.Cancel,
                 type: 'warning'
             }).then(() => {
                 axios.get("/version/reject/"+versionId)
                     .then(res=> {
                         this.$message({
                             type: 'success',
-                            message: '拒绝成功!'
+                            message: this.htmlJson.Success
                         });
                         this.getVersionList(this.versionUrl)
                     })
@@ -170,7 +170,7 @@ var userVersion = Vue.extend({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: this.htmlJson.notOperated
                 });
             });
 

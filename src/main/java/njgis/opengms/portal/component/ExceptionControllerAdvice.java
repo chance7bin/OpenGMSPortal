@@ -1,5 +1,6 @@
 package njgis.opengms.portal.component;
 
+import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName ExceptionControllerAdvice
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @ControllerAdvice
 @ResponseBody
+@Slf4j
 public class ExceptionControllerAdvice {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<JsonResult> defaultErrorHandler(Exception e) {
@@ -47,4 +51,16 @@ public class ExceptionControllerAdvice {
     //     mv.setViewName("error/500");
     //     return mv;
     // }
+
+    /**
+     * 业务异常
+     */
+    @ExceptionHandler(ServiceException.class)
+    public JsonResult handleServiceException(ServiceException e, HttpServletRequest request)
+    {
+        String requestURI = request.getRequestURI();
+        // log.error("请求地址[ {} ], 发生业务异常.", requestURI);
+        Integer code = e.getCode();
+        return code != null ? ResultUtils.error(code, e.getMessage()) : ResultUtils.error(e.getMessage());
+    }
 }

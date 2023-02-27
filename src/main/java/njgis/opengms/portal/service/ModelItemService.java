@@ -772,7 +772,7 @@ public class ModelItemService {
             }
             Date curDate = new Date();
             modelItem.setLastModifyTime(curDate);
-            modelItem.setLastModifier(author);
+            modelItem.setLastModifier(email);
 
             List<Localization> localizationList = modelItem.getLocalizationList();
             for(int l = 0;l<localizationList.size();l++){
@@ -782,7 +782,10 @@ public class ModelItemService {
             }
             modelItem.setLocalizationList(localizationList);
 
-            Version version_new = versionService.addVersion(modelItem, email, originalItemName);
+            Version version_new = versionService.addVersion(modelItem, email, originalItemName, false);
+            // if(1 == 1){
+            //     return null;
+            // }
             if (author.equals(email)) {
                 versions.add(version_new.getId());
                 oriItem.setVersions(versions);

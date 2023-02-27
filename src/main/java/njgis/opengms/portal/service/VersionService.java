@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.component.ServiceException;
+import njgis.opengms.portal.constant.HttpStatus;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
@@ -125,10 +127,23 @@ public class VersionService {
      * @param item 修改的条目数据
      * @param editor 修改者
      * @param originalItemName 原始条目的名字，用于生成版本名
+     * @return {@link Version}
+     * @author 7bin
+     **/
+    public Version addVersion(PortalItem item, String editor, String originalItemName){
+        return addVersion(item, editor, originalItemName, true);
+    }
+
+    /**
+     * 添加审核版本
+     * @param item 修改的条目数据
+     * @param editor 修改者
+     * @param originalItemName 原始条目的名字，用于生成版本名
+     * @param allowNoDiff 是否允许没有修改的条目添加到版本中
      * @return njgis.opengms.portal.entity.po.Version
      * @Author bin
      **/
-    public Version addVersion(PortalItem item, String editor, String originalItemName){
+    public Version addVersion(PortalItem item, String editor, String originalItemName, boolean allowNoDiff){
         Version version = new Version();
 
         // 如果editor和itemCreator相同的话直接审核通过，status设置为1
@@ -158,16 +173,26 @@ public class VersionService {
         ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
         version.setType(itemType);
 
-        PortalItem original = (PortalItem) ((GenericItemDao)genericService.daoFactory(itemType).get("itemDao")).findFirstById(item.getId());
+        GenericItemDao itemDao = (GenericItemDao)genericService.daoFactory(itemType).get("itemDao");
+
+        PortalItem original = (PortalItem) itemDao.findFirstById(item.getId());
         version.setOriginal(original);
 
         try {
             // version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
-            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal()));
-        }catch (Exception e){
+            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal(), allowNoDiff));
+        } catch (ServiceException se){
+            // 没有字段修改会在 getDifferenceBetweenTwoVersion 抛 ServiceException 异常
+
+            // 解锁
+            original.setLock(false);
+            genericService.saveItem(original, itemDao);
+            throw se;
+        } catch (Exception e){
             // e.printStackTrace();
             log.error(e.getMessage());
         }
+        // return null;
         return versionDao.insert(version);
 
     }
@@ -687,14 +712,21 @@ public class VersionService {
      * 比较两个版本的不同
      * @param editItem 编辑后的item数据
      * @param originalItem 原始条目数据
+     * @param allowNoDiff 是否允许没有修改的条目添加到版本中
      * @return void
      * @Author bin
      **/
-    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, PortalItem originalItem) throws IllegalAccessException {
+    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, PortalItem originalItem, boolean allowNoDiff) throws IllegalAccessException {
         // JSONObject factory = genericService.daoFactory(itemType);
         // GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         // PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
-        return genericService.getDifferenceBetweenTwoObject(originalItem,editItem);
+        Map<String, Object> differences = genericService.getDifferenceBetweenTwoObject(originalItem, editItem,
+            "lastModifyTime", "lastModifier", "versions");
+        if(!allowNoDiff && differences.size() == 0){
+            // 错误状态码 415 表示不支持的数据输入 : 未有字段修改
+            throw new ServiceException("无字段修改，不可提交审核", HttpStatus.UNSUPPORTED_TYPE);
+        }
+        return differences;
     }
 
 
