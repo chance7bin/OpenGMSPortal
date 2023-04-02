@@ -5,13 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.GenericCategory;
-import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.doo.MyException;
+import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.theme.*;
 import njgis.opengms.portal.entity.dto.AddDTO;
 import njgis.opengms.portal.entity.dto.FindDTO;
+import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
@@ -450,6 +449,7 @@ public class RepositoryService {
         }
 
         modelAndView = getCommonAttribute(template, templateClassificationDao, modelAndView);
+        modelAndView.addObject("relateModelAndData", getRelateModelAndDataInfo(template.getRelateModelAndData()));
         modelAndView.addObject("modularType", ItemTypeEnum.Template);
         return modelAndView;
     }
@@ -499,9 +499,97 @@ public class RepositoryService {
             }
         }
 
+        modelAndView.addObject("relateModelAndData", getRelateModelAndDataInfo(concept.getRelateModelAndData()));
+        // modelAndView.addObject("relateModelAndData", concept.getRelateModelAndData());
         modelAndView.addObject("related", relateArray);
         modelAndView.addObject("modularType", ItemTypeEnum.Concept);
         return modelAndView;
+    }
+
+    // 返回相关的模型和数据的基本信息
+    public JSONObject getRelateModelAndDataInfo(RelateModelAndData relateModelAndData){
+        JSONObject result = new JSONObject();
+        relateModelAndData = relateModelAndData == null ? new RelateModelAndData() : relateModelAndData;
+        List<String> modelItems = relateModelAndData.getModelItems();
+        JSONArray modelArray = new JSONArray();
+        for (String id : modelItems) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.ModelItem, id);
+            if(item == null){
+                continue;
+            }
+            modelArray.add(item);
+        }
+        result.put("modelItem", modelArray);
+
+        List<String> computableModels = relateModelAndData.getComputableModels();
+        JSONArray computableModelsArray = new JSONArray();
+        for (String id : computableModels) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.ComputableModel, id);
+            if(item == null){
+                continue;
+            }
+            computableModelsArray.add(item);
+        }
+        result.put("computableModel", computableModelsArray);
+
+        List<String> conceptualModels = relateModelAndData.getConceptualModels();
+        JSONArray conceptualModelsArray = new JSONArray();
+        for (String id : conceptualModels) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.ConceptualModel, id);
+            if(item == null){
+                continue;
+            }
+            conceptualModelsArray.add(item);
+        }
+        result.put("conceptualModel", conceptualModelsArray);
+
+        List<String> logicalModels = relateModelAndData.getLogicalModels();
+        JSONArray logicalModelsArray = new JSONArray();
+        for (String id : logicalModels) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.LogicalModel, id);
+            if(item == null){
+                continue;
+            }
+            logicalModelsArray.add(item);
+        }
+        result.put("logicalModel", logicalModelsArray);
+
+
+        List<String> dataItems = relateModelAndData.getDataItems();
+        JSONArray dataItemsArray = new JSONArray();
+        for (String id : dataItems) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.DataItem, id);
+            if(item == null){
+                continue;
+            }
+            dataItemsArray.add(item);
+        }
+        result.put("dataItem", dataItemsArray);
+
+        List<String> dataHubs = relateModelAndData.getDataHubs();
+        JSONArray dataHubsArray = new JSONArray();
+        for (String id : dataHubs) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.DataHub, id);
+            if(item == null){
+                continue;
+            }
+            dataHubsArray.add(item);
+        }
+        result.put("dataHub", dataHubsArray);
+
+        List<String> dataMethods = relateModelAndData.getDataMethods();
+        JSONArray dataMethodsArray = new JSONArray();
+        for (String id : dataMethods) {
+            JSONObject item = genericService.getBasicInfo(ItemTypeEnum.DataMethod, id);
+            if(item == null){
+                continue;
+            }
+            dataMethodsArray.add(item);
+        }
+        result.put("dataMethod", dataMethodsArray);
+
+        return result;
+
     }
 
     /**
@@ -584,6 +672,7 @@ public class RepositoryService {
             modelAndView.addObject("localizations",localizationArray);
         }
 
+        modelAndView.addObject("relateModelAndData", getRelateModelAndDataInfo(spatialReference.getRelateModelAndData()));
         modelAndView.addObject("isTemporal", flag);
         modelAndView.addObject("modularType", ItemTypeEnum.SpatialReference);
         return modelAndView;
@@ -656,6 +745,7 @@ public class RepositoryService {
         }
 
 
+        modelAndView.addObject("relateModelAndData", getRelateModelAndDataInfo(unit.getRelateModelAndData()));
         modelAndView.addObject("oid_cvt",unit.getConversionId());
         modelAndView.addObject("modularType", ItemTypeEnum.Unit);
         return modelAndView;
@@ -1001,5 +1091,71 @@ public class RepositoryService {
 
         return result;
 
+    }
+
+    /**
+     * 通用的更新knowledge方法
+     *
+     * @param knowledgeDTO
+     * @param email
+     * @return {@link JSONObject}
+     * @author 7bin
+     **/
+    public JSONObject updateKnowledge(ItemTypeEnum itemType , KnowledgeDTO knowledgeDTO, String email) {
+
+        GenericItemDao itemDao = (GenericItemDao)genericService.daoFactory(itemType).get("itemDao");
+
+        PortalItem item = (PortalItem) itemDao.findFirstById(knowledgeDTO.getId());
+        String author = item.getAuthor();
+        List<String> versions = item.getVersions();
+        if (!item.isLock()) {
+
+            if (author.equals(email)) {
+                if (versions == null || versions.size() == 0) {
+
+                    Version version = versionService.addVersion(item, email, item.getName());
+
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    item.setVersions(versions);
+                }
+            } else {
+                item.setLock(true);
+                redisService.saveItem(item, ItemTypeEnum.ComputableModel);
+            }
+
+
+            RelateKnowledge relateKnowledge = item.getRelateKnowledge();
+            BeanUtils.copyProperties(knowledgeDTO, relateKnowledge, "id");
+            item.setRelateKnowledge(relateKnowledge);
+
+            item.setLastModifyTime(new Date());
+            item.setLastModifier(email);
+
+            JSONObject result = new JSONObject();
+
+            Version version_new = versionService.addVersion(item, email, item.getName(), false);
+            if (item.getAuthor().equals(email)) {
+                versionService.updateKnowledge(version_new);
+
+                versions.add(version_new.getId());
+                item.setVersions(versions);
+
+                redisService.saveItem(item, itemType);
+                result.put("method", "update");
+                result.put("id", item.getId());
+            } else {
+                // 发送通知
+                noticeService.sendNoticeContainsAllAdmin(email, item.getAuthor(), item.getAdmins() ,ItemTypeEnum.Version,version_new, OperationEnum.Edit);
+
+                result.put("method", "version");
+                result.put("versionId", version_new.getId());
+                return result;
+            }
+            return result;
+
+        } else {
+            return null;
+        }
     }
 }

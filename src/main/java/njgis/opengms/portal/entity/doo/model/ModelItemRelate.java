@@ -3,6 +3,7 @@ package njgis.opengms.portal.entity.doo.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import njgis.opengms.portal.entity.doo.RelateKnowledge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModelItemRelate {
+public class ModelItemRelate extends RelateKnowledge {
 
     List<ModelRelation> modelRelationList = new ArrayList<>();
 
@@ -29,11 +30,6 @@ public class ModelItemRelate {
     List<String> dataItems = new ArrayList<>();
     List<String> dataHubs = new ArrayList<>();
     List<String> dataMethods = new ArrayList<>();
-
-    List<String> concepts = new ArrayList<>();
-    List<String> spatialReferences = new ArrayList<>();
-    List<String> templates = new ArrayList<>();
-    List<String> units = new ArrayList<>();
 
 //    List<String> references = new ArrayList<>();//存放相关Article的Id
 

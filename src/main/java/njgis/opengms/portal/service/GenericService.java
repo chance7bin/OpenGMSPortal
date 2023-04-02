@@ -108,6 +108,7 @@ public class GenericService {
     @Autowired
     VersionDao versionDao;
 
+
     @Autowired
     CommentDao commentDao;
 
@@ -1120,5 +1121,27 @@ public class GenericService {
     public void userCacheEvict(String email){
 
     }
+
+    /**
+     * 获取条目基本信息
+     * @param itemType 条目类型
+     * @param id 条目id
+     * @return {@link JSONObject}  如果没找到返回null
+     * @author 7bin
+     **/
+    public JSONObject getBasicInfo(ItemTypeEnum itemType, String id){
+        JSONObject result = new JSONObject();
+        GenericItemDao itemDao = (GenericItemDao)daoFactory(itemType).get("itemDao");
+        PortalItem item = (PortalItem) itemDao.findFirstById(id);
+        if (item == null){
+            return null;
+        }
+        result.put("id", item.getId());
+        result.put("name", item.getName());
+        result.put("overview", item.getOverview());
+        result.put("image", item.getImage().equals("") ? null : htmlLoadPath + item.getImage());
+        return result;
+    }
+
 
 }

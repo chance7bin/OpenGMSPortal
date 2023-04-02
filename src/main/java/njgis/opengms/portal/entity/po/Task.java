@@ -19,10 +19,14 @@ public class Task extends PortalId {
     String taskId;
     String computableId;
     String computableName;
-    String email;  //原来的userId -> 用userId到user表找email
     String ip;
-    String description;
     int port;
+
+    String email;  // 发布者 原来的userId -> 用userId到user表找email
+    String description; // 描述
+    String timeRange; // 时间范围
+    String ApplicationArea; // 应用区域
+
     int loadTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
@@ -33,8 +37,8 @@ public class Task extends PortalId {
 
 //    List<String> isPublic;//public ;noPublic ;userNames; public和noPublic都放数组头
     String permission;
-    List<TaskData> inputs;
-    List<TaskData> outputs;
+    List<TaskData> inputs; // 输入数据
+    List<TaskData> outputs; // 输出数据
 
     boolean flag = true;
     GeoInfoMeta geoInfoMeta;//一般不需要填

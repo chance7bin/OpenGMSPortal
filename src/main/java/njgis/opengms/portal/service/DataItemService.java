@@ -521,6 +521,37 @@ public class DataItemService {
 
                 break;
             }
+            case DataMethod:{
+                //添加关联
+                for (String relation : newRelations) {
+
+                    if (!oriRelations.contains(relation)){
+                        ModelItem item = modelItemDao.findFirstById(relation);
+                        List<String> dataMethods = item.getRelate().getDataMethods();
+                        if (!dataMethods.contains(itemId)){
+                            dataMethods.add(itemId);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
+                        }
+                    }
+                }
+
+                //删除关联
+                for (String ori : oriRelations) {
+
+                    if (!newRelations.contains(ori)){
+                        ModelItem item = modelItemDao.findFirstById(ori);
+                        List<String> dataMethods = item.getRelate().getDataMethods();
+                        if (dataMethods.contains(itemId)){
+                            dataMethods.remove(itemId);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
+                        }
+                    }
+
+                }
+                break;
+            }
         }
 
     }

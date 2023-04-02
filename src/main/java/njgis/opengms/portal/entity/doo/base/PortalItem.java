@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
 import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.RelateKnowledge;
+import njgis.opengms.portal.entity.doo.RelateModelAndData;
 import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -57,5 +59,13 @@ public class PortalItem extends PortalIdPlus implements Serializable {
     int thumbsUpCount = 0;
     //每日访问计数
     List<DailyViewCount> dailyViewCount = new ArrayList<>();
+
+
+
+    // ========================  分割线  =============================
+    // 上面都是所有通用，下面的是部分通用
+
+    RelateModelAndData relateModelAndData; // community中关联的模型和数据
+    RelateKnowledge relateKnowledge; // 模型和数据关联的community
 
 }

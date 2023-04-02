@@ -17,10 +17,7 @@ import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataApplicationFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
-import njgis.opengms.portal.entity.po.DataMethod;
-import njgis.opengms.portal.entity.po.DataServerTask;
-import njgis.opengms.portal.entity.po.User;
-import njgis.opengms.portal.entity.po.Version;
+import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
 import njgis.opengms.portal.utils.FileUtil;
@@ -100,6 +97,9 @@ public class DataMethodService {
 
     @Autowired
     TemplateService templateService;
+
+    @Autowired
+    DataItemService dataItemService;
 
 
     @Autowired
@@ -1526,5 +1526,70 @@ public class DataMethodService {
         item.setViewCount(item.getViewCount()+1);
 
         return item;
+    }
+
+    public JsonResult setRelation(String id, List<String> relations,String email) {
+
+        DataMethod item = dataMethodDao.findFirstById(id);
+
+        List<String> versions = item.getVersions();
+        String originalItemName = item.getName();
+        JSONObject result = new JSONObject();
+        if (!item.isLock()){
+
+            String author = item.getAuthor();
+            Date now = new Date();
+
+            //如果修改者不是作者的话把该条目锁住送去审核
+            //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
+            if (!author.equals(email)){
+                item.setLock(true);
+                // dataItemDao.save(item);
+                redisService.saveItem(item,ItemTypeEnum.DataItem);
+            } else {
+                if (versions == null || versions.size() == 0) {
+                    Version version = versionService.addVersion(item, email, originalItemName);
+                    versions = new ArrayList<>();
+                    versions.add(version.getId());
+                    item.setVersions(versions);
+                }
+            }
+
+            List<String> oriRelatedModels = item.getRelatedModels();
+            item.setRelatedModels(relations);
+            item.setLastModifyTime(now);
+            item.setLastModifier(email);
+
+
+            Version new_version = versionService.addVersion(item, email,originalItemName);
+            if (author.equals(email)){
+                versions.add(new_version.getId());
+                item.setVersions(versions);
+                dataItemService.updateModelRelate(relations, oriRelatedModels,ItemTypeEnum.DataMethod,id);
+                item.setRelatedModels(relations);
+                // dataItemDao.save(item);
+                redisService.saveItem(item, ItemTypeEnum.DataItem);
+                result.put("type","suc");
+
+                return ResultUtils.success(result);
+            }else {
+
+                //发送通知
+                List<String> recipientList = new ArrayList<>();
+                recipientList.add(author);
+                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addPortalAdmins(recipientList);
+                recipientList = noticeService.addPortalRoot(recipientList);
+                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version,recipientList);
+                result.put("type","version");
+                return ResultUtils.success(result);
+            }
+
+
+        } else {
+            result.put("type","version");
+            return ResultUtils.success(result);
+        }
+
     }
 }
