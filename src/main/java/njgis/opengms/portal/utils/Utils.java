@@ -1146,6 +1146,35 @@ public class Utils {
         return one.equals(two);
     }
 
+    /**
+     * 给定a, b列表，返回只有a有以及只有b用的列表
+     * @param a
+     * @param b
+     * @return {@link JSONObject}  onlyA 表示只有a有； onlyB 表示只有b有
+     * @author 7bin
+     **/
+    public static JSONObject getDifference(List<String> a, List<String> b) {
+        List<String> onlyA = new ArrayList<>();
+        List<String> onlyB = new ArrayList<>();
+
+        for (String i : a) {
+            if (!b.contains(i)) {
+                onlyA.add(i);
+            }
+        }
+
+        for (String i : b) {
+            if (!a.contains(i)) {
+                onlyB.add(i);
+            }
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("onlyA", onlyA);
+        jsonObject.put("onlyB", onlyB);
+
+        return jsonObject;
+    }
 
     /**
      * 深拷贝

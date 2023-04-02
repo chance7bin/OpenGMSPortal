@@ -19,5 +19,7 @@ public class Template extends PortalItem {
     String type;
     String parentId;
 
-    List<String> relatedMethods;//所链接的方法
+    List<String> relatedMethods;//所链接的方法 dataMethod
+
+
 }

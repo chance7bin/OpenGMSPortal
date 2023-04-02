@@ -13,14 +13,12 @@ import njgis.opengms.portal.entity.doo.intergrate.ModelParam;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.Task;
 import njgis.opengms.portal.entity.po.User;
 import njgis.opengms.portal.enums.ItemTypeEnum;
-import njgis.opengms.portal.service.ComputableModelService;
-import njgis.opengms.portal.service.GenericService;
-import njgis.opengms.portal.service.TaskService;
-import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
@@ -59,6 +57,9 @@ public class ComputableModelRestController {
 
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
 
     /**
@@ -142,6 +143,24 @@ public class ComputableModelRestController {
         String email=session.getAttribute("email").toString();
 
         JSONObject result=computableModelService.update(files,jsonObject,email);
+
+        if(result==null){
+            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+        }
+        else {
+            return ResultUtils.success(result);
+        }
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新knowledge")
+    @PostMapping(value = "/knowledge")
+    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        JSONObject result = repositoryService.updateKnowledge(ItemTypeEnum.ComputableModel ,knowledgeDTO,email);
 
         if(result==null){
             return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");

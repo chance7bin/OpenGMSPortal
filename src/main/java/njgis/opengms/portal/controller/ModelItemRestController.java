@@ -10,8 +10,6 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
-import njgis.opengms.portal.entity.doo.support.MetaData;
-import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.metadata.MetadataDTO;
@@ -37,13 +35,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -255,6 +251,8 @@ public class ModelItemRestController {
         List<String> referencesList = modelItemService.referencesDetail2Id(references);
         modelItemUpdateDTO.setReferences(referencesList);
 
+
+
         JSONObject result=modelItemService.update(modelItemUpdateDTO,email);
         if(result==null){
             return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
@@ -350,7 +348,7 @@ public class ModelItemRestController {
     @RequestMapping(value = "/relatedResources/{id}", method = RequestMethod.GET)
     JsonResult getRelatedResources(@PathVariable("id") String id, HttpServletRequest request){
         // System.out.println("test");
-        if(StringUtils.isEmpty(Utils.checkLoginStatus(request))){
+        if(StringUtils. isEmpty(Utils.checkLoginStatus(request))){
             return ResultUtils.error(-1, "no login");
         }
         return ResultUtils.success(modelItemService.getRelatedResources(id));

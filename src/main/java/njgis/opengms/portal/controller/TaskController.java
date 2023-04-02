@@ -13,6 +13,7 @@ import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.task.*;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.IntegratedTask;
+import njgis.opengms.portal.entity.po.Task;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.TaskService;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -64,6 +65,19 @@ public class TaskController {
 
     @Value("${managerServerIpAndPort}")
     private String managerServerIpAndPort;
+
+    /**
+     * 获取公开的任务信息
+     * @param id 任务id
+     * @return 任务是公开的返回任务信息，任务不是公开的返回null，前端去判断
+     * @author 7bin
+     **/
+    @ApiOperation(value = "获取公开的任务信息")
+    @RequestMapping(value = "/public/{id}", method = RequestMethod.GET)
+    public JsonResult getPublicTask(@PathVariable("id") String id) {
+        return ResultUtils.success(taskService.getPublicTask(id));
+    }
+
 
     @LoginRequired
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -338,9 +352,17 @@ public class TaskController {
     }
 
     @LoginRequired
+    @ApiOperation(value = "添加任务描述信息")
+    @RequestMapping(value = "/desc/info",method = RequestMethod.POST)
+    public JsonResult setTaskDesc(@RequestBody TaskPublishDTO publishDTO)
+    {
+        return taskService.setTaskDesc(publishDTO);
+    }
+
+    @LoginRequired
     @ApiOperation(value = "把任务公有化")
     @RequestMapping(value = "/setPublic",method = RequestMethod.POST)
-    public JsonResult setPublic(@RequestParam String taskId,HttpServletRequest httpServletRequest)
+    public JsonResult setPublic(@RequestParam String taskId)
     {
         return taskService.setPublic(taskId);
     }

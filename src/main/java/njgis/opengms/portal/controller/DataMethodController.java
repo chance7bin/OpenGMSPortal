@@ -10,13 +10,11 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataApplicationFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
-import njgis.opengms.portal.service.DataItemService;
-import njgis.opengms.portal.service.DataMethodService;
-import njgis.opengms.portal.service.GenericService;
-import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
@@ -34,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,6 +71,9 @@ public class DataMethodController {
 
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     /**
      * 新增dataMethod
@@ -441,4 +443,40 @@ public class DataMethodController {
     }
 
 
+    @LoginRequired
+    @ApiOperation(value = "更新knowledge")
+    @PostMapping(value = "/knowledge")
+    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        JSONObject result = repositoryService.updateKnowledge(ItemTypeEnum.DataMethod ,knowledgeDTO,email);
+
+        if(result==null){
+            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+        }
+        else {
+            return ResultUtils.success(result);
+        }
+    }
+
+
+    @LoginRequired
+    @ApiOperation(value = "设置相关的模型")
+    @RequestMapping(value="/relation",method = RequestMethod.PUT)
+    public JsonResult setRelation(@RequestParam(value="id") String id,
+                                  @RequestParam(value = "relations[]" , required=false) List<String> relations, HttpServletRequest request){
+
+        id = genericService.formatId(id);
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        if (relations == null){
+            relations = new ArrayList<>();
+        }
+
+        return dataMethodService.setRelation(id,relations,email);
+
+    }
 }
