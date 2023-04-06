@@ -1272,13 +1272,13 @@ var userDataSpace = Vue.extend(
                     dom[0].style.top = e.pageY- 240 + "px"
                     // 125 > window.innerHeight
                     //     ? `${window.innerHeight - 127}px` : `${e.pageY}px`;
-                    dom[0].style.left = e.pageX - 310 + "px";
+                    dom[0].style.left = e.pageX - 410 + "px";
                 }else if(width>599){
                     dom[0].style.top = e.pageY- 300 + "px"
-                    dom[0].style.left = e.pageX - 65 + "px";
+                    dom[0].style.left = e.pageX - 165 + "px";
                 }else{
                     dom[0].style.top = e.pageY- 300 + "px"
-                    dom[0].style.left = e.pageX - 20 + "px";
+                    dom[0].style.left = e.pageX - 120 + "px";
                 }
 
                 this.rightMenuShow = true

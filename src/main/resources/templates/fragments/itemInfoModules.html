@@ -555,7 +555,7 @@
                     <dt th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"><span translateId="Modifytimes">Modify times</span>:&nbsp</dt>
                     <dd><span th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0" th:text="${#lists.size(itemInfo.versions)+'&nbsp'}"></span>
                         <!--查看历史版本隐藏-->
-                        <!--<a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/' + ${itemType==null?'modelItem':itemType} + '/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>-->
+                        <a th:if="${itemInfo} and ${#lists.size(itemInfo.versions)} gt 0"th:href="'/version/historyList/' + ${itemType==null?'modelItem':itemType} + '/'+${itemInfo.id}" target="_blank" translateId="viewHistory">View History</a></dd>
                 </dl>
             </div>
 
