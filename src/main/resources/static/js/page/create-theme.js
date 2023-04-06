@@ -2130,8 +2130,8 @@ var createTheme = Vue.extend({
                 formData.append("info",file);
                 console.log(formData)
                 $.ajax({
-                    url: "/theme/update",
-                    type: "POST",
+                    url: "/theme/" + oid,
+                    type: "PUT",
                     processData: false,
                     contentType: false,
                     async: true,
@@ -2162,6 +2162,9 @@ var createTheme = Vue.extend({
                         else if(result.code==-2){
                             alert(this.htmlJson.LoginInFirst);
                             window.location.href="/user/login";
+                        }
+                        else if(result.code==415){
+                            alert(this.htmlJson.NoModification);
                         }
                         else{
                             alert(result.msg);

@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.component.ServiceException;
 import njgis.opengms.portal.dao.LogicalModelDao;
 import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.AuthorInfo;
@@ -95,9 +96,15 @@ public class LogicalModelService {
     }
 
     public ModelAndView getPage(LogicalModel logicalModelInfo) {
-        logicalModelInfo=(LogicalModel)genericService.recordViewCount(logicalModelInfo);
+        return getPage(logicalModelInfo, false);
+    }
 
-        logicalModelDao.save(logicalModelInfo);
+    public ModelAndView getPage(LogicalModel logicalModelInfo, boolean history) {
+
+        logicalModelInfo=(LogicalModel)genericService.recordViewCount(logicalModelInfo);
+        if(history){
+            logicalModelDao.save(logicalModelInfo);
+        }
 
         //排序
         List<Localization> locals = logicalModelInfo.getLocalizationList();
@@ -418,9 +425,9 @@ public class LogicalModelService {
                 logicalModel.setCXml(jsonObject.getString("cXml"));
                 logicalModel.setSvg(jsonObject.getString("svg"));
                 logicalModel.setLastModifyTime(new Date());
-                logicalModel.setLastModifier(author0);
+                logicalModel.setLastModifier(email);
 
-                Version version_new = versionService.addVersion(logicalModel, email, originalItemName);
+                Version version_new = versionService.addVersion(logicalModel, email, originalItemName, false);
                 if (author0.equals(email)) {
                     versions.add(version_new.getId());
                     logicalModel.setVersions(versions);
@@ -441,6 +448,8 @@ public class LogicalModelService {
 
                 }
 
+            } catch (ServiceException se){
+                throw se;
             } catch (Exception e) {
                 // e.printStackTrace();
                 log.error(e.getMessage());

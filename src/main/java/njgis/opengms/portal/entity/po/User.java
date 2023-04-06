@@ -114,5 +114,9 @@ public class User extends PortalIdPlus {
 
     Date lastInvokeTime;
 
+    // 重试次数
+    int retry;
+    // 下一次可以登录的时间
+    Long nextLoginTime;
 
 }

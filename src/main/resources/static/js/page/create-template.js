@@ -1075,6 +1075,15 @@ var createTemplate = Vue.extend({
                                 }
                             });
                         }
+                        else if(result.code==415){
+                            this.$alert(this.htmlJson.NoModification, 'Tip', {
+                                type:"info",
+                                confirmButtonText: 'OK',
+                                callback: action => {
+                                    // window.location.href="/user/login";
+                                }
+                            });
+                        }
                         else{
                             this.$alert(result.msg, 'Error', {
                                 type:"error",

@@ -77,6 +77,9 @@ public class ComputableModelService {
     UserDao userDao;
 
     @Autowired
+    TaskService taskService;
+
+    @Autowired
     VersionService versionService;
 
     @Autowired
@@ -104,11 +107,17 @@ public class ComputableModelService {
     RedisService redisService;
 
     public ModelAndView getPage(ComputableModel computableModel) {
+        return getPage(computableModel, false);
+    }
+
+    public ModelAndView getPage(ComputableModel computableModel, boolean history) {
         //条目信息
         ModelAndView modelAndView = new ModelAndView();
 
         computableModel=(ComputableModel)genericService.recordViewCount(computableModel);
-        computableModelDao.save(computableModel);
+        if (!history){
+            computableModelDao.save(computableModel);
+        }
 
         //时间
         Date date = computableModel.getCreateTime();
@@ -210,6 +219,10 @@ public class ComputableModelService {
         List<String> modelItemIdList = computableModel.getRelatedModelItems();
         JSONArray modelItemInfoList = ArrayUtils.parseListToJSONArray(genericService.getRelatedModelInfoList(modelItemIdList));
 
+
+        // 关联的任务运行记录
+        List<Task> relateTaskRunRecord = getRelateTaskRunRecord(computableModel.getRelateTaskRunRecord());
+
         modelAndView.setViewName("computable_model");
 
         modelAndView.addObject("itemInfo", computableModel);
@@ -221,6 +234,7 @@ public class ComputableModelService {
         modelAndView.addObject("resources", resourceArray);
         modelAndView.addObject("detailLanguage",detailLanguage);
         modelAndView.addObject("languageList", languageList);
+        modelAndView.addObject("relateTaskRunRecord", relateTaskRunRecord);
 //        modelAndView.addObject("description",modelInfo.getOverview());
         modelAndView.addObject("detail",detailResult);
         if(computableModel.getMdl()!=null) {
@@ -240,6 +254,17 @@ public class ComputableModelService {
 
         modelAndView.addObject("modularType", ItemTypeEnum.ComputableModel);
         return modelAndView;
+    }
+
+    private List<Task> getRelateTaskRunRecord(List<String> relateTaskRunRecord){
+        List<Task> tasks = new ArrayList<>();
+        for (String taskId : relateTaskRunRecord) {
+            Task publicTask = taskService.getPublicTask(taskId);
+            if (publicTask != null){
+                tasks.add(publicTask);
+            }
+        }
+        return tasks;
     }
 
     /**
@@ -699,9 +724,9 @@ public class ComputableModelService {
 
             Date curDate = new Date();
             computableModel.setLastModifyTime(curDate);
-            computableModel.setLastModifier(author0);
+            computableModel.setLastModifier(email);
 
-            Version version_new = versionService.addVersion(computableModel, email, originalItemName);
+            Version version_new = versionService.addVersion(computableModel, email, originalItemName, false);
             if (computableModel.getAuthor().equals(email)) {
                 // computableModelDao.save(computableModel);
                 redisService.saveItem(computableModel, ItemTypeEnum.ComputableModel);
@@ -1168,4 +1193,5 @@ public class ComputableModelService {
         return ResultUtils.success(computableModelResultDTO);
 
     }
+
 }

@@ -4,12 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import njgis.opengms.portal.component.ServiceException;
+import njgis.opengms.portal.constant.HttpStatus;
 import njgis.opengms.portal.dao.*;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
+import njgis.opengms.portal.entity.doo.RelateKnowledge;
+import njgis.opengms.portal.entity.doo.RelateModelAndData;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
+import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
@@ -124,10 +129,23 @@ public class VersionService {
      * @param item 修改的条目数据
      * @param editor 修改者
      * @param originalItemName 原始条目的名字，用于生成版本名
+     * @return {@link Version}
+     * @author 7bin
+     **/
+    public Version addVersion(PortalItem item, String editor, String originalItemName){
+        return addVersion(item, editor, originalItemName, true);
+    }
+
+    /**
+     * 添加审核版本
+     * @param item 修改的条目数据
+     * @param editor 修改者
+     * @param originalItemName 原始条目的名字，用于生成版本名
+     * @param allowNoDiff 是否允许没有修改的条目添加到版本中
      * @return njgis.opengms.portal.entity.po.Version
      * @Author bin
      **/
-    public Version addVersion(PortalItem item, String editor, String originalItemName){
+    public Version addVersion(PortalItem item, String editor, String originalItemName, boolean allowNoDiff){
         Version version = new Version();
 
         // 如果editor和itemCreator相同的话直接审核通过，status设置为1
@@ -157,16 +175,26 @@ public class VersionService {
         ItemTypeEnum itemType = ItemTypeEnum.getItemTypeByName(type);
         version.setType(itemType);
 
-        PortalItem original = (PortalItem) ((GenericItemDao)genericService.daoFactory(itemType).get("itemDao")).findFirstById(item.getId());
+        GenericItemDao itemDao = (GenericItemDao)genericService.daoFactory(itemType).get("itemDao");
+
+        PortalItem original = (PortalItem) itemDao.findFirstById(item.getId());
         version.setOriginal(original);
 
         try {
             // version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),itemType));
-            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal()));
-        }catch (Exception e){
+            version.setChangedField(getDifferenceBetweenTwoVersion(version.getContent(),version.getOriginal(), allowNoDiff));
+        } catch (ServiceException se){
+            // 没有字段修改会在 getDifferenceBetweenTwoVersion 抛 ServiceException 异常
+
+            // 解锁
+            original.setLock(false);
+            genericService.saveItem(original, itemDao);
+            throw se;
+        } catch (Exception e){
             // e.printStackTrace();
             log.error(e.getMessage());
         }
+        // return null;
         return versionDao.insert(version);
 
     }
@@ -180,6 +208,7 @@ public class VersionService {
      **/
     public JsonResult accept(String versionId, String reviewer){
         Version version = versionDao.findFirstById(versionId);
+        ItemTypeEnum type = version.getType();
         Date date = new Date();
         version.setReviewer(reviewer);
         version.setReviewTime(date);
@@ -200,14 +229,16 @@ public class VersionService {
         }
         content.setContributors(contributors);
 
+
+
         //模型条目需要更新关联信息
-        if (version.getType() == ItemTypeEnum.ModelItem){
+        if (type == ItemTypeEnum.ModelItem){
             // 因为不知道更改的是哪个条目的关联，所以要先判断下
             updateModelItemRelation(version);
         }
 
         //数据条目需要更新关联信息
-        if (version.getType() == ItemTypeEnum.DataItem || version.getType() == ItemTypeEnum.DataHub){
+        if (type == ItemTypeEnum.DataItem || type == ItemTypeEnum.DataHub || type == ItemTypeEnum.DataMethod){
 
             List<String> newRelations = ((DataItem)version.getContent()).getRelatedModels();
             List<String> oriRelations = ((DataItem)version.getOriginal()).getRelatedModels();
@@ -215,13 +246,18 @@ public class VersionService {
             dataItemService.updateModelRelate(newRelations, oriRelations,version.getType(),version.getItemId());
         }
 
+        // 模型和数据 更新knowledge的双向绑定
+        if(isModelOrData(type)){
+            updateKnowledge(version);
+        }
 
-        JSONObject factory = genericService.daoFactory(version.getType());
+
+        JSONObject factory = genericService.daoFactory(type);
         GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         try {
             versionDao.save(version);
             // itemDao.save(content);
-            redisService.saveItem(content,version.getType());
+            redisService.saveItem(content,type);
 
             //给编辑者发邮件
             userService.sendAcceptMail(version.getEditor(),content);
@@ -245,6 +281,199 @@ public class VersionService {
         return ResultUtils.success();
     }
 
+    private boolean isModelOrData(ItemTypeEnum type){
+        return type == ItemTypeEnum.ModelItem || type == ItemTypeEnum.ComputableModel ||
+            type == ItemTypeEnum.ConceptualModel || type == ItemTypeEnum.LogicalModel || type == ItemTypeEnum.DataItem ||
+            type == ItemTypeEnum.DataHub || type == ItemTypeEnum.DataMethod;
+    }
+
+    /**
+     * 更新knowledge信息
+     * @param version
+     * @author 7bin
+     **/
+    public void updateKnowledge(Version version) {
+
+        ItemTypeEnum type = version.getType();
+        String itemId = version.getItemId();
+        RelateKnowledge relateKnowledgeOld;
+        RelateKnowledge relateKnowledgeNew;
+        if (type == ItemTypeEnum.ModelItem){
+            relateKnowledgeOld = ((ModelItem)version.getOriginal()).getRelate();
+            relateKnowledgeNew = ((ModelItem)version.getContent()).getRelate();
+        } else {
+            relateKnowledgeOld = version.getOriginal().getRelateKnowledge();
+            relateKnowledgeNew = version.getContent().getRelateKnowledge();
+        }
+        relateKnowledgeOld = relateKnowledgeOld == null ? new RelateKnowledge() : relateKnowledgeOld;
+        relateKnowledgeNew = relateKnowledgeNew == null ? new RelateKnowledge() : relateKnowledgeNew;
+        version.getContent().setRelateKnowledge(relateKnowledgeNew);
+
+        // 模型、数据条目与community双向关联
+        List<String> conceptsOld = relateKnowledgeOld.getConcepts();
+        List<String> conceptsNew = relateKnowledgeNew.getConcepts();
+        List<String> templatesOld = relateKnowledgeOld.getTemplates();
+        List<String> templatesNew = relateKnowledgeNew.getTemplates();
+        List<String> unitsOld = relateKnowledgeOld.getUnits();
+        List<String> unitsNew = relateKnowledgeNew.getUnits();
+        List<String> spatialReferencesOld = relateKnowledgeOld.getSpatialReferences();
+        List<String> spatialReferencesNew = relateKnowledgeNew.getSpatialReferences();
+        JSONObject difference = null; // 找不同
+
+        difference = Utils.getDifference(conceptsOld, conceptsNew);
+        // 只有old有 表示要删除关联
+        for (String conceptId : (List<String>)difference.get("onlyA")) {
+            Concept concept = conceptDao.findFirstById(conceptId);
+            concept.setRelateModelAndData(updateRelateModelAndData(type, itemId, concept.getRelateModelAndData(), false));
+            conceptDao.save(concept);
+        }
+        // 只有new有 表示要新增关联
+        for (String conceptId : (List<String>)difference.get("onlyB")) {
+            Concept concept = conceptDao.findFirstById(conceptId);
+            concept.setRelateModelAndData(updateRelateModelAndData(type, itemId, concept.getRelateModelAndData(), true));
+            conceptDao.save(concept);
+        }
+
+        difference = Utils.getDifference(templatesOld, templatesNew);
+        for (String templateId : (List<String>)difference.get("onlyA")) {
+            Template template = templateDao.findFirstById(templateId);
+            template.setRelateModelAndData(updateRelateModelAndData(type, itemId, template.getRelateModelAndData(), false));
+            templateDao.save(template);
+        }
+        for (String templateId : (List<String>)difference.get("onlyB")) {
+            Template template = templateDao.findFirstById(templateId);
+            template.setRelateModelAndData(updateRelateModelAndData(type, itemId, template.getRelateModelAndData(), true));
+            templateDao.save(template);
+        }
+
+
+
+        difference = Utils.getDifference(unitsOld, unitsNew);
+        for (String unitId : (List<String>)difference.get("onlyA")) {
+            Unit unit = unitDao.findFirstById(unitId);
+            unit.setRelateModelAndData(updateRelateModelAndData(type, itemId, unit.getRelateModelAndData(),false));
+            unitDao.save(unit);
+        }
+        for (String unitId : (List<String>)difference.get("onlyB")) {
+            Unit unit = unitDao.findFirstById(unitId);
+            unit.setRelateModelAndData(updateRelateModelAndData(type, itemId, unit.getRelateModelAndData(),true));
+            unitDao.save(unit);
+        }
+
+
+        difference = Utils.getDifference(spatialReferencesOld, spatialReferencesNew);
+        for (String spatialReferenceId : (List<String>)difference.get("onlyA")) {
+            SpatialReference spatialReference = spatialReferenceDao.findFirstById(spatialReferenceId);
+            spatialReference.setRelateModelAndData(updateRelateModelAndData(type, itemId, spatialReference.getRelateModelAndData(),false));
+            spatialReferenceDao.save(spatialReference);
+        }
+        for (String spatialReferenceId : (List<String>)difference.get("onlyB")) {
+            SpatialReference spatialReference = spatialReferenceDao.findFirstById(spatialReferenceId);
+            spatialReference.setRelateModelAndData(updateRelateModelAndData(type, itemId, spatialReference.getRelateModelAndData(),true));
+            spatialReferenceDao.save(spatialReference);
+        }
+
+
+    }
+
+    /**
+     * 跟新relateModelAndData
+     * @param itemType 条目类型
+     * @param itemId 条目id
+     * @param relateModelAndData 关联的模型和数据
+     * @param add true 添加 ； false 删除
+     * @return {@link RelateModelAndData}
+     * @author 7bin
+     **/
+    private RelateModelAndData updateRelateModelAndData(ItemTypeEnum itemType, String itemId, RelateModelAndData relateModelAndData, boolean add){
+
+        relateModelAndData = relateModelAndData == null ? new RelateModelAndData() : relateModelAndData;
+
+        switch (itemType){
+            case ModelItem:{
+                List<String> modelItems = relateModelAndData.getModelItems();
+                if (add && !modelItems.contains(itemId)){
+                    // 新增关联
+                    modelItems.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    modelItems.remove(itemId);
+                }
+                break;
+            }
+            case ComputableModel:{
+                List<String> computableModels = relateModelAndData.getComputableModels();
+                if (add && !computableModels.contains(itemId)){
+                    // 新增关联
+                    computableModels.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    computableModels.remove(itemId);
+                }
+                break;
+            }
+            case ConceptualModel:{
+                List<String> conceptualModels = relateModelAndData.getConceptualModels();
+                if (add && !conceptualModels.contains(itemId)){
+                    // 新增关联
+                    conceptualModels.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    conceptualModels.remove(itemId);
+                }
+                break;
+            }
+            case LogicalModel:{
+                List<String> logicalModels = relateModelAndData.getLogicalModels();
+                if (add && !logicalModels.contains(itemId)){
+                    // 新增关联
+                    logicalModels.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    logicalModels.remove(itemId);
+                }
+                break;
+            }
+            case DataItem:{
+                List<String> dataItems = relateModelAndData.getDataItems();
+                if (add && !dataItems.contains(itemId)){
+                    // 新增关联
+                    dataItems.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    dataItems.remove(itemId);
+                }
+                break;
+            }
+            case DataHub:{
+                List<String> dataHubs = relateModelAndData.getDataHubs();
+                if (add && !dataHubs.contains(itemId)){
+                    // 新增关联
+                    dataHubs.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    dataHubs.remove(itemId);
+                }
+                break;
+            }
+            case DataMethod:{
+                List<String> dataMethods = relateModelAndData.getDataMethods();
+                if (add && !dataMethods.contains(itemId)){
+                    // 新增关联
+                    dataMethods.add(itemId);
+                } else if(!add){
+                    // 取消关联
+                    dataMethods.remove(itemId);
+                }
+                break;
+            }
+        }
+
+        return relateModelAndData;
+
+    }
+
+
     private void updateModelItemRelation(Version version){
         ModelItem oriVersion = (ModelItem)version.getOriginal();
         ModelItem newVersion = (ModelItem)version.getContent();
@@ -256,6 +485,14 @@ public class VersionService {
         if (!Utils.equalLists(oriRelate.getDataItems(), newRelate.getDataItems())){
             updateRelateItemType = ItemTypeEnum.DataItem.getText();
             updateRelations = newRelate.getDataItems();
+        }
+        if (!Utils.equalLists(oriRelate.getDataHubs(), newRelate.getDataHubs())){
+            updateRelateItemType = ItemTypeEnum.DataHub.getText();
+            updateRelations = newRelate.getDataHubs();
+        }
+        if (!Utils.equalLists(oriRelate.getDataMethods(), newRelate.getDataMethods())){
+            updateRelateItemType = ItemTypeEnum.DataMethod.getText();
+            updateRelations = newRelate.getDataMethods();
         }
         if (!Utils.equalLists(oriRelate.getComputableModels(), newRelate.getComputableModels())){
             updateRelateItemType = ItemTypeEnum.ComputableModel.getText();
@@ -686,14 +923,21 @@ public class VersionService {
      * 比较两个版本的不同
      * @param editItem 编辑后的item数据
      * @param originalItem 原始条目数据
+     * @param allowNoDiff 是否允许没有修改的条目添加到版本中
      * @return void
      * @Author bin
      **/
-    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, PortalItem originalItem) throws IllegalAccessException {
+    public Map<String, Object> getDifferenceBetweenTwoVersion(PortalItem editItem, PortalItem originalItem, boolean allowNoDiff) throws IllegalAccessException {
         // JSONObject factory = genericService.daoFactory(itemType);
         // GenericItemDao itemDao = (GenericItemDao) factory.get("itemDao");
         // PortalItem originalItem = (PortalItem) itemDao.findFirstById(editItem.getId());
-        return genericService.getDifferenceBetweenTwoObject(originalItem,editItem);
+        Map<String, Object> differences = genericService.getDifferenceBetweenTwoObject(originalItem, editItem,
+            "lastModifyTime", "lastModifier", "versions");
+        if(!allowNoDiff && differences.size() == 0){
+            // 错误状态码 415 表示不支持的数据输入 : 未有字段修改
+            throw new ServiceException("无字段修改，不可提交审核", HttpStatus.UNSUPPORTED_TYPE);
+        }
+        return differences;
     }
 
 
@@ -997,9 +1241,6 @@ public class VersionService {
             newField.put("keywords", null);
 
 
-
-
-
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
         if(originalField.get("lastModifier")!=null){
@@ -1041,6 +1282,63 @@ public class VersionService {
             JSONArray  ref_new = getReferences(JSONArray.parseArray(newField.get("references").toString()));
             newField.remove("references");
             newField.put("references", ref_new);
+        }
+
+        //资源信息
+        if(originalField.get("resources")!=null){
+
+            JSONArray resourceArray = new JSONArray();
+            List<Resource> resources = ((JSONArray)originalField.get("resources")).toJavaList(Resource.class);
+
+            if (resources != null) {
+                for (int i = 0; i < resources.size(); i++) {
+
+                    String path = resources.get(i).getPath();
+
+                    String[] arr = path.split("\\.");
+                    String suffix = arr[arr.length - 1];
+
+                    arr = path.split("/");
+                    String name = arr[arr.length - 1].substring(14);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", name);
+                    jsonObject.put("suffix", suffix);
+                    jsonObject.put("path", resources.get(i));
+                    resourceArray.add(jsonObject);
+
+                }
+
+            }
+            originalField.remove("resources");
+            originalField.put("resources", resourceArray);
+        }
+        if(newField.get("resources")!=null){
+            JSONArray resourceArray = new JSONArray();
+            List<Resource> resources = ((JSONArray)newField.get("resources")).toJavaList(Resource.class);
+
+            if (resources != null) {
+                for (int i = 0; i < resources.size(); i++) {
+
+                    String path = resources.get(i).getPath();
+
+                    String[] arr = path.split("\\.");
+                    String suffix = arr[arr.length - 1];
+
+                    arr = path.split("/");
+                    String name = arr[arr.length - 1].substring(14);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", name);
+                    jsonObject.put("suffix", suffix);
+                    jsonObject.put("path", resources.get(i));
+                    resourceArray.add(jsonObject);
+
+                }
+
+            }
+            newField.remove("resources");
+            newField.put("resources", resourceArray);
         }
 
 
@@ -1331,14 +1629,26 @@ public class VersionService {
         GenericItemDao itemDao = (GenericItemDao) daoFactory.get("itemDao");
 
         PortalItem item = (PortalItem)itemDao.findFirstById(id);
-
         JSONArray resultList = new JSONArray();
+
+        if(item == null){
+            modelAndView.addObject("list", resultList);
+            return modelAndView;
+        }
+
         List<String> versions = item.getVersions();
         Collections.reverse(versions);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // 新增代码， 如果找不到版本信息，先记录下来 然后删除
+        List<String> need2delete = new ArrayList<>();
+
         for (String versionId : versions) {
             Version version = versionDao.findFirstById(versionId);
-            if (version == null) {continue;}
+            if (version == null) {
+                need2delete.add(versionId);
+                continue;
+            }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("date", sdf.format(version.getSubmitTime()));
             jsonObject.put("id", version.getId());
@@ -1347,6 +1657,10 @@ public class VersionService {
             jsonObject.put("accessId", user.getAccessId());
             resultList.add(jsonObject);
         }
+
+        // 删除未找到的version
+        versions.removeAll(need2delete);
+        itemDao.save(item);
 
         modelAndView.addObject("id", item.getId());
         modelAndView.addObject("name", item.getName());
@@ -1385,37 +1699,37 @@ public class VersionService {
         try {
             switch (itemType) {
                 case ModelItem:
-                    modelAndView= modelItemService.getPage((ModelItem) content);
+                    modelAndView= modelItemService.getPage((ModelItem) content, true);
                     break;
                 case ConceptualModel:
-                    modelAndView= conceptualModelService.getPage((ConceptualModel) content);
+                    modelAndView= conceptualModelService.getPage((ConceptualModel) content, true);
                     break;
                 case LogicalModel:
-                    modelAndView= logicalModelService.getPage((LogicalModel) content);
+                    modelAndView= logicalModelService.getPage((LogicalModel) content, true);
                     break;
                 case ComputableModel:
-                    modelAndView= computableModelService.getPage((ComputableModel) content);
+                    modelAndView= computableModelService.getPage((ComputableModel) content, true);
                     break;
                 case Concept:
-                    modelAndView= repositoryService.getConceptPage((Concept) content);
+                    modelAndView= repositoryService.getConceptPage((Concept) content, true);
                     break;
                 case SpatialReference:
-                    modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content);
+                    modelAndView= repositoryService.getSpatialReferencePage((SpatialReference) content, true);
                     break;
                 case Template:
-                    modelAndView= repositoryService.getTemplatePage((Template) content);
+                    modelAndView= repositoryService.getTemplatePage((Template) content, true);
                     break;
                 case Unit:
-                    modelAndView= repositoryService.getUnitPage((Unit) content);
+                    modelAndView= repositoryService.getUnitPage((Unit) content, true);
                     break;
                 case DataItem:
-                    modelAndView = dataItemService.getPage((DataItem) content, dataItemDao);
+                    modelAndView = dataItemService.getPage((DataItem) content, dataItemDao, true);
                     break;
                 case DataHub:
-                    modelAndView = dataItemService.getPage((DataItem) content, dataHubDao);
+                    modelAndView = dataItemService.getPage((DataItem) content, dataHubDao, true);
                     break;
                 case DataMethod:
-                    modelAndView = dataMethodService.getPage((DataMethod) content);
+                    modelAndView = dataMethodService.getPage((DataMethod) content, true);
                     break;
 
             }

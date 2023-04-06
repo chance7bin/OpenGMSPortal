@@ -95,6 +95,7 @@
     },
     "AddOutputToMyData": "Add Output to My Data",
     "DownloadFile": "DOWNLOAD FILE",
+    "VisualizationBtn": "Visualization",
     "AddNewFolder": "Add New Folder",
     "OK": "OK",
     "SelectData": "Select Data",
@@ -522,7 +523,7 @@
     "DeleteSuccess": "delete successfully!",
     "LoginInFirst": "Please log in first!",
     "SureDeleteModel": "Are you sure to delete this model?",
-
+    "NoModification": "No field modification, cannot be submitted for review!",
     "Overview_Detail": "Overview & Detail",
 
 
@@ -1732,9 +1733,10 @@
     "SendMessageSuccess": "Send Message Success!",
     "ConfirmClosing": "Confirm closing？",
     "ResetPasswordError": "reset password error",
-    "PleaseEnterOldPassword": "Please enter old passw",
+    "PleaseEnterOldPassword": "Please enter old password",
     "PleaseEnterNewPassword": "Please enter new password!",
     "PleaseConfirmNewPassword": "Please confirm new password!",
+    "passwordReg":"Must contain upper and lower case letters, numbers and characters",
     "PasswordAndConfirmPasswordAreInconsistent": "Password and Confirm Password are inconsistent!",
     "PleaseSelectFirst": "please select first!",
 
@@ -1785,6 +1787,7 @@
     "SubmittedFailed": "Submitted failed!",
     "EditSubmitWait": "Your edit has been submit, please wait for the contributor to handle it.",
     "noDownloadLink": "no download link...",
+    "noVisualizeLink": "no visualize link...",
     "UsingOpenGMSModelServicePackageToCreateModelService": "Using a OpenGMS Model-Service Package to create model service.",
     "UsingDeployedOpenGMSPackageCreateModelService": "Using a deployed OpenGMS Model-Service Package's MD5 to create model service.",
     "HaveModelSourceCode": "I have the model's source code.",
@@ -1858,7 +1861,10 @@
     "EnterStudyArea": "Enter Study Areas ...",
     "EnterOrganizations": "Enter Organizations ...",
     "Save": "Save",
-    "ClickToSelect": "Click to select"
+    "ClickToSelect": "Click to select",
+    "acceptTip": "Accept this version, whether to continue?",
+    "rejectTip": "Reject this version, whether to continue?",
+    "notOperated": "Not operated"
   },
   "zh-cn": {
     "noCLSTip": "请至少选择一种分类!",
@@ -1959,6 +1965,7 @@
     },
     "AddOutputToMyData": "将结果添加到我的数据",
     "DownloadFile": "下载文件",
+    "VisualizationBtn": "可视化",
     "AddNewFolder": "添加文件夹",
     "OK": "确定",
     "SelectData": "选择数据",
@@ -2383,7 +2390,7 @@
     "DeleteSuccess": "删除成功！",
     "LoginInFirst": "请先登录！",
     "SureDeleteModel": "您确认删除该模型吗？",
-
+    "NoModification": "无字段修改，不可提交审核！",
     "Overview_Detail":"概述 & 详情",
 
     "CreateSpatiotemporalReference": "创建时空参考",
@@ -3596,6 +3603,7 @@
     "PleaseEnterOldPassword": "请输入旧密码!",
     "PleaseEnterNewPassword": "请输入新密码!",
     "PleaseConfirmNewPassword": "请确认新密码!",
+    "passwordReg": "密码需包含大小写字母、数字和字符",
     "PasswordAndConfirmPasswordAreInconsistent": "两次输入不一致!",
     "PleaseSelectFirst": "请先选择!",
     "Statistics": "统计",
@@ -3644,6 +3652,7 @@
     "SubmittedFailed": "提交失败",
     "EditSubmitWait": "您的编辑已提交，请等待贡献者处理。",
     "noDownloadLink": "暂无下载链接",
+    "noVisualizeLink": "暂无可视化链接",
     "UsingOpenGMSModelServicePackageToCreateModelService": "使用OpenGMS模型服务包创建模型服务。",
     "UsingDeployedOpenGMSPackageCreateModelService": "使用已部署的OpenGMS模型服务包的MD5创建模型服务。",
     "HaveModelSourceCode": "我有模型的源代码。",
@@ -3715,6 +3724,9 @@
     "EnterStudyArea": "输入研究领域...",
     "EnterOrganizations":"输入组织...",
     "Save": "保存",
-    "ClickToSelect": "点击选择"
+    "ClickToSelect": "点击选择",
+    "acceptTip": "接受该版本, 是否继续?",
+    "rejectTip": "拒绝该版本, 是否继续?",
+    "notOperated": "未操作"
   }
 }

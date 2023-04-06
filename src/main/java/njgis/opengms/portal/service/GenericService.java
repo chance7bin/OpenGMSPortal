@@ -108,6 +108,7 @@ public class GenericService {
     @Autowired
     VersionDao versionDao;
 
+
     @Autowired
     CommentDao commentDao;
 
@@ -846,6 +847,7 @@ public class GenericService {
         return fieldList;
     }
 
+
     /**
      * 比较两个对象的不同，返回不相等的属性
      * @param originalObj 原始对象
@@ -854,24 +856,51 @@ public class GenericService {
      * @Author bin
      **/
     public Map<String,Object> getDifferenceBetweenTwoObject(Object originalObj, Object newObj) throws IllegalAccessException {
-        Map<String,Object> differences = new HashMap<>();
+        return getDifferenceBetweenTwoObject(originalObj, newObj, (String[]) null);
+    }
 
+    /**
+     * 比较两个对象的不同，返回不相等的属性
+     * @param originalObj 原始对象
+     * @param newObj 待比较对象
+     * @param ignoreProperties 忽略的属性
+     * @return {@link Map< String, Object>}
+     * @author 7bin
+     **/
+    public Map<String,Object> getDifferenceBetweenTwoObject(Object originalObj, Object newObj, String... ignoreProperties) throws IllegalAccessException {
+        Map<String,Object> differences = new HashMap<>();
+        List<String> ignoreList = ignoreProperties != null ? Arrays.asList(ignoreProperties) : null;
         //获得所有属性
-        List<Field> allFields = getAllFields(originalObj);
+        List<Field> allField1 = getAllFields(originalObj);
+        List<Field> allField2 = getAllFields(newObj);
+        Set<Field> allFields = new HashSet<>();
+        allFields.addAll(allField1);
+        allFields.addAll(allField2);
         for (Field field : allFields) {
             field.setAccessible(true);
+            if(ignoreList != null && ignoreList.contains(field.getName())){
+                continue;
+            }
             Object originalField = field.get(originalObj);
             Object newField = field.get(newObj);
-            if (newField == null){
-                if (originalField != null){
+            if (originalField == null || newField == null){
+                if(originalField == null && newField == null){
+                    continue;
+                }
+                else if (originalField == null){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("original", null);
+                    jsonObject.put("new", newField);
+                    differences.put(field.getName(),jsonObject);
+                }
+                else {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("original", originalField);
                     jsonObject.put("new", null);
                     differences.put(field.getName(),jsonObject);
                 }
 
-            }
-            else if (!newField.equals(originalField)){
+            } else if (!newField.equals(originalField)){
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("original", originalField);
                 jsonObject.put("new", newField);
@@ -1092,5 +1121,27 @@ public class GenericService {
     public void userCacheEvict(String email){
 
     }
+
+    /**
+     * 获取条目基本信息
+     * @param itemType 条目类型
+     * @param id 条目id
+     * @return {@link JSONObject}  如果没找到返回null
+     * @author 7bin
+     **/
+    public JSONObject getBasicInfo(ItemTypeEnum itemType, String id){
+        JSONObject result = new JSONObject();
+        GenericItemDao itemDao = (GenericItemDao)daoFactory(itemType).get("itemDao");
+        PortalItem item = (PortalItem) itemDao.findFirstById(id);
+        if (item == null){
+            return null;
+        }
+        result.put("id", item.getId());
+        result.put("name", item.getName());
+        result.put("overview", item.getOverview());
+        result.put("image", item.getImage().equals("") ? null : htmlLoadPath + item.getImage());
+        return result;
+    }
+
 
 }

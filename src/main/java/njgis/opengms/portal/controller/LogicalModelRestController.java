@@ -9,9 +9,11 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.base.PortalItem;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.GenericService;
 import njgis.opengms.portal.service.LogicalModelService;
+import njgis.opengms.portal.service.RepositoryService;
 import njgis.opengms.portal.utils.ResultUtils;
 import njgis.opengms.portal.utils.Utils;
 import org.apache.commons.io.IOUtils;
@@ -41,6 +43,9 @@ public class LogicalModelRestController {
 
     @Autowired
     LogicalModelService logicalModelService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     /**
      * @Description 根据id获取逻辑模型详情页面
@@ -183,5 +188,23 @@ public class LogicalModelRestController {
         }
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.LogicalModel,findDTO, true));
 
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新knowledge")
+    @PostMapping(value = "/knowledge")
+    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        JSONObject result = repositoryService.updateKnowledge(ItemTypeEnum.LogicalModel ,knowledgeDTO,email);
+
+        if(result==null){
+            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+        }
+        else {
+            return ResultUtils.success(result);
+        }
     }
 }

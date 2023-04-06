@@ -1354,6 +1354,23 @@ var userTask = Vue.extend(
                 }
             },
 
+            //可视化
+            visualization(url){
+                if (url == undefined || url == ""){
+                    this.$message({
+                        message: this.htmlJson.noVisualizeLink,
+                        type: 'warning'
+                    });
+                } else {
+                    // url = "http://221.226.60.2:8082/data/8c46f99c-77ac-496a-b6c8-290b653a10cf"
+                    let urlArr = url.split("/");
+                    // 兰德访问不了门户网站的数据，要转成兰德的服务器
+                    url = "http://221.226.60.2:8082/data/" + urlArr[urlArr.length - 1]
+                    window.open('http://221.226.60.2:8082/onlinePreview?url=' + Base64.encode(url));
+                }
+
+            },
+
             downloadAll(recordId, name, time) {
                 var form = document.createElement("form");
                 form.style.display = "none";

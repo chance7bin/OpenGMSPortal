@@ -14,11 +14,13 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
 import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.entity.dto.dataItem.DataItemFindDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.DataItemService;
 import njgis.opengms.portal.service.GenericService;
+import njgis.opengms.portal.service.RepositoryService;
 import njgis.opengms.portal.service.UserService;
 import njgis.opengms.portal.utils.MyHttpUtils;
 import njgis.opengms.portal.utils.ResultUtils;
@@ -79,6 +81,9 @@ public class DataItemRestController {
 
     @Value ("${dataContainerIpAndPort}")
     String dataContainerIpAndPort;
+
+    @Autowired
+    RepositoryService repositoryService;
 
 
     /**
@@ -502,5 +507,23 @@ public class DataItemRestController {
         }
         return ResultUtils.success(genericService.queryByUser(ItemTypeEnum.DataItem,findDTO, true));
 
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新knowledge")
+    @PostMapping(value = "/knowledge")
+    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        JSONObject result = repositoryService.updateKnowledge(ItemTypeEnum.DataItem ,knowledgeDTO,email);
+
+        if(result==null){
+            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+        }
+        else {
+            return ResultUtils.success(result);
+        }
     }
 }

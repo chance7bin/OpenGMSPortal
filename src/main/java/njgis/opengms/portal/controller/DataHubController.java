@@ -12,12 +12,10 @@ import njgis.opengms.portal.dao.ModelItemDao;
 import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
+import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
 import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
-import njgis.opengms.portal.service.DataHubService;
-import njgis.opengms.portal.service.DataItemService;
-import njgis.opengms.portal.service.GenericService;
-import njgis.opengms.portal.service.UserService;
+import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +64,9 @@ public class DataHubController
 
     @Autowired
     DataHubService dataHubService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
@@ -266,5 +267,23 @@ public class DataHubController
 
         return ResultUtils.success(result);
 
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新knowledge")
+    @PostMapping(value = "/knowledge")
+    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+
+        HttpSession session=request.getSession();
+        String email = session.getAttribute("email").toString();
+
+        JSONObject result = repositoryService.updateKnowledge(ItemTypeEnum.DataHub ,knowledgeDTO,email);
+
+        if(result==null){
+            return ResultUtils.error(-1,"There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.");
+        }
+        else {
+            return ResultUtils.success(result);
+        }
     }
 }

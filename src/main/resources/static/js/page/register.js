@@ -18,9 +18,17 @@ new Vue({
         };
 
         var validatePass = (rule, value, callback) => {
-            if (value === '') {
+            // var reg = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!#@*&.])[a-zA-Z\d!#@*&.]*$/;
+            var reg = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[_\W])[a-zA-Z\d_\W]*$/;
+            // var reg = new RegExp('^(?![A-Za-z0-9]+$)(?![a-z0-9\\\\W]+$)(?![A-Za-z\\\\W]+$)(?![A-Z0-9\\\\W]+$)[a-zA-Z0-9\\\\W]{8,20}$');
+            // if (value === '') {
+            if (!reg.test(value)) {
+                // console.log("value:", value);
+                // console.log("error");
                 callback(new Error(this.htmlJSON.passwordStr));
             } else {
+                // console.log("value:", value);
+                // console.log("success");
                 if (this.ruleForm2.checkPass !== '') {
                     this.$refs.ruleForm2.validateField('checkPass');
                 }

@@ -95,10 +95,16 @@ public class DataItemService {
     }
 
     public ModelAndView getPage(DataItem dataItem, GenericItemDao genericItemDao){
+        return getPage(dataItem,genericItemDao,false);
+    }
+
+    public ModelAndView getPage(DataItem dataItem, GenericItemDao genericItemDao, boolean history){
         ModelAndView view = new ModelAndView();
 
         dataItem = (DataItem)genericService.recordViewCount(dataItem);
-        genericItemDao.save(dataItem);
+        if (!history){
+            genericItemDao.save(dataItem);
+        }
 
         //用户信息
 
@@ -515,6 +521,37 @@ public class DataItemService {
 
                 break;
             }
+            case DataMethod:{
+                //添加关联
+                for (String relation : newRelations) {
+
+                    if (!oriRelations.contains(relation)){
+                        ModelItem item = modelItemDao.findFirstById(relation);
+                        List<String> dataMethods = item.getRelate().getDataMethods();
+                        if (!dataMethods.contains(itemId)){
+                            dataMethods.add(itemId);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
+                        }
+                    }
+                }
+
+                //删除关联
+                for (String ori : oriRelations) {
+
+                    if (!newRelations.contains(ori)){
+                        ModelItem item = modelItemDao.findFirstById(ori);
+                        List<String> dataMethods = item.getRelate().getDataMethods();
+                        if (dataMethods.contains(itemId)){
+                            dataMethods.remove(itemId);
+                            // modelItemDao.save(item);
+                            redisService.saveItem(item,ItemTypeEnum.ModelItem);
+                        }
+                    }
+
+                }
+                break;
+            }
         }
 
     }
@@ -683,7 +720,7 @@ public class DataItemService {
      * @Author bin
      **/
     public JSONObject updateItem(DataItemDTO dataItemUpdateDTO, String email, ItemTypeEnum type, String id){
-        GenericItemDao genericItemDao = (GenericItemDao)genericService.daoFactory(type);
+        GenericItemDao genericItemDao = (GenericItemDao)genericService.daoFactory(type).get("itemDao");
 
         JSONObject result = new JSONObject();
         PortalItem item = (PortalItem) genericItemDao.findFirstById(id);
@@ -741,7 +778,7 @@ public class DataItemService {
             item.setLastModifyTime(now);
             item.setLastModifier(email);
 
-            Version new_version = versionService.addVersion(item, email,originalItemName);
+            Version new_version = versionService.addVersion(item, email,originalItemName,false);
             if (author.equals(email)){
                 versions.add(new_version.getId());
                 item.setVersions(versions);

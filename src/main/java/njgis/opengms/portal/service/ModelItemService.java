@@ -53,7 +53,8 @@ public class ModelItemService {
     @Value("${htmlLoadPath}")
     private String htmlLoadPath;
 
-    @Value(value = "Public,Discoverable")
+    // @Value(value = "Public,Discoverable")
+    @Value(value = "Public")
     private List<String> itemStatusVisible;
 
     @Autowired
@@ -61,6 +62,12 @@ public class ModelItemService {
 
     @Autowired
     ModelItemDao modelItemDao;
+
+    @Autowired
+    DataHubDao dataHubDao;
+
+    @Autowired
+    DataMethodDao dataMethodDao;
 
     @Autowired
     ModelItemService modelItemService;
@@ -123,11 +130,19 @@ public class ModelItemService {
         return getPage(portalItem);
     }
 
-    public ModelAndView getPage(ModelItem portalItem){
-        ModelAndView modelAndView=new ModelAndView();
-        ModelItem modelInfo = (ModelItem) genericService.recordViewCount(portalItem);
 
-        modelItemDao.save(modelInfo);
+    public ModelAndView getPage(ModelItem portalItem){
+        return getPage(portalItem, false);
+    }
+
+    public ModelAndView getPage(ModelItem portalItem, boolean history){
+        ModelAndView modelAndView=new ModelAndView();
+
+        ModelItem modelInfo = (ModelItem) genericService.recordViewCount(portalItem);
+        if(!history){
+            modelItemDao.save(modelInfo);
+        }
+
         JSONArray classResult = modelClassificationService.getClassifications(modelInfo.getClassifications());
 
         //详情页面
@@ -203,6 +218,8 @@ public class ModelItemService {
 
         return modelAndView;
     }
+
+
 
     public String getAuthorshipString(List<AuthorInfo> authorshipList) {
         String authorshipString = "";
@@ -408,7 +425,40 @@ public class ModelItemService {
             }
         }
 
-        //TODO dataHubs dataMethod
+        List<String> dataHubs = modelItemRelate.getDataHubs();
+        JSONArray dataHubArray = new JSONArray();
+        if(dataHubs!=null){
+            for(String hub:dataHubs){
+                DataHub dataHub = dataHubDao.findFirstById(hub);
+                if (dataHub == null){continue;}
+                if(dataHub.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject dataJson=new JSONObject();
+                dataJson.put("name",dataHub.getName());
+                dataJson.put("id",dataHub.getId());
+                dataJson.put("overview",dataHub.getOverview());
+                dataHubArray.add(dataJson);
+            }
+        }
+
+        List<String> dataMethods = modelItemRelate.getDataHubs();
+        JSONArray dataMethodsArray = new JSONArray();
+        if(dataMethods!=null){
+            for(String method:dataMethods){
+                DataMethod dataMethod = dataMethodDao.findFirstById(method);
+                if (dataMethod == null){continue;}
+                if(dataMethod.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject dataJson=new JSONObject();
+                dataJson.put("name",dataMethod.getName());
+                dataJson.put("id",dataMethod.getId());
+                dataJson.put("overview",dataMethod.getOverview());
+                dataMethodsArray.add(dataJson);
+            }
+        }
+
 
         JSONObject relationJson = new JSONObject();
         relationJson.put("modelItems",modelItemArray);
@@ -417,7 +467,8 @@ public class ModelItemService {
         relationJson.put("computableModels",computableArray);
 
         relationJson.put("dataItems",dataItemArray);
-
+        relationJson.put("dataHubs",dataHubArray);
+        relationJson.put("dataMethods",dataMethodsArray);
         relationJson.put("concepts",conceptArray);
         relationJson.put("spatialReferences",spatialReferenceArray);
         relationJson.put("templates",templateArray);
@@ -762,7 +813,7 @@ public class ModelItemService {
             }
             Date curDate = new Date();
             modelItem.setLastModifyTime(curDate);
-            modelItem.setLastModifier(author);
+            modelItem.setLastModifier(email);
 
             List<Localization> localizationList = modelItem.getLocalizationList();
             for(int l = 0;l<localizationList.size();l++){
@@ -772,8 +823,13 @@ public class ModelItemService {
             }
             modelItem.setLocalizationList(localizationList);
 
-            Version version_new = versionService.addVersion(modelItem, email, originalItemName);
+            Version version_new = versionService.addVersion(modelItem, email, originalItemName, false);
+            // if(1 == 1){
+            //     return null;
+            // }
             if (author.equals(email)) {
+                versionService.updateKnowledge(version_new);
+
                 versions.add(version_new.getId());
                 oriItem.setVersions(versions);
 
@@ -1139,6 +1195,7 @@ public class ModelItemService {
             JSONArray links = new JSONArray();
 
             List<ModelItem> modelItemList = modelItemDao.findAll();
+            // List<ModelItem> modelItemList =  modelItemDao.findAllByStatusIn(itemStatusVisible);
             for (int i = 0; i < modelItemList.size(); i++) {
                 ModelItem modelItem = modelItemList.get(i);
                 if(modelItem.getRelate().getModelRelationList().size()==0){
@@ -1151,7 +1208,7 @@ public class ModelItemService {
 //                    System.out.println(modelItem.getOid() + " " + j);
 //                    System.out.println(node);
 //                    System.out.println(modelItem.getOid());
-                    if (node.getString("type").equals("model") && node.getString("name").equals(modelItem.getName())) {
+                    if ("model".equals(node.getString("type")) && modelItem.getName().equals(node.getString("name"))) {
                         exist = true;
                         break;
                     }
@@ -1161,7 +1218,7 @@ public class ModelItemService {
                     JSONObject node = new JSONObject();
                     node.put("name", modelItem.getName());
                     node.put("oid", modelItem.getId());
-                    node.put("img", modelItem.getImage().equals("") ? "" : "/static" + modelItem.getImage());
+                    node.put("img", "".equals(modelItem.getImage()) ? "" : "/static" + modelItem.getImage());
                     node.put("overview", modelItem.getOverview());
                     node.put("type", "model");
                     nodes.add(node);
@@ -1205,6 +1262,10 @@ public class ModelItemService {
             String relateOid = modelRelation.getModelId();
             ModelItem modelItem_relation = modelItemDao.findFirstById(relateOid);
 
+            if(modelItem_relation == null){
+                continue;
+            }
+
             Boolean exist = false;
             int n = 0;
             for (; n < nodes.size(); n++) {
@@ -1227,7 +1288,7 @@ public class ModelItemService {
                 JSONObject node = new JSONObject();
                 node.put("name", modelItem_relation.getName());
                 node.put("oid", modelItem_relation.getId());
-                node.put("img", modelItem_relation.getImage().equals("") ? "" : "/static" + modelItem_relation.getImage());
+                node.put("img", "".equals(modelItem_relation.getImage()) ? "" : "/static" + modelItem_relation.getImage());
                 node.put("overview", modelItem_relation.getOverview());
                 node.put("type", "model");
                 nodes.add(node);
@@ -1547,6 +1608,7 @@ public class ModelItemService {
 
         switch (type){
             case "dataItem":
+                relate.setDataItems(relations);
 
                 // for(int i=0;i<relate.getDataItems().size();i++){
                 //     relationDelete.add(relate.getDataItems().get(i));
@@ -1598,6 +1660,12 @@ public class ModelItemService {
                 //     }
                 // }
 
+                break;
+            case "dataHub":
+                relate.setDataHubs(relations);
+                break;
+            case "dataMethod":
+                relate.setDataMethods(relations);
                 break;
             case "conceptualModel":
                 relate.setConceptualModels(relations);
@@ -1687,6 +1755,84 @@ public class ModelItemService {
                 }
 
                 relate.setDataItems(relations);
+
+                break;
+            case "dataHub":
+
+
+                //获取原始关联条目
+                List<String> dataHubs = relate.getDataHubs();
+
+                //添加关联
+                for (String relation : relations) {
+
+                    if (!dataHubs.contains(relation)){
+                        DataHub item = dataHubDao.findFirstById(relation);
+                        List<String> relatedModels = item.getRelatedModels();
+                        if (!relatedModels.contains(modelId)){
+                            relatedModels.add(modelId);
+                            // dataItemDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.DataHub);
+                        }
+                    }
+
+                }
+
+                //删除关联
+                for (String dataHub : dataHubs) {
+
+                    if (!relations.contains(dataHub)){
+                        DataHub item = dataHubDao.findFirstById(dataHub);
+                        List<String> relatedModels = item.getRelatedModels();
+                        if (relatedModels.contains(modelId)){
+                            relatedModels.remove(modelId);
+                            // dataItemDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.DataHub);
+                        }
+                    }
+
+                }
+
+                relate.setDataHubs(relations);
+
+                break;
+            case "dataMethod":
+
+
+                //获取原始关联条目
+                List<String> dataMethods = relate.getDataMethods();
+
+                //添加关联
+                for (String relation : relations) {
+
+                    if (!dataMethods.contains(relation)){
+                        DataMethod item = dataMethodDao.findFirstById(relation);
+                        List<String> relatedModels = item.getRelatedModels();
+                        if (!relatedModels.contains(modelId)){
+                            relatedModels.add(modelId);
+                            // dataItemDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.DataMethod);
+                        }
+                    }
+
+                }
+
+                //删除关联
+                for (String dataMethod : dataMethods) {
+
+                    if (!relations.contains(dataMethod)){
+                        DataMethod item = dataMethodDao.findFirstById(dataMethod);
+                        List<String> relatedModels = item.getRelatedModels();
+                        if (relatedModels.contains(modelId)){
+                            relatedModels.remove(modelId);
+                            // dataItemDao.save(item);
+                            redisService.saveItem(item, ItemTypeEnum.DataMethod);
+                        }
+                    }
+
+                }
+
+                relate.setDataMethods(relations);
 
                 break;
             case "conceptualModel":
@@ -2147,16 +2293,27 @@ public class ModelItemService {
 //        relate.setLocalFiles(relateLocalFiles);
         relate.setDataSpaceFiles(relateDataSpaceFiles);
 
-        if(email.equals(modelItem.getAuthor())) {
-            modelItem.setRelate(relate);
-            // modelItemDao.save(modelItem);
-            redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
+        // if(email.equals(modelItem.getAuthor())) {
+        //     modelItem.setRelate(relate);
+        //     // modelItemDao.save(modelItem);
+        //
+        //     redisService.saveItem(modelItem, ItemTypeEnum.ModelItem);
+        //     return "suc";
+        // }else{
+        //     ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+        //     modelItemUpdateDTO.setOriginId(modelItem.getId());
+        //     modelItemUpdateDTO.setRelate(relate);
+        //     modelItemService.update(modelItemUpdateDTO,email);
+        //     return "version";
+        // }
+
+        ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
+        modelItemUpdateDTO.setOriginId(modelItem.getId());
+        modelItemUpdateDTO.setRelate(relate);
+        JSONObject update = modelItemService.update(modelItemUpdateDTO, email);
+        if("update".equals(update.getString("method"))){
             return "suc";
-        }else{
-            ModelItemUpdateDTO modelItemUpdateDTO = new ModelItemUpdateDTO();
-            modelItemUpdateDTO.setOriginId(modelItem.getId());
-            modelItemUpdateDTO.setRelate(relate);
-            modelItemService.update(modelItemUpdateDTO,email);
+        } else {
             return "version";
         }
 

@@ -577,11 +577,17 @@ var userAccount = Vue.extend(
                     let oldPass = $("#inputOldPass").val();
                     let newPass = $("#inputPassword").val();
                     let newPassAgain = $("#inputPassAgain").val();
+                    // var reg = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!#@*&.])[a-zA-Z\d!#@*&.]*$/;
+                    var reg = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[_\W])[a-zA-Z\d_\W]*$/;
+
                     if (oldPass == "") {
                         alert(this.htmlJson.PleaseEnterOldPassword)
                         return;
                     } else if (newPass == "") {
                         alert(this.htmlJson.PleaseEnterNewPassword)
+                        return;
+                    } else if (!reg.test(newPass)) {
+                        alert(this.htmlJson.passwordReg)
                         return;
                     } else if (newPassAgain == "") {
                         alert(this.htmlJson.PleaseConfirmNewPassword)

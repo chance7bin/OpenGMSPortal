@@ -26,6 +26,8 @@ public interface GenericItemDao<T>{
 
     T findFirstByAccessId(String accessId);
 
+    List<T> findAllByStatusIn(List<String> itemStatusVisible);
+
 
     Page<T> findAllByNameContainsIgnoreCaseAndStatusIn(String name, List<String> itemStatusVisible, Pageable pageable);
     Page<T> findAllByKeywordsContainsIgnoreCaseAndStatusIn(String keyword, List<String> itemStatusVisible, Pageable pageable);

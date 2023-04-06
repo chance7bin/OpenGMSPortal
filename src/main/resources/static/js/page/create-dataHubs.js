@@ -613,6 +613,9 @@ var createDataHubs = Vue.extend({
                                 alert(this.htmlJson.LoginInFirst);
                                 window.location.href="/user/login";
                             }
+                            else if(result.data.code==415){
+                                alert(this.htmlJson.NoModification);
+                            }
                             else{
                                 alert(result.data.msg);
                             }

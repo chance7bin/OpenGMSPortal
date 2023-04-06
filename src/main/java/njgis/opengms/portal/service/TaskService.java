@@ -3,6 +3,7 @@ package njgis.opengms.portal.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.component.AbstractTask.AsyncTask;
 import njgis.opengms.portal.dao.*;
@@ -27,6 +28,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -36,6 +38,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
@@ -1755,13 +1760,49 @@ public class TaskService {
         return ResultUtils.success(task.getPermission());
     }
 
+    public JsonResult setTaskDesc(TaskPublishDTO publishDTO) {
+
+        // 如果id没传过来的话新建一个task记录
+        if(publishDTO.getId() == null || "".equals(publishDTO.getId())){
+            Task newTask = new Task();
+            BeanUtils.copyProperties(publishDTO, newTask);
+            return ResultUtils.success();
+        }
+
+        Task task = taskDao.findFirstByTaskId(publishDTO.getId());
+        if (task == null){
+            return ResultUtils.error();
+        }
+        // 任务公开添加的信息
+        BeanUtils.copyProperties(publishDTO, task, "id");
+        taskDao.save(task);
+        return ResultUtils.success();
+    }
+
     public JsonResult setPublic(String taskId) {
         Task task = taskDao.findFirstByTaskId(taskId);
         if (task == null) {
             return ResultUtils.error();
         }
+
         task.setPermission("public");
         taskDao.save(task);
+
+        // 关联到计算模型去
+        ComputableModel computableModel = computableModelDao.findFirstById(task.getComputableId());
+        if (computableModel != null){
+            List<String> runRecord = computableModel.getRelateTaskRunRecord();
+            if (runRecord == null){
+                runRecord = new ArrayList<>();
+                // 如果初始值为null的话为该属性分配空间的时候computableModel并不会同步更新，它还是指向null
+                computableModel.setRelateTaskRunRecord(runRecord);
+            }
+            if(!runRecord.contains(taskId)){
+                runRecord.add(taskId);
+            }
+        }
+        computableModelDao.save(computableModel);
+
         return ResultUtils.success(task.getPermission());
     }
 
@@ -2131,6 +2172,20 @@ public class TaskService {
 
         integratedTaskDao.save(integratedTask);
         return taskDescription;
+    }
+
+    /**
+     * 获取公开的任务信息
+     * @param id 任务id
+     * @return 任务是公开的返回任务信息，任务不是公开的返回null
+     * @author 7bin
+     **/
+    public Task getPublicTask(String id) {
+        Task task = findByTaskId(id);
+        if(!"public".equals(task.getPermission())){
+            task = null;
+        }
+        return task;
     }
 
 }
