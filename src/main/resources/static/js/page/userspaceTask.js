@@ -5,6 +5,15 @@ var userTask = Vue.extend(
         data() {
             return {
                 //页面样式控制
+                dialogFormVisible: false,
+                formLabelWidth: '120px',
+                publicTask: {},
+                taskInfo:{
+                    id: '',
+                    taskDateRange: '',
+                    taskApplyArea: '',
+                    taskDesc: ''
+                },
                 loading: 'false',
                 load: true,
                 ScreenMinHeight: "0px",
@@ -520,8 +529,10 @@ var userTask = Vue.extend(
             },
 
             publishTask(task) {
+                console.log(task)
                 const h = this.$createElement;
                 if (task.permission == 'private') {
+
                     this.$msgbox({
                         title: ' ',
                         message: this.htmlJson.SureSetPublic,
@@ -571,7 +582,8 @@ var userTask = Vue.extend(
                             message: this.htmlJson.CanVisitedPublic
                         });
                     });
-                } else {
+                }
+                else {
                     this.$msgbox({
                         title: ' ',
                         message: this.htmlJson.SureSetPrivate,
@@ -1808,6 +1820,44 @@ var userTask = Vue.extend(
             sendUserToParent(userId){
                 this.$emit('com-senduserinfo',userId)
             },
+
+            showTaskInfo(task){
+                if (task.permission === "private"){
+                    this.dialogFormVisible = true
+                    this.publicTask = task
+                    console.log(task)
+                }
+                else {
+                    this.publishTask(task)
+                }
+            },
+
+            taskInfoConfirm(){
+                if (this.taskInfo.taskDesc === '' || this.taskInfo.taskDateRange === '' || this.taskInfo.taskApplyArea === ''){
+                    this.$message({
+                        message: '请完善信息',
+                        type: 'warning'
+                    });
+                    return
+                }
+
+                this.taskInfo.id = this.publicTask.id
+                let taskData = JSON.stringify({
+                    id: this.taskInfo.id,
+                    timeRange: this.taskInfo.taskDateRange,
+                    applicationArea: this.taskInfo.taskApplyArea,
+                    description: this.taskInfo.taskDesc
+                })
+                console.log(taskData)
+                this.dialogFormVisible = false
+                axios.post('/task/desc/info', taskData, {headers: {
+                        'Content-Type': 'application/json'
+                    }})
+                    .then(res=>{
+                        console.log(res)
+                        this.publishTask(this.publicTask)
+                    })
+            }
         },
 
         // created() {

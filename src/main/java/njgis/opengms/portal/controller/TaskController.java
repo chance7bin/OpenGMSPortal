@@ -163,6 +163,8 @@ public class TaskController {
 
     }
 
+
+
     // @LoginRequired
     // @ApiOperation(value = "更新数据库用")
     // @RequestMapping(value="/update",method = RequestMethod.PUT )
@@ -184,7 +186,6 @@ public class TaskController {
         String taskId=obj.get("taskId").toString();
         String description=obj.get("description").toString();
         return taskService.addDescription(taskId,description);
-
     }
 
 
@@ -357,6 +358,13 @@ public class TaskController {
     public JsonResult setTaskDesc(@RequestBody TaskPublishDTO publishDTO)
     {
         return taskService.setTaskDesc(publishDTO);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "根据taskID查询task")
+    @RequestMapping(value = "taskInfoByID/{id}", method = RequestMethod.GET)
+    public JsonResult GetTaskByTaskID(@PathVariable("id") String id){
+        return ResultUtils.success(taskService.findByTaskId(id));
     }
 
     @LoginRequired

@@ -137,6 +137,308 @@
             <!--relatedVisualization-->
             <div th:replace="fragments/itemInfoModules :: data_related_processing"></div>
 
+            <div th:replace="fragments/itemInfoModules :: model_related_material(${relation}, true)"></div>
+
+            <el-dialog v-cloak :visible.sync="relatedResourceVisible" :title="'Link Material to '+ itemInfo.name" width="72%"
+                       style="min-height: 450px">
+
+                <el-card shadow="never" class="box-card" style="width:40%;margin-right: 1%;float: left;">
+                    <div slot="header" class="clearfix">
+                        <span>{{htmlJSON.RelatedItems}}</span>
+
+                    </div>
+                    <el-table
+                      :data="tableData"
+                      :max-height="tableMaxHeight">
+                        <el-table-column
+                          label="Name"
+                        >
+                            <template slot-scope="props">
+                                <a class="cursorPointer ellipsis" @click="checkContent(props.row)"
+                                   target="_blank">{{props.row.name}}</a>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column
+                          :label="htmlJSON.Type"
+                          width="120"
+                        >
+                            <template slot-scope="props">
+                                <el-tooltip class="item" effect="dark" :content="getTypeExpress(props.row)"
+                                            placement="bottom-start">
+                                    <i class="fa fa-file-o" style="font-size: 26px;color: #11c2fd;"
+                                       v-if="props.row.type=='dataSpaceFile'"></i>
+                                    <i class="fa fa-link" style="font-size: 26px;color: #11c2fd;"
+                                       v-else-if="props.row.type=='exLink'"></i>
+                                    <img class="ellipsis" :src="getTypeImg(props.row)" v-else target="_blank"
+                                         style="width: 27px;">{{props.row.name}}</img>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column fixed="right" label=" " width="70">
+                            <template slot-scope="scope">
+                                <el-button
+                                  size="mini"
+                                  type="danger"
+                                  icon="el-icon-close" circle
+                                  @click="handleDelete(scope.$index, scope.row)">
+                                </el-button>
+
+
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-card>
+
+                <div class="flexJustStart" style="width:59%;float: left;">
+                    <ul class="sideSelect">
+                        <li class="sideSelectLi" @click="changeRelateType('concept')"
+                            :class="relateType!='concept'?'':'active'">
+                            <div class="sideSelectCell flexCenter">
+                                <el-tooltip content="Concept & Semantic" placement="right-start">
+                                    <img src="/static/img/model/semantics.png">
+                                </el-tooltip>
+                            </div>
+                        </li>
+                        <li class="sideSelectLi" @click="changeRelateType('spatialReference')"
+                            :class="relateType!='spatialReference'?'':'active'">
+                            <div class="sideSelectCell flexCenter">
+                                <el-tooltip content="Spatiotemporal Reference" placement="right-start">
+                                    <img style="width: 30px" src="/static/img/model/spatialreference.png">
+                                </el-tooltip>
+                            </div>
+                        </li>
+                        <li class="sideSelectLi" @click="changeRelateType('template')"
+                            :class="relateType!='template'?'':'active'">
+                            <div class="sideSelectCell flexCenter">
+                                <el-tooltip content="Data Template" placement="right-start">
+                                    <img src="/static/img/model/template.png">
+                                </el-tooltip>
+                            </div>
+                        </li>
+                        <li class="sideSelectLi" @click="changeRelateType('unit')" :class="relateType!='unit'?'':'active'">
+                            <div class="sideSelectCell flexCenter">
+                                <el-tooltip content="Unit & Metric" placement="right-start">
+                                    <img src="/static/img/model/unit.png">
+                                </el-tooltip>
+                            </div>
+                        </li>
+                        <li class="sideSelectLi" @click="changeRelateType('dataSpaceFile')"
+                            :class="relateType!='dataSpaceFile'?'':'active'">
+                            <div class="sideSelectCell flexCenter">
+                                <el-tooltip content="File" placement="right-start">
+                                    <i class="fa fa-file-o" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
+                                </el-tooltip>
+                            </div>
+                        </li>
+                        <li class="sideSelectLi" @click="changeRelateType('exLink')" :class="relateType!='exLink'?'':'active'">
+                            <div class="sideSelectCell flexCenter">
+                                <el-tooltip content="External Link" placement="right-start">
+                                    <i class="fa fa-link" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
+                                </el-tooltip>
+                            </div>
+                        </li>
+                    </ul>
+                    <el-tabs type="border-card" :stretch="true" v-model="activeName_dialog" v-if="relateType=='concept'||relateType=='spatialReference'
+            ||relateType=='template'||relateType=='unit'">
+                        <div style="padding: 8px 16px;
+                        background-color: #ecf8ff;
+                        border-radius: 4px;
+                        border-left: 5px solid #50bfff;
+                        margin: 0 0 10px;">
+                            <p style="font-size: 14px;color: #5e6d82;line-height: 1.5em;margin:0;">
+                                {{htmlJSON.LinkResourceFromRepositoryOrCreate}}<a
+                              style="cursor:pointer;text-decoration: underline"
+                              @click="jump">{{htmlJSON.create}}</a>.
+                            </p>
+                        </div>
+                        <el-tab-pane name="my" label="My Repository"
+                                     v-if="relateType!='concept'&&relateType!='spatialReference'&&relateType!='template'&&relateType!='unit'">
+
+                            <el-input placeholder="Please enter name..." v-model="pageOption_my.relateSearch"
+                                      class="input-with-select"
+                                      clearable="true" @keyup.enter.native="searchInit">
+                                <el-button slot="append" icon="el-icon-search" @click="searchInit"></el-button>
+                            </el-input>
+                            <el-table
+                              :data="pageOption_my.searchResult"
+                              style="margin-top:17px;"
+                              show-overflow-tooltip
+                              :max-height="tableMaxHeight">
+                                <el-table-column type="expand">
+                                    <template slot-scope="props">
+                                        <el-form label-position="left" inline class="demo-table-expand">
+                                            <el-form-item label="Overview">
+                                                <span>{{ props.row.overview }}</span>
+                                            </el-form-item>
+
+                                        </el-form>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column sortable='custom'
+                                                 label="toLowerCaseName">
+                                    <template slot-scope="props">
+                                        <a :href="'/repository/'+relateType+'/'+props.row.id"
+                                           target="_blank">{{props.row.name}}</a>
+                                    </template>
+                                </el-table-column>
+                                <!--<el-table-column-->
+                                <!--label="Contributor"-->
+                                <!--prop="author">-->
+                                <!--</el-table-column>-->
+                                <el-table-column fixed="right" label=" " width="60">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                          v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"
+                                          size="mini"
+                                          type="success"
+                                          icon="el-icon-plus" circle
+                                          @click="handleEdit(scope.$index, scope.row)">
+                                        </el-button>
+                                        <el-button
+                                          v-if="hasAdded(scope.row)"
+                                          size="mini"
+                                          type="danger"
+                                          icon="el-icon-close" circle
+                                          @click="handleDelete(scope.$index, scope.row)">
+                                        </el-button>
+
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-pagination style="text-align: center;margin-top:20px"
+                                           @current-change="handlePageChange"
+                                           :current-page="pageOption_my.currentPage"
+                                           layout="total, prev, pager, next, jumper"
+                                           :page-size="pageOption_my.pageSize"
+                                           :total="pageOption_my.total">
+                            </el-pagination>
+                        </el-tab-pane>
+                        <el-tab-pane name="all" :label="htmlJSON.AllRepository">
+
+                            <el-input :placeholder="htmlJSON.PleaseEnterName" v-model="pageOption_all.relateSearch"
+                                      class="input-with-select"
+                                      clearable="true" @keyup.enter.native="searchInit('all')">
+                                <el-button slot="append" icon="el-icon-search" @click="searchInit('all')"></el-button>
+                            </el-input>
+                            <el-table
+                              :data="pageOption_all.searchResult"
+                              style="margin-top:17px;"
+                              show-overflow-tooltip
+                              @sort-change="relationSortChange"
+                              :max-height="tableMaxHeight">
+                                <el-table-column type="expand">
+                                    <template slot-scope="props">
+                                        <el-form label-position="left" inline class="demo-table-expand">
+                                            <el-form-item label="Overview">
+                                                <span>{{ props.row.overview }}</span>
+                                            </el-form-item>
+
+                                        </el-form>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column sortable='custom'
+                                                 label="Name">
+                                    <template slot-scope="props">
+                                        <a :href="'/repository/'+relateType+'/'+props.row.id"
+                                           target="_blank">{{props.row.name}}</a>
+                                    </template>
+                                </el-table-column>
+                                <!--<el-table-column-->
+                                <!--label="Contributor"-->
+                                <!--prop="author">-->
+                                <!--</el-table-column>-->
+                                <el-table-column fixed="right" label=" " width="60">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                          v-if="!isCurrentItem(scope.row)&&!hasAdded(scope.row)"
+                                          size="mini"
+                                          type="success"
+                                          icon="el-icon-plus" circle
+                                          @click="handleEdit(scope.$index, scope.row)">
+                                        </el-button>
+                                        <el-button
+                                          v-if="hasAdded(scope.row)"
+                                          size="mini"
+                                          type="danger"
+                                          icon="el-icon-close" circle
+                                          @click="handleDelete(scope.$index, scope.row)">
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-pagination style="text-align: center;margin-top:20px"
+                                           @current-change="handlePageChange"
+                                           :current-page="pageOption_all.currentPage"
+                                           layout="total, prev, pager, next, jumper"
+                                           :page-size="pageOption_all.pageSize"
+                                           :total="pageOption_all.total">
+                            </el-pagination>
+                        </el-tab-pane>
+                    </el-tabs>
+                    <el-card v-if="relateType=='localFile'">
+                        <div class="">
+                            <el-upload
+                              class="uploadCenter"
+                              drag
+                              ref="upload"
+                              :on-change="uploadChange"
+                              :on-remove="uploadRemove"
+                              :auto-upload="false"
+                              :show-file-list="false"
+                              :multiple="false">
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">Drop the file here, or<em>click </em>to upload.</div>
+                                <template #tip>
+                                    <div class="el-upload__tip">
+                                        File size should not exceed 10m.
+                                    </div>
+                                </template>
+                            </el-upload>
+                        </div>
+                    </el-card>
+                    <el-card v-if="relateType=='dataSpaceFile'" class="flexCenter" style="min-height: 260px;flex:1">
+                        <el-button round size="mini" @click='checkPersonData()' type="primary">Select From My Space</el-button>
+                    </el-card>
+                    <el-card v-if="relateType=='exLink'" v-loading="checkUrlValidLoading" style="min-height: 260px;flex:1">
+                        <div class="flexCol flexAlignCenter">
+                            <el-input
+                              :rows="2"
+                              placeholder="please input the name of the external link"
+                              v-model="exLink.name"
+                              style="margin-top:15px"
+                            >
+                            </el-input>
+                            <el-input
+                              type="textarea"
+                              :rows="2"
+                              placeholder="please input the content the external link"
+                              v-model="exLink.content"
+                              style="margin-top:15px">
+                            </el-input>
+                            <el-button round size="mini" @click='addExLink' type="success" style="margin-top:15px">+ add
+                            </el-button>
+                        </div>
+
+                    </el-card>
+                </div>
+
+
+                <div slot="footer" class="dialog-footer">
+                    <!--<span style="float:left;font-size: 16px">Or you can click <a style="cursor:pointer" @click="jump">here</a> to create a new one.</span>-->
+                    <el-button @click="relatedResourceVisible = false;">{{htmlJSON.Cancel}}</el-button>
+                    <el-popconfirm
+                      confirm-button-text='Yes'
+                      cancel-button-text='No'
+                      title="Are you sure to submit changes?"
+                      @confirm="addRelateResources()"
+                    >
+                        <el-button type="primary" slot="reference">OK</el-button>
+                    </el-popconfirm>
+                </div>
+            </el-dialog>
+
             <!--how to Cite-->
             <div id="cite" class="detail_block">
                 <div class="block_head">

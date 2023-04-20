@@ -14,6 +14,7 @@ import njgis.opengms.portal.entity.dto.FindDTO;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.UserFindDTO;
 import njgis.opengms.portal.entity.dto.community.KnowledgeDTO;
+import njgis.opengms.portal.entity.dto.task.TaskFindDTO;
 import njgis.opengms.portal.entity.po.ComputableModel;
 import njgis.opengms.portal.entity.po.Task;
 import njgis.opengms.portal.entity.po.User;
@@ -155,7 +156,7 @@ public class ComputableModelRestController {
     @LoginRequired
     @ApiOperation(value = "更新knowledge")
     @PostMapping(value = "/knowledge")
-    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+    public JsonResult updateKnowledge(@RequestBody KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
 
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
@@ -426,5 +427,15 @@ public class ComputableModelRestController {
         return computableModelService.getInfoForUserserver(id);
     }
 
+    @LoginRequired
+    @ApiOperation(value = "得到当前计算模型运行成功的任务信息")
+    @RequestMapping(value="/{computableModelId}/taskInfo",method = RequestMethod.POST )
+    public JsonResult getTasksByUserByStatus(@PathVariable("computableModelId") String computableModelId ,@RequestBody TaskFindDTO taskFindDTO, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String email = session.getAttribute("email").toString();
+        return taskService.getSuccessfulTasksByUserByComputableModelId(email,computableModelId,taskFindDTO);
+
+    }
 
 }

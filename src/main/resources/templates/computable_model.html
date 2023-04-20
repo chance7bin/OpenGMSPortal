@@ -76,6 +76,8 @@
                 <div th:replace="fragments/itemInfoModules :: computable_MDL"></div>
             </div>
 
+            <div  th:replace="fragments/itemInfoModules :: TaskExample(${relateTaskRunRecord})"></div>
+
             <div th:replace="fragments/itemInfoModules :: description(${itemInfo}, ${detailLanguage}, True)"></div>
 
             <div  th:replace="fragments/itemInfoModules :: related_models(${relateModelItemList})"></div>
@@ -251,6 +253,85 @@
     </el-dialog>
     <div th:replace="fragments/footer :: footer"></div>
 
+    <el-dialog title="任务列表" :visible.sync="dialogTableVisible">
+        <el-table :data="gridData">
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column property="computableName" label="Model Name" width="250"></el-table-column>
+            <el-table-column property="runTime" label="Run Time" width="250"></el-table-column>
+            <el-table-column label="permission" width="150">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.permission == 'public'">Public</span>
+                    <span v-else>Private</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="Operation">
+                <template slot-scope="scope">
+                    <el-button v-if="scope.row.permission != 'public'" @click="publicTask(scope.row.id, scope.row)" type="text" size="small">Public</el-button>
+                    <el-button v-if="scope.row.permission == 'public'" @click="editTask(scope.row.id, scope.row)" type="text" size="small">Edit</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-dialog>
+
+    <el-dialog title="任务信息编辑" :visible.sync="taskDialogFormVisible">
+        <el-form :model="taskInfo">
+            <el-form-item label="时间范围" :label-width="formLabelWidth" prop="taskDateRange" :rules="[{ required: true, message: '请输入时间范围', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskDateRange" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="应用区域" :label-width="formLabelWidth" prop="taskApplyArea" :rules="[{ required: true, message: '请输入应用区域', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskApplyArea" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="任务描述" :label-width="formLabelWidth" prop="taskDesc" :rules="[{ required: true, message: '请输入任务描述', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskDesc" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="taskDialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="taskInfoConfirm">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="任务信息编辑" :visible.sync="taskDialogFormVisible2">
+        <el-form :model="taskInfo">
+            <el-form-item label="时间范围" :label-width="formLabelWidth" prop="taskDateRange" :rules="[{ required: true, message: '请输入时间范围', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskDateRange" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="应用区域" :label-width="formLabelWidth" prop="taskApplyArea" :rules="[{ required: true, message: '请输入应用区域', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskApplyArea" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="任务描述" :label-width="formLabelWidth" prop="taskDesc" :rules="[{ required: true, message: '请输入任务描述', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskDesc" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="taskDialogFormVisible2 = false">取 消</el-button>
+            <el-button type="primary" @click="taskInfoConfirm2">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="任务信息编辑" :visible.sync="taskDialogFormVisible3">
+        <el-form :model="taskInfo">
+            <el-form-item label="时间范围" :label-width="formLabelWidth" prop="taskDateRange" :rules="[{ required: true, message: '请输入时间范围', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskDateRange" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="应用区域" :label-width="formLabelWidth" prop="taskApplyArea" :rules="[{ required: true, message: '请输入应用区域', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskApplyArea" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="任务描述" :label-width="formLabelWidth" prop="taskDesc" :rules="[{ required: true, message: '请输入任务描述', trigger: 'blur' }]">
+                <el-input v-model="taskInfo.taskDesc" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="taskDialogFormVisible3 = false">取 消</el-button>
+            <el-button type="primary" @click="taskInfoConfirm3">确 定</el-button>
+        </div>
+    </el-dialog>
 </div>
 <template th:replace="modules/editComputableModelModule :: editComputableModelModule"></template>
 <template th:replace="fragments/comments :: comments"></template>

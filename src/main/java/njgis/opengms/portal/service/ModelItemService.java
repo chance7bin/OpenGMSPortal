@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import njgis.opengms.portal.dao.*;
-import njgis.opengms.portal.entity.doo.AuthorInfo;
-import njgis.opengms.portal.entity.doo.JsonResult;
-import njgis.opengms.portal.entity.doo.Localization;
-import njgis.opengms.portal.entity.doo.MyException;
+import njgis.opengms.portal.entity.doo.*;
 import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.ModelRelation;
 import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemAddDTO;
@@ -60,6 +57,7 @@ public class ModelItemService {
     @Autowired
     GenericService genericService;
 
+
     @Autowired
     ModelItemDao modelItemDao;
 
@@ -80,6 +78,9 @@ public class ModelItemService {
 
     @Autowired
     ClassificationDao classificationDao;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     @Autowired
     DataItemDao dataItemDao;
@@ -442,7 +443,7 @@ public class ModelItemService {
             }
         }
 
-        List<String> dataMethods = modelItemRelate.getDataHubs();
+        List<String> dataMethods = modelItemRelate.getDataMethods();
         JSONArray dataMethodsArray = new JSONArray();
         if(dataMethods!=null){
             for(String method:dataMethods){
@@ -1013,6 +1014,42 @@ public class ModelItemService {
                     }
                 }
                 break;
+            case "dataHub":
+                list=relation.getDataHubs();
+                if(list!=null){
+                    for(String id:list){
+                        DataHub dataHub=dataHubDao.findFirstById(id);
+                        if(dataHub.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item=new JSONObject();
+                        item.put("id",dataHub.getId());
+                        item.put("name",dataHub.getName());
+                        User user=userDao.findFirstByEmail(dataHub.getAuthor());
+                        item.put("author_name",user.getName());
+                        item.put("author_email", user.getEmail());
+                        result.add(item);
+                    }
+                }
+                break;
+            case "dataMethod":
+                list=relation.getDataMethods();
+                if(list!=null){
+                    for(String id:list){
+                        DataMethod dataMethod=dataMethodDao.findFirstById(id);
+                        if(dataMethod.getStatus().equals("Private")){
+                            continue;
+                        }
+                        JSONObject item=new JSONObject();
+                        item.put("id",dataMethod.getId());
+                        item.put("name",dataMethod.getName());
+                        User user=userDao.findFirstByEmail(dataMethod.getAuthor());
+                        item.put("author_name",user.getName());
+                        item.put("author_email", user.getEmail());
+                        result.add(item);
+                    }
+                }
+                break;
             case "modelItem":
                 List<ModelRelation> modelRelationList = relation.getModelRelationList();
                 if (modelRelationList != null) {
@@ -1376,73 +1413,13 @@ public class ModelItemService {
         ModelItemRelate relation=modelItem.getRelate();
         List<String> list=new ArrayList<>();
 
-        list=relation.getConcepts();
-        if(list!=null) {
-            for (String id : list) {
-                Concept concept = conceptDao.findFirstById(id);
-                if(concept.getStatus().equals("Private")){
-                    continue;
-                }
-                JSONObject item = new JSONObject();
-                item.put("id", concept.getId());
-                item.put("name", concept.getName());
-                item.put("author", userService.getByEmail(concept.getAuthor()).getName());
-                item.put("author_uid", concept.getAuthor());
-                item.put("type", "concept");
-                result.add(item);
-            }
-        }
-
-        list=relation.getSpatialReferences();
-        if(list!=null) {
-            for (String id : list) {
-                SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
-                if(spatialReference.getStatus().equals("Private")){
-                    continue;
-                }
-                JSONObject item = new JSONObject();
-                item.put("id", spatialReference.getId());
-                item.put("name", spatialReference.getName());
-                item.put("author", userService.getByEmail(spatialReference.getAuthor()).getName());
-                item.put("author_uid", spatialReference.getAuthor());
-                item.put("type", "spatialReference");
-                result.add(item);
-            }
-        }
-
-        list=relation.getTemplates();
-        if(list!=null) {
-            for (String id : list) {
-                Template template = templateDao.findFirstById(id);
-                if(template.getStatus().equals("Private")){
-                    continue;
-                }
-                JSONObject item = new JSONObject();
-                item.put("id", template.getId());
-                item.put("name", template.getName());
-                item.put("author", userService.getByEmail(template.getAuthor()).getName());
-                item.put("author_uid", template.getAuthor());
-                item.put("type", "template");
-                result.add(item);
-            }
-        }
-
-        list=relation.getUnits();
-        if(list!=null) {
-            for (String id : list) {
-                Unit unit = unitDao.findFirstById(id);
-                if(unit.getStatus().equals("Private")){
-                    continue;
-                }
-                JSONObject item = new JSONObject();
-                item.put("id", unit.getId());
-                item.put("name", unit.getName());
-                item.put("author", userService.getByEmail(unit.getAuthor()).getName());
-                item.put("author_uid", unit.getAuthor());
-                item.put("type", "unit");
-                result.add(item);
-            }
-        }
+        RelateKnowledge relateKnowledge = new RelateKnowledge();
+        relateKnowledge.setConcepts(relation.getConcepts());
+        relateKnowledge.setTemplates(relation.getTemplates());
+        relateKnowledge.setSpatialReferences(relation.getSpatialReferences());
+        relateKnowledge.setUnits(relation.getUnits());
+        JSONArray relatedResources = repositoryService.getRelatedResources(relateKnowledge);
+        result = relatedResources;
 
         List<Map<String,String>> mapList = new ArrayList<>();
         mapList=relation.getDataSpaceFiles();

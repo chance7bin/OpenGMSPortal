@@ -30,7 +30,7 @@
     "AuthorshipInfo3": "Claim",
     "AuthorshipInfo4": "Is authorship not correct?",
     "AuthorshipInfo5": "Feed back",
-    "Contributor":"Contributor(s)",
+    "Contributor":"Contributor",
 
     "History": "History",
     "HistoryInfo": "Last modify time:&nbsp ",
@@ -71,6 +71,7 @@
     "lineLabel": "Line Label",
     "lineColor": "Line Color",
     "fullRelation": "Full relation",
+    "RelatedModels": "Related Models",
 
     "On": "On",
     "Off": "Off",
@@ -277,6 +278,7 @@
 
     "Please": "请",
     "login": "登录",
+    "RelatedModels": "关联模型",
     "PleaseSelectFileFirst": "请先选择文件！",
     "ServiceOffline": "抱歉，服务已下线！",
     "ReplyTo": "回复 ",

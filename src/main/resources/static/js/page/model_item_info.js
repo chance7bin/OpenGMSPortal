@@ -2234,7 +2234,6 @@ var info=new Vue({
                     })
 
                 }
-
             });
 
         },
@@ -3886,6 +3885,16 @@ var info=new Vue({
                                 this.typeName = "Data Item";
                                 this.activeName_dialog = "my";
                                 break;
+                            case 10:
+                                this.relateType = "dataHub";
+                                this.typeName = "Data Hub";
+                                this.activeName_dialog = "my";
+                                break;
+                            case 11:
+                                this.relateType = "dataMethod";
+                                this.typeName = "Data Method";
+                                this.activeName_dialog = "my";
+                                break;
                         }
                         var linkTip = ""
                         const lang = window.localStorage.getItem("language")
@@ -4885,7 +4894,21 @@ var info=new Vue({
                 return false
             }
             return true
-        }
+        },
+
+        relationSortChange(sort){
+            console.log(sort);
+            let order = sort.order==="ascending";
+            let field = sort.column.label.toLowerCase();
+            if(this.activeName_dialog==="my"){
+                this.pageOption_my.sortAsc=order;
+                this.pageOption_my.sortField=field;
+            }else{
+                this.pageOption_all.sortAsc=order;
+                this.pageOption_all.sortField=field;
+            }
+            this.search(this.activeName_dialog);
+        },
     },
 
     created(){

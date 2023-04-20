@@ -431,6 +431,8 @@
     </div>
 </div>
 
+
+
 <div th:fragment="alias(itemInfo)" id="alias" class="detail_block"
      th:if="${itemInfo.alias!=null&&#lists.size(itemInfo.alias)>0}">
     <div class="block_head">
@@ -1114,6 +1116,7 @@
                 </el-tooltip>
             </div>
         </el-tab-pane>
+
         <el-tab-pane name="Data Item">
             <div slot="label">{{htmlJSON.DataItem}}
                 <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.dataItems)==0} ? 'background-color: #bbbbbb' : '')}"
@@ -1160,6 +1163,138 @@
                 <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
                         class="btn btn-default" type="button"
                         style="display: inline-block;" @click="addRelation(9)">
+
+                    <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
+                </button>
+                <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                            popper-class="fontsize-15"
+                            :content="htmlJSON.anotherVersion"
+                            effect="light" placement="top">
+                    <button class="btn btn-default" type="button"
+                            style="display: inline-block;">
+
+                        <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
+                    </button>
+                </el-tooltip>
+
+            </div>
+
+        </el-tab-pane>
+
+        <el-tab-pane name="Data Hub">
+            <div slot="label">Data Hub
+                <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.dataHubs)==0} ? 'background-color: #bbbbbb' : '')}"
+                      th:text="${#lists.size(relation.dataHubs)}">
+                            </span>
+            </div>
+            <div th:if="${#lists.size(relation.dataHubs)}!=0">
+                <div class="list_panel clearfix" th:each="model:${relation.dataHubs}">
+                    <!--<div th:text="${model.image}"></div>-->
+                    <a class="img" th:href="'/dataItem/'+${model.id}">
+                        <!--<img src="/static/img/model/data.png">-->
+                        <avatar th:username="${model.name}" :size="90" :rounded="false"></avatar>
+                    </a>
+                    <div class="info" style="margin-top:0px;">
+                        <a th:href="'/dataHub/'+${model.id}"
+                           th:text="${model.name}">Ground Water Flow System</a>
+                        <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
+                            neural network method to extract
+                            land use change rules in the study area, and then applies the rules to
+                            subsequent
+                            simulations and predictions.</p>
+                    </div>
+                </div>
+                <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                           @click="addRelation(10)" type="primary" icon="el-icon-plus"
+                           style="width: 100%">
+<!--                    {{htmlJSON.RelatedDataItem}}-->
+                    Edit Related Data Hub
+                </el-button>
+                <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                            popper-class="fontsize-15"
+                            :content="htmlJSON.anotherVersion"
+                            effect="light" placement="top">
+                    <el-button plain type="info" icon="el-icon-plus"
+                               style="width: 100%">
+<!--                        {{htmlJSON.RelatedDataItem}}-->
+                        Edit Related Data Hub
+                    </el-button>
+                </el-tooltip>
+
+            </div>
+            <div class="text-center" th:if="${#lists.size(relation.dataHubs)}==0">
+                <h5 style="margin-bottom: 10px;display: inline-block;">
+                    There is no related data hub. You can link data hubs.
+                </h5>
+                <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                        class="btn btn-default" type="button"
+                        style="display: inline-block;" @click="addRelation(10)">
+
+                    <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
+                </button>
+                <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                            popper-class="fontsize-15"
+                            :content="htmlJSON.anotherVersion"
+                            effect="light" placement="top">
+                    <button class="btn btn-default" type="button"
+                            style="display: inline-block;">
+
+                        <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
+                    </button>
+                </el-tooltip>
+
+            </div>
+
+        </el-tab-pane>
+
+        <el-tab-pane name="Data Method">
+            <div slot="label">Data Method
+                <span class="el-badge__content el-badge__content--undefined" th:style="@{(${#lists.size(relation.dataMethods)==0} ? 'background-color: #bbbbbb' : '')}"
+                      th:text="${#lists.size(relation.dataMethods)}">
+                            </span>
+            </div>
+            <div th:if="${#lists.size(relation.dataMethods)}!=0">
+                <div class="list_panel clearfix" th:each="model:${relation.dataMethods}">
+                    <!--<div th:text="${model.image}"></div>-->
+                    <a class="img" th:href="'/dataMethod/'+${model.id}">
+                        <!--<img src="/static/img/model/data.png">-->
+                        <avatar th:username="${model.name}" :size="90" :rounded="false"></avatar>
+                    </a>
+                    <div class="info" style="margin-top:0px;">
+                        <a th:href="'/dataMethod/'+${model.id}"
+                           th:text="${model.name}">Ground Water Flow System</a>
+                        <p style="margin-top: 0px" th:text="${model.overview}">ANN-CA uses the artificial
+                            neural network method to extract
+                            land use change rules in the study area, and then applies the rules to
+                            subsequent
+                            simulations and predictions.</p>
+                    </div>
+                </div>
+                <el-button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                           @click="addRelation(11)" type="primary" icon="el-icon-plus"
+                           style="width: 100%">
+                    <!--                    {{htmlJSON.RelatedDataItem}}-->
+                    Edit Related Data Methods
+                </el-button>
+                <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                            popper-class="fontsize-15"
+                            :content="htmlJSON.anotherVersion"
+                            effect="light" placement="top">
+                    <el-button plain type="info" icon="el-icon-plus"
+                               style="width: 100%">
+                        <!--                        {{htmlJSON.RelatedDataItem}}-->
+                        Edit Related Data Methods
+                    </el-button>
+                </el-tooltip>
+
+            </div>
+            <div class="text-center" th:if="${#lists.size(relation.dataMethods)}==0">
+                <h5 style="margin-bottom: 10px;display: inline-block;">
+                    There is no related data method. You can link data methods.
+                </h5>
+                <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                        class="btn btn-default" type="button"
+                        style="display: inline-block;" @click="addRelation(11)">
 
                     <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
                 </button>
@@ -1441,6 +1576,135 @@
     </el-tabs>
 </div>
 
+<div v-cloak th:fragment="model_related_material(relation, showTag)" th:if="${history!=true}" id="model_related_material" class="detail_block">
+    <div class="block_head">
+        <div class="head_text">
+            <h4>{{htmlJSON.RelatedKnowledge}}</h4>
+        </div>
+    </div>
+    <el-tabs class="block_content" v-model="activeResource" type="border-card" stretch="true">
+        <el-tab-pane name="Resource" label="Resource" style="max-height: 400px; overflow: auto;">
+            <div slot="label">
+                <!--<el-button v-if="activeName=='Computable Model'" type="primary" icon="el-icon-edit" size="mini" circle></el-button>-->
+                Material
+<!--                <span class="el-badge__content el-badge__content&#45;&#45;undefined"-->
+<!--                      th:style="@{(${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)==0} ? 'background-color: #bbbbbb' : '')}"-->
+<!--                      th:text="${#lists.size(relation.concepts)+#lists.size(relation.spatialReferences)+#lists.size(relation.templates)+#lists.size(relation.units)}">-->
+<!--                            </span>-->
+
+            </div>
+            <div th:if="${#lists.size(relation.concepts)}!=0" class="list_panel clearfix" th:each="model:${relation.concepts}">
+                <a th:href="'/repository/concept/'+${model.id}" class="img">
+                    <img src="/static/img/model/semantics.png">
+                </a>
+                <div class="info" style="margin-top:0px;">
+                    <a th:href="'/repository/concept/'+${model.id}"
+                       th:text="${model.name}">Ground Water Flow System</a>
+                    <p style="margin-top: 0px; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 2;"
+                       th:text="${model.overview!=null?model.overview:model.overview_ZH!=null?model.overview_ZH:model.overview_EN}">
+                        ANN-CA uses the artificial
+                        neural network method to extract
+                        land use change rules in the study area, and then applies the rules to
+                        subsequent
+                        simulations and predictions.</p>
+                </div>
+            </div>
+            <div th:if="${#lists.size(relation.spatialReferences)}!=0" class="list_panel clearfix" th:each="model:${relation.spatialReferences}">
+                <a th:href="'/repository/spatialReference/'+${model.id}" class="img">
+                    <img src="/static/img/model/spatialreference.png">
+                </a>
+                <div class="info" style="margin-top:0px;">
+                    <a th:href="'/repository/spatialReference/'+${model.id}"
+                       th:text="${model.name}">Ground Water Flow System</a>
+                    <p style="margin-top: 0px"
+                       th:text="${model.overview!=null?model.overview:model.wkname}">ANN-CA uses
+                        the artificial
+                        neural network method to extract
+                        land use change rules in the study area, and then applies the rules to
+                        subsequent
+                        simulations and predictions.</p>
+                </div>
+            </div>
+            <div th:if="${#lists.size(relation.templates)}!=0" class="list_panel clearfix" th:each="model:${relation.templates}">
+                <a th:href="'/repository/template/'+${model.id}" class="img">
+                    <img src="/static/img/model/template.png">
+                </a>
+                <div class="info" style="margin-top:0px;">
+                    <a th:href="'/repository/template/'+${model.id}"
+                       th:text="${model.name}">Ground Water Flow System</a>
+                    <p style="margin-top: 0px; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 2;"
+                       th:text="${model.overview}">ANN-CA
+                        uses the artificial
+                        neural network method to extract
+                        land use change rules in the study area, and then applies the rules to
+                        subsequent
+                        simulations and predictions.</p>
+                </div>
+            </div>
+            <div th:if="${#lists.size(relation.units)}!=0" class="list_panel clearfix" th:each="model:${relation.units}">
+                <a th:href="'/repository/unit/'+${model.id}" class="img">
+                    <img src="/static/img/model/unit.png">
+                </a>
+                <div class="info" style="margin-top:0px;">
+                    <a th:href="'/repository/unit/'+${model.id}"
+                       th:text="${model.name}">Ground Water Flow System</a>
+                    <p style="margin-top: 0px; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 2;"
+                       th:text="${model.overview}">
+                        ANN-CA uses the artificial
+                        neural network method to extract
+                        land use change rules in the study area, and then applies the rules to
+                        subsequent
+                        simulations and predictions.</p>
+                </div>
+            </div>
+
+            <div class="text-center" th:if="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                    #lists.size(relation.templates)==0 && #lists.size(relation.units)==0}">
+                <h5 style="margin-bottom: 10px;display: inline-block;">
+                    {{htmlJSON.NoRelatedMmaterial}}
+                </h5>
+                <button th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}"
+                        class="btn btn-default" type="button"
+                        style="display: inline-block;" @click="addRelatedResouece()">
+
+                    <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
+                </button>
+                <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                            popper-class="fontsize-15"
+                            :content="htmlJSON.anotherVersion"
+                            effect="light" placement="top">
+                    <button class="btn btn-default" type="button"
+                            style="display: inline-block;">
+
+                        <i class="fa fa-plus" aria-hidden="true" style="color:#409eff;"></i>
+                    </button>
+                </el-tooltip>
+
+            </div>
+            <div th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock!=true}">
+                <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                         #lists.size(relation.templates)==0 && #lists.size(relation.units)==0}"
+                           @click="addRelatedResouece()" type="primary" icon="el-icon-plus"
+                           style="width: 100%">
+                    {{htmlJSON.relatedMaterial}}
+                </el-button>
+            </div>
+
+            <el-tooltip th:if="${itemInfo.status=='Public'&&history!=true&&itemInfo.lock==true}"
+                        popper-class="fontsize-15"
+                        :content="htmlJSON.anotherVersion"
+                        effect="light" placement="top">
+                <el-button th:unless="${#lists.size(relation.concepts)==0 && #lists.size(relation.spatialReferences)==0 &&
+                        #lists.size(relation.templates)==0 && #lists.size(relation.units)==0}"
+                           plain type="info" icon="el-icon-plus"
+                           style="width: 100%">
+                    {{htmlJSON.relatedMaterial}}
+                </el-button>
+            </el-tooltip>
+        </el-tab-pane>
+    </el-tabs>
+</div>
+
 <div th:fragment="model_modifier0" id="model_modifier0" class="detail_block minScreen"
      th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">
     <div th:replace="fragments/itemInfoModules :: History(${lastModifier}, ${lastModifyTime}, null)"></div>
@@ -1588,6 +1852,234 @@
                 </div>
 
 
+                </tbody>
+            </table>
+        </el-tab-pane>
+    </el-tabs>
+</div>
+
+<div th:fragment="TaskExample(relateTaskRunRecord)" id="example" class="detail_block" >
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px; padding-right: 15px; display: inline-flex">
+            <h4>Task Example</h4>
+        </div>
+    </div>
+    <div th:if="${not #arrays.isEmpty(relateTaskRunRecord)}">
+        <el-tabs v-model="activeName2" class="block_content" type="border-card" stretch="true" style="max-height: 300px; overflow-y: auto;">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">时间范围</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">应用区域</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${relateTaskRunRecord}" style="width: 100%; border: 1px solid rgb(222, 222, 222);" name="taskExample">
+                    <td th:if="${item.computableName} != ''" th:text="${item.computableName}" th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:if="${item.computableName} == ''" th:text="无" th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称">无</td>
+                    <td th:text="${item.timeRange}" th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="姓名"></td>
+                    <td th:text="${item.applicationArea}" th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                    <td th:text="${item.description}" th:style="'width: 20%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tabs>
+    </div>
+
+    <div>
+        <el-tabs v-model="activeName2" class="block_content" type="border-card" stretch="true">
+            <p style="text-align: center" th:if="${#arrays.isEmpty(relateTaskRunRecord)}">There is no public task example here. You can choose to:</p>
+            <div style="display: flex; align-items: center; justify-content: center">
+                <button  class="btn btn-lg btn-info" type="button"
+                         @click="publishModel">发布模型
+                </button>
+
+                <span style="width: 10%; text-align: center" th:if="${not #arrays.isEmpty(relateTaskRunRecord)}"></span>
+                <span style="width: 10%; text-align: center" th:if="${#arrays.isEmpty(relateTaskRunRecord)}">or</span>
+
+                <button  class="btn btn-lg btn-info" type="button"
+                         @click="describeModel">描述模型
+                </button>
+            </div>
+        </el-tabs>
+    </div>
+
+</div>
+
+<!--Related Model And Data-->
+<div th:fragment="relatedModelData(relatedMD)" id="relatedModelData" class="detail_block" >
+    <div class="block_head">
+        <div class="head_text" style="padding-left: 10px; padding-right: 15px; display: inline-flex">
+            <h4>Relate Model And Data</h4>
+        </div>
+    </div>
+    <el-tabs class="block_content" v-model="activeName3" type="border-card" stretch="true" style="max-height: 300px; overflow-y: auto;">
+        <el-tab-pane label="data item" name="dataItem">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                    <tr>
+                        <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                        <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                        <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.dataItem)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.dataItem}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tab-pane>
+
+        <el-tab-pane label="data hub" name="dataHub">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                    <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.dataHub)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.dataHub}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tab-pane>
+
+        <el-tab-pane label="data method" name="dataMethod">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                    <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.dataMethod)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.dataMethod}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tab-pane>
+
+        <el-tab-pane label="model item" name="modelItem">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                    <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.modelItem)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.modelItem}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tab-pane>
+
+        <el-tab-pane label="computable model" name="computableModel">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                    <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.computableModel)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.computableModel}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tab-pane>
+
+        <el-tab-pane label="conceptual model" name="conceptualModel">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                    <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.conceptualModel)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.conceptualModel}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </el-tab-pane>
+
+        <el-tab-pane label="logical model" name="logicalModel">
+            <table th:style="'width: 100%'" class="stripeTab">
+                <thead>
+                <tr>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">名称</th>
+                    <th th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">描述</th>
+                    <th th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'">链接</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(relatedMD.logicalModel)}">
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="'无数据'" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:text="'无数据'" th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"></td>
+                </tr>
+                <tr th:each="item : ${relatedMD.logicalModel}" style="width: 100%; border: 1px solid rgb(222, 222, 222);">
+                    <td th:text="${item.name}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="名称"></td>
+                    <td th:text="${item.overview}" th:style="'width: 30%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="概览"></td>
+                    <td th:style="'width: 10%; border: 1px solid rgb(222, 222, 222); text-align: center; padding: 8px;'" label="地址"><a target="_blank" th:href="'https://geomodeling.njnu.edu.cn/dataItem/' + ${item.id}">链接</a></td>
+                </tr>
                 </tbody>
             </table>
         </el-tab-pane>
@@ -2104,6 +2596,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!--concetpinfo-->
 <div th:fragment="concept_Related_Concepts0(related)"  th:if="${#lists.size(related)!=0}">

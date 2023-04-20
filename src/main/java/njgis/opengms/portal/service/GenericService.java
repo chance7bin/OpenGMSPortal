@@ -1139,9 +1139,34 @@ public class GenericService {
         result.put("id", item.getId());
         result.put("name", item.getName());
         result.put("overview", item.getOverview());
-        result.put("image", item.getImage().equals("") ? null : htmlLoadPath + item.getImage());
+        result.put("image", item.getImage() == null || "".equals(item.getImage()) ? null : htmlLoadPath + item.getImage());
         return result;
     }
+
+    // 根据模型id获取模型的基本信息
+    public JSONArray getModelItemArray(List<String> relatedModels) {
+        JSONArray modelItemArray=new JSONArray();
+
+        if(relatedModels!=null) {
+            for (String mid : relatedModels) {
+                try {
+                    ModelItem modelItem = modelItemDao.findFirstById(mid);
+                    JSONObject modelItemJson = new JSONObject();
+                    modelItemJson.put("name", modelItem.getName());
+                    modelItemJson.put("id", modelItem.getId());
+                    modelItemJson.put("overview", modelItem.getOverview());
+                    modelItemJson.put("image", modelItem.getImage().equals("") ? null : htmlLoadPath + modelItem.getImage());
+                    modelItemArray.add(modelItemJson);
+                }
+                catch (Exception e){
+                    log.error(e.getMessage());
+                    // e.printStackTrace();
+                }
+            }
+        }
+        return modelItemArray;
+    }
+
 
 
 }

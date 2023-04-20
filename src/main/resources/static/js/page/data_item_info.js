@@ -8,6 +8,42 @@ var  data_item_info = new Vue({
     },
     data:function () {
         return{
+            activeResource: "Resource",
+            dialogTableVisible: false,
+            relatedResourceVisible:false,
+            relateSearch: "",
+            relateType: "",
+            typeName: "",
+            tableMaxHeight: 400,
+            tableData: [{
+                relation:"Connected with",
+            }],
+            itemInfo:{},
+
+            pageOption_my: {
+                paginationShow: false,
+                progressBar: true,
+                sortAsc: false,
+                currentPage: 1,
+                pageSize: 5,
+                relateSearch: "",
+                sortField:"default",
+                total: 99999,
+                searchResult: [],
+            },
+
+            pageOption_all: {
+                paginationShow: false,
+                progressBar: true,
+                sortAsc: false,
+                currentPage: 1,
+                pageSize: 5,
+                relateSearch: "",
+                sortField:"viewCount",
+                total: 99999,
+                searchResult: [],
+            },
+
             itemInfo:{},
 
             lightenContributor:{},
@@ -49,6 +85,7 @@ var  data_item_info = new Vue({
             timer:false,
             nomore:"",
             nomoreflag:false,
+            itemType: '',
 
             relatedModelsSearchText:'',
             addModelsSearchText:'',
@@ -346,7 +383,7 @@ var  data_item_info = new Vue({
             };
             $.ajax({
                 type: "GET",
-                url: "/dataItem/relation",
+                url: `/${this.itemType}/relation`,
                 data: data,
                 async: true,
                 success: (json) => {
@@ -1518,12 +1555,470 @@ var  data_item_info = new Vue({
             }
         },
 
+        addRelatedResouece(){
+            this.relateType = 'concept'
+            $.ajax({
+                type: "GET",
+                url: "/user/load",
+                data: {},
+                cache: false,
+                async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: (data) => {
+                    if (data.code !== 0) {
+                        this.confirmLogin()
+                    }
+                    else {
+                        this.activeName_dialog = 'all'
+
+                        this.tableData = [];
+
+                        this.pageOption_my.currentPage = 1;
+                        this.pageOption_my.searchResult = [];
+                        this.pageOption_my.relateSearch = "";
+
+                        this.pageOption_all.currentPage = 1;
+                        this.pageOption_all.searchResult = [];
+                        this.pageOption_all.relateSearch = "";
+
+                        this.getRelatedResources();
+                        this.search(this.activeName_dialog);
+                        if(this.activeName_dialog!="all"){
+                            this.search("all");
+                        }
+                        this.relatedResourceVisible = true;
+                    }
+                }
+            })
+
+        },
+
+        getRelatedResources() {
+            //从地址栏拿到oid
+            let arr = window.location.href.split("/");
+            let id = arr[arr.length - 1].split("#")[0];
+            let data = {
+                id: id,
+            };
+            $.ajax({
+                type: "GET",
+                url: `/${this.itemType}/relatedResources/` + id,
+                // data: data,
+                async: true,
+                success: (json) => {
+                    if (json.code == 0) {
+                        let data = json.data;
+                        console.log(data)
+
+                        this.tableData = data;
+
+                    }else  if (json.code == -1) {
+                        this.confirmLogin()
+                    }
+                    else {
+                        console.log("query error!")
+                    }
+                }
+            })
+        },
+
+        search(scope) {
+            let data;
+            if(scope=="all"){
+                // this.pageOption_all.currentPage = 1;
+                data = {
+                    asc: this.pageOption_all.sortAsc,
+                    page: this.pageOption_all.currentPage,
+                    pageSize: this.pageOption_all.pageSize,
+                    searchText: this.pageOption_all.relateSearch.trim(),
+                    sortField: this.pageOption_all.sortField,
+                }
+            }else {
+                // this.pageOption_my.currentPage = 1;
+                data = {
+                    asc: this.pageOption_my.sortAsc,
+                    page: this.pageOption_my.currentPage,
+                    pageSize: this.pageOption_my.pageSize,
+                    searchText: this.pageOption_my.relateSearch,
+                    sortField: this.pageOption_my.sortField,
+                };
+            }
+            let url, contentType;
+
+            if (this.relateType == "exLink" || this.relateType == "dataSpaceFile"){
+                return;
+            }
+
+
+            if(scope=="all") {
+                url = "/" + this.relateType + "/list";
+            }else{
+                url = "/" + this.relateType + "/listByAuthor";
+            }
+
+            axios.post(url, data).then(res => {
+                let json = res.data;
+                if (json.code == 0) {
+                    let data = json.data;
+                    console.log(data)
+
+                    if(scope=="all") {
+                        this.pageOption_all.total = data.total;
+                        this.pageOption_all.pages = data.pages;
+                        this.pageOption_all.searchResult = data.list;
+                        this.pageOption_all.users = data.users;
+                        this.pageOption_all.progressBar = false;
+                        this.pageOption_all.paginationShow = true;
+                    }else{
+                        this.pageOption_my.total = data.total;
+                        this.pageOption_my.pages = data.pages;
+                        this.pageOption_my.searchResult = data.list;
+                        this.pageOption_my.users = data.users;
+                        this.pageOption_my.progressBar = false;
+                        this.pageOption_my.paginationShow = true;
+                    }
+
+                }
+                else {
+                    console.log("query error!")
+                }
+
+            });
+        },
+
+        relationSortChange(sort){
+            console.log(sort);
+            let order = sort.order==="ascending";
+            let field = sort.column.label.toLowerCase();
+            if(this.activeName_dialog==="my"){
+                this.pageOption_my.sortAsc=order;
+                this.pageOption_my.sortField=field;
+            }else{
+                this.pageOption_all.sortAsc=order;
+                this.pageOption_all.sortField=field;
+            }
+            this.search(this.activeName_dialog);
+        },
+
+        isCurrentItem(row){
+            let urls = window.location.href.split('/');
+            let oid = urls[urls.length-1].substring(0,36);
+            return(oid==row.oid);
+        },
+
+        handlePageChange(val) {
+            if(this.activeName_dialog=="my") {
+                this.pageOption_my.currentPage = val;
+            }else{
+                this.pageOption_all.currentPage = val;
+            }
+            this.search(this.activeName_dialog);
+        },
+
+        handleEdit(index, row) {
+            console.log(row);
+            row.type=this.relateType
+            let flag = false;
+            for (i = 0; i < this.tableData.length; i++) {
+                let tableRow = this.tableData[i];
+                if (tableRow.id == row.id) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                if(this.relateType=="modelItem"){
+                    this.$set(row,"relation","Connected with");
+                }
+                this.tableData.push(row);
+            }
+        },
+
+        addRelateResources(){
+            let relationItem = {
+                concepts: [],
+                spatialReferences: [],
+                templates: [],
+                units: [],
+                id: null
+            };
+            // let stringInfo = []
+            this.tableData.forEach(function (item, index) {
+                // let relateItem={}
+                let relationType = item.type
+
+                if (relationType === 'concept'){
+                    relationItem.concepts.push(item.id)
+                }else if (relationType === 'spatialReference'){
+                    relationItem.spatialReferences.push(item.id)
+                }else if (relationType === 'templates'){
+                    relationItem.templates.push(item.id)
+                }else if (relationType === 'units'){
+                    relationItem.units.push(item.id)
+                }
+                // relationItem.id = item.id
+                // // relationItem.type = item.type
+                // if(item.type=='localFile'){
+                //     formData.append("resources",item.raw);
+                // }
+                // if(item.type=='exLink'){
+                //     relateItem.content = item.content
+                //     relateItem.name = item.name
+                // }
+                // if(item.type=='dataSpaceFile'){
+                //     // relateItem.oid = item.oid
+                //     relateItem.url = item.url
+                //     relateItem.name = item.name
+                // }
+                // stringInfo.push(relateItem);
+            })
+
+            // let file = new File([JSON.stringify(stringInfo)],'ant.txt',{
+            //     type: 'text/plain',
+            // });
+            // formData.append("stringInfo", JSON.stringify(stringInfo))
+
+
+            let arr = window.location.href.split("/");
+            let id = arr[arr.length - 1].split("#")[0];
+            relationItem.id = id
+
+            // let url = '';
+            let contentType = "application/json";
+
+            $.ajax({
+                type: "POST",
+                url: `/${this.itemType}/knowledge`,
+                data: JSON.stringify(relationItem),
+                cache: false,
+                // processData: false,
+                contentType: contentType,
+                async: true,
+                success: (result) => {
+                    let info = result.msg
+                    if(info === 'Success'){
+                        this.$alert('Success!', 'Tip', {
+                            type:'success',
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                this.dialogTableVisible = false;
+                                window.location.reload();
+                            }
+                        });
+                    }else if(info === 'There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.'){
+                        this.$alert("There is another version have not been checked, please contact opengms@njnu.edu.cn if you want to modify this item.", 'Success', {
+                            type: 'success',
+                            confirmButtonText: 'OK',
+                            callback: action => {
+                                window.location.reload();
+                            }
+                        })
+                    }
+
+
+                },
+                error: (json) => {
+                    this.$alert('Submitted failed!', 'Error', {
+                        type:'error',
+                        confirmButtonText: 'OK',
+                        callback: action => {
+
+                        }
+                    });
+                }
+            })
+        },
+
+        getTypeExpress(row){
+            switch (row.type){
+                case "concept":
+                    return 'Concept & Semantic'
+                case "spatialReference":
+                    return 'Spatiotemporal Reference'
+                case "template":
+                    return 'Data Template'
+                case "unit":
+                    return 'Unit & Metric'
+                case "dataSpaceFile":
+                    return 'File'
+            }
+        },
+
+        handleDelete(index, row) {
+            this.tableData.splice(index, 1);
+        },
+
+        jump() {
+            $.ajax({
+                type: "GET",
+                url: "/user/load",
+                data: {},
+                cache: false,
+                async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: (data) => {
+                    if (data.code !== 0) {
+                        this.confirmLogin()
+                    }
+                    else {
+                        let arr = window.location.href.split("/");
+                        let bindOid = arr[arr.length - 1].split("#")[0];
+                        this.setSession("bindOid", bindOid);
+                        switch (this.relateType) {
+                            case "modelItem":
+                                window.open("/user/userSpace#/model/createModelItem", "_blank")
+                                break;
+                            case "conceptualModel":
+                                window.open("/user/userSpace#/model/createConceptualModel", "_blank")
+                                break;
+                            case "logicalModel":
+                                window.open("/user/userSpace#/model/createLogicalModel", "_blank")
+                                break;
+                            case "computableModel":
+                                window.open("/user/userSpace#/model/createComputableModel", "_blank")
+                                break;
+                            case "concept":
+                                window.open("/user/userSpace#/community/createConcept", "_blank")
+                                break;
+                            case "spatialReference":
+                                window.open("/user/userSpace#/community/createSpatialReference", "_blank")
+                                break;
+                            case "template":
+                                window.open("/user/userSpace#/community/createTemplate", "_blank")
+                                break;
+                            case "unit":
+                                window.open("/user/userSpace#/community/createUnit", "_blank")
+                                break;
+                        }
+                        this.dialogTableVisible = false;
+                    }
+                }
+            })
+        },
+
+        hasAdded(row){
+            for(let i=0;i<this.tableData.length;i++){
+                let data = this.tableData[i];
+                let oid1,oid2;
+                if(data.oid!=undefined){
+                    oid1 = data.oid;
+                    oid2 = row.oid;
+                }else{
+                    oid1 = data.id;
+                    oid2 = row.id;
+                }
+                if(oid1==oid2){
+                    return true;
+                }
+            }
+        },
+
+        changeRelateType(activeType){
+            this.relateType = activeType
+            this.searchInit(this.activeName_dialog)
+        },
+
+        searchInit(scope){
+            this.pageOption_all.currentPage = 1;
+            this.pageOption_my.currentPage = 1;
+            this.search(scope);
+        },
+
+        //relate search
+        search(scope) {
+            let data;
+            if(scope=="all"){
+                // this.pageOption_all.currentPage = 1;
+                data = {
+                    asc: this.pageOption_all.sortAsc,
+                    page: this.pageOption_all.currentPage,
+                    pageSize: this.pageOption_all.pageSize,
+                    searchText: this.pageOption_all.relateSearch.trim(),
+                    sortField: this.pageOption_all.sortField,
+                }
+            }else {
+                // this.pageOption_my.currentPage = 1;
+                data = {
+                    asc: this.pageOption_my.sortAsc,
+                    page: this.pageOption_my.currentPage,
+                    pageSize: this.pageOption_my.pageSize,
+                    searchText: this.pageOption_my.relateSearch,
+                    sortField: this.pageOption_my.sortField,
+                };
+            }
+            let url, contentType;
+
+            if (this.relateType == "exLink" || this.relateType == "dataSpaceFile"){
+                return;
+            }
+
+
+            if(scope=="all") {
+                url = "/" + this.relateType + "/list";
+            }else{
+                url = "/" + this.relateType + "/listByAuthor";
+            }
+
+            axios.post(url, data).then(res => {
+                let json = res.data;
+                if (json.code == 0) {
+                    let data = json.data;
+                    console.log(data)
+
+                    if(scope=="all") {
+                        this.pageOption_all.total = data.total;
+                        this.pageOption_all.pages = data.pages;
+                        this.pageOption_all.searchResult = data.list;
+                        this.pageOption_all.users = data.users;
+                        this.pageOption_all.progressBar = false;
+                        this.pageOption_all.paginationShow = true;
+                    }else{
+                        this.pageOption_my.total = data.total;
+                        this.pageOption_my.pages = data.pages;
+                        this.pageOption_my.searchResult = data.list;
+                        this.pageOption_my.users = data.users;
+                        this.pageOption_my.progressBar = false;
+                        this.pageOption_my.paginationShow = true;
+                    }
+
+                }
+                else {
+                    console.log("query error!")
+                }
+
+            });
+        },
+
+        getTypeImg(row){
+            switch (row.type){
+                case "concept":
+                    return '../../static/img/model/semantics.png'
+                    break;
+                case "spatialReference":
+                    return '../../static/img/model/spatialreference.png'
+                case "template":
+                    return '../../static/img/model/template.png'
+                case "unit":
+                    return '../../static/img/model/unit.png'
+            }
+
+        },
 
     },
 
     mounted(){
 
         this.changeCLSLng();
+
+        this.itemType = window.location.pathname.split('/')
+        this.itemType = this.itemType[this.itemType.length-2]
+        // console.log(this.itemType)
 
         this.lightenContributor = author
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)

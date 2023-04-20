@@ -12,6 +12,7 @@
     "Search": "Search",
     "CurrentClass":"Current Category: ",
     "Loading": "Loading...",
+    "RelatedKnowledge":"Related Knowledge",
     "items": "items",
     "NoData": "no data",
     "SortBy":"Sorted By:",
@@ -116,6 +117,7 @@
     "intelligentComputationAnalysis":"智能计算分析",
 
     "processPerspective":"过程视角",
+    "RelatedKnowledge":"相关知识",
 
     "physicalProcessCalculation":"物理过程计算",
     "chemicalProcessCalculation":"化学过程计算",

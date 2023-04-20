@@ -3,6 +3,7 @@ package njgis.opengms.portal.entity.po;
 import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 import njgis.opengms.portal.entity.doo.data.TestData;
+import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.Resource;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -28,6 +29,7 @@ public class DataMethod extends DataItem{
     boolean invokable;//是否绑定了invokeService
 
     String method; // 保留该字段 Conversion Processing Visualization
+
 
     List<TestData> testData;//存储testData的id
     String testDataPath;

@@ -10,8 +10,10 @@ import lombok.Data;
 public class TaskPublishDTO {
 
     String id; // 任务id
+    String computableId; // 计算模型id
     String timeRange; // 时间范围
-    String ApplicationArea; // 应用区域
+    String applicationArea; // 应用区域
     String description; // 描述
+    String computableName; // 计算模型名称
 
 }

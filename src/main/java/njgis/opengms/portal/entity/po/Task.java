@@ -25,7 +25,7 @@ public class Task extends PortalId {
     String email;  // 发布者 原来的userId -> 用userId到user表找email
     String description; // 描述
     String timeRange; // 时间范围
-    String ApplicationArea; // 应用区域
+    String applicationArea; // 应用区域
 
     int loadTime;
 

@@ -471,22 +471,22 @@ public class RepositoryService {
     }
 
     public ModelAndView getConceptPage(Concept concept, boolean history) {
-        ModelAndView modelAndView = new ModelAndView();
-        if(concept==null){
-            modelAndView.setViewName("error/404");
-            return modelAndView;
-        }
+            ModelAndView modelAndView = new ModelAndView();
+            if(concept==null){
+                modelAndView.setViewName("error/404");
+                return modelAndView;
+            }
 
-        modelAndView.setViewName("conceptInfo");
+            modelAndView.setViewName("conceptInfo");
 
-        concept = (Concept)genericService.recordViewCount(concept);
-        if (!history){
-            conceptDao.save(concept);
-        }
+            concept = (Concept)genericService.recordViewCount(concept);
+            if (!history){
+                conceptDao.save(concept);
+            }
 
-        modelAndView = getCommonAttribute(concept, conceptClassificationDao, modelAndView);
+            modelAndView = getCommonAttribute(concept, conceptClassificationDao, modelAndView);
 
-        List<String> related = concept.getRelated();
+            List<String> related = concept.getRelated();
         JSONArray relateArray = new JSONArray();
         if (related != null) {
             for (String relatedId : related) {
@@ -1121,11 +1121,12 @@ public class RepositoryService {
                 }
             } else {
                 item.setLock(true);
-                redisService.saveItem(item, ItemTypeEnum.ComputableModel);
+                redisService.saveItem(item, itemType);
             }
 
 
             RelateKnowledge relateKnowledge = item.getRelateKnowledge();
+            relateKnowledge = relateKnowledge == null ? new RelateKnowledge() : relateKnowledge;
             BeanUtils.copyProperties(knowledgeDTO, relateKnowledge, "id");
             item.setRelateKnowledge(relateKnowledge);
 
@@ -1158,4 +1159,200 @@ public class RepositoryService {
             return null;
         }
     }
+
+
+    // 根据relateKnowledge获取community的相关信息
+    public JSONObject getAllKnowledge(RelateKnowledge relateKnowledge){
+        relateKnowledge = relateKnowledge == null ? new RelateKnowledge() : relateKnowledge;
+        List<String> concepts = relateKnowledge.getConcepts();
+        List<String> templates = relateKnowledge.getTemplates();
+        List<String> units = relateKnowledge.getUnits();
+        List<String> spatialReferences = relateKnowledge.getSpatialReferences();
+
+        JSONArray conceptArray=new JSONArray();
+        if(concepts!=null) {
+            for (int i = 0; i < concepts.size(); i++) {
+                String id = concepts.get(i);
+                Concept concept = conceptDao.findFirstById(id);
+                if (concept == null){continue;}
+                if(concept.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", concept.getName());
+                jsonObj.put("id", concept.getId());
+//                jsonObj.put("alias", concept.getAlias());
+                String desc = "";
+                List<Localization> localizationList = concept.getLocalizationList();
+                for(int j=0;j<localizationList.size();j++){
+                    String description = localizationList.get(j).getDescription();
+                    if(description!=null&&!description.equals("")){
+                        desc = description;
+                        break;
+                    }
+                }
+                jsonObj.put("overview", desc);
+//                jsonObj.put("description_ZH", concept.getDescription_ZH());
+//                jsonObj.put("description_EN", concept.getDescription_EN());
+                conceptArray.add(jsonObj);
+            }
+        }
+
+        JSONArray spatialReferenceArray=new JSONArray();
+        if(spatialReferences!=null) {
+            for (int i = 0; i < spatialReferences.size(); i++) {
+                String id = spatialReferences.get(i);
+                SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                if (spatialReference == null){continue;}
+                if(spatialReference.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", spatialReference.getName());
+                jsonObj.put("id", spatialReference.getId());
+                jsonObj.put("wkname", spatialReference.getWkname());
+                jsonObj.put("overview", spatialReference.getOverview());
+                spatialReferenceArray.add(jsonObj);
+            }
+        }
+
+        JSONArray templateArray=new JSONArray();
+        if(templates!=null) {
+            for (int i = 0; i < templates.size(); i++) {
+                String id = templates.get(i);
+                Template template = templateDao.findFirstById(id);
+                if (template == null){continue;}
+                if(template.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", template.getName());
+                jsonObj.put("id", template.getId());
+                jsonObj.put("overview", template.getOverview());
+                jsonObj.put("type", template.getType());
+                templateArray.add(jsonObj);
+            }
+        }
+
+        JSONArray unitArray=new JSONArray();
+        if(units!=null) {
+            for (int i = 0; i < units.size(); i++) {
+                String id = units.get(i);
+                Unit unit = unitDao.findFirstById(id);
+                if (unit == null){continue;}
+                if(unit.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("name", unit.getName());
+                jsonObj.put("id", unit.getId());
+
+                jsonObj.put("overview", unit.getOverview());
+//                jsonObj.put("description_EN", unit.getDescription_EN());
+                unitArray.add(jsonObj);
+            }
+        }
+
+        JSONObject relationJson = new JSONObject();
+        relationJson.put("concepts",conceptArray);
+        relationJson.put("spatialReferences",spatialReferenceArray);
+        relationJson.put("templates",templateArray);
+        relationJson.put("units",unitArray);
+
+        return relationJson;
+
+    }
+
+
+    // 根据id跟type获取相关信息
+    public JSONArray getRelatedResources(String id, ItemTypeEnum itemType){
+
+        GenericItemDao itemDao = (GenericItemDao)genericService.daoFactory(itemType).get("itemDao");
+        PortalItem item = (PortalItem)itemDao.findFirstById(id);
+        RelateKnowledge relateKnowledge = item.getRelateKnowledge();
+        return  getRelatedResources(relateKnowledge);
+
+    }
+
+    // 根据relateKnowledge获取community的相关信息2
+    public JSONArray getRelatedResources(RelateKnowledge relation){
+
+        relation = relation == null ? new RelateKnowledge() : relation;
+
+        JSONArray result=new JSONArray();
+
+        List<String> list=new ArrayList<>();
+
+        list=relation.getConcepts();
+        if(list!=null) {
+            for (String id : list) {
+                Concept concept = conceptDao.findFirstById(id);
+                if(concept.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", concept.getId());
+                item.put("name", concept.getName());
+                item.put("author", userService.getByEmail(concept.getAuthor()).getName());
+                item.put("author_uid", concept.getAuthor());
+                item.put("type", "concept");
+                result.add(item);
+            }
+        }
+
+        list=relation.getSpatialReferences();
+        if(list!=null) {
+            for (String id : list) {
+                SpatialReference spatialReference = spatialReferenceDao.findFirstById(id);
+                if(spatialReference.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", spatialReference.getId());
+                item.put("name", spatialReference.getName());
+                item.put("author", userService.getByEmail(spatialReference.getAuthor()).getName());
+                item.put("author_uid", spatialReference.getAuthor());
+                item.put("type", "spatialReference");
+                result.add(item);
+            }
+        }
+
+        list=relation.getTemplates();
+        if(list!=null) {
+            for (String id : list) {
+                Template template = templateDao.findFirstById(id);
+                if(template.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", template.getId());
+                item.put("name", template.getName());
+                item.put("author", userService.getByEmail(template.getAuthor()).getName());
+                item.put("author_uid", template.getAuthor());
+                item.put("type", "template");
+                result.add(item);
+            }
+        }
+
+        list=relation.getUnits();
+        if(list!=null) {
+            for (String id : list) {
+                Unit unit = unitDao.findFirstById(id);
+                if(unit.getStatus().equals("Private")){
+                    continue;
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", unit.getId());
+                item.put("name", unit.getName());
+                item.put("author", userService.getByEmail(unit.getAuthor()).getName());
+                item.put("author_uid", unit.getAuthor());
+                item.put("type", "unit");
+                result.add(item);
+            }
+        }
+
+        return result;
+    }
+
+
 }

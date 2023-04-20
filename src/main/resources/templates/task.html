@@ -209,6 +209,12 @@
                                             </el-button>
                                         </template>
                                     </el-table-column>
+                                    <el-table-column
+                                      label="TaskInfo">
+                                        <template slot-scope="scope">
+                                            <a :href="'/task/output/' + computableId + '&' + scope.row.taskId"  target="_blank">taskInfo</a>
+                                        </template>
+                                    </el-table-column>
                                 </el-table>
                                 <el-pagination style="text-align: center;padding:10px"
                                                small

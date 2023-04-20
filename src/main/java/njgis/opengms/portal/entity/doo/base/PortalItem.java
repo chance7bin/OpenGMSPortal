@@ -65,7 +65,7 @@ public class PortalItem extends PortalIdPlus implements Serializable {
     // ========================  分割线  =============================
     // 上面都是所有通用，下面的是部分通用
 
-    RelateModelAndData relateModelAndData; // community中关联的模型和数据
-    RelateKnowledge relateKnowledge; // 模型和数据关联的community
+    RelateModelAndData relateModelAndData; // community类通用属性 community中关联的模型和数据
+    RelateKnowledge relateKnowledge; // 除了modelitem以外的模型和数据通用属性 模型和数据关联的community
 
 }

@@ -311,7 +311,7 @@
       "Add": "Add"
     },
     "Tip": "Tip",
-    "confirmButtonText": "View",
+    "confirmButtonText": "OK",
     "cancelButtonText": "Go Back",
     "addSuccess": "Create model item successfully!",
     "treeData_part1": [
@@ -2127,8 +2127,8 @@
     "Overview": "描述",
     "Keywords": "关键词",
     "Image": "图片",
-    "References": "引用",
-    "AddReference": "添加引用",
+    "References": "参考文献",
+    "AddReference": "添加参考文献",
     "Public": {
       "label": "公开",
       "content": "这个项目可以被检索、分享和编辑。"

@@ -97,6 +97,9 @@
             <!--链接的数据方法-->
             <div th:replace="fragments/itemInfoModules :: template_relatedDataMethods"></div>
 
+            <div th:replace="fragments/itemInfoModules :: relatedModelData(${relateModelAndData})"></div>
+
+
             <div id="cite" class="detail_block">
                 <div class="block_head">
                     <div class="head_text">
@@ -240,6 +243,7 @@
         </el-pagination>
 
     </el-dialog>
+
     <div th:replace="fragments/footer :: footer"></div>
 
 </div>
