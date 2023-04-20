@@ -93,8 +93,14 @@
                             <el-row type="flex" justify="space-between" align="middle" >
                                 <div class="containerShallowBlue"
                                         style="font-size: 16px;min-width: 60%;max-height: 110px;flex: 1;margin-right: 15px">
-                                    <p>{{htmlJSON.Description}}:<br></p>
-                                    <div style="width: 99%;word-wrap: break-word" v-if="info.taskInfo.description!=''">{{this.info.taskInfo.description}}</div>
+                                    <p style="display: inline-block;">{{htmlJSON.Description}}:</p>
+                                    <div style="display: inline-block;word-wrap: break-word" v-if="info.taskInfo.description!==''">{{this.info.taskInfo.description}}</div>
+                                    <br>
+                                    <p style="display: inline-block;" v-if="taskInfoByID.applicationArea !== ''">Application Area:</p>
+                                    <div style="display: inline-block;word-wrap: break-word" v-if="info.taskInfo.description!=''">{{this.taskInfoByID.applicationArea}}</div>
+                                    <br>
+                                    <p style="display: inline-block;" v-if="taskInfoByID.timeRange !== ''">Time Range:</p>
+                                    <div style="display: inline-block;word-wrap: break-word" v-if="info.taskInfo.timeRange!=''">{{this.taskInfoByID.timeRange}}</div>
 
 
                                 </div>

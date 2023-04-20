@@ -45,7 +45,7 @@ public class ComputableModel extends PortalItem {
     CheckedModel checkedModel; //计算模型的检查记录
 
     // 关联的任务运行记录id
-    List<String> relateTaskRunRecord;
+    // List<String> relateTaskRunRecord;
 
 
 }

@@ -2,6 +2,22 @@ new Vue({
     el: '#app',
     data: function () {
         return {
+            nowModelName: '',
+            publicTaskData: {},
+            nowPublicTaskID: '',
+            taskInfo:{
+                id: '',
+                taskDateRange: '',
+                taskApplyArea: '',
+                taskDesc: ''
+            },
+            formLabelWidth: '120px',
+            taskDialogFormVisible: false,
+            taskDialogFormVisible2: false,
+            taskDialogFormVisible3: false,
+            gridData:[],
+            dialogTableVisible: false,
+            activeName2: "taskExample",
             htmlJSON:{},
             lightenContributor:{},
             activeIndex:'3-3',
@@ -140,6 +156,207 @@ new Vue({
         }
     },
     methods: {
+        confirmLogin(){
+            window.sessionStorage.setItem("history", window.location.href);
+            const language = window.localStorage.getItem("language");
+
+            if (language !== "zh-cn"){
+                var loginTip = "This function requires an account, please login first."
+                var login = "Log in"
+                var tip = "Tip"
+            }else {
+                var loginTip = "该操作需要一个账户，请先登录"
+                var login = "登录"
+                var tip = "提示"
+            }
+
+            this.$confirm('<div style=\'font-size: 18px\'>' + loginTip + '</div>', tip, {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: login,
+                cancelButtonClass: 'fontsize-15',
+                confirmButtonClass: 'fontsize-15',
+                type: 'info',
+                center: true,
+                showClose: false,
+            }).then(() => {
+                window.location.href = "/user/login";
+            }).catch(() => {
+
+            });
+        },
+
+        requestModelName(){
+            let webURL = window.location.href
+            let modelOid = webURL.substring(webURL.lastIndexOf('/')+1)
+            axios.get('/computableModel/itemInfo/'+modelOid).then(
+                res => {
+                    this.nowModelName = res.data.data.name
+                })
+        },
+
+        publishModel(){
+            this.dialogTableVisible = true
+            let webURL = window.location.href
+            let modelOid = webURL.substring(webURL.lastIndexOf('/')+1)
+
+            //  /computableModel/{computableModelId}/taskInfo 使用POST得到当前计算模型运行成功的任务信息
+            axios.post('/computableModel/'+modelOid+'/taskInfo',{
+                "asc": -1,
+                "page": 1,
+                "pageSize": 1000,
+                "sortType": "runTime",
+            }).then(
+                res => {
+                    if(res.code == -1){
+                        this.confirmLogin()
+                        return
+                    }
+                    this.gridData = res.data.data.tasks
+                    console.log(this.gridData)
+                })
+        },
+
+        describeModel(){
+            this.taskDialogFormVisible3 = true
+        },
+
+        publicTask(taskID, task){
+            console.log(task)
+            this.taskDialogFormVisible = true
+            this.taskInfo.taskDesc = task.description
+            this.taskInfo.taskApplyArea = task.applicationArea
+            this.taskInfo.taskDateRange = task.timeRange
+            this.nowPublicTaskID = taskID
+            this.publicTaskData = task
+        },
+
+        editTask(taskID, task){
+            console.log(task)
+            this.taskDialogFormVisible2 = true
+            this.taskInfo.taskDesc = task.description
+            this.taskInfo.taskApplyArea = task.applicationArea
+            this.taskInfo.taskDateRange = task.timeRange
+            this.nowPublicTaskID = taskID
+            this.publicTaskData = task
+        },
+
+        taskInfoConfirm(){
+            if (this.taskInfo.taskDesc === '' || this.taskInfo.taskDateRange === '' || this.taskInfo.taskApplyArea === ''){
+                this.$message({
+                    message: '请完善信息',
+                    type: 'warning'
+                });
+                return
+            }
+
+            this.taskInfo.id = this.nowPublicTaskID
+
+            let taskData = JSON.stringify({
+                id: this.taskInfo.id,
+                timeRange: this.taskInfo.taskDateRange,
+                applicationArea: this.taskInfo.taskApplyArea,
+                description: this.taskInfo.taskDesc,
+            })
+
+            // console.log(taskData)
+
+            this.taskDialogFormVisible = false
+            axios.post('/task/desc/info', taskData, {headers: {
+                    'Content-Type': 'application/json'
+                }})
+                .then(res=>{
+                    if(res.code == -1){
+                        this.confirmLogin()
+                        return
+                    }
+                    console.log(res)
+                    this.publishTask(this.publicTaskData)
+                })
+            // refresh page
+        },
+
+        taskInfoConfirm2(){
+            if (this.taskInfo.taskDesc === '' || this.taskInfo.taskDateRange === '' || this.taskInfo.taskApplyArea === ''){
+                this.$message({
+                    message: '请完善信息',
+                    type: 'warning'
+                });
+                return
+            }
+
+            this.taskInfo.id = this.nowPublicTaskID
+
+            let taskData = JSON.stringify({
+                id: this.taskInfo.id,
+                timeRange: this.taskInfo.taskDateRange,
+                applicationArea: this.taskInfo.taskApplyArea,
+                description: this.taskInfo.taskDesc
+            })
+
+            // console.log(taskData)
+
+            this.taskDialogFormVisible = false
+            axios.post('/task/desc/info', taskData, {headers: {
+                    'Content-Type': 'application/json'
+                }})
+                .then(res=>{
+                    if(res.code == -1){
+                        this.confirmLogin()
+                        return
+                    }
+                    this.$message({
+                        message: '任务信息编辑完成',
+                        type: 'success'
+                    });
+                    window.location.reload()
+                    return
+                })
+            // refresh page
+        },
+
+        taskInfoConfirm3(){
+            if (this.taskInfo.taskDesc === '' || this.taskInfo.taskDateRange === '' || this.taskInfo.taskApplyArea === ''){
+                this.$message({
+                    message: '请完善信息',
+                    type: 'warning'
+                });
+                return
+            }
+
+            this.taskInfo.id = this.nowPublicTaskID
+            let computable = ''
+            let href = window.location.href.split('/')
+            let ids = href[href.length - 1]
+            computable = ids
+            let taskData = JSON.stringify({
+                timeRange: this.taskInfo.taskDateRange,
+                applicationArea: this.taskInfo.taskApplyArea,
+                description: this.taskInfo.taskDesc,
+                computableId: computable,
+                computableName: this.nowModelName
+            })
+
+            // console.log(taskData)
+
+            this.dialogTableVisible3 = false
+            axios.post('/task/desc/info', taskData, {headers: {
+                    'Content-Type': 'application/json'
+                }})
+                .then(res=>{
+                    if(res.code == -1){
+                        this.confirmLogin()
+                        return
+                    }
+                    this.$message({
+                        message: '任务信息编辑完成',
+                        type: 'success'
+                    });
+                    window.location.reload()
+                    return
+                })
+            // refresh page
+        },
+
         // 获取缓存
         getStorage(key){
             var localStorage = window.localStorage;
@@ -154,6 +371,119 @@ new Vue({
             } else if (v.indexOf('str-') === 0) {
                 return v.slice(4);
             }
+        },
+
+        publishTask(task) {
+            console.log('123', task)
+            const h = this.$createElement;
+            if (task.permission == 'private' || task.permission == null) {
+
+                this.$msgbox({
+                    title: ' ',
+                    message: "所有用户都将有权执行此任务。您确定将任务设为公开吗？",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText:"确认",
+                    cancelButtonText: "取消",
+                    beforeClose: (action, instance, done) => {
+                        let href = window.location.href.split('/')
+                        let ids = href[href.length - 1]
+                        let taskId = ids.split('&')[1]
+                        if (action === 'confirm') {
+                            instance.confirmButtonLoading = true;
+                            // instance.confirmButtonText = '...';
+                            setTimeout(() => {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/task/setPublic",
+                                    data: {taskId: task.taskId},
+                                    async: true,
+                                    contentType: "application/x-www-form-urlencoded",
+                                    success: (json) => {
+                                        if (json.code == -1) {
+                                            alert("请先登录！")
+                                            window.sessionStorage.setItem("history", window.location.href);
+                                            window.location.href = "/user/login"
+                                        } else {
+                                            // this.rightTargetItem=null;
+                                            task.permission = json.data;
+                                        }
+
+                                    }
+                                });
+                                done();
+                                setTimeout(() => {
+                                    instance.confirmButtonLoading = false;
+                                }, 100);
+                            }, 100);
+                        } else {
+                            done();
+                        }
+                    }
+                }).then(action => {
+                    this.rightMenuShow = false
+                    this.$message({
+                        type: 'success',
+                        message: "公众可以访问此任务"
+                    });
+                    window.location.reload()
+                });
+            }
+            else  {
+                this.$msgbox({
+                    title: ' ',
+                    message: this.htmlJson.SureSetPrivate,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: this.htmlJson.confirm,
+                    cancelButtonText: this.htmlJson.cancel,
+                    beforeClose: (action, instance, done) => {
+                        let href = window.location.href.split('/')
+                        let ids = href[href.length - 1]
+                        let taskId = ids.split('&')[1]
+                        if (action === 'confirm') {
+                            instance.confirmButtonLoading = true;
+                            // instance.confirmButtonText = '...';
+                            setTimeout(() => {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/task/setPrivate",
+                                    data: {taskId: task.taskId},
+                                    async: true,
+                                    contentType: "application/x-www-form-urlencoded",
+                                    success: (json) => {
+                                        if (json.code == -1) {
+                                            alert(this.htmlJson.LoginInFirst)
+                                            window.sessionStorage.setItem("history", window.location.href);
+                                            window.location.href = "/user/login"
+                                        } else {
+                                            // this.rightTargetItem=null;
+                                            task.permission = json.data;
+                                        }
+
+                                    }
+                                });
+                                done();
+                                setTimeout(() => {
+                                    instance.confirmButtonLoading = false;
+                                }, 100);
+                            }, 100);
+                        } else {
+                            done();
+                        }
+                    }
+                }).then(action => {
+                    this.rightMenuShow = false
+                    this.$message({
+                        type: 'success',
+                        message: this.htmlJson.HasBeenSetPrivate
+                    });
+                    window.location.reload()
+
+                });
+            }
+
+
         },
 
         translatePage(jsonContent){
@@ -777,5 +1107,7 @@ new Vue({
         this.$refs.mainContributorAvatar.insertAvatar(this.lightenContributor.avatar)
         this.$refs.mainContributorAvatar1.insertAvatar(this.lightenContributor.avatar)
         // console.log(this.lightenContributor)
+        
+        this.requestModelName()
     }
 })

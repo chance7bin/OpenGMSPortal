@@ -55,7 +55,9 @@ var vue = new Vue({
             Output:"Output",
 
 
+
         },
+        computableId: "",
         LoadDataActiveName:"public",
 
         initializing:true,
@@ -154,6 +156,7 @@ var vue = new Vue({
                 {
                     userName: '',
                     runTime: '',
+                    taskId: '',
                     description: '',
                     public: [],
                     status: '',
@@ -492,6 +495,10 @@ var vue = new Vue({
         }
     },
     methods: {
+        showTaskInfo(taskId){
+
+        },
+
         //可视化
         visualization(url){
             // url = "http://221.226.60.2:8082/data/8c46f99c-77ac-496a-b6c8-290b653a10cf"
@@ -1564,8 +1571,8 @@ var vue = new Vue({
                         }
                 }
             ).then((res) => {
-
                 this.exampleDataList.content = res.data.data.content
+                console.log(this.exampleDataList.content)
                 this.exampleDataList.total = res.data.data.total
                 for (let i = 0; i < this.exampleDataList.content.length; i++) {
                     this.exampleDataList.content[i].runTime = this.dateFormat(this.exampleDataList.content[i].runTime)
@@ -3584,6 +3591,9 @@ var vue = new Vue({
                 }
             }
         })
+
+        this.computableId = window.location.href.split("/")[4]
+        console.log(this.computableId)
     },
 
     destory() {

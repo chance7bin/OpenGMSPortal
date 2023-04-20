@@ -17,6 +17,8 @@ import njgis.opengms.portal.entity.dto.data.dataItem.DataItemDTO;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.service.*;
 import njgis.opengms.portal.utils.ResultUtils;
+import njgis.opengms.portal.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -272,7 +274,7 @@ public class DataHubController
     @LoginRequired
     @ApiOperation(value = "更新knowledge")
     @PostMapping(value = "/knowledge")
-    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+    public JsonResult updateKnowledge(@RequestBody KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
 
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();
@@ -285,5 +287,15 @@ public class DataHubController
         else {
             return ResultUtils.success(result);
         }
+    }
+
+    @ApiOperation(value = "获取模型相关资源", notes = "@LoginRequired\n")
+    @RequestMapping(value = "/relatedResources/{id}", method = RequestMethod.GET)
+    JsonResult getRelatedResources(@PathVariable("id") String id, HttpServletRequest request){
+        // System.out.println("test");
+        if(StringUtils. isEmpty(Utils.checkLoginStatus(request))){
+            return ResultUtils.error(-1, "no login");
+        }
+        return ResultUtils.success(repositoryService.getRelatedResources(id, ItemTypeEnum.DataHub));
     }
 }

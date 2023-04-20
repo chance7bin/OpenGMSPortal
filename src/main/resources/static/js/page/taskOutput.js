@@ -2,6 +2,7 @@ var vue = new Vue({
     el: "#app",
     // props:['htmlJSON'],
     data: {
+        taskInfoByID:{},
         tableLoading: true,
         first: true,
         activeIndex: "3-2",
@@ -91,6 +92,16 @@ var vue = new Vue({
     },
     computed: {},
     methods: {
+        getTaskInfo(){
+            const URL = window.location.href
+            const taskID = URL.split('&')[1]
+            // console.log('taskID:' + taskID)
+            axios.get("/task/taskByTaskId?id="+taskID)
+                .then(res => {
+                    this.taskInfoByID = res.data.data
+                    console.log(this.taskInfoByID)
+                })
+        },
 
         translatePage(jsonContent){
             // console.log("translatePage:",jsonContent);
@@ -706,6 +717,8 @@ var vue = new Vue({
 
         window.addEventListener('scroll',this.initSize);
         window.addEventListener('resize',this.initSize);
+
+        this.getTaskInfo()
 
 
     },

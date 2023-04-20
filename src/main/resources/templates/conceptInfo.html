@@ -123,6 +123,8 @@
 
             <div th:replace="fragments/itemInfoModules :: copyright"></div>
 
+            <div th:replace="fragments/itemInfoModules :: relatedModelData(${relateModelAndData})"></div>
+
 
             <div id="Modifier0" class="detail_block minScreen"
                  th:if="${history!=true&&itemInfo.contributors!=null&&#lists.size(itemInfo.contributors)!=0}">

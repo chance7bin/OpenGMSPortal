@@ -10,6 +10,7 @@ import njgis.opengms.portal.entity.doo.JsonResult;
 import njgis.opengms.portal.entity.doo.Localization;
 import njgis.opengms.portal.entity.doo.MyException;
 import njgis.opengms.portal.entity.doo.data.InvokeService;
+import njgis.opengms.portal.entity.doo.model.ModelItemRelate;
 import njgis.opengms.portal.entity.doo.model.Resource;
 import njgis.opengms.portal.entity.doo.support.DailyViewCount;
 import njgis.opengms.portal.entity.doo.support.MetaData;
@@ -17,6 +18,7 @@ import njgis.opengms.portal.entity.doo.support.TaskData;
 import njgis.opengms.portal.entity.dto.SpecificFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataApplicationFindDTO;
 import njgis.opengms.portal.entity.dto.data.dataMethod.DataMethodDTO;
+import njgis.opengms.portal.entity.dto.model.modelItem.ModelItemUpdateDTO;
 import njgis.opengms.portal.entity.po.*;
 import njgis.opengms.portal.enums.ItemTypeEnum;
 import njgis.opengms.portal.enums.OperationEnum;
@@ -101,6 +103,8 @@ public class DataMethodService {
     @Autowired
     DataItemService dataItemService;
 
+    @Autowired
+    RepositoryService repositoryService;
 
     @Autowired
     VersionService versionService;
@@ -165,11 +169,17 @@ public class DataMethodService {
         //     classificationName.add(name);
         // }
 
+        List<String> relatedModels= dataMethod.getRelatedModels();
+        JSONArray modelItemArray = genericService.getModelItemArray(relatedModels);
+
         modelAndView.addObject("itemInfo", dataMethod);
+        modelAndView.addObject("datainfo", dataMethod);
         modelAndView.addObject("classifications", classifications);
         modelAndView.addObject("date", dateResult);
         modelAndView.addObject("year", calendar.get(Calendar.YEAR));
         modelAndView.addObject("user", userJson);
+        modelAndView.addObject("relation",repositoryService.getAllKnowledge(dataMethod.getRelateKnowledge()));
+        modelAndView.addObject("relatedModels",modelItemArray);
         modelAndView.addObject("authorship", authorshipString);
         modelAndView.addObject("resources", resourceArray);
         modelAndView.addObject("lastModifyTime", lastModifyTime);
@@ -1535,17 +1545,17 @@ public class DataMethodService {
         List<String> versions = item.getVersions();
         String originalItemName = item.getName();
         JSONObject result = new JSONObject();
-        if (!item.isLock()){
+        if (!item.isLock()) {
 
             String author = item.getAuthor();
             Date now = new Date();
 
             //如果修改者不是作者的话把该条目锁住送去审核
             //提前单独判断的原因是对item统一修改后里面的值已经是新的了，再保存就没效果了
-            if (!author.equals(email)){
+            if (!author.equals(email)) {
                 item.setLock(true);
                 // dataItemDao.save(item);
-                redisService.saveItem(item,ItemTypeEnum.DataItem);
+                redisService.saveItem(item, ItemTypeEnum.DataItem);
             } else {
                 if (versions == null || versions.size() == 0) {
                     Version version = versionService.addVersion(item, email, originalItemName);
@@ -1561,33 +1571,33 @@ public class DataMethodService {
             item.setLastModifier(email);
 
 
-            Version new_version = versionService.addVersion(item, email,originalItemName);
-            if (author.equals(email)){
+            Version new_version = versionService.addVersion(item, email, originalItemName);
+            if (author.equals(email)) {
                 versions.add(new_version.getId());
                 item.setVersions(versions);
-                dataItemService.updateModelRelate(relations, oriRelatedModels,ItemTypeEnum.DataMethod,id);
+                dataItemService.updateModelRelate(relations, oriRelatedModels, ItemTypeEnum.DataMethod, id);
                 item.setRelatedModels(relations);
                 // dataItemDao.save(item);
                 redisService.saveItem(item, ItemTypeEnum.DataItem);
-                result.put("type","suc");
+                result.put("type", "suc");
 
                 return ResultUtils.success(result);
-            }else {
+            } else {
 
                 //发送通知
                 List<String> recipientList = new ArrayList<>();
                 recipientList.add(author);
-                recipientList = noticeService.addItemAdmins(recipientList,item.getAdmins());
+                recipientList = noticeService.addItemAdmins(recipientList, item.getAdmins());
                 recipientList = noticeService.addPortalAdmins(recipientList);
                 recipientList = noticeService.addPortalRoot(recipientList);
-                noticeService.sendNoticeContains(email, OperationEnum.Edit,ItemTypeEnum.Version,new_version,recipientList);
-                result.put("type","version");
+                noticeService.sendNoticeContains(email, OperationEnum.Edit, ItemTypeEnum.Version, new_version, recipientList);
+                result.put("type", "version");
                 return ResultUtils.success(result);
             }
 
 
         } else {
-            result.put("type","version");
+            result.put("type", "version");
             return ResultUtils.success(result);
         }
 

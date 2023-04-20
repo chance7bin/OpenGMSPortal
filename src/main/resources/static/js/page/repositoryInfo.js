@@ -6,6 +6,7 @@ new Vue({
     },
     data: {
         //unitconversion
+        activeName3: 'dataItem',
         lightenContributor:{},
         oid_cvt: window.oidcvt,
         unitname: window.infoname,

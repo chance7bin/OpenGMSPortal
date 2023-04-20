@@ -905,6 +905,39 @@ public class TaskService {
 
     }
 
+    public JsonResult getSuccessfulTasksByUserByComputableModelId(String email, String computableModelId, TaskFindDTO taskFindDTO) {
+
+        Sort sort = Sort.by(taskFindDTO.getAsc() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC, "runTime");
+        Pageable pageable = PageRequest.of(taskFindDTO.getPage()-1, taskFindDTO.getPageSize(), sort);
+        Page<Task> tasks = Page.empty();
+        try{
+            tasks = taskDao.findAllByEmailAndStatusAndComputableId(email, 2, computableModelId, pageable);
+            List<Task> ts = tasks.getContent();
+
+            List<Task> newTasks = updateUserTasks(ts);//先利用这个函数更新一下数据库
+
+            for(Task newTask : newTasks){
+                for(Task task:ts){
+                    if(newTask.getId().equals(task.getId())){
+                        task.setStatus(newTask.getStatus());
+                        task.setOutputs(newTask.getOutputs());
+                    }
+                }
+
+            }
+
+            JSONObject taskObject = new JSONObject();
+            taskObject.put("count", tasks.getTotalElements());
+            taskObject.put("tasks", ts);
+            return ResultUtils.success(taskObject);
+
+        }catch (Exception e){
+            return ResultUtils.error("search error");
+        }
+
+
+    }
+
     //多线程通过managerserver更新数据库
     public List<Task> updateUserTasks(List<Task> ts) {
 
@@ -1765,16 +1798,19 @@ public class TaskService {
         // 如果id没传过来的话新建一个task记录
         if(publishDTO.getId() == null || "".equals(publishDTO.getId())){
             Task newTask = new Task();
-            BeanUtils.copyProperties(publishDTO, newTask);
+            BeanUtils.copyProperties(publishDTO, newTask, "id");
+            newTask.setComputableId(publishDTO.getComputableId());
+            newTask.setPermission("public");
+            taskDao.save(newTask);
             return ResultUtils.success();
         }
 
-        Task task = taskDao.findFirstByTaskId(publishDTO.getId());
+        Task task = taskDao.findFirstById(publishDTO.getId());
         if (task == null){
             return ResultUtils.error();
         }
         // 任务公开添加的信息
-        BeanUtils.copyProperties(publishDTO, task, "id");
+        BeanUtils.copyProperties(publishDTO, task, "id", "computableId", "computableName");
         taskDao.save(task);
         return ResultUtils.success();
     }
@@ -1789,19 +1825,19 @@ public class TaskService {
         taskDao.save(task);
 
         // 关联到计算模型去
-        ComputableModel computableModel = computableModelDao.findFirstById(task.getComputableId());
-        if (computableModel != null){
-            List<String> runRecord = computableModel.getRelateTaskRunRecord();
-            if (runRecord == null){
-                runRecord = new ArrayList<>();
-                // 如果初始值为null的话为该属性分配空间的时候computableModel并不会同步更新，它还是指向null
-                computableModel.setRelateTaskRunRecord(runRecord);
-            }
-            if(!runRecord.contains(taskId)){
-                runRecord.add(taskId);
-            }
-        }
-        computableModelDao.save(computableModel);
+        // ComputableModel computableModel = computableModelDao.findFirstById(task.getComputableId());
+        // if (computableModel != null){
+        //     List<String> runRecord = computableModel.getRelateTaskRunRecord();
+        //     if (runRecord == null){
+        //         runRecord = new ArrayList<>();
+        //         // 如果初始值为null的话为该属性分配空间的时候computableModel并不会同步更新，它还是指向null
+        //         computableModel.setRelateTaskRunRecord(runRecord);
+        //     }
+        //     if(!runRecord.contains(task.getId())){
+        //         runRecord.add(task.getId());
+        //     }
+        // }
+        // computableModelDao.save(computableModel);
 
         return ResultUtils.success(task.getPermission());
     }
@@ -2181,11 +2217,20 @@ public class TaskService {
      * @author 7bin
      **/
     public Task getPublicTask(String id) {
-        Task task = findByTaskId(id);
+        Task task = taskDao.findFirstById(id);
+        task = task == null ? new Task() : task;
         if(!"public".equals(task.getPermission())){
             task = null;
         }
         return task;
     }
+
+    public List<Task> getRelateTaskRunRecordByComputableModelId(String computableModelId){
+
+        List<Task> tasks = taskDao.findAllByComputableIdAndPermission(computableModelId, "public");
+        return tasks;
+
+    }
+
 
 }

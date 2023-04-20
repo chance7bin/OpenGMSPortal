@@ -311,7 +311,7 @@
       "Add": "Add"
     },
     "Tip": "Tip",
-    "confirmButtonText": "View",
+    "confirmButtonText": "OK",
     "cancelButtonText": "Go Back",
     "addSuccess": "Create model item successfully!",
     "treeData_part1": [

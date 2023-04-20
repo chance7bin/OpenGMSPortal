@@ -128,7 +128,9 @@
 
             <div th:replace="fragments/itemInfoModules :: spatial_transform"></div>
 
-<!--            description-->
+            <div th:replace="fragments/itemInfoModules :: relatedModelData(${relateModelAndData})"></div>
+
+            <!--            description-->
             <div th:replace="fragments/itemInfoModules :: community_description"></div>
 
             <div id="cite" class="detail_block">

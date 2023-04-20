@@ -6,7 +6,7 @@
 
     "RelatedModels": "Related Models",
     "RelatedModelsInfo": "There is no related model item. You can link one.",
-
+    "RelatedKnowledge": "Related Knowledge",
     "HowtoCite": "How to Cite",
 
     "CopyrightAndDisclaimer":"Copyright and Disclaimer",
@@ -30,6 +30,7 @@
     "PleaseSelectDataFirst":"Please select data first!",
     "EnterFolderName": "Enter Folder Name",
     "Cancel": "Cancel",
+    "RelatedItems": "Related Items",
     "ForkSuccessfully": "Fork successfully!",
     "Success": "Success",
     "failed": "failed",
@@ -44,11 +45,15 @@
     "EditRelatedModelItem": "Edit Related Model Item",
     "NoRelatedModelItem": "There is no related model item. You can bind model items.",
     "RelatedVisualization": "Related Visualization",
+    "NoRelatedMmaterial":"There is no related material. You can link materials to it.",
     "Copy": "Copy",
     "Current": "current",
+    "AllRepository": "All Repository",
     "DataResource": "Data Resource",
     "DetailedDescription": "Detailed Description",
+    "create": "Create",
     "ViewFullContent": "View Full Content",
+    "relatedMaterial":"Edit Related Material",
 
     "anotherVersion":"There is another version haven't been reviewed, you can edit it later or contact us.",
     "ContributorMayNotAuthor": "Contributor is the person who contributed the item to OpenGMS, may not be the author of the item.",
@@ -58,7 +63,9 @@
     "SubmitError": "Submit Error!",
     "PermanentlyDelete": "This will permanently delete the comment. Continue?",
     "CommentDeletedSuccessfully": "Comment deleted successfully!",
+    "LinkResourceFromRepositoryOrCreate": "You can link resource from repository to this item, or you can create a new item.",
     "DeleteError": "Delete Error!",
+    "PleaseEnterName": "Please enter name...",
     "Delete": "Delete",
     "Edit": "Edit"
 
@@ -111,6 +118,7 @@
     "Copy": "复制",
     "Current": "当前",
     "DataResource": "数据资源",
+    "RelatedKnowledge": "相关知识",
     "DetailedDescription": "详细描述",
     "ViewFullContent": "查看完整内容",
     "anotherVersion":"还有一个版本还没有审核，您可以稍后编辑或联系我们。",
@@ -118,14 +126,19 @@
     "AddRelatedModelItem": "添加关联模型",
     "CommentSubmittedSuccessfully": "评论已成功提交！",
     "CommentCanNotBeEmpty": "评论不能为空！",
+    "NoRelatedMmaterial":"无相关资源，您可以添加相关资源",
     "SubmitError": "提交失败",
     "PermanentlyDelete": "这将会永久删除评论，是否继续？",
     "CommentDeletedSuccessfully": "评论删除成功",
     "DeleteError": "删除失败",
+    "RelatedItems": "关联项",
     "Delete": "删除",
-    "Edit":"编辑"
-
-
+    "AllRepository": "所有仓库",
+    "Edit":"编辑",
+    "PleaseEnterName": "请输入名称",
+    "relatedMaterial":"编辑相关知识",
+    "LinkResourceFromRepositoryOrCreate": "您可以从仓库中向该项提供关联，或者创建一个新的项.",
+    "create": "创建"
   }
 
 }

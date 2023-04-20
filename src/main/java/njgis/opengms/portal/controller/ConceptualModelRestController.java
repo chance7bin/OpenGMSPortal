@@ -194,7 +194,7 @@ public class ConceptualModelRestController {
     @LoginRequired
     @ApiOperation(value = "更新knowledge")
     @PostMapping(value = "/knowledge")
-    public JsonResult updateKnowledge(KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
+    public JsonResult updateKnowledge(@RequestBody KnowledgeDTO knowledgeDTO, HttpServletRequest request) throws IOException {
 
         HttpSession session=request.getSession();
         String email = session.getAttribute("email").toString();

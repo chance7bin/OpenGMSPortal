@@ -20,6 +20,8 @@ public interface TaskDao extends MongoRepository<Task, String> {
 
     Page<Task> findAllByEmailAndStatus(String email, int status, Pageable pageable);
 
+    Page<Task> findAllByEmailAndStatusAndComputableId(String email, int status, String computableId,Pageable pageable);
+
     List<Task> findAllByEmailAndStatus(String email, int status);
 
     Page<Task> findAllByEmail(String email,Pageable pageable);
@@ -37,6 +39,8 @@ public interface TaskDao extends MongoRepository<Task, String> {
     List<Task> findAllByTaskIdIn(List<String> taskIds);
 
     List<Task> findAllByComputableId(String computableModelId);
+
+    List<Task> findAllByComputableIdAndPermission(String computableModelId, String permission);
 
     List<Task> findAllByComputableIdAndRunTimeGreaterThanEqual(String oid, Date date);
 

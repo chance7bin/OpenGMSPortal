@@ -73,6 +73,9 @@ public class DataItemService {
     ClassificationDao classificationDao;
 
     @Autowired
+    RepositoryService repositoryService;
+
+    @Autowired
     GenericService genericService;
 
     @Autowired
@@ -116,7 +119,7 @@ public class DataItemService {
 
         //related models
         List<String> relatedModels= dataItem.getRelatedModels();
-        JSONArray modelItemArray = getModelItemArray(relatedModels);
+        JSONArray modelItemArray = genericService.getModelItemArray(relatedModels);
 
         ArrayList<String> fileName = new ArrayList<>();
         if (null!=dataItem.getDataType()&&dataItem.getDataType().equals("DistributedNode")){
@@ -152,6 +155,7 @@ public class DataItemService {
         view.addObject("detailLanguage",detailLanguage);
         view.addObject("itemType","Data");
         view.addObject("languageList",languageList);
+        view.addObject("relation",repositoryService.getAllKnowledge(dataItem.getRelateKnowledge()));
         view.addObject("itemInfo",dataItem);
         view.addObject("detail",detailResult);
         view.addObject("history",false);
@@ -246,28 +250,7 @@ public class DataItemService {
         return jsonObject;
     }
 
-    public JSONArray getModelItemArray(List<String> relatedModels) {
-        JSONArray modelItemArray=new JSONArray();
 
-        if(relatedModels!=null) {
-            for (String mid : relatedModels) {
-                try {
-                    ModelItem modelItem = modelItemDao.findFirstById(mid);
-                    JSONObject modelItemJson = new JSONObject();
-                    modelItemJson.put("name", modelItem.getName());
-                    modelItemJson.put("id", modelItem.getId());
-                    modelItemJson.put("overview", modelItem.getOverview());
-                    modelItemJson.put("image", modelItem.getImage().equals("") ? null : htmlLoadPath + modelItem.getImage());
-                    modelItemArray.add(modelItemJson);
-                }
-                catch (Exception e){
-                    log.error(e.getMessage());
-                    // e.printStackTrace();
-                }
-            }
-        }
-        return modelItemArray;
-    }
 
     public String getAuthorshipString(List<AuthorInfo> authorshipList) {
         String authorshipString="";

@@ -99,6 +99,10 @@ dd{
     margin:20px 20px;
 }
 
+.stripeTab tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
 .detail{
     padding:15px;
     padding-bottom: 10px;

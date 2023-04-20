@@ -39,6 +39,7 @@
     "View": "View",
 
     "HowtoCite": "How to Cite",
+    "RelatedModels": "Related Models",
 
     "CopyrightAndDisclaimer":"Copyright and Disclaimer",
     "CopyrightAndDisclaimerInfo": "All copyrights of a material (model, data, article, etc.) in the OpenGMS fully belong to its author/developer/designer (or any other wording about the owner). The OpenGMS takes every care to avoid copyright infringement, contributor(s) should carefully employ materials from other sources and give proper citations.",
@@ -396,6 +397,7 @@
     "EnterLocalizedName": "请输入模型的本地化名称",
     "Edit": "选择语言",
     "Edit": "编辑",
+    "RelatedModels": "关联模型",
     "EditClassification": "编辑分类",
     "SureSubmitChanges": "您确认提交更改？",
     "Yes": "确认",

@@ -221,7 +221,7 @@ public class ComputableModelService {
 
 
         // 关联的任务运行记录
-        List<Task> relateTaskRunRecord = getRelateTaskRunRecord(computableModel.getRelateTaskRunRecord());
+        List<Task> relateTaskRunRecord = taskService.getRelateTaskRunRecordByComputableModelId(computableModel.getId());
 
         modelAndView.setViewName("computable_model");
 
@@ -256,16 +256,6 @@ public class ComputableModelService {
         return modelAndView;
     }
 
-    private List<Task> getRelateTaskRunRecord(List<String> relateTaskRunRecord){
-        List<Task> tasks = new ArrayList<>();
-        for (String taskId : relateTaskRunRecord) {
-            Task publicTask = taskService.getPublicTask(taskId);
-            if (publicTask != null){
-                tasks.add(publicTask);
-            }
-        }
-        return tasks;
-    }
 
     /**
      * @Description 计算模型详情页面
