@@ -224,21 +224,6 @@
                                 </el-tooltip>
                             </div>
                         </li>
-                        <li class="sideSelectLi" @click="changeRelateType('dataSpaceFile')"
-                            :class="relateType!='dataSpaceFile'?'':'active'">
-                            <div class="sideSelectCell flexCenter">
-                                <el-tooltip content="File" placement="right-start">
-                                    <i class="fa fa-file-o" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
-                                </el-tooltip>
-                            </div>
-                        </li>
-                        <li class="sideSelectLi" @click="changeRelateType('exLink')" :class="relateType!='exLink'?'':'active'">
-                            <div class="sideSelectCell flexCenter">
-                                <el-tooltip content="External Link" placement="right-start">
-                                    <i class="fa fa-link" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
-                                </el-tooltip>
-                            </div>
-                        </li>
                     </ul>
                     <el-tabs type="border-card" :stretch="true" v-model="activeName_dialog" v-if="relateType=='concept'||relateType=='spatialReference'
             ||relateType=='template'||relateType=='unit'">

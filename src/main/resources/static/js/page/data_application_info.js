@@ -5,6 +5,7 @@ var data_application_info = new Vue({
     },
     data: function () {
         return {
+            activeResource: "Resource",
             lightenContributor:{},
             userId:'',      // 不能删，html页面有用
             viewCount:'',
@@ -87,6 +88,36 @@ var data_application_info = new Vue({
         }
     },
     methods: {
+        addRelation(order){
+
+            $.ajax({
+                type: "GET",
+                url: "/user/load",
+                data: {},
+                cache: false,
+                async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: (result) => {
+                    if (result.code !== 0) {
+                        this.confirmLogin();
+                    }
+                    else {
+                        let arr = window.location.href.split("/");
+                        let id = arr[arr.length - 1].split("#")[0];
+                        let targetType = arr[arr.length - 2];
+
+                        this.dialogTableVisible = true;
+                        this.$nextTick(()=>{
+                            this.$refs.linkRelatedItemModule.manualInit(id,targetType,"modelItem-D");
+                        })
+                    }
+                }
+            })
+        },
+
         // 获取缓存
         getStorage(key){
             var localStorage = window.localStorage;
