@@ -79,7 +79,7 @@
             <div th:replace="fragments/itemInfoModules :: data_invoke"></div>
 
             <!--related models-->
-            <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${relatedModels}, true)"></div>
+<!--            <div th:replace="fragments/itemInfoModules :: data_relatedmodels(${relatedModels}, true)"></div>-->
 
             <div th:replace="fragments/itemInfoModules :: model_related_material(${relation}, true)"></div>
 
@@ -165,21 +165,6 @@
                             <div class="sideSelectCell flexCenter">
                                 <el-tooltip content="Unit & Metric" placement="right-start">
                                     <img src="/static/img/model/unit.png">
-                                </el-tooltip>
-                            </div>
-                        </li>
-                        <li class="sideSelectLi" @click="changeRelateType('dataSpaceFile')"
-                            :class="relateType!='dataSpaceFile'?'':'active'">
-                            <div class="sideSelectCell flexCenter">
-                                <el-tooltip content="File" placement="right-start">
-                                    <i class="fa fa-file-o" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
-                                </el-tooltip>
-                            </div>
-                        </li>
-                        <li class="sideSelectLi" @click="changeRelateType('exLink')" :class="relateType!='exLink'?'':'active'">
-                            <div class="sideSelectCell flexCenter">
-                                <el-tooltip content="External Link" placement="right-start">
-                                    <i class="fa fa-link" style="font-size: 26px; color: rgb(17, 194, 253);"></i>
                                 </el-tooltip>
                             </div>
                         </li>
